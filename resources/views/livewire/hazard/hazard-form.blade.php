@@ -164,7 +164,7 @@
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor" placeholder="Cari Nama Pelapor..." class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" x-ref="searchInput" />
                         <!-- Dropdown hasil search (teleport keluar collapse) -->
                         @if ($showPelaporDropdown)
-                        <template wire:ignore x-teleport="body">
+                        <template  x-teleport="body">
                             <ul x-data x-init="
                                     // Posisikan dropdown tepat di bawah input
                                     $el.style.position = 'absolute';
@@ -194,8 +194,7 @@
                                 </li>
                                 @endif
                                 @endif
-
-                                @if ($manualPelaporMode==true)
+                                @if ($manualPelaporMode)
                                 <li class="p-2">
                                     <div class="relative w-full">
                                         <input name="manualPelaporName" type="text" wire:model.live="manualPelaporName" placeholder="Masukkan nama pelapor..." class="input input-bordered w-full pr-20 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
