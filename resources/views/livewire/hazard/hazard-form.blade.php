@@ -187,16 +187,15 @@
                                 @endforeach
                                 @else
                                 @if (!$manualPelaporMode)
-                                <li class="px-3 py-2 cursor-pointer text-warning hover:bg-base-200">
-                                   
-                                    <flux:button size="xs" wire:click="enableManualPelapor" icon="plus" class="w-full" variant="primary" color="cyan">
+                                <li class="px-3 py-2  ">
+                                    <flux:button size="xs" wire:click="enableManualPelapor" icon="plus" class="w-full cursor-pointer text-warning" variant="primary" color="cyan">
                                         Tidak ditemukan, tambah pelapor manual
                                     </flux:button>
                                 </li>
                                 @endif
                                 @endif
 
-                                @if ($manualPelaporMode)
+                                @if ($manualPelaporMode==true)
                                 <li class="p-2">
                                     <div class="relative w-full">
                                         <input name="manualPelaporName" type="text" wire:model.live="manualPelaporName" placeholder="Masukkan nama pelapor..." class="input input-bordered w-full pr-20 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
