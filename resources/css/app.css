@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
+@import "flatpickr/dist/flatpickr.css";
+@import "flatpickr/dist/themes/airbnb.css";
+/* @import "./flatpickr-custom.css"; */
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@plugin "daisyui" {
+    themes: dark --default, dark --prefersdark, corporate;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-200);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    .ck-content ul {
+        @apply list-disc pl-6;
+    }
+
+    .ck-content ol {
+        @apply list-decimal pl-6;
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+@layer utilities {
+    .bg-from-db-red {
+        @apply bg-red-600;
+    }
+
+    .bg-from-db-yellow {
+        @apply bg-yellow-400;
+    }
+
+    .bg-from-db-green {
+        @apply bg-green-500;
+    }
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */
+.rotate_text {
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+    -ms-writing-mode: vertical-lr;
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+
+.ck-editor__editable[role="textbox"] {
+    min-height: 100px;
+    border-radius: 0.5rem;
+}
+
+.ck-editor__editable {
+    padding: 1rem;
+}
+.ck-editor__editable.error {
+    border: 1px solid red !important;
+}
+.ck.ck-toolbar {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.ck-editor__editable {
+    min-height: 150px;      /* biar enak di hp */
+    max-height: 400px;      /* batasi di laptop */
+    width: 100% !important; /* paksa full width */
+    box-sizing: border-box; /* ikut padding parent */
+}
+.ck-editor {
+    width: 100% !important; /* biar responsif */
+}
+
+/* Flatpickr biar full width */
+.flatpickr-calendar {
+    font-size: 0.75rem; /* sama dengan text-sm Tailwind */
+    transform: scale(0.9); /* perkecil keseluruhan */
+    transform-origin: top left; /* biar ngecil dari pojok kiri atas */
+}
+
+/* === Kalender Flatpickr kecil & menempel === */
+
+/* Kalender tempel ke input (hilangkan shadow & jarak berlebihan) */
+/* Flatpickr dalam fieldset */
+.fieldset .flatpickr-calendar {
+  position: absolute !important;
+  top: 100% !important;   /* langsung di bawah input */
+  left: 0 !important;
+  margin-top: 0.25rem;    /* kasih jarak kecil */
+  z-index: 9999 !important; /* biar di atas elemen lain */
+  font-size: 0.75rem;     /* kecilkan biar rapi */
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Header bulan & tahun */
+.flatpickr-months .flatpickr-month {
+  font-size: 0.8rem;
+}
+
+/* Tombol navigasi bulan */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+}
+
+/* Hari dalam kalender */
+.flatpickr-day {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 0.7rem;
+  border-radius: 0.25rem;
+}
+
+/* Input waktu (jam & menit) */
+.flatpickr-time input {
+  height: 24px;
+  font-size: 0.75rem;
+  padding: 0 0.25rem;
+}
+.table .btn.btn-square.btn-xs {
+    padding: 2.5 !important;
+    min-height: auto !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 10 !important;
+}
