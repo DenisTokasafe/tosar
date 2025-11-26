@@ -219,22 +219,7 @@
                                             </li>
                                         @endif
                                     @endif
-                                    @if ($manualPelaporMode)
-                                        <li class="p-2">
-                                            <div class="relative w-full">
-                                                <input name="manualPelaporName" type="text"
-                                                    wire:model.live="manualPelaporName"
-                                                    placeholder="Masukkan nama pelapor..."
-                                                    class="input input-bordered w-full pr-20 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                                <div class="!absolute top-1/2 -translate-y-1/2 right-0 z-20">
-                                                    <flux:button size="xs" wire:click="addPelaporManual"
-                                                        icon="plus" variant="primary">
-                                                        Tambah
-                                                    </flux:button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
+
                                 </ul>
 
                             </template>
