@@ -66,7 +66,7 @@ class ModeratorAssignmentManager extends Component
         if (strlen($this->searchModerator) > 1) {
             $this->users = User::where('name', 'like', '%' . $this->searchModerator . '%')
                 ->orderBy('name')
-                ->limit(10)
+                ->limit(100)
                 ->get();
             $this->showMpderatorDropdown = true;
         } else {
