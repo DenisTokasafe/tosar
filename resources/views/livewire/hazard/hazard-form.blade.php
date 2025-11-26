@@ -623,25 +623,25 @@
                 </div>
             </div>
             @if ($RiskAssessment != null)
-                <table class="table table-xs mt-4">
+                <table class="table table-xs mt-4 table-zebra">
 
                     <tr>
-                        <th class="w-40 text-xs border-2 border-slate-400">Potential Risk Rating</th>
-                        <td class="pl-2 text-xs border-2 border-slate-400">
+                        <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
+                        <td class="pl-2 text-xs border-slate-400">
                             {{ $RiskAssessment->name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40 text-xs border-2 border-slate-400">Notify</th>
-                        <td class="pl-2 text-xs border-2 border-slate-400">
+                        <th class="w-40 text-xs border-slate-400">Notify</th>
+                        <td class="pl-2 text-xs border-slate-400">
                             {{ $RiskAssessment->reporting_obligation }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40 text-xs border-2 border-slate-400">Deadline</th>
-                        <td class="pl-2 text-xs border-2 border-slate-400">{{ $RiskAssessment->notes }}</td>
+                        <th class="w-40 text-xs border-slate-400">Deadline</th>
+                        <td class="pl-2 text-xs border-slate-400">{{ $RiskAssessment->notes }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40 text-xs border-2 border-slate-400">Coordinator</th>
-                        <td class="pl-2 text-xs border-2 border-slate-400">
+                        <th class="w-40 text-xs border-slate-400">Coordinator</th>
+                        <td class="pl-2 text-xs border-slate-400">
                             {{ $RiskAssessment->coordinator }}
                         </td>
                     </tr>
