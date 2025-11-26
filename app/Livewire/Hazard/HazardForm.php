@@ -334,6 +334,17 @@ class HazardForm extends Component
         $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
         $this->showPelaporDropdown = false;
         $this->pelapor_id = null;
+        $this->dispatch(
+            'alert',
+            [
+                'text' => "nama sudah di tambahkan!!!",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+            ]
+        );
     }
     public function updatedManualPelaporName($value)
     {
