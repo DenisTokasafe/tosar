@@ -256,7 +256,6 @@ class HazardForm extends Component
         $this->penanggungJawabOptions = $department
             ? $department->users()->select('users.id', 'users.name')->get()->toArray()
             : [];
-
         $this->validateOnly('department_id');
     }
     public function updatedSearchContractor()
