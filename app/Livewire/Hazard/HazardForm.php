@@ -342,7 +342,7 @@ class HazardForm extends Component
                 'destination' => '/contact',
                 'newWindow' => true,
                 'close' => true,
-                'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]
         );
     }
