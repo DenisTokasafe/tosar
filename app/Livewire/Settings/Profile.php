@@ -19,6 +19,7 @@ class Profile extends Component
     public $department_id;
     #[Validate('required_without:department_id')]
     public $contractor_id;
+    public $department_name = '';
     public string $email = '';
     public $deptCont = 'department';
     public $search = '';
@@ -28,6 +29,38 @@ class Profile extends Component
     public $showDropdown = false;
     public $searchContractor = '';
     public $showContractorDropdown = false;
+
+    public function rules()
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['nullable', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore(Auth::id()),
+            ],
+
+            'department_name' => ['required', 'string', 'max:255'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            // name
+            'name.required' => 'Nama wajib diisi.',
+
+            // email
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan oleh pengguna lain.',
+            'department_name.required' => 'Department/Contractor wajib dipilih.',
+        ];
+    }
     /**
      * Mount the component.
      */
@@ -65,11 +98,11 @@ class Profile extends Component
     public function selectDepartment($id, $name)
     {
         $this->reset('searchContractor', 'contractor_id');
-        $this->department_id = $id;
+        $this->department_name = $name;
         $this->search = $name;
         $this->dep_cont = $name;
         $this->showDropdown = false;
-        $this->validateOnly('department_id');
+        $this->validateOnly('department_name');
     }
     public function updatedSearchContractor()
     {
@@ -88,7 +121,7 @@ class Profile extends Component
     public function selectContractor($id, $name)
     {
         $this->reset('search', 'department_id');
-        $this->contractor_id = $id;
+        $this->department_name = $name;
         $this->searchContractor = $name;
         $this->dep_cont = $name;
         $this->showContractorDropdown = false;
@@ -102,18 +135,7 @@ class Profile extends Component
     {
         $user = Auth::user();
 
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id),
-            ],
-        ]);
+        $validated = $this->validate();
 
         $user->fill($validated);
 
