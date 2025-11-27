@@ -9,15 +9,15 @@
                     autocomplete="username" />
                 <fieldset>
                     <input id="department" value="department" wire:model="deptCont"
-                        class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont" checked />
+                        class="peer/department radio radio-sm radio-accent" type="radio" name="deptCont" checked />
                     <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
                         label="PT. MSM & PT. TTN" required />
                     <input id="contractor" value="contractor" wire:model="deptCont"
-                        class="peer/contractor radio radio-xs radio-primary" type="radio" name="deptCont" />
+                        class="peer/contractor radio radio-sm radio-primary" type="radio" name="deptCont" />
                     <x-form.label for="contractor" class="peer-checked/contractor:text-primary" label="Kontraktor"
                         required />
 
-                    <div class="hidden peer-checked/department:block mt-1">
+                    <div class="hidden peer-checked/department:block mt-0.5">
                         {{-- Department --}}
                         <div class="relative mb-1">
                             <!-- Input Search -->
@@ -44,7 +44,7 @@
                             <x-label-error :messages="$errors->get('department_name')" />
                         @endif
                     </div>
-                    <div class="hidden peer-checked/contractor:block mt-1">
+                    <div class="hidden peer-checked/contractor:block mt-0.5">
                         {{-- Contractor --}}
                         <div class="relative mb-1">
                             <!-- Input Search -->
