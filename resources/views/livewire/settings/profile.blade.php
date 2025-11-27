@@ -20,9 +20,8 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input name="search" type="text" wire:model.live.debounce.300ms="search"
-                            placeholder="Cari departemen..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('department_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                        <flux:input wire:model.live.debounce.300ms="search" type="text" required autofocus autocomplete="name" />
+
                         <!-- Dropdown hasil search -->
                         @if ($showDropdown && count($departments) > 0)
                             <ul
