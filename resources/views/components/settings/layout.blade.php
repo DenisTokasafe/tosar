@@ -13,7 +13,7 @@
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
 
-        <div class="mt-5 w-full bg-red-500">
+        <div class="mt-5 w-full ">
             {{ $slot }}
         </div>
     </div>
