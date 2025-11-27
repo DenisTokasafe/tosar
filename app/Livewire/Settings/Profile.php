@@ -119,10 +119,8 @@ class Profile extends Component
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
-
         // Validasi semua field
         $validated = $this->validate();
-
         // Update hanya field yang kamu pakai
         $user->name = $validated['name'];
         $user->username = $validated['username'] ?? $user->username;
