@@ -73,7 +73,6 @@ class Profile extends Component
             $this->searchContractor = Auth::user()->department_name;
             $this->deptCont = 'contractor';
         }
-        $this->department_name = Auth::user()->department_name;
         $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
