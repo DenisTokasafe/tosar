@@ -31,6 +31,7 @@ class Profile extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'username' => ['nullable', 'string', 'max:255'],
+            'department_name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -40,7 +41,7 @@ class Profile extends Component
                 Rule::unique(User::class)->ignore(Auth::id()),
             ],
 
-            'department_name' => ['required', 'string', 'max:255'],
+
         ];
     }
 
@@ -49,6 +50,7 @@ class Profile extends Component
         return [
             // name
             'name.required' => 'Nama wajib diisi.',
+            'username.required' => 'Nama wajib diisi.',
 
             // email
             'email.required' => 'Email wajib diisi.',
@@ -73,7 +75,6 @@ class Profile extends Component
         }
         $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
-
         $this->email = Auth::user()->email;
     }
     public function updatedSearch()

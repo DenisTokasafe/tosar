@@ -38,6 +38,9 @@ class User extends Component
     public $showDropdown = false;
     public $searchContractor = '';
     public $showContractorDropdown = false;
+    #[Validate('required_without:contractor_id')]
+    public $department_id;
+    #[Validate('required_without:department_id')]
     public $contractor_id;
     protected function rules()
     {
