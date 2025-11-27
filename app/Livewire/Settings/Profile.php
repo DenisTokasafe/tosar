@@ -32,7 +32,7 @@ class Profile extends Component
             'name' => ['required', 'string', 'max:255'],
             'username' => ['nullable', 'string', 'max:255'],
             'department_name' => ['required', 'string', 'max:255'],
-            'email' => ['required','string','lowercase','email','max:255',Rule::unique(User::class)->ignore(Auth::id())]
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore(Auth::id())]
         ];
     }
 
@@ -41,7 +41,6 @@ class Profile extends Component
         return [
             // name
             'name.required' => 'Nama wajib diisi.',
-
             // email
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
@@ -121,18 +120,27 @@ class Profile extends Component
     {
         $user = Auth::user();
 
+        // Validasi semua field
         $validated = $this->validate();
 
-        $user->fill($validated);
+        // Update hanya field yang kamu pakai
+        $user->name = $validated['name'];
+        $user->username = $validated['username'] ?? $user->username;
+        $user->department_name = $validated['department_name'];
 
-        if ($user->isDirty('email')) {
+        // Jika email berubah → reset verifikasi
+        if ($validated['email'] !== $user->email) {
+            $user->email = $validated['email'];
             $user->email_verified_at = null;
         }
 
+        // Simpan perubahan
         $user->save();
 
+        // Emit ke Livewire
         $this->dispatch('profile-updated', name: $user->name);
     }
+
 
     /**
      * Send an email verification notification to the current user.
