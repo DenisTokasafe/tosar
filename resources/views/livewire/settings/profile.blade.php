@@ -17,7 +17,7 @@
                     <x-form.label for="contractor" class="peer-checked/contractor:text-primary" label="Kontraktor"
                         required />
 
-                    <div class="hidden peer-checked/department:block mt-0.5">
+                    <div class="hidden peer-checked/department:block mt-1">
                         {{-- Department --}}
                         <div class="relative mb-1">
                             <!-- Input Search -->
@@ -44,7 +44,7 @@
                             <x-label-error :messages="$errors->get('department_name')" />
                         @endif
                     </div>
-                    <div class="hidden peer-checked/contractor:block mt-0.5">
+                    <div class="hidden peer-checked/contractor:block mt-1">
                         {{-- Contractor --}}
                         <div class="relative mb-1">
                             <!-- Input Search -->
