@@ -14,7 +14,7 @@ $classes = Flux::classes()
         '[print-color-adjust:exact]',
     ])
     ->add([
-        'bg-white dark:bg-white/10',
+        'bg-white dark:bg-black',
         '[ui-radio[data-checked]_&]:bg-[var(--color-accent)]',
         'hover:[ui-radio[data-checked]_&]:bg-(--color-accent)',
         'focus:[ui-radio[data-checked]_&]:bg-(--color-accent)',
