@@ -33,8 +33,20 @@ class Profile extends Component
      */
     public function mount(): void
     {
+        $dep =  Department::where('department_name', 'like', '%' .  Auth::user()->department_name . '%')->exists();
+        $cont =   Contractor::where('contractor_name', 'like', '%' . Auth::user()->department_name . '%')->exists();
+        if ($dep) {
+            $this->department_id = Auth::user()->department_id;
+            $this->search = Auth::user()->department_name;
+            $this->deptCont = 'department';
+        } elseif ($cont) {
+            $this->contractor_id = Auth::user()->contractor_id;
+            $this->searchContractor = Auth::user()->department_name;
+            $this->deptCont = 'contractor';
+        }
         $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
+
         $this->email = Auth::user()->email;
     }
     public function updatedSearch()

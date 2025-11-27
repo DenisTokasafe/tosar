@@ -21,7 +21,6 @@
                     <div class="relative mb-1">
                         <!-- Input Search -->
                         <flux:input wire:model.blur="search" type="text" class="w-full" required autofocus autocomplete="name" />
-
                         <!-- Dropdown hasil search -->
                         @if ($showDropdown && count($departments) > 0)
                             <ul
@@ -47,9 +46,7 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input name="searchContractor" type="text" wire:model.live.debounce.300ms="searchContractor"
-                            placeholder="Cari kontraktor..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('contractor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                        <flux:input wire:model.blur="searchContractor" type="text" class="w-full" required autofocus autocomplete="name" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
