@@ -64,8 +64,9 @@ class Profile extends Component
      */
     public function mount(): void
     {
-        $dep =  Department::where('department_name', 'like', '%' .  Auth::user()->department_name . '%')->exists();
-        $cont =   Contractor::where('contractor_name', 'like', '%' . Auth::user()->department_name . '%')->exists();
+        $dep = Department::where('department_name', Auth::user()->department_name)->exists();
+        $cont = Contractor::where('contractor_name', Auth::user()->department_name)->exists();
+
         if ($dep) {
             $this->search = Auth::user()->department_name;
             $this->deptCont = 'department';
