@@ -110,7 +110,7 @@ class Profile extends Component
             $this->showContractorDropdown = true;
         } else {
             $this->contractors = [];
-            $this->showContractorDropdown = true;
+            $this->showContractorDropdown = false;
         }
     }
     public function selectContractor($id, $name)
@@ -120,7 +120,7 @@ class Profile extends Component
         $this->searchContractor = $name;
         $this->dep_cont = $name;
         $this->showContractorDropdown = false;
-        $this->validateOnly('contractor_id');
+        $this->validateOnly('department_name');
     }
 
     /**
