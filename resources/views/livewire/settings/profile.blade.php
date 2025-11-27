@@ -3,8 +3,8 @@
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model.blur="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
-            <flux:input wire:model.blur="username" :label="__('username')" type="text" required autofocus
+            <flux:input wire:model.blur="name" :label="__('Name')" type="text"  autofocus autocomplete="name" />
+            <flux:input wire:model.blur="username" :label="__('username')" type="text"  autofocus
                 autocomplete="username" />
             <fieldset>
                 <input id="department" value="department" wire:model="deptCont"
@@ -20,7 +20,7 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.blur="search" type="text" class="w-full" required autofocus autocomplete="name" />
+                        <flux:input wire:model.blur="search" type="text" class="w-full"  autofocus autocomplete="name" />
                         <!-- Dropdown hasil search -->
                         @if ($showDropdown && count($departments) > 0)
                             <ul
@@ -46,7 +46,7 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.blur="searchContractor" type="text" class="w-full" required autofocus autocomplete="name" />
+                        <flux:input wire:model.blur="searchContractor" type="text" class="w-full"  autofocus autocomplete="name" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
