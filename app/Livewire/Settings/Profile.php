@@ -11,6 +11,7 @@ use Livewire\Component;
 class Profile extends Component
 {
     public string $name = '';
+    public string $username = '';
 
     public string $email = '';
 
@@ -19,6 +20,7 @@ class Profile extends Component
      */
     public function mount(): void
     {
+        $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
     }
