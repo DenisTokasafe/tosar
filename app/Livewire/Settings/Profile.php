@@ -65,11 +65,9 @@ class Profile extends Component
         $dep =  Department::where('department_name', 'like', '%' .  Auth::user()->department_name . '%')->exists();
         $cont =   Contractor::where('contractor_name', 'like', '%' . Auth::user()->department_name . '%')->exists();
         if ($dep) {
-            $this->department_id = Auth::user()->department_id;
             $this->search = Auth::user()->department_name;
             $this->deptCont = 'department';
         } elseif ($cont) {
-            $this->contractor_id = Auth::user()->contractor_id;
             $this->searchContractor = Auth::user()->department_name;
             $this->deptCont = 'contractor';
         }
@@ -93,7 +91,7 @@ class Profile extends Component
     }
     public function selectDepartment($id, $name)
     {
-        $this->reset('searchContractor', 'contractor_id');
+        $this->reset('searchContractor');
         $this->department_name = $name;
         $this->search = $name;
         $this->dep_cont = $name;
@@ -116,7 +114,7 @@ class Profile extends Component
     }
     public function selectContractor($id, $name)
     {
-        $this->reset('search', 'department_id');
+        $this->reset('search');
         $this->department_name = $name;
         $this->searchContractor = $name;
         $this->dep_cont = $name;
