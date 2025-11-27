@@ -20,7 +20,7 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.live="search" type="text" class="w-full" required autofocus autocomplete="name" />
+                        <flux:input wire:model.blur="search" type="text" class="w-full" required autofocus autocomplete="name" />
 
                         <!-- Dropdown hasil search -->
                         @if ($showDropdown && count($departments) > 0)
