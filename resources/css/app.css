@@ -129,56 +129,6 @@ select:focus[data-flux-control] {
     width: 100% !important; /* biar responsif */
 }
 
-/* Flatpickr biar full width */
-.flatpickr-calendar {
-    font-size: 0.75rem; /* sama dengan text-sm Tailwind */
-    transform: scale(0.9); /* perkecil keseluruhan */
-    transform-origin: top left; /* biar ngecil dari pojok kiri atas */
-}
-
-/* === Kalender Flatpickr kecil & menempel === */
-
-/* Kalender tempel ke input (hilangkan shadow & jarak berlebihan) */
-/* Flatpickr dalam fieldset */
-.fieldset .flatpickr-calendar {
-  position: absolute !important;
-  top: 100% !important;   /* langsung di bawah input */
-  left: 0 !important;
-  margin-top: 0.25rem;    /* kasih jarak kecil */
-  z-index: 9999 !important; /* biar di atas elemen lain */
-  font-size: 0.75rem;     /* kecilkan biar rapi */
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-/* Header bulan & tahun */
-.flatpickr-months .flatpickr-month {
-  font-size: 0.8rem;
-}
-
-/* Tombol navigasi bulan */
-.flatpickr-prev-month,
-.flatpickr-next-month {
-  width: 20px;
-  height: 20px;
-  font-size: 0.75rem;
-}
-
-/* Hari dalam kalender */
-.flatpickr-day {
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  font-size: 0.7rem;
-  border-radius: 0.25rem;
-}
-
-/* Input waktu (jam & menit) */
-.flatpickr-time input {
-  height: 24px;
-  font-size: 0.75rem;
-  padding: 0 0.25rem;
-}
 .table .btn.btn-square.btn-xs {
     padding: 2.5 !important;
     min-height: auto !important;
