@@ -74,7 +74,7 @@ class ErmAssignmentManager extends Component
     }
     public function selectModerator($id, $name)
     {
-        $this->reset('searchContractor', 'contractor_id');
+
         $this->user_id = $id;
         $this->searchModerator = $name;
         $this->showMpderatorDropdown = false;
