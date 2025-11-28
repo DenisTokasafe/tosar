@@ -114,4 +114,8 @@ class Custodian extends Component
             'Departments' => Department::with('contractors')->searchdept(trim($this->search_department))->paginate(20)
         ]);
     }
+        public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
