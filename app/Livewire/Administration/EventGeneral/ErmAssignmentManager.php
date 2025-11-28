@@ -151,7 +151,7 @@ class ErmAssignmentManager extends Component
             'department_id' => $this->department_id,
             'contractor_id' => $this->contractor_id,
         ]);
-        $this->reset(['user_id', 'department_id', 'contractor_id', ]);
+        $this->reset(['user_id', 'searchModerator']);
         $this->loadAssignments();
         $this->dispatch(
             'alert',
