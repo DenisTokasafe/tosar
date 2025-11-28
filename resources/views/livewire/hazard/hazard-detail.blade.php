@@ -189,7 +189,7 @@
             <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="Yakin hapus Laporan ini?" icon:trailing="trash" variant="danger">Hapus Laporan</flux:button>
         </div>
         <x-tab-hazard.layout>
-            <div wire:loading.class="skeleton animate-pulse" wire:target="submit">
+            <div wire:loading.class="skeleton animate-pulse skeleton-text" wire:target="submit">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                     <fieldset class="fieldset">
                         <x-form.label label="Tipe Bahaya" required />
