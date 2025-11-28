@@ -117,7 +117,7 @@ class User extends Authenticatable
 
     public function contractors()
     {
-        return $this->belongsToMany(Contractor::class, 'erm_assignments', 'user_id', 'contractor_id');
+        return $this->belongsToMany(Contractor::class, 'erm_assignments','contractor_id');
     }
     public function role()
     {
