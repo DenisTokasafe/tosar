@@ -214,17 +214,25 @@ class HazardDetail extends Component
         if ($this->department_id) {
             $department = Department::with('users')->find($this->department_id);
             $this->search =  $department?->department_name ?? '';
-            $this->penanggungJawabOptions = $department
-                ? $department->users()->select('users.id', 'users.name')->get()->toArray()
-                : [];
+            // Ambil user dari erm_assignments berdasarkan department_id
+            $this->penanggungJawabOptions = ErmAssignment::where('department_id', $this->department_id)
+                ->with('user:id,name')   // pastikan relasi user() ada di model
+                ->get()
+                ->pluck('user')
+                ->filter()
+                ->toArray();
             $this->deptCont = 'department';
         }
         if ($this->contractor_id) {
             $contractor = Contractor::with('users')->find($this->contractor_id);
             $this->searchContractor = $contractor?->contractor_name ?? '';
-            $this->penanggungJawabOptions = $contractor
-                ? $contractor->users()->select('users.id', 'users.name')->get()->toArray()
-                : [];
+            // Ambil user dari erm_assignments berdasarkan contractor_id
+            $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $this->contractor_id)
+                ->with('user:id,name')
+                ->get()
+                ->pluck('user')
+                ->filter()
+                ->toArray();
             $this->deptCont = 'company';
         }
         if ($this->location_id) {
