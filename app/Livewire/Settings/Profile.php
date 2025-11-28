@@ -70,6 +70,7 @@ class Profile extends Component
         $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
         $this->department_name = Auth::user()->department_name;
+        $this->employee_id = Auth::user()->employee_id;
         $this->date_birth = Auth::user()->date_birth;
         $this->email = Auth::user()->email;
     }
