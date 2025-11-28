@@ -69,7 +69,6 @@ class Profile extends Component
         $this->name = Auth::user()->name;
         $this->department_name = Auth::user()->department_name;
         $this->date_birth = Auth::user()->date_birth;
-        dd($this->date_birth);
         $this->email = Auth::user()->email;
     }
     public function updatedSearch()
@@ -130,6 +129,7 @@ class Profile extends Component
         $user->name = $validated['name'];
         $user->username = $validated['username'] ?? $user->username;
         $user->department_name = $validated['department_name'];
+        $user->date_birth = $validated['date_birth'];
 
         // Jika email berubah → reset verifikasi
         if ($validated['email'] !== $user->email) {
