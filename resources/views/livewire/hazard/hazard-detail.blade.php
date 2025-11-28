@@ -185,8 +185,8 @@
     </div>
     <form wire:submit.prevent="submit">
         <div class="w-full bg-base-200 p-1 mb-2 rounded">
-            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" type="submit" icon:trailing="save" variant="primary">Simpan</flux:button>
-            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="Yakin hapus Laporan ini?" icon:trailing="trash" variant="danger">Hapus</flux:button>
+            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" type="submit" icon:trailing="save" variant="primary">Update Laporan</flux:button>
+            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="Yakin hapus Laporan ini?" icon:trailing="trash" variant="danger">Hapus Laporan</flux:button>
         </div>
         <x-tab-hazard.layout>
             <div wire:loading.class="skeleton animate-pulse" wire:target="submit">
@@ -851,7 +851,7 @@
                              this.fp = flatpickr(this.$refs.closeEdit,{
                                  disableMobile:true,
                                  dateFormat:'d-m-Y',
-                                 
+
                                  onChange:(dates,str)=>$wire.set('edit_action_actual_close_date',str),
                              });
                          }
