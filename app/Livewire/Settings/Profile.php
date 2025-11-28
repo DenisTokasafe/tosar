@@ -20,6 +20,7 @@ class Profile extends Component
     public $deptCont = 'department';
     public $search = '';
     public $date_birth;
+    public $employee_id;
     public $dep_cont = '';
     public $departments = [];
     public $contractors = [];
@@ -32,6 +33,7 @@ class Profile extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'date_birth' => 'nullable|date',
+            'employee_id' => 'nullable|date',
             'username' => ['nullable', 'string', 'max:255'],
             'department_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore(Auth::id())]
@@ -129,6 +131,7 @@ class Profile extends Component
         $user->name = $validated['name'];
         $user->username = $validated['username'] ?? $user->username;
         $user->department_name = $validated['department_name'];
+        $user->employee_id = $validated['employee_id'];
         $user->date_birth = $validated['date_birth'];
 
         // Jika email berubah → reset verifikasi

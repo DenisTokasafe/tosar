@@ -5,8 +5,8 @@
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 <flux:input wire:model.blur="name" :label="__('Name')" type="text" autofocus autocomplete="name" />
-                <flux:input wire:model.blur="username" :label="__('username')" type="text" autofocus
-                    autocomplete="username" />
+                <flux:input wire:model.blur="username" :label="__('username')" type="text" autofocus autocomplete="username" />
+                <flux:input wire:model.blur="employee_id" :label="__('employee_id')" type="text" autofocus autocomplete="employee_id" />
                 <fieldset>
                     <input id="department" value="department" wire:model="deptCont"
                         class="peer/department radio radio-sm radio-accent" type="radio" name="deptCont" checked />
