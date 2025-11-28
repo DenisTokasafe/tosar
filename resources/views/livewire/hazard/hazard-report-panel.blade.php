@@ -2,7 +2,7 @@
     <x-toast />
     @include('partials.header-hazard')
     <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center">
-        <div class="mb-4 md:mb-0 z-30">
+        <div class="mb-4 md:mb-0 ">
             <div class="tooltip tooltip-right md:tooltip-top " data-tip="Tambah Hazard">
                 <a href="{{ route('hazard-form') }}" class="btn btn-square btn-primary btn-xs">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
