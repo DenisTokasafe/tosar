@@ -69,6 +69,7 @@ class Profile extends Component
         $this->name = Auth::user()->name;
         $this->department_name = Auth::user()->department_name;
         $this->date_birth = Auth::user()->date_birth;
+        dd($this->date_birth);
         $this->email = Auth::user()->email;
     }
     public function updatedSearch()
