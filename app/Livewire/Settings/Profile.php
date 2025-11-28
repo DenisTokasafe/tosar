@@ -19,6 +19,7 @@ class Profile extends Component
     public string $email = '';
     public $deptCont = 'department';
     public $search = '';
+    public $date_birth;
     public $dep_cont = '';
     public $departments = [];
     public $contractors = [];
@@ -30,6 +31,7 @@ class Profile extends Component
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'date_birth' => 'nullable|date',
             'username' => ['nullable', 'string', 'max:255'],
             'department_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore(Auth::id())]
@@ -65,6 +67,7 @@ class Profile extends Component
         }
         $this->username = Auth::user()->username;
         $this->name = Auth::user()->name;
+        $this->date_birth = Auth::user()->date_birth;
         $this->email = Auth::user()->email;
     }
     public function updatedSearch()

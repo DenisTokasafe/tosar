@@ -95,15 +95,8 @@
                         </div>
                     @endif
                 </div>
-                <flux:input wire:model.blur="date_birth" :label="__('date_birth')" type="text" autofocus
+                <flux:input wire:model.blur="date_birth" :label="__('Date of Birth')" type="text" autofocus
                     autocomplete="date_birth" x-data x-init="flatpickr($refs.input, { dateFormat: 'Y-m-d' })" x-ref="input"/>
-                {{-- <fieldset class="fieldset">
-                    <x-form.label label="Tanggal masuk" required />
-                    <input type="text" readonly id="date_commenced" wire:model="date_commenced"
-                        class="cursor-pointer input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('date_commenced') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                        placeholder="Pilih tanggal masuk" x-data x-init="flatpickr($refs.input, { dateFormat: 'Y-m-d' })" x-ref="input" />
-                    <x-label-error :messages="$errors->get('date_commenced')" />
-                </fieldset> --}}
             </div>
 
             <div class="flex items-center gap-4">
