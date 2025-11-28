@@ -456,11 +456,13 @@ class HazardDetail extends Component
         $this->search = $name;
         $this->showDropdown = false;
 
-        // Ambil user relasi dari departemen
-        $department = Department::with('users')->find($id);
-        $this->penanggungJawabOptions = $department
-            ? $department->users()->select('users.id', 'users.name')->get()->toArray()
-            : [];
+        // Ambil user dari erm_assignments berdasarkan contractor_id
+        $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
+            ->with('user:id,name')
+            ->get()
+            ->pluck('user')
+            ->filter()
+            ->toArray();
 
         $this->validateOnly('department_id');
     }
@@ -484,11 +486,13 @@ class HazardDetail extends Component
         $this->contractor_id = $id;
         $this->searchContractor = $name;
         $this->showContractorDropdown = false;
-        // Ambil user relasi dari contractor
-        $contractor = Contractor::with('users')->find($id);
-        $this->penanggungJawabOptions = $contractor
-            ? $contractor->users()->select('users.id', 'users.name')->get()->toArray()
-            : [];
+        // Ambil user dari erm_assignments berdasarkan contractor_id
+        $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
+            ->with('user:id,name')
+            ->get()
+            ->pluck('user')
+            ->filter()
+            ->toArray();
         $this->validateOnly('contractor_id');
     }
     public function updatedSearchLocation()
