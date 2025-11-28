@@ -112,12 +112,12 @@ class User extends Authenticatable
     }
     public function departments()
     {
-        return $this->belongsToMany(Department::class, 'erm_assignments','department_id');
+        return $this->belongsToMany(Department::class);
     }
 
     public function contractors()
     {
-        return $this->belongsToMany(Contractor::class, 'erm_assignments','contractor_id');
+        return $this->belongsToMany(Contractor::class, 'erm_assignments', 'user_id', 'contractor_id');
     }
     public function role()
     {
