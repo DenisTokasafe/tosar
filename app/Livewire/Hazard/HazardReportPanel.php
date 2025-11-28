@@ -59,7 +59,7 @@ class HazardReportPanel extends Component
             'Department' => Department::all(['id', 'department_name']),
             'Contractors' => Contractor::all(['id', 'contractor_name']),
             'EventType' => EventType::all(['id', 'event_type_name']),
-            'EventSubType' => EventSubType::whereIn('event_type_id',$eventTypes)->get(['id', 'event_sub_type_name']),
+            'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
         ];
     }
 
@@ -70,7 +70,7 @@ class HazardReportPanel extends Component
     public function updatedFilterStatus()
     {
         // Panggil logika filter data Anda di sini
-        // $this->filterData(); 
+        // $this->filterData();
 
         // Opsional: Tutup dropdown setelah filter diterapkan
         // $this->isDropdownOpen = false;
@@ -242,7 +242,7 @@ class HazardReportPanel extends Component
         $this->showPelaporDropdown = false;
     }
 
-    
+
 
     public function render()
     {
@@ -264,13 +264,11 @@ class HazardReportPanel extends Component
             $q->byEventSubType($this->filterEventSubType);
         });
 
-        // Terapkan filter Department
-        $query->when($this->filterEventSubType, function ($q) {
-            $q->byDepartments($this->filterDepartment); // Meneruskan array langsung
-        });
         $query->when($this->searchPelapor, function ($q) {
             $q->byPelapor($this->searchPelapor); // Meneruskan array langsung
         });
+        // Terapkan filter Department
+        $query->byDepartments($this->filterDepartment);
         // Terapkan filter Contractor
         $query->byContractors($this->filterContractor);
 
