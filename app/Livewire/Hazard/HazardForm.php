@@ -316,7 +316,7 @@ class HazardForm extends Component
         if (strlen($this->searchPelapor) > 1) {
             $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
                 ->orderBy('name')
-                ->limit(10)
+                ->limit(50)
                 ->get();
             $this->showPelaporDropdown = true;
         } else {
@@ -361,7 +361,7 @@ class HazardForm extends Component
         if (strlen($this->searchActResponsibility) > 1) {
             $this->pelaporsAct = User::where('name', 'like', '%' . $this->searchActResponsibility . '%')
                 ->orderBy('name')
-                ->limit(10)
+                ->limit(50)
                 ->get();
             $this->showActPelaporDropdown = true;
         } else {
