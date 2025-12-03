@@ -10,7 +10,7 @@
                     </svg>
                 </a>
             </div>
-            @livewire('hazard.import-hazard-reports-modal')
+            {{-- @livewire('hazard.import-hazard-reports-modal') --}}
         </div>
         <div class="w-full flex flex-col md:flex-row md:max-w-md  gap-4">
             <fieldset class="fieldset w-full">
