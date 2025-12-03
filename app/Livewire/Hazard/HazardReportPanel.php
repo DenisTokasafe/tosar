@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Hazard;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Hazard;
 use Livewire\Component;
 use App\Models\EventType;
@@ -9,7 +11,6 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Enums\HazardStatus;
 use App\Models\EventSubType;
-use App\Models\User;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
@@ -281,8 +282,8 @@ class HazardReportPanel extends Component
         if ($this->role === 'moderator') {
             $this->filterModeratorReports($query);
         }
-
-        $reports = $query->paginate(30);
+        $today = Carbon::now()->format('Y-m-d : H:i');
+        $reports = $query->orderByRaw('ABS(DATEDIFF(tanggal, ?)) ASC', [$today])->paginate(30);
         $availableStatuses = ['submitted', 'in_progress', 'pending', 'closed'];
         return view('livewire.hazard.hazard-report-panel', [
             'eventTypes' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(),
