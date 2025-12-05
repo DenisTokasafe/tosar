@@ -9,6 +9,7 @@
         <flux:tooltip content="tambah data" position="top">
             <flux:button size="xs" wire:click='open_modal' icon="add-icon" variant="primary"></flux:button>
         </flux:tooltip>
+        @livewire('manhours.manhours-import')
         @endif
     </div>
     <x-manhours.layout>
