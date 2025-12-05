@@ -4,7 +4,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @include('partials.manhours')
     <div class="flex justify-between bg-stone-400/20">
-        <div class="flex flex-col md:flex-row gap-2">
+        <div class="flex flex-row gap-2">
             <!-- You can open the modal using ID.showModal() method -->
             @can('create', \App\Models\Manhour::class)
                 <flux:tooltip content="tambah data" position="top">
