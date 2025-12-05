@@ -1,7 +1,7 @@
 <div>
     {{-- 1. Tombol untuk membuka Modal --}}
      <flux:tooltip content="import manhours" position="top">
-            <flux:button size="xs" wire:click='openModal' icon="import" variant="secondary"></flux:button>
+            <flux:button size="xs" wire:click='openModal' icon="import" variant="accent"></flux:button>
         </flux:tooltip>
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
     @if ($message && $status == 'success')
