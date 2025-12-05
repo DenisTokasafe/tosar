@@ -259,7 +259,7 @@ class Index extends Component
         }
         // --- Perubahan dimulai di sini ---
         // Panggil scope dateRange() pada query, dan lewati properti filter
-        $query->dateRange($this->start_date, $this->end_date)->search()($this->search);
+        $query->dateRange($this->start_date, $this->end_date)->search($this->search);
         $query = $query
             // 1. Urutkan berdasarkan 'date' secara descending (terbaru ke terlama)
             ->orderBy('date', 'desc')
