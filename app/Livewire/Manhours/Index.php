@@ -50,8 +50,11 @@ class Index extends Component
 
             // Pastikan ada dua tanggal yang valid
             if (count($dates) === 2) {
-                $this->start_date = $dates[0];
-                $this->end_date = $dates[1];
+               // Parse dan format tanggal awal ke YYYY/MM/DD
+                $this->start_date = Carbon::parse(trim($dates[0]))->format('Y/m/d');
+
+                // Parse dan format tanggal akhir ke YYYY/MM/DD
+                $this->end_date = Carbon::parse(trim($dates[1]))->format('Y/m/d');
                 $this->dispatch('dateRangeUpdated', [
                     'start' => $this->start_date,
                     'end'   => $this->end_date,
