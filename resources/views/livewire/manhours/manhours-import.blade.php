@@ -31,10 +31,10 @@
                 <div class="modal-action">
                     {{-- Tombol Tutup --}}
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
-                    <flux:button size="xs" wire:click='closeModal' icon="import" variant="error">Batal</flux:button>
+                    <flux:button size="xs" wire:click='closeModal' icon="import" variant="danger">Batal</flux:button>
                     {{-- Tombol Submit --}}
                     <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled"
-                        icon="import" variant="accent"><span wire:loading.class='hidden' wire:target="import">Import
+                        icon="import" variant="primary"><span wire:loading.class='hidden' wire:target="import">Import
                             Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import">
                             <span class="loading loading-spinner"></span>
