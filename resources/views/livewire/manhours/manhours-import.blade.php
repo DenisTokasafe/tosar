@@ -19,7 +19,7 @@
                     <label class="label">
                         <span class="label-text">Pilih File Import</span>
                     </label>
-                    <input type="file" wire:model="file" class="file-input file-input-bordered w-full" />
+                    <input type="file" wire:model.live="file" class="file-input file-input-bordered w-full" />
                     {{-- Menampilkan error validasi Livewire --}}
                     @error('file')
                         <label class="label">
@@ -34,9 +34,9 @@
                     <flux:button size="xs" wire:click='closeModal' icon="import" variant="danger">Batal</flux:button>
                     {{-- Tombol Submit --}}
                     <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled"
-                        icon="import" variant="primary"><span wire:loading.class='hidden' wire:target="import">Import
+                        icon="import" variant="primary"><span wire:loading.class='hidden' wire:target="import,file">Import
                             Sekarang</span>
-                        <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import">
+                        <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import,file">
                             <span class="loading loading-spinner"></span>
                             Memproses...
                         </span>
