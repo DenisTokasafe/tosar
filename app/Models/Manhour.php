@@ -32,4 +32,15 @@ class Manhour extends Model
 
         return $query;
     }
+     public function scopeSearch(Builder $query, $search = null): Builder
+     {
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('department', 'like', '%' . $search . '%')
+                  ->orWhere('company', 'like', '%' . $search . '%')
+                  ->orWhere('company_category', 'like', '%' . $search . '%');
+            });
+        }
+        return $query;
+     }
 }

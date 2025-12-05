@@ -37,7 +37,7 @@ class Index extends Component
     public $department;
     public $dept_group;
     public $form;
-
+    public $search = '';
     public $range_date = '';
     public $start_date;
     public $end_date;
@@ -50,7 +50,7 @@ class Index extends Component
 
             // Pastikan ada dua tanggal yang valid
             if (count($dates) === 2) {
-               // Parse dan format tanggal awal ke YYYY/MM/DD
+                // Parse dan format tanggal awal ke YYYY/MM/DD
                 $this->start_date = Carbon::parse(trim($dates[0]))->format('Y/m/d');
 
                 // Parse dan format tanggal akhir ke YYYY/MM/DD
@@ -259,7 +259,7 @@ class Index extends Component
         }
         // --- Perubahan dimulai di sini ---
         // Panggil scope dateRange() pada query, dan lewati properti filter
-        $query->dateRange($this->start_date, $this->end_date);
+        $query->dateRange($this->start_date, $this->end_date)->search()($this->search);
         $query = $query
             // 1. Urutkan berdasarkan 'date' secara descending (terbaru ke terlama)
             ->orderBy('date', 'desc')
