@@ -14,9 +14,9 @@
                 @endif
             </div>
            <div class="flex flex-col md:flex-row">
-             <fieldset class="fieldset w-60">
+             <fieldset class=" w-60">
               <flux:input size='xs' icon="magnifying-glass" wire:model.blur='search' placeholder="Search departemen" />
-            <fieldset class="fieldset w-60">
+            <fieldset class=" w-60">
 
                 <div class="join" wire:ignore x-data="{
                         fp: null,
