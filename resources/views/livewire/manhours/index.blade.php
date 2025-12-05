@@ -13,10 +13,8 @@
                 @livewire('manhours.manhours-import')
                 @endif
             </div>
-        </div>
-        <div>
             <fieldset class="fieldset">
-                <x-form.label label="Rentang Tanggal" required />
+
                 <div class="join" wire:ignore x-data="{
                         fp: null,
                         initFlatpickr() {
@@ -38,7 +36,7 @@
                         }
                     }" x-init="initFlatpickr(); Livewire.hook('message.processed', () => initFlatpickr());" x-ref="wrapper">
 
-                    <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date" placeholder="Pilih Tanggal" class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item" readonly />
+                    <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date" placeholder="Pilih Rentang Tanggal" class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item" readonly />
 
                     <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item" title="Bersihkan Filter">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw">
@@ -50,6 +48,8 @@
                 </div>
             </fieldset>
         </div>
+
+
         <x-manhours.layout>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
