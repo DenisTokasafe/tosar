@@ -14,6 +14,42 @@
                 @endif
             </div>
         </div>
+        <div>
+            <fieldset class="fieldset">
+                <x-form.label label="Rentang Tanggal" required />
+                <div class="join" wire:ignore x-data="{
+                        fp: null,
+                        initFlatpickr() {
+                            if (this.fp) this.fp.destroy();
+                            this.fp = flatpickr(this.$refs.tanggalInput2, {
+                                disableMobile: true,
+                                enableTime: false,
+                                altInput: true,
+                                altFormat: 'd-M-Y',
+                                dateFormat: 'd-m-Y',
+                                mode: 'range',
+                                onChange: (dates, str) => $wire.set('range_date', str),
+                                locale:{ rangeSeparator: ' Ke '},
+                            });
+                        },
+                        clearDate() {
+                            if (this.fp) this.fp.clear(); // 🔥 kosongkan input di flatpickr
+                            $wire.set('range_date', null); // 🔥 kosongkan properti Livewire
+                        }
+                    }" x-init="initFlatpickr(); Livewire.hook('message.processed', () => initFlatpickr());" x-ref="wrapper">
+
+                    <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date" placeholder="Pilih Tanggal" class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item" readonly />
+
+                    <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item" title="Bersihkan Filter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                            <path d="M21 3v5h-5" />
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                            <path d="M8 16H3v5" /></svg>
+                    </label>
+                </div>
+            </fieldset>
+        </div>
         <x-manhours.layout>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
