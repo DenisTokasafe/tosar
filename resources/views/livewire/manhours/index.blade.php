@@ -13,7 +13,7 @@
                 @livewire('manhours.manhours-import')
                 @endif
             </div>
-            <fieldset class="fieldset w-56">
+            <fieldset class="fieldset w-60">
 
                 <div class="join" wire:ignore x-data="{
                         fp: null,
