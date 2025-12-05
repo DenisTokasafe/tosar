@@ -26,10 +26,8 @@
             {{-- 1. Input Search (w-60) --}}
             <div class="w-60">
                 {{-- flux:input sudah ada di sini --}}
-                <flux:input size='xs' icon="magnifying-glass" wire:model.blur='search'
-                    placeholder="Search departemen" />
+                <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
             </div>
-
             {{-- 2. Input Rentang Tanggal (w-60) --}}
             <div class="w-60">
                 <div class="join" wire:ignore x-data="{
