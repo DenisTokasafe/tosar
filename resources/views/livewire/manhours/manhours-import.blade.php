@@ -38,17 +38,13 @@
                     <button type="button" class="btn" wire:click="closeModal">Batal</button>
 
                     {{-- Tombol Submit --}}
-                    <button
-                        type="submit"
-                        class="btn btn-success"
-                        wire:loading.attr="disabled">
-
-                        <span wire:loading.class='hidden' wire:target="import">Import Sekarang</span>
+                    <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled" icon="import" variant="accent"><span wire:loading.class='hidden' wire:target="import">Import Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import">
                              <span class="loading loading-spinner"></span>
                              Memproses...
                         </span>
-                    </button>
+                    </flux:button>
+
                 </div>
             </form>
         </div>
