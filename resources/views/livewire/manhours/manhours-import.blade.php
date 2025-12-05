@@ -43,8 +43,8 @@
                         class="btn btn-success"
                         wire:loading.attr="disabled">
 
-                        <span wire:loading.remove wire:target="import">Import Sekarang</span>
-                        <span wire:loading wire:target="import">
+                        <span wire:loading.class='hidden' wire:target="import">Import Sekarang</span>
+                        <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import">
                              <span class="loading loading-spinner"></span>
                              Memproses...
                         </span>
