@@ -1,8 +1,8 @@
 <div>
     {{-- 1. Tombol untuk membuka Modal --}}
-     <flux:tooltip content="import manhours" position="top">
-            <flux:button size="xs" wire:click='openModal' icon="import" variant="accent"></flux:button>
-        </flux:tooltip>
+    <flux:tooltip content="import manhours" position="top">
+        <flux:button size="xs" wire:click='openModal' icon="import" variant="accent"></flux:button>
+    </flux:tooltip>
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
 
 
@@ -19,11 +19,7 @@
                     <label class="label">
                         <span class="label-text">Pilih File Import</span>
                     </label>
-                    <input
-                        type="file"
-                        wire:model="file"
-                        class="file-input file-input-bordered w-full"
-                    />
+                    <input type="file" wire:model="file" class="file-input file-input-bordered w-full" />
                     {{-- Menampilkan error validasi Livewire --}}
                     @error('file')
                         <label class="label">
@@ -35,13 +31,14 @@
                 <div class="modal-action">
                     {{-- Tombol Tutup --}}
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
-                    <button type="button" class="btn" wire:click="closeModal">Batal</button>
-
+                    <flux:button size="xs" wire:click='closeModal' icon="import" variant="error">Batal</flux:button>
                     {{-- Tombol Submit --}}
-                    <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled" icon="import" variant="accent"><span wire:loading.class='hidden' wire:target="import">Import Sekarang</span>
+                    <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled"
+                        icon="import" variant="accent"><span wire:loading.class='hidden' wire:target="import">Import
+                            Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import">
-                             <span class="loading loading-spinner"></span>
-                             Memproses...
+                            <span class="loading loading-spinner"></span>
+                            Memproses...
                         </span>
                     </flux:button>
 
