@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
 class Manhour extends Model
 {
     protected $table = 'manhours';
@@ -17,4 +17,19 @@ class Manhour extends Model
         'manhours',
         'manpower',
     ];
+
+    public function scopeDateRange(Builder $query, $startDate = null, $endDate = null): Builder
+    {
+        // Jika startDate ada, tambahkan kondisi >=
+        if ($startDate) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        // Jika endDate ada, tambahkan kondisi <=
+        if ($endDate) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        return $query;
+    }
 }

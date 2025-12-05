@@ -255,7 +255,8 @@ class Index extends Component
             $query = Manhour::whereIn('company', $contractorNames);
         }
         // --- Perubahan dimulai di sini ---
-
+        // Panggil scope dateRange() pada query, dan lewati properti filter
+        $query->dateRange($this->start_date, $this->end_date);
         $query = $query
             // 1. Urutkan berdasarkan 'date' secara descending (terbaru ke terlama)
             ->orderBy('date', 'desc')
