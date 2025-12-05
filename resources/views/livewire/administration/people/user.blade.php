@@ -3,11 +3,13 @@
     <x-tabs-relation.layout>
         <div class="p-4">
             <div class="flex justify-between items-center mb-4">
-                <flux:tooltip content="Bulk Update" position="top">
+                <div class="flex flex-row">
+                    <flux:tooltip content="Bulk Update" position="top">
                     <flux:button size="xs" variant="primary" icon='refresh-cw' wire:click="$set('showBulkUpdateModal', true)"></flux:button>
                 </flux:tooltip>
                 <div class="mx-2 w-60">
                     <input name="searchLocation" type="text" wire:model.live="searchPelapor" placeholder="Cari Pelapor..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                </div>
                 </div>
                 <div>
 
