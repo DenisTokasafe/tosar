@@ -6,6 +6,7 @@
                 <flux:tooltip content="Bulk Update" position="top">
                     <flux:button size="xs" variant="primary" icon='refresh-cw' wire:click="$set('showBulkUpdateModal', true)"></flux:button>
                 </flux:tooltip>
+                <input name="searchLocation" type="text" wire:model.live="searchPelapor" placeholder="Cari Pelapor..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                 <div>
 
                     <flux:tooltip content="tambah data" position="top">

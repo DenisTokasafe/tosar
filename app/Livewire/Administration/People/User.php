@@ -31,6 +31,7 @@ class User extends Component
     public $showBulkUpdateModal = false;
     public $bulkRole;
     public $roles;
+    public $searchPelapor = '';
     public $deptCont = 'department';
     public $search = '';
     public $departments = [];
@@ -182,7 +183,7 @@ class User extends Component
     public function render()
     {
         return view('livewire.administration.people.user', [
-            'users' => UserProfile::paginate(20),
+            'users' => UserProfile::search(trim($this->searchPelapor))->paginate(20),
             'role' => Role::all()
         ]);
     }
