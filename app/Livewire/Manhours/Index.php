@@ -237,7 +237,7 @@ class Index extends Component
             'bu'        => BusinessUnit::all(),
             'cont'      => Contractor::all(),
             'departemen' => Department::get(),
-            'data_manhours'  => $query->latest()->paginate(10),
+            'data_manhours'  => $query->paginate(30),
         ]);
     }
 
