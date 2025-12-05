@@ -13,7 +13,8 @@
                 @livewire('manhours.manhours-import')
                 @endif
             </div>
-            <fieldset class="fieldset w-60">
+           <div class="flex flex-col md:flex-row">
+             <fieldset class="fieldset w-60">
               <flux:input size='xs' icon="magnifying-glass" wire:model.blur='search' placeholder="Search departemen" />
             <fieldset class="fieldset w-60">
 
@@ -49,6 +50,7 @@
                     </label>
                 </div>
             </fieldset>
+           </div>
         </div>
 
 
