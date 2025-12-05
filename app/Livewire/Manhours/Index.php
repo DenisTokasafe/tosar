@@ -44,25 +44,25 @@ class Index extends Component
     public $jobclasses = [
         'supervisor'     => 'Supervisor',
         'operational'    => 'Operational',
-        'administration' => 'Administration',
+        'Administrator' => 'Administrator',
     ];
 
     public $hide = [
         'supervisor'     => false,
         'operational'    => false,
-        'administration' => false,
+        'Administrator' => false,
     ];
 
     public $manhours = [
         'supervisor'     => null,
         'operational'    => null,
-        'administration' => null,
+        'Administrator' => null,
     ];
 
     public $manpower = [
         'supervisor'     => null,
         'operational'    => null,
-        'administration' => null,
+        'Administrator' => null,
     ];
 
     protected function rules()
