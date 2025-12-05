@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @include('partials.manhours')
-    <div class="flex justify-between items-center bg-stone-400/20 p-2 rounded-lg shadow-sm">
+    <div class="flex justify-between items-center bg-stone-400/20 px-2 rounded-lg shadow-sm">
 
         {{-- BAGIAN KIRI: Tombol Aksi (Create & Import) --}}
         {{-- Ikon Tombol Sejajar Horizontal --}}
@@ -29,7 +29,7 @@
                 <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class="w-60">
+            <div class="w-64">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
