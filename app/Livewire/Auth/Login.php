@@ -10,13 +10,15 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Illuminate\Validation\Rule; // <-- Import Rule untuk validasi (Opsional, tapi praktik baik)
 use Livewire\Component;
-
 #[Layout('components.layouts.auth')]
 class Login extends Component
 {
-    #[Validate('required|string|email')]
-    public string $email = '';
+    // Ganti $email menjadi $credential.
+    // Aturan validasi diubah menjadi required|string
+    #[Validate('required|string')]
+    public string $credential = ''; // <-- Properti baru untuk menampung email atau username
 
     #[Validate('required|string')]
     public string $password = '';
@@ -32,11 +34,21 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        // Tentukan field otentikasi berdasarkan input
+        $field = filter_var($this->credential, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Buat array credential untuk otentikasi
+        $credentials = [
+            $field => $this->credential,
+            'password' => $this->password,
+        ];
+
+        // Coba otentikasi menggunakan field (email atau username) yang sesuai
+        if (! Auth::attempt($credentials, $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'credential' => __('auth.failed'), // <-- Ubah 'email' menjadi 'credential'
             ]);
         }
 
@@ -60,7 +72,7 @@ class Login extends Component
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
+            'credential' => __('auth.throttle', [ // <-- Ubah 'email' menjadi 'credential'
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -72,6 +84,7 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        // Gunakan $this->credential untuk throttle key
+        return Str::transliterate(Str::lower($this->credential)).'|'.request()->ip();
     }
 }

@@ -55,7 +55,7 @@
                 Livewire.hook('message.processed', () => initFlatpickr());" x-ref="wrapper">
 
                     <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
-                        placeholder="Pilih Tanggal"
+                        placeholder="Pilih Rentang Tanggal"
                         class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
