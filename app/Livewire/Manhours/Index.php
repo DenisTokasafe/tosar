@@ -224,6 +224,15 @@ class Index extends Component
             $contractorNames = $user->contractors()->pluck('contractor_name');
             $query = Manhour::whereIn('company', $contractorNames);
         }
+        // --- Perubahan dimulai di sini ---
+
+        $query = $query
+            // 1. Urutkan berdasarkan 'date' secara descending (terbaru ke terlama)
+            ->orderBy('date', 'desc')
+            // 2. Kemudian, urutkan berdasarkan 'company_category' secara ascending (A ke Z)
+            ->orderBy('company_category', 'asc');
+
+        // --- Perubahan berakhir di sini ---
         return view('livewire.manhours.index', [
             'bu'        => BusinessUnit::all(),
             'cont'      => Contractor::all(),
