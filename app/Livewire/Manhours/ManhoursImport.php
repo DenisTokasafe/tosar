@@ -12,7 +12,7 @@ class ManhoursImport extends Component
     use WithFileUploads;
 
     public $file;
-    public $showModal = false;
+    public $showModal = '';
 
     public function import()
     {
@@ -42,7 +42,7 @@ class ManhoursImport extends Component
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
             $this->file = null; // Reset file input
-            $this->showModal = false;
+            $this->showModal = "";
         } catch (\Exception $e) {
             // 4. Gagal
             $this->dispatch('alert', [
@@ -53,7 +53,7 @@ class ManhoursImport extends Component
                 'close' => true,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-            $this->showModal = true;
+            $this->showModal = "modal-open";
             // Opsional: Log error untuk debugging
             // \Log::error('Manhours Import Error: ' . $e->getMessage());
         }
@@ -61,13 +61,13 @@ class ManhoursImport extends Component
     // Method untuk membuka modal dari tombol di luar
     public function openModal()
     {
-        $this->showModal = true;
+        $this->showModal = "modal-open";
     }
 
     // Method untuk menutup modal
     public function closeModal()
     {
-        $this->showModal = false;
+        $this->showModal = "";
         // Opsional: reset file dan error saat menutup
         $this->file = null;
         $this->resetErrorBag();

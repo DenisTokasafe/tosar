@@ -8,8 +8,7 @@
 
     {{-- 2. Modal Daisy UI --}}
     {{-- Gunakan atribut :checked="$showModal" untuk mengontrol status buka/tutup --}}
-    <input type="checkbox" id="manhours_import_modal" class="modal-toggle" :checked="$showModal" />
-    <div class="modal" role="dialog">
+    <div class="modal {{ $showModal }}" role="dialog">
         <div class="modal-box">
             <h3 class="font-bold text-lg">Import Data Manhours</h3>
             <p class="py-4">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi data manhours.</p>
