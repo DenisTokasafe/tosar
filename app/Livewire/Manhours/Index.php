@@ -38,7 +38,37 @@ class Index extends Component
     public $dept_group;
     public $form;
 
+    public $range_date = '';
+    public $start_date;
+    public $end_date;
+    public function updatedRangeDate($value)
+    {
+        // Cek apakah nilai tidak kosong
+        if (!empty($value)) {
+            // Pisahkan string berdasarkan " to "
+            $dates = explode(' Ke ', $value);
 
+            // Pastikan ada dua tanggal yang valid
+            if (count($dates) === 2) {
+                $this->start_date = $dates[0];
+                $this->end_date = $dates[1];
+                $this->dispatch('dateRangeUpdated', [
+                    'start' => $this->start_date,
+                    'end'   => $this->end_date,
+                ]);
+            }
+        } else {
+            $this->reset('start_date', 'end_date');
+            $this->dispatch('dateRangeUpdated', [
+                'start' => null,
+                'end'   => null,
+            ]);
+        }
+    }
+    public function clearFilter()
+    {
+        $this->reset('range_date', 'start_date', 'end_date');
+    }
 
     // jobclass setup
     public $jobclasses = [
