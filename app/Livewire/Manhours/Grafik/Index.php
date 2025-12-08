@@ -9,7 +9,7 @@ use App\Models\Manhour;
 
 class Index extends Component
 {
-   public $data;
+    public $data;
     public $start_date;
     public $end_date;
 
