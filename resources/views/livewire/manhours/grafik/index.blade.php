@@ -1,4 +1,4 @@
-    <div wire:ignore id="hazardTrend" style="height: 350px;" class="w-full"></div>
+    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     @push('scripts')
         <!-- Load ECharts dari CDN -->
         <script type="module">
@@ -7,70 +7,119 @@
             var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
             var option;
-            console.log(data.months);
 
             option = {
                 title: {
-                    text: 'Stacked Line'
+                    text: 'Jumlah Laporan Hazard per Bulan',
+                    left: 'center',
+                    top: 5,
+                    textStyle: {
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: '#333'
+                    },
+                    subtext: 'Data laporan berdasarkan bulan berjalan',
+                    subtextStyle: {
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 8,
+                        color: '#666'
+                    }
                 },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+                textStyle: {
+                    fontFamily: 'Microsoft YaHei',
+                    fontSize: 12,
+                    fontStyle: 'normal',
+                    fontWeight: 'normal',
                 },
                 grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
+                    top: 90,
+                    right: 30,
+                    bottom: 50,
+                    left: 50,
                     containLabel: true
                 },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {}
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(50,50,50,0.8)',
+                    borderWidth: 0,
+                    textStyle: {
+                        color: '#fff',
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 12,
+                    }
+                },
+                legend: {
+                    data: ['Jumlah Laporan'],
+                    top: 50,
+                    left: 'center',
+                    textStyle: {
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 12,
+                        fontWeight: 'normal'
                     }
                 },
                 xAxis: {
                     type: 'category',
-                    boundaryGap: false,
-                    data: data.months
+                    data: data.months,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#888'
+                        }
+                    },
+                    axisLabel: {
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 12
+                    },
+                    axisTick: {
+                        show: false
+                    }
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#888'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed',
+                            color: '#ddd'
+                        }
+                    },
+                    axisLabel: {
+                        fontFamily: 'Microsoft YaHei',
+                        fontSize: 12
+                    }
                 },
                 series: [{
-                        name: 'Email',
+                        name: 'PT. MSM',
                         type: 'line',
-                        stack: 'Total',
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        stack: 'Total', // Optional: Stacked line
+                        data: data.msm_manhours
                     },
                     {
-                        name: 'Union Ads',
+                        name: 'PT. TTN',
                         type: 'line',
-                        stack: 'Total',
-                        data: [220, 182, 191, 234, 290, 330, 310]
+                        stack: 'Total', // Optional: Stacked line
+                        data: data.ttn_manhours
                     },
                     {
-                        name: 'Video Ads',
+                        name: 'All Contractor',
                         type: 'line',
-                        stack: 'Total',
-                        data: [150, 232, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: 'Direct',
-                        type: 'line',
-                        stack: 'Total',
-                        data: [320, 332, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name: 'Search Engine',
-                        type: 'line',
-                        stack: 'Total',
-                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                        // Tidak di-stack, agar garis ini menunjukkan total sesungguhnya
+                        // Stack: 'Total',
+                        data: data.all_contractor_manhours,
+                        lineStyle: {
+                            width: 4, // Garis lebih tebal untuk total
+                            type: 'dashed' // Garis putus-putus untuk total
+                        }
                     }
                 ]
             };
 
-           window.addEventListener('resize', myChart.resize);
+
+            window.addEventListener('resize', myChart.resize);
         </script>
     @endpush
