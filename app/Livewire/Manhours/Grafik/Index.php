@@ -28,7 +28,7 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
-        /$dataManhours = Manhour::query()
+        $dataManhours = Manhour::query()
         ->whereRaw(
             "STR_TO_DATE(`date`, '%Y/%m/%d') BETWEEN
              STR_TO_DATE(?, '%Y/%m/%d') AND STR_TO_DATE(?, '%Y/%m/%d')",
