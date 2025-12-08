@@ -32,7 +32,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: date.months
+                    data: data.months
                 },
                 yAxis: {
                     type: 'value'
