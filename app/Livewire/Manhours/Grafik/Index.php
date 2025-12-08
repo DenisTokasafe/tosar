@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard;
+namespace App\Livewire\Manhours\Grafik;
 
 use Carbon\Carbon;
 use Livewire\Component;
