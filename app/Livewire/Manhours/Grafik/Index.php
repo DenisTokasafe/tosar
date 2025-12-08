@@ -19,7 +19,7 @@ class Index extends Component
         // Default filter tanggal
         if (!$this->start_date || !$this->end_date) {
             $this->start_date = Carbon::now()->startOfYear()->format('Y/m/d');
-            $this->end_date = Carbon::now()->endOfYear()->toDateString();
+            $this->end_date = Carbon::now()->endOfYear()->format('Y/m/d');
         }
         $this->loadData();
     }
@@ -38,7 +38,7 @@ class Index extends Component
         // --- 1. Ambil Data Manhours Perusahaan (PT. MSM & PT. TTN) ---
         $dataMSM = $this->getMonthlyManhours('PT. MSM');
         $dataTTN = $this->getMonthlyManhours('PT. TTN');
-         dd($this->start_date);
+         dd($this->end_date);
 
         // --- 2. Ambil Data Total SELURUH Contractor ---
         $dataAllContractor = $this->getMonthlyManhours(null, true); // Parameter kedua menandakan ambil SEMUA contractor
