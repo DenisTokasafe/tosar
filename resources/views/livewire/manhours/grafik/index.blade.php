@@ -16,7 +16,7 @@
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['PT. MSM', 'PT. TTN', 'Video Ads']
+                    data: ['PT. MSM', 'PT. TTN']
                 },
                 grid: {
                     left: '3%',
@@ -48,12 +48,6 @@
                         type: 'line',
                         stack: 'Total',
                         data: data.ttn
-                    },
-                    {
-                        name: 'Video Ads',
-                        type: 'line',
-                        stack: 'Total',
-                        data: [150, 232, 201, 154, 190, 330, 410]
                     }
                 ]
             };
