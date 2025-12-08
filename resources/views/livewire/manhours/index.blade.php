@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @include('partials.manhours')
-    <div class="flex justify-between items-center bg-stone-400/20 px-2 rounded-lg shadow-sm">
+    <div class="flex flex-col lg:flex-row lg:justify-between  items-center bg-stone-400/20 px-2 rounded-lg shadow-sm">
 
         {{-- BAGIAN KIRI: Tombol Aksi (Create & Import) --}}
         {{-- Ikon Tombol Sejajar Horizontal --}}
@@ -21,15 +21,15 @@
 
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
-        <div class="flex flex-row gap-2 items-center">
+        <div class="flex flex-col lg:flex-row gap-2 items-center">
 
             {{-- 1. Input Search (w-60) --}}
-            <div class="w-60">
+            <div class="w-full lg:w-60">
                 {{-- flux:input sudah ada di sini --}}
                 <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class="w-64">
+            <div class=" w-full lg:w-64">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
