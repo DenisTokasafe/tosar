@@ -98,6 +98,6 @@ class ManhoursChart extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.manhours-chart');
+        return view('livewire.manhours.grafik.index');
     }
 }
