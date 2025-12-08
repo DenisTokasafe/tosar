@@ -16,7 +16,7 @@
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['PT. MSM', 'PT. TTN']
+                    data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR']
                 },
                 grid: {
                     left: '3%',
