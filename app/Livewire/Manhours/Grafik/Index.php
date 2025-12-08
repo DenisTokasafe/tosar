@@ -46,7 +46,7 @@ class Index extends Component
     // ---- Ambil data per company ----
     $msmData = $dataManhours->where('company', 'PT. MSM')->pluck('total','month')->toArray();
     $ttnData = $dataManhours->where('company', 'PT. TTN')->pluck('total','month')->toArray();
-    $contractorData = $dataManhours->where('company', 'Contractor')->pluck('total','month')->toArray();
+    $contractorData = $dataManhours->where('company_category', 'Contractor')->pluck('total','month')->toArray();
 
     // ---- Ambil bulan dari database ----
     $monthsRaw = $dataManhours->pluck('month')->unique()->sort()->values()->toArray();
