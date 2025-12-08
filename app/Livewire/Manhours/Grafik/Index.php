@@ -54,15 +54,15 @@ class Index extends Component
         $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. TTN')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')
-            ->pluck('total_manhours')->get()
+            ->groupBy('month')->get()
+            ->pluck('total_manhours')
             ->toArray();
         // === CONTRACTOR ===
         $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company_category', 'CONTRACTOR')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')
-            ->pluck('total_manhours')->get()
+            ->groupBy('month')->get()
+            ->pluck('total_manhours')
             ->toArray();
 
         // Format data: pastikan semua bulan ada (0 jika kosong)
