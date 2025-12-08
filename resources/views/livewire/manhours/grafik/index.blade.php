@@ -60,9 +60,19 @@
                         xAxis: {
                             data: payload_trand.months
                         },
-                        series: [{
-                            data: payload_trand.counts
-                        }]
+                         series: [{
+                        name: 'Email',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload_trand.msm
+                    },
+                    {
+                        name: 'Union Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload_trand.ttn
+                    }
+                ]
 
                     });
                 });
