@@ -22,7 +22,7 @@ class Index extends Component
         }
         $this->loadData();
     }
-    #[On('chartManhoursUpdate')]
+    #[On('dateRangeManhours')]
     public function updateDateRange($data)
     {
         $this->start_date = $data['start'];
@@ -31,7 +31,7 @@ class Index extends Component
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
-    #[On('chartTrandUpdated')]
+    #[On('chartManhoursUpdate')]
     public function loadData()
     {
         $dataManhours = Manhour::dateRange($this->start_date, $this->end_date);
