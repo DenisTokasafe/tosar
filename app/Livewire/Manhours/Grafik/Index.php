@@ -55,14 +55,23 @@ class Index extends Component
             ->groupBy('month')
             ->pluck('total_manhours', 'month')
             ->toArray();
+        // === CONTRACTOR ===
+        $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company_category', 'CONTRACTOR')
+            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
+            ->groupBy('month')
+            ->pluck('total_manhours', 'month')
+            ->toArray();
 
         // Format data: pastikan semua bulan ada (0 jika kosong)
         $msm = [];
         $ttn = [];
+        $contractor = [];
 
         for ($m = 1; $m <= 12; $m++) {
             $msm[] = $msmData[$m] ?? 0;
             $ttn[] = $ttnData[$m] ?? 0;
+            $contractor[] = $contractorData[$m] ?? 0;
         }
 
         // Data final untuk chart
@@ -70,6 +79,7 @@ class Index extends Component
             'months' => $months,
             'msm'    => $msm,
             'ttn'    => $ttn,
+            'contractor'    => $contractor,
         ]);
         $this->dispatch('manhoursChart', $this->data);
     }
