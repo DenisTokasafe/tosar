@@ -1,148 +1,80 @@
-<div wire:ignore id="manhoursCombinedChart" style="height: 320px;" class="w-full"></div>
+<div>
+    <!-- Container Grafik -->
+    <div id="combinedChart" style="height: 450px;"></div>
 
-@push('scripts')
-    <script type="module">
-        // Pastikan ECharts diinisialisasi hanya sekali
-        var dom = document.getElementById('manhoursCombinedChart');
+    <script>
+        document.addEventListener("livewire:init", () => {
+            // Inisialisasi Grafik
+            var chartDom = document.getElementById('combinedChart');
+            var combinedChart = echarts.init(chartDom);
 
-        // Mengubah ID dari hazardTrend ke manhoursCombinedChart untuk kejelasan
-        // Jika Anda harus tetap menggunakan 'hazardTrend', ganti ID di atas.
+            function renderChart(chartData) {
+                let data = JSON.parse(chartData);
 
-        if (!dom) {
-            console.error("Elemen ID 'manhoursCombinedChart' tidak ditemukan di DOM.");
-            return;
-        }
-        var myChart = echarts.init(dom);
+                let option = {
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['PT. MSM', 'PT. TTN', 'All Contractor'],
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: data.months
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'PT. MSM',
+                            type: 'line',
+                            stack: 'total',
+                            smooth: true,
+                            areaStyle: {},
+                            emphasis: { focus: 'series' },
+                            data: data.msm_manhours
+                        },
+                        {
+                            name: 'PT. TTN',
+                            type: 'line',
+                            stack: 'total',
+                            smooth: true,
+                            areaStyle: {},
+                            emphasis: { focus: 'series' },
+                            data: data.ttn_manhours
+                        },
+                        {
+                            name: 'All Contractor',
+                            type: 'line',
+                            stack: 'total',
+                            smooth: true,
+                            areaStyle: {},
+                            emphasis: { focus: 'series' },
+                            data: data.all_contractor_manhours
+                        }
+                    ]
+                };
 
-        // Fungsi untuk Menggambar/Memperbarui Grafik
-        function updateChart(data) {
-            if (!data || !data.months) {
-                console.error("Data Manhours tidak valid atau kosong.");
-                return;
+                combinedChart.setOption(option);
             }
 
-            var option = {
-                title: {
-                    text: 'Manhours Bulanan: PT. MSM, PT. TTN & All Contractor',
-                    left: 'center',
-                    top: 5,
-                    textStyle: {
-                        fontSize: 14,
-                        fontWeight: 'bold'
-                    },
-                    subtext: 'Total Manhours per bulan (Filter: ' + ({{ $start_date }} ? '{{ $start_date }}' :
-                        'Awal Tahun') + ' - ' + ({{ $end_date }} ? '{{ $end_date }}' : 'Akhir Tahun') + ')',
-                    subtextStyle: {
-                        fontSize: 8
-                    }
-                },
-                grid: {
-                    top: 90,
-                    right: 30,
-                    bottom: 50,
-                    left: 50,
-                    containLabel: true
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    // Formatter untuk menampilkan total jam kerja
-                    formatter: function(params) {
-                        let tooltip = params[0].name + '<br/>';
-                        params.forEach(function(item) {
-                            tooltip += item.marker + item.seriesName + ': ' + item.value.toLocaleString() +
-                                ' Jam<br/>';
-                        });
-                        return tooltip;
-                    }
-                },
-                legend: {
-                    data: ['PT. MSM', 'PT. TTN', 'All Contractor'],
-                    top: 50,
-                    left: 'center',
-                },
-                xAxis: {
-                    type: 'category',
-                    data: data.months,
-                    axisTick: {
-                        show: false
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    name: 'Total Manhours (Jam)',
-                    splitLine: {
-                        lineStyle: {
-                            type: 'dashed',
-                            color: '#ddd'
-                        }
-                    },
-                },
-                series: [{
-                        name: 'PT. MSM',
-                        type: 'line',
-                        data: data.msm_manhours,
-                        smooth: true // Garis halus
-                    },
-                    {
-                        name: 'PT. TTN',
-                        type: 'line',
-                        data: data.ttn_manhours,
-                        smooth: true
-                    },
-                    {
-                        name: 'All Contractor',
-                        type: 'line',
-                        data: data.all_contractor_manhours,
-                        smooth: true,
-                        lineStyle: {
-                            width: 4,
-                            type: 'dashed'
-                        },
-                        itemStyle: {
-                            color: '#000' // Warna hitam untuk Total
-                        }
-                    }
-                ]
-            };
-
-            myChart.setOption(option, true);
-        }
-
-        // 3. Listener Livewire untuk Update Dinamis
-        document.addEventListener('livewire:initialized', () => {
-            @this.on('updateCombinedChart', (dataJson) => {
-                try {
-                    const data = JSON.parse(dataJson);
-                    updateChart(data);
-                } catch (e) {
-                    console.error("Gagal parse JSON dari Livewire:", e);
-                }
+            // Event pertama kali load
+            $wire.on('updateCombinedChart', (chartData) => {
+                renderChart(chartData);
             });
         });
-
-        // 4. Load Data Awal (Menggunakan data dari render awal Blade)
-        try {
-            // Mengambil string JSON awal dari Livewire dan mem-parse
-            const initialDataString = @json($combinedChartData);
-            if (initialDataString) {
-                // Cek jika data sudah dalam bentuk string JSON valid
-                const initialData = JSON.parse(initialDataString);
-                updateChart(initialData);
-            } else {
-                // Jika $combinedChartData kosong, coba gunakan nilai default yang diinisialisasi
-                // Ini penting untuk menghindari error saat load pertama jika data kosong
-                updateChart({
-                    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    "msm_manhours": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    "ttn_manhours": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    "all_contractor_manhours": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                });
-            }
-        } catch (e) {
-            console.warn("Gagal inisialisasi data awal (Pastikan properti Livewire diinisialisasi):", e);
-        }
-
-        // 5. Responsive Resize
-        window.addEventListener('resize', myChart.resize);
     </script>
-@endpush
+</div>
