@@ -1,104 +1,75 @@
-<div>
-    {{-- Pastikan ID kontainer ini sesuai dengan yang Anda gunakan di script --}}
-    <div wire:ignore id="manhoursCombinedChart" style="height: 320px;" class="w-full"></div>
-
+    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     @push('scripts')
+        <!-- Load ECharts dari CDN -->
         <script type="module">
-            // ⚠️ PENTING: Hapus setInterval() ini. Polling seharusnya diatur di Livewire Component jika diperlukan.
-            // setInterval(() => Livewire.dispatch('chartManhoursUpdated'), 1000);
-
-            // --- INI ADALAH GRAFIK MANHOURS GABUNGAN ---
-
-            // 1. Inisialisasi ECharts di luar event listener
-            var dom = document.getElementById('manhoursCombinedChart');
-            // Cek untuk menghindari error 'Cannot read properties of null'
-            if (!dom) return;
-
+            setInterval(() => Livewire.dispatch('chartManhoursUpdated'), 1000);
+            const data = @json($combinedChartData);
+            var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
+            var option;
 
-            // 2. Event Listener Livewire untuk menerima data baru
-            document.addEventListener('livewire:initialized', () => {
-
-                // Ganti 'updateCombinedChart' dengan nama event dispatch yang Anda gunakan di komponen Livewire
-                @this.on('updateCombinedChart', (dataJson) => {
-
-                    try {
-                        const data = JSON.parse(dataJson);
-
-                        var option = {
-                            title: {
-                                // ⚠️ Ganti judul dari 'Hazard' menjadi 'Manhours'
-                                text: 'Manhours Bulanan: PT. MSM, PT. TTN & All Contractor',
-                                left: 'center',
-                                top: 5,
-                                textStyle: { fontSize: 14, fontWeight: 'bold' },
-                                subtext: 'Total Manhours per bulan',
-                                subtextStyle: { fontSize: 8 }
-                            },
-                            grid: {
-                                top: 90,
-                                right: 30,
-                                bottom: 50,
-                                left: 50,
-                                containLabel: true
-                            },
-                            tooltip: {
-                                trigger: 'axis',
-                                // Menampilkan nilai total jika menggunakan stacking
-                            },
-                            legend: {
-                                data: ['PT. MSM', 'PT. TTN', 'All Contractor'], // ⚠️ Perbarui Legend
-                                top: 50,
-                                left: 'center',
-                            },
-                            xAxis: {
-                                type: 'category',
-                                data: data.months, // Data Bulan dari Livewire
-                                axisTick: { show: false }
-                            },
-                            yAxis: {
-                                type: 'value',
-                                splitLine: { lineStyle: { type: 'dashed', color: '#ddd' } },
-                            },
-                            series: [
-                                {
-                                    name: 'PT. MSM',
-                                    type: 'line',
-                                    // Hapus 'stack: Total' jika Anda ingin 3 garis terpisah di sumbu Y yang sama
-                                    data: data.msm_manhours
-                                },
-                                {
-                                    name: 'PT. TTN',
-                                    type: 'line',
-                                    // Hapus 'stack: Total'
-                                    data: data.ttn_manhours
-                                },
-                                {
-                                    name: 'All Contractor',
-                                    type: 'line',
-                                    // Garis ini mewakili total keseluruhan contractor
-                                    data: data.all_contractor_manhours,
-                                    lineStyle: {
-                                        width: 4,
-                                        type: 'dashed'
-                                    }
-                                }
-                            ]
-                        };
-
-                        // 3. Set Option ke Chart
-                        myChart.setOption(option);
-
-                    } catch (e) {
-                        console.error("Gagal memperbarui data ECharts:", e);
+            option = {
+                title: {
+                    text: 'Stacked Line'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
                     }
-                });
-            });
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                        name: 'Email',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: 'Union Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: 'Video Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: 'Direct',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [320, 332, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: 'Search Engine',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                    }
+                ]
+            };
 
-            // 4. Resize Chart
-            window.addEventListener('resize', () => {
-                if (myChart) myChart.resize();
-            });
+            option && myChart.setOption(option);
         </script>
     @endpush
-</div>
