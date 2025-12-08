@@ -2,7 +2,7 @@
     @push('scripts')
     <!-- Load ECharts dari CDN -->
     <script type="module">
-        setInterval(() => Livewire.dispatch('chartTrandUpdated'), 1000);
+        setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
         const data = @json($data);
         var dom = document.getElementById('hazardTrend');
         var myChart = echarts.init(dom);
@@ -112,7 +112,7 @@
 
         if (option && typeof option === 'object') {
             myChart.setOption(option);
-            Livewire.on('trandChart', event => {
+            Livewire.on('manhoursChart', event => {
                 let payload_trand = JSON.parse(event);
                 myChart.setOption({
                     xAxis: {

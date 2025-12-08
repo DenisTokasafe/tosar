@@ -17,7 +17,7 @@ class Index extends Component
     {
         $this->loadData();
     }
-    #[On('dateRangeUpdated')]
+    #[On('chartManhoursUpdate')]
     public function updateDateRange($data)
     {
         $this->start_date = $data['start'];
@@ -29,22 +29,22 @@ class Index extends Component
     #[On('chartTrandUpdated')]
     public function loadData()
     {
-        $dataHazard = ModelsHazard::when($this->start_date && $this->end_date, function ($q) {
+        $dataManhours = Manhour::when($this->start_date && $this->end_date, function ($q) {
             $q->dateRange($this->start_date, $this->end_date);
         });
-        $dataHazard->selectRaw('MONTH(tanggal) as month, COUNT(*) as total')
-            ->whereYear('tanggal', Carbon::now()->year)
+        $dataManhours->selectRaw('MONTH(date) as month, COUNT(*) as total')
+            ->whereYear('date', Carbon::now()->year)
             ->groupBy('month')
             ->orderBy('month')
             ->get();
         $data = [
-            'months' => $dataHazard->pluck('month')->map(function ($m) {
+            'months' => $dataManhours->pluck('month')->map(function ($m) {
                 return Carbon::create()->month($m)->format('M');
             })->toArray(),
-            'counts' => $dataHazard->pluck('total')->toArray()
+            'counts' => $dataManhours->where('company', 'PT. MSM')->pluck('total')->toArray()
         ];
         $this->data = json_encode($data);
-        $this->dispatch('trandChart', $this->data);
+        $this->dispatch('manhoursChart', $this->data);
     }
 
     public function render()
