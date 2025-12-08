@@ -79,7 +79,7 @@ class Index extends Component
             'months' => $months,
             'msm'    => $msm,
             'ttn'    => $ttn,
-            'contractor'    => $contractor,
+            'contractor'    => $contractor
         ]);
         $this->dispatch('manhoursChart', $this->data);
     }

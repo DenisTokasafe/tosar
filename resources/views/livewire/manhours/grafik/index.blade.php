@@ -16,7 +16,7 @@
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['PT. MSM', 'PT. TTN','Contractor']
+                    data: ['PT. MSM', 'PT. TTN']
                 },
                 grid: {
                     left: '3%',
@@ -38,22 +38,16 @@
                     type: 'value'
                 },
                 series: [{
-                        name: 'MSM',
+                        name: 'Email',
                         type: 'line',
                         stack: 'Total',
                         data: data.msm
                     },
                     {
-                        name: 'TTN',
+                        name: 'Union Ads',
                         type: 'line',
                         stack: 'Total',
                         data: data.ttn
-                    },
-                    {
-                        name: 'Contractor',
-                        type: 'line',
-                        stack: 'Total',
-                        data: data.contractor
                     }
                 ]
             };
@@ -67,22 +61,16 @@
                             data: payload_trand.months
                         },
                          series: [{
-                        name: 'MSM',
+                        name: 'Email',
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.msm
                     },
                     {
-                        name: 'TTN',
+                        name: 'Union Ads',
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.ttn
-                    }
-                    {
-                        name: 'Contractor',
-                        type: 'line',
-                        stack: 'Total',
-                        data: payload_trand.contractor
                     }
                 ]
 
