@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+
 class Manhour extends Model
 {
     protected $table = 'manhours';
@@ -21,26 +22,28 @@ class Manhour extends Model
     public function scopeDateRange(Builder $query, $startDate = null, $endDate = null): Builder
     {
         // Jika startDate ada, tambahkan kondisi >=
-        if ($startDate) {
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$this->start_date, $this->end_date]);
+        } elseif ($startDate) {
             $query->where('date', '>=', $startDate);
-        }
-
-        // Jika endDate ada, tambahkan kondisi <=
-        if ($endDate) {
+        } elseif ($endDate) {
             $query->where('date', '<=', $endDate);
-        }
+        } else {
+            // Jika tidak ada filter tanggal, ambil data dari awal tahun berjalan
+            $query->whereYear('date', now()->year);
+        };
 
         return $query;
     }
-     public function scopeSearch(Builder $query, $search = null): Builder
-     {
+    public function scopeSearch(Builder $query, $search = null): Builder
+    {
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('department', 'like', '%' . $search . '%')
-                  ->orWhere('company', 'like', '%' . $search . '%')
-                  ->orWhere('company_category', 'like', '%' . $search . '%');
+                    ->orWhere('company', 'like', '%' . $search . '%')
+                    ->orWhere('company_category', 'like', '%' . $search . '%');
             });
         }
         return $query;
-     }
+    }
 }
