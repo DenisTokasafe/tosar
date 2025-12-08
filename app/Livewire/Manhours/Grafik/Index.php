@@ -15,6 +15,11 @@ class Index extends Component
 
     public function mount()
     {
+        // Default filter tanggal
+        if (!$this->start_date || !$this->end_date) {
+            $this->start_date = Carbon::now()->startOfYear()->format('Y/m/d');
+            $this->end_date = Carbon::now()->endOfYear()->format('Y/m/d');
+        }
         $this->loadData();
     }
     #[On('chartManhoursUpdate')]
