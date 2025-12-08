@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Manhour;
-use Psy\CodeCleaner\AssignThisVariablePass;
 
 class Index extends Component
 {
@@ -19,8 +18,8 @@ class Index extends Component
     {
         // Default filter tanggal
         if (!$this->start_date || !$this->end_date) {
-           $this->start_date = Carbon::now()->startOfYear()->format('Y/m/d');
-            $this->end_date = Carbon::now()->endOfYear()->format('Y/m/d');
+            $this->start_date = Carbon::now()->startOfYear()->toDateString();
+            $this->end_date = Carbon::now()->endOfYear()->toDateString();
         }
         $this->loadData();
     }
