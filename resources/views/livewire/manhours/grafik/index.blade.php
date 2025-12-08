@@ -1,105 +1,131 @@
-<div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        <div wire:ignore id="grafik-manpower" style="height: 320px">
-            Grafik Manpower Placeholder
-        </div>
-
-        {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
-        <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
-    </div>
-
+    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     @push('scripts')
-        <script type="module">
-            // --- INISIALISASI GRAFIK MANHOURS GABUNGAN (LINE CHART) ---
-            var combinedChartDom = document.getElementById('grafik-manhours');
-            var combinedChart = echarts.init(combinedChartDom);
-            var combinedOption;
+    <!-- Load ECharts dari CDN -->
+    <script type="module">
+        setInterval(() => Livewire.dispatch('chartTrandUpdated'), 1000);
+        const data = @json($data);
+        var dom = document.getElementById('hazardTrend');
+        var myChart = echarts.init(dom);
+        var option;
 
-            document.addEventListener('livewire:initialized', () => {
-                @this.on('updateCombinedChart', (dataJson) => {
-                    try {
-                        const data = JSON.parse(dataJson);
-
-                        combinedOption = {
-                            title: {
-                                text: 'Manhours Bulanan: PT. MSM vs PT. TTN vs All Contractor',
-                                left: 'center',
-                                textStyle: { fontSize: 14 }
-                            },
-                            tooltip: {
-                                trigger: 'axis',
-                                axisPointer: { type: 'shadow' }
-                            },
-                            legend: {
-                                data: ['PT. MSM', 'PT. TTN', 'All Contractor'],
-                                bottom: '0%'
-                            },
-                            grid: {
-                                left: '3%',
-                                right: '4%',
-                                bottom: '15%',
-                                containLabel: true
-                            },
-                            toolbox: {
-                                feature: {
-                                    saveAsImage: {}
-                                }
-                            },
-                            xAxis: {
-                                type: 'category',
-                                boundaryGap: false,
-                                data: data.months // Data Bulan
-                            },
-                            yAxis: {
-                                type: 'value',
-                                name: 'Manhours',
-                                nameLocation: 'middle',
-                                nameGap: 30
-                            },
-                            series: [
-                                {
-                                    name: 'PT. MSM',
-                                    type: 'line',
-                                    stack: 'Total', // Optional: Stacked line
-                                    data: data.msm_manhours
-                                },
-                                {
-                                    name: 'PT. TTN',
-                                    type: 'line',
-                                    stack: 'Total', // Optional: Stacked line
-                                    data: data.ttn_manhours
-                                },
-                                {
-                                    name: 'All Contractor',
-                                    type: 'line',
-                                    // Tidak di-stack, agar garis ini menunjukkan total sesungguhnya
-                                    // Stack: 'Total',
-                                    data: data.all_contractor_manhours,
-                                    lineStyle: {
-                                        width: 4, // Garis lebih tebal untuk total
-                                        type: 'dashed' // Garis putus-putus untuk total
-                                    }
-                                }
-                            ]
-                        };
-
-                        combinedChart.setOption(combinedOption);
-
-                    } catch (e) {
-                        console.error("Gagal memproses data Combined chart:", e);
+        option = {
+            title: {
+                text: 'Jumlah Laporan Hazard per Bulan'
+                , left: 'center'
+                , top: 5
+                , textStyle: {
+                    fontFamily: 'Microsoft YaHei'
+                    , fontSize: 14
+                    , fontWeight: 'bold'
+                    , color: '#333'
+                }
+                , subtext: 'Data laporan berdasarkan bulan berjalan'
+                , subtextStyle: {
+                    fontFamily: 'Microsoft YaHei'
+                    , fontSize: 8
+                    , color: '#666'
+                }
+            }
+            , textStyle: {
+                fontFamily: 'Microsoft YaHei'
+                , fontSize: 12
+                , fontStyle: 'normal'
+                , fontWeight: 'normal'
+            , }
+            , grid: {
+                top: 90
+                , right: 30
+                , bottom: 50
+                , left: 50
+                , containLabel: true
+            }
+            , tooltip: {
+                trigger: 'axis'
+                , backgroundColor: 'rgba(50,50,50,0.8)'
+                , borderWidth: 0
+                , textStyle: {
+                    color: '#fff'
+                    , fontFamily: 'Microsoft YaHei'
+                    , fontSize: 12
+                , }
+            }
+            , legend: {
+                data: ['Jumlah Laporan']
+                , top: 50
+                , left: 'center'
+                , textStyle: {
+                    fontFamily: 'Microsoft YaHei'
+                    , fontSize: 12
+                    , fontWeight: 'normal'
+                }
+            }
+            , xAxis: {
+                type: 'category'
+                , data: data.months
+                , axisLine: {
+                    lineStyle: {
+                        color: '#888'
                     }
+                }
+                , axisLabel: {
+                    fontFamily: 'Microsoft YaHei'
+                    , fontSize: 12
+                }
+                , axisTick: {
+                    show: false
+                }
+            }
+            , yAxis: {
+                type: 'value'
+                , axisLine: {
+                    lineStyle: {
+                        color: '#888'
+                    }
+                }
+                , splitLine: {
+                    lineStyle: {
+                        type: 'dashed'
+                        , color: '#ddd'
+                    }
+                }
+                , axisLabel: {
+                    fontFamily: 'Microsoft YaHei'
+                    , fontSize: 12
+                }
+            }
+            , series: [{
+                name: 'Jumlah Laporan'
+                , data: data.counts
+                , type: 'line'
+                , smooth: false
+                , lineStyle: {
+                    width: 3
+                }
+                , symbol: 'circle'
+                , symbolSize: 6
+                , itemStyle: {
+                    color: '#3B82F6'
+                }
+
+            }]
+        };
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+            Livewire.on('trandChart', event => {
+                let payload_trand = JSON.parse(event);
+                myChart.setOption({
+                    xAxis: {
+                        data: payload_trand.months
+                    }
+                    , series: [{
+                        data: payload_trand.counts
+                    }]
+
                 });
             });
+        }
+        window.addEventListener('resize', myChart.resize);
 
-            // --- JANGAN LUPA CODE UNTUK grafik-manpower (jika ada) ---
-
-            // 🛠️ Pastikan grafik responsif
-            window.addEventListener('resize', function () {
-                if (combinedChart) {
-                    combinedChart.resize();
-                }
-                // Resize chart manpower jika ada
-            });
-        </script>
+    </script>
     @endpush
-</div>
