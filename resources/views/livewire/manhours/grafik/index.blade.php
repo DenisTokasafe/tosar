@@ -1,10 +1,17 @@
-    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div wire:ignore id="grafik-manhours" style="height: 320px">
+            Grafik Manpower Placeholder
+        </div>
+
+        {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
+        <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
+    </div>
     @push('scripts')
         <!-- Load ECharts dari CDN -->
         <script type="module">
             setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
             const data = @json($data);
-            var dom = document.getElementById('hazardTrend');
+            var dom = document.getElementById('grafik-manhours');
             var myChart = echarts.init(dom);
             var option;
 
