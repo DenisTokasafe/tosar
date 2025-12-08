@@ -51,10 +51,10 @@ class Index extends Component
             // Pastikan ada dua tanggal yang valid
             if (count($dates) === 2) {
                 // Parse dan format tanggal awal ke YYYY/MM/DD
-                $this->start_date = Carbon::parse(trim($dates[0]))->format('Y/m/d');
+                $this->start_date = Carbon::parse(trim($dates[0]))->format('Y-m-d');
 
                 // Parse dan format tanggal akhir ke YYYY/MM/DD
-                $this->end_date = Carbon::parse(trim($dates[1]))->format('Y/m/d');
+                $this->end_date = Carbon::parse(trim($dates[1]))->format('Y-m-d');
                 $this->dispatch('dateRangeManhours', [
                     'start' => $this->start_date,
                     'end'   => $this->end_date,
