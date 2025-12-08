@@ -18,7 +18,7 @@ class Index extends Component
     {
         // Default filter tanggal
         if (!$this->start_date || !$this->end_date) {
-            $this->start_date = Carbon::now()->startOfYear()->toDateString();
+            $this->start_date = Carbon::now()->startOfYear()->format('Y/m/d');
             $this->end_date = Carbon::now()->endOfYear()->toDateString();
         }
         $this->loadData();
@@ -48,7 +48,7 @@ class Index extends Component
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::create()->month($i)->format('M');
         }
-
+ dd($this->start_date);
         $data = [
             'months' => $months,
             'msm_manhours' => array_values($dataMSM),
