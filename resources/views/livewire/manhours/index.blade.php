@@ -21,15 +21,17 @@
 
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
-        <div class="flex flex-col lg:flex-row gap-2 lg:items-center">
+        <div class="flex flex-col md:flex-row gap-2 md:items-center">
 
             {{-- 1. Input Search (w-60) --}}
-            <div class="w-full ">
+            <div class="w-full">
                 {{-- flux:input sudah ada di sini --}}
-                <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
+                <input type="text" wire:model.live="search"
+                    class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                    placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class=" w-full ">
+            <div class="w-full">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
