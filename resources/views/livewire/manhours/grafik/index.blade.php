@@ -112,21 +112,21 @@
             }]
         };
 
-        // if (option && typeof option === 'object') {
-        //     myChart.setOption(option);
-        //     Livewire.on('trandChart', event => {
-        //         let payload_trand = JSON.parse(event);
-        //         myChart.setOption({
-        //             xAxis: {
-        //                 data: payload_trand.months
-        //             }
-        //             , series: [{
-        //                 data: payload_trand.counts
-        //             }]
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+            Livewire.on('trandChart', event => {
+                let payload_trand = JSON.parse(event);
+                myChart.setOption({
+                    xAxis: {
+                        data: payload_trand.months
+                    }
+                    , series: [{
+                        data: payload_trand.counts
+                    }]
 
-        //         });
-        //     });
-        // }
+                });
+            });
+        }
         window.addEventListener('resize', myChart.resize);
 
     </script>
