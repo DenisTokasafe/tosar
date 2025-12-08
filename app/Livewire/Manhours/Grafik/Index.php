@@ -34,20 +34,43 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
-        $dataManhours = Manhour::dateRange($this->start_date, $this->end_date);
-        $dataManhours->selectRaw('MONTH(date) as month, COUNT(*) as total')
-            ->whereYear('date', Carbon::now()->year)
+        // Ambil semua bulan (Jan - Des)
+        $months = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $months[] = Carbon::create()->month($i)->format('M');
+        }
+
+        // === PT. MSM ===
+        $msmData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company', 'PT. MSM')
+            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
             ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-        $data = [
-            'months' => $dataManhours->pluck('month')->map(function ($m) {
-                return Carbon::create()->month($m)->format('M');
-            })->toArray(),
-            'msm' => $dataManhours->where('company', 'PT. MSM')->pluck('total')->toArray(),
-            'ttn' => $dataManhours->where('company', 'PT. TTN')->pluck('total')->toArray()
-        ];
-        $this->data = json_encode($data);
+            ->pluck('total_manhours', 'month')
+            ->toArray();
+
+        // === PT. TTN ===
+        $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company', 'PT. TTN')
+            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
+            ->groupBy('month')
+            ->pluck('total_manhours', 'month')
+            ->toArray();
+
+        // Format data: pastikan semua bulan ada (0 jika kosong)
+        $msm = [];
+        $ttn = [];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $msm[] = $msmData[$m] ?? 0;
+            $ttn[] = $ttnData[$m] ?? 0;
+        }
+
+        // Data final untuk chart
+        $this->data = json_encode([
+            'months' => $months,
+            'msm'    => $msm,
+            'ttn'    => $ttn,
+        ]);
         $this->dispatch('manhoursChart', $this->data);
     }
 
