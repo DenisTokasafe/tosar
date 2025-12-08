@@ -1,6 +1,6 @@
 <div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        <div wire:ignore id="grafik-contractor" style="height: 320px"></div>
+<div wire:ignore.self id="grafik-manhours" style="height: 320px"></div>
         <div wire:ignore id="grafik-msm-ttn" style="height: 320px"></div>
     </div>
 
