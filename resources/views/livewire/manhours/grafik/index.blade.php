@@ -7,7 +7,7 @@
             var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
             var option;
-            console.log(data);
+            console.log(data[0]);
 
             option = {
                 title: {
