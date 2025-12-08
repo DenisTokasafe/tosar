@@ -29,9 +29,7 @@ class Index extends Component
     #[On('chartTrandUpdated')]
     public function loadData()
     {
-        $dataManhours = Manhour::when($this->start_date && $this->end_date, function ($q) {
-            $q->dateRange($this->start_date, $this->end_date);
-        });
+        $dataManhours = Manhour::dateRange($this->start_date, $this->end_date);
         $dataManhours->selectRaw('MONTH(date) as month, COUNT(*) as total')
             ->whereYear('date', Carbon::now()->year)
             ->groupBy('month')
