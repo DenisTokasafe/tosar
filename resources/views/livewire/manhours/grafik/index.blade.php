@@ -3,7 +3,7 @@
     <!-- Load ECharts dari CDN -->
     <script type="module">
         setInterval(() => Livewire.dispatch('chartTrandUpdated'), 1000);
-        const data = @json($data);
+        const data = @json($combinedChartData);
         var dom = document.getElementById('hazardTrend');
         var myChart = echarts.init(dom);
         var option;
@@ -95,7 +95,7 @@
             }
             , series: [{
                 name: 'Jumlah Laporan'
-                , data: data.counts
+                , data: data.msm_manhours
                 , type: 'line'
                 , smooth: false
                 , lineStyle: {
