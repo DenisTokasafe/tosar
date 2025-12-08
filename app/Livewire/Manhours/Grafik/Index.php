@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Manhour;
+use Psy\CodeCleaner\AssignThisVariablePass;
 
 class Index extends Component
 {
@@ -43,7 +44,7 @@ class Index extends Component
         $dataAllContractor = $this->getMonthlyManhours(null, true); // Parameter kedua menandakan ambil SEMUA contractor
 
         // --- 3. Format Data Akhir ---
-
+ dd($this->start_date);
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::create()->month($i)->format('M');
