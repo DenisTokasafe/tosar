@@ -25,8 +25,13 @@ class Index extends Component
     #[On('dateRangeManhours')]
     public function updateDateRange($data)
     {
-        $this->start_date = $data['start'];
-        $this->end_date   = $data['end'];
+         if (!$data['start'] || !$data['end']) {
+            $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
+            $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
+        }else{
+            $this->start_date = $data['start'];
+            $this->end_date   = $data['end'];
+        }
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
