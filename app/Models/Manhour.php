@@ -24,14 +24,7 @@ class Manhour extends Model
         // Jika startDate ada, tambahkan kondisi >=
         if ($startDate && $endDate) {
             $query->whereBetween('date', [$this->start_date, $this->end_date]);
-        } elseif ($startDate) {
-            $query->where('date', '>=', $startDate);
-        } elseif ($endDate) {
-            $query->where('date', '<=', $endDate);
-        } else {
-            // Jika tidak ada filter tanggal, ambil data dari awal tahun berjalan
-            $query->whereYear('date', now()->year);
-        };
+        }
 
         return $query;
     }
