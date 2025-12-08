@@ -46,23 +46,23 @@ class Index extends Component
         $msmData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. MSM')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')->get()
-            ->pluck('total_manhours')
+            ->groupBy('month')
+            ->pluck('total_manhours', 'month')
             ->toArray();
 
         // === PT. TTN ===
         $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. TTN')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')->get()
-            ->pluck('total_manhours')
+            ->groupBy('month')
+            ->pluck('total_manhours', 'month')
             ->toArray();
         // === CONTRACTOR ===
         $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company_category', 'CONTRACTOR')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')->get()
-            ->pluck('total_manhours')
+            ->groupBy('month')
+            ->pluck('total_manhours', 'month')
             ->toArray();
 
         // Format data: pastikan semua bulan ada (0 jika kosong)
@@ -79,9 +79,9 @@ class Index extends Component
         // Data final untuk chart
         $this->data = json_encode([
             'months' => $months,
-            'msm'    => $msmData,
-            'ttn'    => $ttnData,
-            'contractor'    => $contractorData
+            'msm'    => $msm,
+            'ttn'    => $ttn,
+            'contractor'    => $contractor
         ]);
         $this->dispatch('manhoursChart', $this->data);
     }
