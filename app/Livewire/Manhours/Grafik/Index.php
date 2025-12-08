@@ -28,62 +28,54 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
-        /// Ambil bulan unique berdasarkan tanggal dan rentang filter
-        $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
-            ->selectRaw('DISTINCT MONTH(date) as month')
-            ->orderBy('month')
-            ->pluck('month')
-            ->toArray();
+        /$dataManhours = Manhour::query()
+        ->whereRaw(
+            "STR_TO_DATE(`date`, '%Y/%m/%d') BETWEEN
+             STR_TO_DATE(?, '%Y/%m/%d') AND STR_TO_DATE(?, '%Y/%m/%d')",
+            [$this->start_date, $this->end_date]
+        )
+        ->selectRaw('
+            MONTH(STR_TO_DATE(`date`, "%Y/%m/%d")) as month,
+            company,
+            COUNT(*) as total
+        ')
+        ->groupBy('month', 'company')
+        ->orderBy('month')
+        ->get();
 
-        // Format bulan ke teks (Jan, Feb, Mar)
-        $months = array_map(
-            fn($m) =>
-            Carbon::create()->month($m)->format('M'),
-            $monthsRaw
-        );
+    // ---- Ambil data per company ----
+    $msmData = $dataManhours->where('company', 'PT. MSM')->pluck('total','month')->toArray();
+    $ttnData = $dataManhours->where('company', 'PT. TTN')->pluck('total','month')->toArray();
+    $contractorData = $dataManhours->where('company', 'Contractor')->pluck('total','month')->toArray();
 
-        // === PT. MSM ===
-        $msmData = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company', 'PT. MSM')
-            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')
-            ->pluck('total_manhours', 'month')
-            ->toArray();
+    // ---- Ambil bulan dari database ----
+    $monthsRaw = $dataManhours->pluck('month')->unique()->sort()->values()->toArray();
 
-        // === PT. TTN ===
-        $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company', 'PT. TTN')
-            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')
-            ->pluck('total_manhours', 'month')
-            ->toArray();
-        // === CONTRACTOR ===
-        $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company_category', 'CONTRACTOR')
-            ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
-            ->groupBy('month')
-            ->pluck('total_manhours', 'month')
-            ->toArray();
+    // ---- Konversi ke nama bulan (Jan, Feb, ...) ----
+    $months = collect($monthsRaw)
+        ->map(fn($m) => Carbon::create()->month($m)->format('M'))
+        ->toArray();
 
-        // Format data: pastikan semua bulan ada (0 jika kosong)
-        $msm = [];
-        $ttn = [];
-        $contractor = [];
+    // ---- Isi data berdasarkan bulan dari database ----
+    $msm = [];
+    $ttn = [];
+    $contractor = [];
 
-        foreach ($monthsRaw as $m) {
-            $msm[]        = $msmData[$m] ?? 0;
-            $ttn[]        = $ttnData[$m] ?? 0;
-            $contractor[] = $contractorData[$m] ?? 0;
-        }
+    foreach ($monthsRaw as $m) {
+        $msm[]        = $msmData[$m] ?? 0;
+        $ttn[]        = $ttnData[$m] ?? 0;
+        $contractor[] = $contractorData[$m] ?? 0;
+    }
 
-        // Data final untuk chart
-        $this->data = json_encode([
-            'months' => $months,
-            'msm'    => $msm,
-            'ttn'    => $ttn,
-            'contractor'    => $contractor
-        ]);
-        $this->dispatch('manhoursChart', $this->data);
+    // ---- Kirim ke Chart ----
+    $this->data = json_encode([
+        'months'     => $months,
+        'msm'        => $msm,
+        'ttn'        => $ttn,
+        'contractor' => $contractor,
+    ]);
+
+    $this->dispatch('manhoursChart', $this->data);
     }
 
     public function render()
