@@ -32,7 +32,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    data: data.months
                 },
                 yAxis: {
                     type: 'value'
