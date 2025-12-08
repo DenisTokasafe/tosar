@@ -67,19 +67,19 @@
                             data: payload_trand.months
                         },
                          series: [{
-                        name: 'Email',
+                        name: 'MSM',
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.msm
                     },
                     {
-                        name: 'Union Ads',
+                        name: 'TTN',
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.ttn
                     },
                     {
-                        name: 'Union Ads',
+                        name: 'Contractor',
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.contractor
