@@ -70,9 +70,9 @@ class Index extends Component
         $ttn = [];
         $contractor = [];
 
-        for ($m = 1; $m <= 12; $m++) {
-            $msm[] = $msmData[$m] ?? 0;
-            $ttn[] = $ttnData[$m] ?? 0;
+        foreach ($monthsRaw as $m) {
+            $msm[]        = $msmData[$m] ?? 0;
+            $ttn[]        = $ttnData[$m] ?? 0;
             $contractor[] = $contractorData[$m] ?? 0;
         }
 
