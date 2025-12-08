@@ -10,118 +10,62 @@
 
             option = {
                 title: {
-                    text: 'Jumlah Laporan Hazard per Bulan',
-                    left: 'center',
-                    top: 5,
-                    textStyle: {
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        color: '#333'
-                    },
-                    subtext: 'Data laporan berdasarkan bulan berjalan',
-                    subtextStyle: {
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 8,
-                        color: '#666'
-                    }
-                },
-                textStyle: {
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 12,
-                    fontStyle: 'normal',
-                    fontWeight: 'normal',
-                },
-                grid: {
-                    top: 90,
-                    right: 30,
-                    bottom: 50,
-                    left: 50,
-                    containLabel: true
+                    text: 'Stacked Line'
                 },
                 tooltip: {
-                    trigger: 'axis',
-                    backgroundColor: 'rgba(50,50,50,0.8)',
-                    borderWidth: 0,
-                    textStyle: {
-                        color: '#fff',
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 12,
-                    }
+                    trigger: 'axis'
                 },
                 legend: {
-                    data: ['Jumlah Laporan'],
-                    top: 50,
-                    left: 'center',
-                    textStyle: {
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 12,
-                        fontWeight: 'normal'
+                    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
                     }
                 },
                 xAxis: {
                     type: 'category',
-                    data: data.months,
-                    axisLine: {
-                        lineStyle: {
-                            color: '#888'
-                        }
-                    },
-                    axisLabel: {
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 12
-                    },
-                    axisTick: {
-                        show: false
-                    }
+                    boundaryGap: false,
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 },
                 yAxis: {
-                    type: 'value',
-                    axisLine: {
-                        lineStyle: {
-                            color: '#888'
-                        }
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            type: 'dashed',
-                            color: '#ddd'
-                        }
-                    },
-                    axisLabel: {
-                        fontFamily: 'Microsoft YaHei',
-                        fontSize: 12
-                    }
+                    type: 'value'
                 },
                 series: [{
-                        name: 'Jumlah Laporan',
-                        data: data.counts,
+                        name: 'Email',
                         type: 'line',
-                        smooth: false,
-                        lineStyle: {
-                            width: 3
-                        },
-                        symbol: 'circle',
-                        symbolSize: 6,
-                        itemStyle: {
-                            color: '#3B82F6'
-                        }
-
+                        stack: 'Total',
+                        data: [120, 132, 101, 134, 90, 230, 210]
                     },
                     {
-                        name: 'Jumlah Laporan',
-                        data: data.counts,
+                        name: 'Union Ads',
                         type: 'line',
-                        smooth: false,
-                        lineStyle: {
-                            width: 3
-                        },
-                        symbol: 'circle',
-                        symbolSize: 6,
-                        itemStyle: {
-                            color: '#3B82F6'
-                        }
-
+                        stack: 'Total',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: 'Video Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: 'Direct',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [320, 332, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: 'Search Engine',
+                        type: 'line',
+                        stack: 'Total',
+                        data: [820, 932, 901, 934, 1290, 1330, 1320]
                     }
                 ]
             };
