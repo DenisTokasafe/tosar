@@ -44,10 +44,16 @@
                         data: data.msm
                     },
                     {
-                        name: 'Union Ads',
+                        name: 'Email',
                         type: 'line',
                         stack: 'Total',
                         data: data.ttn
+                    },
+                    {
+                        name: 'Union Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: data.contractor
                     }
                 ]
             };
@@ -71,6 +77,12 @@
                         type: 'line',
                         stack: 'Total',
                         data: payload_trand.ttn
+                    },
+                    {
+                        name: 'Union Ads',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload_trand.contractor
                     }
                 ]
 
