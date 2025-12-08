@@ -54,7 +54,7 @@ class Index extends Component
             'ttn_manhours' => array_values($dataTTN),
             'all_contractor_manhours' => array_values($dataAllContractor),
         ];
-        dd($data);
+
         $this->combinedChartData = json_encode($data);
 
         // Dispatch event untuk update grafik
