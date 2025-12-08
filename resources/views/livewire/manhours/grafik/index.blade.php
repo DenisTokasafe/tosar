@@ -1,131 +1,83 @@
-    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
+<div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div wire:ignore id="grafik-contractor" style="height: 320px"></div>
+        <div wire:ignore id="grafik-msm-ttn" style="height: 320px"></div>
+    </div>
+
     @push('scripts')
-    <!-- Load ECharts dari CDN -->
-    <script type="module">
-        setInterval(() => Livewire.dispatch('chartTrandUpdated'), 1000);
-        const data = @json($data);
-        var dom = document.getElementById('hazardTrend');
-        var myChart = echarts.init(dom);
-        var option;
+        <script type="module">
+            // --- INI ADALAH GRAFIK 1: TOTAL MANHOURS CONTRACTOR ---
+            var contractorChartDom = document.getElementById('grafik-contractor');
+            var contractorChart = echarts.init(contractorChartDom);
+            var contractorOption;
 
-        option = {
-            title: {
-                text: 'Jumlah Laporan Hazard per Bulan'
-                , left: 'center'
-                , top: 5
-                , textStyle: {
-                    fontFamily: 'Microsoft YaHei'
-                    , fontSize: 14
-                    , fontWeight: 'bold'
-                    , color: '#333'
-                }
-                , subtext: 'Data laporan berdasarkan bulan berjalan'
-                , subtextStyle: {
-                    fontFamily: 'Microsoft YaHei'
-                    , fontSize: 8
-                    , color: '#666'
-                }
-            }
-            , textStyle: {
-                fontFamily: 'Microsoft YaHei'
-                , fontSize: 12
-                , fontStyle: 'normal'
-                , fontWeight: 'normal'
-            , }
-            , grid: {
-                top: 90
-                , right: 30
-                , bottom: 50
-                , left: 50
-                , containLabel: true
-            }
-            , tooltip: {
-                trigger: 'axis'
-                , backgroundColor: 'rgba(50,50,50,0.8)'
-                , borderWidth: 0
-                , textStyle: {
-                    color: '#fff'
-                    , fontFamily: 'Microsoft YaHei'
-                    , fontSize: 12
-                , }
-            }
-            , legend: {
-                data: ['Jumlah Laporan']
-                , top: 50
-                , left: 'center'
-                , textStyle: {
-                    fontFamily: 'Microsoft YaHei'
-                    , fontSize: 12
-                    , fontWeight: 'normal'
-                }
-            }
-            , xAxis: {
-                type: 'category'
-                , data: data.months
-                , axisLine: {
-                    lineStyle: {
-                        color: '#888'
-                    }
-                }
-                , axisLabel: {
-                    fontFamily: 'Microsoft YaHei'
-                    , fontSize: 12
-                }
-                , axisTick: {
-                    show: false
-                }
-            }
-            , yAxis: {
-                type: 'value'
-                , axisLine: {
-                    lineStyle: {
-                        color: '#888'
-                    }
-                }
-                , splitLine: {
-                    lineStyle: {
-                        type: 'dashed'
-                        , color: '#ddd'
-                    }
-                }
-                , axisLabel: {
-                    fontFamily: 'Microsoft YaHei'
-                    , fontSize: 12
-                }
-            }
-            , series: [{
-                name: 'Jumlah Laporan'
-                , data: data.counts
-                , type: 'line'
-                , smooth: false
-                , lineStyle: {
-                    width: 3
-                }
-                , symbol: 'circle'
-                , symbolSize: 6
-                , itemStyle: {
-                    color: '#3B82F6'
-                }
+            document.addEventListener('livewire:initialized', () => {
+                @this.on('updateContractorChart', (dataJson) => {
+                    try {
+                        const data = JSON.parse(dataJson);
 
-            }]
-        };
+                        contractorOption = {
+                            title: { text: 'Total Manhours ALL Contractor', left: 'center' },
+                            tooltip: { trigger: 'axis' },
+                            legend: { data: ['Total Manhours'], bottom: '0%' },
+                            grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                            xAxis: { type: 'category', data: data.months },
+                            yAxis: { type: 'value' },
+                            series: [{
+                                name: 'Total Manhours',
+                                type: 'bar',
+                                data: data.manhours
+                            }]
+                        };
 
-        if (option && typeof option === 'object') {
-            myChart.setOption(option);
-            Livewire.on('trandChart', event => {
-                let payload_trand = JSON.parse(event);
-                myChart.setOption({
-                    xAxis: {
-                        data: payload_trand.months
-                    }
-                    , series: [{
-                        data: payload_trand.counts
-                    }]
-
+                        contractorChart.setOption(contractorOption);
+                    } catch (e) { console.error("Gagal memproses data Contractor chart:", e); }
                 });
             });
-        }
-        window.addEventListener('resize', myChart.resize);
 
-    </script>
+            // --- INI ADALAH GRAFIK 2: MANHOURS PT. MSM & PT. TTN ---
+            var msmTtnChartDom = document.getElementById('grafik-msm-ttn');
+            var msmTtnChart = echarts.init(msmTtnChartDom);
+            var msmTtnOption;
+
+            document.addEventListener('livewire:initialized', () => {
+                @this.on('updateMSMTTNChart', (dataJson) => {
+                    try {
+                        const data = JSON.parse(dataJson);
+
+                        msmTtnOption = {
+                            title: { text: 'Manhours PT. MSM vs PT. TTN', left: 'center' },
+                            tooltip: { trigger: 'axis' },
+                            legend: { data: ['PT. MSM', 'PT. TTN'], bottom: '0%' },
+                            grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                            xAxis: { type: 'category', boundaryGap: false, data: data.months },
+                            yAxis: { type: 'value' },
+                            series: [
+                                {
+                                    name: 'PT. MSM',
+                                    type: 'line',
+                                    stack: 'Total',
+                                    data: data.ptmsm
+                                },
+                                {
+                                    name: 'PT. TTN',
+                                    type: 'line',
+                                    stack: 'Total',
+                                    data: data.ptttn
+                                }
+                            ]
+                        };
+
+                        msmTtnChart.setOption(msmTtnOption);
+                    } catch (e) { console.error("Gagal memproses data MSM/TTN chart:", e); }
+                });
+            });
+
+            // Resize Observer (Penting untuk Livewire dan ECharts)
+            window.addEventListener('resize', function () {
+                if (contractorChart) contractorChart.resize();
+                if (msmTtnChart) msmTtnChart.resize();
+            });
+        </script>
     @endpush
+</div>
