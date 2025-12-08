@@ -10,7 +10,7 @@ use App\Models\Manhour;
 class Index extends Component
 {
     // Properti untuk menyimpan data yang dikirim ke ECharts
-    public $combinedChartData = '[]';
+    public $combinedChartData;
     public $start_date = null;
     public $end_date = null;
 
