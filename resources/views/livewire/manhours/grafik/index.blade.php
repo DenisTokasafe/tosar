@@ -4,6 +4,8 @@
         <script type="module">
             setInterval(() => Livewire.dispatch('chartManhoursUpdated'), 1000);
             const data = @json($combinedChartData);
+            console.log(data);
+
             var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
             var option;
