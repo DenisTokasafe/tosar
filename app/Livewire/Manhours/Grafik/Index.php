@@ -38,7 +38,7 @@ class Index extends Component
         // --- 1. Ambil Data Manhours Perusahaan (PT. MSM & PT. TTN) ---
         $dataMSM = $this->getMonthlyManhours('PT. MSM');
         $dataTTN = $this->getMonthlyManhours('PT. TTN');
-         dd(d$this->start_date);
+         dd($this->start_date);
 
         // --- 2. Ambil Data Total SELURUH Contractor ---
         $dataAllContractor = $this->getMonthlyManhours(null, true); // Parameter kedua menandakan ambil SEMUA contractor
