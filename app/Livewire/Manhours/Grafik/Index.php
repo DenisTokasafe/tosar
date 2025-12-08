@@ -84,9 +84,7 @@ class Index extends Component
 
         // Data final untuk chart
         $this->data = json_encode([
-            'months' => $contractorData->pluck('month')->map(function ($m) {
-                return Carbon::create()->month($m)->format('M');
-            })->toArray(),
+            'months' => $months,
             'msm'    => $msm,
             'ttn'    => $ttn,
             'contractor'    => $contractor
