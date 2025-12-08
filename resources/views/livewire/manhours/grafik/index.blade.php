@@ -3,8 +3,8 @@
         <!-- Load ECharts dari CDN -->
         <script type="module">
             setInterval(() => Livewire.dispatch('chartManhoursUpdated'), 1000);
-            const data = @json($data);
-            var dom = document.getElementById('combinedChartData');
+            const data = @json($combinedChartData);
+            var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
             var option;
 
