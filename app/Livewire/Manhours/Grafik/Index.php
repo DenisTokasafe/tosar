@@ -7,7 +7,7 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Manhour;
 
-class ManhoursChart extends Component
+class Index extends Component
 {
     // Properti untuk menyimpan data yang dikirim ke ECharts
     public $combinedChartData = '[]';
