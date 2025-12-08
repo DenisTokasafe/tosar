@@ -53,7 +53,7 @@
                         name: 'Contractor',
                         type: 'line',
                         stack: 'Total',
-                        data: data.ttn
+                        data: data.contractor
                     }
                 ]
             };
