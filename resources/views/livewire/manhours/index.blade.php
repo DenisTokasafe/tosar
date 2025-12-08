@@ -294,8 +294,7 @@
                         </div>
                     </div>
                 </flux:modal>
+
+                 @livewire('manhours.grafik.index')
             </x-manhours.layout>
-
-
-
         </section>
