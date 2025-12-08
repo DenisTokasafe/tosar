@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
 class Manhour extends Model
 {
     protected $table = 'manhours';
@@ -20,32 +18,19 @@ class Manhour extends Model
         'manpower',
     ];
 
-       public function scopeDateRange(Builder $query, string $startDate, string $endDate): void
+    public function scopeDateRange(Builder $query, $startDate = null, $endDate = null): Builder
     {
-        // Jika tidak ada tanggal yang dipilih, jangan terapkan filter
-        if (is_null($startDate) && is_null($endDate)) {
-            return;
+        // Jika startDate ada, tambahkan kondisi >=
+        if ($startDate) {
+            $query->where('date', '>=', $startDate);
         }
 
-        // Filter jika hanya tanggal awal yang ada
-        if (!is_null($startDate) && is_null($endDate)) {
-            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
-            $query->where('date', '===', $startDateFormatted);
-            return;
+        // Jika endDate ada, tambahkan kondisi <=
+        if ($endDate) {
+            $query->where('date', '<=', $endDate);
         }
 
-        // Filter jika hanya tanggal akhir yang ada
-        if (is_null($startDate) && !is_null($endDate)) {
-            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
-            $query->where('date', '<=', $endDateFormatted);
-            return;
-        }
-
-        // Filter jika kedua tanggal ada (rentang penuh)
-        $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
-        $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
-
-        $query->whereBetween('date', [$startDateFormatted, $endDateFormatted]);
+        return $query;
     }
      public function scopeSearch(Builder $query, $search = null): Builder
      {
