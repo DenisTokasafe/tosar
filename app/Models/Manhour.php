@@ -30,14 +30,14 @@ class Manhour extends Model
         // Filter jika hanya tanggal awal yang ada
         if (!is_null($startDate) && is_null($endDate)) {
             $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
-            $query->where('tanggal', '===', $startDateFormatted);
+            $query->where('date', '===', $startDateFormatted);
             return;
         }
 
         // Filter jika hanya tanggal akhir yang ada
         if (is_null($startDate) && !is_null($endDate)) {
             $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
-            $query->where('tanggal', '<=', $endDateFormatted);
+            $query->where('date', '<=', $endDateFormatted);
             return;
         }
 
@@ -45,7 +45,7 @@ class Manhour extends Model
         $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
         $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
 
-        $query->whereBetween('tanggal', [$startDateFormatted, $endDateFormatted]);
+        $query->whereBetween('date', [$startDateFormatted, $endDateFormatted]);
     }
      public function scopeSearch(Builder $query, $search = null): Builder
      {
