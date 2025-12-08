@@ -1,6 +1,6 @@
 <div>
     <!-- Container Grafik -->
-    <div id="combinedChart" style="height: 450px;"></div>
+    <div wire:ignore id="combinedChart" style="height: 450px;"></div>
 
     <script>
         document.addEventListener("livewire:init", () => {
