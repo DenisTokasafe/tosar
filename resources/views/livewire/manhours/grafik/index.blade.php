@@ -1,82 +1,104 @@
 <div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-<div wire:ignore.self id="grafik-manhours" style="height: 320px"></div>
-        <div wire:ignore id="grafik-msm-ttn" style="height: 320px"></div>
+        <div wire:ignore id="grafik-manpower" style="height: 320px">
+            Grafik Manpower Placeholder
+        </div>
+
+        {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
+        <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     </div>
 
     @push('scripts')
         <script type="module">
-            // --- INI ADALAH GRAFIK 1: TOTAL MANHOURS CONTRACTOR ---
-            var contractorChartDom = document.getElementById('grafik-contractor');
-            var contractorChart = echarts.init(contractorChartDom);
-            var contractorOption;
+            // --- INISIALISASI GRAFIK MANHOURS GABUNGAN (LINE CHART) ---
+            var combinedChartDom = document.getElementById('grafik-manhours');
+            var combinedChart = echarts.init(combinedChartDom);
+            var combinedOption;
 
             document.addEventListener('livewire:initialized', () => {
-                @this.on('updateContractorChart', (dataJson) => {
+                @this.on('updateCombinedChart', (dataJson) => {
                     try {
                         const data = JSON.parse(dataJson);
 
-                        contractorOption = {
-                            title: { text: 'Total Manhours ALL Contractor', left: 'center' },
-                            tooltip: { trigger: 'axis' },
-                            legend: { data: ['Total Manhours'], bottom: '0%' },
-                            grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
-                            xAxis: { type: 'category', data: data.months },
-                            yAxis: { type: 'value' },
-                            series: [{
-                                name: 'Total Manhours',
-                                type: 'bar',
-                                data: data.manhours
-                            }]
-                        };
-
-                        contractorChart.setOption(contractorOption);
-                    } catch (e) { console.error("Gagal memproses data Contractor chart:", e); }
-                });
-            });
-
-            // --- INI ADALAH GRAFIK 2: MANHOURS PT. MSM & PT. TTN ---
-            var msmTtnChartDom = document.getElementById('grafik-msm-ttn');
-            var msmTtnChart = echarts.init(msmTtnChartDom);
-            var msmTtnOption;
-
-            document.addEventListener('livewire:initialized', () => {
-                @this.on('updateMSMTTNChart', (dataJson) => {
-                    try {
-                        const data = JSON.parse(dataJson);
-
-                        msmTtnOption = {
-                            title: { text: 'Manhours PT. MSM vs PT. TTN', left: 'center' },
-                            tooltip: { trigger: 'axis' },
-                            legend: { data: ['PT. MSM', 'PT. TTN'], bottom: '0%' },
-                            grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
-                            xAxis: { type: 'category', boundaryGap: false, data: data.months },
-                            yAxis: { type: 'value' },
+                        combinedOption = {
+                            title: {
+                                text: 'Manhours Bulanan: PT. MSM vs PT. TTN vs All Contractor',
+                                left: 'center',
+                                textStyle: { fontSize: 14 }
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: { type: 'shadow' }
+                            },
+                            legend: {
+                                data: ['PT. MSM', 'PT. TTN', 'All Contractor'],
+                                bottom: '0%'
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '15%',
+                                containLabel: true
+                            },
+                            toolbox: {
+                                feature: {
+                                    saveAsImage: {}
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: data.months // Data Bulan
+                            },
+                            yAxis: {
+                                type: 'value',
+                                name: 'Manhours',
+                                nameLocation: 'middle',
+                                nameGap: 30
+                            },
                             series: [
                                 {
                                     name: 'PT. MSM',
                                     type: 'line',
-                                    stack: 'Total',
-                                    data: data.ptmsm
+                                    stack: 'Total', // Optional: Stacked line
+                                    data: data.msm_manhours
                                 },
                                 {
                                     name: 'PT. TTN',
                                     type: 'line',
-                                    stack: 'Total',
-                                    data: data.ptttn
+                                    stack: 'Total', // Optional: Stacked line
+                                    data: data.ttn_manhours
+                                },
+                                {
+                                    name: 'All Contractor',
+                                    type: 'line',
+                                    // Tidak di-stack, agar garis ini menunjukkan total sesungguhnya
+                                    // Stack: 'Total',
+                                    data: data.all_contractor_manhours,
+                                    lineStyle: {
+                                        width: 4, // Garis lebih tebal untuk total
+                                        type: 'dashed' // Garis putus-putus untuk total
+                                    }
                                 }
                             ]
                         };
 
-                        msmTtnChart.setOption(msmTtnOption);
-                    } catch (e) { console.error("Gagal memproses data MSM/TTN chart:", e); }
+                        combinedChart.setOption(combinedOption);
+
+                    } catch (e) {
+                        console.error("Gagal memproses data Combined chart:", e);
+                    }
                 });
             });
 
-            // Resize Observer (Penting untuk Livewire dan ECharts)
+            // --- JANGAN LUPA CODE UNTUK grafik-manpower (jika ada) ---
+
+            // 🛠️ Pastikan grafik responsif
             window.addEventListener('resize', function () {
-                if (contractorChart) contractorChart.resize();
-                if (msmTtnChart) msmTtnChart.resize();
+                if (combinedChart) {
+                    combinedChart.resize();
+                }
+                // Resize chart manpower jika ada
             });
         </script>
     @endpush
