@@ -24,12 +24,12 @@
         <div class="flex flex-col lg:flex-row gap-2 lg:items-center">
 
             {{-- 1. Input Search (w-60) --}}
-            <div class="w-full lg:w-60">
+            <div class="w-full ">
                 {{-- flux:input sudah ada di sini --}}
-                <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
+                <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class=" w-full lg:w-64">
+            <div class=" w-full s">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
@@ -54,7 +54,7 @@
 
                     <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
                         placeholder="Pilih Rentang Tanggal"
-                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
+                        class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
                     <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item"
