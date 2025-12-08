@@ -6,7 +6,6 @@
         {{-- Grafik Manhours --}}
         <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     </div>
-
     @push('scripts')
         <script type="module">
             // Pastikan ECharts dimuat sebelum skrip ini
