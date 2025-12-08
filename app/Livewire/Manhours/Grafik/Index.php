@@ -48,7 +48,7 @@ class Index extends Component
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::create()->month($i)->format('M');
         }
- dd($this->start_date);
+
         $data = [
             'months' => $months,
             'msm_manhours' => array_values($dataMSM),
