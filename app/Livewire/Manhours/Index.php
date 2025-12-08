@@ -55,14 +55,14 @@ class Index extends Component
 
                 // Parse dan format tanggal akhir ke YYYY/MM/DD
                 $this->end_date = Carbon::parse(trim($dates[1]))->format('Y/m/d');
-                $this->dispatch('dateRangeUpdated', [
+                $this->dispatch('dateRangeManhours', [
                     'start' => $this->start_date,
                     'end'   => $this->end_date,
                 ]);
             }
         } else {
             $this->reset('start_date', 'end_date');
-            $this->dispatch('dateRangeUpdated', [
+            $this->dispatch('dateRangeManhours', [
                 'start' => null,
                 'end'   => null,
             ]);

@@ -12,21 +12,15 @@ class Index extends Component
     // Properti untuk menyimpan data yang dikirim ke ECharts
     public $manhoursChartData = '[]';
     public $manpowerChartData = '[]'; // Tambahkan ini jika Anda juga ingin memuat data Manpower
-    public $start_date = null;
-    public $end_date = null;
+    public $start_date;
+    public $end_date;
 
     public function mount()
     {
-        // Default filter tanggal
-        if (!$this->start_date || !$this->end_date) {
-            $this->start_date = Carbon::now()->startOfYear()->toDateString();
-            $this->end_date = Carbon::now()->endOfYear()->toDateString();
-        }
         $this->loadManhoursData();
-        // Anda mungkin ingin menambahkan $this->loadManpowerData(); di sini
     }
 
-    #[On('dateRangeUpdated')]
+    #[On('dateRangeManhours')]
     public function updateDateRange($data)
     {
         $this->start_date = $data['start'];
@@ -36,7 +30,7 @@ class Index extends Component
         // $this->loadManpowerData();
     }
 
-    #[On('chartsDataRefresh')]
+    #[On('chartTrandUpdated')]
     public function loadManhoursData()
     {
         $dataMSM = $this->getMonthlyManhours('PT. MSM');
