@@ -21,7 +21,7 @@
 
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
-        <div class="flex flex-col lg:flex-row gap-2 items-center">
+        <div class="flex flex-col lg:flex-row gap-2 lg:items-center">
 
             {{-- 1. Input Search (w-60) --}}
             <div class="w-full lg:w-60">
