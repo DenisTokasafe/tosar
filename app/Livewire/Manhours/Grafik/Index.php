@@ -44,7 +44,7 @@ class Index extends Component
         $dataAllContractor = $this->getMonthlyManhours(null, true); // Parameter kedua menandakan ambil SEMUA contractor
 
         // --- 3. Format Data Akhir ---
-a
+
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::create()->month($i)->format('M');
