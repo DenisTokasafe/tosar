@@ -79,9 +79,9 @@ class Index extends Component
         // Data final untuk chart
         $this->data = json_encode([
             'months' => $months,
-            'msm'    => $msm,
-            'ttn'    => $ttn,
-            'contractor'    => $contractor
+            'msm'    => $msmData,
+            'ttn'    => $ttnData,
+            'contractor'    => $contractorData
         ]);
         $this->dispatch('manhoursChart', $this->data);
     }
