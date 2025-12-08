@@ -7,7 +7,6 @@
             var dom = document.getElementById('hazardTrend');
             var myChart = echarts.init(dom);
             var option;
-            console.log(data.months);
 
             option = {
                 title: {
@@ -33,7 +32,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: data.months
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 },
                 yAxis: {
                     type: 'value'
