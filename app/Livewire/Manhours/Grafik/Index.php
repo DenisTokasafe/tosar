@@ -22,7 +22,7 @@ class Index extends Component
     {
         $this->start_date = $data['start'];
         $this->end_date   = $data['end'];
-
+        dd($this->start_date,$this->end_date);
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
