@@ -19,8 +19,8 @@ class Index extends Component
     {
         // Default filter tanggal
         if (!$this->start_date || !$this->end_date) {
-            $this->start_date = Carbon::now()->startOfYear()->toDateString();
-            $this->end_date = Carbon::now()->endOfYear()->toDateString();
+           $this->start_date = Carbon::now()->startOfYear()->format('Y/m/d');
+            $this->end_date = Carbon::now()->endOfYear()->format('Y/m/d');
         }
         $this->loadData();
     }
@@ -44,7 +44,7 @@ class Index extends Component
         $dataAllContractor = $this->getMonthlyManhours(null, true); // Parameter kedua menandakan ambil SEMUA contractor
 
         // --- 3. Format Data Akhir ---
- dd($this->start_date);
+a
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::create()->month($i)->format('M');
