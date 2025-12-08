@@ -32,7 +32,7 @@ class Index extends Component
         $this->loadData();
     }
 
-    #[On('chartTrandUpdated')]
+    #[On('chartManhoursUpdated')]
     public function loadData()
     {
         // --- 1. Ambil Data Manhours Perusahaan (PT. MSM & PT. TTN) ---
