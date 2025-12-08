@@ -34,11 +34,19 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
-        // Ambil semua bulan (Jan - Des)
-        $months = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $months[] = Carbon::create()->month($i)->format('M');
-        }
+        /// Ambil bulan unique berdasarkan tanggal dan rentang filter
+        $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
+            ->selectRaw('DISTINCT MONTH(date) as month')
+            ->orderBy('month')
+            ->pluck('month')
+            ->toArray();
+
+        // Format bulan ke teks (Jan, Feb, Mar)
+        $months = array_map(
+            fn($m) =>
+            Carbon::create()->month($m)->format('M'),
+            $monthsRaw
+        );
 
         // === PT. MSM ===
         $msmData = Manhour::dateRange($this->start_date, $this->end_date)
@@ -76,7 +84,7 @@ class Index extends Component
 
         // Data final untuk chart
         $this->data = json_encode([
-            'months' =>$contractorData->pluck('month')->map(function ($m) {
+            'months' => $contractorData->pluck('month')->map(function ($m) {
                 return Carbon::create()->month($m)->format('M');
             })->toArray(),
             'msm'    => $msm,
