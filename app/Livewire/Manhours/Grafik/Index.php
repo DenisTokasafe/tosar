@@ -44,7 +44,8 @@ class Index extends Component
             'months' => $dataManhours->pluck('month')->map(function ($m) {
                 return Carbon::create()->month($m)->format('M');
             })->toArray(),
-            'counts' => $dataManhours->where('company', 'PT. MSM')->pluck('total')->toArray()
+            'msm' => $dataManhours->where('company', 'PT. MSM')->pluck('total')->toArray(),
+            'msm' => $dataManhours->where('company', 'PT. TTN')->pluck('total')->toArray()
         ];
         $this->data = json_encode($data);
         $this->dispatch('manhoursChart', $this->data);
