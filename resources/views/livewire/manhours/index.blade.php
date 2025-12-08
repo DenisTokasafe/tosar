@@ -29,7 +29,7 @@
                 <input  type="text" wire:model.live="search"class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class=" w-full s">
+            <div class=" w-full ">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
@@ -76,7 +76,7 @@
 
     <x-manhours.layout>
         <div class="overflow-x-auto ">
-            <table class="table table-xs">
+            <table class="table table-xs table-pin-rows">
                 <thead>
                     <tr>
                         <th></th>
