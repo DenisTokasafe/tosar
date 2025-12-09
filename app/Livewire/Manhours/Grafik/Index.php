@@ -94,11 +94,7 @@ class Index extends Component
     #[On('chartManpowerUpdate')] // Ganti nama event agar tidak bentrok
     public function loadDataManpower()
     {
-        // Cek filter tanggal
-        if (!$this->start_date || !$this->end_date) {
-            $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
-            $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
-        }
+
         /// Ambil bulan unique berdasarkan tanggal dan rentang filter
         $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
             ->selectRaw('DISTINCT MONTH(date) as month')
