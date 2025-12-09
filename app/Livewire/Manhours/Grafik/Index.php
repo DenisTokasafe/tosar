@@ -142,7 +142,6 @@ class Index extends Component
             $ttn_mp[] = $ttnData[$m] ?? 0;
             $contractor_mp[] = $contractorData[$m] ?? 0;
         }
-
         // Data final untuk chart (Gunakan properti yang berbeda jika chart manpower dipisah)
         $data_manpower = [
             'months' => $months,
@@ -151,6 +150,7 @@ class Index extends Component
             'contractor' => $contractor_mp
         ];
 
+        dd($data_manpower);
         // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
         $this->manpowerChartData = json_encode($data_manpower);
 
