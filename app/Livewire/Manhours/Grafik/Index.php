@@ -9,7 +9,7 @@ use App\Models\Manhour;
 
 class Index extends Component
 {
-    public $data,$manpowerChartData;
+    public $data, $manpowerChartData;
     public $start_date;
     public $end_date;
     public function mount()
@@ -24,10 +24,10 @@ class Index extends Component
     #[On('dateRangeManhours')]
     public function updateDateRange($data)
     {
-         if (!$data['start'] || !$data['end']) {
+        if (!$data['start'] || !$data['end']) {
             $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
             $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
-        }else{
+        } else {
             $this->start_date = $data['start'];
             $this->end_date   = $data['end'];
         }
@@ -92,84 +92,84 @@ class Index extends Component
     }
 
     #[On('chartManpowerUpdate')] // Ganti nama event agar tidak bentrok
-public function loadDataManpower()
-{
-    // Cek filter tanggal
-    if (!$this->start_date || !$this->end_date) {
-        // Terapkan logika default jika belum ada filter
-        $defaultYear = Carbon::now()->year;
-        $this->start_date = Carbon::createFromDate($defaultYear, 1, 1)->format('Y/m/d');
-        $this->end_date = Carbon::createFromDate($defaultYear, 12, 31)->format('Y/m/d');
+    public function loadDataManpower()
+    {
+        // Cek filter tanggal
+        if (!$this->start_date || !$this->end_date) {
+            // Terapkan logika default jika belum ada filter
+            $defaultYear = Carbon::now()->year;
+            $this->start_date = Carbon::createFromDate($defaultYear, 1, 1)->format('Y/m/d');
+            $this->end_date = Carbon::createFromDate($defaultYear, 12, 31)->format('Y/m/d');
+        }
+
+        /// Ambil bulan unique berdasarkan tanggal dan rentang filter
+        $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
+            ->selectRaw('DISTINCT MONTH(date) as month')
+            ->orderBy('month')
+            ->pluck('month')
+            ->toArray();
+
+        // Format bulan ke teks (Jan, Feb, Mar)
+        $months = array_map(
+            fn($m) => Carbon::create()->month($m)->format('M'),
+            $monthsRaw
+        );
+
+        // === PT. MSM ===
+        $msmData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company', 'PT. MSM')
+            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
+            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
+            ->groupBy('month')
+            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
+            ->pluck('total_manpower', 'month')
+            ->toArray();
+
+        // === PT. TTN ===
+        $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company', 'PT. TTN')
+            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
+            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
+            ->groupBy('month')
+            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
+            ->pluck('total_manpower', 'month')
+            ->toArray();
+
+        // === CONTRACTOR ===
+        $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
+            ->where('company_category', 'CONTRACTOR')
+            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
+            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
+            ->groupBy('month')
+            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
+            ->pluck('total_manpower', 'month')
+            ->toArray();
+
+        // Format data: pastikan semua bulan ada (0 jika kosong)
+        $msm_mp = []; // Menggunakan suffix _mp (manpower) untuk menghindari konflik nama
+        $ttn_mp = [];
+        $contractor_mp = [];
+
+        foreach ($monthsRaw as $m) {
+            $msm_mp[] = $msmData[$m] ?? 0;
+            $ttn_mp[] = $ttnData[$m] ?? 0;
+            $contractor_mp[] = $contractorData[$m] ?? 0;
+        }
+
+        // Data final untuk chart (Gunakan properti yang berbeda jika chart manpower dipisah)
+        $data_manpower = [
+            'months' => $months,
+            'msm'    => $msm_mp,
+            'ttn'    => $ttn_mp,
+            'contractor' => $contractor_mp
+        ];
+
+        // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
+        $this->manpowerChartData = json_encode($data_manpower);
+
+        // Dispatch event yang berbeda untuk grafik manpower
+        $this->dispatch('manpowerChart', $this->manpowerChartData);
     }
-
-    /// Ambil bulan unique berdasarkan tanggal dan rentang filter
-    $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
-        ->selectRaw('DISTINCT MONTH(date) as month')
-        ->orderBy('month')
-        ->pluck('month')
-        ->toArray();
-
-    // Format bulan ke teks (Jan, Feb, Mar)
-    $months = array_map(
-        fn($m) => Carbon::create()->month($m)->format('M'),
-        $monthsRaw
-    );
-
-    // === PT. MSM ===
-    $msmData = Manhour::dateRange($this->start_date, $this->end_date)
-        ->where('company', 'PT. MSM')
-        // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
-        ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-        ->groupBy('month')
-        // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
-        ->pluck('total_manpower', 'month')
-        ->toArray();
-
-    // === PT. TTN ===
-    $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
-        ->where('company', 'PT. TTN')
-        // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
-        ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-        ->groupBy('month')
-        // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
-        ->pluck('total_manpower', 'month')
-        ->toArray();
-
-    // === CONTRACTOR ===
-    $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
-        ->where('company_category', 'CONTRACTOR')
-        // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
-        ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-        ->groupBy('month')
-        // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
-        ->pluck('total_manpower', 'month')
-        ->toArray();
-
-    // Format data: pastikan semua bulan ada (0 jika kosong)
-    $msm_mp = []; // Menggunakan suffix _mp (manpower) untuk menghindari konflik nama
-    $ttn_mp = [];
-    $contractor_mp = [];
-
-    foreach ($monthsRaw as $m) {
-        $msm_mp[] = $msmData[$m] ?? 0;
-        $ttn_mp[] = $ttnData[$m] ?? 0;
-        $contractor_mp[] = $contractorData[$m] ?? 0;
-    }
-
-    // Data final untuk chart (Gunakan properti yang berbeda jika chart manpower dipisah)
-    $data_manpower = [
-        'months' => $months,
-        'msm'    => $msm_mp,
-        'ttn'    => $ttn_mp,
-        'contractor' => $contractor_mp
-    ];
-
-    // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
-    $this->manpowerChartData = json_encode($data_manpower);
-
-    // Dispatch event yang berbeda untuk grafik manpower
-    $this->dispatch('manpowerChart', $this->manpowerChartData);
-}
 
     public function render()
     {
