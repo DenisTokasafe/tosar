@@ -28,6 +28,10 @@ class Register extends Component
     public $status = 'department'; // default departemen
     public $departments = [], $showDepartemenDropdown = false, $searchDepartemen = '';
     public $contractors = [], $showContractorDropdown = false, $searchContractor = '';
+    public $check_no_id_status = ''; // Menyimpan status pengecekan
+
+
+
     /**
      * Handle an incoming registration request.
      */
@@ -37,6 +41,19 @@ class Register extends Component
         'searchContractor.required_if' => 'Kontraktor wajib diisi.',
         'jenis_kelamin.required' => 'Jenis Kelamin wajib diisi.',
     ];
+    public function checkIdAvailability(): void
+    {
+        // Panggil fungsi pengecekan
+        $exists = User::where('employee_id', $this->no_id)->exists();
+
+        if ($exists) {
+            $this->check_no_id_status = 'Nomor ID sudah terdaftar.';
+            $this->addError('no_id', 'Nomor ID ini sudah digunakan.'); // Tetap tampilkan error di field utama
+        } else {
+            $this->check_no_id_status = 'Nomor ID tersedia.';
+            $this->resetError('no_id');
+        }
+    }
     public function updated($propertyName): void
     {
         if (in_array($propertyName, ['first_name', 'last_name'])) {

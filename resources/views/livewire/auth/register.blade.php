@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6 w-full ">
-     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
+    <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
         <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
             <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
         </span>
@@ -9,18 +9,30 @@
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
+    <div class="flux-input-wrapper">
+        <flux:input wire:model="no_id" :label="__('Nomor ID')" type="text" required autocomplete="no_id"
+            :placeholder="__('Nomor ID')" />
 
+        {{-- Feedback Kustom di Bawah Field --}}
+        @if ($check_no_id_status)
+            <p
+                class="text-xs mt-1 {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
+                {{ $check_no_id_status }}
+            </p>
+        @endif
+    </div>
     <form wire:submit="register">
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Name -->
-            <flux:input wire:model.live="first_name" :label="__('Nama')" type="text" required autofocus autocomplete="Nama Lengkap"
-                :placeholder="__('Nama ')" />
+            <flux:input wire:model.live="first_name" :label="__('Nama')" type="text" required autofocus
+                autocomplete="Nama Lengkap" :placeholder="__('Nama ')" />
             <!-- Name -->
-            <flux:input wire:model.live="last_name" :label="__('Marga')" type="text" required autofocus autocomplete="last_name"
-                :placeholder="__('Marga')" />
+            <flux:input wire:model.live="last_name" :label="__('Marga')" type="text" required autofocus
+                autocomplete="last_name" :placeholder="__('Marga')" />
             <!-- Name -->
-            <flux:input wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text" disabled required autofocus autocomplete="name"
-                :placeholder="__('Nama yang di tampilkan')" />
+            <flux:input wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text" disabled required
+                autofocus autocomplete="name" :placeholder="__('Nama yang di tampilkan')" />
 
             <!-- Username -->
             <flux:input wire:model="username" :label="__('Username')" type="text" required autocomplete="username"
@@ -33,7 +45,8 @@
             <flux:input wire:model="no_id" :label="__('Nomor ID')" type="text" required autocomplete="no_id"
                 :placeholder="__('Nomor ID')" />
             <!-- Jenis kelamin -->
-            <flux:select wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin" :label="__('Jenis Kelamin')" required>
+            <flux:select wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin" :label="__('Jenis Kelamin')"
+                required>
                 <flux:select.option>Laki-Laki</flux:select.option>
                 <flux:select.option>Perempuan</flux:select.option>
             </flux:select>
@@ -55,7 +68,7 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.live.debounce.300ms="searchDepartemen" type="text"  autofocus
+                        <flux:input wire:model.live.debounce.300ms="searchDepartemen" type="text" autofocus
                             :placeholder="__('Department')" />
                         <!-- Dropdown hasil search -->
                         @if ($showDepartemenDropdown && count($departments) > 0)
@@ -82,7 +95,7 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.live.debounce.300ms="searchContractor" type="text"  autofocus
+                        <flux:input wire:model.live.debounce.300ms="searchContractor" type="text" autofocus
                             :placeholder="__('Kontraktor')" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
