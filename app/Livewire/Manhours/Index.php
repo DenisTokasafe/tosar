@@ -41,6 +41,11 @@ class Index extends Component
     public $range_date = '';
     public $start_date;
     public $end_date;
+    public function updatedSearch($value)
+    {
+
+        $this->dispatch('manhoursSearchUpdated', search: $value);
+    }
     public function updatedRangeDate($value)
     {
         // Cek apakah nilai tidak kosong
