@@ -130,7 +130,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: dataManpower.months
+                    data: dataManpower.monthsManpower
                 },
                 yAxis: {
                     type: 'value'
@@ -162,7 +162,7 @@
                     let payload_trandManpower = JSON.parse(event);
                     myChartManpower.setOption({
                         xAxis: {
-                            data: payload_trandManpower.months
+                            data: payload_trandManpower.monthsManpower
                         },
                          series: [{
                         name: 'MSM',

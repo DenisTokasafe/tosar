@@ -111,6 +111,7 @@ class Index extends Component
             $msm[]        = $msmData[$m] ?? 0;
             $ttn[]        = $ttnData[$m] ?? 0;
             $contractor[] = $contractorData[$m] ?? 0;
+
             $msmManpower[]        = $msmDataManpower[$m] ?? 0;
             $ttnManpower[]        = $ttnDataManpower[$m] ?? 0;
             $contractorManpower[] = $contractorDataManpower[$m] ?? 0;
@@ -125,7 +126,7 @@ class Index extends Component
         ]);
         $this->dispatch('manhoursChart', $this->data);
         $this->dataManpower = json_encode([
-            'months' => $months,
+            'monthsManpower' => $months,
             'msmManpower'    => $msmManpower,
             'ttnManpower'    => $ttnManpower,
             'contractorManpower'    => $contractorManpower
