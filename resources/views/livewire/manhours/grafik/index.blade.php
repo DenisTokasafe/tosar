@@ -15,9 +15,9 @@
         var myChart = echarts.init(dom);
         var option;
 
-        option = {
+         option_mp = {
             title: {
-                text: 'Manhours Bulanan'
+                text: 'Manhours Bulanan' // Mengganti Judul
             },
             tooltip: {
                 trigger: 'axis'
@@ -39,7 +39,7 @@
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: data.months
+                data: data_manpower.months // Menggunakan data manpower
             },
             yAxis: {
                 type: 'value'
