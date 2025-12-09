@@ -37,18 +37,18 @@ class Register extends Component
     ];
 
     public function updatedStatus($value)
- {
-  if ($value === 'department') {
-   // Reset kontraktor jika pindah ke departemen
-   $this->resetErrorBag(['searchContractor']);
-   $this->reset(['searchContractor', 'contractors']);
-  }
-  if ($value === 'company') {
-   // Reset departemen jika pindah ke kontraktor
-   $this->resetErrorBag(['searchDepartemen']);
-   $this->reset(['searchDepartemen', 'departments']);
-  }
- }
+    {
+        if ($value === 'department') {
+            // Reset kontraktor jika pindah ke departemen
+            $this->resetErrorBag(['searchContractor']);
+            $this->reset(['searchContractor', 'contractors']);
+        }
+        if ($value === 'company') {
+            // Reset departemen jika pindah ke kontraktor
+            $this->resetErrorBag(['searchDepartemen']);
+            $this->reset(['searchDepartemen', 'departments']);
+        }
+    }
 
 
     public function updatedSearchDepartemen()
@@ -64,7 +64,7 @@ class Register extends Component
             $this->showDepartemenDropdown = false;
         }
     }
-    public function selectDepartment($id,$name)
+    public function selectDepartment($id, $name)
     {
         $this->reset('searchContractor');
         $this->searchDepartemen = $name;
@@ -84,7 +84,7 @@ class Register extends Component
             $this->showContractorDropdown = true;
         }
     }
-    public function selectContractor($id,$name)
+    public function selectContractor($id, $name)
     {
         $this->reset('searchDepartemen');
 
@@ -109,14 +109,19 @@ class Register extends Component
 
         // Tentukan nilai department_name dari input yang aktif
         $departmentName = ($this->status === 'department') ? $this->searchDepartemen : $this->searchContractor;
-
+        // --- LOGIKA BARU UNTUK MENGATASI ERROR DATA TRUNCATED ---
+        $genderCode = match ($validated['jenis_kelamin']) {
+            'Laki-Laki' => 'L',
+            'Perempuan' => 'P',
+            default => null, // Tambahkan penanganan jika ada nilai tak terduga
+        };
         // Siapkan data untuk User::create
         $dataToCreate = [
             'name' => $validated['name'],
             'username' => $validated['username'],
             'email' => $validated['email'],
             'employee_id' => $validated['no_id'], // Asumsi 'no_id' masuk ke kolom 'employee_id'
-            'gender' => $validated['jenis_kelamin'], // Asumsi 'jenis_kelamin' masuk ke kolom 'gender'
+            'gender' => $genderCode, // Asumsi 'jenis_kelamin' masuk ke kolom 'gender'
             'password' => Hash::make($validated['password']),
             'department_name' => $departmentName, // Menyimpan nama Departemen/Kontraktor ke kolom 'department_name'
             // 'role_id' dan field lain (seperti date_commenced) mungkin perlu diisi default/null
