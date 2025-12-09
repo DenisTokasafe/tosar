@@ -16,7 +16,7 @@
 
         <fieldset>
                 <input id="department" value="department" wire:model.live="status" class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
-                <label for="department" class="peer-checked/department:text-accent">Departemen @if($status ==="department") <span class="text-red-500 font-bold">*</span> @endif</label>
+                <label for="department" class="peer-checked/department:text-accent">Departemen @if($status ==="department") <span class="text-red-500 font-bold text-xs">*</span> @endif</label>
 
                 <input id="company" value="company" wire:model.live="status" class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
                 <label for="company" class="peer-checked/company:text-primary">Kontraktor @if($status ==="company") <span class="text-red-500 font-bold">*</span> @endif</label>
