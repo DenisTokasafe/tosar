@@ -12,6 +12,7 @@ class Index extends Component
     public $data, $manpowerData;
     public $start_date;
     public $end_date;
+    public $years;
     public function mount()
     {
         // Default filter tanggal
@@ -19,6 +20,8 @@ class Index extends Component
             $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
             $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         }
+        $this->years = Carbon::now()->year;
+        dd($this->years);
         $this->loadData();
         $this->loadDataManpower();
     }

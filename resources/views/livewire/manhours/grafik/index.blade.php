@@ -17,7 +17,7 @@
 
          option_mp = {
             title: {
-                text: 'Manhours Bulanan' // Mengganti Judul
+                text: 'Manhours Bulanan Periode' // Mengganti Judul
             },
             tooltip: {
                 trigger: 'axis'
@@ -98,6 +98,7 @@
         }
         window.addEventListener('resize', myChart.resize);
     </script>
+
     <script type="module">
 
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
