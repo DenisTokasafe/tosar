@@ -99,14 +99,9 @@
         window.addEventListener('resize', myChart.resize);
     </script>
     <script type="module">
-        // ⚠️ Hati-hati dengan interval polling 1000ms. Hapus jika tidak benar-benar diperlukan.
-        // Jika tetap digunakan, ganti nama event-nya agar tidak bentrok dengan Manhours
+
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
-
-        // Ambil data awal dari Livewire. Asumsikan properti Livewire-nya adalah $manpowerChartData
-        // Jika Anda menggunakan $data di Livewire untuk Manpower, ganti $manpowerChartData dengan $data.
         const data_manpower = @json($manpowerChartData);
-
         var dom_mp = document.getElementById('grafik-manpower');
         var myChart_mp = echarts.init(dom_mp);
         var option_mp;
