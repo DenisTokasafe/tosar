@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="corporate" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="forest">
+<html data-theme="corporate" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
     {{-- @laravelPWA --}}
     @include('partials.head')
