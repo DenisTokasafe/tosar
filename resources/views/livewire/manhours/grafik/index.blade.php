@@ -17,7 +17,7 @@
 
         option = {
             title: {
-                text: 'Stacked Line'
+                text: 'Manhours Bulanan'
             },
             tooltip: {
                 trigger: 'axis'
@@ -111,7 +111,7 @@
         // --- OPSI ECHARTS UNTUK MANPOWER ---
         option_mp = {
             title: {
-                text: 'Manpower Bulanan (Stacked Line)' // Mengganti Judul
+                text: 'Manpower Bulanan' // Mengganti Judul
             },
             tooltip: {
                 trigger: 'axis'
