@@ -64,7 +64,7 @@ class Register extends Component
             $this->showDepartemenDropdown = false;
         }
     }
-    public function selectDepartment($id, $name)
+    public function selectDepartment($name)
     {
         $this->reset('searchContractor');
         $this->searchDepartemen = $name;
@@ -84,7 +84,7 @@ class Register extends Component
             $this->showContractorDropdown = true;
         }
     }
-    public function selectContractor($id, $name)
+    public function selectContractor( $name)
     {
         $this->reset('searchDepartemen');
 
