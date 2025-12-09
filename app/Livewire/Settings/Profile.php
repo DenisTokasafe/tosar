@@ -33,7 +33,7 @@ class Profile extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'date_birth' => 'nullable|date',
-            'employee_id' => 'nullable|date',
+            'employee_id' => 'nullable|string',
             'username' => ['nullable', 'string', 'max:255'],
             'department_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore(Auth::id())]
