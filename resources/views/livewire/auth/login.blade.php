@@ -1,27 +1,27 @@
 <div class="flex flex-col gap-6 md:max-w-sm">
+    <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
+        <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
+            <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+        </span>
+        <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
+    </a>
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your username or email and password below to log in')" />
     {{-- ^ Deskripsi diubah --}}
 
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form wire:submit="login" class="flex flex-col gap-6">
-        <flux:input
-            size="sm"
-            wire:model="credential"  {{-- <-- DIUBAH dari wire:model="email" --}}
-            :label="__('Username or Email')" {{-- <-- Label diubah --}}
-            type="text"                  {{-- <-- type diubah ke text (bukan email) --}}
-            required
-            autofocus
-            autocomplete="username"      {{-- <-- autocomplete diubah --}}
-            placeholder="username atau email@example.com"
-        />
+        <flux:input size="sm" wire:model="credential" {{-- <-- DIUBAH dari wire:model="email" --}} :label="__('Username or Email')"
+            {{-- <-- Label diubah --}} type="text" {{-- <-- type diubah ke text (bukan email) --}} required autofocus autocomplete="username"
+            {{-- <-- autocomplete diubah --}} placeholder="username atau email@example.com" />
 
         <div class="relative ">
-            <flux:input size="sm" wire:model="password" :label="__('Password')" type="password" required autocomplete="current-password" :placeholder="__('Password')" viewable />
+            <flux:input size="sm" wire:model="password" :label="__('Password')" type="password" required
+                autocomplete="current-password" :placeholder="__('Password')" viewable />
             @if (Route::has('password.request'))
-            <flux:link class="absolute end-0 top-0 text-sm " :href="route('password.request')" wire:navigate>
-                {{ __('Forgot your password?') }}
-            </flux:link>
+                <flux:link class="absolute end-0 top-0 text-sm " :href="route('password.request')" wire:navigate>
+                    {{ __('Forgot your password?') }}
+                </flux:link>
             @endif
         </div>
 
@@ -33,10 +33,10 @@
     </form>
 
     {{-- ... (bagian register) ... --}}
-     @if (Route::has('register'))
-    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-        {{ __('Don\'t have an account?') }}
-        <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-    </div>
+    @if (Route::has('register'))
+        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+            {{ __('Don\'t have an account?') }}
+            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+        </div>
     @endif
 </div>
