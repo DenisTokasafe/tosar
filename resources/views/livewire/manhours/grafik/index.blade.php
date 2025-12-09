@@ -100,9 +100,6 @@
     </script>
 
     <script type="module">
-        const dataManpower = @json($dataManpower);
-        console.log(dataManpower.monthsManpower);
-
 
     </script>
 @endpush
