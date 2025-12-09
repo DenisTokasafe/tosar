@@ -153,7 +153,7 @@ class Index extends Component
 
         // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
         $this->manpowerData = json_encode($data_manpower);
-
+        dd($this->manpowerData);
         // Dispatch event yang berbeda untuk grafik manpower
         $this->dispatch('manpowerChart', $this->manpowerData);
     }
