@@ -16,7 +16,7 @@
             {{-- Tambahkan wire:model.live untuk memfilter secara real-time --}}
             <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
                 class="checkbox checkbox-info" />
-            <label for="myReportsCheckbox" class="text-sm font-medium text-gray-700 ">
+            <label for="myReportsCheckbox" class="text-sm font-medium text-gray-700 cursor-pointer">
                 Hanya Laporan Saya
             </label>
         </div>
