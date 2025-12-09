@@ -157,7 +157,12 @@
                                     defaultDate: this.$wire.entangle('tanggal').defer,
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
-                                    appendTo: this.$refs.wrapper,
+                                    // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                    // appendTo: this.$refs.wrapper,
+
+                                    // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                    position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+
                                     onChange: (selectedDates, dateStr) => {
                                         this.$wire.set('tanggal', dateStr);
                                     }
