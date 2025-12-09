@@ -40,13 +40,13 @@ class Register extends Component
     {
         if ($value === 'department') {
             // Reset kontraktor jika pindah ke departemen
-            $this->resetErrorBag(['contractor_id']);
-            $this->reset(['contractor_id', 'searchContractor', 'contractors']);
+            $this->resetErrorBag(['searchContractor']);
+            $this->reset(['searchContractor', 'contractors']);
         }
         if ($value === 'company') {
             // Reset departemen jika pindah ke kontraktor
-            $this->resetErrorBag(['department_id']);
-            $this->reset(['department_id', 'searchDepartemen', 'departments']);
+            $this->resetErrorBag(['searchDepartemen']);
+            $this->reset(['searchDepartemen', 'departments']);
         }
     }
 
@@ -84,7 +84,7 @@ class Register extends Component
             $this->showContractorDropdown = true;
         }
     }
-    public function selectContractor( $name)
+    public function selectContractor($name)
     {
         $this->reset('searchDepartemen');
 
