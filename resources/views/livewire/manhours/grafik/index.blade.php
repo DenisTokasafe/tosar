@@ -45,19 +45,19 @@
                 type: 'value'
             },
             series: [{
-                    name: 'Email',
+                    name: 'MSM',
                     type: 'line',
                     stack: 'Total',
                     data: data.msm
                 },
                 {
-                    name: 'Email',
+                    name: 'TTN',
                     type: 'line',
                     stack: 'Total',
                     data: data.ttn
                 },
                 {
-                    name: 'Union Ads',
+                    name: 'Contractor',
                     type: 'line',
                     stack: 'Total',
                     data: data.contractor
