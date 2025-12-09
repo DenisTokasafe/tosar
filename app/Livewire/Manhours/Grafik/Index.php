@@ -111,30 +111,24 @@ class Index extends Component
         // === PT. MSM ===
         $msmData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. MSM')
-            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
-            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
             ->pluck('total_manpower', 'month')
             ->toArray();
 
         // === PT. TTN ===
         $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. TTN')
-            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
-            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
             ->pluck('total_manpower', 'month')
             ->toArray();
 
         // === CONTRACTOR ===
         $contractorData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company_category', 'CONTRACTOR')
-            // 🔑 PERUBAHAN: SUM(manhours) diganti menjadi SUM(manpower)
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
-            // 🔑 PERUBAHAN: pluck('total_manhours', 'month') menjadi pluck('total_manpower', 'month')
             ->pluck('total_manpower', 'month')
             ->toArray();
 
