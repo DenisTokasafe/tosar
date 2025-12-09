@@ -20,6 +20,7 @@ class Index extends Component
             $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         }
         $this->loadData();
+        $this->loadDataManpower();
     }
     #[On('dateRangeManhours')]
     public function updateDateRange($data)
@@ -33,6 +34,7 @@ class Index extends Component
         }
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
+        $this->loadDataManpower();
     }
     #[On('chartManhoursUpdate')]
     public function loadData()
@@ -153,7 +155,6 @@ class Index extends Component
 
         // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
         $this->manpowerData = json_encode($data_manpower);
-        dd($this->manpowerData);
         // Dispatch event yang berbeda untuk grafik manpower
         $this->dispatch('manpowerChart', $this->manpowerData);
     }
