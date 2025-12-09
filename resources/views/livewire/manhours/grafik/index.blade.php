@@ -102,7 +102,7 @@
     <script type="module">
         setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
         const dataManpower = @json($dataManpower);
-        console.log(dataManpower);
+        console.log(dataManpower.monthsManpower);
 
         var domManpower = document.getElementById('grafik-manpower');
         var myChartManpower = echarts.init(domManpower);
