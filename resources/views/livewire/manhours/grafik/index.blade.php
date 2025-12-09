@@ -100,95 +100,9 @@
     </script>
 
     <script type="module">
-        setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
         const dataManpower = @json($dataManpower);
         console.log(dataManpower.monthsManpower);
 
-        var domManpower = document.getElementById('grafik-manpower');
-        var myChartManpower = echarts.init(domManpower);
-        var optionManpower;
 
-        optionManpower = {
-            title: {
-                text: 'Stacked Line'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: dataManpower.monthsManpower
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                    name: 'MSM',
-                    type: 'line',
-                    stack: 'Total',
-                    data: dataManpower.msmManpower
-                },
-                {
-                    name: 'TTN',
-                    type: 'line',
-                    stack: 'Total',
-                    data: dataManpower.ttnManpower
-                },
-                {
-                    name: 'Contractor',
-                    type: 'line',
-                    stack: 'Total',
-                    data: dataManpower.contractorManpower
-                }
-            ]
-        };
-
-        if (optionManpower && typeof option === 'object') {
-            myChartManpower.setOption(optionManpower);
-            Livewire.on('manhoursChart', event => {
-                let payload_trandManpower = JSON.parse(event);
-                myChartManpower.setOption({
-                    xAxis: {
-                        data: payload_trandManpower.monthsManpower
-                    },
-                    series: [{
-                            name: 'MSM',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trandManpower.msmManpower
-                        },
-                        {
-                            name: 'TTN',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trandManpower.ttnManpower
-                        },
-                        {
-                            name: 'Contractor',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trandManpower.contractorManpower
-                        }
-                    ]
-
-                });
-            });
-        }
-        window.addEventListener('resize', myChartManpower.resize);
     </script>
 @endpush
