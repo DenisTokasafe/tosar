@@ -10,8 +10,11 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
     <div class="flux-input-wrapper">
-        <flux:input wire:model.live="check_id" :label="__('Nomor ID')" type="text" required autocomplete="check_id"
-            :placeholder="__('Nomor ID')" />
+        <flux:input.group>
+            <flux:input wire:model.live="check_id" :label="__('Nomor ID')" type="text" required autocomplete="check_id"
+                :placeholder="__('Nomor ID')" />
+            <flux:button icon="plus">Check ID</flux:button>
+        </flux:input.group>
 
         {{-- Feedback Kustom di Bawah Field --}}
         @if ($check_no_id_status)

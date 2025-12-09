@@ -52,6 +52,7 @@ class Register extends Component
             $this->addError('check_id', 'Nomor ID ini sudah digunakan.'); // Tetap tampilkan error di field utama
         } else {
             $this->check_no_id_status = 'Nomor ID tersedia.';
+            $this->resetError('check_id'); // Hapus error jika ada
         }
     }
     public function updated($propertyName): void
