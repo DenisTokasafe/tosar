@@ -4,15 +4,15 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form wire:submit="register" class="flex flex-col gap-6">
+    <form wire:submit="register" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Name -->
-        <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" :placeholder="__('Full name')" />
+        <flux:input wire:model="name" :label="__('Nama')" type="text" required autofocus autocomplete="name" :placeholder="__('Nama Lengkap')" />
 
         <!-- Username -->
         <flux:input wire:model="username" :label="__('Username')" type="text" required autocomplete="username" :placeholder="__('Username')" />
 
         <!-- Email Address -->
-        <flux:input wire:model="email" :label="__('Email address')" type="email" required autocomplete="email" placeholder="email@example.com" />
+        <flux:input wire:model="email" :label="__('Alamat Email')" type="email" required autocomplete="email" placeholder="email@example.com" />
 
         <fieldset>
                 <input id="department" value="department" wire:model.live="status" class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
