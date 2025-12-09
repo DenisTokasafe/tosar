@@ -17,20 +17,12 @@ use Illuminate\Auth\Events\Registered;
 class Register extends Component
 {
     public string $name = '';
-
     public string $username = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
-
-    #[Validate('required_without:contractor_id')]
-    public $department_id;
-    #[Validate('required_without:department_id')]
-    public $contractor_id;
-    public  $showMpderatorDropdown = false, $searchModerator = '';
+    public string $no_id = '';
+    public string $jenis_kelamin = '';
     public $status = 'department'; // default departemen
     public $departments = [], $showDepartemenDropdown = false, $searchDepartemen = '';
     public $contractors = [], $showContractorDropdown = false, $searchContractor = '';
@@ -39,8 +31,9 @@ class Register extends Component
      */
     protected $messages =
     [
-        'department_id.required_without' => 'Departemen wajib dipilih jika kontraktor tidak diisi.',
-        'contractor_id.required_without' => 'Kontraktor wajib dipilih jika departemen tidak diisi.',
+        'searchDepartemen.required_if' => 'Departemen wajib diisi.',
+        'searchContractor.required_if' => 'Kontraktor wajib diisi.',
+        'jenis_kelamin.required' => 'Jenis Kelamin wajib diisi.',
     ];
 
     public function updatedStatus($value)
@@ -73,10 +66,9 @@ class Register extends Component
     }
     public function selectDepartment($id, $name)
     {
-        $this->department_id = $id;
+        $this->reset('searchContractor');
         $this->searchDepartemen = $name;
         $this->showDepartemenDropdown = false;
-        $this->validateOnly('department_id');
     }
     public function updatedSearchContractor()
     {
@@ -94,11 +86,10 @@ class Register extends Component
     }
     public function selectContractor($id, $name)
     {
-        $this->reset('searchDepartemen', 'department_id');
-        $this->contractor_id = $id;
+        $this->reset('searchDepartemen');
+
         $this->searchContractor = $name;
         $this->showContractorDropdown = false;
-        $this->validateOnly('contractor_id');
     }
     public function register(): void
     {
@@ -106,12 +97,32 @@ class Register extends Component
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:50', 'unique:users,username'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'no_id' => ['required', 'string', 'max:50', 'unique:users,employee_id'], // Ubah kolom DB jika beda
+            'jenis_kelamin' => ['required', 'string', 'in:Laki-Laki,Perempuan'],
+            // Validasi wajib isi salah satu (Departemen atau Kontraktor)
+            // Kita wajibkan $searchDepartemen jika $status=='department' DAN $searchContractor jika $status=='company'
+            'searchDepartemen' => ['required_if:status,department', 'string', 'nullable', 'max:255'],
+            'searchContractor' => ['required_if:status,company', 'string', 'nullable', 'max:255'],
+            // End Validasi wajib
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Tentukan nilai department_name dari input yang aktif
+        $departmentName = ($this->status === 'department') ? $this->searchDepartemen : $this->searchContractor;
 
-        event(new Registered(($user = User::create($validated))));
+        // Siapkan data untuk User::create
+        $dataToCreate = [
+            'name' => $validated['name'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'employee_id' => $validated['no_id'], // Asumsi 'no_id' masuk ke kolom 'employee_id'
+            'gender' => $validated['jenis_kelamin'], // Asumsi 'jenis_kelamin' masuk ke kolom 'gender'
+            'password' => Hash::make($validated['password']),
+            'department_name' => $departmentName, // Menyimpan nama Departemen/Kontraktor ke kolom 'department_name'
+            // 'role_id' dan field lain (seperti date_commenced) mungkin perlu diisi default/null
+        ];
+
+        event(new Registered(($user = User::create($dataToCreate))));
 
         Auth::login($user);
 
