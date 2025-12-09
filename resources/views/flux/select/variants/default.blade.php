@@ -17,7 +17,7 @@ $classes = Flux::classes()
     'xs' => 'h-6 text-xs leading-[1.125rem] rounded-xs',
     })
     ->add('shadow-xs  ')
-    ->add('bg-base-100 dark:border dark:bg-base-100 dark:disabled:bg-white/[9%] ')
+    ->add('dark:border bg-base-100 dark:disabled:bg-white/[9%] ')
     ->add('text-zinc-700 dark:text-zinc-700 font-semibold')
     // Make the placeholder match the text color of standard input placeholders...
     ->add('has-[option.placeholder:checked]:text-zinc-400 dark:has-[option.placeholder:checked]:text-zinc-400')
