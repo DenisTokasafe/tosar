@@ -96,12 +96,9 @@ class Index extends Component
     {
         // Cek filter tanggal
         if (!$this->start_date || !$this->end_date) {
-            // Terapkan logika default jika belum ada filter
-            $defaultYear = Carbon::now()->year;
-            $this->start_date = Carbon::createFromDate($defaultYear, 1, 1)->format('Y/m/d');
-            $this->end_date = Carbon::createFromDate($defaultYear, 12, 31)->format('Y/m/d');
+            $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
+            $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         }
-
         /// Ambil bulan unique berdasarkan tanggal dan rentang filter
         $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
             ->selectRaw('DISTINCT MONTH(date) as month')
