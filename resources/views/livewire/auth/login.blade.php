@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-6 md:max-w-sm">
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your username or email and password below to log in')" />
     {{-- ^ Deskripsi diubah --}}
 
