@@ -139,28 +139,28 @@
                         name: 'Email',
                         type: 'line',
                         stack: 'Total',
-                        data: dataManpower.msm
+                        data: dataManpower.msmManpower
                     },
                     {
                         name: 'Email',
                         type: 'line',
                         stack: 'Total',
-                        data: dataManpower.ttn
+                        data: dataManpower.ttnManpower
                     },
                     {
                         name: 'Union Ads',
                         type: 'line',
                         stack: 'Total',
-                        data: dataManpower.contractor
+                        data: dataManpower.contractorManpower
                     }
                 ]
             };
 
             if (optionManpower && typeof optionManpower === 'object') {
-                myChart.setOption(optionManpower);
+                myChartManpower.setOption(optionManpower);
                 Livewire.on('manhoursChart', event => {
                     let payload_trandManpower = JSON.parse(event);
-                    myChart.setOption({
+                    myChartManpower.setOption({
                         xAxis: {
                             data: payload_trandManpower.months
                         },
@@ -168,25 +168,25 @@
                         name: 'MSM',
                         type: 'line',
                         stack: 'Total',
-                        data: payload_trandManpower.msm
+                        data: payload_trandManpower.msmManpower
                     },
                     {
                         name: 'TTN',
                         type: 'line',
                         stack: 'Total',
-                        data: payload_trandManpower.ttn
+                        data: payload_trandManpower.ttnManpower
                     },
                     {
                         name: 'Contractor',
                         type: 'line',
                         stack: 'Total',
-                        data: payload_trandManpower.contractor
+                        data: payload_trandManpower.contractorManpower
                     }
                 ]
 
                     });
                 });
             }
-            window.addEventListener('resize', myChart.resize);
+            window.addEventListener('resize', myChartManpower.resize);
         </script>
     @endpush

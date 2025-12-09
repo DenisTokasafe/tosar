@@ -126,9 +126,9 @@ class Index extends Component
         $this->dispatch('manhoursChart', $this->data);
         $this->dataManpower = json_encode([
             'months' => $months,
-            'msm'    => $msmManpower,
-            'ttn'    => $ttnManpower,
-            'contractor'    => $contractorManpower
+            'msmManpower'    => $msmManpower,
+            'ttnManpower'    => $ttnManpower,
+            'contractorManpower'    => $contractorManpower
         ]);
         $this->dispatch('manpowerChart', $this->dataManpower);
     }
