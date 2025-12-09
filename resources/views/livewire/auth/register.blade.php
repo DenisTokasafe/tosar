@@ -19,13 +19,13 @@
                 <label for="department" class="peer-checked/department:text-accent">Departemen @if($status ==="department") <span class="text-red-500 font-bold text-xs">*</span> @endif</label>
 
                 <input id="company" value="company" wire:model.live="status" class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
-                <label for="company" class="peer-checked/company:text-primary">Kontraktor @if($status ==="company") <span class="text-red-500 font-bold">*</span> @endif</label>
+                <label for="company" class="peer-checked/company:text-primary">Kontraktor @if($status ==="company") <span class="text-red-500 font-bold text-xs">*</span> @endif</label>
 
                 <div class="hidden peer-checked/department:block mt-0.5">
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchDepartemen" placeholder="Cari departemen..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                        <flux:input wire:model.live.debounce.300ms="searchDepartemen"  type="text" required autofocus  :placeholder="__('Department')" />
                         <!-- Dropdown hasil search -->
                         @if($showDepartemenDropdown && count($departments) > 0)
                         <ul class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
