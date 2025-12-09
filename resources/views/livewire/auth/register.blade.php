@@ -12,7 +12,7 @@
     <div class="flux-input-wrapper">
         <flux:input.group>
             <flux:input wire:model.live="check_id"  type="text" required autocomplete="check_id"
-                :placeholder="__('Nomor ID')" />
+                :placeholder="__('Pastikan Nomor ID belum terdaftar')" />
             <flux:button wire:click='checkId' icon="plus">Check ID</flux:button>
         </flux:input.group>
 
