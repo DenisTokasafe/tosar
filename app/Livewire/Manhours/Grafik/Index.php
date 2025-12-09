@@ -60,7 +60,6 @@ class Index extends Component
             ->groupBy('month')
             ->pluck('total_manhours', 'month')
             ->toArray();
-
         // === PT. TTN ===
         $ttnData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. TTN')
@@ -75,7 +74,6 @@ class Index extends Component
             ->groupBy('month')
             ->pluck('total_manhours', 'month')
             ->toArray();
-
         // Format data: pastikan semua bulan ada (0 jika kosong)
         $msm = [];
         $ttn = [];
@@ -94,7 +92,6 @@ class Index extends Component
         ]);
         $this->dispatch('manhoursChart', $this->data);
     }
-
     #[On('chartManpowerUpdate')] // Ganti nama event agar tidak bentrok
     public function loadDataManpower()
     {
