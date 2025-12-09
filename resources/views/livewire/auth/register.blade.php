@@ -14,12 +14,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Name -->
             <flux:input wire:model.live="first_name" :label="__('Nama')" type="text" required autofocus autocomplete="Nama Lengkap"
-                :placeholder="__('Nama Lengkap')" />
+                :placeholder="__('Nama ')" />
             <!-- Name -->
             <flux:input wire:model.live="last_name" :label="__('Marga')" type="text" required autofocus autocomplete="last_name"
                 :placeholder="__('Marga')" />
             <!-- Name -->
-            <flux:input wire:model.live="name" :label="__('Nama')" type="text" disabled required autofocus autocomplete="name"
+            <flux:input wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text" disabled required autofocus autocomplete="name"
                 :placeholder="__('Nama yang di tampilkan')" />
 
             <!-- Username -->
