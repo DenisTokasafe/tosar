@@ -13,7 +13,7 @@
         <flux:input.group>
             <flux:input wire:model.live="check_id"  type="text" required autocomplete="check_id"
                 :placeholder="__('Nomor ID')" />
-            <flux:button icon="plus">Check ID</flux:button>
+            <flux:button wire:click='checkId' icon="plus">Check ID</flux:button>
         </flux:input.group>
 
         {{-- Feedback Kustom di Bawah Field --}}

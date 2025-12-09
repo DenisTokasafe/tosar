@@ -42,7 +42,7 @@ class Register extends Component
         'searchContractor.required_if' => 'Kontraktor wajib diisi.',
         'jenis_kelamin.required' => 'Jenis Kelamin wajib diisi.',
     ];
-    public function updatedCheckId()
+    public function checkId()
     {
         // Panggil fungsi pengecekan
         $exists = User::where('employee_id', $this->check_id)->exists();
