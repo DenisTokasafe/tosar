@@ -1,4 +1,10 @@
 <div class="flex flex-col gap-6 w-full ">
+     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
+        <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
+            <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+        </span>
+        <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
+    </a>
     <x-auth-header :title="__('Pendaftaran Akun')" :description="__('Isi data di bawah untuk mendaftar.')" />
 
     <!-- Session Status -->
