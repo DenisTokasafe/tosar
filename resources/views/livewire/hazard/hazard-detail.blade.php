@@ -366,7 +366,7 @@
 
                     <fieldset class="fieldset relative">
                         <x-form.label label="Tanggal & Waktu" required />
-                        <div class="relative" wire:ignore x-data="{
+                        <div class="relative " wire:ignore x-data="{
                             fp: null,
                             initFlatpickr() {
                                 if (this.fp) this.fp.destroy();
@@ -376,18 +376,22 @@
                                     defaultDate: this.$wire.entangle('tanggal').defer,
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
-                                    appendTo: this.$refs.wrapper,
+                                    // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                    // appendTo: this.$refs.wrapper,
+
+                                    // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                    position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+
                                     onChange: (selectedDates, dateStr) => {
                                         this.$wire.set('tanggal', dateStr);
                                     }
                                 });
                             }
-                        }" x-ref="wrapper" x-init="
-                            initFlatpickr();
+                        }" x-ref="wrapper"
+                            x-init="initFlatpickr();
                             Livewire.hook('message.processed', () => {
                                 initFlatpickr();
-                            });
-                        ">
+                            });">
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput" wire:model.live='tanggal' placeholder="Pilih Tanggal dan Waktu..." readonly class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                         </div>
                         <x-label-error :messages="$errors->get('tanggal')" />
