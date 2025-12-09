@@ -438,10 +438,7 @@
                                     disableMobile: true,
                                     enableTime: true,
 
-                                    // ⚡️ PERUBAHAN UTAMA: Gunakan nilai properti Livewire yang sudah terformat
-                                    // Kita gunakan @js() untuk memastikan string dikirim dengan benar ke JavaScript.
-                                    // Jika $this->tanggal di Livewire sudah format 'd-m-Y H:i', maka gunakan @js().
-                                    // Jika $this->tanggal masih format DB 'Y-m-d H:i:s', Flatpickr tetap akan mengurainya.
+
                                     defaultDate: @js($this->tanggal),
 
                                     dateFormat: 'd-m-Y H:i',
