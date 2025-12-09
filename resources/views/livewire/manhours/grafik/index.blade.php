@@ -101,7 +101,7 @@
     <script type="module">
 
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
-        const data_manpower = @json($manpowerChartData);
+        const data_manpower = @json($manpowerData);
         console.log(data_manpower);
 
         var dom_mp = document.getElementById('grafik-manpower');

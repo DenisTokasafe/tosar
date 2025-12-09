@@ -9,7 +9,7 @@ use App\Models\Manhour;
 
 class Index extends Component
 {
-    public $data, $manpowerChartData;
+    public $data, $manpowerData;
     public $start_date;
     public $end_date;
     public function mount()
@@ -150,12 +150,12 @@ class Index extends Component
             'contractor' => $contractor_mp
         ];
 
-        dd($data_manpower);
+
         // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
-        $this->manpowerChartData = json_encode($data_manpower);
+        $this->manpowerData = json_encode($data_manpower);
 
         // Dispatch event yang berbeda untuk grafik manpower
-        $this->dispatch('manpowerChart', $this->manpowerChartData);
+        $this->dispatch('manpowerChart', $this->manpowerData);
     }
 
     public function render()
