@@ -8,13 +8,14 @@
     <script type="module">
         setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
         const data = @json($data);
+        const currentYear = @json($years);
         var dom = document.getElementById('grafik-manhours');
         var myChart = echarts.init(dom);
         var option;
 
         option = {
             title: {
-                text: 'Manhours Bulanan'
+                text: 'Manhours Bulanan Tahun ' + currentYear,
             },
             tooltip: {
                 trigger: 'axis'
@@ -99,7 +100,7 @@
 
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
         const data_manpower = @json($manpowerData);
-        console.log(data_manpower);
+        const currentYear = @json($years);
 
         var dom_mp = document.getElementById('grafik-manpower');
         var myChart_mp = echarts.init(dom_mp);
@@ -108,7 +109,7 @@
         // --- OPSI ECHARTS UNTUK MANPOWER ---
         option_mp = {
             title: {
-                text: 'Manpower Bulanan' // Mengganti Judul
+                text: 'Manpower Bulanan Tahun ' + currentYear,
             },
             tooltip: {
                 trigger: 'axis'
