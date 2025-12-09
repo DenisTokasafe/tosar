@@ -12,7 +12,6 @@ class Index extends Component
     public $data,$dataManpower;
     public $start_date;
     public $end_date;
-
     public function mount()
     {
         // Default filter tanggal
@@ -44,14 +43,12 @@ class Index extends Component
             ->orderBy('month')
             ->pluck('month')
             ->toArray();
-
         // Format bulan ke teks (Jan, Feb, Mar)
         $months = array_map(
             fn($m) =>
             Carbon::create()->month($m)->format('M'),
             $monthsRaw
         );
-
         // === PT. MSM ===
         $msmData = Manhour::dateRange($this->start_date, $this->end_date)
             ->where('company', 'PT. MSM')
@@ -75,48 +72,15 @@ class Index extends Component
             ->pluck('total_manhours', 'month')
             ->toArray();
 
-            // **** MANPOWER ****
-        // === PT. MSM ===
-        $msmDataManpower = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company', 'PT. MSM')
-            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-            ->groupBy('month')
-            ->pluck('total_manpower', 'month')
-            ->toArray();
-
-        // === PT. TTN ===
-        $ttnDataManpower = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company', 'PT. TTN')
-            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-            ->groupBy('month')
-            ->pluck('total_manpower', 'month')
-            ->toArray();
-        // === CONTRACTOR ===
-        $contractorDataManpower = Manhour::dateRange($this->start_date, $this->end_date)
-            ->where('company_category', 'CONTRACTOR')
-            ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
-            ->groupBy('month')
-            ->pluck('total_manpower', 'month')
-            ->toArray();
-
         // Format data: pastikan semua bulan ada (0 jika kosong)
         $msm = [];
         $ttn = [];
         $contractor = [];
-        $msmManpower = [];
-        $ttnManpower = [];
-        $contractorManpower = [];
-
         foreach ($monthsRaw as $m) {
             $msm[]        = $msmData[$m] ?? 0;
             $ttn[]        = $ttnData[$m] ?? 0;
             $contractor[] = $contractorData[$m] ?? 0;
-
-            $msmManpower[]        = $msmDataManpower[$m] ?? 0;
-            $ttnManpower[]        = $ttnDataManpower[$m] ?? 0;
-            $contractorManpower[] = $contractorDataManpower[$m] ?? 0;
         }
-
         // Data final untuk chart
         $this->data = json_encode([
             'months' => $months,
@@ -125,13 +89,8 @@ class Index extends Component
             'contractor'    => $contractor
         ]);
         $this->dispatch('manhoursChart', $this->data);
-        $this->dataManpower = json_encode([
-            'monthsManpower' => $months,
-            'msmManpower'    => $msmManpower,
-            'ttnManpower'    => $ttnManpower,
-            'contractorManpower'    => $contractorManpower
-        ]);
-        $this->dispatch('manpowerChart', $this->dataManpower);
+
+
     }
 
     public function render()
