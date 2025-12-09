@@ -21,7 +21,6 @@ class Index extends Component
             $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         }
         $this->years = Carbon::now()->year;
-        dd($this->years);
         $this->loadData();
         $this->loadDataManpower();
     }

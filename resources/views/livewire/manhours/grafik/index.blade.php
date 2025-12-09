@@ -112,7 +112,7 @@
         // --- OPSI ECHARTS UNTUK MANPOWER ---
         option_mp = {
             title: {
-                text: 'Manpower Bulanan' // Mengganti Judul
+                text: 'Manpower Bulanan'.$year // Mengganti Judul
             },
             tooltip: {
                 trigger: 'axis'
