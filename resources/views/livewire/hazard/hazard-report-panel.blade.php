@@ -3,7 +3,7 @@
     @include('partials.header-hazard')
     <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center">
         <div class="mb-4 md:mb-0 flex items-center gap-2">
-            <div class="tooltip tooltip-right  mb-0.5" data-tip="Tambah Hazard">
+            <div class="tooltip tooltip-right  mb-1" data-tip="Tambah Hazard">
                 <a href="{{ route('hazard-form') }}" class="btn btn-square btn-primary btn-xs">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
