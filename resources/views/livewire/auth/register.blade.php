@@ -63,7 +63,7 @@
                         @endif
                     </div>
                     @if ($status === 'department')
-                        <x-label-error :messages="$errors->get('department_id')" />
+                        <x-label-error :messages="$errors->get('searchDepartemen')" />
                     @endif
                 </div>
                 <div class="hidden peer-checked/company:block mt-0.5">
@@ -90,7 +90,7 @@
                         @endif
                     </div>
                     @if ($status === 'company')
-                        <x-label-error :messages="$errors->get('contractor_id')" />
+                        <x-label-error :messages="$errors->get('searchContractor')" />
                     @endif
                 </div>
             </fieldset>
