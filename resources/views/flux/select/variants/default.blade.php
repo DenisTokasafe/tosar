@@ -23,7 +23,7 @@
     // Menggunakan kelas bg-base-100 (yang mungkin putih di light mode) dan dark:bg-transparent.
     ->add('bg-white dark:disabled:bg-white/[7%] dark:border') // Mengikuti dark:bg-transparent dari input 'outline'
     // -------------------------------------------------------------------------
-    ->add('text-black dark:text-zinc-200 font-semibold') // Mengubah dark:text-zinc-700 menjadi dark:text-zinc-200 agar terlihat di background gelap
+    ->add('text-black dark:text-zinc-800 font-semibold') // Mengubah dark:text-zinc-700 menjadi dark:text-zinc-200 agar terlihat di background gelap
     // Make the placeholder match the text color of standard input placeholders...
     ->add('has-[option.placeholder:checked]:text-zinc-400 dark:has-[option.placeholder:checked]:text-zinc-400')
     // Options on Windows don't inherit dark mode styles, so we need to force them...
