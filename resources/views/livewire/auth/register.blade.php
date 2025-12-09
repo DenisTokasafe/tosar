@@ -17,12 +17,14 @@
             <!-- Email Address -->
             <flux:input wire:model="email" :label="__('Alamat Email')" type="email" required autocomplete="email"
                 placeholder="email@example.com" />
-             <!-- Nomor ID -->
+            <!-- Nomor ID -->
             <flux:input wire:model="no_id" :label="__('Nomor ID')" type="text" required autocomplete="no_id"
                 :placeholder="__('Nomor ID')" />
-             <!-- Jenis kelamin -->
-            <flux:input wire:model="gender" :label="__('Jenis kelamin')" type="text" required autocomplete="gender"
-                :placeholder="__('Jenis kelamin')" />
+            <!-- Jenis kelamin -->
+            <flux:select wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin" :label="__('Jenis Kelamin')" required>
+                <flux:select.option>Laki-Laki</flux:select.option>
+                <flux:select.option>Perempuan</flux:select.option>
+            </flux:select>
             <fieldset>
                 <input id="department" value="department" wire:model.live="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
