@@ -11,13 +11,14 @@
     <script type="module">
         setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
         const data = @json($data);
+        const currentYear = @json($years);
         var dom = document.getElementById('grafik-manhours');
         var myChart = echarts.init(dom);
         var option;
 
          option_mp = {
             title: {
-                text: 'Manhours Bulanan Periode' // Mengganti Judul
+              text: 'Manhours Bulanan Tahun ' + currentYear,
             },
             tooltip: {
                 trigger: 'axis'
