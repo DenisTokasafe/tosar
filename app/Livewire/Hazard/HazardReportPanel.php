@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 class HazardReportPanel extends Component
 {
     use WithPagination;
+    // PROPERTI BARU UNTUK CHECKBOX
+    public bool $filterByAuth = false;
     public array $filterStatus = [];
     public $role;
     public $filterEventType;
@@ -248,8 +250,12 @@ class HazardReportPanel extends Component
     public function render()
     {
         $query = Hazard::with('pelapor')->withHazardCounts()->latest();
-
-        // Tambahkan withCount untuk menghitung relasi
+        $user = Auth::user(); // Ambil data user yang sedang login
+        // ⚡️ IMPLEMENTASI FILTER CHECKBOX BARU
+        $query->when($this->filterByAuth, function ($q) use ($user) {
+            // Hanya tampilkan laporan di mana pelapor_id sama dengan ID pengguna yang sedang login
+            $q->where('pelapor_id', $user->id);
+        });
 
 
         // Terapkan scope untuk setiap filter
