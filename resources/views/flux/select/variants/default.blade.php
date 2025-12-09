@@ -25,7 +25,7 @@
     // -------------------------------------------------------------------------
     ->add('text-black dark:text-zinc-800 font-semibold') // Mengubah dark:text-zinc-700 menjadi dark:text-zinc-200 agar terlihat di background gelap
     // Make the placeholder match the text color of standard input placeholders...
-    ->add('has-[option.placeholder:checked]:text-zinc-400 dark:has-[option.placeholder:checked]:text-zinc-400')
+    ->add('has-[option.placeholder:checked]:text-black dark:has-[option.placeholder:checked]:text-black')
     // Options on Windows don't inherit dark mode styles, so we need to force them...
         ->add('dark:[&>option]:bg-base-100 dark:[&>option]:text-base-content ')
         ->add('disabled:shadow-none')
