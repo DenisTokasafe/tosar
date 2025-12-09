@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6 w-full bg-base-300">
+<div class="flex flex-col gap-6 w-full ">
     <x-auth-header :title="__('Pendaftaran Akun')" :description="__('Isi data di bawah untuk mendaftar.')" />
 
     <!-- Session Status -->
