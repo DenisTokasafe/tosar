@@ -21,7 +21,7 @@
     ->add('shadow-xs  ')
     // --- BARIS INI DIMODIFIKASI UNTUK MENYESUAIKAN DENGAN BACKGROUND INPUT ---
     // Menggunakan kelas bg-base-100 (yang mungkin putih di light mode) dan dark:bg-transparent.
-    ->add('bg-white dark:bg-transparent dark:disabled:bg-white/[7%] dark:border') // Mengikuti dark:bg-transparent dari input 'outline'
+    ->add('bg-transparent dark:disabled:bg-white/[7%] dark:border') // Mengikuti dark:bg-transparent dari input 'outline'
     // -------------------------------------------------------------------------
     ->add('text-zinc-700 dark:text-zinc-200 font-semibold') // Mengubah dark:text-zinc-700 menjadi dark:text-zinc-200 agar terlihat di background gelap
     // Make the placeholder match the text color of standard input placeholders...
