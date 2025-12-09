@@ -16,6 +16,8 @@ use Illuminate\Auth\Events\Registered;
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
+    public string $first_name = '';
+    public string $last_name = '';
     public string $name = '';
     public string $username = '';
     public string $email = '';
@@ -35,7 +37,36 @@ class Register extends Component
         'searchContractor.required_if' => 'Kontraktor wajib diisi.',
         'jenis_kelamin.required' => 'Jenis Kelamin wajib diisi.',
     ];
+    public function updated($propertyName): void
+    {
+        if (in_array($propertyName, ['first_name', 'last_name'])) {
+            $this->updateNameField();
+        }
+    }
+    protected function updateNameField(): void
+    {
+        // 1. Pemformatan first_name: Title Case (Yoman Denis)
+        $firstName = trim($this->first_name);
+        // Ubah ke lowercase dulu, lalu capitalize setiap kata
+        $formattedFirstName = ucwords(strtolower($firstName));
 
+        // 2. Pemformatan last_name: Uppercase (BANEA)
+        $lastName = trim($this->last_name);
+        $formattedLastName = strtoupper($lastName);
+
+        // 3. Gabungkan ke properti 'name' (Format: MARGA, Nama Depan)
+        if (!empty($formattedLastName) && !empty($formattedFirstName)) {
+            $this->name = "{$formattedLastName}, {$formattedFirstName}";
+        } elseif (!empty($formattedLastName)) {
+            // Jika hanya Marga yang diisi
+            $this->name = $formattedLastName;
+        } elseif (!empty($formattedFirstName)) {
+            // Jika hanya Nama Depan yang diisi
+            $this->name = $formattedFirstName;
+        } else {
+            $this->name = '';
+        }
+    }
     public function updatedStatus($value)
     {
         if ($value === 'department') {
@@ -93,6 +124,8 @@ class Register extends Component
     }
     public function register(): void
     {
+        // Panggil ini lagi untuk memastikan properti 'name' final sebelum validasi
+        $this->updateNameField();
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:50', 'unique:users,username'],
