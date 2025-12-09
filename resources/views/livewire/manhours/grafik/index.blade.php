@@ -6,98 +6,113 @@
 @push('scripts')
     <!-- Load ECharts dari CDN -->
     <script type="module">
-        setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
-        const data = @json($data);
+        // ⚠️ Hapus atau Nonaktifkan ini. Polling 1000ms sangat membebani server dan browser.
+        // setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
+
+        // 1. Ambil Data Awal dan Tahun
+        const data_initial = @json($data);
         const currentYear = @json($years);
+
+        // 2. Inisialisasi ECharts di luar event listener
         var dom = document.getElementById('grafik-manhours');
-        var myChart = echarts.init(dom);
-        var option;
-
-        option = {
-            title: {
-                text: 'Manhours Bulanan Tahun ' + currentYear,
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: data.months
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                    name: 'MSM',
-                    type: 'line',
-                    stack: 'Total',
-                    data: data.msm
-                },
-                {
-                    name: 'TTN',
-                    type: 'line',
-                    stack: 'Total',
-                    data: data.ttn
-                },
-                {
-                    name: 'Contractor',
-                    type: 'line',
-                    stack: 'Total',
-                    data: data.contractor
-                }
-            ]
-        };
-
-        if (option && typeof option === 'object') {
-            myChart.setOption(option);
-            Livewire.on('manhoursChart', event => {
-                let payload_trand = JSON.parse(event);
-                myChart.setOption({
-                    xAxis: {
-                        data: payload_trand.months
-                    },
-                    series: [{
-                            name: 'MSM',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trand.msm
-                        },
-                        {
-                            name: 'TTN',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trand.ttn
-                        },
-                        {
-                            name: 'Contractor',
-                            type: 'line',
-                            stack: 'Total',
-                            data: payload_trand.contractor
-                        }
-                    ]
-
-                });
-            });
+        if (!dom) {
+            console.error("Elemen ID 'grafik-manhours' tidak ditemukan.");
+            return;
         }
+        var myChart = echarts.init(dom);
+
+        // 3. Fungsi untuk Menggambar/Memperbarui Grafik
+        function updateChart(payload) {
+            if (!payload || !payload.months || payload.months.length === 0) {
+                console.warn("Payload data chart Manhours kosong.");
+                // Opsi: Tampilkan placeholder "Data Kosong" jika perlu
+                // myChart.clear();
+                return;
+            }
+
+            var option = {
+                title: {
+                    text: 'Manhours Bulanan Tahun ' + currentYear,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    // 🔑 HARUS SAMA PERSIS dengan nama 'name' di series
+                    data: ['PT. MSM', 'PT. TTN', 'Contractor']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: payload.months
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                        // 🔑 Nama series di sini
+                        name: 'PT. MSM',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload.msm
+                    },
+                    {
+                        // 🔑 Nama series di sini
+                        name: 'PT. TTN',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload.ttn
+                    },
+                    {
+                        // 🔑 Nama series di sini
+                        name: 'Contractor',
+                        type: 'line',
+                        stack: 'Total',
+                        data: payload.contractor
+                    }
+                ]
+            };
+
+            // Menggunakan setOption dengan parameter kedua 'true' untuk update penuh
+            myChart.setOption(option, true);
+        }
+
+        // 4. Load Data Awal (Menggunakan data yang disuntikkan dari Blade)
+        try {
+            const initialPayload = JSON.parse(JSON.stringify(data_initial)); // Kloning data untuk keamanan
+            updateChart(initialPayload);
+        } catch (e) {
+            console.warn("Gagal inisialisasi data awal Manhours:", e);
+        }
+
+        // 5. Livewire Listener untuk Update Dinamis
+        Livewire.on('manhoursChart', event => {
+            try {
+                // Event di Livewire 3 bisa berupa array atau string, kita ambil payloadnya
+                const payloadString = (typeof event === 'string') ? event : event[0];
+                let payload_trand = JSON.parse(payloadString);
+                updateChart(payload_trand);
+            } catch (e) {
+                console.error("Gagal parse data update Manhours dari Livewire:", e);
+            }
+        });
+
         window.addEventListener('resize', myChart.resize);
     </script>
-    <script type="module">
 
+    <script type="module">
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
         const data_manpower = @json($manpowerData);
         const currentYear = @json($years);
