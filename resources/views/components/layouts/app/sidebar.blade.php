@@ -5,7 +5,7 @@
     @include('partials.head')
 </head>
 <body class="min-h-screen " x-data="{ sidebarHidden: false }">
-    <flux:sidebar sticky stashable x-bind:class="sidebarHidden ? 'border-e border-zinc-200 bg-zinc-50 bg-base-300 hidden' : 'border-e border-base-100 bg-base-300 '">
+    <flux:sidebar sticky stashable x-bind:class="sidebarHidden ? 'border-e border-zinc-200 bg-base-300 hidden' : 'border-e border-base-100 bg-base-300 '">
 
         <div class="flex items-center justify-between ">
             <!-- Logo -->
