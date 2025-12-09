@@ -113,7 +113,7 @@
         // --- OPSI ECHARTS UNTUK MANPOWER ---
         option_mp = {
             title: {
-              text: 'Manhours Bulanan Tahun ' + currentYear,
+              text: 'Manpower Bulanan Tahun ' + currentYear,
             },
             tooltip: {
                 trigger: 'axis'
