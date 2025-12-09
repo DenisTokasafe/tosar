@@ -37,18 +37,18 @@ class Register extends Component
     ];
 
     public function updatedStatus($value)
-    {
-        if ($value === 'department') {
-            // Reset kontraktor jika pindah ke departemen
-            $this->resetErrorBag(['searchContractor']);
-            $this->reset(['searchContractor', 'contractors']);
-        }
-        if ($value === 'company') {
-            // Reset departemen jika pindah ke kontraktor
-            $this->resetErrorBag(['searchDepartemen']);
-            $this->reset(['searchDepartemen', 'departments']);
-        }
-    }
+ {
+  if ($value === 'department') {
+   // Reset kontraktor jika pindah ke departemen
+   $this->resetErrorBag(['searchContractor']);
+   $this->reset(['searchContractor', 'contractors']);
+  }
+  if ($value === 'company') {
+   // Reset departemen jika pindah ke kontraktor
+   $this->resetErrorBag(['searchDepartemen']);
+   $this->reset(['searchDepartemen', 'departments']);
+  }
+ }
 
 
     public function updatedSearchDepartemen()
@@ -64,7 +64,7 @@ class Register extends Component
             $this->showDepartemenDropdown = false;
         }
     }
-    public function selectDepartment($name)
+    public function selectDepartment($id,$name)
     {
         $this->reset('searchContractor');
         $this->searchDepartemen = $name;
@@ -84,7 +84,7 @@ class Register extends Component
             $this->showContractorDropdown = true;
         }
     }
-    public function selectContractor($name)
+    public function selectContractor($id,$name)
     {
         $this->reset('searchDepartemen');
 
