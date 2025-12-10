@@ -8,61 +8,86 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class UsersImport implements ToModel, WithHeadingRow
 {
+    // ... (rules() dan parseDate() tetap sama) ...
+
     /**
      * @param array $row
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function rules(): array
-    {
-        return [
-            'name' => ['nullable'],
-            'email' => ['nullable', 'email'], // pastikan tidak ada spasi
-            'gender' => ['nullable'],
-            'date_birth' => ['nullable'],
-            'username' => ['nullable'],
-            'department_name' => ['nullable'],
-            'employee_id' => ['nullable'],
-            'date_birth' => ['nullable'],
-            'date_commenced' => ['nullable'],
-            'role_id' => ['nullable'],
-        ];
-    }
     public function model(array $row)
     {
-        // skip kalau salah satu key utama kosong
+        // 1. Definisikan Kunci Pencarian Unik (kriteria WHERE)
+        $searchKeys = [
+            'employee_id' => $row['employee_id'] ?? null,
+        ];
 
-        //      if (
-        //     User::where('email', $row['email'])->exists() ||
-        //     User::where('username', $row['username'])->exists() ||
-        //     User::where('employee_id', $row['employee_id'])->exists()
-        // ) {
-        //     return null; // skip baris
-        // }
-        return new User([
-            'name'              => $row['name'],
-            'email'             => $row['email'] ?? null,
-            'gender'            => $row['gender'] ?? null,
-            'date_birth'        => $this->parseDate($row['date_birth'] ?? null),
-            'username'          => $row['username'] ?? null,
-            'department_name'   => $row['department_name'] ?? null,
-            'employee_id'       => $row['employee_id'] ?? null,
-            'date_commenced'    => $this->parseDate($row['date_commenced'] ?? null),
-            'role_id' => $row['role_id'] ?? null,
-        ]);
-    }
-    private function parseDate($value)
-    {
-        // Kalau kosong atau string "NULL" -> return null
-        if (empty($value) || strtoupper($value) === 'NULL') {
+        // Cek juga berdasarkan email jika employee_id tidak ada
+        if (empty($searchKeys['employee_id']) && !empty($row['email'])) {
+             $searchKeys = ['email' => $row['email']];
+        }
+
+        // Jika tidak ada kunci unik yang ditemukan (misal baris kosong), lewati
+        if (empty($searchKeys) || current($searchKeys) === null) {
             return null;
         }
 
-        try {
-            // Excel biasanya kirim dalam format yyyy-mm-dd atau numeric (serial Excel)
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
-        } catch (\Exception $e) {
-            return null; // fallback aman
+        // 2. Siapkan Data yang Akan Disisipkan atau Diperbarui
+        // Catatan: Jika Anda tidak ingin kolom-kolom ini ditimpa saat update,
+        // Anda harus memindahkannya ke dalam logika kondisional di langkah 3.
+        $dataToUpdate = [
+            'name'                => $row['name'],
+            'email'               => $row['email'] ?? null,
+            'gender'              => $row['gender'] ?? null,
+            'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
+            'department_name'     => $row['department_name'] ?? null,
+            'employee_id'         => $row['employee_id'] ?? null,
+            'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
+            'role_id'             => $row['role_id'] ?? null,
+            'updated_at'          => now(),
+        ];
+
+        // 3. Panggil firstOrNew
+        $user = User::firstOrNew($searchKeys);
+
+        // Jika User sudah ada, kita hanya update kolom tertentu
+        if ($user->exists) {
+
+            // --- Logika Update Kondisional (Tanpa Hash) ---
+
+            // Update Username jika saat ini kosong di DB
+            if (empty($user->username) && !empty($row['username'])) {
+                $user->username = $row['username'];
+            }
+
+            // Update Password jika saat ini kosong di DB
+            // (Mengambil plain text dari Excel)
+            if (empty($user->password) && !empty($row['password_kolom'])) {
+                $user->password = $row['password_kolom']; // TIDAK menggunakan Hash::make()
+            }
+
+            // Update data lainnya yang selalu ingin di-update
+            $user->fill($dataToUpdate);
+
+            $user->save();
+            return $user;
+
+        } else {
+            // Jika User BARU (tidak ditemukan), lakukan INSERT
+            $dataToUpdate['username'] = $row['username'] ?? null;
+            $dataToUpdate['created_at'] = now();
+
+            // --- Logika Insert Data Baru (Tanpa Hash) ---
+
+            // Tambahkan password untuk data baru (plain text)
+            if (!empty($row['password_kolom'])) {
+                $dataToUpdate['password'] = $row['password_kolom']; // TIDAK menggunakan Hash::make()
+            } else {
+                 $dataToUpdate['password'] = 'default_password'; // Password default plain text
+            }
+
+            // Gunakan `create` untuk menyisipkan data baru
+            return User::create($dataToUpdate);
         }
     }
 }
