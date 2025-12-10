@@ -19,13 +19,22 @@ class UsersImport implements ToModel, WithHeadingRow
         // 1. Definisikan Kunci Pencarian Unik (kriteria WHERE)
         $searchKeys = [];
 
-        // Prioritaskan employee_id
-        if (!empty($row['employee_id'])) {
-            $searchKeys['employee_id'] = $row['employee_id'];
+        $searchKeys = [];
+
+        $employeeId = $row['employee_id'] ?? null;
+        $email = $row['email'] ?? null;
+
+        // SELALU bersihkan dan normalisasi email/ID sebelum digunakan untuk pencarian
+        $normalizedEmail = !empty($email) ? strtolower(trim($email)) : null;
+        $normalizedEmployeeId = !empty($employeeId) ? trim($employeeId) : null;
+
+        // Prioritaskan employee_id untuk pencarian
+        if (!empty($normalizedEmployeeId)) {
+            $searchKeys['employee_id'] = $normalizedEmployeeId;
         }
         // Jika employee_id kosong, gunakan email
-        elseif (!empty($row['email'])) {
-            $searchKeys['email'] = $row['email'];
+        elseif (!empty($normalizedEmail)) {
+            $searchKeys['email'] = $normalizedEmail; // Gunakan email yang sudah dinormalisasi
         }
         // Jika employee_id kosong, gunakan email
         elseif (!empty($row['name'])) {
@@ -44,11 +53,11 @@ class UsersImport implements ToModel, WithHeadingRow
         // Gunakan fungsi parseDate() untuk memastikan format yyyy-mm-dd
         $dataToUpdate = [
             'name'                => $row['name'],
-            'email'               => $row['email'] ?? null,
+            'email'               => $normalizedEmail,
             'gender'              => $this->mapGender($row['gender'] ?? null),
             'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
             'department_name'     => $row['department_name'] ?? null,
-            'employee_id'         => $row['employee_id'] ?? null,
+            'employee_id'         => $normalizedEmployeeId,
             'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
             'role_id'             => $row['role_id'] ?? null,
             'updated_at'          => now(),
@@ -74,7 +83,6 @@ class UsersImport implements ToModel, WithHeadingRow
 
             $user->save();
             return $user;
-
         } else {
             // Data BARU (INSERT)
 
@@ -86,7 +94,7 @@ class UsersImport implements ToModel, WithHeadingRow
             if (!empty($row['password_kolom'])) {
                 $dataToUpdate['password'] = $row['password_kolom'];
             } else {
-                 $dataToUpdate['password'] = 'default_password';
+                $dataToUpdate['password'] = 'default_password';
             }
 
             // Gunakan create untuk menyisipkan data baru
@@ -118,31 +126,31 @@ class UsersImport implements ToModel, WithHeadingRow
     // Metode rules() Anda
     public function rules(): array
     {
-         return [
-             'name' => ['nullable'],
-             'email' => ['nullable', 'email'],
-             // ... (aturan validasi lainnya)
-         ];
+        return [
+            'name' => ['nullable'],
+            'email' => ['nullable', 'email'],
+            // ... (aturan validasi lainnya)
+        ];
     }
 
     private function mapGender($value)
-{
-    if (empty($value)) {
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        // Konversi ke huruf kecil untuk pengecekan yang lebih fleksibel
+        $normalizedValue = strtolower(trim($value));
+
+        if (in_array($normalizedValue, ['l', 'male', 'laki-laki', 'pria'])) {
+            return 'L';
+        }
+
+        if (in_array($normalizedValue, ['p', 'female', 'perempuan', 'wanita'])) {
+            return 'P';
+        }
+
+        // Default: jika tidak dikenali, kembalikan null atau nilai default yang aman
         return null;
     }
-
-    // Konversi ke huruf kecil untuk pengecekan yang lebih fleksibel
-    $normalizedValue = strtolower(trim($value));
-
-    if (in_array($normalizedValue, ['l', 'male', 'laki-laki', 'pria'])) {
-        return 'L';
-    }
-
-    if (in_array($normalizedValue, ['p', 'female', 'perempuan', 'wanita'])) {
-        return 'P';
-    }
-
-    // Default: jika tidak dikenali, kembalikan null atau nilai default yang aman
-    return null;
-}
 }
