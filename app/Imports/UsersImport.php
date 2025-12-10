@@ -27,6 +27,10 @@ class UsersImport implements ToModel, WithHeadingRow
         elseif (!empty($row['email'])) {
             $searchKeys['email'] = $row['email'];
         }
+        // Jika employee_id kosong, gunakan email
+        elseif (!empty($row['name'])) {
+            $searchKeys['name'] = $row['name'];
+        }
 
         // Jika tidak ada kunci unik yang valid, lewati baris
         if (empty($searchKeys)) {
