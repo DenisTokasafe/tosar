@@ -193,7 +193,7 @@ class User extends Component
                     'text' => 'Terdapat kesalahan data di dalam file Excel Anda. Mohon periksa detail berikut.',
                     'type' => 'error', // Pastikan notifikasi Anda mendukung tipe 'error'
                     'html' => $errorHtml,
-                    'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
+                   'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
                     'close' => true,
                 ]
             );
