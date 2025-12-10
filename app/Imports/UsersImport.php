@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Carbon\Carbon; // Pastikan Carbon diimpor
+use Carbon\Carbon;
 
 class UsersImport implements ToModel, WithHeadingRow
 {
@@ -16,32 +16,26 @@ class UsersImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        // 1. Definisikan Kunci Pencarian Unik (kriteria WHERE)
-        $searchKeys = [];
+        // 1. Normalisasi Data Kunci (Penting untuk menghindari error Duplicate entry)
+        $employeeId = !empty($row['employee_id']) ? trim($row['employee_id']) : null;
+        // Email dinormalisasi ke huruf kecil untuk pencarian yang konsisten
+        $email = !empty($row['email']) ? strtolower(trim($row['email'])) : null;
 
         $searchKeys = [];
 
-        $employeeId = $row['employee_id'] ?? null;
-        $email = $row['email'] ?? null;
-
-        // SELALU bersihkan dan normalisasi email/ID sebelum digunakan untuk pencarian
-        $normalizedEmail = !empty($email) ? strtolower(trim($email)) : null;
-        $normalizedEmployeeId = !empty($employeeId) ? trim($employeeId) : null;
-
-        // Prioritaskan employee_id untuk pencarian
-        if (!empty($normalizedEmployeeId)) {
-            $searchKeys['employee_id'] = $normalizedEmployeeId;
+        // Prioritaskan employee_id untuk pencarian (Lebih unik)
+        if (!empty($employeeId)) {
+            $searchKeys['employee_id'] = $employeeId;
         }
-        // Jika employee_id kosong, gunakan email
-        elseif (!empty($normalizedEmail)) {
-            $searchKeys['email'] = $normalizedEmail; // Gunakan email yang sudah dinormalisasi
-        }
-        // Jika employee_id kosong, gunakan email
-        elseif (!empty($row['name'])) {
-            $searchKeys['name'] = $row['name'];
+        // Jika employee_id kosong, gunakan email (Kunci unik kedua)
+        elseif (!empty($email)) {
+            $searchKeys['email'] = $email;
         }
 
-        // Jika tidak ada kunci unik yang valid, lewati baris
+        // --- HAPUS PENCARIAN BERDASARKAN 'NAME' ---
+        // Pengecekan 'name' di sini dihilangkan karena tidak unik dan bisa menyebabkan penimpaan data yang salah.
+
+        // Jika tidak ada kunci pencarian yang valid (employee_id/email), lewati baris
         if (empty($searchKeys)) {
             return null;
         }
@@ -50,14 +44,13 @@ class UsersImport implements ToModel, WithHeadingRow
         $user = User::firstOrNew($searchKeys);
 
         // 3. Siapkan Data Dasar yang Akan Disisipkan atau Diperbarui
-        // Gunakan fungsi parseDate() untuk memastikan format yyyy-mm-dd
         $dataToUpdate = [
             'name'                => $row['name'],
-            'email'               => $normalizedEmail,
+            'email'               => $email, // Gunakan email yang sudah dinormalisasi
             'gender'              => $this->mapGender($row['gender'] ?? null),
             'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
             'department_name'     => $row['department_name'] ?? null,
-            'employee_id'         => $normalizedEmployeeId,
+            'employee_id'         => $employeeId,
             'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
             'role_id'             => $row['role_id'] ?? null,
             'updated_at'          => now(),
@@ -65,14 +58,14 @@ class UsersImport implements ToModel, WithHeadingRow
 
         // 4. Logika Update atau Insert
         if ($user->exists) {
-            // Data DITEMUKAN (UPDATE KONDISIONAL)
+            // Data DITEMUKAN (UPDATE / REPLACE)
 
             // a. Update Username jika saat ini kosong di DB
             if (empty($user->username) && !empty($row['username'])) {
                 $user->username = $row['username'];
             }
 
-            // b. Update Password jika saat ini kosong di DB (Tanpa Hashing)
+            // b. Update Password jika saat ini kosong di DB (Plain Text)
             // Ganti 'password_kolom' dengan nama header yang benar di Excel Anda
             if (empty($user->password) && !empty($row['password_kolom'])) {
                 $user->password = $row['password_kolom'];
@@ -83,6 +76,7 @@ class UsersImport implements ToModel, WithHeadingRow
 
             $user->save();
             return $user;
+
         } else {
             // Data BARU (INSERT)
 
@@ -90,14 +84,13 @@ class UsersImport implements ToModel, WithHeadingRow
             $dataToUpdate['created_at'] = now();
 
             // Tambahkan password untuk data baru (Plain Text)
-            // Ganti 'password_kolom'
             if (!empty($row['password_kolom'])) {
                 $dataToUpdate['password'] = $row['password_kolom'];
             } else {
-                $dataToUpdate['password'] = 'default_password';
+                 $dataToUpdate['password'] = 'default_password';
             }
 
-            // Gunakan create untuk menyisipkan data baru
+            // Lakukan INSERT
             return User::create($dataToUpdate);
         }
     }
@@ -109,37 +102,26 @@ class UsersImport implements ToModel, WithHeadingRow
      */
     private function parseDate($value)
     {
-        // Kalau kosong atau string "NULL" -> return null
         if (empty($value) || strtoupper($value) === 'NULL') {
             return null;
         }
 
         try {
-            // Carbon::parse akan menangani format berbeda,
-            // lalu format 'Y-m-d' akan memaksa output menjadi yyyy-mm-dd
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
-            return null; // fallback aman jika parsing gagal
+            return null;
         }
     }
 
-    // Metode rules() Anda
-    public function rules(): array
-    {
-        return [
-            'name' => ['nullable'],
-            'email' => ['nullable', 'email'],
-            // ... (aturan validasi lainnya)
-        ];
-    }
-
+    /**
+     * Metode Pembantu 2: Menerjemahkan nilai gender (Misal: Male/Female ke L/P)
+     */
     private function mapGender($value)
     {
         if (empty($value)) {
             return null;
         }
 
-        // Konversi ke huruf kecil untuk pengecekan yang lebih fleksibel
         $normalizedValue = strtolower(trim($value));
 
         if (in_array($normalizedValue, ['l', 'male', 'laki-laki', 'pria'])) {
@@ -150,7 +132,17 @@ class UsersImport implements ToModel, WithHeadingRow
             return 'P';
         }
 
-        // Default: jika tidak dikenali, kembalikan null atau nilai default yang aman
         return null;
+    }
+
+    // Metode rules() Anda
+    public function rules(): array
+    {
+        return [
+            'name' => ['nullable'],
+            'email' => ['nullable', 'email'],
+            'gender' => ['nullable'],
+            // ... (lanjutkan aturan validasi lainnya)
+        ];
     }
 }
