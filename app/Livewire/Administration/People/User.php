@@ -201,6 +201,27 @@ class User extends Component
         $user = UserProfile::findOrFail($id);
         $this->fill($user->toArray());
         $this->userId = $user->id;
+        // 2. Tentukan Radio Button yang terpilih (Department/Contractor)
+        // Kolom DB yang menyimpan status radio button adalah 'pilih_divisi'
+        // dan di Livewire mapping ke $this->deptCont.
+        $this->deptCont = $user->pilih_divisi;
+        // 3. Memuat nilai nama (department_name) ke input pencarian yang relevan
+        // Kolom DB yang menyimpan nama Departemen/Kontraktor adalah 'department_name'
+        // yang di Livewire di-mapping ke $this->dep_cont.
+
+        if ($this->deptCont === 'department') {
+            // Jika user adalah Department, tampilkan nama departemen di input search
+            $this->search = $user->department_name;
+            $this->searchContractor = ''; // Pastikan input kontraktor kosong
+        } elseif ($this->deptCont === 'contractor') {
+            // Jika user adalah Contractor, tampilkan nama kontraktor di input searchContractor
+            $this->searchContractor = $user->department_name;
+            $this->search = ''; // Pastikan input departemen kosong
+        } else {
+            // Kasus fallback jika pilih_divisi kosong/null (mungkin department_name saja yang terisi)
+            $this->search = $user->department_name;
+            $this->searchContractor = '';
+        }
         $this->showModal = true;
     }
 
