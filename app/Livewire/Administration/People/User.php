@@ -12,7 +12,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use App\Models\User as UserProfile;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Validation\Rule; // <-- BARIS INI DITAMBAHKAN
 class User extends Component
 {
     use WithPagination, WithFileUploads;
@@ -44,19 +44,43 @@ class User extends Component
     #[Validate('required_without:department_id')]
     public $contractor_id;
     protected function rules()
-    {
-        return [
-            'name' => 'required|string|max:255',
-            'gender' => 'nullable|in:L,P',
-            'date_birth' => 'nullable|date',
-            'role_id' => 'nullable',
-            'username' => 'required|string|max:255|unique:users,username,' . $this->userId,
-            'dep_cont' => 'nullable|string|max:255',
-            'employee_id' => 'required|string|max:255|unique:users,employee_id,' . $this->userId,
-            'date_commenced' => 'nullable|date',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->userId,
-        ];
-    }
+{
+    // Gunakan 0 sebagai fallback jika $this->userId belum diatur (untuk operasi 'create')
+    $userId = $this->userId ?? 0;
+
+    return [
+        'name' => 'required|string|max:255',
+        'gender' => 'nullable|in:L,P',
+        'date_birth' => 'nullable|date',
+        'role_id' => 'nullable',
+
+        // PERBAIKAN 1: Username
+        'username' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('users', 'username')->ignore($userId),
+        ],
+        'dep_cont' => 'nullable|string|max:255',
+
+        // PERBAIKAN 2: Employee ID
+        'employee_id' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('users', 'employee_id')->ignore($userId),
+        ],
+        'date_commenced' => 'nullable|date',
+
+        // PERBAIKAN 3: Email
+        'email' => [
+            'required',
+            'email',
+            'max:255',
+            Rule::unique('users', 'email')->ignore($userId),
+        ],
+    ];
+}
     protected function messages()
     {
         return [
@@ -197,34 +221,32 @@ class User extends Component
         $this->showModal = true;
     }
     public function edit($id)
-    {
-        $user = UserProfile::findOrFail($id);
-        $this->fill($user->toArray());
-        $this->userId = $user->id;
-        // 2. Tentukan Radio Button yang terpilih (Department/Contractor)
-        // Kolom DB yang menyimpan status radio button adalah 'pilih_divisi'
-        // dan di Livewire mapping ke $this->deptCont.
-        $this->deptCont = $user->pilih_divisi;
-        // 3. Memuat nilai nama (department_name) ke input pencarian yang relevan
-        // Kolom DB yang menyimpan nama Departemen/Kontraktor adalah 'department_name'
-        // yang di Livewire di-mapping ke $this->dep_cont.
+{
+    $user = UserProfile::findOrFail($id);
 
-        if ($this->deptCont === 'department') {
-            // Jika user adalah Department, tampilkan nama departemen di input search
-            $this->search = $user->department_name;
-            $this->searchContractor = ''; // Pastikan input kontraktor kosong
-        } elseif ($this->deptCont === 'contractor') {
-            // Jika user adalah Contractor, tampilkan nama kontraktor di input searchContractor
-            $this->searchContractor = $user->department_name;
-            $this->search = ''; // Pastikan input departemen kosong
-        } else {
-            // Kasus fallback jika pilih_divisi kosong/null (mungkin department_name saja yang terisi)
-            $this->search = $user->department_name;
-            $this->searchContractor = '';
-        }
-        $this->showModal = true;
-        $this->dispatch('dateLoaded');
+    // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
+    $this->userId = $user->id;
+
+    $this->fill($user->toArray());
+
+    // 2. Tentukan Radio Button yang terpilih...
+    $this->deptCont = $user->pilih_divisi;
+
+    // 3. Memuat nilai nama...
+    if ($this->deptCont === 'department') {
+        $this->search = $user->department_name;
+        $this->searchContractor = '';
+    } elseif ($this->deptCont === 'contractor') {
+        $this->searchContractor = $user->department_name;
+        $this->search = '';
+    } else {
+        $this->search = $user->department_name;
+        $this->searchContractor = '';
     }
+
+    $this->showModal = true;
+    $this->dispatch('dateLoaded');
+}
 
     public function save()
     {
