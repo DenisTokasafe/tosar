@@ -12,7 +12,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use App\Models\User as UserProfile;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Validation\Rule; // <-- TAMBAH INI
+
 class User extends Component
 {
     use WithPagination, WithFileUploads;
@@ -52,12 +52,7 @@ class User extends Component
             'role_id' => 'nullable',
             'username' => 'required|string|max:255|unique:users,username,' . $this->userId,
             'dep_cont' => 'nullable|string|max:255',
-           'employee_id' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('users', 'employee_id')->ignore($this->userId)
-        ],
+            'employee_id' => 'required|string|max:255|unique:users,employee_id,' . $this->userId,
             'date_commenced' => 'nullable|date',
             'email' => 'required|email|max:255|unique:users,email,' . $this->userId,
         ];
