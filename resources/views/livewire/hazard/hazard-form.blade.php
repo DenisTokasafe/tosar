@@ -185,22 +185,24 @@
                 <fieldset class="fieldset ">
                     <x-form.label label="Dilaporkan Oleh" required />
                     <div class="relative">
-                        <!-- Input Search -->
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
                             placeholder="Cari Nama Pelapor..."
                             class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                             x-ref="searchInput" />
-                        <!-- Dropdown hasil search (teleport keluar collapse) -->
+
                         @if ($showPelaporDropdown)
                             <template x-teleport="body">
-                                <ul x-data x-init="// Posisikan dropdown tepat di bawah input
-                                $el.style.position = 'absolute';
-                                const rect = $refs.searchInput.getBoundingClientRect();
-                                $el.style.top = rect.bottom + 'px';
-                                $el.style.left = rect.left + 'px';
-                                $el.style.width = rect.width + 'px';
-                                $el.style.zIndex = 9999;"
+                                {{-- Tambahkan x-show untuk memicu Alpine saat ditampilkan --}}
+                                <ul x-data="{
+                                    positionDropdown() {
+                                            const input = document.querySelector('[x-ref=\"searchInput\"]'); if (input) { const
+                                    rect=input.getBoundingClientRect(); this.$el.style.position = 'absolute';
+                                    this.$el.style.top=rect.bottom + 'px' ; this.$el.style.left=rect.left + 'px' ;
+                                    this.$el.style.width=rect.width + 'px' ; this.$el.style.zIndex=9999; } } }"
+                                    x-init="positionDropdown()" x-show="$wire.showPelaporDropdown" {{-- Tambahkan ini untuk memastikan elemen ditampilkan --}}
+                                    {{-- Hapus x-ref="searchInput" dari sini, karena input sudah memiliki ref --}}
                                     class="bg-base-100 border rounded-md mt-1 max-h-60 overflow-auto shadow">
+
                                     <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
                                         {{ $manualPelaporMode }}
@@ -215,7 +217,7 @@
                                         @endforeach
                                     @else
                                         @if (!$manualPelaporMode)
-                                            <li class="px-3 py-2  ">
+                                            <li class="px-3 py-2">
                                                 <flux:button size="xs" wire:click="enableManualPelapor"
                                                     icon="plus" class="w-full cursor-pointer text-warning"
                                                     variant="primary" color="cyan">
@@ -229,8 +231,8 @@
 
                             </template>
                         @endif
+
                     </div>
-                    <!-- Error Message -->
                     @if ($manualPelaporMode)
                         <x-label-error :messages="$errors->get('manualPelaporName')" />
                     @else
