@@ -186,43 +186,63 @@
                     <x-form.label label="Dilaporkan Oleh" required />
                     <div class="relative">
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
-                            {{-- Tambahkan debounce untuk stabilitas --}} placeholder="Cari Nama Pelapor..."
+                            placeholder="Cari Nama Pelapor..."
                             class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                             x-ref="searchInput" />
 
                         @if ($showPelaporDropdown)
                             <template x-teleport="body">
-                                <ul x-data="{
-                                    init() {
-                                            // Panggil reposition saat inisialisasi pertama kali
-                                            this.repositionDropdown();
-                                        },
-                                        repositionDropdown() {
-                                            // Mencari input berdasarkan x-ref di seluruh DOM
-                                            const input = document.querySelector('[x-ref=\"searchInput\"]'); if (input) { const
-                                    rect=input.getBoundingClientRect(); // Menggunakan this.$el untuk merujuk pada
-                                    elemen <ul>
-                                    this.$el.style.position = 'absolute';
-                                    this.$el.style.top = rect.bottom + 'px';
-                                    this.$el.style.left = rect.left + 'px';
-                                    this.$el.style.width = rect.width + 'px';
-                                    this.$el.style.zIndex = 9999;
-                                    }
-                                    }
-                                    }"
-                                    x-init="init()"
-                                    {{-- ❗ Perbaikan utama: Perhatikan $wire.searchPelapor (yang memicu perubahan $pelapors) --}}
-                                    x-effect="$wire.searchPelapor; $nextTick(() => { repositionDropdown() })"
-
+                                <ul {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk atribut x-data --}}
+                                    x-data='{
+                        init() {
+                            this.repositionDropdown();
+                            // Tambahkan listener untuk event resize, berguna jika modal/sidebar berubah ukuran
+                            window.addEventListener("resize", () => this.repositionDropdown());
+                        },
+                        repositionDropdown() {
+                            // Menggunakan tanda kutip ganda di sini ("searchInput")
+                            const input = document.querySelector("[x-ref=\"searchInput\"]");
+                            if (input) {
+                                const rect = input.getBoundingClientRect();
+                                this.$el.style.position = "absolute";
+                                this.$el.style.top = rect.bottom + "px";
+                                this.$el.style.left = rect.left + "px";
+                                this.$el.style.width = rect.width + "px";
+                                this.$el.style.zIndex = 9999;
+                            }
+                        }
+                    }'
+                                    x-init="init()" {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk x-effect --}}
+                                    x-effect='$wire.searchPelapor; $nextTick(() => { repositionDropdown() })'
                                     class="bg-base-100 border rounded-md mt-1 max-h-60 overflow-auto shadow">
 
-                                    {{-- Konten Dropdown... --}}
+                                    <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
+                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        {{ $manualPelaporMode }}
+                                    </div>
+
+                                    @if (count($pelapors) > 0)
+                                        @foreach ($pelapors as $pelapor)
+                                            <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
+                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                {{ $pelapor->name }}
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        @if (!$manualPelaporMode)
+                                            <li class="px-3 py-2">
+                                                <flux:button size="xs" wire:click="enableManualPelapor"
+                                                    icon="plus" class="w-full cursor-pointer text-warning"
+                                                    variant="primary" color="cyan">
+                                                    Tidak ditemukan, tambah pelapor manual
+                                                </flux:button>
+                                            </li>
+                                        @endif
+                                    @endif
 
                                 </ul>
                             </template>
                         @endif
-
-                        {{-- ... Error Message ... --}}
                     </div>
                     @if ($manualPelaporMode)
                         <x-label-error :messages="$errors->get('manualPelaporName')" />
