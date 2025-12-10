@@ -19,21 +19,28 @@ class UsersImport implements ToModel, WithHeadingRow
         // 1. Normalisasi Data Kunci
         $employeeId = $row['employee_id'] ?? null;
         $email = $row['email'] ?? null;
+        $username = $row['username'] ?? null; // DITAMBAHKAN: Ambil nilai username
         $name = $row['name'] ?? null;
 
-        // Normalisasi untuk pencarian yang ketat (trim dan strtolower untuk email)
+        // Normalisasi untuk pencarian yang ketat
         $normalizedEmployeeId = !empty($employeeId) ? trim((string)$employeeId) : null;
         $normalizedEmail = !empty($email) ? strtolower(trim($email)) : null;
+        $normalizedUsername = !empty($username) ? strtolower(trim($username)) : null; // DITAMBAHKAN: Normalisasi username (opsional: strtolower)
         $normalizedName = !empty($name) ? trim($name) : null;
 
 
-        // 2. Lakukan PENCARIAN EKSPLISIT (Prioritas: ID > Email > Nama)
+        // 2. Lakukan PENCARIAN EKSPLISIT (Prioritas: ID > Email > Username > Nama)
         $user = null;
 
-        // PRIORITAS 3: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
+        // PRIORITAS 4: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
         if (is_null($user) && !empty($normalizedName)) {
             $user = User::where('name', $normalizedName)->first();
         }
+        // PRIORITAS 3: Cari berdasarkan Username (DITAMBAHKAN: Hanya jika belum ditemukan)
+        if (is_null($user) && !empty($normalizedUsername)) {
+            $user = User::where('username', $normalizedUsername)->first();
+        }
+
         // PRIORITAS 1: Cari berdasarkan Employee ID
         if (!empty($normalizedEmployeeId)) {
             $user = User::where('employee_id', $normalizedEmployeeId)->first();
@@ -64,6 +71,8 @@ class UsersImport implements ToModel, WithHeadingRow
             'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
             'role_id'             => $row['role_id'] ?? null,
             'updated_at'          => now(),
+            // Pastikan username masuk ke dataToUpdate
+            'username'            => $normalizedUsername,
         ];
 
 
@@ -71,9 +80,13 @@ class UsersImport implements ToModel, WithHeadingRow
         if ($user->exists) {
             // Data DITEMUKAN (UPDATE / REPLACE)
 
-            // a. Update Username jika saat ini kosong di DB
-            if (empty($user->username) && !empty($row['username'])) {
-                $user->username = $row['username'];
+            // a. Update Username jika saat ini kosong di DB (LOGIKA INI DIGANTI KARENA SUDAH ADA DI $dataToUpdate)
+            // KECUALI Anda ingin mengabaikan pembaruan username jika sudah ada di DB.
+            // Jika Anda ingin mempertahankan logika "isi hanya jika kosong", Anda bisa menghapus 'username' dari $dataToUpdate di atas, dan kembalikan logika ini:
+
+            // -- Logika Update Kondisional Username --
+            if (empty($user->username) && !empty($normalizedUsername)) {
+                 $user->username = $normalizedUsername;
             }
 
             // b. Update Password jika saat ini kosong di DB (Plain Text)
@@ -83,6 +96,12 @@ class UsersImport implements ToModel, WithHeadingRow
             }
 
             // c. Update data lainnya
+            // PENTING: Jika username DITAMBAHKAN ke $dataToUpdate, hapus logika kondisional username di atas.
+            // Saya asumsikan Anda ingin username HANYA diisi jika kosong (seperti password)
+
+            // Hapus 'username' dari dataToUpdate agar tidak menimpa nilai yang sudah ada di DB
+            unset($dataToUpdate['username']);
+
             $user->fill($dataToUpdate);
             $user->save();
             return $user;
@@ -90,7 +109,8 @@ class UsersImport implements ToModel, WithHeadingRow
         } else {
             // Data BARU (INSERT)
 
-            $dataToUpdate['username'] = $row['username'] ?? null;
+            // Username sudah ada di $dataToUpdate
+
             $dataToUpdate['created_at'] = now();
 
             // Tambahkan password untuk data baru (Plain Text)
