@@ -214,7 +214,19 @@
                     <x-form.label label="Tanggal masuk" required />
                     <input type="text" readonly id="date_commenced" wire:model="date_commenced"
                         class="cursor-pointer input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('date_commenced') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                        placeholder="Pilih tanggal masuk" x-data x-init="flatpickr($refs.input, { dateFormat: 'Y-m-d' })" x-ref="input" />
+                        placeholder="Pilih tanggal masuk" x-data="{ fp: null }" {{-- Tambahkan state untuk Flatpickr instance --}}
+                        x-init="// Inisialisasi Flatpickr dan simpan instance-nya
+                        fp = flatpickr($refs.input, {
+                            dateFormat: 'Y-m-d',
+                        });
+
+                        // Dengarkan event 'dateLoaded' dari Livewire
+                        $wire.on('dateLoaded', () => {
+                            // Set tanggal menggunakan nilai Livewire saat event dipanggil
+                            if ($wire.date_commenced) {
+                                fp.setDate($wire.date_commenced);
+                            }
+                        });" x-ref="input" />
                     <x-label-error :messages="$errors->get('date_commenced')" />
                 </fieldset>
 
