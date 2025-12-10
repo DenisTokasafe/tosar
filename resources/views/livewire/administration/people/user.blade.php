@@ -298,12 +298,12 @@
                 <flux:button wire:click="import" size="xs" icon:trailing="save" variant="primary"
                     wire:loading.attr="disabled" wire:target="import,file">
 
-                    <span wire:loading.remove wire:target="import,file">Import</span>
-                    <span wire:loading wire:target="import,file">Mengimpor...</span>
+                    <span wire:loading.remove  wire:target="import,file">Import</span>
+                    <span wire:loading.class.remove='hidden' class="hidden" wire:target="import,file">Mengimpor...</span>
                 </flux:button>
 
                 {{-- Tombol Batal --}}
-                <flux:button size="xs" wire:click="$set('showImportModal', false)" icon:trailing="circle-x"
+                <flux:button size="xs" wire:click="$set('showImportModal', false)" wire:loading.class="btn-disabled" icon:trailing="circle-x"
                     variant="danger">
                     Batal
                 </flux:button>
