@@ -20,7 +20,7 @@
                         <flux:button size="xs" wire:click="create" icon="add-icon" variant="primary"></flux:button>
                     </flux:tooltip>
                     <flux:tooltip content="Import data" position="top">
-                        <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="upload"
+                        <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="import"
                             variant="subtle"></flux:button>
                     </flux:tooltip>
                 </div>
