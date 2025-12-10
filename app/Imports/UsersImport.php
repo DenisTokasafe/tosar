@@ -16,37 +16,46 @@ class UsersImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        // 1. Normalisasi Data Kunci (Penting untuk menghindari error Duplicate entry)
+        // 1. Normalisasi Data Kunci
         $employeeId = !empty($row['employee_id']) ? trim($row['employee_id']) : null;
-        // Email dinormalisasi ke huruf kecil untuk pencarian yang konsisten
         $email = !empty($row['email']) ? strtolower(trim($row['email'])) : null;
+        $name = !empty($row['name']) ? trim($row['name']) : null; // Ambil dan bersihkan Nama
 
         $searchKeys = [];
 
-        // Prioritaskan employee_id untuk pencarian (Lebih unik)
+        // Prioritas Pencarian (Dari yang Paling Unik ke Paling Tidak Unik)
+
+        // A. PRIORITAS 1: employee_id
         if (!empty($employeeId)) {
             $searchKeys['employee_id'] = $employeeId;
         }
-        // Jika employee_id kosong, gunakan email (Kunci unik kedua)
+
+        // B. PRIORITAS 2: email
+        // Hanya jika employee_id tidak ada
         elseif (!empty($email)) {
             $searchKeys['email'] = $email;
         }
 
-        // --- HAPUS PENCARIAN BERDASARKAN 'NAME' ---
-        // Pengecekan 'name' di sini dihilangkan karena tidak unik dan bisa menyebabkan penimpaan data yang salah.
+        // C. PRIORITAS 3 (FALLBACK): name
+        // Hanya jika employee_id DAN email kosong.
+        // Risiko: Jika nama tidak unik, data akan menimpa user pertama yang ditemukan.
+        elseif (!empty($name)) {
+            $searchKeys['name'] = $name;
+        }
 
-        // Jika tidak ada kunci pencarian yang valid (employee_id/email), lewati baris
+        // Jika tidak ada kunci pencarian yang valid, lewati baris
         if (empty($searchKeys)) {
             return null;
         }
 
-        // 2. Panggil firstOrNew untuk mencari atau membuat instance baru
+        // 2. Panggil firstOrNew
         $user = User::firstOrNew($searchKeys);
 
         // 3. Siapkan Data Dasar yang Akan Disisipkan atau Diperbarui
+        // Gunakan nilai yang sudah dinormalisasi
         $dataToUpdate = [
-            'name'                => $row['name'],
-            'email'               => $email, // Gunakan email yang sudah dinormalisasi
+            'name'                => $name,
+            'email'               => $email,
             'gender'              => $this->mapGender($row['gender'] ?? null),
             'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
             'department_name'     => $row['department_name'] ?? null,
@@ -73,7 +82,6 @@ class UsersImport implements ToModel, WithHeadingRow
 
             // c. Update data lainnya
             $user->fill($dataToUpdate);
-
             $user->save();
             return $user;
 
@@ -95,17 +103,13 @@ class UsersImport implements ToModel, WithHeadingRow
         }
     }
 
-    /**
-     * @param string|null $value
-     * @return string|null
-     * Memastikan tanggal disimpan dalam format yyyy-mm-dd
-     */
+    // --- Metode Pembantu (parseDate, mapGender, rules) ---
+
     private function parseDate($value)
     {
         if (empty($value) || strtoupper($value) === 'NULL') {
             return null;
         }
-
         try {
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
@@ -113,35 +117,26 @@ class UsersImport implements ToModel, WithHeadingRow
         }
     }
 
-    /**
-     * Metode Pembantu 2: Menerjemahkan nilai gender (Misal: Male/Female ke L/P)
-     */
     private function mapGender($value)
     {
         if (empty($value)) {
             return null;
         }
-
         $normalizedValue = strtolower(trim($value));
-
         if (in_array($normalizedValue, ['l', 'male', 'laki-laki', 'pria'])) {
             return 'L';
         }
-
         if (in_array($normalizedValue, ['p', 'female', 'perempuan', 'wanita'])) {
             return 'P';
         }
-
         return null;
     }
 
-    // Metode rules() Anda
     public function rules(): array
     {
         return [
             'name' => ['nullable'],
             'email' => ['nullable', 'email'],
-            'gender' => ['nullable'],
             // ... (lanjutkan aturan validasi lainnya)
         ];
     }
