@@ -19,48 +19,47 @@ class UsersImport implements ToModel, WithHeadingRow
         // 1. Normalisasi Data Kunci
         $employeeId = $row['employee_id'] ?? null;
         $email = $row['email'] ?? null;
-        $username = $row['username'] ?? null; // DITAMBAHKAN: Ambil nilai username
+        $username = $row['username'] ?? null;
         $name = $row['name'] ?? null;
 
-        // Normalisasi untuk pencarian yang ketat
         $normalizedEmployeeId = !empty($employeeId) ? trim((string)$employeeId) : null;
         $normalizedEmail = !empty($email) ? strtolower(trim($email)) : null;
-        $normalizedUsername = !empty($username) ? strtolower(trim($username)) : null; // DITAMBAHKAN: Normalisasi username (opsional: strtolower)
+        $normalizedUsername = !empty($username) ? strtolower(trim($username)) : null;
         $normalizedName = !empty($name) ? trim($name) : null;
 
 
         // 2. Lakukan PENCARIAN EKSPLISIT (Prioritas: ID > Email > Username > Nama)
         $user = null;
 
-        // PRIORITAS 4: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
-        if (is_null($user) && !empty($normalizedName)) {
-            $user = User::where('name', $normalizedName)->first();
-        }
-        // PRIORITAS 3: Cari berdasarkan Username (DITAMBAHKAN: Hanya jika belum ditemukan)
-        if (is_null($user) && !empty($normalizedUsername)) {
-            $user = User::where('username', $normalizedUsername)->first();
-        }
-
         // PRIORITAS 1: Cari berdasarkan Employee ID
         if (!empty($normalizedEmployeeId)) {
             $user = User::where('employee_id', $normalizedEmployeeId)->first();
         }
 
-        // PRIORITAS 2: Cari berdasarkan Email (Hanya jika belum ditemukan)
+        // PRIORITAS 2: Cari berdasarkan Email
         if (is_null($user) && !empty($normalizedEmail)) {
             $user = User::where('email', $normalizedEmail)->first();
         }
 
+        // PRIORITAS 3: Cari berdasarkan Username
+        if (is_null($user) && !empty($normalizedUsername)) {
+            $user = User::where('username', $normalizedUsername)->first();
+        }
 
-        // 3. Jika user tidak ditemukan, buat instance baru untuk disisipkan
+        // PRIORITAS 4: Cari berdasarkan Name
+        if (is_null($user) && !empty($normalizedName)) {
+            $user = User::where('name', $normalizedName)->first();
+        }
+
+        // 3. Jika user tidak ditemukan, buat instance baru
         if (is_null($user)) {
              $user = new User();
-             $user->exists = false; // Tandai sebagai data baru
+             $user->exists = false;
         }
 
 
         // 4. Siapkan Data Dasar yang Akan Disisipkan atau Diperbarui
-        // Gunakan nilai yang sudah dinormalisasi
+        // SEMUA KOLOM MASUK DI SINI, TERMASUK USERNAME
         $dataToUpdate = [
             'name'                => $normalizedName,
             'email'               => $normalizedEmail,
@@ -71,45 +70,28 @@ class UsersImport implements ToModel, WithHeadingRow
             'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
             'role_id'             => $row['role_id'] ?? null,
             'updated_at'          => now(),
-            // Pastikan username masuk ke dataToUpdate
             'username'            => $normalizedUsername,
         ];
 
 
         // 5. Logika Update atau Insert
         if ($user->exists) {
-            // Data DITEMUKAN (UPDATE / REPLACE)
+            // Data DITEMUKAN (OVERWRITE SEMUA DATA LAMA)
 
-            // a. Update Username jika saat ini kosong di DB (LOGIKA INI DIGANTI KARENA SUDAH ADA DI $dataToUpdate)
-            // KECUALI Anda ingin mengabaikan pembaruan username jika sudah ada di DB.
-            // Jika Anda ingin mempertahankan logika "isi hanya jika kosong", Anda bisa menghapus 'username' dari $dataToUpdate di atas, dan kembalikan logika ini:
-
-            // -- Logika Update Kondisional Username --
-            if (empty($user->username) && !empty($normalizedUsername)) {
-                 $user->username = $normalizedUsername;
-            }
-
-            // b. Update Password jika saat ini kosong di DB (Plain Text)
+            // Password tetap kondisional (hanya jika kosong di DB)
             // Ganti 'password_kolom' dengan nama header yang benar di Excel Anda
             if (empty($user->password) && !empty($row['password_kolom'])) {
-                $user->password = $row['password_kolom'];
+                 $user->password = $row['password_kolom'];
             }
 
-            // c. Update data lainnya
-            // PENTING: Jika username DITAMBAHKAN ke $dataToUpdate, hapus logika kondisional username di atas.
-            // Saya asumsikan Anda ingin username HANYA diisi jika kosong (seperti password)
-
-            // Hapus 'username' dari dataToUpdate agar tidak menimpa nilai yang sudah ada di DB
-            unset($dataToUpdate['username']);
-
+            // Kolom lainnya (termasuk username) akan DITIMPA/DI-REPLACE
+            // karena semua kolom ada di $dataToUpdate
             $user->fill($dataToUpdate);
             $user->save();
             return $user;
 
         } else {
             // Data BARU (INSERT)
-
-            // Username sudah ada di $dataToUpdate
 
             $dataToUpdate['created_at'] = now();
 
