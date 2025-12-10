@@ -13,11 +13,12 @@ use Livewire\Attributes\Validate;
 use App\Models\User as UserProfile;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Validation\Rule; // <-- BARIS INI DITAMBAHKAN
+use Maatwebsite\Excel\Validators\ValidationException;
 class User extends Component
 {
     use WithPagination, WithFileUploads;
 
-    public $userId,$name_user;
+    public $userId, $name_user;
     public $name, $gender, $date_birth, $username, $dep_cont, $employee_id, $date_commenced, $email, $role_id;
     public $showModal = false;
     public $showDeleteModal = false;
@@ -44,43 +45,43 @@ class User extends Component
     #[Validate('required_without:department_id')]
     public $contractor_id;
     protected function rules()
-{
-    // Gunakan 0 sebagai fallback jika $this->userId belum diatur (untuk operasi 'create')
-    $userId = $this->userId ?? 0;
+    {
+        // Gunakan 0 sebagai fallback jika $this->userId belum diatur (untuk operasi 'create')
+        $userId = $this->userId ?? 0;
 
-    return [
-        'name' => 'required|string|max:255',
-        'gender' => 'nullable|in:L,P',
-        'date_birth' => 'nullable|date',
-        'role_id' => 'nullable',
+        return [
+            'name' => 'required|string|max:255',
+            'gender' => 'nullable|in:L,P',
+            'date_birth' => 'nullable|date',
+            'role_id' => 'nullable',
 
-        // PERBAIKAN 1: Username
-        'username' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('users', 'username')->ignore($userId),
-        ],
-        'dep_cont' => 'nullable|string|max:255',
+            // PERBAIKAN 1: Username
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($userId),
+            ],
+            'dep_cont' => 'nullable|string|max:255',
 
-        // PERBAIKAN 2: Employee ID
-        'employee_id' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('users', 'employee_id')->ignore($userId),
-        ],
-        'date_commenced' => 'nullable|date',
+            // PERBAIKAN 2: Employee ID
+            'employee_id' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'employee_id')->ignore($userId),
+            ],
+            'date_commenced' => 'nullable|date',
 
-        // PERBAIKAN 3: Email
-        'email' => [
-            'required',
-            'email',
-            'max:255',
-            Rule::unique('users', 'email')->ignore($userId),
-        ],
-    ];
-}
+            // PERBAIKAN 3: Email
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($userId),
+            ],
+        ];
+    }
     protected function messages()
     {
         return [
@@ -117,6 +118,7 @@ class User extends Component
     }
     public function import()
     {
+        // 1. Validasi Format File
         $this->validate([
             'file' => 'required|mimes:xlsx,csv,xls|max:2048',
         ], [
@@ -124,38 +126,97 @@ class User extends Component
             'file.mimes'    => 'Format file harus xlsx, csv, atau xls.',
             'file.max'      => 'Ukuran file maksimal 2MB.',
         ]);
+
         $imported = 0;
         $skipped = 0;
-        $rows = Excel::toCollection(new UsersImport, $this->file->getRealPath());
-        foreach ($rows[0] as $row) {
-            $user = (new UsersImport)->model($row->toArray());
-            if ($user) {
-                $user->save();
-                $imported++;
-            } else {
-                $skipped++;
+
+        try {
+            // 2. Membungkus Logika Impor dalam Try-Catch
+            $rows = Excel::toCollection(new UsersImport, $this->file->getRealPath());
+
+            foreach ($rows[0] as $row) {
+                $user = (new UsersImport)->model($row->toArray());
+
+                // Pastikan Anda menangani logika duplikasi/lewat di dalam model()
+                if ($user) {
+                    $user->save();
+                    $imported++;
+                } else {
+                    $skipped++;
+                }
             }
+
+            // 3. Logika Sukses (Hanya dijalankan jika tidak ada exception)
+            $this->importedCount = $imported;
+            $this->skippedCount = $skipped;
+
+            $this->reset('file');
+            $this->showImportModal = false;
+
+            session()->flash('success', "$imported row berhasil diimport, $skipped row dilewati (kosong/duplikat).");
+            $this->dispatch(
+                'alert',
+                [
+                    'text' => "Data user berhasil diimport!",
+                    'duration' => 5000,
+                    'destination' => '/contact',
+                    'newWindow' => true,
+                    'close' => true,
+                    'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+                ]
+            );
+        } catch (ValidationException $e) {
+            // 4. Menangkap Error Validasi Data Internal
+
+            $failures = $e->failures();
+            $errorHtml = '<ul>';
+            $totalErrors = count($failures);
+
+            // Kumpulkan pesan kegagalan ke dalam format HTML
+            foreach ($failures as $failure) {
+                $rowNumber = $failure->row();
+                $errors = implode(', ', $failure->errors());
+
+                $errorHtml .= "<li>Baris {$rowNumber}: {$errors}</li>";
+            }
+            $errorHtml .= '</ul>';
+
+            // Reset dan tutup modal
+            $this->reset('file');
+            $this->showImportModal = false;
+
+            // Tampilkan alert dengan detail error validasi
+            $this->dispatch(
+                'alert',
+                [
+                    'title' => "Gagal Impor ({$totalErrors} Baris Tidak Valid)",
+                    'text' => 'Terdapat kesalahan data di dalam file Excel Anda. Mohon periksa detail berikut.',
+                    'type' => 'error', // Pastikan notifikasi Anda mendukung tipe 'error'
+                    'html' => $errorHtml,
+                    'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
+                    'close' => true,
+                ]
+            );
+        } catch (\Exception $e) {
+            // 5. Menangkap error lain (Database/Server)
+            $this->reset('file');
+            $this->showImportModal = false;
+
+            // Anda bisa log error ini di sini
+
+            $this->dispatch(
+                'alert',
+                [
+                    'title' => "Terjadi Kesalahan Server",
+                    'text' => 'Gagal memproses file. Periksa log server atau coba lagi.',
+                    'type' => 'error',
+                    'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
+                    'close' => true,
+                ]
+            );
         }
-
-        $this->importedCount = $imported;
-        $this->skippedCount = $skipped;
-
-        $this->reset('file');
-        $this->showImportModal = false;
-
-        session()->flash('success', "$imported row berhasil diimport, $skipped row dilewati (kosong/duplikat).");
-        $this->dispatch(
-            'alert',
-            [
-                'text' => "Data user berhasil diimport!",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-            ]
-        );
     }
+
 
     public function updatedSearch()
     {
@@ -221,32 +282,32 @@ class User extends Component
         $this->showModal = true;
     }
     public function edit($id)
-{
-    $user = UserProfile::findOrFail($id);
+    {
+        $user = UserProfile::findOrFail($id);
 
-    // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
-    $this->userId = $user->id;
-    $this->name_user = $user->name;
-    $this->fill($user->toArray());
+        // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
+        $this->userId = $user->id;
+        $this->name_user = $user->name;
+        $this->fill($user->toArray());
 
-    // 2. Tentukan Radio Button yang terpilih...
-    $this->deptCont = $user->pilih_divisi;
+        // 2. Tentukan Radio Button yang terpilih...
+        $this->deptCont = $user->pilih_divisi;
 
-    // 3. Memuat nilai nama...
-    if ($this->deptCont === 'department') {
-        $this->search = $user->department_name;
-        $this->searchContractor = '';
-    } elseif ($this->deptCont === 'contractor') {
-        $this->searchContractor = $user->department_name;
-        $this->search = '';
-    } else {
-        $this->search = $user->department_name;
-        $this->searchContractor = '';
+        // 3. Memuat nilai nama...
+        if ($this->deptCont === 'department') {
+            $this->search = $user->department_name;
+            $this->searchContractor = '';
+        } elseif ($this->deptCont === 'contractor') {
+            $this->searchContractor = $user->department_name;
+            $this->search = '';
+        } else {
+            $this->search = $user->department_name;
+            $this->searchContractor = '';
+        }
+
+        $this->showModal = true;
+        $this->dispatch('dateLoaded');
     }
-
-    $this->showModal = true;
-    $this->dispatch('dateLoaded');
-}
 
     public function save()
     {
@@ -332,6 +393,6 @@ class User extends Component
 
     private function resetInput()
     {
-        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email','dep_cont','deptCont']);
+        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email', 'dep_cont', 'deptCont']);
     }
 }
