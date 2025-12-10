@@ -17,55 +17,57 @@ class UsersImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         // 1. Normalisasi Data Kunci
-        $employeeId = !empty($row['employee_id']) ? trim($row['employee_id']) : null;
-        $email = !empty($row['email']) ? strtolower(trim($row['email'])) : null;
-        $name = !empty($row['name']) ? trim($row['name']) : null; // Ambil dan bersihkan Nama
+        $employeeId = $row['employee_id'] ?? null;
+        $email = $row['email'] ?? null;
+        $name = $row['name'] ?? null;
 
-        $searchKeys = [];
+        // Normalisasi untuk pencarian yang ketat (trim dan strtolower untuk email)
+        $normalizedEmployeeId = !empty($employeeId) ? trim((string)$employeeId) : null;
+        $normalizedEmail = !empty($email) ? strtolower(trim($email)) : null;
+        $normalizedName = !empty($name) ? trim($name) : null;
 
-        // Prioritas Pencarian (Dari yang Paling Unik ke Paling Tidak Unik)
 
-        // A. PRIORITAS 1: employee_id
-        if (!empty($employeeId)) {
-            $searchKeys['employee_id'] = $employeeId;
+        // 2. Lakukan PENCARIAN EKSPLISIT (Prioritas: ID > Email > Nama)
+        $user = null;
+
+        // PRIORITAS 1: Cari berdasarkan Employee ID
+        if (!empty($normalizedEmployeeId)) {
+            $user = User::where('employee_id', $normalizedEmployeeId)->first();
         }
 
-        // B. PRIORITAS 2: email
-        // Hanya jika employee_id tidak ada
-        elseif (!empty($email)) {
-            $searchKeys['email'] = $email;
+        // PRIORITAS 2: Cari berdasarkan Email (Hanya jika belum ditemukan)
+        if (is_null($user) && !empty($normalizedEmail)) {
+            $user = User::where('email', $normalizedEmail)->first();
         }
 
-        // C. PRIORITAS 3 (FALLBACK): name
-        // Hanya jika employee_id DAN email kosong.
-        // Risiko: Jika nama tidak unik, data akan menimpa user pertama yang ditemukan.
-        elseif (!empty($name)) {
-            $searchKeys['name'] = $name;
+        // PRIORITAS 3: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
+        if (is_null($user) && !empty($normalizedName)) {
+            $user = User::where('name', $normalizedName)->first();
         }
 
-        // Jika tidak ada kunci pencarian yang valid, lewati baris
-        if (empty($searchKeys)) {
-            return null;
+        // 3. Jika user tidak ditemukan, buat instance baru untuk disisipkan
+        if (is_null($user)) {
+             $user = new User();
+             $user->exists = false; // Tandai sebagai data baru
         }
 
-        // 2. Panggil firstOrNew
-        $user = User::firstOrNew($searchKeys);
 
-        // 3. Siapkan Data Dasar yang Akan Disisipkan atau Diperbarui
+        // 4. Siapkan Data Dasar yang Akan Disisipkan atau Diperbarui
         // Gunakan nilai yang sudah dinormalisasi
         $dataToUpdate = [
-            'name'                => $name,
-            'email'               => $email,
+            'name'                => $normalizedName,
+            'email'               => $normalizedEmail,
             'gender'              => $this->mapGender($row['gender'] ?? null),
             'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
             'department_name'     => $row['department_name'] ?? null,
-            'employee_id'         => $employeeId,
+            'employee_id'         => $normalizedEmployeeId,
             'date_commenced'      => $this->parseDate($row['date_commenced'] ?? null),
             'role_id'             => $row['role_id'] ?? null,
             'updated_at'          => now(),
         ];
 
-        // 4. Logika Update atau Insert
+
+        // 5. Logika Update atau Insert
         if ($user->exists) {
             // Data DITEMUKAN (UPDATE / REPLACE)
 
