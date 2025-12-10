@@ -30,6 +30,10 @@ class UsersImport implements ToModel, WithHeadingRow
         // 2. Lakukan PENCARIAN EKSPLISIT (Prioritas: ID > Email > Nama)
         $user = null;
 
+        // PRIORITAS 3: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
+        if (is_null($user) && !empty($normalizedName)) {
+            $user = User::where('name', $normalizedName)->first();
+        }
         // PRIORITAS 1: Cari berdasarkan Employee ID
         if (!empty($normalizedEmployeeId)) {
             $user = User::where('employee_id', $normalizedEmployeeId)->first();
@@ -40,10 +44,6 @@ class UsersImport implements ToModel, WithHeadingRow
             $user = User::where('email', $normalizedEmail)->first();
         }
 
-        // PRIORITAS 3: Cari berdasarkan Name (Hanya jika belum ditemukan, berisiko penimpaan)
-        if (is_null($user) && !empty($normalizedName)) {
-            $user = User::where('name', $normalizedName)->first();
-        }
 
         // 3. Jika user tidak ditemukan, buat instance baru untuk disisipkan
         if (is_null($user)) {
