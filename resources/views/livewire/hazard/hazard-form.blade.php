@@ -184,65 +184,51 @@
             <div class="grid grid-cols-1 gap-4">
                 <fieldset class="fieldset ">
                     <x-form.label label="Dilaporkan Oleh" required />
+
+                    {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
                     <div class="relative">
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
                             placeholder="Cari Nama Pelapor..."
                             class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                            x-ref="searchInput" />
+                            {{-- x-ref="searchInput" TIDAK LAGI DIBUTUHKAN --}} />
 
+                        {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
                         @if ($showPelaporDropdown)
-                            <template x-teleport="body">
-                                <ul {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk atribut x-data --}}
-                                    x-data='{
-                        init() {
-                            this.repositionDropdown();
-                            // Opsi: Tambahkan listener untuk reposition saat jendela diubah ukurannya
-                            window.addEventListener("resize", () => this.repositionDropdown());
-                        },
-                        repositionDropdown() {
-                            // Mencari input berdasarkan x-ref di seluruh DOM
-                            // Menggunakan tanda kutip ganda di sini ("searchInput")
-                            const input = document.querySelector("[x-ref=\"searchInput\"]");
-                            if (input) {
-                                const rect = input.getBoundingClientRect();
-                                this.$el.style.position = "absolute";
-                                this.$el.style.top = rect.bottom + "px";
-                                this.$el.style.left = rect.left + "px";
-                                this.$el.style.width = rect.width + "px";
-                                this.$el.style.zIndex = 9999;
-                            }
-                        }
-                    }'
-                                    x-init="init()" {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk x-effect --}} {{-- Ini memastikan reposition terjadi setiap kali Livewire memperbarui $searchPelapor --}}
-                                    x-effect='$wire.searchPelapor; $nextTick(() => { repositionDropdown() })'
-                                    class="bg-base-100 border rounded-md mt-1 max-h-60 overflow-auto shadow">
+                            <ul
+                                class="absolute z-10 bg-base-100 border rounded-md w-full max-w-sm mt-1 max-h-60 overflow-auto shadow">
 
-                                    <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        {{ $manualPelaporMode }}
-                                    </div>
+                                {{-- Spinner ketika klik --}}
+                                <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
+                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                    {{-- {{ $manualPelaporMode }} --}}
+                                </div>
 
-                                    @if (count($pelapors) > 0)
-                                        @foreach ($pelapors as $pelapor)
-                                            <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $pelapor->name }}
-                                            </li>
-                                        @endforeach
+                                @if (count($pelapors) > 0)
+                                    @foreach ($pelapors as $pelapor)
+                                        <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
+                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                            {{ $pelapor->name }}
+                                        </li>
+                                    @endforeach
+                                @else
+                                    {{-- Logika untuk "Tambah pelapor manual" --}}
+                                    @if (!$manualPelaporMode)
+                                        <li class="px-3 py-2">
+                                            <flux:button size="xs" wire:click="enableManualPelapor"
+                                                icon="plus" class="w-full cursor-pointer text-warning"
+                                                variant="primary" color="cyan">
+                                                Tidak ditemukan, tambah pelapor manual
+                                            </flux:button>
+                                        </li>
                                     @else
-                                        @if (!$manualPelaporMode)
-                                            <li class="px-3 py-2">
-                                                <flux:button size="xs" wire:click="enableManualPelapor"
-                                                    icon="plus" class="w-full cursor-pointer text-warning"
-                                                    variant="primary" color="cyan">
-                                                    Tidak ditemukan, tambah pelapor manual
-                                                </flux:button>
-                                            </li>
-                                        @endif
+                                        <li class="px-3 py-2 text-sm text-gray-500">
+                                            Nama Pelapor Manual akan digunakan.
+                                        </li>
                                     @endif
-                                </ul>
-                            </template>
+                                @endif
+                            </ul>
                         @endif
+
                     </div>
                     @if ($manualPelaporMode)
                         <x-label-error :messages="$errors->get('manualPelaporName')" />
