@@ -296,9 +296,13 @@ class User extends Component
         // 3. Memuat nilai nama...
         if ($this->deptCont === 'department') {
             $this->search = $user->department_name;
+            $this->department_id = Department::where('department_name', $user->department_name)->value('id');
+            $this->contractor_id = null;
             $this->searchContractor = '';
         } elseif ($this->deptCont === 'contractor') {
             $this->searchContractor = $user->department_name;
+            $this->contractor_id = Contractor::where('contractor_name', $user->department_name)->value('id');
+            $this->department_id = null;
             $this->search = '';
         } else {
             $this->search = $user->department_name;
