@@ -45,7 +45,7 @@ class UsersImport implements ToModel, WithHeadingRow
         $dataToUpdate = [
             'name'                => $row['name'],
             'email'               => $row['email'] ?? null,
-            'gender'              => $row['gender'] ?? null,
+            'gender'              => $this->mapGender($row['gender'] ?? null),
             'date_birth'          => $this->parseDate($row['date_birth'] ?? null),
             'department_name'     => $row['department_name'] ?? null,
             'employee_id'         => $row['employee_id'] ?? null,
@@ -124,4 +124,25 @@ class UsersImport implements ToModel, WithHeadingRow
              // ... (aturan validasi lainnya)
          ];
     }
+
+    private function mapGender($value)
+{
+    if (empty($value)) {
+        return null;
+    }
+
+    // Konversi ke huruf kecil untuk pengecekan yang lebih fleksibel
+    $normalizedValue = strtolower(trim($value));
+
+    if (in_array($normalizedValue, ['l', 'male', 'laki-laki', 'pria'])) {
+        return 'L';
+    }
+
+    if (in_array($normalizedValue, ['p', 'female', 'perempuan', 'wanita'])) {
+        return 'P';
+    }
+
+    // Default: jika tidak dikenali, kembalikan null atau nilai default yang aman
+    return null;
+}
 }
