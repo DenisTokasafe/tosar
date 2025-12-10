@@ -196,10 +196,11 @@
                                     x-data='{
                         init() {
                             this.repositionDropdown();
-                            // Tambahkan listener untuk event resize, berguna jika modal/sidebar berubah ukuran
+                            // Opsi: Tambahkan listener untuk reposition saat jendela diubah ukurannya
                             window.addEventListener("resize", () => this.repositionDropdown());
                         },
                         repositionDropdown() {
+                            // Mencari input berdasarkan x-ref di seluruh DOM
                             // Menggunakan tanda kutip ganda di sini ("searchInput")
                             const input = document.querySelector("[x-ref=\"searchInput\"]");
                             if (input) {
@@ -212,7 +213,7 @@
                             }
                         }
                     }'
-                                    x-init="init()" {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk x-effect --}}
+                                    x-init="init()" {{-- ❗ PERBAIKAN: Gunakan tanda kutip TUNGGAL untuk x-effect --}} {{-- Ini memastikan reposition terjadi setiap kali Livewire memperbarui $searchPelapor --}}
                                     x-effect='$wire.searchPelapor; $nextTick(() => { repositionDropdown() })'
                                     class="bg-base-100 border rounded-md mt-1 max-h-60 overflow-auto shadow">
 
@@ -239,7 +240,6 @@
                                             </li>
                                         @endif
                                     @endif
-
                                 </ul>
                             </template>
                         @endif
