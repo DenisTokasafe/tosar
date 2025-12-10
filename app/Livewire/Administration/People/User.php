@@ -223,6 +223,7 @@ class User extends Component
             $this->searchContractor = '';
         }
         $this->showModal = true;
+        $this->dispatch('dateLoaded');
     }
 
     public function save()

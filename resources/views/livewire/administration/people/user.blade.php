@@ -110,12 +110,20 @@
                 <fieldset class="fieldset">
                     <x-form.label label="Tanggal Lahir" required />
                     <input type="text" readonly id="date_birth" wire:model="date_birth"
-                        class=" cursor-pointer input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                        class="cursor-pointer input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                         placeholder="Pilih tanggal lahir {{ $errors->has('date_birth') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                        {{-- MODIFIKASI FLATICKR INI --}} x-data x-init="flatpickr($refs.input, {
+                        x-data="{ fp: null }" {{-- Tambahkan state untuk Flatpickr instance --}} x-init="// Inisialisasi Flatpickr dan simpan instance-nya
+                        fp = flatpickr($refs.input, {
                             dateFormat: 'Y-m-d',
-                            defaultDate: $wire.date_birth // Ambil nilai awal dari Livewire
-                        })" x-ref="input" {{-- END MODIFIKASI --}} />
+                        });
+
+                        // Dengarkan event 'dateLoaded' dari Livewire
+                        $wire.on('dateLoaded', () => {
+                            // Set tanggal menggunakan nilai Livewire saat event dipanggil
+                            if ($wire.date_birth) {
+                                fp.setDate($wire.date_birth);
+                            }
+                        });" x-ref="input" />
                     <x-label-error :messages="$errors->get('date_birth')" />
                 </fieldset>
 
