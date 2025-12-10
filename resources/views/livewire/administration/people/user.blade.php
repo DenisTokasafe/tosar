@@ -284,7 +284,7 @@
                 <x-label-error :messages="$errors->get('file')" />
 
                 {{-- Loading indicator saat pilih file --}}
-                <div wire:loading wire:target="file" class="text-info text-sm mt-1">
+                <div wire:loading.class='block' wire:target="file" class="text-info text-sm mt-1 hidden">
                     ⏳ Sedang mengunggah file...
                 </div>
             </fieldset>
