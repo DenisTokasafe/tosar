@@ -175,7 +175,7 @@
                     <div class="hidden peer-checked/contractor:block mt-0.5">
                         {{-- Contractor --}}
                         <div class="relative mb-1">
-                            <!-- Input Search -->comp
+                            <!-- Input Search -->
                             <input name="searchContractor" type="text"
                                 wire:model.live.debounce.300ms="searchContractor"
                                 wire:key="search-contractor-{{ $userId }} placeholder="Cari kontraktor..."
