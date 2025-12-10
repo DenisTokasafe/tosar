@@ -85,7 +85,7 @@
     {{-- Create/Edit Modal --}}
     <dialog class="modal" @if ($showModal) open @endif>
         <div class="modal-box w-11/12 max-w-2xl">
-           <h3 class="font-bold text-lg">{{ $userId ? 'Edit User ' . $name_user : 'Add User' }}</h3>
+            <h3 class="font-bold text-lg">{{ $userId ? 'Edit User ' . $name_user : 'Add User' }}</h3>
 
             <div class="grid grid-cols-2 gap-4 mt-4">
 
@@ -284,7 +284,8 @@
                 <x-label-error :messages="$errors->get('file')" />
 
                 {{-- Loading indicator saat pilih file --}}
-                <div wire:loading wire:target="file" wire:loading.class.remove="hidden" class="text-info text-sm mt-1 hidden">
+                <div wire:loading wire:target="file" wire:loading.class.remove="hidden"
+                    class="text-info text-sm mt-1 hidden">
                     ⏳ Sedang mengunggah file...
                 </div>
             </fieldset>
@@ -298,13 +299,14 @@
                 <flux:button wire:click="import" size="xs" icon:trailing="save" variant="primary"
                     wire:loading.attr="disabled" wire:target="import,file">
 
-                    <span wire:loading.remove  wire:target="import,file">Import</span>
-                    <span wire:loading.class.remove='hidden' class="hidden" wire:target="import,file">Mengimpor...</span>
+                    <span wire:loading.remove wire:target="import,file">Import</span>
+                    <span wire:loading.class.remove='hidden' class="hidden"
+                        wire:target="import,file">Mengimpor...</span>
                 </flux:button>
 
                 {{-- Tombol Batal --}}
-                <flux:button size="xs" wire:click="$set('showImportModal', false)" wire:loading.class="btn-disabled" icon:trailing="circle-x"
-                    variant="danger">
+                <flux:button size="xs" wire:click="$set('showImportModal', false)" wire:loading.attr="disabled"
+                    wire:target="import,file" {{-- ⬅️ PERBAIKAN DI SINI --}} icon:trailing="circle-x" variant="danger">
                     Batal
                 </flux:button>
             </div>
