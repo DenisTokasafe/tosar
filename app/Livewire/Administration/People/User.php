@@ -17,7 +17,7 @@ class User extends Component
 {
     use WithPagination, WithFileUploads;
 
-    public $userId;
+    public $userId,$name_user;
     public $name, $gender, $date_birth, $username, $dep_cont, $employee_id, $date_commenced, $email, $role_id;
     public $showModal = false;
     public $showDeleteModal = false;
@@ -226,7 +226,7 @@ class User extends Component
 
     // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
     $this->userId = $user->id;
-
+    $this->name_user = $user->name;
     $this->fill($user->toArray());
 
     // 2. Tentukan Radio Button yang terpilih...
