@@ -85,7 +85,7 @@
     {{-- Create/Edit Modal --}}
     <dialog class="modal" @if ($showModal) open @endif>
         <div class="modal-box w-11/12 max-w-2xl">
-            <h3 class="font-bold text-lg">{{ $userId ? 'Edit User'{{ $name_user }} : 'Add User' }}</h3>
+            <h3 class="font-bold text-lg">{{ $userId ? 'Edit User' $name_user : 'Add User' }}</h3>
 
             <div class="grid grid-cols-2 gap-4 mt-4">
 
