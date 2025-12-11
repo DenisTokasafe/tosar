@@ -16,10 +16,10 @@
 
 
                 <div class="relative">
-                    <label class="input">
+                    <label  class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" >
                         <input type="text" wire:model.live.debounce.300ms="searchModerator"
                             placeholder="Ketik untuk mencari dan memilih moderator..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                           />
                         <div wire:loading.delay wire:target="searchModerator" class="p-2 text-center">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
