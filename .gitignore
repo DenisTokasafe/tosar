@@ -7,7 +7,7 @@
 # /public/storage/sesudah_perbaikan
 /storage/*.key
 /storage/pail
-/vendor
+#/vendor
 .env
 .env.backup
 .env.production
