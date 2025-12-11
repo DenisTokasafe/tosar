@@ -6,7 +6,7 @@
             <div class="relative" x-data @click.outside="$wire.set('showDepartmentDropdown', false)">
 
                 <!-- Input pencarian -->
-                <div class="relative">
+                <div class="relative w-full md:max-w-md">
                         <input type="text" wire:model.live.debounce.300ms="searchDepartment" wire:focus="$set('showDepartmentDropdown', true)"
                             placeholder="Ketik untuk mencari dan memilih Departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
