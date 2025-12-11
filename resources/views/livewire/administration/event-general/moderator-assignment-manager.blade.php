@@ -11,13 +11,13 @@
 
         <div class="grid grid-cols-4 gap-2">
             <fieldset class="fieldset ">
-                <label class="block">Pilih ERM</label>
+                <label class="block">Pilih Moderator</label>
 
 
 
                 <div class="relative">
                     <input type="text" wire:model.live.debounce.300ms="searchModerator"
-                        placeholder="Ketik untuk mencari dan memilih ERM..."
+                        placeholder="Ketik untuk mencari dan memilih moderator..."
                         class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
 
                     @if ($showModeratorDropdown && count($users) > 0)
