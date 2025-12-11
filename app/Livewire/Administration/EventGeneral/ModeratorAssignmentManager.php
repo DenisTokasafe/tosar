@@ -33,7 +33,6 @@ class ModeratorAssignmentManager extends Component
     public $selectedModerators = [];
     protected $messages =
     [
-        'user_id.required'                => 'Nama Moderator wajib diisi.',
         'event_type_id.required'          => 'Tipe Bahaya wajib diisi.',
     ];
     public function mount()
