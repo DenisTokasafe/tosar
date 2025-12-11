@@ -19,7 +19,7 @@
                         <input type="text" wire:model.live.debounce.300ms="searchModerator"
                             placeholder="Ketik untuk mencari dan memilih moderator..."
                            />
-                        <div wire:loading.remove.class='hidden' wire:target="searchModerator" class="p-2 text-center hidden">
+                        <div wire:loading.remove.class='hidden' wire:target="searchModerator,selectModerator" class="p-2 text-center hidden">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
                     </label>
