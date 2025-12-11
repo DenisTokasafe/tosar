@@ -246,7 +246,7 @@ class ErmAssignmentManager extends Component
         }
 
         // Reset properti
-        $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id', 'event_type_id']);
+        $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id']);
         $this->loadAssignments();
     }
     public function delete($id)
