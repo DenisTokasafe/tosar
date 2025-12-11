@@ -1,5 +1,5 @@
 @props(['activeTab'])
-<div class="flex flex-row  md:flex-col ">
+<div class="flex  flex-col ">
     <div class=" w-full  md:w-60 ">
         <flux:navlist-horizontal>
             <flux:navlist-horizontal.item :href="route('administration-department-group')"
