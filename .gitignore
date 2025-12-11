@@ -5,7 +5,7 @@
 # /public/storage
 # /public/storage/sebelum_perbaikan
 # /public/storage/sesudah_perbaikan
-/storage/*.key
+#/storage/*.key
 /storage/pail
 #/vendor
 .env
