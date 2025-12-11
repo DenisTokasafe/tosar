@@ -9,7 +9,7 @@
     </div>
 
     {{-- <flux:separator class="md:hidden" /> --}}
-
+  <x-tabs-group.url_panel/>
     <div class=" py-2 ">
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
@@ -18,6 +18,7 @@
             <div
                 class="h-full flex-1 overflow-y-auto overflow-x-hidden rounded-xl border border-neutral-200 dark:border-base-200 p-4">
                 <div class="w-full max-w-full ">
+
                     {{ $slot }}
                 </div>
             </div>
