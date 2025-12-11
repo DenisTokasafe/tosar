@@ -174,8 +174,7 @@ class ErmAssignmentManager extends Component
         $levelValue = $this->status === 'department' ? $this->department_id : $this->contractor_id;
 
         // 2. Persiapan: Ambil ID user yang sudah terdaftar dengan KOMBINASI LENGKAP ini
-        $existingAssignments = ModeratorAssignment::where('event_type_id', $this->event_type_id)
-            ->where($levelColumn, $levelValue)
+        $existingAssignments = ErmAssignment::where($levelColumn, $levelValue)
             ->pluck('user_id')
             ->toArray();
 
