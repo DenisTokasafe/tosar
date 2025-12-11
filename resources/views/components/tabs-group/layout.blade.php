@@ -12,6 +12,7 @@
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         <div class="mt-5  w-full ">
+            test
             {{ $slot }}
         </div>
     </div>
