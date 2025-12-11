@@ -31,11 +31,6 @@ class ModeratorAssignmentManager extends Component
     public $moderator_ids = [];
     // 💡 BARU: Array untuk menampung detail moderator yang dipilih (ID dan Nama)
     public $selectedModerators = [];
-    protected $rules = [
-        'moderator_ids' => 'required|array|min:1', // Memastikan minimal 1 moderator dipilih
-        'moderator_ids.*' => 'exists:users,id', // Memastikan setiap ID valid
-        // ... aturan lain
-    ];
     protected $messages =
     [
         'user_id.required'                => 'Nama Moderator wajib diisi.',
