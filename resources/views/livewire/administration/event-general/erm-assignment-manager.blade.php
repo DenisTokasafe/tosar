@@ -13,14 +13,17 @@
             <fieldset class="fieldset ">
                 <label class="block">Pilih ERM</label>
                 <div class="relative">
-                    <label  class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" >
+                    <div class="relative">
                         <input type="text" wire:model.live.debounce.300ms="searchModerator"
-                            placeholder="Ketik untuk mencari dan memilih ERM..."
-                           />
-                        <div wire:loading.remove.class='hidden' wire:target="searchModerator,selectModerator" class="p-2 text-center hidden">
+                            placeholder="Ketik untuk mencari dan memilih ERM..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
+
+                        {{-- Spinner diposisikan absolute di kanan input --}}
+                        <div wire:loading wire:target="searchModerator,selectModerator"
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
-                    </label>
+                    </div>
 
                     @if ($showModeratorDropdown && count($users) > 0)
                         <ul
