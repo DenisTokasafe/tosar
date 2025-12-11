@@ -3,7 +3,7 @@
     <x-tabs-relation.layout>
         <fieldset class="mb-4 fieldset">
             <label class="block ">Departemen</label>
-            <div class="relative w-full md:max-w-md" x-data @click.outside="$wire.set('showDepartmentDropdown', false)">
+            <div class="relative w-full md:max-w-sm" x-data @click.outside="$wire.set('showDepartmentDropdown', false)">
 
                 <!-- Input pencarian -->
                 <div class="relative ">
