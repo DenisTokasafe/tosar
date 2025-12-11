@@ -25,6 +25,11 @@ class ModeratorAssignmentManager extends Component
     public $contractors = [], $showContractorDropdown = false, $searchContractor = '';
     #[Validate('required')]
     public $user_id;
+    public $showModeratorDropdown = false;
+    // 💡 BARU: Array untuk menampung ID moderator yang dipilih
+    public $moderator_ids = [];
+    // 💡 BARU: Array untuk menampung detail moderator yang dipilih (ID dan Nama)
+    public $selectedModerators = [];
     protected $messages =
     [
         'user_id.required'                => 'Nama Moderator wajib diisi.',
@@ -63,25 +68,58 @@ class ModeratorAssignmentManager extends Component
     }
     public function updatedSearchModerator()
     {
+        // 💡 BARU: Kecualikan ID yang sudah dipilih dari hasil pencarian
+        $exclude_ids = $this->moderator_ids;
+
         if (strlen($this->searchModerator) > 1) {
             $this->users = User::where('name', 'like', '%' . $this->searchModerator . '%')
+                // Menghindari menampilkan yang sudah dipilih
+                ->whereNotIn('id', $exclude_ids)
                 ->orderBy('name')
                 ->limit(100)
                 ->get();
-            $this->showMpderatorDropdown = true;
+            // PERBAIKAN: Menggunakan properti yang benar
+            $this->showModeratorDropdown = true;
         } else {
             $this->users = [];
-            $this->showMpderatorDropdown = false;
+            // PERBAIKAN: Menggunakan properti yang benar
+            $this->showModeratorDropdown = false;
         }
     }
+
     public function selectModerator($id, $name)
     {
-        $this->reset('searchContractor', 'contractor_id');
-        $this->user_id = $id;
-        $this->searchModerator = $name;
-        $this->showMpderatorDropdown = false;
-        $this->validateOnly('user_id');
+        // Pengecekan agar ID tidak ganda
+        if (!in_array($id, $this->moderator_ids)) {
+            // 1. Tambahkan ID ke array
+            $this->moderator_ids[] = (int) $id;
+            // 2. Tambahkan detail moderator ke array untuk ditampilkan di Blade
+            $this->selectedModerators[] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+        }
+        // Reset input pencarian dan sembunyikan dropdown
+        // PERBAIKAN: Hapus reset contractor, fokus pada moderator
+        $this->reset('searchModerator', 'users');
+        $this->showModeratorDropdown = false;
+        // Hapus $this->user_id = $id; karena sudah diganti dengan array
+        // Hapus $this->validateOnly('user_id'); jika Anda sekarang memvalidasi 'moderator_ids'
     }
+    // 💡 BARU: Metode untuk menghapus moderator yang sudah dipilih
+    public function removeModerator($id)
+    {
+        // 1. Hapus ID dari array moderator_ids
+        $this->moderator_ids = array_diff($this->moderator_ids, [(int) $id]);
+        // 2. Hapus detail moderator dari array selectedModerators
+        $this->selectedModerators = collect($this->selectedModerators)->filter(function ($moderator) use ($id) {
+            return $moderator['id'] != $id;
+        })->values()->toArray(); // values() untuk mereset kunci array
+
+        // Opsional: Lakukan pencarian ulang jika pengguna sedang mencari
+        $this->updatedSearchModerator();
+    }
+
     public function updatedSearchDepartemen()
     {
         if (strlen($this->searchDepartemen) > 1) {

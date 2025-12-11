@@ -3,7 +3,7 @@
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     @include('partials.event-general-head')
     @push('styles')
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     @endpush
     <!-- name of each tab group should be unique -->
     <x-tabs-event.layout>
@@ -12,90 +12,130 @@
         <div class="grid grid-cols-4 gap-2">
             <fieldset class="fieldset ">
                 <label class="block">Pilih Moderator</label>
-                <div class="relative">
-                    <!-- Input Search -->
-                    <input type="text" wire:model.live.debounce.300ms="searchModerator" placeholder="Pilih Moderator..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                    <!-- Dropdown hasil search -->
-                    @if($showMpderatorDropdown && count($users) > 0)
-                    <ul class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                        <!-- Spinner ketika klik -->
-                        <div wire:loading wire:target="selectModerator" class="p-2 text-center">
-                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                        </div>
-                        @foreach($users as $user)
-                        <li wire:click="selectModerator({{ $user->id }}, '{{ $user->name }}')" class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                            {{ $user->name }}
-                        </li>
+
+                @if (count($selectedModerators) > 0)
+                    <div class="mt-2 mb-3 flex flex-wrap gap-2">
+                        @foreach ($selectedModerators as $moderator)
+                            <div class="badge badge-info gap-2">
+                                <span>{{ $moderator['name'] }}</span>
+                                <button type="button" wire:click="removeModerator({{ $moderator['id'] }})"
+                                    class="btn btn-xs btn-circle btn-ghost">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
+                @endif
+
+                <div class="relative">
+                    <input type="text" wire:model.live.debounce.300ms="searchModerator"
+                        placeholder="Ketik untuk mencari dan memilih moderator..."
+                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+
+                    @if ($showModeratorDropdown && count($users) > 0)
+                        <ul
+                            class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+
+                            <div wire:loading.delay wire:target="searchModerator" class="p-2 text-center">
+                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                            </div>
+
+                            @foreach ($users as $user)
+                                <li wire:click="selectModerator({{ $user->id }}, '{{ $user->name }}')"
+                                    class="px-3 py-2 cursor-pointer hover:bg-base-200" wire:loading.attr="disabled">
+                                    {{ $user->name }}
+                                </li>
+                            @endforeach
+                        </ul>
                     @endif
+
+                    @foreach ($moderator_ids as $id)
+                        <input type="hidden" name="moderator_ids[]" value="{{ $id }}">
+                    @endforeach
+
                 </div>
-                <x-label-error :messages="$errors->get('user_id')" />
+
+                <x-label-error :messages="$errors->get('moderator_ids')" />
             </fieldset>
 
             <fieldset>
-                <input id="department" value="department" wire:model="status" class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
+                <input id="department" value="department" wire:model="status"
+                    class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
                 <label for="department" class="peer-checked/department:text-accent">Departemen</label>
 
-                <input id="company" value="company" wire:model="status" class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
+                <input id="company" value="company" wire:model="status"
+                    class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
                 <label for="company" class="peer-checked/company:text-primary">Kontraktor</label>
 
                 <div class="hidden peer-checked/department:block mt-0.5">
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchDepartemen" placeholder="Cari departemen..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                        <input type="text" wire:model.live.debounce.300ms="searchDepartemen"
+                            placeholder="Cari departemen..."
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                         <!-- Dropdown hasil search -->
-                        @if($showDepartemenDropdown && count($departments) > 0)
-                        <ul class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                            <!-- Spinner ketika klik salah satu -->
-                            <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                <span class="loading loading-spinner loading-sm text-secondary"></span>
-                            </div>
-                            @foreach($departments as $dept)
-                            <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')" class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                {{ $dept->department_name }}
-                            </li>
-                            @endforeach
-                        </ul>
+                        @if ($showDepartemenDropdown && count($departments) > 0)
+                            <ul
+                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                <!-- Spinner ketika klik salah satu -->
+                                <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                </div>
+                                @foreach ($departments as $dept)
+                                    <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                        class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                        {{ $dept->department_name }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
                     </div>
-                    @if($status === 'department')
-                    <x-label-error :messages="$errors->get('department_id')" />
+                    @if ($status === 'department')
+                        <x-label-error :messages="$errors->get('department_id')" />
                     @endif
                 </div>
                 <div class="hidden peer-checked/company:block mt-0.5">
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..." class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                        <input type="text" wire:model.live.debounce.300ms="searchContractor"
+                            placeholder="Cari kontraktor..."
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                         <!-- Dropdown hasil search -->
-                        @if($showContractorDropdown && count($contractors) > 0)
-                        <ul class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                            <!-- Spinner ketika klik -->
-                            <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                <span class="loading loading-spinner loading-sm text-secondary"></span>
-                            </div>
-                            @foreach($contractors as $contractor)
-                            <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')" class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                {{ $contractor->contractor_name }}
-                            </li>
-                            @endforeach
-                        </ul>
+                        @if ($showContractorDropdown && count($contractors) > 0)
+                            <ul
+                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                <!-- Spinner ketika klik -->
+                                <div wire:loading wire:target="selectContractor" class="p-2 text-center">
+                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                </div>
+                                @foreach ($contractors as $contractor)
+                                    <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                        class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                        {{ $contractor->contractor_name }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
                     </div>
-                    @if($status === 'company')
-                    <x-label-error :messages="$errors->get('contractor_id')" />
+                    @if ($status === 'company')
+                        <x-label-error :messages="$errors->get('contractor_id')" />
                     @endif
                 </div>
             </fieldset>
 
             <fieldset class="fieldset">
                 <x-form.label label="Tipe Bahaya" required />
-                <select wire:model.live="event_type_id" class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('event_type_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                <select wire:model.live="event_type_id"
+                    class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('event_type_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                     <option value="">-- Pilih --</option>
-                    @foreach($eventType as $co)
-                    <option value="{{ $co->id }}">{{ $co->event_type_name }}</option>
+                    @foreach ($eventType as $co)
+                        <option value="{{ $co->id }}">{{ $co->event_type_name }}</option>
                     @endforeach
                 </select>
                 <x-label-error :messages="$errors->get('event_type_id')" />
@@ -108,7 +148,8 @@
             </flux:button>
         </div>
         <hr class="my-4">
-        <input type="text" wire:model.live="search" placeholder="Cari nama moderator..." class="px-3 py-1 border rounded text-sm w-1/2 mb-2">
+        <input type="text" wire:model.live="search" placeholder="Cari nama moderator..."
+            class="px-3 py-1 border rounded text-sm w-1/2 mb-2">
         <table class="table-auto w-full text-sm border">
             <thead>
                 <tr class="bg-gray-100">
@@ -120,18 +161,19 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($assignments as $mod)
-                <tr>
-                    <td class="border px-2">{{ $mod->user->name }}</td>
-                    <td class="border px-2">{{ $mod->department->department_name ?? '-' }}</td>
-                    <td class="border px-2">{{ $mod->contractor->contractor_name ?? '-' }}</td>
-                    <td class="border px-2">{{ $mod->eventType->event_type_name ?? '-' }}</td>
-                    <td class="border px-2">
-                        <button wire:click="delete({{ $mod->id }})" class="text-red-500 hover:underline text-xs">
-                            Hapus
-                        </button>
-                    </td>
-                </tr>
+                @foreach ($assignments as $mod)
+                    <tr>
+                        <td class="border px-2">{{ $mod->user->name }}</td>
+                        <td class="border px-2">{{ $mod->department->department_name ?? '-' }}</td>
+                        <td class="border px-2">{{ $mod->contractor->contractor_name ?? '-' }}</td>
+                        <td class="border px-2">{{ $mod->eventType->event_type_name ?? '-' }}</td>
+                        <td class="border px-2">
+                            <button wire:click="delete({{ $mod->id }})"
+                                class="text-red-500 hover:underline text-xs">
+                                Hapus
+                            </button>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
