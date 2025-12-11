@@ -7,8 +7,6 @@
     @endpush
     <!-- name of each tab group should be unique -->
     <x-tabs-event.layout>
-
-
         <div class="grid grid-cols-4 gap-2">
             <fieldset class="fieldset ">
                 <label class="block">Pilih ERM</label>
