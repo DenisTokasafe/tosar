@@ -14,7 +14,6 @@
                 <label class="block">Pilih Moderator</label>
 
 
-
                 <div class="relative">
                     <label  class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" >
                         <input type="text" wire:model.live.debounce.300ms="searchModerator"
