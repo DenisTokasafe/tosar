@@ -62,35 +62,33 @@
                 @endif
             </fieldset>
 
-            <fieldset>
-                <input id="department" value="department" wire:model.live="status"
+              <fieldset>
+                <input id="department" value="department" wire:model="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
-                <label for="department" class="peer-checked/department:text-accent">Departemen @if ($status === 'department')
-                        <span class="text-red-500 font-bold">*</span>
-                    @endif
-                </label>
-                <input id="company" value="company" wire:model.live="status"
+                <label for="department" class="peer-checked/department:text-accent">Departemen</label>
+
+                <input id="company" value="company" wire:model="status"
                     class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
-                <label for="company" class="peer-checked/company:text-primary">Kontraktor @if ($status === 'company')
-                        <span class="text-red-500 font-bold">*</span>
-                    @endif
-                </label>
+                <label for="company" class="peer-checked/company:text-primary">Kontraktor</label>
 
                 <div class="hidden peer-checked/department:block mt-0.5">
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchDepartemen"
-                            placeholder="Cari departemen..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                        <div class="relative">
+                            <input type="text" wire:model.live.debounce.300ms="searchDepartemen"
+                                placeholder="Cari departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
+                            {{-- Spinner diposisikan absolute di kanan input --}}
+                            <div wire:loading.remove.class='hidden' wire:target="searchDepartemen,selectDepartment"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-10 hidden">
+                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                            </div>
+                        </div>
                         <!-- Dropdown hasil search -->
                         @if ($showDepartemenDropdown && count($departments) > 0)
                             <ul
                                 class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                                <!-- Spinner ketika klik salah satu -->
-                                <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                </div>
                                 @foreach ($departments as $dept)
                                     <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
                                         class="px-3 py-2 cursor-pointer hover:bg-base-200">
@@ -108,30 +106,33 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchContractor"
-                            placeholder="Cari kontraktor..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                        <!-- Dropdown hasil search -->
-                        @if ($showContractorDropdown && count($contractors) > 0)
-                            <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                                <!-- Spinner ketika klik -->
-                                <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                </div>
-                                @foreach ($contractors as $contractor)
-                                    <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                        class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                        {{ $contractor->contractor_name }}
-                                    </li>
-                                @endforeach
-                            </ul>
+                        <div class="relative">
+                            <input type="text" wire:model.live.debounce.300ms="searchContractor"
+                                placeholder="Cari departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
+                            {{-- Spinner diposisikan absolute di kanan input --}}
+                            <div wire:loading.remove.class='hidden' wire:target="searchContractor,selectContractor"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-10 hidden">
+                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                            </div>
+                            <!-- Dropdown hasil search -->
+                            @if ($showContractorDropdown && count($contractors) > 0)
+                                <ul
+                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    <!-- Spinner ketika klik -->
+                                    @foreach ($contractors as $contractor)
+                                        <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                            {{ $contractor->contractor_name }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                        @if ($status === 'company')
+                            <x-label-error :messages="$errors->get('contractor_id')" />
                         @endif
                     </div>
-                    @if ($status === 'company')
-                        <x-label-error :messages="$errors->get('contractor_id')" />
-                    @endif
-                </div>
             </fieldset>
         </div>
 
