@@ -26,7 +26,7 @@
                     @if ($showModeratorDropdown && count($users) > 0)
                         <ul
                             class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
-                            @forelse ( as )
+                            @forelse ($users as $user )
                                  <li wire:click="selectModerator({{ $user->id }}, '{{ $user->name }}')"
                                     class="px-3 py-2 cursor-pointer hover:bg-base-200" wire:loading.attr="disabled">
                                     {{ $user->name }}
