@@ -208,7 +208,6 @@ class ErmAssignmentManager extends Component
                     // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
                     'department_id' => $this->status === 'department' ? $this->department_id : null,
                     'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-                    'event_type_id' => $this->event_type_id,
                 ]);
 
                 $successfulAssignments++;
