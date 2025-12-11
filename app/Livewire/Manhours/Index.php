@@ -46,6 +46,14 @@ class Index extends Component
 
         $this->dispatch('manhoursSearchUpdated', search: $value);
     }
+    public function updatingSearch()
+    {
+        $this->resetPage(); // Reset pagination ketika search berubah
+    }
+    public function updatingRangeDate()
+    {
+        $this->resetPage(); // Reset pagination ketika filter tanggal berubah
+    }
     public function updatedRangeDate($value)
     {
         // Cek apakah nilai tidak kosong
