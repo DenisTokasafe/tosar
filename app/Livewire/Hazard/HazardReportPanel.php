@@ -22,7 +22,6 @@ class HazardReportPanel extends Component
     public array $filterStatus = [];
     public $role;
     public $filterEventType;
-
     public $openDropdownId = null;
     public $deptCont = 'department'; // default departemen
     public $search = '';
@@ -42,15 +41,12 @@ class HazardReportPanel extends Component
     public $end_date;
     // Properti ini yang akan mengontrol tampilan dropdown
     public bool $isDropdownOpen = false;
-
     // Properties untuk menampung ID yang dicentang
     public array $filterDepartment = [];
     public array $filterContractor = [];
     public array $filterEventSubType = [];
-
     // Data filter
     public $filterOptions = [];
-
     public function mount()
     {
         $eventTypes = Hazard::select('event_type_id')
@@ -105,7 +101,6 @@ class HazardReportPanel extends Component
     {
         $this->resetPage(); // Reset pagination ketika search contractor berubah
     }
-
     public function toggleDropdownstatus()
     {
         $this->isDropdownOpen = !$this->isDropdownOpen;
@@ -118,7 +113,6 @@ class HazardReportPanel extends Component
         // Opsional: Tutup dropdown setelah filter diterapkan
         // $this->isDropdownOpen = false;
     }
-
     public function updatedDeptCont($value)
     {
         if ($value === 'department') {
@@ -150,7 +144,6 @@ class HazardReportPanel extends Component
     }
     public function toggleDropdown($reportId)
     {
-
         $this->openDropdownId = $this->openDropdownId === $reportId ? null : $reportId;
     }
     public function updateStatus($reportId, $newStatus)
