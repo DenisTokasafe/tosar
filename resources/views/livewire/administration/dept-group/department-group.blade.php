@@ -3,7 +3,7 @@
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     {{-- @include('partials.dept-group-heading') --}}
 
-    <x-tabs-group.layout>
+    <x-tabs-group.layout :activeTab="$activeTab">
         <div class="overflow-x-auto ">
             <table class="table table-xs table-zebra">
                 <thead class="text-center">

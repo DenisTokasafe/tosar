@@ -1,3 +1,4 @@
+@props(['activeTab']) // Definisikan properti yang diharapkan
 <div class="flex  md:flex-col ">
     <div class=" w-full  md:w-60 ">
         <flux:navlist-horizontal>
