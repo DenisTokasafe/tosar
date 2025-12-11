@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    @include('partials.dept-group-heading')
+    {{-- @include('partials.dept-group-heading') --}}
     <x-tabs-group.layout>
         <div class="flex justify-between">
             <flux:tooltip content="tambah data" position="top">
