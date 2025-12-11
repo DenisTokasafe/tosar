@@ -9,7 +9,7 @@
     </div>
 
     {{-- <flux:separator class="md:hidden" /> --}}
-    <div wire:ignore class=" py-2 ">
+    <div  class=" py-2 ">
         {{-- 💡 LOGIKA KONDISIONAL BERDASARKAN ROUTE AKTIF --}}
 
         @if (Route::currentRouteName() === 'administration-department-group')
