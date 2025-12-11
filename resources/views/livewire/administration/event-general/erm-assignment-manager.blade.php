@@ -14,7 +14,7 @@
                 <label class="block">Pilih ERM</label>
                 <div class="relative">
                     <label  class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" >
-                        <input type="text" wire:model.live.debounce.300ms="searchModerator" class="focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                        <input type="text" wire:model.live.debounce.300ms="searchModerator"
                             placeholder="Ketik untuk mencari dan memilih ERM..."
                            />
                         <div wire:loading.remove.class='hidden' wire:target="searchModerator,selectModerator" class="p-2 text-center hidden">
