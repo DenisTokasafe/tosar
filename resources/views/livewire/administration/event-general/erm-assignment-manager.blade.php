@@ -20,7 +20,7 @@
 
                         {{-- Spinner diposisikan absolute di kanan input --}}
                         <div wire:loading  wire:target="searchModerator,selectModerator"
-                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none ">
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-10">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
                     </div>
