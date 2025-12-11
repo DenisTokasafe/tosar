@@ -58,7 +58,7 @@ class Index extends Component
     {
         // Cek apakah nilai tidak kosong
         if (!empty($value)) {
-            // Pisahkan string berdasarkan " to "
+            // Pisahkan string berdasarkan " ke "
             $dates = explode(' Ke ', $value);
 
             // Pastikan ada dua tanggal yang valid

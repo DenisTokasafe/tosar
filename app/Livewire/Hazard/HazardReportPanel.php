@@ -65,6 +65,46 @@ class HazardReportPanel extends Component
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
         ];
     }
+     public function updatingSearch()
+    {
+        $this->resetPage(); // Reset pagination ketika search berubah
+    }
+    public function updatingFilterStatus()
+    {
+        $this->resetPage(); // Reset pagination ketika filter status berubah
+    }
+    public function updatingFilterEventType()
+    {
+        $this->resetPage(); // Reset pagination ketika filter event type berubah
+    }
+    public function updatingFilterByAuth()
+    {
+        $this->resetPage(); // Reset pagination ketika filter checkbox berubah
+    }
+    public function updatingFilterDepartment()
+    {
+        $this->resetPage(); // Reset pagination ketika filter department berubah
+    }
+    public function updatingFilterContractor()
+    {
+        $this->resetPage(); // Reset pagination ketika filter contractor berubah
+    }
+    public function updatingFilterEventSubType()
+    {
+        $this->resetPage(); // Reset pagination ketika filter event sub type berubah
+    }
+    public function updatingActionDueDate()
+    {
+        $this->resetPage(); // Reset pagination ketika filter tanggal berubah
+    }
+    public function updatingSearchPelapor()
+    {
+        $this->resetPage(); // Reset pagination ketika search pelapor berubah
+    }
+    public function updatingSearchContractor()
+    {
+        $this->resetPage(); // Reset pagination ketika search contractor berubah
+    }
 
     public function toggleDropdownstatus()
     {
