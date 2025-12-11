@@ -9,8 +9,18 @@
     </div>
 
     {{-- <flux:separator class="md:hidden" /> --}}
-  <x-tabs-group.url_panel/>
     <div class=" py-2 ">
+        {{-- 💡 LOGIKA KONDISIONAL BERDASARKAN ROUTE AKTIF --}}
+
+        @if (Route::currentRouteName() === 'administration-department-group')
+            <x-tabs-group.url_panel />
+            {{-- x-tabs-group.url_panel_group di-hide secara implisit karena tidak berada di blok ini --}}
+        @endif
+
+        @if (Route::currentRouteName() === 'administration-department-group-group')
+            <x-tabs-group.url_panel_group />
+            {{-- x-tabs-group.url_panel di-hide secara implisit karena tidak berada di blok ini --}}
+        @endif
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         <div
