@@ -8,7 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Validate;
 use Livewire\WithoutUrlPagination;
-
+use Illuminate\Support\Facades\Route;
 class Group extends Component
 {
     use WithPagination, WithoutUrlPagination;
@@ -17,11 +17,25 @@ class Group extends Component
     public $group_name;
     public $showConfirmModal = false;
     public $search_group, $group_id, $delete_id;
+    public $activeTab;
 
+    public function mount()
+    {
+        $currentRoute = Route::currentRouteName();
+
+        if ($currentRoute === 'administration-department-group') {
+            $this->activeTab = 'department';
+        } elseif ($currentRoute === 'administration-department-group-group') {
+            $this->activeTab = 'group';
+        } else {
+            // Default jika rute tidak cocok (misalnya rute induk)
+            $this->activeTab = 'department';
+        }
+    }
     public function open_modal()
     {
         Flux::modal('group')->show();
-           $this->legend = 'Input group';
+        $this->legend = 'Input group';
     }
     public function open_modal_edit(ModelsGroup $id)
     {
@@ -30,8 +44,7 @@ class Group extends Component
             $this->group_id = $id->id;
             $this->group_name = $id->group_name;
             $this->legend = 'Edit group';
-        }
-        else {
+        } else {
             $this->reset('group_id', 'group_name');
         }
     }
@@ -40,8 +53,6 @@ class Group extends Component
         Flux::modal('group_edit')->close();
         Flux::modal('group')->close();
         $this->reset('group_id', 'group_name');
-
-
     }
     public function store()
     {
@@ -66,8 +77,8 @@ class Group extends Component
                 'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]
         );
-          $this->dispatch('group-created');
-        $this->reset('group_id', 'group_name', );
+        $this->dispatch('group-created');
+        $this->reset('group_id', 'group_name',);
     }
     public function showDelete(ModelsGroup $id)
     {
@@ -100,6 +111,6 @@ class Group extends Component
     }
     public function paginationView()
     {
-         return 'paginate.pagination';
+        return 'paginate.pagination';
     }
 }

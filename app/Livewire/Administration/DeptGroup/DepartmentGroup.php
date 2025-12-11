@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 use App\Models\Department_group;
 use Livewire\Attributes\Validate;
 use Livewire\WithoutUrlPagination;
-
+use Illuminate\Support\Facades\Route;
 class DepartmentGroup extends Component
 {
     use WithPagination, WithoutUrlPagination;
@@ -19,6 +19,23 @@ class DepartmentGroup extends Component
     #[Validate('required', message: 'kolom ini tidak boleh kosong!!!')]
     public $group_id, $department_id, $status;
     public $search, $dept_group_id;
+
+    // Properti yang menentukan tab mana yang harus ditampilkan
+    public $activeTab;
+
+    public function mount()
+    {
+        $currentRoute = Route::currentRouteName();
+
+        if ($currentRoute === 'administration-department-group') {
+            $this->activeTab = 'department';
+        } elseif ($currentRoute === 'administration-department-group-group') {
+            $this->activeTab = 'group';
+        } else {
+            // Default jika rute tidak cocok (misalnya rute induk)
+            $this->activeTab = 'department';
+        }
+    }
     public function resetFilds()
     {
         $this->reset('group_id', 'department_id', 'status', 'dept_group_id');
