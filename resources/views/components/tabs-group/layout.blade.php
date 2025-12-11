@@ -11,12 +11,15 @@
     {{-- <flux:separator class="md:hidden" /> --}}
     <div class=" py-2 ">
         {{-- 💡 LOGIKA KONDISIONAL BERDASARKAN ROUTE AKTIF --}}
+        @if (Route::currentRouteName() === 'administration-department-group' ||
+                Route::currentRouteName() === 'administration-department-group-group')
 
-        @if ($activeTab === 'department')
-            <x-tabs-group.url_panel />
-        @endif
-        @if ($activeTab === 'group')
-            <x-tabs-group.url_panel_group />
+            @if ($activeTab === 'department')
+                <x-tabs-group.url_panel />
+            @endif
+            @if ($activeTab === 'group')
+                <x-tabs-group.url_panel_group />
+            @endif
         @endif
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
