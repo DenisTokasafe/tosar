@@ -9,7 +9,7 @@
     <x-tabs-event.layout>
 
 
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid md:grid-cols-3 grid-rows-3 gap-2">
             <fieldset class="fieldset ">
                 <label class="block">Pilih Moderator</label>
 
