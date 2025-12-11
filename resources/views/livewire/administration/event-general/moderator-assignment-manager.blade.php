@@ -13,23 +13,7 @@
             <fieldset class="fieldset ">
                 <label class="block">Pilih Moderator</label>
 
-                @if (count($selectedModerators) > 0)
-                    <div class="mt-2 mb-3 flex flex-wrap gap-2">
-                        @foreach ($selectedModerators as $moderator)
-                            <div class="badge badge-info gap-2">
-                                <span>{{ $moderator['name'] }}</span>
-                                <button type="button" wire:click="removeModerator({{ $moderator['id'] }})"
-                                    class="btn btn-xs btn-circle btn-ghost">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
+
 
                 <div class="relative">
                     <input type="text" wire:model.live.debounce.300ms="searchModerator"
@@ -58,8 +42,24 @@
                     @endforeach
 
                 </div>
-
                 <x-label-error :messages="$errors->get('moderator_ids')" />
+                @if (count($selectedModerators) > 0)
+                    <div class="mt-2 mb-3 flex flex-wrap gap-2">
+                        @foreach ($selectedModerators as $moderator)
+                            <div class="badge badge-info gap-2">
+                                <span>{{ $moderator['name'] }}</span>
+                                <button type="button" wire:click="removeModerator({{ $moderator['id'] }})"
+                                    class="btn btn-xs btn-circle btn-ghost">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </fieldset>
 
             <fieldset>
