@@ -15,14 +15,17 @@
 
 
                 <div class="relative">
-                    <label  class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" >
+                   <div class="relative">
                         <input type="text" wire:model.live.debounce.300ms="searchModerator"
-                            placeholder="Ketik untuk mencari dan memilih moderator..."
-                           />
-                        <div wire:loading.remove.class='hidden' wire:target="searchModerator,selectModerator" class="p-2 text-center hidden">
+                            placeholder="Ketik untuk mencari dan memilih Moderator..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
+
+                        {{-- Spinner diposisikan absolute di kanan input --}}
+                        <div wire:loading.remove.class='hidden'  wire:target="searchModerator,selectModerator"
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-10 hidden">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
-                    </label>
+                    </div>
                     @if ($showModeratorDropdown && count($users) > 0)
                         <ul
                             class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
