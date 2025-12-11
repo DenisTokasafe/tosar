@@ -1,8 +1,10 @@
 <div class="flex  md:flex-col ">
     <div class=" w-full  md:w-60 ">
         <flux:navlist-horizontal>
-            <flux:navlist-horizontal.item :href="route('administration-department-group')"    wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
-            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"   wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('administration-department-group')"
+                wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"
+                wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
         </flux:navlist-horizontal>
     </div>
 
@@ -11,9 +13,14 @@
     <div class=" p-2 ">
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
-        <div class="mt-5  w-full ">
-            test
-            {{ $slot }}
+        <div
+            class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
+            <div
+                class="h-full flex-1 overflow-y-auto overflow-x-hidden rounded-xl border border-neutral-200 dark:border-base-200 p-4">
+                <div class="w-full max-w-full ">
+                    {{ $slot }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
