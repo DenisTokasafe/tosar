@@ -257,6 +257,12 @@ class ModeratorAssignmentManager extends Component
     public function delete($id)
     {
         ModeratorAssignment::findOrFail($id)->delete();
+        $this->dispatch('alert', [
+                'text' => "Penugasan moderator berhasil dihapus.",
+                'duration' => 8000,
+                'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+                // ... properti dispatch lainnya
+            ]);
         $this->loadAssignments();
     }
     public function render()

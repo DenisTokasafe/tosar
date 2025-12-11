@@ -252,6 +252,12 @@ class ErmAssignmentManager extends Component
     public function delete($id)
     {
         ErmAssignment::findOrFail($id)->delete();
+        $this->dispatch('alert', [
+                'text' => "Penugasan ERM berhasil dihapus.",
+                'duration' => 8000,
+                'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+                // ... properti dispatch lainnya
+            ]);
         $this->loadAssignments();
     }
     public function render()
