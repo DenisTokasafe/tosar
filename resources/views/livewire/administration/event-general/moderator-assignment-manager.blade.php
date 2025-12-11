@@ -83,7 +83,7 @@
                             placeholder="Cari departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
                         {{-- Spinner diposisikan absolute di kanan input --}}
-                        <div wire:loading.remove.class='hidden'  wire:target="searchModerator,selectModerator"
+                        <div wire:loading.remove.class='hidden'  wire:target="searchDepartemen,selectDepartment"
                             class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-10 hidden">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
