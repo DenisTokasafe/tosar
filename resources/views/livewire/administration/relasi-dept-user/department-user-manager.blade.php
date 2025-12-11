@@ -46,7 +46,7 @@
                 </label>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mt-1 md:max-h-96 overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 ">
                 @foreach($users as $user)
                 @if(!$showOnlySelected || in_array($user->id, $selectedUsers))
                 <label class="flex items-center space-x-2" wire:key="user-{{ $user->id }}">
