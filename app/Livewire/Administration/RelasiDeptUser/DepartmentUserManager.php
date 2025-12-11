@@ -26,10 +26,10 @@ class DepartmentUserManager extends Component
     {
         $this->departments = Department::where('department_name', 'like', '%' . $this->searchDepartment . '%')
             ->orderBy('department_name')
-            ->limit(10)
+            ->limit(30)
             ->get();
-            $this->showDepartmentDropdown = true;
-            $this->reset('searchUser','selectedUsers');
+        $this->showDepartmentDropdown = true;
+        $this->reset('searchUser', 'selectedUsers');
     }
     public function selectDepartment($id, $name)
     {
@@ -71,7 +71,7 @@ class DepartmentUserManager extends Component
                 'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]
         );
-         $this->reset('searchUser','selectedUsers');
+        $this->reset('searchUser', 'selectedUsers');
     }
     public function render()
     {

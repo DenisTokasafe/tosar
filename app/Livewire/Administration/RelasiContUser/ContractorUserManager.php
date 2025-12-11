@@ -26,10 +26,10 @@ class ContractorUserManager extends Component
     {
         $this->contractors = Contractor::where('contractor_name', 'like', '%' . $this->searchContractor . '%')
             ->orderBy('contractor_name')
-            ->limit(10)
+            ->limit(30)
             ->get();
-               $this->showContractorDropdown = true;
-            $this->reset('searchUser','selectedUsers');
+        $this->showContractorDropdown = true;
+        $this->reset('searchUser', 'selectedUsers');
     }
 
     public function selectContractor($id, $name)
