@@ -1,5 +1,5 @@
 <div class="flex  flex-col ">
-     <div class=" hidden md:block w-60 overflow-x-auto">
+     <div class=" overflow-x-auto">
         <flux:navlist-horizontal>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventCategory')" wire:navigate>{{ __('Event Category') }}</flux:navlist-horizontal.item>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventType')" wire:navigate>{{ __('Event Type') }}</flux:navlist-horizontal.item>
