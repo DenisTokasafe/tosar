@@ -171,19 +171,14 @@ class ModeratorAssignmentManager extends Component
         $successfulAssignments = 0;
         $failedAssignments = 0;
         $failedNames = [];
-        $existingUserIds = [];
 
-        // 2. Persiapan: Ambil semua ID moderator yang sudah ditetapkan untuk level yang sama
-        // Kita hanya perlu tahu siapa yang sudah ada untuk level ini (department/contractor/event_type)
+        // Tentukan kolom dan nilai ID level yang sedang aktif
+        $levelColumn = $this->status === 'department' ? 'department_id' : 'contractor_id';
+        $levelValue = $this->status === 'department' ? $this->department_id : $this->contractor_id;
 
-        $levelCondition = function ($q) {
-            $q->where('department_id', $this->department_id)
-                ->orWhere('contractor_id', $this->contractor_id);
-        };
-
-        // Ambil ID pengguna yang sudah ada untuk KONDISI LEVEL DAN EVENT TYPE ini
+        // 2. Persiapan: Ambil ID user yang sudah terdaftar dengan KOMBINASI LENGKAP ini
         $existingAssignments = ModeratorAssignment::where('event_type_id', $this->event_type_id)
-            ->where($levelCondition)
+            ->where($levelColumn, $levelValue)
             ->pluck('user_id')
             ->toArray();
 
@@ -194,24 +189,29 @@ class ModeratorAssignmentManager extends Component
             // 4. Iterasi setiap ID moderator yang dipilih
             foreach ($this->moderator_ids as $userId) {
 
-                // 5. Pengecekan Duplikasi
+                // 5. Pengecekan Duplikasi EFEKTIF
                 // Cek apakah ID saat ini sudah ada di daftar $existingAssignments
                 if (in_array($userId, $existingAssignments)) {
 
+                    // TIDAK MEMUNCULKAN SESSION FLASH ERROR
                     $failedAssignments++;
+
                     // Catat nama yang gagal
                     $user = \App\Models\User::find($userId);
                     if ($user) {
                         $failedNames[] = $user->name;
                     }
-                    continue; // Lanjut ke ID berikutnya
+
+                    // Langsung lanjut ke ID berikutnya (mengabaikan ID yang duplikat)
+                    continue;
                 }
 
                 // 6. Buat entri baru
                 ModeratorAssignment::create([
                     'user_id' => $userId,
-                    'department_id' => $this->department_id,
-                    'contractor_id' => $this->contractor_id,
+                    // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                    'department_id' => $this->status === 'department' ? $this->department_id : null,
+                    'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
                     'event_type_id' => $this->event_type_id,
                 ]);
 
@@ -222,19 +222,20 @@ class ModeratorAssignmentManager extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            session()->flash('error', 'Terjadi kesalahan sistem saat menyimpan data: ' . $e->getMessage());
+            // Hanya memunculkan error jika terjadi kegagalan SISTEM
+            session()->flash('error', 'Terjadi kesalahan sistem saat menyimpan data.');
             return;
         }
 
         // 8. Pengiriman Notifikasi dan Reset State
 
-        // Gabungkan pesan notifikasi
+        // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
         if ($successfulAssignments > 0) {
             $message = "Berhasil menetapkan **{$successfulAssignments}** moderator.";
             $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
 
             if ($failedAssignments > 0) {
-                $message .= " Namun, **{$failedAssignments}** moderator gagal (sudah ada): " . implode(', ', $failedNames);
+                $message .= " **{$failedAssignments}** moderator dilewati (sudah terdaftar): " . implode(', ', $failedNames);
                 $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
             }
 
@@ -242,13 +243,14 @@ class ModeratorAssignmentManager extends Component
                 'text' => $message,
                 'duration' => 8000,
                 'backgroundColor' => $backgroundColor,
+                // ... properti dispatch lainnya
             ]);
         } elseif ($failedAssignments > 0) {
-            // Semua gagal
-            session()->flash('error', 'Semua moderator gagal ditetapkan karena sudah ada: ' . implode(', ', $failedNames));
+            // Jika semua ID duplikat
+            session()->flash('error', 'Semua moderator yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
         }
 
-        // Reset properti setelah berhasil
+        // Reset properti
         $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id', 'event_type_id']);
         $this->loadAssignments();
     }
