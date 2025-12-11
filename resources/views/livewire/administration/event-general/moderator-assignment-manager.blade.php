@@ -9,7 +9,7 @@
     <x-tabs-event.layout>
 
 
-        <div class="grid  grid-rows-3 md:grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <fieldset class="fieldset ">
                 <label class="block">Pilih Moderator</label>
 
@@ -64,7 +64,6 @@
                     </div>
                 @endif
             </fieldset>
-
             <fieldset>
                 <input id="department" value="department" wire:model="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
@@ -137,7 +136,6 @@
                         @endif
                     </div>
             </fieldset>
-
             <fieldset class="fieldset">
                 <x-form.label label="Tipe Bahaya" required />
                 <select wire:model.live="event_type_id"
