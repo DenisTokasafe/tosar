@@ -16,17 +16,19 @@
 
 
                 <div class="relative">
-                    <input type="text" wire:model.live.debounce.300ms="searchModerator"
-                        placeholder="Ketik untuk mencari dan memilih moderator..."
-                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-
+                    <label class="input">
+                        <input type="text" wire:model.live.debounce.300ms="searchModerator"
+                            placeholder="Ketik untuk mencari dan memilih moderator..."
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                        <div wire:loading.delay wire:target="searchModerator" class="p-2 text-center">
+                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                        </div>
+                    </label>
                     @if ($showModeratorDropdown && count($users) > 0)
                         <ul
                             class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
 
-                            <div wire:loading.delay wire:target="searchModerator" class="p-2 text-center">
-                                <span class="loading loading-spinner loading-sm text-secondary"></span>
-                            </div>
+
 
                             @foreach ($users as $user)
                                 <li wire:click="selectModerator({{ $user->id }}, '{{ $user->name }}')"
