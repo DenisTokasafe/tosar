@@ -10,7 +10,7 @@
 
     {{-- <flux:separator class="md:hidden" /> --}}
 
-    <div class=" p-2 ">
+    <div class=" py-2 ">
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         <div
