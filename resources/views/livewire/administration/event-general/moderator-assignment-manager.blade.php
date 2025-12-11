@@ -46,7 +46,7 @@
                 @if (count($selectedModerators) > 0)
                     <div class="mt-2 mb-3 flex flex-wrap gap-2">
                         @foreach ($selectedModerators as $moderator)
-                            <div class="badge badge-info gap-2">
+                            <div class="badge badge-xs badge-info gap-2">
                                 <span>{{ $moderator['name'] }}</span>
                                 <button type="button" wire:click="removeModerator({{ $moderator['id'] }})"
                                     class="btn btn-xs btn-circle btn-ghost">
