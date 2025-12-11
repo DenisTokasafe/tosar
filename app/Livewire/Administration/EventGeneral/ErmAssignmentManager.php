@@ -8,6 +8,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\ErmAssignment;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
 
 class ErmAssignmentManager extends Component
 {
@@ -20,8 +21,12 @@ class ErmAssignmentManager extends Component
     public $users = [], $showMpderatorDropdown = false, $searchModerator = '';
     public $departments = [], $showDepartemenDropdown = false, $searchDepartemen = '';
     public $contractors = [], $showContractorDropdown = false, $searchContractor = '';
-    #[Validate('required')]
-    public $user_id;
+    public $showModeratorDropdown = false;
+    // 💡 BARU: Array untuk menampung ID moderator yang dipilih
+    #[Validate('required|array', message: 'Anda harus memilih minimal satu moderator.')]
+    public $moderator_ids = [];
+    // 💡 BARU: Array untuk menampung detail moderator yang dipilih (ID dan Nama)
+    public $selectedModerators = [];
     protected $messages =
     [
         'user_id.required'                => 'Nama Moderator wajib diisi.',
@@ -61,24 +66,56 @@ class ErmAssignmentManager extends Component
     }
     public function updatedSearchModerator()
     {
+        // 💡 BARU: Kecualikan ID yang sudah dipilih dari hasil pencarian
+        $exclude_ids = $this->moderator_ids;
+
         if (strlen($this->searchModerator) > 1) {
             $this->users = User::where('name', 'like', '%' . $this->searchModerator . '%')
+                // Menghindari menampilkan yang sudah dipilih
+                ->whereNotIn('id', $exclude_ids)
                 ->orderBy('name')
                 ->limit(100)
                 ->get();
-            $this->showMpderatorDropdown = true;
+            // PERBAIKAN: Menggunakan properti yang benar
+            $this->showModeratorDropdown = true;
         } else {
             $this->users = [];
-            $this->showMpderatorDropdown = false;
+            // PERBAIKAN: Menggunakan properti yang benar
+            $this->showModeratorDropdown = false;
         }
     }
+
     public function selectModerator($id, $name)
     {
+        // Pengecekan agar ID tidak ganda
+        if (!in_array($id, $this->moderator_ids)) {
+            // 1. Tambahkan ID ke array
+            $this->moderator_ids[] = (int) $id;
+            // 2. Tambahkan detail moderator ke array untuk ditampilkan di Blade
+            $this->selectedModerators[] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+        }
+        // Reset input pencarian dan sembunyikan dropdown
+        // PERBAIKAN: Hapus reset contractor, fokus pada moderator
+        $this->reset('searchModerator', 'users');
+        $this->showModeratorDropdown = false;
+        // Hapus $this->user_id = $id; karena sudah diganti dengan array
+        // Hapus $this->validateOnly('user_id'); jika Anda sekarang memvalidasi 'moderator_ids'
+    }
+    // 💡 BARU: Metode untuk menghapus moderator yang sudah dipilih
+    public function removeModerator($id)
+    {
+        // 1. Hapus ID dari array moderator_ids
+        $this->moderator_ids = array_diff($this->moderator_ids, [(int) $id]);
+        // 2. Hapus detail moderator dari array selectedModerators
+        $this->selectedModerators = collect($this->selectedModerators)->filter(function ($moderator) use ($id) {
+            return $moderator['id'] != $id;
+        })->values()->toArray(); // values() untuk mereset kunci array
 
-        $this->user_id = $id;
-        $this->searchModerator = $name;
-        $this->showMpderatorDropdown = false;
-        $this->validateOnly('user_id');
+        // Opsional: Lakukan pencarian ulang jika pengguna sedang mencari
+        $this->updatedSearchModerator();
     }
     public function updatedSearchDepartemen()
     {
@@ -122,48 +159,97 @@ class ErmAssignmentManager extends Component
         $this->showContractorDropdown = false;
         $this->validateOnly('contractor_id');
     }
+    // 💡 FUNGSI ASSIGN YANG DISESUAIKAN
     public function assign()
     {
+        // 1. Validasi Properti Dasar (required, array)
         $this->validate();
-        // Cegah duplikasi per level
-        $exists = ErmAssignment::where('user_id', $this->user_id)
-            ->where(function ($q) {
-                $q->where('department_id', $this->department_id)
-                    ->orWhere('contractor_id', $this->contractor_id);
-            })->exists();
 
-        if ($exists) {
-             $this->dispatch(
-            'alert',
-            [
-                'text'            => 'User sudah ditetapkan sebagai moderator di level ini',
-                'duration'        => 5000,
-                'destination'     => '/contact',
-                'newWindow'       => true,
-                'close'           => true,
-                'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
-            ]
-        );
+        $successfulAssignments = 0;
+        $failedAssignments = 0;
+        $failedNames = [];
+
+        // Tentukan kolom dan nilai ID level yang sedang aktif
+        $levelColumn = $this->status === 'department' ? 'department_id' : 'contractor_id';
+        $levelValue = $this->status === 'department' ? $this->department_id : $this->contractor_id;
+
+        // 2. Persiapan: Ambil ID user yang sudah terdaftar dengan KOMBINASI LENGKAP ini
+        $existingAssignments = ModeratorAssignment::where('event_type_id', $this->event_type_id)
+            ->where($levelColumn, $levelValue)
+            ->pluck('user_id')
+            ->toArray();
+
+        // 3. Mulai Transaksi
+        DB::beginTransaction();
+
+        try {
+            // 4. Iterasi setiap ID moderator yang dipilih
+            foreach ($this->moderator_ids as $userId) {
+
+                // 5. Pengecekan Duplikasi EFEKTIF
+                // Cek apakah ID saat ini sudah ada di daftar $existingAssignments
+                if (in_array($userId, $existingAssignments)) {
+
+                    // TIDAK MEMUNCULKAN SESSION FLASH ERROR
+                    $failedAssignments++;
+
+                    // Catat nama yang gagal
+                    $user = \App\Models\User::find($userId);
+                    if ($user) {
+                        $failedNames[] = $user->name;
+                    }
+
+                    // Langsung lanjut ke ID berikutnya (mengabaikan ID yang duplikat)
+                    continue;
+                }
+
+                // 6. Buat entri baru
+                ErmAssignment::create([
+                    'user_id' => $userId,
+                    // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                    'department_id' => $this->status === 'department' ? $this->department_id : null,
+                    'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+                    'event_type_id' => $this->event_type_id,
+                ]);
+
+                $successfulAssignments++;
+            }
+
+            // 7. Commit Transaksi
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            // Hanya memunculkan error jika terjadi kegagalan SISTEM
+            session()->flash('error', 'Terjadi kesalahan sistem saat menyimpan data.');
             return;
         }
-        ErmAssignment::create([
-            'user_id' => $this->user_id,
-            'department_id' => $this->department_id,
-            'contractor_id' => $this->contractor_id,
-        ]);
-        $this->reset(['user_id', 'searchModerator']);
+
+        // 8. Pengiriman Notifikasi dan Reset State
+
+        // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
+        if ($successfulAssignments > 0) {
+            $message = "Berhasil menetapkan **{$successfulAssignments}** moderator.";
+            $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
+
+            if ($failedAssignments > 0) {
+                $message .= " **{$failedAssignments}** moderator dilewati (sudah terdaftar): " . implode(', ', $failedNames);
+                $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
+            }
+
+            $this->dispatch('alert', [
+                'text' => $message,
+                'duration' => 8000,
+                'backgroundColor' => $backgroundColor,
+                // ... properti dispatch lainnya
+            ]);
+        } elseif ($failedAssignments > 0) {
+            // Jika semua ID duplikat
+            session()->flash('error', 'Semua moderator yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
+        }
+
+        // Reset properti
+        $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id', 'event_type_id']);
         $this->loadAssignments();
-        $this->dispatch(
-            'alert',
-            [
-                'text'            => 'ERM berhasil ditetapkan.',
-                'duration'        => 5000,
-                'destination'     => '/contact',
-                'newWindow'       => true,
-                'close'           => true,
-                'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
-            ]
-        );
     }
     public function delete($id)
     {
