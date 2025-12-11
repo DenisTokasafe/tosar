@@ -3,10 +3,10 @@
     <x-tabs-relation.layout>
         <fieldset class="mb-4 fieldset">
             <label class="block ">Departemen</label>
-            <div class="relative" x-data @click.outside="$wire.set('showDepartmentDropdown', false)">
+            <div class="relative w-full md:max-w-md" x-data @click.outside="$wire.set('showDepartmentDropdown', false)">
 
                 <!-- Input pencarian -->
-                <div class="relative w-full md:max-w-md">
+                <div class="relative ">
                         <input type="text" wire:model.live.debounce.300ms="searchDepartment" wire:focus="$set('showDepartmentDropdown', true)"
                             placeholder="Ketik untuk mencari dan memilih Departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
@@ -18,7 +18,7 @@
                     </div>
                 <!-- Dropdown hasil search -->
                 @if($showDepartmentDropdown && count($departments) > 0)
-                <ul class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                <ul class="absolute z-10 bg-base-100 border rounded-md  mt-1 max-h-60 overflow-auto shadow">
                     <!-- Spinner ketika klik -->
                     @foreach($departments as $dept)
                     <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')" class="px-3 py-2 cursor-pointer hover:bg-base-200">
