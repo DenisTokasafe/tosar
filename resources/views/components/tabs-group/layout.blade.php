@@ -1,8 +1,10 @@
 <div class="flex  md:flex-col ">
     <div class=" w-full  md:w-60 ">
         <flux:navlist-horizontal>
-            <flux:navlist-horizontal.item :href="route('administration-department-group')" wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
-            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('administration-department-group')"
+                wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"
+                wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
         </flux:navlist-horizontal>
     </div>
 
