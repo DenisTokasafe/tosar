@@ -1,5 +1,5 @@
 <div class="flex  flex-col ">
-     <div class=" hidden md:block w-60">
+     <div class=" hidden md:block w-60 overflow-x-auto">
         <flux:navlist-horizontal>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventCategory')" wire:navigate>{{ __('Event Category') }}</flux:navlist-horizontal.item>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventType')" wire:navigate>{{ __('Event Type') }}</flux:navlist-horizontal.item>
@@ -8,7 +8,7 @@
             <flux:navlist-horizontal.item :href="route('administration-event_general-ErmAssignmentManager')" wire:navigate>{{ __('ERM Assigment') }}</flux:navlist-horizontal.item>
         </flux:navlist-horizontal>
     </div>
-    <div class=" md:hidden w-full">
+    {{-- <div class=" md:hidden w-full">
         <flux:navlist>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventCategory')" wire:navigate>{{ __('Event Category') }}</flux:navlist-horizontal.item>
             <flux:navlist-horizontal.item :href="route('administration-event_general-eventType')" wire:navigate>{{ __('Event Type') }}</flux:navlist-horizontal.item>
@@ -16,7 +16,7 @@
             <flux:navlist-horizontal.item :href="route('administration-event_general-ModeratorAssignmentManager')" wire:navigate>{{ __('Moderator Assigment') }}</flux:navlist-horizontal.item>
             <flux:navlist-horizontal.item :href="route('administration-event_general-ErmAssignmentManager')" wire:navigate>{{ __('ERM Assigment') }}</flux:navlist-horizontal.item>
         </flux:navlist>
-    </div>
+    </div> --}}
 
     {{-- <flux:separator class="md:hidden" /> --}}
 
