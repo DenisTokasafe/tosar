@@ -5,7 +5,7 @@
     <div>
         <div class="relative">
             <input type="text" wire:model.live.debounce.300ms="search_group"
-                placeholder="Ketik untuk mencari Departemen Group..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                placeholder="Ketik untuk mencari Group..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs pr-10" />
             {{-- Spinner diposisikan absolute di kanan input --}}
             <div wire:loading.remove.class='hidden' wire:target="search_group"
