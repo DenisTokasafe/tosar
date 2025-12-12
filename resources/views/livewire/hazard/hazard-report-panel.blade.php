@@ -1,8 +1,8 @@
 <section class="w-full">
     <x-toast />
     @include('partials.header-hazard')
-    <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center">
-        <div class="mb-4 md:mb-0 flex items-center gap-2">
+    <div class="flex flex-col items-start md:flex-row md:justify-between md:items-center">
+        <div class="flex items-center gap-2 mb-4 md:mb-0">
             <div class="tooltip tooltip-right  mb-0.5" data-tip="Tambah Hazard">
                 <a href="{{ route('hazard-form') }}" class="btn btn-square btn-primary btn-xs">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -12,7 +12,7 @@
                     </svg>
                 </a>
             </div>
-            {{-- @livewire('hazard.import-hazard-reports-modal') --}}
+            @livewire('hazard.import-hazard-reports-modal')
             {{-- Tambahkan wire:model.live untuk memfilter secara real-time --}}
             <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
                 class="checkbox checkbox-info" />
@@ -20,8 +20,8 @@
                 Hanya Laporan Saya
             </label>
         </div>
-        <div class="w-full flex flex-col md:flex-row md:max-w-md  gap-4">
-            <fieldset class="fieldset w-full">
+        <div class="flex flex-col w-full gap-4 md:flex-row md:max-w-md">
+            <fieldset class="w-full fieldset">
                 <x-form.label label="Cari Pelapor" required />
                 <div class="relative">
                     <!-- Input Search -->
@@ -31,7 +31,7 @@
                     <!-- Dropdown hasil search -->
                     @if ($showPelaporDropdown && count($pelapors) > 0)
                         <ul
-                            class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                             <!-- Spinner ketika klik -->
                             <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
                                 <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -46,7 +46,7 @@
                     @endif
                 </div>
             </fieldset>
-            <fieldset class="fieldset w-full">
+            <fieldset class="w-full fieldset">
                 <x-form.label label="rentang tanggal" required />
                 <div class="relative" wire:ignore x-data="{
                     fp: null,
@@ -73,8 +73,8 @@
             </fieldset>
         </div>
     </div>
-    <div class="overflow-x-auto mt-4">
-        <table class="table table-xs border text-xs px-2">
+    <div class="mt-4 overflow-x-auto">
+        <table class="table px-2 text-xs border table-xs">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="border">#</th>
@@ -83,7 +83,7 @@
                     <th class="border">Jenis Bahaya
                         <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
                             style="anchor-name:--eventSubType">
-                            <span class="text-blue-600 text-xs">
+                            <span class="text-xs text-blue-600">
                                 @if (empty($filterEventSubType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -107,16 +107,16 @@
                                 @endif
                             </span>
                         </button>
-                        <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-lg p-2 max-h-60 overflow-y-auto"
+                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
                             popover id="eventSubType"
                             style="position-anchor:--eventSubType; inset-area: bottom span-right;">
                             {{-- Loop Department --}}
                             @foreach ($filterOptions['EventSubType'] as $event_sub_type)
                                 <li>
-                                    <label class="flex items-center cursor-pointer hover:bg-gray-100 p-1 rounded">
+                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
                                         <input type="checkbox" wire:model.live="filterEventSubType"
                                             value="{{ $event_sub_type->id }}"
-                                            class="form-checkbox text-blue-600 rounded">
+                                            class="text-blue-600 rounded form-checkbox">
                                         <span
                                             class="ml-2 text-xs capitalize">{{ $event_sub_type->event_sub_type_name }}</span>
                                     </label>
@@ -128,7 +128,7 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="divisi_dept"
                             style="anchor-name:--divisi_dept">
                             {{-- Ikon Filter: Tampilkan jika filterDepartment tidak kosong --}}
-                            <span class="text-blue-600 text-xs">
+                            <span class="text-xs text-blue-600">
                                 @if (empty($filterDepartment) && empty($filterContractor))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -152,15 +152,15 @@
                                 @endif
                             </span>
                         </button>
-                        <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-lg p-2 max-h-60 overflow-y-auto"
+                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
                             popover id="divisi_dept"
                             style="position-anchor:--divisi_dept; inset-area: bottom span-right;">
                             {{-- Loop Department --}}
                             @foreach ($filterOptions['Department'] as $dept)
                                 <li>
-                                    <label class="flex items-center cursor-pointer hover:bg-gray-100 p-1 rounded">
+                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
                                         <input type="checkbox" wire:model.live="filterDepartment"
-                                            value="{{ $dept->id }}" class="form-checkbox text-blue-600 rounded">
+                                            value="{{ $dept->id }}" class="text-blue-600 rounded form-checkbox">
                                         <span class="ml-2 text-xs capitalize">{{ $dept->department_name }}</span>
                                     </label>
                                 </li>
@@ -168,9 +168,9 @@
                             {{-- Loop Contractor --}}
                             @foreach ($filterOptions['Contractors'] as $cont)
                                 <li>
-                                    <label class="flex items-center cursor-pointer hover:bg-gray-100 p-1 rounded">
+                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
                                         <input type="checkbox" wire:model.live="filterContractor"
-                                            value="{{ $cont->id }}" class="form-checkbox text-blue-600 rounded">
+                                            value="{{ $cont->id }}" class="text-blue-600 rounded form-checkbox">
 
                                         <span class="ml-2 text-xs capitalize">{{ $cont->contractor_name }}</span>
                                     </label>
@@ -178,12 +178,12 @@
                             @endforeach
                         </ul>
                     </th>
-                    <th class="border relative">
+                    <th class="relative border">
                         Status
                         <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
                             style="anchor-name:--anchor-1">
 
-                            <span class="text-blue-600 text-xs">
+                            <span class="text-xs text-blue-600">
                                 @if (empty($filterStatus))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -208,15 +208,15 @@
                             </span>
                         </button>
                         {{-- Dropdown Menu --}}
-                        <ul class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-1"
+                        <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100" popover id="popover-1"
                             style="position-anchor:--anchor-1">
 
                             {{-- Loop Isi Dropdown --}}
                             @foreach ($availableStatuses as $status)
                                 <li>
-                                    <label class="flex items-center mb-1 cursor-pointer hover:bg-gray-100 p-1 rounded">
+                                    <label class="flex items-center p-1 mb-1 rounded cursor-pointer hover:bg-gray-100">
                                         <input type="checkbox" wire:model.live="filterStatus"
-                                            value="{{ $status }}" class="form-checkbox text-blue-600 rounded">
+                                            value="{{ $status }}" class="text-blue-600 rounded form-checkbox">
                                         <span
                                             class="ml-2 text-xs capitalize">{{ str_replace('_', ' ', $status) }}</span>
                                     </label>
@@ -226,7 +226,7 @@
                     </th>
                     <th class="border">Pelapor</th>
                     <th class="border">Tanggal</th>
-                    <th class="flex-col border text-center">
+                    <th class="flex-col text-center border">
                         <p>Action</p>
                         <p>Total/Open</p>
                     </th>
@@ -239,10 +239,10 @@
                         <td class="border">
                             @can('view', $report)
                                 <a href="{{ route('hazard-detail', $report) }}"
-                                    class="text-blue-600 text-xs hover:underline">{{ $report->no_referensi ?? '-' }}</a>
+                                    class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
                             @else
                                 <span
-                                    class="text-gray-400 text-xs cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
+                                    class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
                             @endcan
                         </td>
                         <td class="border">{{ $report->eventType->event_type_name ?? '-' }}</td>
@@ -261,13 +261,13 @@
                         </td>
                         <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
-                        <td class="border text-center">
+                        <td class="text-center border">
                             {{ $report->total_due_dates }} / {{ $report->pending_actual_closes }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="text-center text-gray-500 py-4">Tidak ada laporan ditemukan.</td>
+                        <td colspan="9" class="py-4 text-center text-gray-500">Tidak ada laporan ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>
