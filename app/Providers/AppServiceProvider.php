@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL; // <-- Tambahkan ini
 use Diglactic\Breadcrumbs\Breadcrumbs;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // === START: PERBAIKAN MIXED CONTENT UNTUK LIVEWIRE ===
+        // Memaksa Laravel menggunakan skema HTTPS saat membuat URL
+        // karena lingkungan cPanel/proxy sering tidak menyampaikan header HTTPS dengan benar.
+        // APP_ENV diatur ke 'local' di .env Anda, jadi kita gunakan kondisi ini,
+        // atau gunakan 'production' jika Anda sudah mengubahnya.
+        if (config('app.env') === 'local' || config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+        // === END: PERBAIKAN MIXED CONTENT ===
+
         if (file_exists(base_path('routes/breadcrumbs.php'))) {
             require_once base_path('routes/breadcrumbs.php');
         }
