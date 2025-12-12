@@ -12,7 +12,7 @@
                     </svg>
                 </a>
             </div>
-            @livewire('hazard.import-hazard-reports-modal')
+            {{-- @livewire('hazard.import-hazard-reports-modal') --}}
             {{-- Tambahkan wire:model.live untuk memfilter secara real-time --}}
             <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
                 class="checkbox checkbox-info" />
