@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Storage;
 
 Route::get('dashboard', Hazard::class)->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/', 'dashboard');
+Route::redirect('/eventReport/hazardReportGuest/3','/hazard/form',301);
 Route::get('hazard/form', HazardForm::class)->name('hazard-form');
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
