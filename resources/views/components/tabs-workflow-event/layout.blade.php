@@ -7,13 +7,11 @@
         </flux:navlist-horizontal>
     </div>
     <div class="py-2 ">
-        {{-- 💡 LOGIKA KONDISIONAL BERDASARKAN ROUTE AKTIF --}}
+        {{-- <flux:heading>{{ $heading ?? '' }}</flux:heading> --}}
+        <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         @if ($activeTab === 'hazard')
             <x-tabs-workflow-event.panel_hazard />
         @endif
-
-        {{-- <flux:heading>{{ $heading ?? '' }}</flux:heading> --}}
-        <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         <div
             class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
             <div
