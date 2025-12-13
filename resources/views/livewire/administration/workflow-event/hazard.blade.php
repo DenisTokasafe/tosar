@@ -87,9 +87,9 @@
                                 {{-- Menggunakan Flux Select Component --}}
                                 <flux:select label="Dari Status (Key)" id="from_status" wire:model.defer="from_status"
                                     size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
-                                    <option value="">Pilih Status Awal</option>
+                                    <flux:select.option value="">Pilih Status Awal</flux:select.option>
                                     @foreach ($statusOptions as $status)
-                                        <option value="{{ $status }}">{{ $status }}</option>
+                                        <flux:select.option value="{{ $status }}">{{ $status }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
                                 @error('from_status')
@@ -111,9 +111,9 @@
                                 {{-- Menggunakan Flux Select Component --}}
                                 <flux:select label="Ke Status (Key)" id="to_status" wire:model.defer="to_status"
                                     size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
-                                    <option value="">Pilih Status Tujuan</option>
+                                    <flux:select.option value="">Pilih Status Tujuan</flux:select.option>
                                     @foreach ($statusOptions as $status)
-                                        <option value="{{ $status }}">{{ $status }}</option>
+                                        <flux:select.option value="{{ $status }}">{{ $status }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
                                 @error('to_status')
@@ -135,9 +135,9 @@
                                 {{-- Menggunakan Flux Select Component --}}
                                 <flux:select label="Role Yang Bertanggung Jawab" id="role"
                                     wire:model.defer="role" size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
-                                    <option value="">Pilih Role</option>
+                                    <flux:select.option value="">Pilih Role</flux:select.option>
                                     @foreach ($roleOptions as $r)
-                                        <option value="{{ $r }}">{{ ucfirst($r) }}</option>
+                                        <flux:select.option value="{{ $r }}">{{ ucfirst($r) }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
                                 @error('role')
