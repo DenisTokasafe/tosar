@@ -421,7 +421,7 @@
                             <x-form.label label="Lokasi Spesifik" required />
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                 wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                                class="w-full  input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                             <x-label-error :messages="$errors->get('location_specific')" />
                         </fieldset>
                     @endif
@@ -437,7 +437,7 @@
                                 this.fp = flatpickr(this.$refs.tanggalInput, {
                                     disableMobile: true,
                                     enableTime: true,
-                                     time_24hr: true
+                                     time_24hr: true,
                                     defaultDate: @js($this->tanggal),
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
@@ -774,7 +774,7 @@
                 <div class="flex flex-col gap-2 md:flex-row">
 
                     {{-- Kolom Likelihood & Consequence --}}
-                    <div class="space-y-4  md:grow">
+                    <div class="space-y-4 md:grow">
                         {{-- Consequence --}}
                         <fieldset class="fieldset ">
                             <x-form.label label="Consequence" required />
@@ -850,7 +850,7 @@
                                 @foreach ($likelihoods as $l)
                                     <tr class="text-center text-[9px]">
 
-                                        <td class="w-1 font-bold  border-1">{{ $l->name }}</td>
+                                        <td class="w-1 font-bold border-1">{{ $l->name }}</td>
                                         @foreach ($consequences as $c)
                                             @php
                                                 $cell =

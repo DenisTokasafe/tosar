@@ -154,7 +154,7 @@
                                 this.fp = flatpickr(this.$refs.tanggalInput, {
                                     disableMobile: true,
                                     enableTime: true,
-                                    time_24hr: true
+                                    time_24hr: true,
                                     defaultDate: this.$wire.entangle('tanggal').defer,
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
@@ -519,7 +519,7 @@
             </div>
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
-                <div class="space-y-4  md:grow">
+                <div class="space-y-4 md:grow">
                     {{-- Consequence --}}
                     <fieldset class="fieldset ">
                         <x-form.label label="Consequence" required />
@@ -598,7 +598,7 @@
                             @foreach ($likelihoods as $l)
                                 <tr class="w-32 text-xs text-center">
 
-                                    <td class="w-1 font-bold  border-1">{{ $l->name }}</td>
+                                    <td class="w-1 font-bold border-1">{{ $l->name }}</td>
                                     @foreach ($consequences as $c)
                                         @php
                                             $cell =
