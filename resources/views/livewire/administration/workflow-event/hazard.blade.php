@@ -66,10 +66,7 @@
         {{-- Karena Livewire V3 memiliki fitur 'Livewire Modals', kita bisa menggunakan properti $isModalOpen --}}
         @if ($isModalOpen)
             {{-- DaisyUI Modal - Note: Kita menggunakan 'fixed inset-0' untuk overlay background Livewire secara manual karena kita memicu modal melalui state $isModalOpen --}}
-            <div class="fixed inset-0 z-50 flex items-center justify-center opacity-50 bg-black/50">
-
-                {{-- Tambahkan kelas 'modal-open' ke body atau container utama jika Anda menggunakan cara pemicuan modal bawaan DaisyUI.
-                 Namun, untuk integrasi Livewire, kita hanya perlu bagian 'modal-box'-nya saja di dalam overlay Livewire/Tailwind. --}}
+            <div class="modal modal-open" role="dialog">
                 <div class="relative w-full max-w-lg modal-box" x-data="{}"
                     @click.away="window.livewire.find('{{ $this->getName() }}').closeModal()">
 
