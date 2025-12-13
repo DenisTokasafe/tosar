@@ -7,15 +7,15 @@
             {!! Breadcrumbs::render('hazard-detail', $hazard_id) !!}
         @endif
     </div>
-    <div class="card bg-base-100 shadow-md mb-2 ">
-        <div class="card-body py-1 px-4 ">
+    <div class="mb-2 shadow-md card bg-base-100 ">
+        <div class="px-4 py-1 card-body ">
             {{-- STATUS + Tombol Audit Trail --}}
-            <div class="flex justify-between items-center">
-                <div class="flex gap-2 items-center">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
                     <label class="label">
-                        <span class="label-text text-xs font-semibold">Status :</span>
+                        <span class="text-xs font-semibold label-text">Status :</span>
                     </label>
-                    <span class="text-green-600 italic text-xs capitalize">
+                    <span class="text-xs italic text-green-600 capitalize">
                         {{ $hazard->status }}
                     </span>
                 </div>
@@ -30,14 +30,14 @@
             @endphp
 
             {{-- Form Action --}}
-            <div class="flex flex-col md:flex-row md:items-stretch gap-2 ">
+            <div class="flex flex-col gap-2 md:flex-row md:items-stretch ">
                 {{-- PROCEED TO --}}
                 <div class="max-w-sm">
                     <label class="label">
-                        <span class="label-text text-xs font-semibold">Lanjutkan Ke</span>
+                        <span class="text-xs font-semibold label-text">Lanjutkan Ke</span>
                     </label>
                     <select wire:model.live="proceedTo"
-                        class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                         <option value="">-- Pilih Aksi --</option>
                         @foreach ($availableTransitions as $label => $status)
                             <option value="{{ $status }}">
@@ -51,10 +51,10 @@
                 @if ($proceedTo === 'in_progress')
                     <div class="max-w-sm">
                         <label class="label">
-                            <span class="label-text font-semibold text-xs">Pilih ERM Utama</span>
+                            <span class="text-xs font-semibold label-text">Pilih ERM Utama</span>
                         </label>
                         <select wire:model="assignTo1"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">-- Pilih --</option>
                             @foreach ($ermList as $erm)
                                 <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
@@ -64,10 +64,10 @@
 
                     <div class="max-w-sm">
                         <label class="label">
-                            <span class="label-text font-semibold text-xs">Pilih ERM Tambahan (Opsional)</span>
+                            <span class="text-xs font-semibold label-text">Pilih ERM Tambahan (Opsional)</span>
                         </label>
                         <select wire:model="assignTo2"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">-- Pilih --</option>
                             @foreach ($ermList as $erm)
                                 <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
@@ -77,20 +77,20 @@
                 @endif
 
                 {{-- TOMBOL SIMPAN --}}
-                <div class="card-actions justify-end self-end mt-1">
-                    <div x-data="{ proceedTo: @entangle('proceedTo') }" class="card-actions justify-end hidden md:block">
+                <div class="self-end justify-end mt-1 card-actions">
+                    <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end hidden card-actions md:block">
                         <div class="tooltip">
-                            <div class="tooltip-content z-40">
-                                <div class="animate-bounce text-orange-400 text-sm font-black">Kirim</div>
+                            <div class="z-40 tooltip-content">
+                                <div class="text-sm font-black text-orange-400 animate-bounce">Kirim</div>
                             </div>
                             <flux:button size="xs" wire:click="processAction" icon:trailing="send"
                                 variant="primary"></flux:button>
                         </div>
                     </div>
-                    <div x-data="{ proceedTo: @entangle('proceedTo') }" class="card-actions justify-end block md:hidden">
+                    <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end block card-actions md:hidden">
                         <div class="tooltip">
-                            <div class="tooltip-content z-40">
-                                <div class="animate-bounce text-orange-400 text-sm font-black">Kirim</div>
+                            <div class="z-40 tooltip-content">
+                                <div class="text-sm font-black text-orange-400 animate-bounce">Kirim</div>
                             </div>
                             <flux:button size="xs" wire:click="processAction" icon:trailing="send" class="w-full"
                                 variant="primary">Kirim</flux:button>
@@ -101,27 +101,27 @@
 
             {{-- Modal DaisyUI --}}
             <dialog class="modal" id="my_modal_2" role="dialog">
-                <div class="modal-box max-w-4xl ">
+                <div class="max-w-4xl modal-box ">
                     <form method="dialog">
-                        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
                     </form>
-                    <h3 class="text-lg font-bold mb-2">Audit Trail</h3>
+                    <h3 class="mb-2 text-lg font-bold">Audit Trail</h3>
                     <div class="max-h-[80vh] overflow-y-auto">
-                        <table class="table table-xs table-pin-rows border">
+                        <table class="table border table-xs table-pin-rows">
                             <thead>
                                 <tr class="bg-gray-100">
-                                    <th class="border px-2 py-1">Tanggal</th>
-                                    <th class="border px-2 py-1">User</th>
-                                    <th class="border px-2 py-1">Perubahan</th>
+                                    <th class="px-2 py-1 border">Tanggal</th>
+                                    <th class="px-2 py-1 border">User</th>
+                                    <th class="px-2 py-1 border">Perubahan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($report->activities as $activity)
                                     <tr>
-                                        <td class="border px-2 py-1">{{ $activity->created_at->format('d-m-Y H:i') }}
+                                        <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
                                         </td>
-                                        <td class="border px-2 py-1">{{ $activity->causer->name ?? 'System' }}</td>
-                                        <td class="border px-2 py-1">
+                                        <td class="px-2 py-1 border">{{ $activity->causer->name ?? 'System' }}</td>
+                                        <td class="px-2 py-1 border">
                                             @if (str_contains($activity->description, 'ActionHazard'))
                                                 {{-- Log khusus ActionHazard --}}
                                                 <div class="mb-1 text-blue-600">
@@ -199,7 +199,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="text-center text-gray-500 py-2">Belum ada perubahan
+                                        <td colspan="3" class="py-2 text-center text-gray-500">Belum ada perubahan
                                         </td>
                                     </tr>
                                 @endforelse
@@ -213,7 +213,7 @@
 
     </div>
     <form wire:submit.prevent="submit">
-        <div class="w-full bg-base-200 p-1 mb-2 rounded">
+        <div class="w-full p-1 mb-2 rounded bg-base-200">
             <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                 type="submit" icon:trailing="save" variant="primary">Update Laporan</flux:button>
             <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
@@ -222,11 +222,11 @@
         </div>
         <x-tab-hazard.layout>
             <div wire:loading.class="skeleton animate-pulse skeleton-text" wire:target="submit">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="fieldset">
                         <x-form.label label="Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tipe_bahaya"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">-- Pilih --</option>
                             @foreach ($eventTypes as $et)
                                 <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
@@ -237,7 +237,7 @@
                     <fieldset class="fieldset">
                         <x-form.label label="Sub Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="sub_tipe_bahaya"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">-- Pilih --</option>
                             @if ($tipe_bahaya)
                                 @foreach ($subTypes as $et)
@@ -255,11 +255,11 @@
                             <!-- Input Search -->
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                 wire:model.live.debounce.300ms="searchPelapor" placeholder="Cari Nama Pelapor..."
-                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                             <!-- Dropdown hasil search -->
                             @if ($showPelaporDropdown)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik -->
                                     <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -286,7 +286,7 @@
                                             <div class="relative w-full">
                                                 <input type="text" wire:model.live="manualPelaporName"
                                                     placeholder="Masukkan nama pelapor..."
-                                                    class="input input-bordered w-full pr-20 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                                    class="w-full pr-20 input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                                 <div class="!absolute top-1/2 -translate-y-1/2 right-0 z-20">
                                                     <flux:button size="xs" wire:click="addPelaporManual"
                                                         icon="plus" variant="primary">
@@ -325,11 +325,11 @@
 
                                 <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                     wire:model.live.debounce.300ms="search" placeholder="Cari departemen..."
-                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                                 <!-- Dropdown hasil search -->
                                 @if ($showDropdown && count($departments) > 0)
                                     <ul
-                                        class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                         <!-- Spinner ketika klik salah satu -->
                                         <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
                                             <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -347,17 +347,17 @@
                                 <x-label-error :messages="$errors->get('department_id')" />
                             @endif
                         </div>
-                        <div class="hidden peer-checked/company:block mt-1">
+                        <div class="hidden mt-1 peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
                                 <!-- Input Search -->
                                 <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                     wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..."
-                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                 <!-- Dropdown hasil search -->
                                 @if ($showContractorDropdown && count($contractors) > 0)
                                     <ul
-                                        class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                         <!-- Spinner ketika klik -->
                                         <div wire:loading wire:target="selectContractor" class="p-2 text-center">
                                             <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -379,7 +379,7 @@
                     <fieldset class="fieldset">
                         <x-form.label label="Penanggung Jawab Area" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">-- Pilih --</option>
                             @foreach ($penanggungJawabOptions as $pj)
                                 <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
@@ -394,11 +394,11 @@
                             <!-- Input Search -->
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                 wire:model.live.debounce.300ms="searchLocation" placeholder="Cari Lokasi..."
-                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                             <!-- Dropdown hasil search -->
                             @if ($showLocationDropdown && count($locations) > 0)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik -->
                                     <div wire:loading wire:target="selectLocation" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -421,12 +421,12 @@
                             <x-form.label label="Lokasi Spesifik" required />
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                 wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                                class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full  input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                             <x-label-error :messages="$errors->get('location_specific')" />
                         </fieldset>
                     @endif
 
-                    <fieldset class="fieldset relative">
+                    <fieldset class="relative fieldset">
                         <x-form.label label="Tanggal & Waktu" required />
                         <div class="relative " wire:ignore x-data="{
                             fp: null,
@@ -437,10 +437,8 @@
                                 this.fp = flatpickr(this.$refs.tanggalInput, {
                                     disableMobile: true,
                                     enableTime: true,
-
-
+                                     time_24hr: true
                                     defaultDate: @js($this->tanggal),
-
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
                                     position: 'auto-below',
@@ -459,13 +457,13 @@
                             });">
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
                                 wire:model.live='tanggal' placeholder="Pilih Tanggal dan Waktu..." readonly
-                                class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                         </div>
                         <x-label-error :messages="$errors->get('tanggal')" />
                     </fieldset>
 
                 </div>
-                <fieldset class="fieldset mb-4">
+                <fieldset class="mb-4 fieldset">
                     <x-form.label label="Deskripsi" required />
                     <div wire:ignore>
                         <textarea id="ckeditor-description">{{ $description }}</textarea>
@@ -474,7 +472,7 @@
                     <input type="hidden" wire:model.live="description" id="description">
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 ">
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3 ">
                     <fieldset class=" fieldset">
                         <x-form.label label="Dokumentasi Sebelum Tidakan perbaikan langsung" />
                         <label wire:ignore for="upload-deskripsi"
@@ -490,10 +488,10 @@
                         </label>
                         @if ($new_doc_deskripsi)
                             <div class="text-xs text-green-600">Preview file baru:</div>
-                            <img src="{{ $new_doc_deskripsi->temporaryUrl() }}" class="h-24 rounded border mt-1">
+                            <img src="{{ $new_doc_deskripsi->temporaryUrl() }}" class="h-24 mt-1 border rounded">
                         @elseif($doc_deskripsi)
                             <div class="text-xs text-gray-600">File lama:</div>
-                            <img src="{{ asset('storage/' . $doc_deskripsi) }}" class="h-24 rounded border mt-1">
+                            <img src="{{ asset('storage/' . $doc_deskripsi) }}" class="h-24 mt-1 border rounded">
                         @else
                             <span class="text-xs text-gray-400">Belum ada file</span>
                         @endif
@@ -504,7 +502,7 @@
                         <x-label-error :messages="$errors->get('new_doc_deskripsi')" />
                     </fieldset>
                 </div>
-                <fieldset class="fieldset mb-4">
+                <fieldset class="mb-4 fieldset">
                     <x-form.label label="Tindakan perbaikan langsung" required />
                     <div wire:ignore>
                         <textarea id="ckeditor-immediate_corrective_action">{{ $immediate_corrective_action }}</textarea>
@@ -514,7 +512,7 @@
                         id="immediate_corrective_action">
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 ">
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3 ">
                     <fieldset class=" fieldset">
                         <x-form.label label="Dokumentasi Sesudah Tidakan perbaikan langsung" />
                         <label wire:ignore for="upload-corrective"
@@ -530,10 +528,10 @@
                         </label>
                         @if ($new_doc_corrective)
                             <div class="text-xs text-green-600">Preview file baru:</div>
-                            <img src="{{ $new_doc_corrective->temporaryUrl() }}" class="h-24 rounded border mt-1">
+                            <img src="{{ $new_doc_corrective->temporaryUrl() }}" class="h-24 mt-1 border rounded">
                         @elseif($doc_corrective)
                             <div class="text-xs text-gray-600">File lama:</div>
-                            <img src="{{ asset('storage/' . $doc_corrective) }}" class="h-24 rounded border mt-1">
+                            <img src="{{ asset('storage/' . $doc_corrective) }}" class="h-24 mt-1 border rounded">
                         @else
                             <span class="text-xs text-gray-400">Belum ada file</span>
                         @endif
@@ -545,19 +543,19 @@
                     </fieldset>
                 </div>
 
-                <fieldset class="fieldset  bg-base-100 shadow-md border border-gray-200 p-3 mb-4">
-                    <legend class="card-title text-sm font-semibold ">Tambah Tindakan Lanjutan</legend>
+                <fieldset class="p-3 mb-4 border border-gray-200 shadow-md fieldset bg-base-100">
+                    <legend class="text-sm font-semibold card-title ">Tambah Tindakan Lanjutan</legend>
                     <!-- Deskripsi Tindakan -->
                     <fieldset class="fieldset md:col-span-1">
                         <x-form.label label="Deskripsi Tindakan" required />
                         <div wire:ignore>
-                            <textarea id="ckeditor-action_description" class="textarea textarea-bordered w-full h-20">{{ $action_description }}</textarea>
+                            <textarea id="ckeditor-action_description" class="w-full h-20 textarea textarea-bordered">{{ $action_description }}</textarea>
                         </div>
                         <input name="action_description" type="hidden" wire:model.live="action_description"
                             id="action_description">
                         <x-label-error :messages="$errors->get('action_description')" />
                     </fieldset>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
                         <!-- Tanggal & Waktu -->
                         <fieldset class="fieldset md:col-span-1">
                             <x-form.label label="Batas Waktu Penyelesaian" required />
@@ -606,7 +604,7 @@
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
                         </fieldset>
                         <!-- Dilaporkan Oleh -->
-                        <fieldset class="fieldset md:col-span-1 relative">
+                        <fieldset class="relative fieldset md:col-span-1">
                             <x-form.label label="Dilaporkan Oleh" required />
                             <div class="relative">
                                 <input name="searchActResponsibility" type="text"
@@ -617,7 +615,7 @@
                                 <!-- Dropdown hasil search -->
                                 @if ($showActPelaporDropdown)
                                     <ul
-                                        class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                         <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
                                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                                         </div>
@@ -644,7 +642,7 @@
                                                         wire:model.live="manualActPelaporName"
                                                         placeholder="Masukkan nama..."
                                                         class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                                    <div class="absolute top-1/2 -translate-y-1/2 right-0">
+                                                    <div class="absolute right-0 -translate-y-1/2 top-1/2">
                                                         <flux:button size="xs" wire:click="addActPelaporManual"
                                                             icon="plus" variant="primary">
                                                             Tambah
@@ -664,14 +662,14 @@
                         </fieldset>
                     </div>
                     <!-- Tombol Tambah -->
-                    <div class=" flex justify-end">
+                    <div class="flex justify-end ">
                         <flux:button size="xs" wire:click="addActionHazard" icon:trailing="add-icon"
                             variant="primary">Tambah</flux:button>
                     </div>
                     <!-- List Actions -->
-                    <div class="divider my-2">Daftar Tindakan</div>
+                    <div class="my-2 divider">Daftar Tindakan</div>
                     <div class="overflow-x-auto ">
-                        <table class="table table-xs border text-sm px-2">
+                        <table class="table px-2 text-sm border table-xs">
                             <thead class="bg-base-200">
                                 <tr>
                                     <th class="whitespace-nowrap">Deskripsi</th>
@@ -705,7 +703,7 @@
                                         </td>
 
                                         {{-- Action Buttons --}}
-                                        <td class="align-top text-center">
+                                        <td class="text-center align-top">
                                             <div class="flex justify-center gap-2">
                                                 <flux:button variant="subtle" size="xs"
                                                     wire:click="loadEditAction({{ $act['id'] }})"
@@ -721,7 +719,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center text-sm text-gray-500">
+                                        <td colspan="5" class="text-sm text-center text-gray-500">
                                             Belum ada tindakan lanjutan ditambahkan.
                                         </td>
                                     </tr>
@@ -731,7 +729,7 @@
                     </div>
                 </fieldset>
 
-                <div class="grid grid-cols-1 md:grid-cols-2  gap-4 mb-4 border border-gray-300 p-4 rounded">
+                <div class="grid grid-cols-1 gap-4 p-4 mb-4 border border-gray-300 rounded md:grid-cols-2">
                     {{-- KEY WORD --}}
                     <fieldset>
                         <input {{ $isDisabled ? 'disabled' : '' }} id="kta" value="kta"
@@ -745,9 +743,9 @@
                         <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px]"
                             label="Tindakan Tidak Aman" required />
 
-                        <div class="hidden peer-checked/kta:block mt-1">
+                        <div class="hidden mt-1 peer-checked/kta:block">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
-                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">-- Pilih Kondisi Tidak Aman --</option>
                                 @foreach ($ktas as $kta)
                                     <option value="{{ $kta->id }}">{{ $kta->name }}</option>
@@ -755,9 +753,9 @@
                             </select>
 
                         </div>
-                        <div class="hidden peer-checked/tta:block mt-1">
+                        <div class="hidden mt-1 peer-checked/tta:block">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
-                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">-- Pilih Tindakan Tidak Aman --</option>
                                 @foreach ($ttas as $tta)
                                     <option value="{{ $tta->id }}">{{ $tta->name }}</option>
@@ -773,15 +771,15 @@
 
                     </fieldset>
                 </div>
-                <div class="flex flex-col md:flex-row gap-2">
+                <div class="flex flex-col gap-2 md:flex-row">
 
                     {{-- Kolom Likelihood & Consequence --}}
-                    <div class=" space-y-4 md:grow">
+                    <div class="space-y-4  md:grow">
                         {{-- Consequence --}}
                         <fieldset class="fieldset ">
                             <x-form.label label="Consequence" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="consequence_id"
-                                class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">-- Pilih --</option>
                                 @foreach ($consequencess as $cons)
                                     <option value="{{ $cons->id }}">{{ $cons->name }}</option>
@@ -795,7 +793,7 @@
                                 @endphp
                                 @if ($selectedConsequence)
                                     <div
-                                        class="mt-1 text-sm text-gray-600 h-20 overflow-y-auto border rounded p-2 bg-gray-50">
+                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
                                         {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
                                     </div>
                                 @endif
@@ -805,7 +803,7 @@
                         <fieldset class="fieldset ">
                             <x-form.label label="Likelihood" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="likelihood_id"
-                                class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">-- Pilih --</option>
                                 @foreach ($likelihoodss as $like)
                                     <option value="{{ $like->id }}">{{ $like->name }}</option>
@@ -819,7 +817,7 @@
                                 @endphp
                                 @if ($selectedLikelihood)
                                     <div
-                                        class="mt-1 text-sm text-gray-600 h-20 overflow-y-auto border rounded p-2 bg-gray-50">
+                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
                                         {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
                                     </div>
                                 @endif
@@ -830,16 +828,16 @@
                     </div>
 
                     {{-- Kolom Risk Matrix --}}
-                    <div class="overflow-x-auto  flex-none ">
+                    <div class="flex-none overflow-x-auto ">
                         <table class="table table-xs w-60">
                             <thead>
                                 <tr class="text-center text-[9px]">
                                     <td class=" border-1">Level</td>
                                     <td class="rotate_text border-1 bg-emerald-500">Low</td>
-                                    <td class="rotate_text border-1 bg-yellow-500">Moderate</td>
-                                    <td class="rotate_text border-1 bg-orange-500">High</td>
+                                    <td class="bg-yellow-500 rotate_text border-1">Moderate</td>
+                                    <td class="bg-orange-500 rotate_text border-1">High</td>
                                     <td class="rotate_text border-1 bg-rose-500">Extreme</td>
-                                    <td class="rotate_text border-1 bg-gray-100">Closed</td>
+                                    <td class="bg-gray-100 rotate_text border-1">Closed</td>
                                 </tr>
                                 <tr class="text-center text-[9px]">
                                     <th class="border-1">Likelihooc ↓ / Consequence →</th>
@@ -852,7 +850,7 @@
                                 @foreach ($likelihoods as $l)
                                     <tr class="text-center text-[9px]">
 
-                                        <td class=" font-bold w-1 border-1">{{ $l->name }}</td>
+                                        <td class="w-1 font-bold  border-1">{{ $l->name }}</td>
                                         @foreach ($consequences as $c)
                                             @php
                                                 $cell =
@@ -883,7 +881,7 @@
 
                 </div>
                 @if ($RiskAssessment != null)
-                    <table class="table table-xs mb-4">
+                    <table class="table mb-4 table-xs">
 
                         <tr>
                             <th class="w-40 text-xs border-2 border-slate-400">Potential Risk Rating</th>
@@ -914,22 +912,22 @@
     </form>
     <!-- Modal Edit ActionHazard -->
     <div x-data="{ open: false }" x-on:open-edit-action.window="open = true" x-show="open" x-transition
-        class="modal modal-open fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        class="fixed inset-0 z-50 flex items-center justify-center modal modal-open bg-black/50"
         style="display:none;">
-        <div class="modal-box w-11/12 max-w-4xl">
-            <h3 class="font-bold text-lg mb-4">Edit Tindakan Lanjutan </h3>
+        <div class="w-11/12 max-w-4xl modal-box">
+            <h3 class="mb-4 text-lg font-bold">Edit Tindakan Lanjutan </h3>
 
             {{-- === Form Update === --}}
             <fieldset class="fieldset md:col-span-1">
                 <x-form.label label="Deskripsi Tindakan" required />
                 <div wire:ignore>
-                    <textarea id="ckeditor-edit-action" class="textarea textarea-bordered w-full h-20">{{ $edit_action_description }}</textarea>
+                    <textarea id="ckeditor-edit-action" class="w-full h-20 textarea textarea-bordered">{{ $edit_action_description }}</textarea>
                 </div>
                 <input type="hidden" wire:model.live="edit_action_description" id="edit_action_description">
                 <x-label-error :messages="$errors->get('edit_action_description')" />
             </fieldset>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-4">
+            <div class="grid items-end grid-cols-1 gap-4 mt-4 md:grid-cols-3">
                 {{-- Batas Waktu --}}
                 <fieldset class="fieldset">
                     <x-form.label label="Batas Waktu Penyelesaian" required />
@@ -957,7 +955,7 @@
                     });"
                         x-ref="wrapper">
                         <input type="text" x-ref="dueEdit" wire:model.live="edit_action_due_date"
-                            class="input input-bordered w-full input-xs" placeholder="Pilih Tanggal" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="Pilih Tanggal" readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_due_date')" />
                 </fieldset>
@@ -981,13 +979,13 @@
                     Livewire.hook('message.processed', () => initFlatpickr());"
                         x-ref="wrapper">
                         <input type="text" x-ref="closeEdit" wire:model.live="edit_action_actual_close_date"
-                            class="input input-bordered w-full input-xs" placeholder="Pilih Tanggal" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="Pilih Tanggal" readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_actual_close_date')" />
                 </fieldset>
 
                 {{-- Responsible Person --}}
-                <fieldset class="fieldset md:col-span-1 relative">
+                <fieldset class="relative fieldset md:col-span-1">
                     <x-form.label label="PIC" required />
                     <div class="relative">
                         <input name="searchActResponsibilityEdit" type="text"
@@ -998,7 +996,7 @@
                         <!-- Dropdown hasil search -->
                         @if ($showActPelaporDropdownEdit)
                             <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                 <div wire:loading wire:target="selectActPelaporEdit" class="p-2 text-center">
                                     <span class="loading loading-spinner loading-sm text-secondary"></span>
                                 </div>
@@ -1025,7 +1023,7 @@
                                                 wire:model.live="manualActPelaporNameEdit"
                                                 placeholder="Masukkan nama..."
                                                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                            <div class="absolute top-1/2 -translate-y-1/2 right-0">
+                                            <div class="absolute right-0 -translate-y-1/2 top-1/2">
                                                 <flux:button size="xs" wire:click="addActPelaporManualEdit"
                                                     icon="plus" variant="primary">
                                                     Tambah
@@ -1046,7 +1044,7 @@
             </div>
 
             <!-- Aksi -->
-            <div class="modal-action mt-4 flex justify-end gap-2">
+            <div class="flex justify-end gap-2 mt-4 modal-action">
                 <!-- Update tidak menutup modal -->
                 <flux:button variant="primary" size="xs" type="button" wire:click="updateAction"
                     x-on:click="$wire.call('updateAction').then(() => { open = false })">

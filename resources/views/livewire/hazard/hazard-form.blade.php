@@ -7,7 +7,7 @@
     @include('partials.manhours-heading')
     <x-manhours.layout>
         <form wire:submit.prevent="submit">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="fieldset">
                     <x-form.label label="Tipe Bahaya" required />
                     <select wire:model.live="tipe_bahaya"
@@ -67,8 +67,8 @@
                     @endif
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <fieldset class="fieldset mb-4 lg:col-span-2">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Deskripsi" required />
                     <div wire:ignore>
                         <textarea id="ckeditor-description"></textarea>
@@ -80,7 +80,7 @@
                 <fieldset class=" fieldset">
                     <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
                     <label wire:ignore for="upload-deskripsi"
-                        class="flex items-center gap-2 cursor-pointer border border-info rounded  hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
+                        class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
                         <!-- Tombol custom -->
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
@@ -106,7 +106,7 @@
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="fieldset ">
                     <x-form.label label="Lokasi" required />
                     <div class="relative">
@@ -117,7 +117,7 @@
                         <!-- Dropdown hasil search -->
                         @if ($showLocationDropdown && count($locations) > 0)
                             <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                 <!-- Spinner ketika klik -->
                                 <div wire:loading wire:target="selectLocation" class="p-2 text-center">
                                     <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -143,7 +143,7 @@
                         <x-label-error :messages="$errors->get('location_specific')" />
                     </fieldset>
                 @endif
-                <fieldset class="fieldset relative">
+                <fieldset class="relative fieldset">
                     <x-form.label label="Tanggal & Waktu" required />
                     <div
                         class="{{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
@@ -154,6 +154,7 @@
                                 this.fp = flatpickr(this.$refs.tanggalInput, {
                                     disableMobile: true,
                                     enableTime: true,
+                                    time_24hr: true
                                     defaultDate: this.$wire.entangle('tanggal').defer,
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
@@ -195,7 +196,7 @@
                         {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
                         @if ($showPelaporDropdown)
                             <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full max-w-sm mt-1 max-h-60 overflow-auto shadow">
+                                class="absolute z-10 w-full max-w-sm mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
                                 {{-- Spinner ketika klik --}}
                                 <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
@@ -237,8 +238,8 @@
                     @endif
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <fieldset class="fieldset mb-4 md:col-span-2">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div wire:ignore>
@@ -253,7 +254,7 @@
                     <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
                     <label class="block"></label>
                     <label wire:ignore for="upload-corrective"
-                        class="flex items-center gap-2 cursor-pointer border border-info rounded  hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
+                        class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
                         <!-- Tombol custom -->
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
@@ -279,9 +280,9 @@
                     <x-label-error :messages="$errors->get('doc_corrective')" />
                 </fieldset>
             </div>
-            <fieldset class="fieldset card bg-base-100 shadow-md border border-gray-200 p-3">
-                <legend class="card-title text-sm font-semibold ">DiLaporkan ke</legend>
-                <div class="grid grid-cols-1 md:grid-cols-2  gap-4 lg:mb-4 ">
+            <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+                <legend class="text-sm font-semibold card-title ">DiLaporkan ke</legend>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                     <fieldset>
                         <input id="department" value="department" wire:model="deptCont"
                             class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont"
@@ -293,7 +294,7 @@
                         <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
                             required />
 
-                        <div class="hidden peer-checked/department:block mt-2">
+                        <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
                                 <!-- Input Search -->
@@ -304,7 +305,7 @@
                                 <!-- Dropdown hasil search -->
                                 @if ($showDropdown && count($departments) > 0)
                                     <ul
-                                        class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                         <!-- Spinner ketika klik salah satu -->
                                         <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
                                             <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -322,7 +323,7 @@
                                 <x-label-error :messages="$errors->get('department_id')" />
                             @endif
                         </div>
-                        <div class="hidden peer-checked/company:block mt-2">
+                        <div class="hidden mt-2 peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
                                 <!-- Input Search -->
@@ -332,7 +333,7 @@
                                 <!-- Dropdown hasil search -->
                                 @if ($showContractorDropdown && count($contractors) > 0)
                                     <ul
-                                        class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                         <!-- Spinner ketika klik -->
                                         <div wire:loading wire:target="selectContractor" class="p-2 text-center">
                                             <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -364,22 +365,22 @@
                     </fieldset>
                 </div>
             </fieldset>
-            <div class=" mx-auto mb-4">
-                <fieldset class="fieldset card bg-base-100 shadow-md border border-gray-200 p-3">
-                    <legend class="card-title text-sm font-semibold "> Tindakan Lanjutan</legend>
+            <div class="mx-auto mb-4 ">
+                <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+                    <legend class="text-sm font-semibold card-title "> Tindakan Lanjutan</legend>
                     <div class="card-body ">
 
                         <!-- Deskripsi Tindakan -->
                         <fieldset class="fieldset md:col-span-1">
                             <x-form.label label="Deskripsi Tindakan" required />
                             <div wire:ignore>
-                                <textarea id="ckeditor-action_description" class="textarea textarea-bordered w-full h-20"></textarea>
+                                <textarea id="ckeditor-action_description" class="w-full h-20 textarea textarea-bordered"></textarea>
                             </div>
                             <input name="action_description" type="hidden" wire:model.live="action_description"
                                 id="action_description">
                             <x-label-error :messages="$errors->get('action_description')" />
                         </fieldset>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
                             <!-- Tanggal & Waktu -->
                             <fieldset class="fieldset md:col-span-1">
                                 <x-form.label label="Batas Waktu Penyelesaian" />
@@ -428,7 +429,7 @@
                                 <x-label-error :messages="$errors->get('actual_close_date')" />
                             </fieldset>
                             <!-- Dilaporkan Oleh -->
-                            <fieldset class="fieldset md:col-span-1 relative">
+                            <fieldset class="relative fieldset md:col-span-1">
                                 <x-form.label label="Dilaporkan Oleh" />
                                 <div class="relative">
                                     <input name="searchActResponsibility" type="text"
@@ -439,7 +440,7 @@
                                     <!-- Dropdown hasil search -->
                                     @if ($showActPelaporDropdown)
                                         <ul
-                                            class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                             <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
                                                 <span class="loading loading-spinner loading-sm text-secondary"></span>
                                             </div>
@@ -466,7 +467,7 @@
                                                             wire:model.live="manualActPelaporName"
                                                             placeholder="Masukkan nama..."
                                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                                        <div class="absolute top-1/2 -translate-y-1/2 right-0">
+                                                        <div class="absolute right-0 -translate-y-1/2 top-1/2">
                                                             <flux:button size="xs"
                                                                 wire:click="addActPelaporManual" icon="plus"
                                                                 variant="primary">
@@ -488,16 +489,16 @@
                         </div>
 
                         <!-- Tombol Tambah -->
-                        <div class=" flex justify-end">
+                        <div class="flex justify-end ">
                             <flux:button size="xs" wire:click="addAction" icon:trailing="add-icon"
                                 variant="primary">Tambah</flux:button>
                         </div>
                         <!-- List Actions -->
-                        <div class="divider my-2">Daftar Tindakan</div>
+                        <div class="my-2 divider">Daftar Tindakan</div>
                         <ul class="space-y-2">
                             @forelse($actions as $index => $act)
                                 <li
-                                    class="flex flex-col md:flex-row md:items-center justify-between border p-3 rounded bg-base-50">
+                                    class="flex flex-col justify-between p-3 border rounded md:flex-row md:items-center bg-base-50">
                                     <div class="mb-2 md:mb-0">
                                         <p><strong>{!! $act['description'] !!}</strong></p>
                                         <p class="text-sm text-gray-500">
@@ -507,18 +508,18 @@
                                         </p>
                                     </div>
                                     <button type="button" wire:click="removeAction({{ $index }})"
-                                        class="btn btn-error btn-xs self-start md:self-center">Hapus</button>
+                                        class="self-start btn btn-error btn-xs md:self-center">Hapus</button>
                                 </li>
                             @empty
-                                <li class="text-gray-500 text-sm">Belum ada tindakan lanjutan ditambahkan.</li>
+                                <li class="text-sm text-gray-500">Belum ada tindakan lanjutan ditambahkan.</li>
                             @endforelse
                         </ul>
                     </div>
                 </fieldset>
             </div>
-            <div class="flex flex-col-reverse md:flex-row gap-2 mt-2">
+            <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
-                <div class=" space-y-4 md:grow">
+                <div class="space-y-4  md:grow">
                     {{-- Consequence --}}
                     <fieldset class="fieldset ">
                         <x-form.label label="Consequence" required />
@@ -537,7 +538,7 @@
                             @endphp
                             @if ($selectedConsequence)
                                 <div
-                                    class="mt-1 text-sm text-gray-600 h-20 overflow-y-auto border rounded p-2 bg-gray-50">
+                                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
                                     {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
                                 </div>
                             @endif
@@ -561,7 +562,7 @@
                             @endphp
                             @if ($selectedLikelihood)
                                 <div
-                                    class="mt-1 text-sm text-gray-600 h-20 overflow-y-auto border rounded p-2 bg-gray-50">
+                                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
                                     {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
                                 </div>
                             @endif
@@ -571,7 +572,7 @@
 
                 </div>
                 {{-- Kolom Risk Matrix --}}
-                <div class="overflow-x-auto  flex-none ">
+                <div class="flex-none overflow-x-auto ">
                     <div role="tablist" class="flex">
 
 
@@ -581,10 +582,10 @@
                             <tr class="text-center text-[9px]">
                                 <td class=" border-1">Level</td>
                                 <td class="rotate_text border-1 bg-emerald-500">Low</td>
-                                <td class="rotate_text border-1 bg-yellow-500">Moderate</td>
-                                <td class="rotate_text border-1 bg-orange-500">High</td>
+                                <td class="bg-yellow-500 rotate_text border-1">Moderate</td>
+                                <td class="bg-orange-500 rotate_text border-1">High</td>
                                 <td class="rotate_text border-1 bg-rose-500">Extreme</td>
-                                <td class="rotate_text border-1 bg-gray-100">Closed</td>
+                                <td class="bg-gray-100 rotate_text border-1">Closed</td>
                             </tr>
                             <tr class="text-center text-[9px]">
                                 <th class="border-1">Likelihood ↓ / Consequence →</th>
@@ -595,9 +596,9 @@
                         </thead>
                         <tbody>
                             @foreach ($likelihoods as $l)
-                                <tr class="text-center text-xs w-32">
+                                <tr class="w-32 text-xs text-center">
 
-                                    <td class=" font-bold w-1 border-1">{{ $l->name }}</td>
+                                    <td class="w-1 font-bold  border-1">{{ $l->name }}</td>
                                     @foreach ($consequences as $c)
                                         @php
                                             $cell =
@@ -627,7 +628,7 @@
                 </div>
             </div>
             @if ($RiskAssessment != null)
-                <table class="table table-xs mt-4 table-zebra">
+                <table class="table mt-4 table-xs table-zebra">
 
                     <tr>
                         <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
@@ -653,11 +654,11 @@
 
                 </table>
             @endif
-            <div class="hidden md:block flex justify-end mt-4">
+            <div class="flex justify-end hidden mt-4 md:block">
                 <flux:button size="xs" type="submit" icon:trailing="send" variant="primary">Kirim Laporan
                 </flux:button>
             </div>
-            <div class="block md:hidden  mt-4">
+            <div class="block mt-4 md:hidden">
                 <flux:button size="xs" class="w-full" type="submit" icon:trailing="send" variant="primary">
                     Kirim Laporan</flux:button>
             </div>
