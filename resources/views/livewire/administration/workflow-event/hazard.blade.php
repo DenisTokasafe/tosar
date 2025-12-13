@@ -83,82 +83,75 @@
                     <form wire:submit.prevent="save">
                         <div class="space-y-4">
 
-                            <label class="w-full form-control">
-                                <div class="label">
-                                    <span class="label-text">Dari Status (Key)</span>
-                                </div>
-                                <select wire:model.defer="from_status" id="from_status"
-                                    class="w-full select select-bordered">
+                            <div>
+                                {{-- Menggunakan Flux Select Component --}}
+                                <x-flux-select label="Dari Status (Key)" id="from_status" wire:model.defer="from_status"
+                                    size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Status Awal</option>
                                     @foreach ($statusOptions as $status)
                                         <option value="{{ $status }}">{{ $status }}</option>
                                     @endforeach
-                                </select>
+                                </x-flux-select>
                                 @error('from_status')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
-                            </label>
+                            </div>
 
-                            <label class="w-full form-control">
-                                <div class="label">
-                                    <span class="label-text">Dari Status (Nama)</span>
-                                </div>
-                                <input type="text" wire:model.defer="from_inisial" id="from_inisial"
-                                    placeholder="Cth: Submitted Event" class="w-full input input-bordered" />
+                            <div>
+                                {{-- Menggunakan Flux Input Component --}}
+                                <x-flux-input label="Dari Status (Nama)" id="from_inisial" type="text"
+                                    wire:model.defer="from_inisial" placeholder="Cth: Submitted Event" size="xs"
+                                    {{-- Mengatur ukuran ke xs --}} class="w-full" />
                                 @error('from_inisial')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
-                            </label>
+                            </div>
 
-                            <label class="w-full form-control">
-                                <div class="label">
-                                    <span class="label-text">Ke Status (Key)</span>
-                                </div>
-                                <select wire:model.defer="to_status" id="to_status"
-                                    class="w-full select select-bordered">
+                            <div>
+                                {{-- Menggunakan Flux Select Component --}}
+                                <x-flux-select label="Ke Status (Key)" id="to_status" wire:model.defer="to_status"
+                                    size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Status Tujuan</option>
                                     @foreach ($statusOptions as $status)
                                         <option value="{{ $status }}">{{ $status }}</option>
                                     @endforeach
-                                </select>
+                                </x-flux-select>
                                 @error('to_status')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
-                            </label>
+                            </div>
 
-                            <label class="w-full form-control">
-                                <div class="label">
-                                    <span class="label-text">Ke Status (Nama)</span>
-                                </div>
-                                <input type="text" wire:model.defer="to_inisial" id="to_inisial"
-                                    placeholder="Cth: Moderator Review" class="w-full input input-bordered" />
+                            <div>
+                                {{-- Menggunakan Flux Input Component --}}
+                                <x-flux-input label="Ke Status (Nama)" id="to_inisial" type="text"
+                                    wire:model.defer="to_inisial" placeholder="Cth: Moderator Review" size="xs"
+                                    {{-- Mengatur ukuran ke xs --}} class="w-full" />
                                 @error('to_inisial')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
-                            </label>
+                            </div>
 
-                            <label class="w-full form-control">
-                                <div class="label">
-                                    <span class="label-text">Role Yang Bertanggung Jawab</span>
-                                </div>
-                                <select wire:model.defer="role" id="role" class="w-full select select-bordered">
+                            <div>
+                                {{-- Menggunakan Flux Select Component --}}
+                                <x-flux-select label="Role Yang Bertanggung Jawab" id="role"
+                                    wire:model.defer="role" size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Role</option>
                                     @foreach ($roleOptions as $r)
                                         <option value="{{ $r }}">{{ ucfirst($r) }}</option>
                                     @endforeach
-                                </select>
+                                </x-flux-select>
                                 @error('role')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
-                            </label>
+                            </div>
                         </div>
 
                         {{-- Modal Actions (Button) --}}
                         <div class="mt-6 modal-action">
-                            <button type="button" wire:click="closeModal()" class="btn">
+                            <button type="button" wire:click="closeModal()" class="btn btn-sm">
                                 Batal
                             </button>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success btn-sm">
                                 Simpan
                             </button>
                         </div>
