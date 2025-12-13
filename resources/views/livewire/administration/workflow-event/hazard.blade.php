@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
     <x-tabs-workflow-event.layout :activeTab="$activeTab" :heading="$heaading" :subheading="$subheading">
-        <div class="overflow-hidden bg-white rounded-lg shadow-md">
+        <div class="overflow-x-auto bg-white rounded-lg shadow-md md:overflow-hidden">
             <table class="table w-full min-w-full table-xs">
                 <thead>
                     <tr>
