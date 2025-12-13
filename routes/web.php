@@ -82,7 +82,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/userManager/roles', Role::class)->name('roles');
     Route::get('administration/userManager/user_roles', UserRole::class)->name('user_roles');
     Route::get('administration/userManager/people', User::class)->name('people');
-    Route::get('administration/hazard-workflows', WorkflowEventHazard::class)->name('hazard.workflows');
+    Route::get('administration/workflows/hazard', WorkflowEventHazard::class)->name('hazard.workflows');
 });
 
 require __DIR__ . '/auth.php';
