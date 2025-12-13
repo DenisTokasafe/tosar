@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-6 md:max-w-sm">
     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-        <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-            <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+        <span class="flex items-center justify-center mb-1 rounded-md h-9 w-9">
+            <x-app-logo-icon class="bg-white fill-current size-9 dark:text-white" />
         </span>
         <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
     </a>
@@ -19,7 +19,7 @@
             <flux:input size="sm" wire:model="password" :label="__('Password')" type="password" required
                 autocomplete="current-password" :placeholder="__('Password')" viewable />
             @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm " :href="route('password.request')" wire:navigate>
+                <flux:link class="absolute top-0 text-sm end-0 " :href="route('password.request')" wire:navigate>
                     {{ __('Forgot your password?') }}
                 </flux:link>
             @endif
@@ -34,7 +34,7 @@
 
     {{-- ... (bagian register) ... --}}
     @if (Route::has('register'))
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
             {{ __('Don\'t have an account?') }}
             <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
         </div>
