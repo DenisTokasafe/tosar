@@ -32,6 +32,7 @@ use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\RiskAssessment\Assessement;
 use App\Livewire\Administration\Roles\Role;
+use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 use App\Livewire\Administrator\UserRoleManager\UserRole;
 use App\Livewire\Dashboard\Hazard;
 use App\Livewire\Hazard\HazardForm;
@@ -81,6 +82,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/userManager/roles', Role::class)->name('roles');
     Route::get('administration/userManager/user_roles', UserRole::class)->name('user_roles');
     Route::get('administration/userManager/people', User::class)->name('people');
+    Route::get('administration/hazard-workflows', WorkflowEventHazard::class)->name('hazard.workflows');
 });
 
 require __DIR__ . '/auth.php';

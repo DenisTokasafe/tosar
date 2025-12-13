@@ -1,21 +1,17 @@
-@props(['activeTab'])
+@props(['activeTab','heading','subheading'])
 <div class="flex flex-col ">
-    <div class="w-full  md:w-60">
+    <div class="w-full md:w-60">
         <flux:navlist-horizontal>
-            <flux:navlist-horizontal.item :href="route('administration-department-group')"
-                wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
-            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"
-                wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('hazard.workflows')"
+                wire:navigate>{{ __('Hazard Workflow Administration') }}</flux:navlist-horizontal.item>
         </flux:navlist-horizontal>
     </div>
     <div class="py-2 ">
         {{-- 💡 LOGIKA KONDISIONAL BERDASARKAN ROUTE AKTIF --}}
-            @if ($activeTab === 'department')
-                <x-tabs-group.url_panel />
-            @endif
-            @if ($activeTab === 'group')
-                <x-tabs-group.url_panel_group />
-            @endif
+        @if ($activeTab === 'hazard')
+            <x-tabs-workflow-event.panel_hazard />
+        @endif
+
         <flux:heading>{{ $heading ?? '' }}</flux:heading>
         <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
         <div
@@ -23,7 +19,6 @@
             <div
                 class="flex-1 h-full p-4 overflow-x-hidden overflow-y-auto border rounded-xl border-neutral-200 dark:border-base-200">
                 <div class="w-full max-w-full ">
-
                     {{ $slot }}
                 </div>
             </div>
