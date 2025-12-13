@@ -2,31 +2,31 @@
     <x-toast />
     <x-tabs-workflow-event.layout :activeTab="$activeTab" :heading="$heaading" :subheading="$subheading">
         <div class="overflow-hidden bg-white rounded-lg shadow-md">
-            <table class="min-w-full leading-normal">
+            <table class="table w-full min-w-full table-xs">
                 <thead>
                     <tr>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Dari Status (Key)
                         </th>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Dari Status (Nama)
                         </th>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Ke Status (Key)
                         </th>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Ke Status (Nama)
                         </th>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Role
                         </th>
                         <th
-                            class="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                            class="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200 ">
                             Aksi
                         </th>
                     </tr>
@@ -34,21 +34,21 @@
                 <tbody>
                     @foreach ($workflows as $workflow)
                         <tr wire:key="{{ $workflow->id }}">
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">{{ $workflow->from_status }}
+                            <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->from_status }}
                             </td>
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                            <td class="text-sm bg-white border-b border-gray-200 ">
                                 {{ $workflow->from_inisial }}</td>
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">{{ $workflow->to_status }}
+                            <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->to_status }}
                             </td>
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">{{ $workflow->to_inisial }}
+                            <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->to_inisial }}
                             </td>
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                            <td class="text-sm bg-white border-b border-gray-200 ">
                                 <span
                                     class="relative inline-block px-3 py-1 font-semibold leading-tight {{ $workflow->role == 'moderator' ? 'text-purple-900 bg-purple-200' : 'text-indigo-900 bg-indigo-200' }} rounded-full">
                                     {{ ucfirst($workflow->role) }}
                                 </span>
                             </td>
-                            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                            <td class="text-sm bg-white border-b border-gray-200 ">
                                 <button wire:click="edit({{ $workflow->id }})"
                                     class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</button>
                                 <button wire:click="delete({{ $workflow->id }})" class="text-red-600 hover:text-red-900"
