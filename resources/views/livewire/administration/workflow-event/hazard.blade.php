@@ -85,13 +85,13 @@
 
                             <div>
                                 {{-- Menggunakan Flux Select Component --}}
-                                <x-flux-select label="Dari Status (Key)" id="from_status" wire:model.defer="from_status"
+                                <flux:select label="Dari Status (Key)" id="from_status" wire:model.defer="from_status"
                                     size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Status Awal</option>
                                     @foreach ($statusOptions as $status)
                                         <option value="{{ $status }}">{{ $status }}</option>
                                     @endforeach
-                                </x-flux-select>
+                                </flux:select>
                                 @error('from_status')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
@@ -99,7 +99,7 @@
 
                             <div>
                                 {{-- Menggunakan Flux Input Component --}}
-                                <x-flux-input label="Dari Status (Nama)" id="from_inisial" type="text"
+                                <flux:input label="Dari Status (Nama)" id="from_inisial" type="text"
                                     wire:model.defer="from_inisial" placeholder="Cth: Submitted Event" size="xs"
                                     {{-- Mengatur ukuran ke xs --}} class="w-full" />
                                 @error('from_inisial')
@@ -109,13 +109,13 @@
 
                             <div>
                                 {{-- Menggunakan Flux Select Component --}}
-                                <x-flux-select label="Ke Status (Key)" id="to_status" wire:model.defer="to_status"
+                                <flux:select label="Ke Status (Key)" id="to_status" wire:model.defer="to_status"
                                     size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Status Tujuan</option>
                                     @foreach ($statusOptions as $status)
                                         <option value="{{ $status }}">{{ $status }}</option>
                                     @endforeach
-                                </x-flux-select>
+                                </flux:select>
                                 @error('to_status')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
@@ -123,7 +123,7 @@
 
                             <div>
                                 {{-- Menggunakan Flux Input Component --}}
-                                <x-flux-input label="Ke Status (Nama)" id="to_inisial" type="text"
+                                <flux:input label="Ke Status (Nama)" id="to_inisial" type="text"
                                     wire:model.defer="to_inisial" placeholder="Cth: Moderator Review" size="xs"
                                     {{-- Mengatur ukuran ke xs --}} class="w-full" />
                                 @error('to_inisial')
@@ -133,13 +133,13 @@
 
                             <div>
                                 {{-- Menggunakan Flux Select Component --}}
-                                <x-flux-select label="Role Yang Bertanggung Jawab" id="role"
+                                <flux:select label="Role Yang Bertanggung Jawab" id="role"
                                     wire:model.defer="role" size="xs" {{-- Mengatur ukuran ke xs --}} class="w-full">
                                     <option value="">Pilih Role</option>
                                     @foreach ($roleOptions as $r)
                                         <option value="{{ $r }}">{{ ucfirst($r) }}</option>
                                     @endforeach
-                                </x-flux-select>
+                                </flux:select>
                                 @error('role')
                                     <span class="mt-1 text-xs text-error">{{ $message }}</span>
                                 @enderror
