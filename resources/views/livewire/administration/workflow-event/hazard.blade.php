@@ -140,10 +140,10 @@
 
                         {{-- Modal Actions (Button) --}}
                         <div class="mt-6 modal-action">
-                            <button type="button" wire:click="closeModal()" class="btn btn-sm">
+                            <button type="button" wire:click="closeModal()" class="btn btn-sm btn-error btn-outline">
                                 Batal
                             </button>
-                            <button type="submit" class="btn btn-success btn-sm">
+                            <button type="submit" class="btn btn-success btn-sm btn-outline">
                                 Simpan
                             </button>
                         </div>
