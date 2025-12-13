@@ -72,7 +72,7 @@
         @if ($isModalOpen)
             {{-- DaisyUI Modal - Note: Kita menggunakan 'fixed inset-0' untuk overlay background Livewire secara manual karena kita memicu modal melalui state $isModalOpen --}}
             <div class="modal modal-open" role="dialog">
-                <div class="relative w-full max-w-lg modal-box" x-data="{}"
+                <div class="relative modal-box" x-data="{}"
                     @click.away="window.livewire.find('{{ $this->getName() }}').closeModal()">
 
                     {{-- Tombol Close (x) di sudut kanan atas --}}
