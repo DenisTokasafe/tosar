@@ -48,12 +48,17 @@
                                     {{ ucfirst($workflow->role) }}
                                 </span>
                             </td>
-                            <td class="text-sm bg-white border-b border-gray-200 ">
-                                <button wire:click="edit({{ $workflow->id }})"
-                                    class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</button>
-                                <button wire:click="delete({{ $workflow->id }})" class="text-red-600 hover:text-red-900"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus workflow ini?')">Hapus</button>
-                            </td>
+                            <th class='flex flex-row justify-center gap-2'>
+                                <flux:tooltip content="edit" position="top">
+                                    <flux:button wire:click="edit({{ $workflow->id }})" size="xs"
+                                        icon="pencil-square" variant="subtle"></flux:button>
+                                </flux:tooltip>
+
+                                <flux:tooltip content="hapus" position="top">
+                                    <flux:button wire:click="delete({{ $workflow->id }})" size="xs" icon="trash"  onclick="return confirm('Apakah Anda yakin ingin menghapus workflow ini?')"
+                                        variant="danger"></flux:button>
+                                </flux:tooltip>
+                            </th>
                         </tr>
                     @endforeach
                 </tbody>
