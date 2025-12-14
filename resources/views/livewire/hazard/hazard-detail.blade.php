@@ -437,7 +437,7 @@
                                 this.fp = flatpickr(this.$refs.tanggalInput, {
                                     disableMobile: true,
                                     enableTime: true,
-                                     time_24hr: true,
+                                    time_24hr: true,
                                     defaultDate: @js($this->tanggal),
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
@@ -475,27 +475,88 @@
                 <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3 ">
                     <fieldset class=" fieldset">
                         <x-form.label label="Dokumentasi Sebelum Tidakan perbaikan langsung" />
+
                         <label wire:ignore for="upload-deskripsi"
-                            class="flex items-center gap-2  {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded  hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                            <!-- Tombol custom -->
+                            class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
                             <span class="btn btn-info btn-xs {{ $isDisabled ? 'btn btn-disabled' : '' }}">
                                 Pilih file atau gambar
                             </span>
-                            <!-- Nama file -->
                             <span id="file-name" class="text-[9px] text-gray-500 truncate max-w-sm">
                                 {!! $new_doc_deskripsi ? $new_doc_deskripsi->getClientOriginalName() : $doc_deskripsi !!}
                             </span>
                         </label>
-                        @if ($new_doc_deskripsi)
-                            <div class="text-xs text-green-600">Preview file baru:</div>
-                            <img src="{{ $new_doc_deskripsi->temporaryUrl() }}" class="h-24 mt-1 border rounded">
-                        @elseif($doc_deskripsi)
-                            <div class="text-xs text-gray-600">File lama:</div>
-                            <img src="{{ asset('storage/' . $doc_deskripsi) }}" class="h-24 mt-1 border rounded">
+
+                        @php
+                            // Tentukan file yang akan dipreview
+                            $fileToPreview =
+                                $new_doc_deskripsi ?? ($doc_deskripsi ? (object) ['name' => $doc_deskripsi] : null);
+
+                            // Ambil nama file atau path
+                            $fileName = $fileToPreview
+                                ? ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
+                                    ? $fileToPreview->getClientOriginalName()
+                                    : $fileToPreview->name)
+                                : null;
+
+                            // Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
+                            $extension = $fileName ? strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) : null;
+
+                            // Tentukan apakah file adalah gambar
+                            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+
+                            // Tentukan URL/Path file lama atau URL sementara untuk file baru
+                            $fileUrl = $new_doc_deskripsi
+                                ? $new_doc_deskripsi->temporaryUrl()
+                                : ($doc_deskripsi
+                                    ? asset('storage/' . $doc_deskripsi)
+                                    : null);
+                        @endphp
+
+                        @if ($fileToPreview)
+                            <div class="text-xs {{ $new_doc_deskripsi ? 'text-green-600' : 'text-gray-600' }}">
+                                {{ $new_doc_deskripsi ? 'Preview file baru:' : 'File lama:' }}
+                            </div>
+
+                            @if ($isImage)
+                                <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
+                            @else
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($extension == 'pdf')
+                                        <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2V7h2v9z" />
+                                            <path fill="white" d="M13 16h-2V7h2v9z" />
+                                            <path
+                                                d="M15.5 7.5L13 10V7h-2v3l-2.5-2.5L7 8l4 4-4 4 1.5 1.5L13 14v3h2v-3l2.5 2.5L17 16l-4-4 4-4-1.5-1.5z" />
+                                        </svg>
+                                        <span class="text-sm text-red-600">File PDF: {{ $fileName }}</span>
+                                    @elseif (in_array($extension, ['doc', 'docx']))
+                                        <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M19 3h-4.18C14.4 1.84 13.2 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm3 15H9v-2h6v2zm0-4H9v-2h6v2zm0-4H9V8h6v2z" />
+                                        </svg>
+                                        <span class="text-sm text-blue-600">File Word: {{ $fileName }}</span>
+                                    @else
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File {{ strtoupper($extension) }}:
+                                            {{ $fileName }}</span>
+                                    @endif
+                                </div>
+                                @if (!$new_doc_deskripsi)
+                                    <a href="{{ $fileUrl }}" target="_blank"
+                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                @endif
+                            @endif
                         @else
                             <span class="text-xs text-gray-400">Belum ada file</span>
                         @endif
-                        <!-- Input asli (disembunyikan) -->
+
                         <input {{ $isDisabled ? 'disabled' : '' }} id="upload-deskripsi"
                             wire:model.live='new_doc_deskripsi' type="file" class="hidden"
                             onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
@@ -746,7 +807,7 @@
                         <div class="hidden mt-1 peer-checked/kta:block">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
                                 class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                               <option value="">-- Pilih Kategori Bahaya --</option>
+                                <option value="">-- Pilih Kategori Bahaya --</option>
                                 @foreach ($ktas as $kta)
                                     <option value="{{ $kta->id }}">{{ $kta->name }}</option>
                                 @endforeach

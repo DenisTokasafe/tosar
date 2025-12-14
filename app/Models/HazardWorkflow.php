@@ -25,5 +25,38 @@ class HazardWorkflow extends Model
             ->unique()
             ->toArray();
     }
+    public static function getModeratorsForStatus(string $status, Hazard $hazard): array
+    {
+        // Secara default, hanya kirim notifikasi saat laporan baru disubmit.
+        // Anda dapat menambahkan logika status lain di sini jika diperlukan.
+        if ($status !== 'submitted') {
+            return [];
+        }
+
+        // Jika status adalah 'submitted', kita cari semua moderator yang relevan.
+
+        $moderatorIds = ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+            ->where(function ($query) use ($hazard) {
+
+                // Kriteria 1: Penugasan bersifat umum (hanya berdasarkan event_type_id)
+                $query->whereNull('department_id')
+                      ->whereNull('contractor_id');
+
+                // Kriteria 2: Penugasan spesifik untuk Department laporan
+                if ($hazard->department_id) {
+                    $query->orWhere('department_id', $hazard->department_id);
+                }
+
+                // Kriteria 3: Penugasan spesifik untuk Contractor laporan
+                if ($hazard->contractor_id) {
+                    $query->orWhere('contractor_id', $hazard->contractor_id);
+                }
+            })
+            ->distinct('user_id')
+            ->pluck('user_id')
+            ->toArray();
+
+        return $moderatorIds;
+    }
 }
 
