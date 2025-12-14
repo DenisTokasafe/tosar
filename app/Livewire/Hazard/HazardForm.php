@@ -614,10 +614,7 @@ class HazardForm extends Component
                 );
             }
             // [END] Logika Baru: Notifikasi ke Semua Moderator
-
         });
-
-
         // 4. Feedback ke user
         $this->dispatch('alert', [
             'text' => "Laporan berhasil dikirim!",
