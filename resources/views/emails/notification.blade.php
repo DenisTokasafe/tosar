@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>{{ $subject ?? 'Notifikasi Sistem' }}</title>
@@ -16,7 +17,7 @@
             background: #ffffff;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .logo-header {
@@ -90,44 +91,46 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="email-container">
+    <div class="email-container">
 
-    {{-- Logo Perusahaan --}}
-    <div class="logo-header">
-        <img src="{{ asset('favicon.svg') }}" alt="Company Logo">
-    </div>
-
-    {{-- Bar Judul --}}
-    <div class="header-bar">
-        <h1>{{ $title ?? 'Notifikasi Sistem' }}</h1>
-    </div>
-
-    {{-- Isi Konten --}}
-    <div class="content">
-
-        <p>{!! nl2br(e($messageText ?? '')) !!}</p>
-
-        @isset($additionalInfo)
-        <div class="info-box">
-            {!! nl2br(e($additionalInfo)) !!}
+        {{-- Logo Perusahaan --}}
+        <div class="logo-header">
+            <img src="{{ secure_url('favicon.svg') }}" alt="Company Logo">
         </div>
-        @endisset
 
-        @isset($actionUrl)
-            <a href="{{ $actionUrl }}" class="btn-primary">Lihat Detail</a>
-        @endisset
+        {{-- Bar Judul --}}
+        <div class="header-bar">
+            <h1>{{ $title ?? 'Notifikasi Sistem' }}</h1>
+        </div>
+
+        {{-- Isi Konten --}}
+        <div class="content">
+
+            <p>{!! nl2br(e($messageText ?? '')) !!}</p>
+
+            @isset($additionalInfo)
+                <div class="info-box">
+                    {!! nl2br(e($additionalInfo)) !!}
+                </div>
+            @endisset
+
+            @isset($actionUrl)
+                <a href="{{ $actionUrl }}" class="btn-primary">Lihat Detail</a>
+            @endisset
+
+        </div>
+
+        {{-- Footer --}}
+        <div class="footer">
+            Email ini dikirim otomatis oleh sistem.
+            <small>{{ config('app.name') }}</small>
+        </div>
 
     </div>
-
-    {{-- Footer --}}
-    <div class="footer">
-        Email ini dikirim otomatis oleh sistem.
-        <small>{{ config('app.name') }}</small>
-    </div>
-
-</div>
 
 </body>
+
 </html>
