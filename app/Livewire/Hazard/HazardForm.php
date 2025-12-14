@@ -16,6 +16,7 @@ use App\Helpers\FileHelper;
 use App\Helpers\MailHelper;
 use App\Models\ActionHazard;
 use App\Models\EventSubType;
+use App\Models\ErmAssignment;
 use Livewire\WithFileUploads;
 use App\Models\RiskAssessment;
 use App\Models\RiskMatrixCell;
@@ -24,10 +25,10 @@ use App\Models\UnsafeCondition;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessmentMatrix;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\DateBeforeOrEqualToday;
-use App\Models\ErmAssignment;
 
 class HazardForm extends Component
 {
@@ -531,6 +532,31 @@ class HazardForm extends Component
                     'responsible_id' => $act['responsible_id'],
                 ]);
             }
+
+            // --- Tentukan Nama Lokasi/Penugasan yang Akan Ditampilkan di Email ---
+            $locationName = 'N/A';
+            if ($hazard->department_id && $hazard->department) {
+                // Jika Department ada, gunakan namanya
+                $locationName = $hazard->department->department_name;
+            } elseif ($hazard->contractor_id && $hazard->contractor) {
+                // Jika Department NULL/kosong, dan Contractor ada, gunakan namanya
+                // Asumsi: Nama kolom di model Department adalah 'department_name'
+                // dan nama kolom di model Contractor adalah 'name' (sesuaikan jika berbeda)
+                $locationName = $hazard->contractor->contractor_name;
+            }
+
+            // [START] Logika Baru Penentuan Nama Pelapor
+            $reporterName = 'Tidak Diketahui';
+            if ($hazard->pelapor_id) {
+                // Jika ada ID pelapor, ambil dari relasi User
+                // Asumsi relasi User di model Hazard bernama 'pelapor'.
+                // Menggunakan optional chaining (?->) untuk keamanan jika relasi belum dimuat.
+                $reporterName = $hazard->pelapor?->name ?? 'User Terdaftar';
+            } else {
+                // Jika tidak ada ID pelapor, ambil dari input manual
+                $reporterName = $hazard->manualPelaporName ?? 'Anonim';
+            }
+            // [END] Logika Baru Penentuan Nama Pelapor
             // 3. Notifikasi
             // Dapatkan Penanggung Jawab dari relasi
             $penanggungJawab = $hazard->penanggung_jawab_id;
@@ -548,7 +574,50 @@ class HazardForm extends Component
                     ]
                 );
             }
+
+            // [START] Logika Baru: Notifikasi ke Semua Moderator
+            // Dapatkan semua ID pengguna moderator yang relevan
+            // Dapatkan semua ID pengguna moderator yang relevan
+            $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+                ->where(function ($query) use ($hazard) {
+                    // Moderator ditugaskan untuk Event Type ini,
+                    // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
+
+                    // Kriteria 1: Penugasan bersifat umum (department_id dan contractor_id di assignment adalah NULL)
+                    $query->whereNull('department_id')
+                        ->whereNull('contractor_id');
+
+                    // Kriteria 2: Penugasan spesifik untuk Department
+                    if ($hazard->department_id) {
+                        $query->orWhere('department_id', $hazard->department_id);
+                    }
+
+                    // Kriteria 3: Penugasan spesifik untuk Contractor
+                    if ($hazard->contractor_id) {
+                        $query->orWhere('contractor_id', $hazard->contractor_id);
+                    }
+                })
+                ->distinct('user_id')
+                ->pluck('user_id');
+            // Kirim email ke setiap moderator
+            foreach ($moderatorIds as $moderatorId) {
+                MailHelper::sendToUserId(
+                    $moderatorId,'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Laporan Hazard Baru',
+                        'title'         => 'Notifikasi Laporan Hazard',
+                        'messageText'   => "Telah dibuat laporan hazard baru.\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: Submitted",
+                        'actionUrl'     => route('hazard-detail', $hazard->id)
+                    ]
+                );
+            }
+            // [END] Logika Baru: Notifikasi ke Semua Moderator
+
         });
+
+
         // 4. Feedback ke user
         $this->dispatch('alert', [
             'text' => "Laporan berhasil dikirim!",
