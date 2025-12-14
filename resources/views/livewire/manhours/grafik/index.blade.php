@@ -62,19 +62,16 @@
             series: [{
                     name: 'PT. MSM',
                     type: 'line',
-                    stack: 'Total',
                     data: data.msm
                 },
                 {
                     name: 'PT. TTN',
                     type: 'line',
-                    stack: 'Total',
                     data: data.ttn
                 },
                 {
                     name: 'CONTRACTOR',
                     type: 'line',
-                    stack: 'Total',
                     data: data.contractor
                 }
             ]
@@ -110,19 +107,16 @@
                     series: [{
                             name: 'PT. MSM',
                             type: 'line',
-                            stack: 'Total',
                             data: payload_trand.msm
                         },
                         {
                             name: 'PT. TTN',
                             type: 'line',
-                            stack: 'Total',
                             data: payload_trand.ttn
                         },
                         {
                             name: 'CONTRACTOR',
                             type: 'line',
-                            stack: 'Total',
                             data: payload_trand.contractor
                         }
                     ]
@@ -190,19 +184,16 @@
             series: [{
                     name: 'PT. MSM', // Sesuai Legend
                     type: 'line',
-                    stack: 'Total',
                     data: data_manpower.msm
                 },
                 {
                     name: 'PT. TTN', // Sesuai Legend
                     type: 'line',
-                    stack: 'Total',
                     data: data_manpower.ttn
                 },
                 {
                     name: 'CONTRACTOR', // Sesuai Legend
                     type: 'line',
-                    stack: 'Total',
                     data: data_manpower.contractor
                 }
             ]
@@ -238,19 +229,16 @@
                     series: [{
                             name: 'PT. MSM', // Harus sinkron dengan load awal
                             type: 'line',
-                            stack: 'Total',
                             data: payload_manpower.msm
                         },
                         {
                             name: 'PT. TTN', // Harus sinkron dengan load awal
                             type: 'line',
-                            stack: 'Total',
                             data: payload_manpower.ttn
                         },
                         {
                             name: 'CONTRACTOR', // Harus sinkron dengan load awal
                             type: 'line',
-                            stack: 'Total',
                             data: payload_manpower.contractor
                         }
                     ]
