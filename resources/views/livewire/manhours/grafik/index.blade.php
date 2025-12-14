@@ -1,12 +1,14 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-    <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
-    {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
-    <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
+<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+    <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
+    {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
+    <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
 </div>
 @push('scripts')
-    <!-- Load ECharts dari CDN -->
     <script type="module">
         setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
+
+        // CATATAN: Karena Livewire me-render data awal, pastikan data awal juga mengandung 'hidden_legends' jika Anda ingin legend disembunyikan pada load pertama.
+        // Jika tidak, legend akan mengikuti data awal default (aktif semua).
         const data = @json($data);
         const currentYear = @json($years);
         var dom = document.getElementById('grafik-manhours');
@@ -21,7 +23,18 @@
                 trigger: 'axis'
             },
             legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR']
+                // Konfigurasi legend di load awal
+                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
+                // Set initial selection based on PHP data structure if it contains 'hidden_legends'
+                selected: (function(initialData) {
+                    let selected = {'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true};
+                    if (initialData.hidden_legends) {
+                        initialData.hidden_legends.forEach(name => {
+                            selected[name] = false;
+                        });
+                    }
+                    return selected;
+                })(@json($data))
             },
             grid: {
                 left: '3%',
@@ -65,9 +78,24 @@
 
         if (option && typeof option === 'object') {
             myChart.setOption(option);
+
+            // --- MODIFIKASI LISTENER LIVEWIRE UNTUK GRAFIK MANHOURS ---
             Livewire.on('manhoursChart', event => {
                 let payload_trand = JSON.parse(event);
+
+                let selectedLegends = {'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true};
+
+                // Set legend yang tidak ada data (berdasarkan hidden_legends dari Livewire) menjadi false (non-aktif)
+                if (payload_trand.hidden_legends) {
+                    payload_trand.hidden_legends.forEach(name => {
+                        selectedLegends[name] = false;
+                    });
+                }
+
                 myChart.setOption({
+                    legend: {
+                        selected: selectedLegends // Terapkan status legend yang dipilih
+                    },
                     xAxis: {
                         data: payload_trand.months
                     },
@@ -99,6 +127,7 @@
     <script type="module">
 
         setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
+
         const data_manpower = @json($manpowerData);
         const currentYear = @json($years);
 
@@ -115,7 +144,18 @@
                 trigger: 'axis'
             },
             legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR']
+                // Konfigurasi legend di load awal
+                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
+                // Set initial selection based on PHP data structure
+                selected: (function(initialData) {
+                    let selected = {'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true};
+                    if (initialData.hidden_legends) {
+                        initialData.hidden_legends.forEach(name => {
+                            selected[name] = false;
+                        });
+                    }
+                    return selected;
+                })(@json($manpowerData))
             },
             grid: {
                 left: '3%',
@@ -160,10 +200,23 @@
         if (option_mp && typeof option_mp === 'object') {
             myChart_mp.setOption(option_mp);
 
-            // 🔑 PERUBAHAN KRITIS: Menggunakan event listener 'manpowerChart'
+            // --- MODIFIKASI LISTENER LIVEWIRE UNTUK GRAFIK MANPOWER ---
             Livewire.on('manpowerChart', event => {
                 let payload_manpower = JSON.parse(event);
+
+                let selectedLegends_mp = {'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true};
+
+                // Set legend yang tidak ada data (berdasarkan hidden_legends dari Livewire) menjadi false (non-aktif)
+                if (payload_manpower.hidden_legends) {
+                    payload_manpower.hidden_legends.forEach(name => {
+                        selectedLegends_mp[name] = false;
+                    });
+                }
+
                 myChart_mp.setOption({
+                    legend: {
+                        selected: selectedLegends_mp // Terapkan status legend yang dipilih
+                    },
                     xAxis: {
                         data: payload_manpower.months
                     },

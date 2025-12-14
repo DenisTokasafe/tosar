@@ -93,13 +93,31 @@ class Index extends Component
             $ttn[]        = $ttnData[$m] ?? 0;
             $contractor[] = $contractorData[$m] ?? 0;
         }
+        // --- Pemeriksaan Data Total untuk Legend ---
+        $totalMsm = array_sum($msm);
+        $totalTtn = array_sum($ttn);
+        $totalContractor = array_sum($contractor);
         // Data final untuk chart
-        $this->data = json_encode([
+        $payload = [
             'months' => $months,
             'msm'    => $msm,
             'ttn'    => $ttn,
-            'contractor'    => $contractor
-        ]);
+            'contractor' => $contractor,
+            // Tambahkan informasi legend yang harus disembunyikan
+            'hidden_legends' => [],
+        ];
+
+        if ($totalMsm === 0) {
+            $payload['hidden_legends'][] = 'PT. MSM';
+        }
+        if ($totalTtn === 0) {
+            $payload['hidden_legends'][] = 'PT. TTN';
+        }
+        if ($totalContractor === 0) {
+            $payload['hidden_legends'][] = 'CONTRACTOR';
+        }
+
+        $this->data = json_encode($payload);
         $this->dispatch('manhoursChart', $this->data);
     }
     #[On('chartManpowerUpdate')] // Ganti nama event agar tidak bentrok
@@ -153,19 +171,36 @@ class Index extends Component
             $ttn_mp[] = $ttnData[$m] ?? 0;
             $contractor_mp[] = $contractorData[$m] ?? 0;
         }
-        // Data final untuk chart (Gunakan properti yang berbeda jika chart manpower dipisah)
-        $data_manpower = [
-            'months' => $months,
-            'msm'    => $msm_mp,
-            'ttn'    => $ttn_mp,
-            'contractor' => $contractor_mp
-        ];
+       // --- Pemeriksaan Data Total untuk Legend ---
+    $totalMsm_mp = array_sum($msm_mp);
+    $totalTtn_mp = array_sum($ttn_mp);
+    $totalContractor_mp = array_sum($contractor_mp);
+
+    // Data final untuk chart (Gunakan properti yang berbeda jika chart manpower dipisah)
+    $payload_manpower = [
+        'months' => $months,
+        'msm'    => $msm_mp,
+        'ttn'    => $ttn_mp,
+        'contractor' => $contractor_mp,
+        // Tambahkan informasi legend yang harus disembunyikan
+        'hidden_legends' => [],
+    ];
+
+    if ($totalMsm_mp === 0) {
+        $payload_manpower['hidden_legends'][] = 'PT. MSM';
+    }
+    if ($totalTtn_mp === 0) {
+        $payload_manpower['hidden_legends'][] = 'PT. TTN';
+    }
+    if ($totalContractor_mp === 0) {
+        $payload_manpower['hidden_legends'][] = 'CONTRACTOR';
+    }
 
 
-        // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
-        $this->manpowerData = json_encode($data_manpower);
-        // Dispatch event yang berbeda untuk grafik manpower
-        $this->dispatch('manpowerChart', $this->manpowerData);
+    // Gunakan properti Livewire yang berbeda, misalnya $manpowerChartData
+    $this->manpowerData = json_encode($payload_manpower);
+    // Dispatch event yang berbeda untuk grafik manpower
+    $this->dispatch('manpowerChart', $this->manpowerData);
     }
 
     public function render()
