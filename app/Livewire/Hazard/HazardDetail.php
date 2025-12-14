@@ -14,6 +14,7 @@ use App\Models\Department;
 use App\Models\Likelihood;
 use App\Enums\HazardStatus;
 use App\Helpers\FileHelper;
+use App\Helpers\MailHelper;
 use Livewire\Attributes\On;
 use App\Models\ActionHazard;
 use App\Models\EventSubType;
@@ -635,7 +636,6 @@ class HazardDetail extends Component
         $updateData = [
             'event_type_id'          => $this->tipe_bahaya,
             'event_sub_type_id'      => $this->sub_tipe_bahaya,
-            'status'                 => 'submitted',
             'department_id'          => $this->department_id,
             'contractor_id'          => $this->contractor_id,
             'pelapor_id'             => $this->pelapor_id,
@@ -665,6 +665,88 @@ class HazardDetail extends Component
 
         $hazard = Hazard::findOrFail($this->hazard->id);
         $hazard->update($updateData);
+
+         // --- Tentukan Nama Lokasi/Penugasan yang Akan Ditampilkan di Email ---
+            $locationName = 'N/A';
+            if ($hazard->department_id && $hazard->department) {
+                // Jika Department ada, gunakan namanya
+                $locationName = $hazard->department->department_name;
+            } elseif ($hazard->contractor_id && $hazard->contractor) {
+                // Jika Department NULL/kosong, dan Contractor ada, gunakan namanya
+                // Asumsi: Nama kolom di model Department adalah 'department_name'
+                // dan nama kolom di model Contractor adalah 'name' (sesuaikan jika berbeda)
+                $locationName = $hazard->contractor->contractor_name;
+            }
+
+            // [START] Logika Baru Penentuan Nama Pelapor
+            $reporterName = 'Tidak Diketahui';
+            if ($hazard->pelapor_id) {
+                // Jika ada ID pelapor, ambil dari relasi User
+                // Asumsi relasi User di model Hazard bernama 'pelapor'.
+                // Menggunakan optional chaining (?->) untuk keamanan jika relasi belum dimuat.
+                $reporterName = $hazard->pelapor?->name ?? 'User Terdaftar';
+            } else {
+                // Jika tidak ada ID pelapor, ambil dari input manual
+                $reporterName = $hazard->manualPelaporName ?? 'Anonim';
+            }
+            // [END] Logika Baru Penentuan Nama Pelapor
+            // 3. Notifikasi
+            // Dapatkan Penanggung Jawab dari relasi
+            $penanggungJawab = $hazard->penanggung_jawab_id;
+            if ($penanggungJawab) {
+                MailHelper::sendToUserId(
+                    $penanggungJawab,
+                    'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Update Laporan Hazard ',
+                        'title'         => 'Notifikasi Laporan Hazard',
+                        'messageText'   => "Telah diupdate laporan hazard .\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                        'actionUrl'     => route('hazard-detail', $hazard->id)
+                    ]
+                );
+            }
+
+            // [START] Logika Baru: Notifikasi ke Semua Moderator
+            // Dapatkan semua ID pengguna moderator yang relevan
+            // Dapatkan semua ID pengguna moderator yang relevan
+            $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+                ->where(function ($query) use ($hazard) {
+                    // Moderator ditugaskan untuk Event Type ini,
+                    // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
+
+                    // Kriteria 1: Penugasan bersifat umum (department_id dan contractor_id di assignment adalah NULL)
+                    $query->whereNull('department_id')
+                        ->whereNull('contractor_id');
+
+                    // Kriteria 2: Penugasan spesifik untuk Department
+                    if ($hazard->department_id) {
+                        $query->orWhere('department_id', $hazard->department_id);
+                    }
+
+                    // Kriteria 3: Penugasan spesifik untuk Contractor
+                    if ($hazard->contractor_id) {
+                        $query->orWhere('contractor_id', $hazard->contractor_id);
+                    }
+                })
+                ->distinct('user_id')
+                ->pluck('user_id');
+            // Kirim email ke setiap moderator
+            foreach ($moderatorIds as $moderatorId) {
+                MailHelper::sendToUserId(
+                    $moderatorId,'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Update Laporan Hazard ',
+                        'title'         => 'Notifikasi Laporan Hazard',
+                        'messageText'   => "Telah diupdate laporan hazard .\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                        'actionUrl'     => route('hazard-detail', $hazard->id)
+                    ]
+                );
+            }
+            // [END] Logika Baru: Notifikasi ke Semua Moderator
 
         $ermUsers = ErmAssignment::where('department_id', $this->department_id)
             ->orWhere('contractor_id', $this->contractor_id)

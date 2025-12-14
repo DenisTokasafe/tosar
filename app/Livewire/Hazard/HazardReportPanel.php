@@ -10,6 +10,7 @@ use App\Models\EventType;
 use App\Models\Contractor;
 use App\Models\Department;
 use App\Enums\HazardStatus;
+use App\Helpers\MailHelper;
 use App\Models\EventSubType;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
@@ -186,6 +187,88 @@ class HazardReportPanel extends Component
 
         $report->status = $newStatus;
         $report->save();
+
+         // --- Tentukan Nama Lokasi/Penugasan yang Akan Ditampilkan di Email ---
+            $locationName = 'N/A';
+            if ($report->department_id && $report->department) {
+                // Jika Department ada, gunakan namanya
+                $locationName = $report->department->department_name;
+            } elseif ($report->contractor_id && $report->contractor) {
+                // Jika Department NULL/kosong, dan Contractor ada, gunakan namanya
+                // Asumsi: Nama kolom di model Department adalah 'department_name'
+                // dan nama kolom di model Contractor adalah 'name' (sesuaikan jika berbeda)
+                $locationName = $report->contractor->contractor_name;
+            }
+
+            // [START] Logika Baru Penentuan Nama Pelapor
+            $reporterName = 'Tidak Diketahui';
+            if ($report->pelapor_id) {
+                // Jika ada ID pelapor, ambil dari relasi User
+                // Asumsi relasi User di model Hazard bernama 'pelapor'.
+                // Menggunakan optional chaining (?->) untuk keamanan jika relasi belum dimuat.
+                $reporterName = $report->pelapor?->name ?? 'User Terdaftar';
+            } else {
+                // Jika tidak ada ID pelapor, ambil dari input manual
+                $reporterName = $report->manualPelaporName ?? 'Anonim';
+            }
+            // [END] Logika Baru Penentuan Nama Pelapor
+            // 3. Notifikasi
+            // Dapatkan Penanggung Jawab dari relasi
+            $penanggungJawab = $report->penanggung_jawab_id;
+            if ($penanggungJawab) {
+                MailHelper::sendToUserId(
+                    $penanggungJawab,
+                    'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                       'subject'       => 'Laporan Hazard Status Update',
+                        'title'         => 'Notifikasi Laporan Hazard',
+                        'messageText'   => "Laporan hazard telah diupdate.\nSilakan lakukan pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $newStatus",
+                        'actionUrl'     => route('hazard-detail', $report->id)
+                    ]
+                );
+            }
+
+            // [START] Logika Baru: Notifikasi ke Semua Moderator
+            // Dapatkan semua ID pengguna moderator yang relevan
+            // Dapatkan semua ID pengguna moderator yang relevan
+            $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $report->event_type_id)
+                ->where(function ($query) use ($report) {
+                    // Moderator ditugaskan untuk Event Type ini,
+                    // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
+
+                    // Kriteria 1: Penugasan bersifat umum (department_id dan contractor_id di assignment adalah NULL)
+                    $query->whereNull('department_id')
+                        ->whereNull('contractor_id');
+
+                    // Kriteria 2: Penugasan spesifik untuk Department
+                    if ($report->department_id) {
+                        $query->orWhere('department_id', $report->department_id);
+                    }
+
+                    // Kriteria 3: Penugasan spesifik untuk Contractor
+                    if ($report->contractor_id) {
+                        $query->orWhere('contractor_id', $report->contractor_id);
+                    }
+                })
+                ->distinct('user_id')
+                ->pluck('user_id');
+            // Kirim email ke setiap moderator
+            foreach ($moderatorIds as $moderatorId) {
+                MailHelper::sendToUserId(
+                    $moderatorId,'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Laporan Hazard Status Update',
+                        'title'         => 'Notifikasi Laporan Hazard',
+                        'messageText'   => "Laporan hazard telah diupdate.\nSilakan lakukan pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $newStatus",
+                        'actionUrl'     => route('hazard-detail', $report->id)
+                    ]
+                );
+            }
+            // [END] Logika Baru: Notifikasi ke Semua Moderator
 
         // TODO: kirim notifikasi otomatis
 
