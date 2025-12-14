@@ -51,8 +51,18 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
+        // authorize viewAny
+        Gate::authorize('viewAny', Manhour::class);
+        $user = auth()->user();
+
+        if ($user->roles()->where('role_id', 1)->exists()) {
+            $query = Manhour::query();
+        } else {
+            $contractorNames = $user->contractors()->pluck('contractor_name');
+            $query = Manhour::whereIn('company', $contractorNames);
+        }
         /// Ambil bulan unique berdasarkan tanggal dan rentang filter
-        $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)
+        $monthsRaw = $query->dateRange($this->start_date, $this->end_date)
             ->selectRaw('DISTINCT MONTH(date) as month')
             ->orderBy('month')
             ->pluck('month')
@@ -64,21 +74,21 @@ class Index extends Component
             $monthsRaw
         );
         // === PT. MSM ===
-        $msmData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $msmData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company', 'PT. MSM')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
             ->groupBy('month')
             ->pluck('total_manhours', 'month')
             ->toArray();
         // === PT. TTN ===
-        $ttnData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $ttnData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company', 'PT. TTN')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
             ->groupBy('month')
             ->pluck('total_manhours', 'month')
             ->toArray();
         // === CONTRACTOR ===
-        $contractorData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $contractorData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company_category', 'CONTRACTOR')
             ->selectRaw('MONTH(date) as month, SUM(manhours) as total_manhours')
             ->groupBy('month')
@@ -123,9 +133,17 @@ class Index extends Component
     #[On('chartManpowerUpdate')] // Ganti nama event agar tidak bentrok
     public function loadDataManpower()
     {
+Gate::authorize('viewAny', Manhour::class);
+        $user = auth()->user();
 
+        if ($user->roles()->where('role_id', 1)->exists()) {
+            $query = Manhour::query();
+        } else {
+            $contractorNames = $user->contractors()->pluck('contractor_name');
+            $query = Manhour::whereIn('company', $contractorNames);
+        }
         /// Ambil bulan unique berdasarkan tanggal dan rentang filter
-        $monthsRaw = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $monthsRaw = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->selectRaw('DISTINCT MONTH(date) as month')
             ->orderBy('month')
             ->pluck('month')
@@ -138,7 +156,7 @@ class Index extends Component
         );
 
         // === PT. MSM ===
-        $msmData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $msmData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company', 'PT. MSM')
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
@@ -146,7 +164,7 @@ class Index extends Component
             ->toArray();
 
         // === PT. TTN ===
-        $ttnData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $ttnData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company', 'PT. TTN')
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
@@ -154,7 +172,7 @@ class Index extends Component
             ->toArray();
 
         // === CONTRACTOR ===
-        $contractorData = Manhour::dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
+        $contractorData = $query->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
             ->where('company_category', 'CONTRACTOR')
             ->selectRaw('MONTH(date) as month, SUM(manpower) as total_manpower')
             ->groupBy('month')
