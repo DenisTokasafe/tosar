@@ -522,14 +522,7 @@
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extension == 'pdf')
-                                        <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2V7h2v9z" />
-                                            <path fill="white" d="M13 16h-2V7h2v9z" />
-                                            <path
-                                                d="M15.5 7.5L13 10V7h-2v3l-2.5-2.5L7 8l4 4-4 4 1.5 1.5L13 14v3h2v-3l2.5 2.5L17 16l-4-4 4-4-1.5-1.5z" />
-                                        </svg>
+                                         <x-icon.pdf class="w-8 h-8 " />
                                         <span class="text-sm text-red-600">File PDF: {{ $fileName }}</span>
                                     @elseif (in_array($extension, ['doc', 'docx']))
                                        <x-icon.pdf class="w-8 h-8 " />
