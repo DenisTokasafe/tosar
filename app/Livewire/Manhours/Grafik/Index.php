@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Manhour;
-
+use Illuminate\Support\Facades\Gate;
 class Index extends Component
 {
     public $data, $manpowerData;
