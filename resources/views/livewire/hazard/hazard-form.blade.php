@@ -44,7 +44,7 @@
                     <div class="hidden peer-checked/kta:block ">
                         <select wire:model.live="kondisi_tidak_aman"
                             class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih Kondisi Tidak Aman --</option>
+                            <option value="">-- Pilih Kategori Bahaya --</option>
                             @foreach ($ktas as $kta)
                                 <option value="{{ $kta->id }}">{{ $kta->name }}</option>
                             @endforeach
@@ -53,7 +53,7 @@
                     <div class="hidden peer-checked/tta:block ">
                         <select wire:model.live="tindakan_tidak_aman"
                             class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih Tidakan Tidak Aman --</option>
+                            <option value="">-- Pilih Kategori Bahaya --</option>
                             @foreach ($ttas as $tta)
                                 <option value="{{ $tta->id }}">{{ $tta->name }}</option>
                             @endforeach

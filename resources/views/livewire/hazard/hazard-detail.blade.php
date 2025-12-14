@@ -746,7 +746,7 @@
                         <div class="hidden mt-1 peer-checked/kta:block">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
                                 class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                                <option value="">-- Pilih Kondisi Tidak Aman --</option>
+                               <option value="">-- Pilih Kategori Bahaya --</option>
                                 @foreach ($ktas as $kta)
                                     <option value="{{ $kta->id }}">{{ $kta->name }}</option>
                                 @endforeach
@@ -756,7 +756,7 @@
                         <div class="hidden mt-1 peer-checked/tta:block">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
                                 class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                                <option value="">-- Pilih Tindakan Tidak Aman --</option>
+                                <option value="">-- Pilih Kategori Bahaya --</option>
                                 @foreach ($ttas as $tta)
                                     <option value="{{ $tta->id }}">{{ $tta->name }}</option>
                                 @endforeach
