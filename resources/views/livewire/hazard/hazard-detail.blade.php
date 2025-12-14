@@ -532,12 +532,7 @@
                                         </svg>
                                         <span class="text-sm text-red-600">File PDF: {{ $fileName }}</span>
                                     @elseif (in_array($extension, ['doc', 'docx']))
-                                        <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M19 3h-4.18C14.4 1.84 13.2 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm3 15H9v-2h6v2zm0-4H9v-2h6v2zm0-4H9V8h6v2z" />
-                                        </svg>
-                                        <x-icon.pdf/>
+                                       <x-icon.pdf class="w-8 h-8 " />
                                         <span class="text-sm text-blue-600">File Word: {{ $fileName }}</span>
                                     @else
                                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
