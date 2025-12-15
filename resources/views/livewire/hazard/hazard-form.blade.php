@@ -86,12 +86,29 @@
                             Pilih file atau gambar
                         </span>
                         <span id="file-name" class="text-xs text-gray-500">
-                            {!! $doc_deskripsi ? $doc_deskripsi->getClientOriginalName() : 'Belum ada file' !!}
+                            {{-- Menggunakan Fallback JavaScript dan mempercayai pemeriksaan di @php untuk Livewire --}}
+                            @php
+                                $currentFileName = 'Belum ada file';
+                                if (
+                                    $doc_deskripsi instanceof
+                                    \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
+                                ) {
+                                    $currentFileName = $doc_deskripsi->getClientOriginalName();
+                                } elseif (is_string($doc_deskripsi) && !empty($doc_deskripsi)) {
+                                    // Logika jika $doc_deskripsi menyimpan path/nama file lama (string)
+                                    $currentFileName = basename($doc_deskripsi);
+                                }
+                            @endphp
+                            {!! $currentFileName !!}
                         </span>
                     </label>
 
                     @php
                         $fileToPreview = $doc_deskripsi;
+                        $isImage = false;
+                        $fileName = '';
+                        $extension = '';
+                        $fileUrl = '';
 
                         // Cek apakah file benar-benar ada dan merupakan TemporaryUploadedFile
                         if ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
@@ -100,7 +117,8 @@
                             $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
                             $fileUrl = $fileToPreview->temporaryUrl();
                         } else {
-                            // Jika $doc_deskripsi bukan objek file yang baru diupload (misal: null)
+                            // Jika file bukan TemporaryUploadedFile, kita set $fileToPreview menjadi null
+                            // agar pratinjau tidak dijalankan di blok @if ($fileToPreview).
                             $fileToPreview = null;
                         }
                     @endphp
