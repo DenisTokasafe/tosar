@@ -85,6 +85,10 @@
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
                         </span>
+                         <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_deskripsi" >
+                            <span class="mr-2 loading loading-bars loading-xs text-info"></span>
+                            <span class="text-xs text-info">Mengunggah...</span>
+                        </span>
                         <!-- Nama file -->
                         <span id="file-name" class="text-xs text-gray-500">
                             Belum ada file
@@ -94,6 +98,7 @@
                     <input name="doc_deskripsi" id="upload-deskripsi" wire:model.live='doc_deskripsi' type="file"
                         class="hidden"
                         onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
+                    <div wire:loading.remove wire:target="doc_deskripsi">
                     @if ($doc_deskripsi)
                         @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
                             <img src="{{ $doc_deskripsi->temporaryUrl() }}"
@@ -123,6 +128,7 @@
                                     {{ $doc_deskripsi->getClientOriginalName() }}</p>
                         @endif
                     @endif
+                    </div>
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
