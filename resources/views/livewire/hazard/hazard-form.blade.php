@@ -273,47 +273,59 @@
                 <fieldset class=" fieldset">
                     <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
                     <label class="block"></label>
+
                     <label wire:ignore for="upload-corrective"
                         class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                        <!-- Tombol custom -->
+
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
                         </span>
-                        <!-- Nama file -->
-                        <span id="file-name-corrective" class="text-xs text-gray-500">
-                            Belum ada file
+
+                        <span wire:loading wire:target="doc_corrective">
+                            <span class="mr-2 loading loading-bars loading-xs text-info"></span>
+                            <span class="text-xs text-info">Mengunggah...</span>
+                        </span>
+
+                        <span id="file-name-corrective" class="text-xs text-gray-500" wire:loading.remove
+                            wire:target="doc_corrective">
+                            {!! $doc_corrective ? $doc_corrective->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
                     </label>
-                    @if ($doc_corrective)
-                        @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                            <img src="{{ $doc_corrective->temporaryUrl() }}"
-                                class="mt-2 {{ $doc_corrective ? 'w-40' : '' }} h-auto rounded border" />
-                        @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                            <div class="flex items-center gap-2 mt-2">
-                                @if ($doc_corrective->getClientOriginalExtension() == 'pdf')
-                                    <x-icon.pdf class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-red-600">{{ $doc_corrective->getClientOriginalName() }}</span>
-                                @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['doc', 'docx']))
-                                    <x-icon.word class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-blue-600">{{ $doc_corrective->getClientOriginalName() }}</span>
-                                @else
-                                    {{-- Ikon generik untuk file lain --}}
-                                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                    </svg>
-                                    <span class="text-sm text-gray-600">File:
-                                        {{ $doc_corrective->getClientOriginalName() }}</span>
-                                @endif
-                        @else
-                            <p class="mt-2 text-sm text-gray-600">File: {{ $doc_corrective->getClientOriginalName() }}
-                            </p>
+
+                    <div wire:loading.remove wire:target="doc_corrective">
+                        @if ($doc_corrective)
+                            @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                <img src="{{ $doc_corrective->temporaryUrl() }}"
+                                    class="mt-2 {{ $doc_corrective ? 'w-40' : '' }} h-auto rounded border" />
+                            @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($doc_corrective->getClientOriginalExtension() == 'pdf')
+                                        <x-icon.pdf class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-red-600">{{ $doc_corrective->getClientOriginalName() }}</span>
+                                    @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['doc', 'docx']))
+                                        <x-icon.word class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-blue-600">{{ $doc_corrective->getClientOriginalName() }}</span>
+                                    @else
+                                        {{-- Ikon generik untuk file lain --}}
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File:
+                                            {{ $doc_corrective->getClientOriginalName() }}</span>
+                                    @endif
+                                </div>
+                            @else
+                                <p class="mt-2 text-sm text-gray-600">File:
+                                    {{ $doc_corrective->getClientOriginalName() }}
+                                </p>
+                            @endif
                         @endif
-                    @endif
-                    <!-- Input asli (disembunyikan) -->
+                    </div>
+
                     <input name="doc_corrective" id="upload-corrective" wire:model.live='doc_corrective'
                         type="file" class="hidden"
                         onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
