@@ -281,8 +281,7 @@
                     </div>
                 </div>
                 {{-- Modal konfirmasi --}}
-                <div class="modal{{ $confirmingDelete ? 'modal-open' : '' }}">
-
+                <div class="modal {{ $confirmingDelete ? 'modal-open' : '' }}">
                     <div class="modal-box">
                         <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
                         <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
