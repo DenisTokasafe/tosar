@@ -133,7 +133,7 @@
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="fieldset ">
                     <x-form.label label="Lokasi" required />
                     <div class="relative">
