@@ -283,7 +283,7 @@
                     </div>
                 </div>
                 {{-- Modal konfirmasi --}}
-                {{-- <flux:modal name="delete-bu" wire:model="confirmingDelete">
+                <flux:modal name="delete-bu" wire:model="confirmingDelete">
                     <div class="p-4 space-y-4">
                         <h2 class="text-lg font-semibold">Konfirmasi Hapus</h2>
                         <p>Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
@@ -293,7 +293,7 @@
                             <flux:button wire:click="delete" variant="danger">Hapus</flux:button>
                         </div>
                     </div>
-                </flux:modal> --}}
+                </flux:modal>
 
                 @livewire('manhours.grafik.index')
             </x-manhours.layout>
