@@ -2,6 +2,7 @@
     <x-toast />
     @push('styles')
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.core.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.core.js"></script>
     @endpush
     {{-- Breadcrumb di sebelah kanan --}}
     <div class="flex justify-start mb-2 " wire:ignore>
@@ -729,7 +730,7 @@
     </x-manhours.layout>
     @push('scripts')
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.core.js"></script>
+
         <script>
             const quill = new Quill('#quill_immediate_corrective_action', {
                 theme: 'snow'
