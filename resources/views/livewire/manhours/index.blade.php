@@ -130,7 +130,7 @@
                 <div class="modal {{ $modalOpen }}">
                     <div class="modal-box max-w-4xl w-11/12 max-h-[90vh] md:max-h-[85vh] lg:max-h-[80vh] overflow-y-auto">
                         <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
-                            <fieldset class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
+                            <fieldset wire.ignore.self class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
                                 <legend class="fieldset-legend">Formulir {{ $form }} Manhours & Manpower</legend>
                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     {{-- Bulan --}}
