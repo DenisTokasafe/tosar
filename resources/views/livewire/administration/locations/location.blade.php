@@ -8,7 +8,7 @@
     <div wire:ignore>
         <div id="editor">
             <h2>Demo Content</h2>
-            <p>Preset build with <code>snow</code> theme, and some common formats.</p>
+           {!! $body !!}
         </div>
     </div>
     <button wire:click="updatePost" class="px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
