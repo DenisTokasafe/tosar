@@ -1,8 +1,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta name="apple-mobile-web-app-status-bar" content="#01d679">
-<meta name="apple-mobile-web-app-capable" content="yes">
+{{-- <meta name="apple-mobile-web-app-status-bar" content="#01d679">
+<meta name="apple-mobile-web-app-capable" content="yes"> --}}
 <title>{{ $title ?? config('app.name') }}</title>
 
 <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
