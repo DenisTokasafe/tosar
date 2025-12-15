@@ -1,9 +1,9 @@
 <section class="w-full">
     <x-toast />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script> --}}
     @include('partials.manhours')
-    <div class="flex flex-col lg:flex-row lg:justify-between  items-center bg-stone-400/20 px-2 rounded-lg shadow-sm">
+    <div class="flex flex-col items-center px-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
 
         {{-- BAGIAN KIRI: Tombol Aksi (Create & Import) --}}
         {{-- Ikon Tombol Sejajar Horizontal --}}
@@ -21,13 +21,13 @@
 
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
-        <div class="flex flex-col md:flex-row gap-2 md:items-center">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center">
 
             {{-- 1. Input Search (w-60) --}}
             <div class="w-full">
                 {{-- flux:input sudah ada di sini --}}
                 <input type="text" wire:model.live="search"
-                    class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                    class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                     placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
@@ -56,7 +56,7 @@
 
                     <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
                         placeholder="Pilih Rentang Tanggal"
-                        class="input input-bordered w-full md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
+                        class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
                     <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item"
@@ -107,7 +107,7 @@
                                 <td>{{ $manhour->manhours }}</td>
                                 <td>{{ $manhour->manpower }}</td>
                                 @can('create', \App\Models\Manhour::class)
-                                    <th class='flex justify-center flex-row gap-2'>
+                                    <th class='flex flex-row justify-center gap-2'>
                                         <flux:tooltip content="edit" position="top">
                                             <flux:button wire:click="open_modal({{ $manhour->id }})" size="xs"
                                                 icon="pencil-square" variant="subtle"></flux:button>
@@ -130,9 +130,9 @@
                 <div class="modal {{ $modalOpen }}">
                     <div class="modal-box max-w-4xl w-11/12 max-h-[90vh] md:max-h-[85vh] lg:max-h-[80vh] overflow-y-auto">
                         <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
-                            <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4 overflow-y-auto">
+                            <fieldset class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
                                 <legend class="fieldset-legend">Formulir {{ $form }} Manhours & Manpower</legend>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                                     {{-- Bulan --}}
                                     <fieldset class="fieldset">
                                         <x-form.label label="Bulan" required />
@@ -157,7 +157,7 @@
                                         }" x-init="initFlatpickr()"
                                             x-effect="if($wire.date) fp.setDate($wire.date, true)" wire:ignore>
                                             <input x-ref="input" type="text" wire:model.live="date"
-                                                class="input input-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                                class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                                                 placeholder="Pilih bulan" />
                                         </div>
                                         <x-label-error :messages="$errors->get('date')" />
@@ -167,7 +167,7 @@
                                     <fieldset class="fieldset">
                                         <x-form.label label="Jenis Entitas" required />
                                         <select wire:model.live="entityType"
-                                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                            class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                             <option value="">-- Pilih --</option>
                                             <option value="owner">Perusahaan (Owner)</option>
                                             <option value="contractor">Kontraktor</option>
@@ -181,7 +181,7 @@
                                     <fieldset class="fieldset">
                                         <x-form.label label="Perusahaan" required />
                                         <select wire:model.live="company"
-                                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                            class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                             <option value="">-- Pilih --</option>
 
                                             {{-- kalau ada owners --}}
@@ -209,7 +209,7 @@
                                     <fieldset class="fieldset">
                                         <x-form.label label="Department" required />
                                         <select wire:model.live="department"
-                                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                            class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                             <option value="">-- Pilih --</option>
                                             @if ($entityType === 'contractor')
                                                 @foreach ($custodian as $cust)
@@ -232,10 +232,10 @@
                                 </div>
 
                                 {{-- Job Class --}}
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                                     @foreach ($jobclasses as $key => $label)
-                                        <fieldset class="fieldset border border-base-300 p-3 rounded-lg">
-                                            <legend class="text-xs font-semibold flex gap-2">
+                                        <fieldset class="p-3 border rounded-lg fieldset border-base-300">
+                                            <legend class="flex gap-2 text-xs font-semibold">
                                                 <span>{{ $label }}</span>
                                                 <label class="flex items-center space-x-1">
                                                     <input type="checkbox" wire:model.live="hide.{{ $key }}"
@@ -250,17 +250,17 @@
                                                 <x-form.label label="Manhours" :required="!$hide[$key]" />
                                                 <input type="number" wire:model.live="manhours.{{ $key }}"
                                                     placeholder="Masukkan manhours..."
-                                                    class="input input-bordered w-full input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                                                    class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
                                                 <x-label-error :messages="$errors->get('manhours.' . $key)" />
                                             </fieldset>
 
                                             {{-- Manpower --}}
-                                            <fieldset class="fieldset mt-2">
+                                            <fieldset class="mt-2 fieldset">
                                                 <x-form.label label="Manpower" :required="!$hide[$key]" />
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
                                                     placeholder="Masukkan manpower..."
-                                                    class="input input-bordered w-full input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                                                    class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
                                                 <x-label-error :messages="$errors->get('manpower.' . $key)" />
                                             </fieldset>
