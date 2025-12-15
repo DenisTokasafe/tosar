@@ -272,7 +272,7 @@
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div wire:ignore>
-                        <div id="quill-immediate_corrective_action" style="min-height: 200px;">
+                        <div id="quill_immediate_corrective_action" style="min-height: 200px;">
                             {{-- Konten awal dapat ditempatkan di sini --}}
                         </div>
                     </div>
@@ -731,106 +731,8 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.core.js"></script>
         <script>
-            // Variabel global untuk instance Quill
-            let quillImmediate_corrective_action = null;
-
-            // Nama properti Livewire yang akan disinkronkan (Harus sesuai dengan properti di PHP Anda)
-            const livewireProperty = 'immediate_corrective_action';
-            // ID elemen div Quill
-            const editorId = 'quill-immediate_corrective_action';
-
-            /**
-             * Fungsi untuk menginisialisasi Quill dan mengikatnya ke Livewire.
-             * @param {object} component - Objek komponen Livewire saat ini (@this)
-             */
-            function initializeQuillEditor(component) {
-                const editorElement = document.getElementById(editorId);
-
-                // Hentikan jika elemen tidak ditemukan atau sudah diinisialisasi
-                if (!editorElement || quillImmediate_corrective_action) {
-                    return;
-                }
-
-                try {
-                    // 1. Inisialisasi Quill
-                    const quill = new Quill(`#${editorId}`, {
-                        theme: 'snow',
-                        placeholder: 'Tulis tindakan korektif Anda di sini...',
-                        // Toolbar yang disesuaikan agar mirip dengan CKEditor
-                        toolbar: [
-                            ['bold', 'italic'],
-                            [{
-                                'list': 'bullet'
-                            }, {
-                                'list': 'ordered'
-                            }],
-                        ],
-                    });
-
-                    quillImmediate_corrective_action = quill;
-
-                    // 2. Mengatur nilai awal dari Livewire
-                    // Dapatkan nilai properti dari Livewire saat ini dan masukkan ke editor
-                    if (component.get(livewireProperty)) {
-                        quill.root.innerHTML = component.get(livewireProperty);
-                    }
-
-                    // 3. Sinkronisasi perubahan dari Quill ke Livewire
-                    quill.on('text-change', function(delta, oldDelta, source) {
-                        if (source === 'user') {
-                            const htmlContent = quill.root.innerHTML;
-
-                            // Mengirim data ke Livewire
-                            component.set(livewireProperty, htmlContent, true);
-
-                            // Logika menghilangkan class 'error' saat pengguna mulai mengetik
-                            const isContentEmpty = quill.getText().trim() === '';
-                            if (!isContentEmpty) {
-                                quill.container.classList.remove('error');
-                            }
-                        }
-                    });
-
-                } catch (error) {
-                    console.error('Gagal menginisialisasi Quill Editor:', error);
-                }
-            }
-
-            // =========================================================================
-            // Penanganan Event Livewire
-            // =========================================================================
-
-            // 1. Inisialisasi setelah navigasi (Penting untuk Livewire v3)
-            // Event ini memastikan inisialisasi terjadi setelah DOM komponen Livewire dimuat atau di-render ulang
-            document.addEventListener('livewire:navigated', () => {
-                // Beri sedikit penundaan dan reset instance lama
-                setTimeout(() => {
-                    // Hapus instance lama agar inisialisasi ulang berjalan
-                    quillImmediate_corrective_action = null;
-                    // Panggil inisialisasi dengan instance Livewire saat ini (@this)
-                    if (typeof @this !== 'undefined') {
-                        initializeQuillEditor(@this);
-                    }
-                }, 50);
-            });
-
-            // 2. Implementasi Validasi dari Event Livewire
-            // Menggunakan Livewire.on untuk mendengarkan event yang mungkin di-dispatch dari Livewire PHP
-            Livewire.on('validateCkEditor', () => {
-                if (quillImmediate_corrective_action) {
-                    // Gunakan quill.getText() untuk mendapatkan teks murni dan memeriksa apakah kosong
-                    const data = quillImmediate_corrective_action.getText().trim();
-
-                    if (data === '') {
-                        // Tambahkan class 'error' ke container Quill
-                        quillImmediate_corrective_action.container.classList.add('error');
-                        return false; // Cegah submit
-                    } else {
-                        quillImmediate_corrective_action.container.classList.remove('error');
-                        return true;
-                    }
-                }
-                return true;
+            const quill = new Quill('#quill_immediate_corrective_action', {
+                theme: 'snow'
             });
         </script>
         {{-- <script>
