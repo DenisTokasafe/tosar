@@ -208,8 +208,6 @@
                     </div>
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
-            </div>
-            <div class="grid grid-cols-1 gap-4">
                 <fieldset class="fieldset ">
                     <x-form.label label="Dilaporkan Oleh" required />
 
@@ -265,6 +263,7 @@
                     @endif
                 </fieldset>
             </div>
+
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
