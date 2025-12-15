@@ -1,5 +1,9 @@
 <section class="w-full">
     <x-toast />
+    @push('styles')
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    @endpush
     @include('partials.location-heading')
     <div class="flex justify-between">
         <div>
@@ -7,13 +11,29 @@
                 <flux:button size="xs" wire:click='open_modal' icon="add-icon" variant="primary"></flux:button>
             </flux:tooltip>
             <flux:tooltip content="upload" position="top">
-                <flux:button size="xs" wire:click='open_modal_opload' icon="upload" variant="subtle"></flux:button>
+                <flux:button size="xs" wire:click='open_modal_opload' icon="upload" variant="subtle">
+                </flux:button>
             </flux:tooltip>
         </div>
         <div>
-            <flux:input class="input-bordered w-full input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden" size='xs' icon="magnifying-glass" wire:model.live='search_lokasi' placeholder="Search lokasi" />
+            <flux:input
+                class="w-full input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                size='xs' icon="magnifying-glass" wire:model.live='search_lokasi' placeholder="Search lokasi" />
         </div>
     </div>
+
+    {{-- tutor quill editor text --}}
+    <div id="editor">
+        <h2>Demo Content</h2>
+        <p>Preset build with <code>snow</code> theme, and some common formats.</p>
+    </div>
+    {{-- end quill editor text --}}
+
+    <script>
+        const quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+    </script>
     <x-manhours.layout>
         <div class="overflow-x-auto ">
             <table class="table table-xs">
@@ -27,21 +47,23 @@
                 </thead>
                 <tbody class="text-center">
                     @foreach ($location as $no => $loc)
-                    <tr>
-                        <th>{{ $location->firstItem() + $no }}</th>
-                        <th>{{ $loc->name }}</th>
-                        <th>{{ $loc->status }}</th>
-                        <th class='flex justify-center flex-row gap-2'>
-                            <flux:tooltip content="edit" position="top">
-                                <flux:button wire:click="open_modal({{ $loc->id }})" size="xs" icon="pencil-square" variant="subtle"></flux:button>
-                            </flux:tooltip>
-                            <flux:modal.trigger name="delete-lokasi">
-                                <flux:tooltip content="hapus" position="top">
-                                    <flux:button wire:click="showDelete({{ $loc->id }})" size="xs" icon="trash" variant="danger"></flux:button>
+                        <tr>
+                            <th>{{ $location->firstItem() + $no }}</th>
+                            <th>{{ $loc->name }}</th>
+                            <th>{{ $loc->status }}</th>
+                            <th class='flex flex-row justify-center gap-2'>
+                                <flux:tooltip content="edit" position="top">
+                                    <flux:button wire:click="open_modal({{ $loc->id }})" size="xs"
+                                        icon="pencil-square" variant="subtle"></flux:button>
                                 </flux:tooltip>
-                            </flux:modal.trigger>
-                        </th>
-                    </tr>
+                                <flux:modal.trigger name="delete-lokasi">
+                                    <flux:tooltip content="hapus" position="top">
+                                        <flux:button wire:click="showDelete({{ $loc->id }})" size="xs"
+                                            icon="trash" variant="danger"></flux:button>
+                                    </flux:tooltip>
+                                </flux:modal.trigger>
+                            </th>
+                        </tr>
                     @endforeach
 
                 </tbody>
@@ -55,15 +77,17 @@
                 </tfoot>
             </table>
         </div>
-       
+
         <flux:modal name="lokasi">
             <form wire:submit='store' class='grid justify-items-stretch'>
                 @csrf
-                <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+                <fieldset
+                    class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend">{{ $legend }}</legend>
                     {{-- Nama Lokasi --}}
                     <x-label-req>{{ __('Nama Lokasi') }} </x-label-req>
-                    <x-text-input wire:model.live='lokasi_name' :error="$errors->get('lokasi_name')" type="text" placeholder="Nama Lokasi" />
+                    <x-text-input wire:model.live='lokasi_name' :error="$errors->get('lokasi_name')" type="text"
+                        placeholder="Nama Lokasi" />
                     <x-label-error :messages="$errors->get('lokasi_name')" />
                     {{-- Status --}}
                     <x-label-req>{{ __('Status') }} </x-label-req>
@@ -76,21 +100,26 @@
 
                 <div class="modal-action">
                     <flux:button size="xs" type="submit" icon="save-icon" variant="primary">Save</flux:button>
-                    <flux:button size="xs" wire:click='close_modal' icon="close-icon" variant="danger">Close</flux:button>
+                    <flux:button size="xs" wire:click='close_modal' icon="close-icon" variant="danger">Close
+                    </flux:button>
                 </div>
             </form>
         </flux:modal>
         <flux:modal name="upload" class="min-w-[22rem]">
             <form wire:submit='import' wire:target="import,upload_data" wire:loading.class="skeleton">
                 @csrf
-                <fieldset wire:target="import,upload_data" wire:loading.class="skeleton" class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+                <fieldset wire:target="import,upload_data" wire:loading.class="skeleton"
+                    class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend">Upload Data</legend>
-                    <flux:input size="xs" variant='outline' type="file" wire:model.live="upload_data" label="Upload Nama Lokasi" />
+                    <flux:input size="xs" variant='outline' type="file" wire:model.live="upload_data"
+                        label="Upload Nama Lokasi" />
                 </fieldset>
 
                 <div class="modal-action">
-                    <flux:button size="xs" type="submit" wire:target="upload_data" wire:loading.class="btn btn-disabled" icon="save-icon" variant="primary">Save</flux:button>
-                    <flux:button size="xs" wire:click='close_modal_upload' wire:target="upload_data" wire:loading.class="btn btn-disabled" icon="close-icon" variant="danger">Close</flux:button>
+                    <flux:button size="xs" type="submit" wire:target="upload_data"
+                        wire:loading.class="btn btn-disabled" icon="save-icon" variant="primary">Save</flux:button>
+                    <flux:button size="xs" wire:click='close_modal_upload' wire:target="upload_data"
+                        wire:loading.class="btn btn-disabled" icon="close-icon" variant="danger">Close</flux:button>
                 </div>
             </form>
         </flux:modal>
@@ -113,5 +142,5 @@
             </div>
         </flux:modal>
     </x-manhours.layout>
-     <div class="mt-1">{{ $location->links() }}</div>
+    <div class="mt-1">{{ $location->links() }}</div>
 </section>
