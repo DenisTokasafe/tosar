@@ -16,12 +16,22 @@
     </button>
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
         <script>
-            const initialContent = @js($body);
-            const quill = new Quill('#editor', {
-                theme: 'snow'
-            });
-            if (initialContent) {
+            document.addEventListener('livewire:initialized', () => {
+                const editorId = '#editor';
+
+                // 1. AMBIL NILAI DARI PHP (PENTING)
+                // Menggunakan @js($body) untuk mem-pass nilai awal dari PHP ke variabel JS
+                const initialContent = @js($body);
+
+                const quill = new Quill(editorId, {
+                    theme: 'snow'
+                });
+
+                // 2. INISIALISASI EDITOR DENGAN NILAI YANG ADA
+                // Memuat konten lama ke editor hanya jika nilainya ada
+                if (initialContent) {
                     // Quill menggunakan innerHTML dari root element-nya
                     quill.root.innerHTML = initialContent;
 
@@ -29,20 +39,14 @@
                     // tapi untuk HTML biasa, innerHTML sudah cukup.
                     // Jika Anda menyimpan data sebagai JSON Delta di DB, Anda harus menggunakan setContents.
                 }
-            // 🌟 BAGIAN PENTING: Mendengarkan perubahan di Quill
-                quill.on('text-change', function() {
-                    // Ambil konten HTML dari editor
-                    const htmlContent = quill.root.innerHTML;
 
-                    // Kirim konten ke properti Livewire '$body'
+                // 3. LISTENER SINKRONISASI (untuk menyimpan perubahan ke Livewire)
+                quill.on('text-change', function() {
+                    const htmlContent = quill.root.innerHTML;
+                    // Sinkronisasi perubahan kembali ke Livewire
                     @this.set('body', htmlContent);
                 });
-
-                // Opsional: Jika Anda ingin memuat konten awal dari Livewire saat komponen dimuat
-                const initialContent = @js($body);
-                if (initialContent) {
-                    quill.root.innerHTML = initialContent;
-                }
+            });
         </script>
     @endpush
 
