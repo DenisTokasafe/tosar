@@ -522,10 +522,10 @@
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extension == 'pdf')
-                                         <x-icon.pdf class="w-8 h-8 " />
+                                        <x-icon.pdf class="w-8 h-8 " />
                                         <span class="text-sm text-red-600">File PDF: {{ $fileName }}</span>
                                     @elseif (in_array($extension, ['doc', 'docx']))
-                                       <x-icon.word class="w-8 h-8 " />
+                                        <x-icon.word class="w-8 h-8 " />
                                         <span class="text-sm text-blue-600">File Word: {{ $fileName }}</span>
                                     @else
                                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
@@ -883,11 +883,11 @@
                             <thead>
                                 <tr class="text-center text-[9px]">
                                     <td class=" border-1">Level</td>
-                                    <td class="rotate_text border-1 bg-emerald-500">Low</td>
-                                    <td class="bg-yellow-500 rotate_text border-1">Moderate</td>
-                                    <td class="bg-orange-500 rotate_text border-1">High</td>
-                                    <td class="rotate_text border-1 bg-rose-500">Extreme</td>
-                                    <td class="bg-gray-100 rotate_text border-1">Closed</td>
+                                    <td class="rotate_text border-1 bg-emerald-500">Rendah</td>
+                                    <td class="bg-yellow-500 rotate_text border-1">Sedang</td>
+                                    <td class="bg-orange-500 rotate_text border-1">Tinggi</td>
+                                    <td class="rotate_text border-1 bg-rose-500">Ekstrem</td>
+                                    <td class="bg-gray-100 rotate_text border-1">Ditutup</td>
                                 </tr>
                                 <tr class="text-center text-[9px]">
                                     <th class="border-1">Likelihooc ↓ / Consequence →</th>
@@ -910,10 +910,10 @@
                                                 $score = $l->level * $c->level;
                                                 $severity = $cell?->severity ?? '';
                                                 $color = match ($severity) {
-                                                    'Low' => 'bg-emerald-500',
-                                                    'Moderate' => 'bg-yellow-500',
-                                                    'High' => 'bg-orange-500',
-                                                    'Extreme' => 'bg-rose-500',
+                                                    'Rendah' => 'bg-emerald-500',
+                                                    'Sedang' => 'bg-yellow-500',
+                                                    'Tinggi' => 'bg-orange-500',
+                                                    'Ekstrem' => 'bg-rose-500',
                                                     default => 'bg-gray-100',
                                                 };
                                             @endphp
