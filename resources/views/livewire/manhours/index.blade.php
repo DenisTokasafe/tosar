@@ -112,10 +112,10 @@
                                             <flux:button wire:click="open_modal({{ $manhour->id }})" size="xs"
                                                 icon="pencil-square" variant="subtle"></flux:button>
                                         </flux:tooltip>
-                                            <flux:tooltip content="hapus" position="top">
-                                                <flux:button wire:click="showDelete({{ $manhour->id }})" size="xs"
-                                                    icon="trash" variant="danger"></flux:button>
-                                            </flux:tooltip>
+                                        <flux:tooltip content="hapus" position="top">
+                                            <flux:button wire:click="showDelete({{ $manhour->id }})" size="xs"
+                                                icon="trash" variant="danger"></flux:button>
+                                        </flux:tooltip>
                                     </th>
                             @endif
                             </tr>
