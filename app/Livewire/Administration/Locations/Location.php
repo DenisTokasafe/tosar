@@ -29,7 +29,7 @@ class Location extends Component
     public function updatePost()
     {
         // Data di $this->body sudah sinkron dengan editor
-        $this->body = 'test update';
+        $this->body = '<h2>Demo Contentfgsf</h2>';
 
 
         session()->flash('message', 'Postingan berhasil diperbarui!');
