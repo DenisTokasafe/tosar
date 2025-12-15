@@ -21,11 +21,11 @@
                 <thead>
                     <tr class="text-center">
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Action Days</th>
-                        <th>Coordinator</th>
-                        <th>Reporting Obligation</th>
-                        <th>Notes</th>
+                        <th>Level</th>
+                        <th>Hari Tindakan</th>
+                        <th>Koordinator</th>
+                        <th>Kewajiban Pelapor</th>
+                        <th>Catatan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +53,7 @@
         <flux:modal name="Risk-Assessment">
             <form wire:submit.prevent="store" class='grid justify-items-stretch'>
                 @csrf
-                <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+                <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend"></legend>
                     {{-- Name --}}
                     <x-label-req>{{ __('Name') }} </x-label-req>
@@ -89,7 +89,7 @@
         <flux:modal name="Risk-AssessmentEdit">
             <form wire:submit.prevent="update" class='grid justify-items-stretch'>
                 @csrf
-                <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+                <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend">Update Risk Consequence</legend>
                    {{-- Name --}}
                     <x-label-req>{{ __('Name') }} </x-label-req>
