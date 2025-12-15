@@ -74,9 +74,9 @@ class HazardForm extends Component
     public $contractor_id;
     #[Validate('required|string')]
     public $penanggungJawab;
-    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx')]
     public $doc_deskripsi;
-    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx')]
     public $doc_corrective;
     #[Validate('required|string')]
     public $tipe_bahaya;
@@ -146,7 +146,7 @@ class HazardForm extends Component
         'doc_deskripsi.max'    => 'Ukuran file deskripsi maksimal 2 MB.',
 
         'doc_corrective.file'  => 'File tindakan perbaikan harus berupa berkas yang valid.',
-        'doc_corrective.mimes' => 'File tindakan perbaikan hanya boleh dalam format JPG, JPEG, PNG, atau PDF.',
+        'doc_corrective.mimes' => 'File tindakan perbaikan hanya boleh dalam format JPG, JPEG, PNG, DOC, DOCX atau PDF.',
         'doc_corrective.max'   => 'Ukuran file tindakan perbaikan maksimal 2 MB.',
     ];
     public function getHasWhatErrorProperty()
