@@ -738,7 +738,7 @@
                     toolbar: [
                         'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
                     ],
-                    removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed']
+                    removePlugins: ['ImageUpload', 'EasyImage']
                 })
                 .then(editor => {
                     ckAction_description = editor;
@@ -789,7 +789,7 @@
             ClassicEditor
                 .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
                     toolbar: [, 'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                    removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed'] // buang plugin gambar
+                    removePlugins: ['ImageUpload', 'EasyImage'] // buang plugin gambar
                 })
                 .then(editor => {
                     ckImmediate_corrective_action = editor;
@@ -824,7 +824,7 @@
             ClassicEditor
                 .create(document.querySelector('#ckeditor-description'), {
                     toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                    removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed']
+                    removePlugins: ['ImageUpload', 'EasyImage']
                 })
                 .then(editor => {
                     ckDescription = editor;
