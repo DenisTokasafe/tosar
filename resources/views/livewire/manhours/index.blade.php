@@ -283,17 +283,29 @@
                     </div>
                 </div>
                 {{-- Modal konfirmasi --}}
-                <flux:modal name="delete-bu" wire:model="confirmingDelete">
-                    <div class="p-4 space-y-4">
-                        <h2 class="text-lg font-semibold">Konfirmasi Hapus</h2>
-                        <p>Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
+                <div class="modal" role="dialog" x-data="{ showModal: @entangle('confirmingDelete') }" x-show="showModal" x-cloak
+                    @keydown.escape.window="showModal = false" style="z-index: 9999;">
 
-                        <div wire.ignore.self class="flex justify-end gap-2">
-                            <flux:button wire:click="$set('confirmingDelete', false)" variant="subtle">Batal</flux:button>
-                            <flux:button wire:click="delete" variant="danger">Hapus</flux:button>
+                    <div class="modal-box">
+                        <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
+                        <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
+
+                        <div class="modal-action">
+                            <button type="button" @click="showModal = false" class="btn btn-warning"
+                                wire:click="$set('confirmingDelete', false)">
+                                Batal
+                            </button>
+
+                            <button type="button" class="btn btn-error" wire:click="delete" wire:loading.attr="disabled"
+                                wire:target="delete">
+                                Hapus
+                            </button>
                         </div>
                     </div>
-                </flux:modal>
+
+                    <label class="modal-backdrop" @click="showModal = false"
+                        wire:click="$set('confirmingDelete', false)"></label>
+                </div>
 
                 @livewire('manhours.grafik.index')
             </x-manhours.layout>
