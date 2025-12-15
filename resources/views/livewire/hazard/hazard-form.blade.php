@@ -722,133 +722,133 @@
             </div>
         </form>
     </x-manhours.layout>
+    @push('scripts')
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+        let ckAction_description = null;
+        document.addEventListener('livewire:navigated', () => {
+            ClassicEditor
+                .create(document.querySelector('#ckeditor-action_description'), {
+                    toolbar: [
+                        'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
+                    ],
+                    removePlugins: ['ImageUpload', 'EasyImage'] // MediaEmbed sudah diaktifkan di sini
+                })
+                .then(editor => {
+                    ckAction_description = editor;
+                    // sinkron ke Livewire
+                    editor.model.document.on('change:data', () => {
+                        const data = editor.getData();
+                        document.querySelector('#ckeditor-action_description').value = data;
+                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('action_description', data);
+
+                        if (data.trim() !== '') {
+                            editor.ui.view.editable.element.classList.remove('error');
+                        }
+                    });
+                })
+                .catch(error => console.error(error));
+        });
+
+        // Validasi untuk AddAction
+        Livewire.on('validateCkEditorAddAction', () => {
+            if (ckAction_description) {
+                const data = ckAction_description.getData().trim();
+                if (data === '') {
+                    ckAction_description.ui.view.editable.element.classList.add('error');
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        // RESET CKEDITOR setelah tombol TAMBAH ditekan
+        Livewire.on('reset-ckeditor', () => {
+            if (ckAction_description) {
+                ckAction_description.setData(''); // kosongkan editor
+            }
+
+            // Hapus spasi di optional chaining
+            if (ckAction_description?.ui?.view?.editable?.element) {
+                ckAction_description.ui.view.editable.element.classList.remove('error');
+            }
+        });
+    </script>
+
+    <script>
+        let ckImmediate_corrective_action = null;
+        document.addEventListener('livewire:navigated', () => {
+            ClassicEditor
+                .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
+                    // Hapus koma yang salah di awal daftar toolbar
+                    toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                    removePlugins: ['ImageUpload', 'EasyImage'] // buang plugin gambar
+                })
+                .then(editor => {
+                    ckImmediate_corrective_action = editor;
+                    editor.model.document.on('change:data', () => {
+                        const data = editor.getData();
+                        document.querySelector('#ckeditor-immediate_corrective_action').value = data;
+                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('immediate_corrective_action', data);
+                        if (data.trim() !== '') {
+                            editor.ui.view.editable.element.classList.remove('error');
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+        Livewire.on('validateCkEditor', event => {
+            if (ckImmediate_corrective_action) {
+                const data = ckImmediate_corrective_action.getData().trim();
+                if (data === '') {
+                    ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
+                    return false; // cegah submit
+                }
+            }
+            return true;
+        });
+    </script>
+
+    <script>
+        let ckDescription = null;
+        document.addEventListener('livewire:navigated', () => {
+            ClassicEditor
+                .create(document.querySelector('#ckeditor-description'), {
+                    toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                    removePlugins: ['ImageUpload', 'EasyImage'] // Di sini perlu ditambahkan 'MediaEmbed' jika Anda tidak ingin menyematkan media
+                })
+                .then(editor => {
+                    ckDescription = editor;
+                    // Update hidden input dan Livewire
+                    editor.model.document.on('change:data', () => {
+                        const data = editor.getData();
+                        document.querySelector('#description').value = data;
+                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('description', data);
+                        // Hapus error jika sudah diisi
+                        if (data.trim() !== '') {
+                            editor.ui.view.editable.element.classList.remove('error');
+                        }
+                    });
+                })
+                .catch(error => console.error(error));
+        });
+        // 🔴 Fungsi untuk validasi CKEditor sebelum submit
+        Livewire.on('validateCkEditor', event => {
+            if (ckDescription) {
+                const data = ckDescription.getData().trim();
+                if (data === '') {
+                    ckDescription.ui.view.editable.element.classList.add('error');
+                    return false; // cegah submit
+                }
+            }
+            return true;
+        });
+    </script>
+    @endpush
 </section>
 
 
 
-@push('scripts')
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-
-<script>
-    let ckAction_description = null;
-    document.addEventListener('livewire:navigated', () => {
-        ClassicEditor
-            .create(document.querySelector('#ckeditor-action_description'), {
-                toolbar: [
-                    'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
-                ],
-                removePlugins: ['ImageUpload', 'EasyImage'] // MediaEmbed sudah diaktifkan di sini
-            })
-            .then(editor => {
-                ckAction_description = editor;
-                // sinkron ke Livewire
-                editor.model.document.on('change:data', () => {
-                    const data = editor.getData();
-                    document.querySelector('#ckeditor-action_description').value = data;
-                    window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('action_description', data);
-
-                    if (data.trim() !== '') {
-                        editor.ui.view.editable.element.classList.remove('error');
-                    }
-                });
-            })
-            .catch(error => console.error(error));
-    });
-
-    // Validasi untuk AddAction
-    Livewire.on('validateCkEditorAddAction', () => {
-        if (ckAction_description) {
-            const data = ckAction_description.getData().trim();
-            if (data === '') {
-                ckAction_description.ui.view.editable.element.classList.add('error');
-                return false;
-            }
-        }
-        return true;
-    });
-
-    // RESET CKEDITOR setelah tombol TAMBAH ditekan
-    Livewire.on('reset-ckeditor', () => {
-        if (ckAction_description) {
-            ckAction_description.setData(''); // kosongkan editor
-        }
-
-        // Hapus spasi di optional chaining
-        if (ckAction_description?.ui?.view?.editable?.element) {
-            ckAction_description.ui.view.editable.element.classList.remove('error');
-        }
-    });
-</script>
-
-<script>
-    let ckImmediate_corrective_action = null;
-    document.addEventListener('livewire:navigated', () => {
-        ClassicEditor
-            .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
-                // Hapus koma yang salah di awal daftar toolbar
-                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                removePlugins: ['ImageUpload', 'EasyImage'] // buang plugin gambar
-            })
-            .then(editor => {
-                ckImmediate_corrective_action = editor;
-                editor.model.document.on('change:data', () => {
-                    const data = editor.getData();
-                    document.querySelector('#ckeditor-immediate_corrective_action').value = data;
-                    window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('immediate_corrective_action', data);
-                    if (data.trim() !== '') {
-                        editor.ui.view.editable.element.classList.remove('error');
-                    }
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
-    Livewire.on('validateCkEditor', event => {
-        if (ckImmediate_corrective_action) {
-            const data = ckImmediate_corrective_action.getData().trim();
-            if (data === '') {
-                ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
-                return false; // cegah submit
-            }
-        }
-        return true;
-    });
-</script>
-
-<script>
-    let ckDescription = null;
-    document.addEventListener('livewire:navigated', () => {
-        ClassicEditor
-            .create(document.querySelector('#ckeditor-description'), {
-                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                removePlugins: ['ImageUpload', 'EasyImage'] // Di sini perlu ditambahkan 'MediaEmbed' jika Anda tidak ingin menyematkan media
-            })
-            .then(editor => {
-                ckDescription = editor;
-                // Update hidden input dan Livewire
-                editor.model.document.on('change:data', () => {
-                    const data = editor.getData();
-                    document.querySelector('#description').value = data;
-                    window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('description', data);
-                    // Hapus error jika sudah diisi
-                    if (data.trim() !== '') {
-                        editor.ui.view.editable.element.classList.remove('error');
-                    }
-                });
-            })
-            .catch(error => console.error(error));
-    });
-    // 🔴 Fungsi untuk validasi CKEditor sebelum submit
-    Livewire.on('validateCkEditor', event => {
-        if (ckDescription) {
-            const data = ckDescription.getData().trim();
-            if (data === '') {
-                ckDescription.ui.view.editable.element.classList.add('error');
-                return false; // cegah submit
-            }
-        }
-        return true;
-    });
-</script>
-@endpush
