@@ -11,6 +11,9 @@
             <p>Preset build with <code>snow</code> theme, and some common formats.</p>
         </div>
     </div>
+    <button wire:click="updatePost" class="px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+        Update Postingan
+    </button>
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
         <script>

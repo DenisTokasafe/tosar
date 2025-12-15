@@ -15,16 +15,28 @@ use App\Models\Location as ModelsLocation;
 
 class Location extends Component
 {
-    use WithPagination, WithoutUrlPagination,WithFileUploads;
+    use WithPagination, WithoutUrlPagination, WithFileUploads;
     public $legend;
-    public $body = '';
+    public $body = '', $test;
     #[Validate('required', message: 'kolom nama perusahaan tidak boleh kosong!!!')]
     public $lokasi_name;
     #[Validate('required', message: 'kolom nama status tidak boleh kosong!!!')]
     public $status;
     public $upload_data;
     public $showConfirmModal = false;
-    public $search_lokasi, $lokasi_id,$delete_id;
+    public $search_lokasi, $lokasi_id, $delete_id;
+    public function mount()
+    {
+        $this->test = 'tes';
+    }
+    public function updatePost()
+    {
+        // Data di $this->body sudah sinkron dengan editor
+        $this->body = $this->test;
+        $this->post->save();
+
+        session()->flash('message', 'Postingan berhasil diperbarui!');
+    }
     public function open_modal(ModelsLocation $id)
     {
         Flux::modal('lokasi')->show();
@@ -35,18 +47,20 @@ class Location extends Component
             $this->legend = 'Edit Company';
         } else {
             $this->legend = 'Input Company';
-              $this->reset('lokasi_id', 'lokasi_name','status');
+            $this->reset('lokasi_id', 'lokasi_name', 'status');
         }
     }
-    public function open_modal_opload(){
+    public function open_modal_opload()
+    {
         Flux::modal('upload')->show();
     }
-    public function close_modal_upload(){
+    public function close_modal_upload()
+    {
         Flux::modal('upload')->close();
     }
-        public function close_modal()
+    public function close_modal()
     {
-        $this->reset('lokasi_id', 'lokasi_name','status');
+        $this->reset('lokasi_id', 'lokasi_name', 'status');
         Flux::modal('lokasi')->close();
     }
     public function store()
@@ -60,7 +74,7 @@ class Location extends Component
             $text = 'Data berhasil di edit!!!';
         } else {
             $text = 'Data berhasil di input!!!';
-             $this->reset('lokasi_id', 'lokasi_name','status');
+            $this->reset('lokasi_id', 'lokasi_name', 'status');
         }
 
         $this->dispatch(
@@ -74,18 +88,18 @@ class Location extends Component
                 'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]
         );
-
     }
-     public function import()
+    public function import()
     {
-      $this->validate(
+        $this->validate(
             [
                 'upload_data' => 'required',
                 'upload_data' => 'mimes:csv,xlsx',
             ],
             [
                 'upload_data' => 'kolom ini tidak boleh kosong!!!',
-            ]);
+            ]
+        );
         Excel::import(new LocationsImport, $this->upload_data);
         $this->dispatch(
             'alert',
@@ -98,11 +112,11 @@ class Location extends Component
                 'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]
         );
-           $this->reset('upload_data');
+        $this->reset('upload_data');
     }
     public function showDelete(ModelsLocation $id)
     {
-       Flux::modal('delete-lokasi')->show();
+        Flux::modal('delete-lokasi')->show();
         $this->delete_id = $id->id;
         $this->lokasi_name = $id->name;
     }
@@ -110,7 +124,7 @@ class Location extends Component
     {
         $deleteFile = ModelsLocation::whereId($this->delete_id);
         $deleteFile->delete();
-       Flux::modal('delete-lokasi')->close();
+        Flux::modal('delete-lokasi')->close();
         $this->dispatch(
             'alert',
             [
@@ -126,8 +140,8 @@ class Location extends Component
 
     public function render()
     {
-        return view('livewire.administration.locations.location',[
-            'location'=>ModelsLocation::search(trim($this->search_lokasi))->paginate(20)
+        return view('livewire.administration.locations.location', [
+            'location' => ModelsLocation::search(trim($this->search_lokasi))->paginate(20)
         ]);
     }
     public function paginationView()
