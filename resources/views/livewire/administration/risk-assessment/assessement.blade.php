@@ -56,24 +56,24 @@
                 <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend"></legend>
                     {{-- Name --}}
-                    <x-label-req>{{ __('Name') }} </x-label-req>
-                    <x-text-input wire:model.live='name' :error="$errors->get('name')" type="text" placeholder="name" />
+                    <x-label-req>{{ __('Level') }} </x-label-req>
+                    <x-text-input wire:model.live='name' :error="$errors->get('name')" type="text" placeholder="Level" />
                     <x-label-error :messages="$errors->get('name')" />
                     {{-- Action Days --}}
-                    <x-label-req>{{ __('Action Days') }} </x-label-req>
-                    <x-text-input wire:model.live='action_days' :error="$errors->get('action_days')" type="text" placeholder="Action Days" />
+                    <x-label-req>{{ __('Hari Tindakan') }} </x-label-req>
+                    <x-text-input wire:model.live='action_days' :error="$errors->get('action_days')" type="text" placeholder="Hari Tindakan" />
                     <x-label-error :messages="$errors->get('action_days')" />
                     {{-- Coordinator --}}
-                    <x-label-req>{{ __('Coordinator') }} </x-label-req>
+                    <x-label-req>{{ __('Koordinator') }} </x-label-req>
                     <x-text-input wire:model.live='coordinator' :error="$errors->get('coordinator')" type="text" placeholder="coordinator" />
                     <x-label-error :messages="$errors->get('coordinator')" />
                     {{-- Reporting Obligation --}}
-                    <x-label-req>{{ __('Reporting Obligation') }} </x-label-req>
-                    <x-text-input wire:model.live='reporting_obligation' :error="$errors->get('reporting_obligation')" type="text" placeholder="Reporting Obligation" />
+                    <x-label-req>{{ __('Kewajiban Pelapor') }} </x-label-req>
+                    <x-text-input wire:model.live='reporting_obligation' :error="$errors->get('reporting_obligation')" type="text" placeholder="Kewajiban Pelapor" />
                     <x-label-error :messages="$errors->get('reporting_obligation')" />
                     {{-- Notes --}}
-                    <x-label-req>{{ __('Notes') }} </x-label-req>
-                    <x-text-area wire:model.live='notes' :error="$errors->get('notes')" type="text" placeholder="Notes" />
+                    <x-label-req>{{ __('Catatan') }} </x-label-req>
+                    <x-text-area wire:model.live='notes' :error="$errors->get('notes')" type="text" placeholder="Catatan" />
                     <x-label-error :messages="$errors->get('notes')" />
 
                 </fieldset>
@@ -91,25 +91,25 @@
                 @csrf
                 <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend">Update Risk Consequence</legend>
-                   {{-- Name --}}
-                    <x-label-req>{{ __('Name') }} </x-label-req>
-                    <x-text-input wire:model.live='name' :error="$errors->get('name')" type="text" placeholder="name" />
+                     {{-- Name --}}
+                    <x-label-req>{{ __('Level') }} </x-label-req>
+                    <x-text-input wire:model.live='name' :error="$errors->get('name')" type="text" placeholder="Level" />
                     <x-label-error :messages="$errors->get('name')" />
                     {{-- Action Days --}}
-                    <x-label-req>{{ __('Action Days') }} </x-label-req>
-                    <x-text-input wire:model.live='action_days' :error="$errors->get('action_days')" type="text" placeholder="Action Days" />
+                    <x-label-req>{{ __('Hari Tindakan') }} </x-label-req>
+                    <x-text-input wire:model.live='action_days' :error="$errors->get('action_days')" type="text" placeholder="Hari Tindakan" />
                     <x-label-error :messages="$errors->get('action_days')" />
                     {{-- Coordinator --}}
-                    <x-label-req>{{ __('Coordinator') }} </x-label-req>
+                    <x-label-req>{{ __('Koordinator') }} </x-label-req>
                     <x-text-input wire:model.live='coordinator' :error="$errors->get('coordinator')" type="text" placeholder="coordinator" />
                     <x-label-error :messages="$errors->get('coordinator')" />
                     {{-- Reporting Obligation --}}
-                    <x-label-req>{{ __('Reporting Obligation') }} </x-label-req>
-                    <x-text-input wire:model.live='reporting_obligation' :error="$errors->get('reporting_obligation')" type="text" placeholder="Reporting Obligation" />
+                    <x-label-req>{{ __('Kewajiban Pelapor') }} </x-label-req>
+                    <x-text-input wire:model.live='reporting_obligation' :error="$errors->get('reporting_obligation')" type="text" placeholder="Kewajiban Pelapor" />
                     <x-label-error :messages="$errors->get('reporting_obligation')" />
                     {{-- Notes --}}
-                    <x-label-req>{{ __('Notes') }} </x-label-req>
-                    <x-text-area wire:model.live='notes' :error="$errors->get('notes')" type="text" placeholder="Notes" />
+                    <x-label-req>{{ __('Catatan') }} </x-label-req>
+                    <x-text-area wire:model.live='notes' :error="$errors->get('notes')" type="text" placeholder="Catatan" />
                     <x-label-error :messages="$errors->get('notes')" />
 
                 </fieldset>
