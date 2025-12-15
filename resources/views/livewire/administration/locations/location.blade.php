@@ -4,6 +4,7 @@
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     @endpush
     {{-- tutor quill editor text --}}
+    {{ $body }}
     <div wire:ignore>
         <div id="editor">
             <h2>Demo Content</h2>
