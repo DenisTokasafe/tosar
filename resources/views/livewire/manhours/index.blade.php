@@ -281,7 +281,7 @@
                     </div>
                 </div>
                 {{-- Modal konfirmasi --}}
-                <div class="modal{{ $confirmingDelete ? 'modal-open' : '' }}" x-data="{ showModal: @entangle('confirmingDelete') }">
+                <div class="modal{{ $confirmingDelete ? 'modal-open' : '' }}">
 
                     <div class="modal-box">
                         <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
