@@ -16,6 +16,20 @@
             const quill = new Quill('#editor', {
                 theme: 'snow'
             });
+            // 🌟 BAGIAN PENTING: Mendengarkan perubahan di Quill
+                quill.on('text-change', function() {
+                    // Ambil konten HTML dari editor
+                    const htmlContent = quill.root.innerHTML;
+
+                    // Kirim konten ke properti Livewire '$body'
+                    @this.set('body', htmlContent);
+                });
+
+                // Opsional: Jika Anda ingin memuat konten awal dari Livewire saat komponen dimuat
+                const initialContent = @js($body);
+                if (initialContent) {
+                    quill.root.innerHTML = initialContent;
+                }
         </script>
     @endpush
 

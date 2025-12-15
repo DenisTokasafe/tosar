@@ -17,6 +17,7 @@ class Location extends Component
 {
     use WithPagination, WithoutUrlPagination,WithFileUploads;
     public $legend;
+    public $body = '';
     #[Validate('required', message: 'kolom nama perusahaan tidak boleh kosong!!!')]
     public $lokasi_name;
     #[Validate('required', message: 'kolom nama status tidak boleh kosong!!!')]
@@ -122,7 +123,7 @@ class Location extends Component
             ]
         );
     }
-   
+
     public function render()
     {
         return view('livewire.administration.locations.location',[
