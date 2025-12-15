@@ -271,7 +271,7 @@
                 <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
-                    <div wire:ignore>
+                    <div>
                         <div id="quill_immediate_corrective_action" style="min-height: 200px;">
                             {{-- Konten awal dapat ditempatkan di sini --}}
                         </div>
