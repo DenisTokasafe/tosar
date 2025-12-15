@@ -525,7 +525,7 @@
                                          <x-icon.pdf class="w-8 h-8 " />
                                         <span class="text-sm text-red-600">File PDF: {{ $fileName }}</span>
                                     @elseif (in_array($extension, ['doc', 'docx']))
-                                       <x-icon.pdf class="w-8 h-8 " />
+                                       <x-icon.word class="w-8 h-8 " />
                                         <span class="text-sm text-blue-600">File Word: {{ $fileName }}</span>
                                     @else
                                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
