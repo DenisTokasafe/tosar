@@ -776,7 +776,7 @@
             }
 
             // hilangkan warna error jika ada
-            if (ckAction_description ?.ui ?.view ?.editable ?.element) {
+            if (ckAction_description?.ui?.view?.editable?.element) {
                 ckAction_description.ui.view.editable.element.classList.remove('error');
             }
         });
