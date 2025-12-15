@@ -281,7 +281,7 @@
                             Pilih file atau gambar
                         </span>
 
-                        <span wire:loading wire:target="doc_corrective">
+                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_corrective" >
                             <span class="mr-2 loading loading-bars loading-xs text-info"></span>
                             <span class="text-xs text-info">Mengunggah...</span>
                         </span>
