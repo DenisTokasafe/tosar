@@ -90,8 +90,9 @@
                             <span class="text-xs text-info">Mengunggah...</span>
                         </span>
                         <!-- Nama file -->
-                        <span id="file-name" class="text-xs text-gray-500">
-                            Belum ada file
+                       <span id="file-name-corrective" class="text-xs text-gray-500" wire:loading.remove
+                            wire:target="doc_deskripsi">
+                            {!! $doc_deskripsi ? $doc_deskripsi->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
                     </label>
                     <!-- Input asli (disembunyikan) -->
