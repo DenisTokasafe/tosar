@@ -17,7 +17,7 @@ class Location extends Component
 {
     use WithPagination, WithoutUrlPagination, WithFileUploads;
     public $legend;
-    public $body = '', $test;
+    public $body = '';
     #[Validate('required', message: 'kolom nama perusahaan tidak boleh kosong!!!')]
     public $lokasi_name;
     #[Validate('required', message: 'kolom nama status tidak boleh kosong!!!')]
@@ -27,7 +27,7 @@ class Location extends Component
     public $search_lokasi, $lokasi_id, $delete_id;
     public function mount()
     {
-        $this->test = '<h2>Demo Contentfgsf</h2>';;
+        $this->body = '<h2>Demo Contentfgsf</h2>';;
     }
     public function updatePost()
     {
