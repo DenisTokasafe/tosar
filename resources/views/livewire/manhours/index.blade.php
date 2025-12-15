@@ -281,8 +281,7 @@
                     </div>
                 </div>
                 {{-- Modal konfirmasi --}}
-                <div class="modal" role="dialog" x-data="{ showModal: @entangle('confirmingDelete') }" x-show="showModal" x-cloak
-                    @keydown.escape.window="showModal = false" style="z-index: 9999;">
+                <div class="modal{{ $confirmingDelete ? 'modal-open' : '' }}" x-data="{ showModal: @entangle('confirmingDelete') }">
 
                     <div class="modal-box">
                         <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
