@@ -764,7 +764,7 @@
     @push('scripts')
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.core.js"></script>
-        <script>
+        {{-- <script>
             let ckAction_description = null;
             document.addEventListener('livewire:navigated', () => {
                 ClassicEditor
@@ -888,6 +888,6 @@
                 }
                 return true;
             });
-        </script>
+        </script> --}}
     @endpush
 </section>
