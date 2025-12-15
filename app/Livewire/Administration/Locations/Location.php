@@ -25,10 +25,7 @@ class Location extends Component
     public $upload_data;
     public $showConfirmModal = false;
     public $search_lokasi, $lokasi_id, $delete_id;
-    public function mount()
-    {
-        $this->body = '<h2>Demo Contentfgsf</h2>';;
-    }
+
     public function updatePost()
     {
         // Data di $this->body sudah sinkron dengan editor
