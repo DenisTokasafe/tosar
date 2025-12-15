@@ -25,11 +25,14 @@ class Location extends Component
     public $upload_data;
     public $showConfirmModal = false;
     public $search_lokasi, $lokasi_id, $delete_id;
-
+    public function mount()
+    {
+        $this->test = '<h2>Demo Contentfgsf</h2>';;
+    }
     public function updatePost()
     {
         // Data di $this->body sudah sinkron dengan editor
-        $this->body = '<h2>Demo Contentfgsf</h2>';
+        $this->body = $this->test;
 
 
         session()->flash('message', 'Postingan berhasil diperbarui!');
