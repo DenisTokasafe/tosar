@@ -3,59 +3,24 @@
     @push('styles')
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     @endpush
-
-    {{-- Gunakan wire:ignore untuk mencegah Livewire merusak inisialisasi Quill --}}
+    {{-- tutor quill editor text --}}
     <div wire:ignore>
-        <div id="editor-{{ $this->id }}" style="height: 300px;">
-            {{-- Konten awal dimuat dari properti $content Livewire --}}
-            {!! $content !!}
+        <div id="editor">
+            <h2>Demo Content</h2>
+            <p>Preset build with <code>snow</code> theme, and some common formats.</p>
         </div>
     </div>
-
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-
         <script>
-            // Pastikan Anda memanggil ini setelah Livewire dimuat
-            document.addEventListener('livewire:initialized', () => {
-                const componentId = @js($this->id);
-                const editorId = `#editor-${componentId}`;
-                const initialContent = @js($content);
-
-                // Livewire 3 menggunakan $nextTick() untuk menjalankan kode setelah DOM di-patch
-                @this.on('dom-ready', () => {
-                    const quill = new Quill(editorId, {
-                        theme: 'snow',
-                        modules: {
-                            toolbar: [ // Contoh konfigurasi toolbar
-                                ['bold', 'italic', 'underline', 'strike'],
-                                ['blockquote', 'code-block'],
-                                [{
-                                    'list': 'ordered'
-                                }, {
-                                    'list': 'bullet'
-                                }],
-                                [{
-                                    'header': [1, 2, 3, 4, 5, 6, false]
-                                }],
-                                ['link', 'image']
-                            ]
-                        }
-                    });
-
-                    // 1. Sinkronisasi perubahan Quill kembali ke properti Livewire
-                    quill.on('text-change', function() {
-                        const content = quill.root.innerHTML;
-                        // Panggil metode 'setContent' di komponen Livewire
-                        @this.set('content', content);
-                    });
-
-                    // 2. Jika Anda perlu menginisialisasi dengan konten awal (optional, karena sudah ada di div)
-                    // quill.root.innerHTML = initialContent;
-                });
+            const quill = new Quill('#editor', {
+                theme: 'snow'
             });
         </script>
     @endpush
+
+
+
     {{-- end quill editor text --}}
     @include('partials.location-heading')
     <div class="flex justify-between">
