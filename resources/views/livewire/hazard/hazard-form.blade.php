@@ -734,7 +734,7 @@
 
                 // 1. AMBIL NILAI DARI PHP (PENTING)
                 // Menggunakan @js($body) untuk mem-pass nilai awal dari PHP ke variabel JS
-                const initialContent = @json($body);
+                const initialContent = @json($description);
 
                 const quill = new Quill(editorId, {
                     theme: 'snow'
