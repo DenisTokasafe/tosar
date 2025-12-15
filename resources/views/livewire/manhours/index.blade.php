@@ -10,12 +10,12 @@
         <div class="flex flex-row gap-2">
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
-                <flux:tooltip content="tambah data" position="top">
+                {{-- <flux:tooltip content="tambah data" position="top">
                     <flux:button size="xs" wire:click='open_modal' icon="add-icon" variant="primary"></flux:button>
-                </flux:tooltip>
+                </flux:tooltip> --}}
 
                 {{-- Komponen Import --}}
-                {{-- @livewire('manhours.manhours-import') --}}
+                @livewire('manhours.manhours-import')
             @endcan
         </div>
 
@@ -107,7 +107,7 @@
                                 <td>{{ $manhour->manhours }}</td>
                                 <td>{{ $manhour->manpower }}</td>
                                 @can('create', \App\Models\Manhour::class)
-                                    <th class='flex flex-row justify-center gap-2'>
+                                    {{-- <th class='flex flex-row justify-center gap-2'>
                                         <flux:tooltip content="edit" position="top">
                                             <flux:button wire:click="open_modal({{ $manhour->id }})" size="xs"
                                                 icon="pencil-square" variant="subtle"></flux:button>
@@ -118,7 +118,7 @@
                                                     icon="trash" variant="danger"></flux:button>
                                             </flux:tooltip>
                                         </flux:modal.trigger>
-                                    </th>
+                                    </th> --}}
                             @endif
                             </tr>
                             @endforeach
