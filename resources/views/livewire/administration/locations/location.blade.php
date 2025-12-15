@@ -17,9 +17,18 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
         <script>
+            const initialContent = @js($body);
             const quill = new Quill('#editor', {
                 theme: 'snow'
             });
+            if (initialContent) {
+                    // Quill menggunakan innerHTML dari root element-nya
+                    quill.root.innerHTML = initialContent;
+
+                    // Atau menggunakan setContents jika Anda ingin bekerja dengan format Delta,
+                    // tapi untuk HTML biasa, innerHTML sudah cukup.
+                    // Jika Anda menyimpan data sebagai JSON Delta di DB, Anda harus menggunakan setContents.
+                }
             // 🌟 BAGIAN PENTING: Mendengarkan perubahan di Quill
                 quill.on('text-change', function() {
                     // Ambil konten HTML dari editor
