@@ -298,7 +298,9 @@
                             {!! $doc_corrective ? $doc_corrective->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
                     </label>
-
+                    <input name="doc_corrective" id="upload-corrective" wire:model.live='doc_corrective'
+                        type="file" class="hidden"
+                        onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
                             @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
@@ -333,9 +335,7 @@
                         @endif
                     </div>
 
-                    <input name="doc_corrective" id="upload-corrective" wire:model.live='doc_corrective'
-                        type="file" class="hidden"
-                        onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
+
                     <x-label-error :messages="$errors->get('doc_corrective')" />
                 </fieldset>
             </div>
