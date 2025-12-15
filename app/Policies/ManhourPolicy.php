@@ -51,4 +51,11 @@ class ManhourPolicy
         // Contractor user boleh kalau punya relasi contractor
         return $user->contractors()->exists();
     }
+    public function viewAdmin(User $user)
+    {
+        // Admin bisa lihat semua
+        if ($user->roles()->where('role_id', 1)->exists()) {
+            return true;
+        }
+    }
 }
