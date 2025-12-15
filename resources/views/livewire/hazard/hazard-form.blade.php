@@ -79,30 +79,64 @@
                 </fieldset>
                 <fieldset class=" fieldset">
                     <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
+
                     <label wire:ignore for="upload-deskripsi"
                         class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                        <!-- Tombol custom -->
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
                         </span>
-                        <!-- Nama file -->
                         <span id="file-name" class="text-xs text-gray-500">
-                            Belum ada file
+                            {!! $doc_deskripsi ? $doc_deskripsi->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
                     </label>
-                    <!-- Input asli (disembunyikan) -->
+
+                    @php
+                        $fileToPreview = $doc_deskripsi;
+
+                        // Cek apakah file benar-benar ada dan merupakan TemporaryUploadedFile
+                        if ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                            $fileName = $fileToPreview->getClientOriginalName();
+                            $extension = strtolower($fileToPreview->getClientOriginalExtension());
+                            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                            $fileUrl = $fileToPreview->temporaryUrl();
+                        } else {
+                            // Jika $doc_deskripsi bukan objek file yang baru diupload (misal: null)
+                            $fileToPreview = null;
+                        }
+                    @endphp
+
+                    @if ($fileToPreview)
+                        <div class="mt-2 text-xs text-green-600">Preview file:</div>
+
+                        @if ($isImage)
+                            {{-- Pratinjau Gambar --}}
+                            <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded" />
+                        @else
+                            {{-- Pratinjau Dokumen (PDF, Word, atau lainnya) --}}
+                            <div class="flex items-center gap-2 mt-2">
+                                @if ($extension == 'pdf')
+                                    <x-icon.pdf class="w-8 h-8" />
+                                    <span class="text-sm text-red-600">{{ $fileName }}</span>
+                                @elseif (in_array($extension, ['doc', 'docx']))
+                                    <x-icon.word class="w-8 h-8" />
+                                    <span class="text-sm text-blue-600">{{ $fileName }}</span>
+                                @else
+                                    {{-- Ikon generik untuk file lain --}}
+                                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-600">File {{ strtoupper($extension) }}:
+                                        {{ $fileName }}</span>
+                                @endif
+                            </div>
+                        @endif
+                    @endif
+
                     <input name="doc_deskripsi" id="upload-deskripsi" wire:model.live='doc_deskripsi' type="file"
                         class="hidden"
                         onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
-                    @if ($doc_deskripsi)
-                        @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                            <img src="{{ $doc_deskripsi->temporaryUrl() }}"
-                                class="mt-2 {{ $doc_deskripsi ? 'w-40' : '' }} h-auto rounded border" />
-                        @else
-                            <p class="mt-2 text-sm text-gray-600">File:
-                                {{ $doc_deskripsi->getClientOriginalName() }}</p>
-                        @endif
-                    @endif
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
@@ -255,25 +289,56 @@
                     <label class="block"></label>
                     <label wire:ignore for="upload-corrective"
                         class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                        <!-- Tombol custom -->
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
                         </span>
-                        <!-- Nama file -->
                         <span id="file-name-corrective" class="text-xs text-gray-500">
-                            Belum ada file
+                            {!! $doc_corrective ? $doc_corrective->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
                     </label>
-                    @if ($doc_corrective)
-                        @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                            <img src="{{ $doc_corrective->temporaryUrl() }}"
-                                class="mt-2 {{ $doc_corrective ? 'w-40' : '' }} h-auto rounded border" />
+
+                    @php
+                        $fileToPreview = $doc_corrective;
+
+                        // Cek apakah file benar-benar ada dan merupakan TemporaryUploadedFile
+                        if ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                            $fileName = $fileToPreview->getClientOriginalName();
+                            $extension = strtolower($fileToPreview->getClientOriginalExtension());
+                            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                            $fileUrl = $fileToPreview->temporaryUrl();
+                        } else {
+                            // Jika $doc_corrective bukan objek file yang baru diupload (misal: null)
+                            $fileToPreview = null;
+                        }
+                    @endphp
+
+                    @if ($fileToPreview)
+                        <div class="mt-2 text-xs text-green-600">Preview file:</div>
+
+                        @if ($isImage)
+                            <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded" />
                         @else
-                            <p class="mt-2 text-sm text-gray-600">File: {{ $doc_corrective->getClientOriginalName() }}
-                            </p>
+                            <div class="flex items-center gap-2 mt-2">
+                                @if ($extension == 'pdf')
+                                    <x-icon.pdf class="w-8 h-8" />
+                                    <span class="text-sm text-red-600">{{ $fileName }}</span>
+                                @elseif (in_array($extension, ['doc', 'docx']))
+                                    <x-icon.word class="w-8 h-8" />
+                                    <span class="text-sm text-blue-600">{{ $fileName }}</span>
+                                @else
+                                    {{-- Ikon generik untuk file lain --}}
+                                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-600">File {{ strtoupper($extension) }}:
+                                        {{ $fileName }}</span>
+                                @endif
+                            </div>
                         @endif
                     @endif
-                    <!-- Input asli (disembunyikan) -->
+
                     <input name="doc_corrective" id="upload-corrective" wire:model.live='doc_corrective'
                         type="file" class="hidden"
                         onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
