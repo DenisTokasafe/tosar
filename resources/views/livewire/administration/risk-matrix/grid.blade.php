@@ -14,19 +14,19 @@
                 </thead>
                 <tbody>
                     @foreach ($likelihoods as $l)
-                    <tr class="text-center text-xs">
+                    <tr class="text-xs text-center">
 
-                        <td class=" font-bold w-1 border-1">{{ $l->name }}</td>
+                        <td class="w-1 font-bold  border-1">{{ $l->name }}</td>
                         @foreach ($consequences as $c)
                         @php
                         $cell = App\Models\RiskMatrixCell::where('likelihood_id', $l->id)->where('risk_consequence_id', $c->id)->first() ?? null;
                         $score = $l->level * $c->level;
                         $severity = $cell?->severity ?? '';
                         $color = match($severity) {
-                        'Low' => 'bg-emerald-500',
-                        'Moderate' => 'bg-sky-500',
-                        'High' => 'bg-orange-300',
-                        'Extreme' => 'bg-rose-500',
+                        'Rendah' => 'bg-emerald-500',
+                        'Sedang' => 'bg-sky-500',
+                        'Tinggi' => 'bg-orange-300',
+                        'Ekstrem' => 'bg-rose-500',
                         default => 'bg-gray-100',
                         };
                         @endphp
@@ -43,15 +43,15 @@
         <flux:modal name="RiskMatrix">
             <form wire:submit.prevent="updateMatrix" class='grid justify-items-stretch'>
                 @csrf
-                <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+                <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                     <legend class="fieldset-legend"></legend>
                     {{-- Severity --}}
                     <x-label-req>{{ __('Severity') }} </x-label-req>
                     <flux:select size="xs" wire:model.live="severity" placeholder="Choose Status...">
-                        <flux:select.option value="Low">Low</flux:select.option>
-                        <flux:select.option value="Moderate">Moderate</flux:select.option>
-                        <flux:select.option value="High">High</flux:select.option>
-                        <flux:select.option value="Extreme">Extreme</flux:select.option>
+                        <flux:select.option value="Rendah">Rendah</flux:select.option>
+                        <flux:select.option value="Sedang">Sedang</flux:select.option>
+                        <flux:select.option value="Tinggi">Tinggi</flux:select.option>
+                        <flux:select.option value="Ekstrem">Ekstrem</flux:select.option>
                     </flux:select>
                     <x-label-error :messages="$errors->get('severity')" />
                     {{-- Description --}}
