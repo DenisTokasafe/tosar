@@ -107,7 +107,7 @@
                                 <td>{{ $manhour->manhours }}</td>
                                 <td>{{ $manhour->manpower }}</td>
                                 @can('create', \App\Models\Manhour::class)
-                                    {{-- <th class='flex flex-row justify-center gap-2'>
+                                    <th class='flex flex-row justify-center gap-2'>
                                         <flux:tooltip content="edit" position="top">
                                             <flux:button wire:click="open_modal({{ $manhour->id }})" size="xs"
                                                 icon="pencil-square" variant="subtle"></flux:button>
@@ -118,7 +118,7 @@
                                                     icon="trash" variant="danger"></flux:button>
                                             </flux:tooltip>
                                         </flux:modal.trigger>
-                                    </th> --}}
+                                    </th>
                             @endif
                             </tr>
                             @endforeach
