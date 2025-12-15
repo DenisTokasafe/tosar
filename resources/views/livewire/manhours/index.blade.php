@@ -288,7 +288,7 @@
                         <h2 class="text-lg font-semibold">Konfirmasi Hapus</h2>
                         <p>Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
-                        <div class="flex justify-end gap-2">
+                        <div wire.ignore.self class="flex justify-end gap-2">
                             <flux:button wire:click="$set('confirmingDelete', false)" variant="subtle">Batal</flux:button>
                             <flux:button wire:click="delete" variant="danger">Hapus</flux:button>
                         </div>
