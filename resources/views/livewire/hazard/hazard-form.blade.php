@@ -85,12 +85,12 @@
                         <span class="btn btn-info btn-xs">
                             Pilih file atau gambar
                         </span>
-                         <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_deskripsi" >
+                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_deskripsi">
                             <span class="mr-2 loading loading-bars loading-xs text-info"></span>
                             <span class="text-xs text-info">Mengunggah...</span>
                         </span>
                         <!-- Nama file -->
-                       <span id="file-name" class="text-xs text-gray-500" wire:loading.remove
+                        <span id="file-name" class="text-xs text-gray-500" wire:loading.remove
                             wire:target="doc_deskripsi">
                             {!! $doc_deskripsi ? $doc_deskripsi->getClientOriginalName() : 'Belum ada file' !!}
                         </span>
@@ -100,35 +100,35 @@
                         class="hidden"
                         onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
-                    @if ($doc_deskripsi)
-                        @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                            <img src="{{ $doc_deskripsi->temporaryUrl() }}"
-                                class="mt-2 {{ $doc_deskripsi ? 'w-40' : '' }} h-auto rounded border" />
-                        @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                            <div class="flex items-center gap-2 mt-2">
-                                @if ($doc_deskripsi->getClientOriginalExtension() == 'pdf')
-                                    <x-icon.pdf class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-red-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
-                                @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['doc', 'docx']))
-                                    <x-icon.word class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-blue-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
+                        @if ($doc_deskripsi)
+                            @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                <img src="{{ $doc_deskripsi->temporaryUrl() }}"
+                                    class="mt-2 {{ $doc_deskripsi ? 'w-40' : '' }} h-auto rounded border" />
+                            @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($doc_deskripsi->getClientOriginalExtension() == 'pdf')
+                                        <x-icon.pdf class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-red-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
+                                    @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['doc', 'docx']))
+                                        <x-icon.word class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-blue-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
+                                    @else
+                                        {{-- Ikon generik untuk file lain --}}
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File:
+                                            {{ $doc_deskripsi->getClientOriginalName() }}</span>
+                                    @endif
                                 @else
-                                    {{-- Ikon generik untuk file lain --}}
-                                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                    </svg>
-                                    <span class="text-sm text-gray-600">File:
-                                        {{ $doc_deskripsi->getClientOriginalName() }}</span>
-                                @endif
-                            @else
-                                <p class="mt-2 text-sm text-gray-600">File:
-                                    {{ $doc_deskripsi->getClientOriginalName() }}</p>
+                                    <p class="mt-2 text-sm text-gray-600">File:
+                                        {{ $doc_deskripsi->getClientOriginalName() }}</p>
+                            @endif
                         @endif
-                    @endif
                     </div>
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
@@ -287,7 +287,7 @@
                             Pilih file atau gambar
                         </span>
 
-                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_corrective" >
+                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_corrective">
                             <span class="mr-2 loading loading-bars loading-xs text-info"></span>
                             <span class="text-xs text-info">Mengunggah...</span>
                         </span>
@@ -723,127 +723,185 @@
     @push('scripts')
         {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> --}}
 
-    <script>
-        let ckAction_description = null;
-        document.addEventListener('livewire:navigated', () => {
-            ClassicEditor
-                .create(document.querySelector('#ckeditor-action_description'), {
-                    toolbar: [
-                        'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
-                    ],
-                    removePlugins: ['ImageUpload', 'EasyImage'] // MediaEmbed sudah diaktifkan di sini
-                })
-                .then(editor => {
-                    ckAction_description = editor;
-                    // sinkron ke Livewire
-                    editor.model.document.on('change:data', () => {
-                        const data = editor.getData();
-                        document.querySelector('#ckeditor-action_description').value = data;
-                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('action_description', data);
+        <script>
+            let ckAction_description = null;
+            document.addEventListener('livewire:navigated', () => {
+                ClassicEditor
+                    .create(document.querySelector('#ckeditor-action_description'), {
+                        toolbar: [
+                            'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
+                        ],
+                        removePlugins: ['ImageUpload', 'EasyImage'] // MediaEmbed sudah diaktifkan di sini
+                    })
+                    .then(editor => {
+                        ckAction_description = editor;
+                        // sinkron ke Livewire
+                        editor.model.document.on('change:data', () => {
+                            const data = editor.getData();
+                            document.querySelector('#ckeditor-action_description').value = data;
+                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('action_description', data);
 
-                        if (data.trim() !== '') {
-                            editor.ui.view.editable.element.classList.remove('error');
-                        }
-                    });
-                })
-                .catch(error => console.error(error));
-        });
-        // Validasi untuk AddAction
-        Livewire.on('validateCkEditorAddAction', () => {
-            if (ckAction_description) {
-                const data = ckAction_description.getData().trim();
-                if (data === '') {
-                    ckAction_description.ui.view.editable.element.classList.add('error');
-                    return false;
+                            if (data.trim() !== '') {
+                                editor.ui.view.editable.element.classList.remove('error');
+                            }
+                        });
+                    })
+                    .catch(error => console.error(error));
+            });
+            // Validasi untuk AddAction
+            Livewire.on('validateCkEditorAddAction', () => {
+                if (ckAction_description) {
+                    const data = ckAction_description.getData().trim();
+                    if (data === '') {
+                        ckAction_description.ui.view.editable.element.classList.add('error');
+                        return false;
+                    }
                 }
-            }
-            return true;
-        });
-        // RESET CKEDITOR setelah tombol TAMBAH ditekan
-        Livewire.on('reset-ckeditor', () => {
-            if (ckAction_description) {
-                ckAction_description.setData(''); // kosongkan editor
-            }
-            // Hapus spasi di optional chaining
-            if (ckAction_description?.ui?.view?.editable?.element) {
-                ckAction_description.ui.view.editable.element.classList.remove('error');
-            }
-        });
-    </script>
+                return true;
+            });
+            // RESET CKEDITOR setelah tombol TAMBAH ditekan
+            Livewire.on('reset-ckeditor', () => {
+                if (ckAction_description) {
+                    ckAction_description.setData(''); // kosongkan editor
+                }
+                // Hapus spasi di optional chaining
+                if (ckAction_description?.ui?.view?.editable?.element) {
+                    ckAction_description.ui.view.editable.element.classList.remove('error');
+                }
+            });
+        </script>
 
-    <script>
-        let ckImmediate_corrective_action = null;
-        document.addEventListener('livewire:navigated', () => {
-            ClassicEditor
-                .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
-                    // Hapus koma yang salah di awal daftar toolbar
-                    toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                    removePlugins: ['ImageUpload', 'EasyImage'] // buang plugin gambar
-                })
-                .then(editor => {
-                    ckImmediate_corrective_action = editor;
-                    editor.model.document.on('change:data', () => {
-                        const data = editor.getData();
-                        document.querySelector('#ckeditor-immediate_corrective_action').value = data;
-                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('immediate_corrective_action', data);
-                        if (data.trim() !== '') {
-                            editor.ui.view.editable.element.classList.remove('error');
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-        Livewire.on('validateCkEditor', event => {
-            if (ckImmediate_corrective_action) {
-                const data = ckImmediate_corrective_action.getData().trim();
-                if (data === '') {
-                    ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
-                    return false; // cegah submit
-                }
-            }
-            return true;
-        });
-    </script>
+        <script>
+            // Variabel CKEditor untuk 'immediate_corrective_action'
+            let ckImmediate_corrective_action = null;
 
-    <script>
-        let ckDescription = null;
-        document.addEventListener('livewire:navigated', () => {
-            ClassicEditor
-                .create(document.querySelector('#ckeditor-description'), {
-                    toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                    removePlugins: ['ImageUpload', 'EasyImage'] // Di sini perlu ditambahkan 'MediaEmbed' jika Anda tidak ingin menyematkan media
-                })
-                .then(editor => {
-                    ckDescription = editor;
-                    // Update hidden input dan Livewire
-                    editor.model.document.on('change:data', () => {
-                        const data = editor.getData();
-                        document.querySelector('#description').value = data;
-                        window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('description', data);
-                        // Hapus error jika sudah diisi
-                        if (data.trim() !== '') {
-                            editor.ui.view.editable.element.classList.remove('error');
-                        }
+            // Inisialisasi CKEditor setelah Livewire selesai navigasi (Livewire V3)
+            document.addEventListener('livewire:navigated', () => {
+                ClassicEditor
+                    .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
+                        // Konfigurasi Toolbar
+                        toolbar: [
+                            'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
+                        ],
+                        // Hapus plugin yang tidak diinginkan
+                        removePlugins: ['ImageUpload', 'EasyImage']
+                    })
+                    .then(editor => {
+                        ckImmediate_corrective_action = editor;
+
+                        // Sinkronisasi data editor ke Livewire saat konten berubah
+                        editor.model.document.on('change:data', () => {
+                            const data = editor.getData();
+
+                            // Set nilai ke elemen input/textarea (untuk fallback dan submit form non-Livewire)
+                            document.querySelector('#ckeditor-immediate_corrective_action').value = data;
+
+                            // Sinkronisasi ke property Livewire 'immediate_corrective_action'
+                            // Ganti 'cyFTxkPgomFUOBDMqaD9' dengan ID komponen Livewire Anda yang benar atau gunakan Livewire.hook (opsional)
+                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('immediate_corrective_action',
+                                data);
+
+                            // Hapus kelas 'error' jika editor sudah terisi
+                            if (data.trim() !== '') {
+                                editor.ui.view.editable.element.classList.remove('error');
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
                     });
-                })
-                .catch(error => console.error(error));
-        });
-        // 🔴 Fungsi untuk validasi CKEditor sebelum submit
-        Livewire.on('validateCkEditor', event => {
-            if (ckDescription) {
-                const data = ckDescription.getData().trim();
-                if (data === '') {
-                    ckDescription.ui.view.editable.element.classList.add('error');
-                    return false; // cegah submit
+            });
+
+            // Validasi untuk ImmediateCorrectiveAction (Nama Event Disesuaikan)
+            // Event ini akan dipicu dari komponen Livewire sebelum proses submit
+            Livewire.on('validateCkEditorImmediateCorrectiveAction', () => {
+                if (ckImmediate_corrective_action) {
+                    const data = ckImmediate_corrective_action.getData().trim();
+                    if (data === '') {
+                        // Tambahkan kelas 'error' jika kosong
+                        ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
+                        return false; // Mencegah submit jika validasi gagal
+                    }
                 }
-            }
-            return true;
-        });
-    </script>
+                return true; // Lanjutkan submit jika validasi berhasil atau editor belum diinisialisasi
+            });
+
+            // RESET CKEDITOR (Nama Event Disesuaikan)
+            Livewire.on('reset-ckeditor-immediate-corrective-action', () => {
+                if (ckImmediate_corrective_action) {
+                    ckImmediate_corrective_action.setData(''); // Kosongkan editor
+                }
+
+                // Hapus kelas 'error' menggunakan optional chaining (pola seperti kode pertama)
+                if (ckImmediate_corrective_action?.ui?.view?.editable?.element) {
+                    ckImmediate_corrective_action.ui.view.editable.element.classList.remove('error');
+                }
+            });
+        </script>
+
+        <script>
+            // Variabel CKEditor untuk 'description'
+            let ckDescription = null;
+
+            // 🚀 Inisialisasi CKEditor setelah Livewire selesai navigasi (Livewire V3)
+            document.addEventListener('livewire:navigated', () => {
+                ClassicEditor
+                    .create(document.querySelector('#ckeditor-description'), {
+                        // Konfigurasi Toolbar
+                        toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                        // Hapus plugin yang tidak diinginkan
+                        removePlugins: ['ImageUpload', 'EasyImage']
+                    })
+                    .then(editor => {
+                        ckDescription = editor;
+
+                        // Sinkronisasi data editor ke Livewire saat konten berubah
+                        editor.model.document.on('change:data', () => {
+                            const data = editor.getData();
+
+                            // Set nilai ke elemen input/textarea (sebagai fallback)
+                            // Perhatikan: querySelector menggunakan '#description' yang mungkin merupakan ID input/textarea Anda
+                            document.querySelector('#ckeditor-description').value = data;
+
+                            // Sinkronisasi ke property Livewire 'description'
+                            // Pastikan ID komponen 'cyFTxkPgomFUOBDMqaD9' sudah benar
+                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('description', data);
+
+                            // Hapus kelas 'error' jika editor sudah terisi
+                            if (data.trim() !== '') {
+                                editor.ui.view.editable.element.classList.remove('error');
+                            }
+                        });
+                    })
+                    .catch(error => console.error(error));
+            });
+
+            // 🔴 Validasi CKEditor Description (Event untuk divalidasi sebelum submit)
+            // Ubah nama event agar lebih spesifik: 'validateCkEditorDescription'
+            Livewire.on('validateCkEditorDescription', () => {
+                if (ckDescription) {
+                    const data = ckDescription.getData().trim();
+                    if (data === '') {
+                        // Tambahkan kelas 'error' jika kosong
+                        ckDescription.ui.view.editable.element.classList.add('error');
+                        return false; // Mencegah submit
+                    }
+                }
+                return true; // Lanjutkan submit
+            });
+
+            // 🔄 RESET CKEDITOR Description (Event untuk dikosongkan setelah submit berhasil)
+            // Tambahkan fungsi reset lengkap dengan penghapusan error class
+            Livewire.on('reset-ckeditor-description', () => {
+                if (ckDescription) {
+                    ckDescription.setData(''); // Kosongkan editor
+                }
+
+                // Hapus kelas 'error' menggunakan optional chaining (pola seperti kode pertama)
+                if (ckDescription?.ui?.view?.editable?.element) {
+                    ckDescription.ui.view.editable.element.classList.remove('error');
+                }
+            });
+        </script>
     @endpush
 </section>
-
-
-
