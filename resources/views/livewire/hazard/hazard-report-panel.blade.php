@@ -261,13 +261,19 @@
                             </span>
                         </td>
                         <td class="border">
+                            {{-- Bersihkan Tag HTML dari Deskripsi --}}
+                            @php
+                                $cleanDescription = strip_tags($report->description);
+                                $truncatedDescription = Str::limit($cleanDescription, 50, '...');
+                            @endphp
+
                             {{-- Container Alpine.js untuk Tooltip --}}
                             <div x-data="{ showTooltip: false }" class="relative inline-block">
 
-                                {{-- Teks yang disingkat --}}
+                                {{-- Teks yang disingkat (sudah bersih dari HTML) --}}
                                 <span @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
                                     class="text-blue-600 cursor-pointer hover:text-blue-800">
-                                    {{ Str::limit($report->description, 50, '...') }}
+                                    {{ $truncatedDescription }}
                                 </span>
 
                                 {{-- Tooltip Modal/Kotak Lengkap --}}
@@ -280,9 +286,9 @@
                                     x-transition:leave-end="opacity-0 scale-90"
                                     class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
 
-                                    {{-- Deskripsi Lengkap di dalam Tooltip --}}
                                     <strong>Deskripsi Lengkap:</strong>
-                                    <p class="mt-1">{{ $report->description }}</p>
+                                    {{-- Teks lengkap (sudah bersih dari HTML) --}}
+                                    <p class="mt-1">{{ $cleanDescription }}</p>
                                 </div>
                             </div>
                         </td>
