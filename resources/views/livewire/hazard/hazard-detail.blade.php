@@ -222,7 +222,7 @@
         </div>
         <x-tab-hazard.layout>
             <div wire:loading.class="skeleton animate-pulse skeleton-text" wire:target="submit">
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="fieldset">
                         <x-form.label label="Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tipe_bahaya"
@@ -234,6 +234,7 @@
                         </select>
                         <x-label-error :messages="$errors->get('tipe_bahaya')" />
                     </fieldset>
+
                     <fieldset class="fieldset">
                         <x-form.label label="Jenis Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="sub_tipe_bahaya"
@@ -249,15 +250,15 @@
                         <x-label-error :messages="$errors->get('sub_tipe_bahaya')" />
                     </fieldset>
 
-                    {{-- KEY WORD --}}
-
                     <fieldset>
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta" value="kta" wire:model.live="keyWord"
-                            class="peer/kta radio radio-xs radio-accent" type="radio" name="keyWord" checked />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta" value="kta"
+                            wire:model.live="keyWord" class="peer/kta radio radio-xs radio-accent" type="radio"
+                            name="keyWord" checked />
                         <x-form.label for="kta" class="peer-checked/kta:text-accent text-[10px]"
                             label="Kondisi Tidak Aman" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta" value="tta" wire:model.live="keyWord"
-                            class="peer/tta radio radio-xs radio-primary" type="radio" name="keyWord" />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta" value="tta"
+                            wire:model.live="keyWord" class="peer/tta radio radio-xs radio-primary" type="radio"
+                            name="keyWord" />
                         <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px]"
                             label="Tindakan Tidak Aman" required />
                         <div class="hidden peer-checked/kta:block ">
@@ -285,234 +286,19 @@
                             <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
                         @endif
                     </fieldset>
-
-                    <fieldset class="fieldset">
-                        <x-form.label label="Dilaporkan Oleh" required />
-                        <div class="relative">
-                            <!-- Input Search -->
-                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                wire:model.live.debounce.300ms="searchPelapor" placeholder="Cari Nama Pelapor..."
-                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                            <!-- Dropdown hasil search -->
-                            @if ($showPelaporDropdown)
-                                <ul
-                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                    <!-- Spinner ketika klik -->
-                                    <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    </div>
-                                    @if (count($pelapors) > 0)
-                                        @foreach ($pelapors as $pelapor)
-                                            <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $pelapor->name }}
-                                            </li>
-                                        @endforeach
-                                    @else
-                                        <!-- Jika tidak ada hasil & belum mode manual -->
-                                        @if (!$manualPelaporMode)
-                                            <li wire:click="enableManualPelapor"
-                                                class="px-3 py-2 cursor-pointer text-warning hover:bg-base-200">
-                                                Tidak ditemukan, tambah pelapor manual
-                                            </li>
-                                        @endif
-                                    @endif
-                                    <!-- Input manual jika mode manual aktif -->
-                                    @if ($manualPelaporMode)
-                                        <li class="p-2">
-                                            <div class="relative w-full">
-                                                <input type="text" wire:model.live="manualPelaporName"
-                                                    placeholder="Masukkan nama pelapor..."
-                                                    class="w-full pr-20 input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                                                <div class="!absolute top-1/2 -translate-y-1/2 right-0 z-20">
-                                                    <flux:button size="xs" wire:click="addPelaporManual"
-                                                        icon="plus" variant="primary">
-                                                        Tambah
-                                                    </flux:button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
-                                </ul>
-                            @endif
-                        </div>
-                        <!-- Error Message -->
-                        @if ($manualPelaporMode)
-                            <x-label-error :messages="$errors->get('manualPelaporName')" />
-                        @else
-                            <x-label-error :messages="$errors->get('pelapor_id')" />
-                        @endif
-                    </fieldset>
-
-                    <fieldset>
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="department" value="department"
-                            wire:model="deptCont" class="peer/department radio radio-xs radio-accent" type="radio"
-                            name="deptCont" checked />
-                        <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
-                            label="PT. MSM & PT. TTN" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="company" value="company"
-                            wire:model="deptCont" class="peer/company radio radio-xs radio-primary" type="radio"
-                            name="deptCont" />
-                        <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
-                            required />
-                        <div class="hidden peer-checked/department:block mt-0.5">
-                            {{-- Department --}}
-                            <div class="relative mb-1">
-                                <!-- Input Search -->
-
-                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                    wire:model.live.debounce.300ms="search" placeholder="Cari departemen..."
-                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
-                                <!-- Dropdown hasil search -->
-                                @if ($showDropdown && count($departments) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik salah satu -->
-                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($departments as $dept)
-                                            <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $dept->department_name }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </div>
-                            @if ($deptCont === 'department')
-                                <x-label-error :messages="$errors->get('department_id')" />
-                            @endif
-                        </div>
-                        <div class="hidden mt-1 peer-checked/company:block">
-                            {{-- Contractor --}}
-                            <div class="relative mb-1">
-                                <!-- Input Search -->
-                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                    wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..."
-                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                                <!-- Dropdown hasil search -->
-                                @if ($showContractorDropdown && count($contractors) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik -->
-                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($contractors as $contractor)
-                                            <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $contractor->contractor_name }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </div>
-                            @if ($deptCont === 'company')
-                                <x-label-error :messages="$errors->get('contractor_id')" />
-                            @endif
-                        </div>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <x-form.label label="Penanggung Jawab Area" required />
-                        <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
-                            @foreach ($penanggungJawabOptions as $pj)
-                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('penanggungJawab')" />
-                    </fieldset>
-
-                    <fieldset class="fieldset ">
-                        <x-form.label label="Lokasi" required />
-                        <div class="relative">
-                            <!-- Input Search -->
-                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                wire:model.live.debounce.300ms="searchLocation" placeholder="Cari Lokasi..."
-                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                            <!-- Dropdown hasil search -->
-                            @if ($showLocationDropdown && count($locations) > 0)
-                                <ul
-                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                    <!-- Spinner ketika klik -->
-                                    <div wire:loading wire:target="selectLocation" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    </div>
-                                    @foreach ($locations as $loc)
-                                        <li wire:click="selectLocation({{ $loc->id }}, '{{ $loc->name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $loc->name }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                        <x-label-error :messages="$errors->get('location_id')" />
-                    </fieldset>
-
-                    {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
-                    @if ($location_id)
-                        <fieldset class="fieldset">
-                            <x-form.label label="Lokasi Spesifik" required />
-                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                            <x-label-error :messages="$errors->get('location_specific')" />
-                        </fieldset>
-                    @endif
-
-                    <fieldset class="relative fieldset">
-                        <x-form.label label="Tanggal & Waktu" required />
-                        <div class="relative " wire:ignore x-data="{
-                            fp: null,
-                            // Properti Alpine.js untuk menampung nilai awal dari Livewire
-                            tanggalValue: '{{ $this->tanggal }}',
-                            initFlatpickr() {
-                                if (this.fp) this.fp.destroy();
-                                this.fp = flatpickr(this.$refs.tanggalInput, {
-                                    disableMobile: true,
-                                    enableTime: true,
-                                    time_24hr: true,
-                                    defaultDate: @js($this->tanggal),
-                                    dateFormat: 'd-m-Y H:i',
-                                    clickOpens: true,
-                                    position: 'auto-below',
-
-                                    onChange: (selectedDates, dateStr) => {
-                                        this.$wire.set('tanggal', dateStr);
-                                    }
-                                });
-                            }
-                        }" x-ref="wrapper"
-                            x-init="initFlatpickr();
-                            Livewire.hook('message.processed', () => {
-                                // Re-initialize hanya jika Anda yakin properti 'tanggal' di Livewire berubah
-                                // dan perlu diperbarui tanpa interaksi user.
-                                // initFlatpickr();
-                            });">
-                            <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
-                                wire:model.live='tanggal' placeholder="Pilih Tanggal dan Waktu..." readonly
-                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                        </div>
-                        <x-label-error :messages="$errors->get('tanggal')" />
-                    </fieldset>
-
                 </div>
-                <fieldset class="mb-4 fieldset">
-                    <x-form.label label="Deskripsi" required />
-                    <div wire:ignore>
-                        <textarea id="ckeditor-description">{{ $description }}</textarea>
-                    </div>
-                    <!-- Hidden input untuk binding Livewire -->
-                    <input type="hidden" wire:model.live="description" id="description">
-                    <x-label-error :messages="$errors->get('description')" />
-                </fieldset>
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3 ">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <fieldset class="mb-4 fieldset lg:col-span-2">
+                        <x-form.label label="Deskripsi" required />
+                        <div wire:ignore>
+                            <textarea id="ckeditor-description">{{ $description }}</textarea>
+                        </div>
+                        <!-- Hidden input untuk binding Livewire -->
+                        <input type="hidden" wire:model.live="description" id="description">
+                        <x-label-error :messages="$errors->get('description')" />
+                    </fieldset>
                     <fieldset class=" fieldset">
-                        <x-form.label label="Dokumentasi Sebelum Tidakan perbaikan langsung" />
-
+                        <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
                         <label wire:ignore for="upload-deskripsi"
                             class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
                             <span class="btn btn-info btn-xs {{ $isDisabled ? 'btn btn-disabled' : '' }}">
@@ -589,17 +375,147 @@
                         <x-label-error :messages="$errors->get('new_doc_deskripsi')" />
                     </fieldset>
                 </div>
-                <fieldset class="mb-4 fieldset">
-                    <x-form.label label="Tindakan perbaikan langsung" required />
-                    <div wire:ignore>
-                        <textarea id="ckeditor-immediate_corrective_action">{{ $immediate_corrective_action }}</textarea>
-                    </div>
-                    <!-- Hidden input untuk binding Livewire -->
-                    <input type="hidden" wire:model.live="immediate_corrective_action"
-                        id="immediate_corrective_action">
-                    <x-label-error :messages="$errors->get('immediate_corrective_action')" />
-                </fieldset>
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-3 ">
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+                    <fieldset class="fieldset ">
+                        <x-form.label label="Lokasi" required />
+                        <div class="relative">
+                            <!-- Input Search -->
+                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                wire:model.live.debounce.300ms="searchLocation" placeholder="Cari Lokasi..."
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                            <!-- Dropdown hasil search -->
+                            @if ($showLocationDropdown && count($locations) > 0)
+                                <ul
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                    <!-- Spinner ketika klik -->
+                                    <div wire:loading wire:target="selectLocation" class="p-2 text-center">
+                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                    </div>
+                                    @foreach ($locations as $loc)
+                                        <li wire:click="selectLocation({{ $loc->id }}, '{{ $loc->name }}')"
+                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                            {{ $loc->name }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                        <x-label-error :messages="$errors->get('location_id')" />
+                    </fieldset>
+                    {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
+                    @if ($location_id)
+                        <fieldset class="fieldset">
+                            <x-form.label label="Lokasi Spesifik" required />
+                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                            <x-label-error :messages="$errors->get('location_specific')" />
+                        </fieldset>
+                    @endif
+                    <fieldset class="relative fieldset">
+                        <x-form.label label="Tanggal & Waktu" required />
+                        <div class="relative " wire:ignore x-data="{
+                            fp: null,
+                            // Properti Alpine.js untuk menampung nilai awal dari Livewire
+                            tanggalValue: '{{ $this->tanggal }}',
+                            initFlatpickr() {
+                                if (this.fp) this.fp.destroy();
+                                this.fp = flatpickr(this.$refs.tanggalInput, {
+                                    disableMobile: true,
+                                    enableTime: true,
+                                    time_24hr: true,
+                                    defaultDate: @js($this->tanggal),
+                                    dateFormat: 'd-m-Y H:i',
+                                    clickOpens: true,
+                                    position: 'auto-below',
+
+                                    onChange: (selectedDates, dateStr) => {
+                                        this.$wire.set('tanggal', dateStr);
+                                    }
+                                });
+                            }
+                        }" x-ref="wrapper"
+                            x-init="initFlatpickr();
+                            Livewire.hook('message.processed', () => {
+                                // Re-initialize hanya jika Anda yakin properti 'tanggal' di Livewire berubah
+                                // dan perlu diperbarui tanpa interaksi user.
+                                // initFlatpickr();
+                            });">
+                            <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
+                                wire:model.live='tanggal' placeholder="Pilih Tanggal dan Waktu..." readonly
+                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                        </div>
+                        <x-label-error :messages="$errors->get('tanggal')" />
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <x-form.label label="Dilaporkan Oleh" required />
+                        <div class="relative">
+                            <!-- Input Search -->
+                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                wire:model.live.debounce.300ms="searchPelapor" placeholder="Cari Nama Pelapor..."
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                            <!-- Dropdown hasil search -->
+                            @if ($showPelaporDropdown)
+                                <ul
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                    <!-- Spinner ketika klik -->
+                                    <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
+                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                    </div>
+                                    @if (count($pelapors) > 0)
+                                        @foreach ($pelapors as $pelapor)
+                                            <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
+                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                {{ $pelapor->name }}
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <!-- Jika tidak ada hasil & belum mode manual -->
+                                        @if (!$manualPelaporMode)
+                                            <li wire:click="enableManualPelapor"
+                                                class="px-3 py-2 cursor-pointer text-warning hover:bg-base-200">
+                                                Tidak ditemukan, tambah pelapor manual
+                                            </li>
+                                        @endif
+                                    @endif
+                                    <!-- Input manual jika mode manual aktif -->
+                                    @if ($manualPelaporMode)
+                                        <li class="p-2">
+                                            <div class="relative w-full">
+                                                <input type="text" wire:model.live="manualPelaporName"
+                                                    placeholder="Masukkan nama pelapor..."
+                                                    class="w-full pr-20 input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                                <div class="!absolute top-1/2 -translate-y-1/2 right-0 z-20">
+                                                    <flux:button size="xs" wire:click="addPelaporManual"
+                                                        icon="plus" variant="primary">
+                                                        Tambah
+                                                    </flux:button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            @endif
+                        </div>
+                        <!-- Error Message -->
+                        @if ($manualPelaporMode)
+                            <x-label-error :messages="$errors->get('manualPelaporName')" />
+                        @else
+                            <x-label-error :messages="$errors->get('pelapor_id')" />
+                        @endif
+                    </fieldset>
+                </div>
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+                    <fieldset class="mb-4 fieldset md:col-span-2">
+                        <x-form.label label="Tindakan perbaikan langsung" required />
+                        <div wire:ignore>
+                            <textarea id="ckeditor-immediate_corrective_action">{{ $immediate_corrective_action }}</textarea>
+                        </div>
+                        <!-- Hidden input untuk binding Livewire -->
+                        <input type="hidden" wire:model.live="immediate_corrective_action"
+                            id="immediate_corrective_action">
+                        <x-label-error :messages="$errors->get('immediate_corrective_action')" />
+                    </fieldset>
                     <fieldset class=" fieldset">
                         <x-form.label label="Dokumentasi Sesudah Tidakan perbaikan langsung" />
 
@@ -683,6 +599,99 @@
                         <x-label-error :messages="$errors->get('new_doc_corrective')" />
                     </fieldset>
                 </div>
+                <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+                    <legend class="text-sm font-semibold card-title ">DiLaporkan ke</legend>
+                    {{-- workgroup --}}
+                    <fieldset>
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="department" value="department"
+                            wire:model="deptCont" class="peer/department radio radio-xs radio-accent" type="radio"
+                            name="deptCont" checked />
+                        <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
+                            label="PT. MSM & PT. TTN" required />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="company" value="company"
+                            wire:model="deptCont" class="peer/company radio radio-xs radio-primary" type="radio"
+                            name="deptCont" />
+                        <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
+                            required />
+                        <div class="hidden peer-checked/department:block mt-0.5">
+                            {{-- Department --}}
+                            <div class="relative mb-1">
+                                <!-- Input Search -->
+
+                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                    wire:model.live.debounce.300ms="search" placeholder="Cari departemen..."
+                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                                <!-- Dropdown hasil search -->
+                                @if ($showDropdown && count($departments) > 0)
+                                    <ul
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                        <!-- Spinner ketika klik salah satu -->
+                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        </div>
+                                        @foreach ($departments as $dept)
+                                            <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                {{ $dept->department_name }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                            @if ($deptCont === 'department')
+                                <x-label-error :messages="$errors->get('department_id')" />
+                            @endif
+                        </div>
+                        <div class="hidden mt-1 peer-checked/company:block">
+                            {{-- Contractor --}}
+                            <div class="relative mb-1">
+                                <!-- Input Search -->
+                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                    wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..."
+                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                <!-- Dropdown hasil search -->
+                                @if ($showContractorDropdown && count($contractors) > 0)
+                                    <ul
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                        <!-- Spinner ketika klik -->
+                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
+                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        </div>
+                                        @foreach ($contractors as $contractor)
+                                            <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                {{ $contractor->contractor_name }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                            @if ($deptCont === 'company')
+                                <x-label-error :messages="$errors->get('contractor_id')" />
+                            @endif
+                        </div>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <x-form.label label="Penanggung Jawab Area" required />
+                        <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            <option value="">-- Pilih --</option>
+                            @foreach ($penanggungJawabOptions as $pj)
+                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('penanggungJawab')" />
+                    </fieldset>
+
+                </fieldset>
+
+
+
+
+
+
+
+
 
                 <fieldset class="p-3 mb-4 border border-gray-200 shadow-md fieldset bg-base-100">
                     <legend class="text-sm font-semibold card-title ">Tambah Tindakan Lanjutan</legend>

@@ -264,7 +264,7 @@
                 </fieldset>
             </div>
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
