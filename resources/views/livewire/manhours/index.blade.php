@@ -165,7 +165,7 @@
 
                                     {{-- Kategori Perusahaan --}}
                                     <fieldset class="fieldset">
-                                        <x-form.label label="Jenis Entitas" required />
+                                        <x-form.label label="Pilih Entitas" required />
                                         <select wire:model.live="entityType"
                                             class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                             <option value="">-- Pilih --</option>
