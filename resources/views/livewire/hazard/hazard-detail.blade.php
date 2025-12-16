@@ -718,7 +718,7 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input name="action_due_date" type="text" x-ref="tanggalInput2"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date" type="text" x-ref="tanggalInput2"
                                             wire:model.live="action_due_date" placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
@@ -741,7 +741,7 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input name="action_actual_close_date" type="text" x-ref="tanggalInput3"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date" type="text" x-ref="tanggalInput3"
                                             wire:model.live="action_actual_close_date" placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
@@ -752,7 +752,7 @@
                                 <fieldset class="relative fieldset md:col-span-1">
                                     <x-form.label label="Dilaporkan Oleh" required />
                                     <div class="relative">
-                                        <input name="searchActResponsibility" type="text"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility" type="text"
                                             wire:model.live.debounce.300ms="searchActResponsibility"
                                             placeholder="Cari Nama Pelapor..."
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
