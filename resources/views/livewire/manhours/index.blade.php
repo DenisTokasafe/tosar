@@ -241,7 +241,6 @@
                                     </fieldset>
                                 </div>
 
-                                {{-- Job Class --}}
                                 {{-- Job Class Section --}}
                                 @foreach ($jobclasses as $key => $label)
                                     <fieldset class="px-3 border rounded-lg fieldset border-base-300">
@@ -268,7 +267,7 @@
                                                 <input type="number" wire:model.live="manhours.{{ $key }}"
                                                     placeholder="Masukkan Jumlah Jam Kerja..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
-                                                    @disabled($hide[$key]) />
+                                                    @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
                                                 <x-label-error :messages="$errors->get('manhours.' . $key)" />
                                             </fieldset>
@@ -280,7 +279,7 @@
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
                                                     placeholder="Masukkan Jumlah Tenaga Kerja..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
-                                                    @disabled($hide[$key]) />
+                                                    @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
                                                 <x-label-error :messages="$errors->get('manpower.' . $key)" />
                                             </fieldset>
@@ -288,17 +287,15 @@
                                     </fieldset>
                                 @endforeach
 
-                            </fieldset>
-
-                            {{-- Tombol Aksi --}}
-                            <div class="flex justify-end gap-2 mt-2">
-                                <flux:button size="xs" variant="danger" wire:click="close_modal">Batal</flux:button>
-                                @if ($selectedId)
-                                    <flux:button size="xs" variant="primary" type="submit">Update</flux:button>
-                                @else
-                                    <flux:button size="xs" variant="primary" type="submit">Simpan</flux:button>
-                                @endif
-                            </div>
+                                {{-- Tombol Aksi --}}
+                                <div class="flex justify-end gap-2 mt-2">
+                                    <flux:button size="xs" variant="danger" wire:click="close_modal">Batal</flux:button>
+                                    @if ($selectedId)
+                                        <flux:button size="xs" variant="primary" type="submit">Update</flux:button>
+                                    @else
+                                        <flux:button size="xs" variant="primary" type="submit">Simpan</flux:button>
+                                    @endif
+                                </div>
                         </form>
                     </div>
                 </div>
