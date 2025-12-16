@@ -254,7 +254,7 @@
                                             </label>
                                         </legend>
 
-                                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                                             {{-- Manhours --}}
                                             <fieldset class="fieldset">
                                                 <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
