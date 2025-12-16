@@ -904,9 +904,9 @@ class HazardDetail extends Component
         $this->validate(
             [
                 'action_description'       => 'required|string',
-                'action_due_date'          => 'required|date',
+                'action_due_date'          => 'nullable|date',
                 'action_actual_close_date' => 'nullable|date',
-                'action_responsible_id'    => 'required|integer|exists:users,id',
+                'action_responsible_id'    => 'nullable|integer|exists:users,id',
             ],
             [
                 'action_description.required'       => 'Deskripsi tindakan wajib diisi.',
