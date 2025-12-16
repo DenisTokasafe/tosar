@@ -11,9 +11,11 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use App\Models\User as UserProfile;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Validation\Rule; // <-- BARIS INI DITAMBAHKAN
 use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Validation\Rule; // <-- BARIS INI DITAMBAHKAN
+
 class User extends Component
 {
     use WithPagination, WithFileUploads;
@@ -40,6 +42,8 @@ class User extends Component
     public $showDropdown = false;
     public $searchContractor = '';
     public $showContractorDropdown = false;
+    public $password;
+    public $password_confirmation;
     #[Validate('required_without:contractor_id')]
     public $department_id;
     #[Validate('required_without:department_id')]
@@ -80,6 +84,19 @@ class User extends Component
                 'max:255',
                 Rule::unique('users', 'email')->ignore($userId),
             ],
+            // Rules untuk Password
+            'password' => [
+                $this->userId ? 'nullable' : 'required', // Wajib diisi saat buat baru, opsional saat edit
+                'string',
+                'min:6',
+                'confirmed', // Harus sama dengan password_confirmation
+            ],
+            // Rules untuk Konfirmasi Password (akan divalidasi oleh 'confirmed')
+        'password_confirmation' => [
+            $this->userId ? 'nullable' : 'required',
+            'string',
+            'min:6', // Sesuaikan jika Anda ingin validasi ini berbeda dari password
+        ],
         ];
     }
     protected function messages()
@@ -193,7 +210,7 @@ class User extends Component
                     'text' => 'Terdapat kesalahan data di dalam file Excel Anda. Mohon periksa detail berikut.',
                     'type' => 'error', // Pastikan notifikasi Anda mendukung tipe 'error'
                     'html' => $errorHtml,
-                   'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
+                    'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
                     'close' => true,
                 ]
             );
@@ -317,21 +334,29 @@ class User extends Component
     {
         $this->validate();
 
-        UserProfile::updateOrCreate(
-            ['id' => $this->userId],
-            [
-                'name' => $this->name,
-                'gender' => $this->gender,
-                'date_birth' => $this->date_birth,
-                'username' => $this->username,
-                'role_id' => $this->role_id,
-                'department_name' => $this->dep_cont,
-                'pilih_divisi' => $this->deptCont,
-                'employee_id' => $this->employee_id,
-                'date_commenced' => $this->date_commenced,
-                'email' => $this->email,
-            ]
-        );
+        $userData = [
+        'name' => $this->name,
+        'gender' => $this->gender,
+        'date_birth' => $this->date_birth,
+        'username' => $this->username,
+        'role_id' => $this->role_id,
+        'department_name' => $this->dep_cont, // atau nama kolom yang sesuai
+        'pilih_divisi' => $this->deptCont,
+        'employee_id' => $this->employee_id,
+        'date_commenced' => $this->date_commenced,
+        'email' => $this->email,
+    ];
+
+    // Logika untuk Password: HANYA perbarui jika field password diisi.
+    if (!empty($this->password)) {
+        $userData['password'] = Hash::make($this->password);
+    }
+
+    // Asumsi: UserProfile adalah model yang tepat (misalnya App\Models\User atau UserProfile)
+    UserProfile::updateOrCreate(
+        ['id' => $this->userId],
+        $userData
+    );
 
         $this->resetInput();
         $this->showModal = false;
@@ -397,6 +422,7 @@ class User extends Component
 
     private function resetInput()
     {
-        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email', 'dep_cont', 'deptCont']);
+        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email', 'dep_cont', 'deptCont','password', 'password_confirmation',]);
+        $this->dispatch('dateLoaded');
     }
 }

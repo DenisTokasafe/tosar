@@ -2,7 +2,7 @@
     <x-toast />
     <x-tabs-relation.layout>
         <div class="p-4">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center justify-between mb-4">
                 <div class="flex flex-row">
                     <flux:tooltip content="Bulk Update" position="top">
                         <flux:button size="xs" variant="primary" icon='refresh-cw'
@@ -11,7 +11,7 @@
                     <div class="mx-2 w-60">
                         <input name="searchLocation" type="text" wire:model.live="searchPelapor"
                             placeholder="Cari Pelapor..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                            class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                     </div>
                 </div>
                 <div>
@@ -59,7 +59,7 @@
 
                                     <div class="tooltip tooltip-right ">
                                         <div class="tooltip-content ">
-                                            <div class="animate-bounce text-warning text-xs font-black">Edit</div>
+                                            <div class="text-xs font-black animate-bounce text-warning">Edit</div>
                                         </div>
                                         <flux:button wire:click="edit({{ $user->id }})" size="xs"
                                             icon="pencil-square" variant="subtle"></flux:button>
@@ -67,7 +67,7 @@
                                     <!-- Delete -->
                                     <div class="tooltip tooltip-right ">
                                         <div class="tooltip-content ">
-                                            <div class="animate-bounce text-error text-xs font-black">Delete</div>
+                                            <div class="text-xs font-black animate-bounce text-error">Delete</div>
                                         </div>
                                         <flux:button wire:click="confirmDelete({{ $user->id }})" size="xs"
                                             icon="trash" variant="danger"></flux:button>
@@ -84,8 +84,8 @@
 
     {{-- Create/Edit Modal --}}
     <dialog class="modal" @if ($showModal) open @endif>
-        <div class="modal-box w-11/12 max-w-2xl">
-            <h3 class="font-bold text-lg">{{ $userId ? 'Edit User ' . $name_user : 'Add User' }}</h3>
+        <div class="w-11/12 max-w-2xl modal-box">
+            <h3 class="text-lg font-bold">{{ $userId ? 'Edit User ' . $name_user : 'Add User' }}</h3>
 
             <div class="grid grid-cols-2 gap-4 mt-4">
 
@@ -99,7 +99,7 @@
                 <fieldset class="fieldset">
                     <x-form.label label="Jenis Kelamin" required />
                     <select wire:model.live="gender"
-                        class="select select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs">
+                        class="w-full select select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs">
                         <option value="">-- Pilih --</option>
                         <option value="L">Laki - laki</option>
                         <option value="P">Perempuan</option>
@@ -110,7 +110,7 @@
                 <fieldset class="fieldset">
                     <x-form.label label="Tanggal Lahir" required />
                     <input type="text" readonly id="date_birth" wire:model="date_birth"
-                        class="cursor-pointer input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                        class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                         placeholder="Pilih tanggal lahir {{ $errors->has('date_birth') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                         x-data="{ fp: null }" {{-- Tambahkan state untuk Flatpickr instance --}} x-init="// Inisialisasi Flatpickr dan simpan instance-nya
                         fp = flatpickr($refs.input, {
@@ -130,7 +130,7 @@
                 <fieldset class="fieldset">
                     <x-form.label label="Username" required />
                     <input type="text" wire:model.live="username"
-                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                     <x-label-error :messages="$errors->get('username')" />
                 </fieldset>
 
@@ -154,7 +154,7 @@
                             <!-- Dropdown hasil search -->
                             @if ($showDropdown && count($departments) > 0)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik salah satu -->
                                     <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -183,7 +183,7 @@
                             <!-- Dropdown hasil search -->
                             @if ($showContractorDropdown && count($contractors) > 0)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik -->
                                     <div wire:loading wire:target="selectContractor" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -247,6 +247,24 @@
                     </select>
                     <x-label-error :messages="$errors->get('role_id')" />
                 </fieldset>
+                <fieldset class="fieldset">
+                    <x-form.label label="Password" required="{{ $userId ? false : true }}" />
+                    <input type="password" wire:model="password"
+                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('password') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                    {{-- Teks bantuan saat edit --}}
+                    @if ($userId)
+                        <p class="text-[8px] text-gray-500 mt-0.5">Kosongkan jika tidak ingin mengubah password.
+                        </p>
+                    @endif
+                    <x-label-error :messages="$errors->get('password')" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <x-form.label label="Konfirmasi Password" required="{{ $userId ? false : true }}" />
+                    <input type="password" wire:model="password_confirmation"
+                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('password_confirmation') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                    <x-label-error :messages="$errors->get('password_confirmation')" />
+                </fieldset>
             </div>
 
             <div class="modal-action">
@@ -261,7 +279,7 @@
     {{-- Delete Confirmation Modal --}}
     <dialog class="modal" @if ($showDeleteModal) open @endif>
         <div class="modal-box">
-            <h3 class="font-bold text-lg">Confirm Delete</h3>
+            <h3 class="text-lg font-bold">Confirm Delete</h3>
             <p>Are you sure you want to delete this user?</p>
             <div class="modal-action">
                 <button class="btn" wire:click="$set('showDeleteModal', false)">Cancel</button>
@@ -272,25 +290,25 @@
     </div>
 
     <dialog class="modal" @if ($showImportModal) open @endif>
-        <div class="modal-box w-11/12 max-w-md">
-            <h3 class="font-bold text-lg">Import Users</h3>
+        <div class="w-11/12 max-w-md modal-box">
+            <h3 class="text-lg font-bold">Import Users</h3>
 
             <fieldset class="fieldset">
                 <label class="block">File Excel</label>
                 <input type="file" wire:model.live="file"
-                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
 
                 {{-- Error message --}}
                 <x-label-error :messages="$errors->get('file')" />
 
                 {{-- Loading indicator saat pilih file --}}
                 <div wire:loading wire:target="file" wire:loading.class.remove="hidden"
-                    class="text-info text-sm mt-1 hidden">
+                    class="hidden mt-1 text-sm text-info">
                     ⏳ Sedang mengunggah file...
                 </div>
             </fieldset>
             @if (session()->has('success'))
-                <div class="alert alert-success my-2">
+                <div class="my-2 alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
@@ -315,11 +333,11 @@
 
     <dialog class="modal" @if ($showBulkUpdateModal) open @endif>
         <div class="modal-box">
-            <h3 class="font-bold text-lg">Bulk Update User</h3>
+            <h3 class="text-lg font-bold">Bulk Update User</h3>
 
             <fieldset class="fieldset">
                 <label class="block">Role Baru</label>
-                <select wire:model="bulkRole" class="select select-bordered w-full input-xs">
+                <select wire:model="bulkRole" class="w-full select select-bordered input-xs">
                     <option value="">-- Pilih Role --</option>
                     @foreach ($roles as $r)
                         <option value="{{ $r->id }}">{{ $r->name }}</option>
