@@ -250,31 +250,28 @@
                     </fieldset>
 
                     {{-- KEY WORD --}}
-                    <fieldset>
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta"
-                            value="kta"wire:model.live="keyWord" class="peer/kta radio radio-xs radio-accent"
-                            type="radio"name="keyWord" checked />
-                        <x-form.label for="kta"
-                            class="peer-checked/kta:text-accent text-[10px]"label="Kondisi Tidak Aman" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta"
-                            value="tta"wire:model.live="keyWord" class="peer/tta radio radio-xs radio-primary"
-                            type="radio" name="keyWord" />
-                        <x-form.label for="tta"
-                            class="peer-checked/tta:text-primary text-[10px]"label="Tindakan Tidak Aman" required />
 
+                    <fieldset>
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta" value="kta" wire:model.live="keyWord"
+                            class="peer/kta radio radio-xs radio-accent" type="radio" name="keyWord" checked />
+                        <x-form.label for="kta" class="peer-checked/kta:text-accent text-[10px]"
+                            label="Kondisi Tidak Aman" required />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta" value="tta" wire:model.live="keyWord"
+                            class="peer/tta radio radio-xs radio-primary" type="radio" name="keyWord" />
+                        <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px]"
+                            label="Tindakan Tidak Aman" required />
                         <div class="hidden peer-checked/kta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
-                                class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">-- Pilih Kategori Bahaya --</option>
                                 @foreach ($ktas as $kta)
                                     <option value="{{ $kta->id }}">{{ $kta->name }}</option>
                                 @endforeach
                             </select>
-
                         </div>
                         <div class="hidden peer-checked/tta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
-                                class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">-- Pilih Kategori Bahaya --</option>
                                 @foreach ($ttas as $tta)
                                     <option value="{{ $tta->id }}">{{ $tta->name }}</option>
@@ -287,7 +284,6 @@
                         @if ($keyWord === 'tta')
                             <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
                         @endif
-
                     </fieldset>
 
                     <fieldset class="fieldset">
