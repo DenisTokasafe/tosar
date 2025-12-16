@@ -37,20 +37,20 @@ $classes = Flux::classes()
 true => [
 'data-current:text-(--color-primary-content) hover:data-current:text-(--color-base-content)',
 'data-current:bg-neutral/[30%] data-current:border-neutral data-current:border-l-4 data-current:border-transparent',
-'hover:text-zinc-800 dark:hover:text-base-content hover:bg-zinc-800/5 ',
+'hover:text-base-content hover:bg-zinc-800/5 ',
 'border border-transparent',
 ],
 false => [
-'data-current:text-zinc-800 dark: data-current:border-zinc-200',
+'data-current:border-zinc-200',
 'data-current:bg-white/10 data-current:border data-current:border-white/10 data-current:shadow-xs',
-'hover:text-zinc-800 dark:hover:text-base-content',
+'hover:text-base-content',
 ],
 },
 default => match ($accent) {
 true => [
 'data-current:text-(--color-base-content) hover:data-current:text-(--color-base-content)',
 'data-current:bg-neutral/[30%] data-current:border-neutral data-current:border-l-4',
-'hover:text-accent-content hover:bg-accent dark:text-(--color-neutral)',
+'hover:text-accent-content text-(--color-neutral)',
 ],
 false => [
 'data-current:text-zinc-800',
