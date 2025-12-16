@@ -601,98 +601,91 @@
                 </div>
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">DiLaporkan ke</legend>
-                    {{-- workgroup --}}
-                    <fieldset>
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="department" value="department"
-                            wire:model="deptCont" class="peer/department radio radio-xs radio-accent" type="radio"
-                            name="deptCont" checked />
-                        <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
-                            label="PT. MSM & PT. TTN" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="company" value="company"
-                            wire:model="deptCont" class="peer/company radio radio-xs radio-primary" type="radio"
-                            name="deptCont" />
-                        <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
-                            required />
-                        <div class="hidden peer-checked/department:block mt-0.5">
-                            {{-- Department --}}
-                            <div class="relative mb-1">
-                                <!-- Input Search -->
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
+                        {{-- workgroup --}}
+                        <fieldset>
+                            <input {{ $isDisabled ? 'disabled' : '' }} id="department" value="department"
+                                wire:model="deptCont" class="peer/department radio radio-xs radio-accent"
+                                type="radio" name="deptCont" checked />
+                            <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
+                                label="PT. MSM & PT. TTN" required />
+                            <input {{ $isDisabled ? 'disabled' : '' }} id="company" value="company"
+                                wire:model="deptCont" class="peer/company radio radio-xs radio-primary"
+                                type="radio" name="deptCont" />
+                            <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
+                                required />
+                            <div class="hidden peer-checked/department:block mt-0.5">
+                                {{-- Department --}}
+                                <div class="relative mb-1">
+                                    <!-- Input Search -->
 
-                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                    wire:model.live.debounce.300ms="search" placeholder="Cari departemen..."
-                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
-                                <!-- Dropdown hasil search -->
-                                @if ($showDropdown && count($departments) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik salah satu -->
-                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($departments as $dept)
-                                            <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $dept->department_name }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                        wire:model.live.debounce.300ms="search" placeholder="Cari departemen..."
+                                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                                    <!-- Dropdown hasil search -->
+                                    @if ($showDropdown && count($departments) > 0)
+                                        <ul
+                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                            <!-- Spinner ketika klik salah satu -->
+                                            <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                            </div>
+                                            @foreach ($departments as $dept)
+                                                <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                    {{ $dept->department_name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                                @if ($deptCont === 'department')
+                                    <x-label-error :messages="$errors->get('department_id')" />
                                 @endif
                             </div>
-                            @if ($deptCont === 'department')
-                                <x-label-error :messages="$errors->get('department_id')" />
-                            @endif
-                        </div>
-                        <div class="hidden mt-1 peer-checked/company:block">
-                            {{-- Contractor --}}
-                            <div class="relative mb-1">
-                                <!-- Input Search -->
-                                <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                    wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..."
-                                    class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                                <!-- Dropdown hasil search -->
-                                @if ($showContractorDropdown && count($contractors) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik -->
-                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($contractors as $contractor)
-                                            <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $contractor->contractor_name }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                            <div class="hidden mt-1 peer-checked/company:block">
+                                {{-- Contractor --}}
+                                <div class="relative mb-1">
+                                    <!-- Input Search -->
+                                    <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                        wire:model.live.debounce.300ms="searchContractor"
+                                        placeholder="Cari kontraktor..."
+                                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                    <!-- Dropdown hasil search -->
+                                    @if ($showContractorDropdown && count($contractors) > 0)
+                                        <ul
+                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                            <!-- Spinner ketika klik -->
+                                            <div wire:loading wire:target="selectContractor" class="p-2 text-center">
+                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                            </div>
+                                            @foreach ($contractors as $contractor)
+                                                <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                    {{ $contractor->contractor_name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                                @if ($deptCont === 'company')
+                                    <x-label-error :messages="$errors->get('contractor_id')" />
                                 @endif
                             </div>
-                            @if ($deptCont === 'company')
-                                <x-label-error :messages="$errors->get('contractor_id')" />
-                            @endif
-                        </div>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <x-form.label label="Penanggung Jawab Area" required />
-                        <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
-                            @foreach ($penanggungJawabOptions as $pj)
-                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('penanggungJawab')" />
-                    </fieldset>
-
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <x-form.label label="Penanggung Jawab Area" required />
+                            <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
+                                class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                <option value="">-- Pilih --</option>
+                                @foreach ($penanggungJawabOptions as $pj)
+                                    <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                                @endforeach
+                            </select>
+                            <x-label-error :messages="$errors->get('penanggungJawab')" />
+                        </fieldset>
+                    </div>
                 </fieldset>
-
-
-
-
-
-
-
-
-
                 <fieldset class="p-3 mb-4 border border-gray-200 shadow-md fieldset bg-base-100">
                     <legend class="text-sm font-semibold card-title ">Tambah Tindakan Lanjutan</legend>
                     <!-- Deskripsi Tindakan -->
