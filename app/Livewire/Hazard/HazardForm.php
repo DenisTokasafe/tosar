@@ -493,13 +493,9 @@ class HazardForm extends Component
                 // Kita panggil validasi hanya untuk field Tindakan Lanjutan
                 $this->validate([
                     'action_description'    => 'required|string',
-                    'action_due_date'       => 'required|date_format:d-m-Y',
-                    'action_responsible_id' => 'required|exists:users,id',
                 ], [], [
                     // Tentukan nama atribut agar pesan error lebih jelas
                     'action_description'    => 'Deskripsi Tindakan Lanjutan',
-                    'action_due_date'       => 'Batas Waktu Tindakan Lanjutan',
-                    'action_responsible_id' => 'Penanggung Jawab Tindakan Lanjutan',
                 ]);
 
                 // Jika validasi di atas sukses, artinya field Tindakan Lanjutan sudah lengkap,
