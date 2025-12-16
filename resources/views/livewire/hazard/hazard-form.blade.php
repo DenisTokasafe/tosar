@@ -722,7 +722,7 @@
     </x-manhours.layout>
     @push('scripts')
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-
+        {{-- action_description --}}
         <script>
             let ckAction_description = null;
             document.addEventListener('livewire:navigated', () => {
@@ -731,15 +731,20 @@
                         toolbar: [
                             'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
                         ],
-                        removePlugins: ['ImageUpload', 'EasyImage'] // MediaEmbed sudah diaktifkan di sini
+                        removePlugins: ['ImageUpload', 'EasyImage']
                     })
                     .then(editor => {
                         ckAction_description = editor;
-                        // sinkron ke Livewire
+                        // Sinkronisasi ke Livewire menggunakan Livewire.dispatch
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
                             document.querySelector('#ckeditor-action_description').value = data;
-                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('action_description', data);
+
+                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
+                            // Kita akan mengirimkan event khusus ke Livewire
+                            Livewire.dispatch('updateActionDescription', {
+                                actionData: data
+                            });
 
                             if (data.trim() !== '') {
                                 editor.ui.view.editable.element.classList.remove('error');
@@ -759,49 +764,41 @@
                 }
                 return true;
             });
-            // RESET CKEDITOR setelah tombol TAMBAH ditekan
+            // RESET CKEDITOR
             Livewire.on('reset-ckeditor', () => {
                 if (ckAction_description) {
                     ckAction_description.setData(''); // kosongkan editor
                 }
-                // Hapus spasi di optional chaining
                 if (ckAction_description?.ui?.view?.editable?.element) {
                     ckAction_description.ui.view.editable.element.classList.remove('error');
                 }
             });
         </script>
 
+        {{-- immediate_corrective_action --}}
         <script>
-            // Variabel CKEditor untuk 'immediate_corrective_action'
             let ckImmediate_corrective_action = null;
 
-            // Inisialisasi CKEditor setelah Livewire selesai navigasi (Livewire V3)
             document.addEventListener('livewire:navigated', () => {
                 ClassicEditor
                     .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
-                        // Konfigurasi Toolbar
                         toolbar: [
                             'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
                         ],
-                        // Hapus plugin yang tidak diinginkan
                         removePlugins: ['ImageUpload', 'EasyImage']
                     })
                     .then(editor => {
                         ckImmediate_corrective_action = editor;
 
-                        // Sinkronisasi data editor ke Livewire saat konten berubah
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-
-                            // Set nilai ke elemen input/textarea (untuk fallback dan submit form non-Livewire)
                             document.querySelector('#ckeditor-immediate_corrective_action').value = data;
 
-                            // Sinkronisasi ke property Livewire 'immediate_corrective_action'
-                            // Ganti 'cyFTxkPgomFUOBDMqaD9' dengan ID komponen Livewire Anda yang benar atau gunakan Livewire.hook (opsional)
-                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('immediate_corrective_action',
-                                data);
+                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
+                            Livewire.dispatch('updateImmediateCorrectiveAction', {
+                                actionData: data
+                            });
 
-                            // Hapus kelas 'error' jika editor sudah terisi
                             if (data.trim() !== '') {
                                 editor.ui.view.editable.element.classList.remove('error');
                             }
@@ -812,62 +809,49 @@
                     });
             });
 
-            // Validasi untuk ImmediateCorrectiveAction (Nama Event Disesuaikan)
-            // Event ini akan dipicu dari komponen Livewire sebelum proses submit
             Livewire.on('validateCkEditorImmediateCorrectiveAction', () => {
                 if (ckImmediate_corrective_action) {
                     const data = ckImmediate_corrective_action.getData().trim();
                     if (data === '') {
-                        // Tambahkan kelas 'error' jika kosong
                         ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
-                        return false; // Mencegah submit jika validasi gagal
+                        return false;
                     }
                 }
-                return true; // Lanjutkan submit jika validasi berhasil atau editor belum diinisialisasi
+                return true;
             });
 
-            // RESET CKEDITOR (Nama Event Disesuaikan)
             Livewire.on('reset-ckeditor-immediate-corrective-action', () => {
                 if (ckImmediate_corrective_action) {
-                    ckImmediate_corrective_action.setData(''); // Kosongkan editor
+                    ckImmediate_corrective_action.setData('');
                 }
-
-                // Hapus kelas 'error' menggunakan optional chaining (pola seperti kode pertama)
                 if (ckImmediate_corrective_action?.ui?.view?.editable?.element) {
                     ckImmediate_corrective_action.ui.view.editable.element.classList.remove('error');
                 }
             });
         </script>
 
+        {{-- DESCRIPTION --}}
         <script>
-            // Variabel CKEditor untuk 'description'
             let ckDescription = null;
 
-            // 🚀 Inisialisasi CKEditor setelah Livewire selesai navigasi (Livewire V3)
             document.addEventListener('livewire:navigated', () => {
                 ClassicEditor
                     .create(document.querySelector('#ckeditor-description'), {
-                        // Konfigurasi Toolbar
                         toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                        // Hapus plugin yang tidak diinginkan
                         removePlugins: ['ImageUpload', 'EasyImage']
                     })
                     .then(editor => {
                         ckDescription = editor;
 
-                        // Sinkronisasi data editor ke Livewire saat konten berubah
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-
-                            // Set nilai ke elemen input/textarea (sebagai fallback)
-                            // Perhatikan: querySelector menggunakan '#description' yang mungkin merupakan ID input/textarea Anda
                             document.querySelector('#ckeditor-description').value = data;
 
-                            // Sinkronisasi ke property Livewire 'description'
-                            // Pastikan ID komponen 'cyFTxkPgomFUOBDMqaD9' sudah benar
-                            window.Livewire.find('cyFTxkPgomFUOBDMqaD9').set('description', data);
+                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
+                            Livewire.dispatch('updateDescriptionData', {
+                                descriptionData: data
+                            });
 
-                            // Hapus kelas 'error' jika editor sudah terisi
                             if (data.trim() !== '') {
                                 editor.ui.view.editable.element.classList.remove('error');
                             }
@@ -876,28 +860,21 @@
                     .catch(error => console.error(error));
             });
 
-            // 🔴 Validasi CKEditor Description (Event untuk divalidasi sebelum submit)
-            // Ubah nama event agar lebih spesifik: 'validateCkEditorDescription'
             Livewire.on('validateCkEditorDescription', () => {
                 if (ckDescription) {
                     const data = ckDescription.getData().trim();
                     if (data === '') {
-                        // Tambahkan kelas 'error' jika kosong
                         ckDescription.ui.view.editable.element.classList.add('error');
-                        return false; // Mencegah submit
+                        return false;
                     }
                 }
-                return true; // Lanjutkan submit
+                return true;
             });
 
-            // 🔄 RESET CKEDITOR Description (Event untuk dikosongkan setelah submit berhasil)
-            // Tambahkan fungsi reset lengkap dengan penghapusan error class
             Livewire.on('reset-ckeditor-description', () => {
                 if (ckDescription) {
-                    ckDescription.setData(''); // Kosongkan editor
+                    ckDescription.setData('');
                 }
-
-                // Hapus kelas 'error' menggunakan optional chaining (pola seperti kode pertama)
                 if (ckDescription?.ui?.view?.editable?.element) {
                     ckDescription.ui.view.editable.element.classList.remove('error');
                 }

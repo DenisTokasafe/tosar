@@ -14,6 +14,7 @@ use App\Models\Department;
 use App\Models\Likelihood;
 use App\Helpers\FileHelper;
 use App\Helpers\MailHelper;
+use Livewire\Attributes\On;
 use App\Models\ActionHazard;
 use App\Models\EventSubType;
 use App\Models\ErmAssignment;
@@ -193,6 +194,26 @@ class HazardForm extends Component
                 'url' => asset('storage/' . $path),
             ]);
         }
+    }
+    // Menangkap data dari CKEditor 'action_description'
+    #[On('updateActionDescription')]
+    public function updateActionDescription($actionData)
+    {
+        $this->action_description = $actionData;
+    }
+
+    // Menangkap data dari CKEditor 'immediate_corrective_action'
+    #[On('updateImmediateCorrectiveAction')]
+    public function updateImmediateCorrectiveAction($actionData)
+    {
+        $this->immediate_corrective_action = $actionData;
+    }
+
+    // Menangkap data dari CKEditor 'description'
+    #[On('updateDescriptionData')]
+    public function updateDescriptionData($descriptionData)
+    {
+        $this->description = $descriptionData;
     }
     public function updated($propertyName)
     {
@@ -449,6 +470,10 @@ class HazardForm extends Component
     public function submit()
     {
         $this->dispatch('validateCkEditor');
+        // PENTING: Panggil event validasi sebelum memanggil $this->validate()
+        $this->dispatch('validateCkEditorAddAction');
+        $this->dispatch('validateCkEditorImmediateCorrectiveAction');
+        $this->dispatch('validateCkEditorDescription');
         $this->validate();
         // Cek apakah form tindak lanjut terisi tapi belum ditambahkan
         $hasPartialAction =
