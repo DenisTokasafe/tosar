@@ -258,7 +258,7 @@
                                         </legend>
 
                                         {{-- Container Manhours dan Manpower --}}
-                                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
 
                                             {{-- Manhours (Jumlah Jam Kerja) --}}
                                             <fieldset class="fieldset">
