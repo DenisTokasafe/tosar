@@ -244,34 +244,43 @@
                                 {{-- Job Class --}}
                                 @foreach ($jobclasses as $key => $label)
                                     <fieldset class="p-3 border rounded-lg fieldset border-base-300">
-                                        <legend class="flex gap-2 text-xs font-semibold">
+                                        <legend class="flex items-center gap-2 text-xs font-semibold">
                                             <span>{{ $label }}</span>
+
+                                            {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
                                             <label class="flex items-center space-x-1">
                                                 <input type="checkbox" wire:model.live="hide.{{ $key }}"
                                                     class="checkbox checkbox-xs">
-                                                <span class="text-[8px] text-rose-500 capitalize">tidak ada
-                                                    {{ $label }}</span>
+                                                <span class="text-[8px] text-rose-500 capitalize">
+                                                    tidak ada {{ $label }}
+                                                </span>
                                             </label>
                                         </legend>
 
+                                        {{-- Container Manhours dan Manpower --}}
                                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                            {{-- Manhours --}}
+
+                                            {{-- Manhours (Jumlah Jam Kerja) --}}
                                             <fieldset class="fieldset">
                                                 <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
+
                                                 <input type="number" wire:model.live="manhours.{{ $key }}"
                                                     placeholder="Masukkan manhours..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
+
                                                 <x-label-error :messages="$errors->get('manhours.' . $key)" />
                                             </fieldset>
 
-                                            {{-- Manpower --}}
+                                            {{-- Manpower (Jumlah Tenaga Kerja) --}}
                                             <fieldset class="mt-2 fieldset">
                                                 <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
+
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
                                                     placeholder="Masukkan manpower..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
+
                                                 <x-label-error :messages="$errors->get('manpower.' . $key)" />
                                             </fieldset>
                                         </div>
