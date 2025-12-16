@@ -265,7 +265,7 @@
                                                 <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
 
                                                 <input type="number" wire:model.live="manhours.{{ $key }}"
-                                                    placeholder="Masukkan manhours..."
+                                                    placeholder="Masukkan Jumlah Jam Kerja..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
 
@@ -277,7 +277,7 @@
                                                 <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
 
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
-                                                    placeholder="Masukkan manpower..."
+                                                    placeholder="Masukkan Jumlah Tenaga Kerja..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
                                                     @disabled($hide[$key]) />
 
