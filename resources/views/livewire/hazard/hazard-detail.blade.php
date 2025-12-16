@@ -789,7 +789,7 @@
                                                                 placeholder="Masukkan nama..."
                                                                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                                             <div class="absolute right-0 -translate-y-1/2 top-1/2">
-                                                                <flux:button {{ $isDisabled ? 'disabled' : '' }} size="xs"
+                                                                <flux:button  size="xs"
                                                                     wire:click="addActPelaporManual" icon="plus"
                                                                     variant="primary">
                                                                     Tambah
