@@ -252,7 +252,7 @@
                                                 <input type="checkbox" wire:model.live="hide.{{ $key }}"
                                                     class="checkbox checkbox-xs">
                                                 <span class="text-[8px] text-rose-500 capitalize">
-                                                    tidak ada {{ $label }}
+                                                   centang jika tidak ada {{ $label }}
                                                 </span>
                                             </label>
                                         </legend>
