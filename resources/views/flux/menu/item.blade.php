@@ -60,7 +60,6 @@ false => [
 },
 })
 ;
-
 $suffixClasses = Flux::classes()
 ->add('ms-auto text-xs text-zinc-400')
 ;
