@@ -111,8 +111,7 @@ class HazardForm extends Component
             'manualPelaporName' => $this->manualPelaporMode ? 'required|string|max:255' : 'nullable',
         ];
         if (!empty($this->action_description)) {
-            $baseRules['action_due_date'] = 'required|date_format:d-m-Y'; // Ubah format jika berbeda
-            $baseRules['action_responsible_id'] = 'required|exists:users,id';
+            $baseRules['action_description'] = 'required'; // Ubah format jika berbeda
             // Tambahkan rule lain yang harus required
         } else {
             // Jika action_description kosong, field ini boleh null/kosong
@@ -518,11 +517,7 @@ class HazardForm extends Component
         $this->validate();
         // 2. Logika Pencegahan Tindakan Lanjutan yang Belum Ditambahkan
         // (Jika validasi di atas sukses, dan field ini masih terisi, tampilkan alert)
-        $hasPartialAction =
-            !empty($this->action_description) ||
-            !empty($this->action_due_date) ||
-            !empty($this->actual_close_date) ||
-            !empty($this->action_responsible_id);
+        $hasPartialAction = !empty($this->action_description);
 
         if ($hasPartialAction) {
             // Tampilkan alert bahwa Tindakan Lanjutan sudah diisi tetapi belum diklik TAMBAH
