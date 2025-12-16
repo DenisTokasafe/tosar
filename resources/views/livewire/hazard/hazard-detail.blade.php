@@ -517,7 +517,7 @@
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
                     <fieldset class=" fieldset">
-                        <x-form.label label="Dokumentasi Sesudah Tidakan perbaikan langsung" />
+                        <x-form.label label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)" />
 
                         <label wire:ignore for="upload-corrective"
                             class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
