@@ -249,14 +249,20 @@
                         <x-label-error :messages="$errors->get('sub_tipe_bahaya')" />
                     </fieldset>
 
-                     {{-- KEY WORD --}}
+                    {{-- KEY WORD --}}
                     <fieldset>
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta" value="kta"wire:model.live="keyWord" class="peer/kta radio radio-xs radio-accent" type="radio"name="keyWord" checked />
-                        <x-form.label for="kta" class="peer-checked/kta:text-accent text-[10px]"label="Kondisi Tidak Aman" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta" value="tta"wire:model.live="keyWord" class="peer/tta radio radio-xs radio-primary" type="radio" name="keyWord" />
-                        <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px]"label="Tindakan Tidak Aman" required />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="kta"
+                            value="kta"wire:model.live="keyWord" class="peer/kta radio radio-xs radio-accent"
+                            type="radio"name="keyWord" checked />
+                        <x-form.label for="kta"
+                            class="peer-checked/kta:text-accent text-[10px]"label="Kondisi Tidak Aman" required />
+                        <input {{ $isDisabled ? 'disabled' : '' }} id="tta"
+                            value="tta"wire:model.live="keyWord" class="peer/tta radio radio-xs radio-primary"
+                            type="radio" name="keyWord" />
+                        <x-form.label for="tta"
+                            class="peer-checked/tta:text-primary text-[10px]"label="Tindakan Tidak Aman" required />
 
-                        <div class="hidden peer-checked/kta:block">
+                        <div class="hidden peer-checked/kta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
                                 class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">-- Pilih Kategori Bahaya --</option>
@@ -266,7 +272,7 @@
                             </select>
 
                         </div>
-                        <div class="hidden peer-checked/tta:block">
+                        <div class="hidden peer-checked/tta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
                                 class="w-full mb-1 select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">-- Pilih Kategori Bahaya --</option>
