@@ -242,8 +242,8 @@
                                 </div>
 
                                 {{-- Job Class --}}
+                                @foreach ($jobclasses as $key => $label)
                                 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                                    @foreach ($jobclasses as $key => $label)
                                         <fieldset class="p-3 border rounded-lg fieldset border-base-300">
                                             <legend class="flex gap-2 text-xs font-semibold">
                                                 <span>{{ $label }}</span>
@@ -257,7 +257,7 @@
 
                                             {{-- Manhours --}}
                                             <fieldset class="fieldset">
-                                                <x-form.label label="Manhours" :required="!$hide[$key]" />
+                                                <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
                                                 <input type="number" wire:model.live="manhours.{{ $key }}"
                                                     placeholder="Masukkan manhours..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
@@ -267,7 +267,7 @@
 
                                             {{-- Manpower --}}
                                             <fieldset class="mt-2 fieldset">
-                                                <x-form.label label="Manpower" :required="!$hide[$key]" />
+                                                <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
                                                     placeholder="Masukkan manpower..."
                                                     class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
@@ -275,8 +275,8 @@
                                                 <x-label-error :messages="$errors->get('manpower.' . $key)" />
                                             </fieldset>
                                         </fieldset>
+                                    </div>
                                     @endforeach
-                                </div>
 
                             </fieldset>
 
