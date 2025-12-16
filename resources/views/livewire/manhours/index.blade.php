@@ -243,18 +243,18 @@
 
                                 {{-- Job Class --}}
                                 @foreach ($jobclasses as $key => $label)
-                                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                                        <fieldset class="p-3 border rounded-lg fieldset border-base-300">
-                                            <legend class="flex gap-2 text-xs font-semibold">
-                                                <span>{{ $label }}</span>
-                                                <label class="flex items-center space-x-1">
-                                                    <input type="checkbox" wire:model.live="hide.{{ $key }}"
-                                                        class="checkbox checkbox-xs">
-                                                    <span class="text-[8px] text-rose-500 capitalize">tidak ada
-                                                        {{ $label }}</span>
-                                                </label>
-                                            </legend>
+                                    <fieldset class="p-3 border rounded-lg fieldset border-base-300">
+                                        <legend class="flex gap-2 text-xs font-semibold">
+                                            <span>{{ $label }}</span>
+                                            <label class="flex items-center space-x-1">
+                                                <input type="checkbox" wire:model.live="hide.{{ $key }}"
+                                                    class="checkbox checkbox-xs">
+                                                <span class="text-[8px] text-rose-500 capitalize">tidak ada
+                                                    {{ $label }}</span>
+                                            </label>
+                                        </legend>
 
+                                        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                                             {{-- Manhours --}}
                                             <fieldset class="fieldset">
                                                 <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
@@ -274,9 +274,9 @@
                                                     @disabled($hide[$key]) />
                                                 <x-label-error :messages="$errors->get('manpower.' . $key)" />
                                             </fieldset>
-                                        </fieldset>
-                                    </div>
-                                    @endforeach
+                                        </div>
+                                    </fieldset>
+                                @endforeach
 
                             </fieldset>
 
