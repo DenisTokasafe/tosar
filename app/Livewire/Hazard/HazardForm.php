@@ -106,10 +106,20 @@ class HazardForm extends Component
     public $action_responsible_id;
     public function rules()
     {
-        return [
+        $baseRules = [
             'pelapor_id' => $this->manualPelaporMode ? 'nullable' : 'required',
             'manualPelaporName' => $this->manualPelaporMode ? 'required|string|max:255' : 'nullable',
         ];
+        if (!empty($this->action_description)) {
+            $baseRules['action_due_date'] = 'required|date_format:d-m-Y'; // Ubah format jika berbeda
+            $baseRules['action_responsible_id'] = 'required|exists:users,id';
+            // Tambahkan rule lain yang harus required
+        } else {
+            // Jika action_description kosong, field ini boleh null/kosong
+            $baseRules['action_due_date'] = 'nullable|date_format:d-m-Y';
+            $baseRules['action_responsible_id'] = 'nullable|exists:users,id';
+        }
+        return $baseRules;
     }
     protected $messages = [
 
@@ -469,13 +479,45 @@ class HazardForm extends Component
     }
     public function submit()
     {
+        // 1. Panggil Event Validasi CKEditor (yang tidak ditangani oleh $this->validate())
+        // Pastikan event ini menghentikan eksekusi jika validasi JS gagal.
         $this->dispatch('validateCkEditor');
-        // PENTING: Panggil event validasi sebelum memanggil $this->validate()
         $this->dispatch('validateCkEditorAddAction');
         $this->dispatch('validateCkEditorImmediateCorrectiveAction');
         $this->dispatch('validateCkEditorDescription');
+
+        // PENTING: Panggil validasi Tindakan Lanjutan yang belum ditambahkan
+        // Validasi ini memastikan bahwa jika action_description diisi,
+        // maka due_date dan responsible_id juga harus diisi.
+        if (!empty($this->action_description)) {
+            try {
+                // Kita panggil validasi hanya untuk field Tindakan Lanjutan
+                $this->validate([
+                    'action_description'    => 'required|string',
+                    'action_due_date'       => 'required|date_format:d-m-Y',
+                    'action_responsible_id' => 'required|exists:users,id',
+                ], [], [
+                    // Tentukan nama atribut agar pesan error lebih jelas
+                    'action_description'    => 'Deskripsi Tindakan Lanjutan',
+                    'action_due_date'       => 'Batas Waktu Tindakan Lanjutan',
+                    'action_responsible_id' => 'Penanggung Jawab Tindakan Lanjutan',
+                ]);
+
+                // Jika validasi di atas sukses, artinya field Tindakan Lanjutan sudah lengkap,
+                // tetapi belum diklik 'Tambah'.
+                // Lanjutkan ke logika error di bawah.
+
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                // Jika validasi gagal (misal: action_due_date kosong padahal action_description diisi),
+                // Livewire akan menampilkan error, dan eksekusi berhenti di sini.
+                throw $e;
+            }
+        }
+        // Panggil validasi utama (yang ada di fungsi rules() atau $rules property)
+        // Ini menangani field utama form.
         $this->validate();
-        // Cek apakah form tindak lanjut terisi tapi belum ditambahkan
+        // 2. Logika Pencegahan Tindakan Lanjutan yang Belum Ditambahkan
+        // (Jika validasi di atas sukses, dan field ini masih terisi, tampilkan alert)
         $hasPartialAction =
             !empty($this->action_description) ||
             !empty($this->action_due_date) ||
@@ -483,13 +525,14 @@ class HazardForm extends Component
             !empty($this->action_responsible_id);
 
         if ($hasPartialAction) {
+            // Tampilkan alert bahwa Tindakan Lanjutan sudah diisi tetapi belum diklik TAMBAH
             $this->dispatch('alert', [
                 'text' => "Anda sudah mengisi Tindakan Lanjutan tetapi belum mengklik tombol TAMBAH!",
                 'duration' => 6000,
                 'close' => true,
                 'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
             ]);
-            return;
+            return; // Hentikan proses submit
         }
         DB::transaction(function () {
             $lastReport = Hazard::latest('id')->first();
@@ -627,7 +670,8 @@ class HazardForm extends Component
             // Kirim email ke setiap moderator
             foreach ($moderatorIds as $moderatorId) {
                 MailHelper::sendToUserId(
-                    $moderatorId,'Notifikasi Laporan Hazard',
+                    $moderatorId,
+                    'Notifikasi Laporan Hazard',
                     'emails.notification',
                     [
                         'subject'       => 'Laporan Hazard Baru',
