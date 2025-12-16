@@ -273,7 +273,7 @@
                                             </fieldset>
 
                                             {{-- Manpower (Jumlah Tenaga Kerja) --}}
-                                            <fieldset class="mt-2 fieldset">
+                                            <fieldset class="fieldset">
                                                 <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
 
                                                 <input type="number" wire:model.live="manpower.{{ $key }}"
