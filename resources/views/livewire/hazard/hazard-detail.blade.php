@@ -342,6 +342,8 @@
 
                             @if ($isImage)
                                 <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
+                                <a href="{{ $fileUrl }}" target="_blank"
+                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extension == 'pdf')
