@@ -86,19 +86,19 @@ class Index extends Component
         $this->reset('range_date', 'start_date', 'end_date');
     }
 
+
+    public $hide = [
+        'supervisor'     => true,
+        'operational'    => true,
+        'Administrator' => true,
+    ];
+
     // jobclass setup
     public $jobclasses = [
         'supervisor'     => 'Supervisor',
         'operational'    => 'Operational',
         'Administrator' => 'Administrator',
     ];
-
-    public $hide = [
-        'supervisor'     => false,
-        'operational'    => false,
-        'Administrator' => false,
-    ];
-
     public $manhours = [
         'supervisor'     => null,
         'operational'    => null,
