@@ -687,7 +687,7 @@
                     </div>
                 </fieldset>
                 <fieldset class="p-3 mb-4 border border-gray-200 shadow-md fieldset bg-base-100">
-                    <legend class="text-sm font-semibold card-title ">Tambah Tindakan Lanjutan</legend>
+                    <legend class="text-sm font-semibold card-title ">Tindakan Lanjutan</legend>
                     <!-- Deskripsi Tindakan -->
                     <fieldset class="fieldset md:col-span-1">
                         <x-form.label label="Deskripsi Tindakan" required />
