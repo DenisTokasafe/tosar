@@ -24,31 +24,31 @@ $classes = Flux::classes()
 ->add('h-10 lg:h-8  relative flex items-center gap-3 outline-none rounded-sm')
 ->add($square ? 'px-2.5!' : '')
 ->add('py-0 text-start w-full px-3 my-px')
-->add('text-zinc-500 dark:text-base-content/80')
+->add('text-base-content/80')
 ->add(match ($variant) {
 'outline' => match ($accent) {
 true => [
 'data-current:text-(--color-neutral-content) hover:data-current:text-(--color-base-content)',
-'data-current:bg-white dark:data-current:bg-neutral data-current:border data-current:border-zinc-200 dark:data-current:border-transparent',
-'hover:text-zinc-800 dark:hover:text-(--color-neutral-content) hover:bg-accent ',
+'data-current:bg-neutral data-current:border data-current:border-transparent',
+'hover:text-(--color-neutral-content) hover:bg-accent ',
 'border border-transparent',
 ],
 false => [
-'data-current:text-zinc-800 dark:data-current:text-zinc-100 data-current:border-zinc-200 ',
-'data-current:bg-white dark:data-current:bg-white/10 data-current:border data-current:border-zinc-200 dark:data-current:border-white/10 data-current:shadow-xs',
-'hover:text-zinc-800 dark:hover:text-(--color-neutral-content) hover:bg-accent',
+'data-current:text-zinc-100 data-current:border-zinc-200 ',
+'data-current:bg-white/10 data-current:border data-current:border-white/10 data-current:shadow-xs',
+'hover:text-(--color-neutral-content) hover:bg-accent',
 ],
 },
 default => match ($accent) {
 true => [
 'data-current:text-(--color-neutral-content) hover:data-current:text-(--color-neutral-content)',
-'data-current:bg-zinc-800/[4%] dark:data-current:bg-neutral ',
-'hover:text-zinc-800 dark:hover:text-(--color-neutral-content) hover:bg-accent ',
+'data-current:bg-neutral ',
+'hover:text-(--color-neutral-content) hover:bg-accent ',
 ],
 false => [
-'data-current:text-zinc-800 dark:data-current:text-zinc-100',
-'data-current:bg-zinc-800/[4%] dark:data-current:bg-white/10',
-'hover:text-zinc-800 dark:hover:text-(--color-neutral-content) hover:bg-accent dark:hover:bg-accent',
+'data-current:text-zinc-100',
+'data-current:bg-white/10',
+'hover:text-(--color-neutral-content) hover:bg-accent',
 ],
 },
 })
