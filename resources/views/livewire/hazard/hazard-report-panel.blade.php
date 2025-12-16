@@ -224,6 +224,7 @@
                             @endforeach
                         </ul>
                     </th>
+                    <th class="border">Deskripsi</th>
                     <th class="border">Pelapor</th>
                     <th class="border">Tanggal</th>
                     <th class="flex-col text-center border">
@@ -258,6 +259,32 @@
                                 @elseif($report->status == 'closed') bg-green-100 text-green-800 @endif">
                                 {{ str_replace('_', ' ', $report->status) }}
                             </span>
+                        </td>
+                        <td class="border">
+                            {{-- Container Alpine.js untuk Tooltip --}}
+                            <div x-data="{ showTooltip: false }" class="relative inline-block">
+
+                                {{-- Teks yang disingkat --}}
+                                <span @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+                                    class="text-blue-600 cursor-pointer hover:text-blue-800">
+                                    {{ Str::limit($report->description, 50, '...') }}
+                                </span>
+
+                                {{-- Tooltip Modal/Kotak Lengkap --}}
+                                <div x-cloak x-show="showTooltip"
+                                    x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-90"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-90"
+                                    class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
+
+                                    {{-- Deskripsi Lengkap di dalam Tooltip --}}
+                                    <strong>Deskripsi Lengkap:</strong>
+                                    <p class="mt-1">{{ $report->description }}</p>
+                                </div>
+                            </div>
                         </td>
                         <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
