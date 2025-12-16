@@ -708,8 +708,6 @@
                             {{ $RiskAssessment->coordinator }}
                         </td>
                     </tr>
-
-
                 </table>
             @endif
             <div class="flex justify-end hidden mt-4 md:block">
@@ -723,7 +721,7 @@
         </form>
     </x-manhours.layout>
     @push('scripts')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+        {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> --}}
 
     <script>
         let ckAction_description = null;
@@ -750,7 +748,6 @@
                 })
                 .catch(error => console.error(error));
         });
-
         // Validasi untuk AddAction
         Livewire.on('validateCkEditorAddAction', () => {
             if (ckAction_description) {
@@ -762,13 +759,11 @@
             }
             return true;
         });
-
         // RESET CKEDITOR setelah tombol TAMBAH ditekan
         Livewire.on('reset-ckeditor', () => {
             if (ckAction_description) {
                 ckAction_description.setData(''); // kosongkan editor
             }
-
             // Hapus spasi di optional chaining
             if (ckAction_description?.ui?.view?.editable?.element) {
                 ckAction_description.ui.view.editable.element.classList.remove('error');
