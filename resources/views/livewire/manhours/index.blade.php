@@ -208,7 +208,16 @@
 
                                     {{-- Departemen --}}
                                     <fieldset class="fieldset">
-                                        <x-form.label label="{{ $entityType === 'contractor' ? 'Custodian' : ($entityType === 'owner' ? 'Department' : 'Pilih Department/Custodian') }}"required />
+                                        {{-- MODIFIKASI DIMULAI DI SINI --}}
+                                        @if ($entityType === 'contractor')
+                                            <x-form.label label="Custodian" required />
+                                        @elseif ($entityType === 'owner')
+                                            <x-form.label label="Department" required />
+                                        @else
+                                            {{-- Default jika belum memilih atau nilainya kosong --}}
+                                            <x-form.label label="Department / Custodian" required />
+                                        @endif
+                                        {{-- MODIFIKASI BERAKHIR DI SINI --}}
                                         <select wire:model.live="department"
                                             class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                             <option value="">-- Pilih --</option>
