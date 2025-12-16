@@ -243,7 +243,7 @@
 
                                 {{-- Job Class --}}
                                 @foreach ($jobclasses as $key => $label)
-                                    <fieldset class="border rounded-lg fieldset border-base-300">
+                                    <fieldset class="px-3 border rounded-lg fieldset border-base-300">
                                         <legend class="flex items-center gap-2 text-xs font-semibold">
                                             <span>{{ $label }}</span>
 
