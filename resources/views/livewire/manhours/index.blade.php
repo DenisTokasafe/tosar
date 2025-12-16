@@ -242,17 +242,18 @@
                                 </div>
 
                                 {{-- Job Class --}}
+                                {{-- Job Class Section --}}
                                 @foreach ($jobclasses as $key => $label)
                                     <fieldset class="px-3 border rounded-lg fieldset border-base-300">
                                         <legend class="flex items-center gap-2 text-xs font-semibold">
                                             <span>{{ $label }}</span>
 
                                             {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
-                                            <label class="flex items-center space-x-1">
+                                            <label class="flex items-center space-x-1 cursor-pointer">
                                                 <input type="checkbox" wire:model.live="hide.{{ $key }}"
                                                     class="checkbox checkbox-xs">
-                                                <span class="text-[8px] text-rose-500 capitalize">
-                                                   centang jika tidak ada {{ $label }}
+                                                <span class="text-[8px] text-rose-500 capitalize select-none">
+                                                    centang jika tidak ada {{ $label }}
                                                 </span>
                                             </label>
                                         </legend>
