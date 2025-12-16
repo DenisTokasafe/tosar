@@ -36,26 +36,26 @@ $classes = Flux::classes()
 'outline' => match ($accent) {
 true => [
 'data-current:text-(--color-primary-content) hover:data-current:text-(--color-base-content)',
-'data-current:bg-white dark:data-current:bg-neutral/[30%] dark:data-current:border-neutral dark:data-current:border-b-4 data-current:border data-current:border-zinc-200 dark:data-current:border-transparent',
-'hover:text-zinc-800 dark:hover:text-base-content hover:bg-zinc-800/5 ',
+'data-current:bg-neutral/[30%] data-current:border-neutral data-current:border-b-4 data-current:border-transparent',
+'hover:text-base-content hover:bg-zinc-800/5 ',
 'border border-transparent',
 ],
 false => [
-'data-current:text-zinc-800 dark:data-current:text-zinc-800 dark: data-current:border-zinc-200',
-'data-current:bg-white dark:data-current:bg-white/10 data-current:border data-current:border-zinc-200 dark:data-current:border-white/10 data-current:shadow-xs',
-'hover:text-zinc-800 dark:hover:text-base-content',
+'data-current:text-zinc-800 data-current:border-zinc-200',
+'data-current:bg-white/10 data-current:border data-current:border-white/10 data-current:shadow-xs',
+'hover:text-base-content',
 ],
 },
 default => match ($accent) {
 true => [
 'data-current:text-(--color-base-content) hover:data-current:text-(--color-base-content)',
-'data-current:bg-zinc-800/[4%] dark:data-current:bg-neutral/[30%] dark:data-current:border-neutral dark:data-current:border-b-4',
-'hover:text-zinc-800 dark:hover:text-accent-content hover:bg-accent dark:text-(--color-neutral)',
+'data-current:border-neutral data-current:border-b-4',
+'hover:text-accent-content hover:bg-accent text-(--color-neutral)',
 ],
 false => [
-'data-current:text-zinc-800 dark:data-current:text-zinc-800',
-'data-current:bg-zinc-800/[4%] dark:data-current:bg-white/10',
-'hover:text-zinc-800 dark:hover:text-accent-content hover:bg-accent dark:hover:bg-white/10',
+'data-current:text-zinc-800',
+'data-current:bg-white/10',
+'hover:text-accent-content hover:bg-accent hover:bg-white/10',
 ],
 },
 })
