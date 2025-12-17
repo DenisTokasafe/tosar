@@ -10,6 +10,14 @@
       0 => 'Diglactic\\Breadcrumbs\\ServiceProvider',
     ),
   ),
+  'directorytree/ldaprecord-laravel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LdapRecord\\Laravel\\LdapServiceProvider',
+      1 => 'LdapRecord\\Laravel\\LdapAuthServiceProvider',
+    ),
+  ),
   'laravel/pail' => 
   array (
     'providers' => 

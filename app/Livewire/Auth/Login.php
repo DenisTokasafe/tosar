@@ -2,16 +2,19 @@
 
 namespace App\Livewire\Auth;
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Session;
+use App\Models\User;
+use Livewire\Component;
+use LdapRecord\Container;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule; // <-- Import Rule untuk validasi (Opsional, tapi praktik baik)
-use Livewire\Component;
+
 #[Layout('components.layouts.auth')]
 class Login extends Component
 {
@@ -31,32 +34,80 @@ class Login extends Component
     public function login(): void
     {
         $this->validate();
-
         $this->ensureIsNotRateLimited();
 
-        // Tentukan field otentikasi berdasarkan input
-        $field = filter_var($this->credential, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        /*
+    |--------------------------------------------------------------------------
+    | 1️⃣ COBA LOGIN LDAP (ACTIVE DIRECTORY)
+    |--------------------------------------------------------------------------
+    */
+        try {
+            $connection = Container::getDefaultConnection();
 
-        // Buat array credential untuk otentikasi
+            // Format UPN: username@domain
+            $ldapUsername = $this->credential . '@archimining.com';
+
+            if ($connection->auth()->attempt($ldapUsername, $this->password)) {
+
+                // Sinkronisasi / buat user lokal
+                $user = User::firstOrCreate(
+                    ['username' => $this->credential],
+                    [
+                        'name'     => $this->credential,
+                        'email'    => null,
+                        'password' => null,
+                        'is_ldap'  => true,
+                    ]
+                );
+
+                Auth::login($user, $this->remember);
+
+                RateLimiter::clear($this->throttleKey());
+                Session::regenerate();
+
+                $this->redirectIntended(
+                    default: route('dashboard', absolute: false),
+                    navigate: true
+                );
+                return;
+            }
+        } catch (\Throwable $e) {
+            // LDAP error → lanjut fallback
+            // (jangan tampilkan error LDAP ke user)
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | 2️⃣ FALLBACK LOGIN DATABASE (EMAIL / USERNAME)
+    |--------------------------------------------------------------------------
+    */
+
+        $field = filter_var($this->credential, FILTER_VALIDATE_EMAIL)
+            ? 'email'
+            : 'username';
+
         $credentials = [
             $field => $this->credential,
             'password' => $this->password,
         ];
 
-        // Coba otentikasi menggunakan field (email atau username) yang sesuai
         if (! Auth::attempt($credentials, $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'credential' => __('auth.failed'), // <-- Ubah 'email' menjadi 'credential'
+                'credential' => __('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(
+            default: route('dashboard', absolute: false),
+            navigate: true
+        );
     }
+
 
     /**
      * Ensure the authentication request is not rate limited.
@@ -85,6 +136,6 @@ class Login extends Component
     protected function throttleKey(): string
     {
         // Gunakan $this->credential untuk throttle key
-        return Str::transliterate(Str::lower($this->credential)).'|'.request()->ip();
+        return Str::transliterate(Str::lower($this->credential)) . '|' . request()->ip();
     }
 }
