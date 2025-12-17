@@ -36,6 +36,7 @@ class HazardController extends Controller
             'Departemen' => $hazard->department->department_name ?? '',
             'Kontraktor' => $hazard->contractor->contractor_name ?? '',
             'Pelapor_Nama' => $hazard->pelapor->name ?? $hazard->manualPelaporName,
+            'dept/contractor_pelapor' => $hazard->pelapor->department_name ?? '',
             'Deskripsi_Hazard' => $hazard->description,
             'Tingkat_Risiko' => $hazard->risk_level ?? '',
             'Penanggung_Jawab' => $hazard->penanggungJawab->name ?? '',
