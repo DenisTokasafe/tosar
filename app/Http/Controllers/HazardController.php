@@ -43,8 +43,8 @@ class HazardController extends Controller
             'lokasi_spesifik' => $hazard->location_specific,
             'tindakan_korektif_segera' => $hazard->immediate_corrective_action,
             'kata_kunci' => $hazard->key_word,
-            'kondisi_tidak_aman_id' => $hazard->hazardKondisiTidakAman() ? $hazard->hazardKondisiTidakAman->name : null,
-            'tindakan_tidak_aman_id' => $hazard->hazardTindakanTidakAman() ? $hazard->hazardTindakanTidakAman->name : null,
+            'kondisi_tidak_aman_id' => $hazard->kondisi_tidak_aman_id ? $hazard->hazardKondisiTidakAman->name : null,
+            'tindakan_tidak_aman_id' => $hazard->tindakan_tidak_aman_id ? $hazard->hazardTindakanTidakAman->name : null,
             // ... tambahkan semua kolom yang Anda butuhkan
         ];
     });
