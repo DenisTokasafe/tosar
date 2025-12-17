@@ -28,7 +28,7 @@ return [
 
 'connections' => [
     'default' => [
-         'hosts' => ['arctktad006.archimining.local'],
+         'hosts' => ['10.10.200.5'],
             'base_dn' => 'dc=archimining,dc=com',
         'username' => null,   // <- kosong, tidak pakai service account
         'password' => null,
