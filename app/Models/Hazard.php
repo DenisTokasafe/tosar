@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\UnsafeAct;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -153,7 +154,14 @@ class Hazard extends Model
     {
         return $this->hasMany(ActionHazard::class, 'hazard_id');
     }
-
+    public function hazardKondisiTidakAman()
+    {
+        return $this->belongsTo(UnsafeCondition::class, 'kondisi_tidak_aman_id');
+    }
+    public function hazardTindakanTidakAman()
+    {
+        return $this->belongsTo(UnsafeAct::class, 'tindakan_tidak_aman_id');
+    }
     /** SCOPES */
     public function scopeStatus($query, $status)
     {
@@ -177,7 +185,7 @@ class Hazard extends Model
     {
         return $query->where('event_type_id', $id);
     }
-    
+
     public function scopeByDepartment($query, $name)
     {
         return $query->whereHas('department', function ($q) use ($name) {
