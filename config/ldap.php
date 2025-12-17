@@ -26,17 +26,18 @@ return [
     |
     */
 
-'connections' => [
-    'default' => [
-        'hosts'    => ['adserver.archimining.local'], // atau IP
-        'username' => null,   // <- kosong, tidak pakai service account
-        'password' => null,
-        'port'     => 389,    // 636 jika LDAPS
-        'use_ssl'  => false,
-        'use_tls'  => false,
-        'base_dn'  => 'DC=archimining,DC=local',
+    'connections' => [
+        'default' => [
+            'hosts' => ['arctktad006.archimining.local'],
+            'base_dn' => 'dc=archimining,dc=com',
+            'username' => null,   // <- kosong, tidak pakai service account
+            'password' => null,
+            'port'     => 389,    // 636 jika LDAPS
+            'use_ssl'  => false,
+            'use_tls'  => false,
+            'base_dn'  => 'DC=archimining,DC=local',
+        ],
     ],
-],
 
 
     /*
