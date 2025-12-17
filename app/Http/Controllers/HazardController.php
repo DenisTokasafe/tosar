@@ -36,6 +36,15 @@ class HazardController extends Controller
             'Pelapor_Nama' => $hazard->pelapor->name ?? $hazard->manualPelaporName,
             'Deskripsi_Hazard' => $hazard->description,
             'Tingkat_Risiko' => $hazard->risk_level,
+            'Penanggung_Jawab' => $hazard->penanggungJawab->name ?? 'N/A',
+            'Lokasi' => $hazard->location->location_name ?? 'N/A',
+            'Konsekuensi' => $hazard->consequence->consequence_name ?? 'N/A',
+            'Kemungkinan' => $hazard->likelihood->likelihood_name ?? 'N/A',
+            'lokasi_spesifik' => $hazard->location_specific,
+            'tindakan_korektif_segera' => $hazard->immediate_corrective_action,
+            'kata_kunci' => $hazard->key_word,
+            'kondisi_tidak_aman_id' => $hazard->kondisi_tidak_aman_id,
+            'tindakan_tidak_aman_id' => $hazard->tindakan_tidak_aman_id,
             // ... tambahkan semua kolom yang Anda butuhkan
         ];
     });
