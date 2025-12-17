@@ -4,7 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Models\User;
 use Livewire\Component;
-use LdapRecord\Container;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -31,82 +31,85 @@ class Login extends Component
     /**
      * Handle an incoming authentication request.
      */
-    public function login(): void
-    {
-        $this->validate();
-        $this->ensureIsNotRateLimited();
+  public function login(): void
+{
+    $this->validate();
+    $this->ensureIsNotRateLimited();
 
-        /*
+    /*
     |--------------------------------------------------------------------------
-    | 1️⃣ COBA LOGIN LDAP (ACTIVE DIRECTORY)
+    | 1️⃣ COBA LOGIN LDAP VIA API GATEWAY
     |--------------------------------------------------------------------------
     */
-        try {
-            $connection = Container::getDefaultConnection();
+    try {
+        $response = Http::timeout(5)->post(
+            config('services.ldap_gateway.url'),
+            [
+                'username' => $this->credential,
+                'password' => $this->password,
+                'api_key'  => config('services.ldap_gateway.key'),
+            ]
+        );
 
-            // Format UPN: username@domain
-            $ldapUsername = $this->credential . '@archimining.com';
+        if ($response->ok() && $response->json('status') === true) {
 
-            if ($connection->auth()->attempt($ldapUsername, $this->password)) {
+            $user = User::firstOrCreate(
+                ['username' => $this->credential],
+                [
+                    'name'    => $this->credential,
+                    'email'   => null,
+                    'password'=> null,
+                    'is_ldap' => true,
+                ]
+            );
 
-                // Sinkronisasi / buat user lokal
-                $user = User::firstOrCreate(
-                    ['username' => $this->credential],
-                    [
-                        'name'     => $this->credential,
-                        'email'    => null,
-                        'password' => null,
-                        'is_ldap'  => true,
-                    ]
-                );
+            Auth::login($user, $this->remember);
 
-                Auth::login($user, $this->remember);
+            RateLimiter::clear($this->throttleKey());
+            Session::regenerate();
 
-                RateLimiter::clear($this->throttleKey());
-                Session::regenerate();
-
-                $this->redirectIntended(
-                    default: route('dashboard', absolute: false),
-                    navigate: true
-                );
-                return;
-            }
-        } catch (\Throwable $e) {
-            // LDAP error → lanjut fallback
-            // (jangan tampilkan error LDAP ke user)
+            $this->redirectIntended(
+                default: route('dashboard', absolute: false),
+                navigate: true
+            );
+            return;
         }
 
-        /*
+    } catch (\Throwable $e) {
+        // API LDAP down → lanjut fallback DB
+    }
+
+    /*
     |--------------------------------------------------------------------------
     | 2️⃣ FALLBACK LOGIN DATABASE (EMAIL / USERNAME)
     |--------------------------------------------------------------------------
     */
+    $field = filter_var($this->credential, FILTER_VALIDATE_EMAIL)
+        ? 'email'
+        : 'username';
 
-        $field = filter_var($this->credential, FILTER_VALIDATE_EMAIL)
-            ? 'email'
-            : 'username';
+    $credentials = [
+        $field => $this->credential,
+        'password' => $this->password,
+    ];
 
-        $credentials = [
-            $field => $this->credential,
-            'password' => $this->password,
-        ];
+    if (! Auth::attempt($credentials, $this->remember)) {
+        RateLimiter::hit($this->throttleKey());
 
-        if (! Auth::attempt($credentials, $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'credential' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(
-            default: route('dashboard', absolute: false),
-            navigate: true
-        );
+        throw ValidationException::withMessages([
+            'credential' => __('auth.failed'),
+        ]);
     }
+
+    RateLimiter::clear($this->throttleKey());
+    Session::regenerate();
+
+    $this->redirectIntended(
+        default: route('dashboard', absolute: false),
+        navigate: true
+    );
+}
+
 
 
     /**

@@ -39,6 +39,11 @@ return [
         'client_id'     => env('MSGRAPH_CLIENT_ID'),
         'client_secret' => env('MSGRAPH_CLIENT_SECRET'),
     ],
+    'ldap_gateway' => [
+    'url' => env('LDAP_GATEWAY_URL'),
+    'key' => env('LDAP_GATEWAY_KEY'),
+],
+
 
 
 ];
