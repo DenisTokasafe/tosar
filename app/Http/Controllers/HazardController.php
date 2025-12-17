@@ -37,7 +37,7 @@ class HazardController extends Controller
             'Kontraktor' => $hazard->contractor->contractor_name ?? '',
             'Pelapor_Nama' => $hazard->pelapor->name ?? $hazard->manualPelaporName,
             'Deskripsi_Hazard' => $hazard->description,
-            'Tingkat_Risiko' => $hazard->risk_level,
+            'Tingkat_Risiko' => $hazard->risk_level ?? '',
             'Penanggung_Jawab' => $hazard->penanggungJawab->name ?? '',
             'Lokasi' => $hazard->location->location_name ?? '',
             'Konsekuensi' => $hazard->consequence->consequence_name ?? '',
