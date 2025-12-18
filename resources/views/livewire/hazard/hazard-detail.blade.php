@@ -297,7 +297,7 @@
                         <input type="hidden" wire:model.live="description" id="description">
                         <x-label-error :messages="$errors->get('description')" />
                     </fieldset>
-                    <fieldset class="fieldset">
+                    <fieldset class=" fieldset">
                         <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
                         <label wire:ignore for="upload-deskripsi"
                             class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
@@ -305,83 +305,74 @@
                                 Pilih file atau gambar
                             </span>
                             <span id="file-name" class="text-[9px] text-gray-500 truncate max-w-sm">
-                                {!! $new_doc_deskripsi ? $new_doc_deskripsi->getClientOriginalName() : urldecode(basename($doc_deskripsi)) !!}
+                                {!! $new_doc_deskripsi ? $new_doc_deskripsi->getClientOriginalName() : $doc_deskripsi !!}
                             </span>
                         </label>
 
                         @php
+                            // Tentukan file yang akan dipreview
                             $fileToPreview =
                                 $new_doc_deskripsi ?? ($doc_deskripsi ? (object) ['name' => $doc_deskripsi] : null);
 
-                            $fileName = null;
-                            if ($fileToPreview) {
-                                $fileName =
-                                    $fileToPreview instanceof
-                                    \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
-                                        ? $fileToPreview->getClientOriginalName()
-                                        : basename($fileToPreview->name);
-                            }
+                            // Ambil nama file atau path
+                            $fileName = $fileToPreview
+                                ? ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
+                                    ? $fileToPreview->getClientOriginalName()
+                                    : $fileToPreview->name)
+                                : null;
 
+                            // Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
                             $extension = $fileName ? strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) : null;
+
+                            // Tentukan apakah file adalah gambar
                             $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
 
-                            // Perbaikan URL Encoding untuk file lama
-                            $fileUrl = null;
-                            if ($new_doc_deskripsi) {
-                                $fileUrl = $new_doc_deskripsi->temporaryUrl();
-                            } elseif ($doc_deskripsi) {
-                                // Memastikan spasi dikonversi menjadi %20 agar URL valid
-                                $encodedPath = implode('/', array_map('rawurlencode', explode('/', $doc_deskripsi)));
-                                $fileUrl = asset('storage/' . $encodedPath);
-                            }
+                            // Tentukan URL/Path file lama atau URL sementara untuk file baru
+                            $fileUrl = $new_doc_deskripsi
+                                ? $new_doc_deskripsi->temporaryUrl()
+                                : ($doc_deskripsi
+                                    ? asset('storage/' . $doc_deskripsi)
+                                    : null);
                         @endphp
 
                         @if ($fileToPreview)
-                            <div class="mt-2 text-xs {{ $new_doc_deskripsi ? 'text-green-600' : 'text-gray-600' }}">
+                            <div class="text-xs {{ $new_doc_deskripsi ? 'text-green-600' : 'text-gray-600' }}">
                                 {{ $new_doc_deskripsi ? 'Preview file baru:' : 'File lama:' }}
                             </div>
 
                             @if ($isImage)
-                                <div class="flex flex-col items-start gap-1">
-                                    {{-- onerror digunakan jika file fisik tetap tidak ditemukan --}}
-                                    <img src="{{ $fileUrl }}" class="object-cover h-24 mt-1 border rounded"
-                                        onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=Error+Load';">
-
-                                    <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
-                                        class="text-xs text-blue-500 hover:underline">
-                                        Lihat Gambar
-                                    </a>
-                                </div>
+                                <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
+                                <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
+                                    class="text-xs text-blue-500 hover:underline">
+                                    Lihat File
+                                </a>
                             @else
-                                <div class="flex flex-col gap-2 mt-2">
-                                    <div class="flex items-center gap-2">
-                                        @if ($extension == 'pdf')
-                                            <x-icon.pdf class="flex-shrink-0 w-8 h-8" />
-                                        @elseif (in_array($extension, ['doc', 'docx']))
-                                            <x-icon.word class="flex-shrink-0 w-8 h-8" />
-                                        @else
-                                            <svg class="w-8 h-8 text-gray-400" fill="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                            </svg>
-                                        @endif
-                                        <span
-                                            class="text-sm truncate max-w-xs {{ $extension == 'pdf' ? 'text-red-600' : 'text-blue-600' }}">
-                                            {{ urldecode($fileName) }}
-                                        </span>
-                                    </div>
-
-                                    @if (!$new_doc_deskripsi)
-                                        <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="text-xs text-blue-500 hover:underline">
-                                            Buka File {{ strtoupper($extension) }}
-                                        </a>
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($extension == 'pdf')
+                                        <x-icon.pdf class="w-8 h-8 " />
+                                        <span class="text-sm text-red-600">{{ $fileName }}</span>
+                                    @elseif (in_array($extension, ['doc', 'docx']))
+                                        <x-icon.word class="w-8 h-8 " />
+                                        <span class="text-sm text-blue-600">{{ $fileName }}</span>
+                                    @else
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File {{ strtoupper($extension) }}:
+                                            {{ $fileName }}</span>
                                     @endif
                                 </div>
+                                @if (!$new_doc_deskripsi)
+                                    <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
+                                        class="text-xs text-blue-500 hover:underline">
+                                        Lihat File
+                                    </a>
+                                @endif
                             @endif
                         @else
-                            <span class="block mt-2 text-xs italic text-gray-400">Belum ada file</span>
+                            <span class="text-xs text-gray-400">Belum ada file</span>
                         @endif
 
                         <input {{ $isDisabled ? 'disabled' : '' }} id="upload-deskripsi"
