@@ -342,8 +342,10 @@
 
                             @if ($isImage)
                                 <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
-                                <a href="{{ $fileUrl }}" target="_blank"
-                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
+                                    class="text-xs text-blue-500 hover:underline">
+                                    Lihat File
+                                </a>
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extension == 'pdf')
@@ -363,8 +365,10 @@
                                     @endif
                                 </div>
                                 @if (!$new_doc_deskripsi)
-                                    <a href="{{ $fileUrl }}" target="_blank"
-                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                    <a href="{{ $fileUrl }}" target="_blank" rel="noopener noreferrer"
+                                        class="text-xs text-blue-500 hover:underline">
+                                        Lihat File
+                                    </a>
                                 @endif
                             @endif
                         @else
@@ -568,7 +572,7 @@
                             @if ($isImageCorrective)
                                 <img src="{{ $fileUrlCorrective }}" class="h-24 mt-1 border rounded">
                                 <a href="{{ $fileUrlCorrective }}" target="_blank"
-                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                    class="text-xs text-blue-500 hover:underline">Lihat File</a>
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extensionCorrective == 'pdf')
@@ -722,8 +726,9 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date" type="text" x-ref="tanggalInput2"
-                                            wire:model.live="action_due_date" placeholder="Pilih Tanggal"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date"
+                                            type="text" x-ref="tanggalInput2" wire:model.live="action_due_date"
+                                            placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
                                     </div>
@@ -745,7 +750,8 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date" type="text" x-ref="tanggalInput3"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date"
+                                            type="text" x-ref="tanggalInput3"
                                             wire:model.live="action_actual_close_date" placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
@@ -756,8 +762,8 @@
                                 <fieldset class="relative fieldset md:col-span-1">
                                     <x-form.label label="Dilaporkan Oleh" required />
                                     <div class="relative">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility" type="text"
-                                            wire:model.live.debounce.300ms="searchActResponsibility"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility"
+                                            type="text" wire:model.live.debounce.300ms="searchActResponsibility"
                                             placeholder="Cari Nama Pelapor..."
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
 
@@ -793,7 +799,7 @@
                                                                 placeholder="Masukkan nama..."
                                                                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                                             <div class="absolute right-0 -translate-y-1/2 top-1/2">
-                                                                <flux:button  size="xs"
+                                                                <flux:button size="xs"
                                                                     wire:click="addActPelaporManual" icon="plus"
                                                                     variant="primary">
                                                                     Tambah
@@ -814,8 +820,9 @@
                             </div>
                             <!-- Tombol Tambah -->
                             <div class="flex justify-end ">
-                                <flux:button size="xs" wire:click="addActionHazard"  class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" icon:trailing="add-icon"
-                                    variant="primary">Tambah</flux:button>
+                                <flux:button size="xs" wire:click="addActionHazard"
+                                    class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                    icon:trailing="add-icon" variant="primary">Tambah</flux:button>
                             </div>
                             <!-- List Actions -->
                             <div class="my-2 divider">Daftar Tindakan</div>
