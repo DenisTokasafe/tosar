@@ -310,7 +310,6 @@
                         </label>
 
                         @php
-                            use Illuminate\Support\Facades\Storage;
 
                             // 1. Tentukan file yang akan dipreview
                             $fileToPreview =
@@ -342,7 +341,7 @@
                                 $pathArray = explode('/', $doc_deskripsi);
                                 $encodedPath = implode('/', array_map('rawurlencode', $pathArray));
 
-                                $fileUrl = Storage::disk('public')->url($encodedPath);
+                                $fileUrl = Illuminate\Support\Facades\Storage::disk('public')->url($encodedPath);
                             }
                         @endphp
 
