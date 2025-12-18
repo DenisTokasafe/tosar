@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HazardController;
 use App\Livewire\Hazard\HazardReportPanel;
 use App\Livewire\Administration\Roles\Role;
+use App\Http\Controllers\ManhoursController;
 use App\Livewire\Administration\People\User;
 use App\Livewire\Administration\Menu\ListMenu;
 use App\Livewire\Administration\DeptGroup\Group;
@@ -47,6 +48,7 @@ Route::redirect('/', 'dashboard');
 Route::redirect('/eventReport/hazardReportGuest/3','/hazard/form',301);
 Route::get('hazard/form', HazardForm::class)->name('hazard-form');
 Route::get('api/hazards/data', [HazardController::class, 'getExcelData'])->name('hazards.excel.data');
+Route::get('api/manhours', [ManhoursController::class, 'getExcelData'])->name('manhours.excel.data');
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
