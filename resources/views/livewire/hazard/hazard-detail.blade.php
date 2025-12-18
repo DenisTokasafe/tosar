@@ -310,39 +310,29 @@
                         </label>
 
                         @php
-
-                            // 1. Tentukan file yang akan dipreview
+                            // Tentukan file yang akan dipreview
                             $fileToPreview =
                                 $new_doc_deskripsi ?? ($doc_deskripsi ? (object) ['name' => $doc_deskripsi] : null);
 
-                            // 2. Ambil nama file atau path
+                            // Ambil nama file atau path
                             $fileName = $fileToPreview
                                 ? ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
                                     ? $fileToPreview->getClientOriginalName()
                                     : $fileToPreview->name)
                                 : null;
 
-                            // 3. Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
+                            // Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
                             $extension = $fileName ? strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) : null;
 
-                            // 4. Tentukan apakah file adalah gambar
+                            // Tentukan apakah file adalah gambar
                             $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
 
-                            // 5. Tentukan URL menggunakan Storage::url() untuk file lama
-                            $fileUrl = null;
-                            if ($new_doc_deskripsi) {
-                                // File baru yang sedang di-upload (Temporary Livewire URL)
-                                $fileUrl = $new_doc_deskripsi->temporaryUrl();
-                            } elseif ($doc_deskripsi) {
-                                /**
-                                 * Menggunakan Storage::url() sebagai pengganti asset().
-                                 * Kita pecah path-nya dan encode per bagian agar spasi menjadi %20 secara aman.
-                                 */
-                                $pathArray = explode('/', $doc_deskripsi);
-                                $encodedPath = implode( array_map('rawurlencode', $pathArray));
-
-                                $fileUrl = Illuminate\Support\Facades\Storage::disk('public')->url($encodedPath);
-                            }
+                            // Tentukan URL/Path file lama atau URL sementara untuk file baru
+                            $fileUrl = $new_doc_deskripsi
+                                ? $new_doc_deskripsi->temporaryUrl()
+                                : ($doc_deskripsi
+                                    ? asset('storage/' . $doc_deskripsi)
+                                    : null);
                         @endphp
 
                         @if ($fileToPreview)
@@ -353,7 +343,7 @@
                             @if ($isImage)
                                 <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
                                 <a href="{{ $fileUrl }}" target="_blank"
-                                    class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extension == 'pdf')
@@ -373,7 +363,7 @@
                                     @endif
                                 </div>
                                 @if (!$new_doc_deskripsi)
-                                    <a href="{{ $fileUrl }}" target="_blank"
+                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url('sebelum_perbaikan/MG_4882.jpeg') }}" target="_blank"
                                         class="text-xs text-blue-500 hover:underline">Lihat File</a>
                                 @endif
                             @endif
@@ -578,7 +568,7 @@
                             @if ($isImageCorrective)
                                 <img src="{{ $fileUrlCorrective }}" class="h-24 mt-1 border rounded">
                                 <a href="{{ $fileUrlCorrective }}" target="_blank"
-                                    class="text-xs text-blue-500 hover:underline">Lihat File</a>
+                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
                             @else
                                 <div class="flex items-center gap-2 mt-2">
                                     @if ($extensionCorrective == 'pdf')
@@ -732,9 +722,8 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date"
-                                            type="text" x-ref="tanggalInput2" wire:model.live="action_due_date"
-                                            placeholder="Pilih Tanggal"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date" type="text" x-ref="tanggalInput2"
+                                            wire:model.live="action_due_date" placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
                                     </div>
@@ -756,8 +745,7 @@
                                     }" x-init="initFlatpickr();
                                     Livewire.hook('message.processed', () => initFlatpickr());"
                                         x-ref="wrapper">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date"
-                                            type="text" x-ref="tanggalInput3"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date" type="text" x-ref="tanggalInput3"
                                             wire:model.live="action_actual_close_date" placeholder="Pilih Tanggal"
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                             readonly />
@@ -768,8 +756,8 @@
                                 <fieldset class="relative fieldset md:col-span-1">
                                     <x-form.label label="Dilaporkan Oleh" required />
                                     <div class="relative">
-                                        <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility"
-                                            type="text" wire:model.live.debounce.300ms="searchActResponsibility"
+                                        <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility" type="text"
+                                            wire:model.live.debounce.300ms="searchActResponsibility"
                                             placeholder="Cari Nama Pelapor..."
                                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
 
@@ -805,7 +793,7 @@
                                                                 placeholder="Masukkan nama..."
                                                                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                                             <div class="absolute right-0 -translate-y-1/2 top-1/2">
-                                                                <flux:button size="xs"
+                                                                <flux:button  size="xs"
                                                                     wire:click="addActPelaporManual" icon="plus"
                                                                     variant="primary">
                                                                     Tambah
@@ -826,9 +814,8 @@
                             </div>
                             <!-- Tombol Tambah -->
                             <div class="flex justify-end ">
-                                <flux:button size="xs" wire:click="addActionHazard"
-                                    class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                                    icon:trailing="add-icon" variant="primary">Tambah</flux:button>
+                                <flux:button size="xs" wire:click="addActionHazard"  class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}" icon:trailing="add-icon"
+                                    variant="primary">Tambah</flux:button>
                             </div>
                             <!-- List Actions -->
                             <div class="my-2 divider">Daftar Tindakan</div>
