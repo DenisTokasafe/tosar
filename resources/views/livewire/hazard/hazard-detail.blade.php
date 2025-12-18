@@ -363,7 +363,7 @@
                                     @endif
                                 </div>
                                 @if (!$new_doc_deskripsi)
-                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url('sebelum_perbaikan/MG_4882.jpeg') }}" target="_blank"
+                                    <a href="{{ $fileUrl }}" target="_blank"
                                         class="text-xs text-blue-500 hover:underline">Lihat File</a>
                                 @endif
                             @endif
