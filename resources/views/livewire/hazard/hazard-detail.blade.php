@@ -339,7 +339,7 @@
                                  * Kita pecah path-nya dan encode per bagian agar spasi menjadi %20 secara aman.
                                  */
                                 $pathArray = explode('/', $doc_deskripsi);
-                                $encodedPath = implode('/', array_map('rawurlencode', $pathArray));
+                                $encodedPath = implode( array_map('rawurlencode', $pathArray));
 
                                 $fileUrl = Illuminate\Support\Facades\Storage::disk('public')->url($encodedPath);
                             }
