@@ -693,7 +693,7 @@
 
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">Tindakan Lanjutan</legend>
-                    <div class="card-body ">
+
                         <!-- Deskripsi Tindakan -->
                         <fieldset class="fieldset md:col-span-1">
                             <x-form.label label="Deskripsi Tindakan" required />
@@ -821,6 +821,40 @@
                         </div>
                         <!-- List Actions -->
                         <div class="my-2 divider">Daftar Tindakan</div>
+                       <ul class="space-y-2">
+                         @forelse($actionHazards as $act)
+                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                                <div class="flex flex-col gap-1 md:flex-row md:justify-between">
+                                    <div>
+                                        <span class="font-semibold">{!! $act['description'] !!}</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 md:flex-row md:items-center">
+                                        <span class="text-sm">Batas Waktu:
+                                            {{ \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') }}</span>
+                                        <span class="text-sm">Tgl Selesai:
+                                            {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
+                                        <span class="text-sm">PIC:
+                                            {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
+                                        <div class="flex gap-2 mt-1 md:mt-0">
+                                            <flux:button variant="subtle" size="xs"
+                                                wire:click="loadEditAction({{ $act['id'] }})"
+                                                icon="pencil-square">
+                                            </flux:button>
+
+                                            <flux:button variant="danger" size="xs"
+                                                wire:click="removeAction({{ $act['id'] }})"
+                                                wire:confirm="Yakin hapus tindakan ini?" icon="trash">
+                                            </flux:button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                                <div class="text-center text-gray-500">Tidak ada tindakan</div>
+                            </li>
+                        @endforelse
+                    </ul>
                         <div class="overflow-x-auto ">
                             <table class="table px-2 text-sm border table-xs">
                                 <thead class="bg-base-200">
@@ -880,7 +914,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+
                 </fieldset>
 
                 <div class="flex flex-col-reverse gap-2 my-2 md:flex-row">

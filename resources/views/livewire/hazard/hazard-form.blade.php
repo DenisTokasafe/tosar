@@ -426,8 +426,6 @@
 
             <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title "> Tindakan Lanjutan</legend>
-                <div class="card-body ">
-
                     <!-- Deskripsi Tindakan -->
                     <fieldset class="fieldset md:col-span-1">
                         <x-form.label label="Deskripsi Tindakan" required />
@@ -571,7 +569,7 @@
                             <li class="text-sm text-gray-500">Belum ada tindakan lanjutan ditambahkan.</li>
                         @endforelse
                     </ul>
-                </div>
+
             </fieldset>
 
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
