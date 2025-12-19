@@ -573,7 +573,9 @@
                                 </div>
                             </li>
                         @empty
-                            <p class="text-sm text-gray-500">Belum ada tindakan yang ditambahkan.</p>
+                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                            <p class="text-sm text-center text-gray-500">Belum ada tindakan yang ditambahkan.</p>
+                        </li>
                         @endforelse
                     </ul>
 
