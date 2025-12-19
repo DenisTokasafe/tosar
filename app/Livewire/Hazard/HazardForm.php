@@ -109,7 +109,7 @@ class HazardForm extends Component
     #[Validate([
         'nullable',
         'date_format:d-m-Y',
-        'before_or_equal:action_actual_close_date'
+        'before_or_equal:actual_close_date'
     ], message: [
         'date_format' => 'Format tanggal harus dd-mm-YYYY.',
         'before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.'
