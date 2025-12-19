@@ -838,7 +838,7 @@
                                             <path d="m22 16-5.5 5.5L14 19" />
                                         </svg>
                                             Batas Waktu:
-                                            {{ \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') :'' }}</span>
+                                            {{$act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') :'' }}</span>
                                         <span class="text-sm badge badge-info badge-outline">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
