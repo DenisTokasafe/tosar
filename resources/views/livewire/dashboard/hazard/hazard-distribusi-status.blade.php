@@ -8,8 +8,6 @@
         // const chartData = JSON.parse('<?php echo $statusChart ?>');
         const chartData = JSON.parse(@json($statusChart));
 
-        console.log(chartData);
-        
         const labels = chartData.labels;
         const values = chartData.values;
         // 🔥 Masukkan data Livewire ke format yang ECharts butuh
