@@ -604,7 +604,7 @@
                     </fieldset>
                 </div>
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
-                    <legend class="text-sm font-semibold card-title ">DiLaporkan ke</legend>
+                    <legend class="text-sm font-semibold card-title ">Penanggung Jawab</legend>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                         {{-- workgroup --}}
                         <fieldset>
@@ -678,7 +678,7 @@
                             </div>
                         </fieldset>
                         <fieldset class="fieldset">
-                            <x-form.label label="Penanggung Jawab Area" required />
+                            <x-form.label label="PIC" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
                                 class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">-- Pilih --</option>
