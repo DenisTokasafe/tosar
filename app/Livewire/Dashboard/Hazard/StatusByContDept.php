@@ -12,45 +12,54 @@ class StatusByContDept extends Component
     public $start_date;
     public $end_date;
     public $status;
+
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {
         $this->start_date = $data['start'];
         $this->end_date   = $data['end'];
-        // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
+
+    // Trigger awal saat komponen dimuat
+    public function mount()
+    {
+        $this->loadData();
+    }
+
     #[On('hazardStatusByCont_Dept')]
     public function loadData()
     {
-        // Logika untuk memuat data berdasarkan $this->start_date dan $this->end_date
-        // Misalnya, ambil data dari model Hazard berdasarkan rentang tanggal
-        $hazards = Hazard::with(['department', 'contractor'])->when($this->start_date && $this->end_date, function ($q) {
-            $q->dateRange($this->start_date, $this->end_date);
-        })->whereYear('tanggal', Carbon::now()->year)->get();
-        // Grouping data berdasarkan Departemen (atau gabungan Dept & Kontraktor)
-        // 2. Kumpulkan semua label unik (Dept + Contractor)
+        $hazards = Hazard::with(['department', 'contractor'])
+            ->whereYear('tanggal', Carbon::now()->year)
+            ->when($this->start_date && $this->end_date, function ($q) {
+                // Pastikan scope dateRange sudah benar di model Hazard
+                $q->whereBetween('tanggal', [$this->start_date, $this->end_date]);
+            })->get();
+
+        // 1. Ambil label unik menggunakan kolom yang benar (department_name & contractor_name)
         $deptNames = $hazards->whereNotNull('department_id')->pluck('department.department_name')->unique();
         $contNames = $hazards->whereNotNull('contractor_id')->pluck('contractor.contractor_name')->unique();
 
-        // Gabungkan dan urutkan secara alfabetis
-        $labels = $deptNames->merge($contNames)->sort()->values()->toArray();
+        // Gabungkan, hilangkan nilai kosong, dan urutkan
+        $labels = $deptNames->merge($contNames)->filter()->sort()->values()->toArray();
 
         $closedData = [];
         $openData = [];
 
-        // 3. Hitung status untuk setiap label
+        // 2. Hitung status untuk setiap label
         foreach ($labels as $name) {
-            // Cari laporan yang department-nya bernama $name ATAU contractor-nya bernama $name
             $reportsForLabel = $hazards->filter(function ($report) use ($name) {
-                return ($report->department->name ?? '') === $name ||
-                    ($report->contractor->name ?? '') === $name;
+                // Cek kecocokan pada kedua kolom relasi
+                $isDept = ($report->department->department_name ?? '') === $name;
+                $isCont = ($report->contractor->contractor_name ?? '') === $name;
+                return $isDept || $isCont;
             });
 
             // Hitung Closed
             $closedData[] = $reportsForLabel->where('status', 'closed')->count();
 
-            // Hitung Open (Bukan closed dan bukan cancel)
+            // Hitung Open (Semua kecuali closed dan cancel)
             $openData[] = $reportsForLabel->whereNotIn('status', ['closed', 'cancel'])->count();
         }
 
@@ -61,8 +70,10 @@ class StatusByContDept extends Component
         ];
 
         $this->status = json_encode($chartData);
-        $this->dispatch('hazardStatus_DeptOrCont', $this->status);
+        // Dispatch event ke browser/AlpineJS
+        $this->dispatch('hazardStatus_DeptOrCont', data: $this->status);
     }
+
     public function render()
     {
         return view('livewire.dashboard.hazard.status-by-cont-dept');
