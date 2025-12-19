@@ -855,65 +855,6 @@
                             </li>
                         @endforelse
                     </ul>
-                        <div class="overflow-x-auto ">
-                            <table class="table px-2 text-sm border table-xs">
-                                <thead class="bg-base-200">
-                                    <tr>
-                                        <th class="whitespace-nowrap">Deskripsi</th>
-                                        <th class="whitespace-nowrap">Batas Waktu</th>
-                                        <th class="whitespace-nowrap">Tgl Selesai</th>
-                                        <th class="whitespace-nowrap">PIC</th>
-                                        <th class="text-center whitespace-nowrap">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($actionHazards as $act)
-                                        <tr>
-                                            {{-- Deskripsi --}}
-                                            <td class="align-top">
-                                                <span class="font-semibold">{!! $act['description'] !!}</span>
-                                            </td>
-
-                                            {{-- Due Date --}}
-                                            <td class="align-top">
-                                                {{ \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') }}
-                                            </td>
-
-                                            {{-- Actual Close --}}
-                                            <td class="align-top">
-                                                {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}
-                                            </td>
-
-                                            {{-- PIC --}}
-                                            <td class="align-top">
-                                                {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}
-                                            </td>
-
-                                            {{-- Action Buttons --}}
-                                            <td class="text-center align-top">
-                                                <div class="flex justify-center gap-2">
-                                                    <flux:button variant="subtle" size="xs"
-                                                        wire:click="loadEditAction({{ $act['id'] }})"
-                                                        icon="pencil-square">
-                                                    </flux:button>
-
-                                                    <flux:button variant="danger" size="xs"
-                                                        wire:click="removeAction({{ $act['id'] }})"
-                                                        wire:confirm="Yakin hapus tindakan ini?" icon="trash">
-                                                    </flux:button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-sm text-center text-gray-500">
-                                                Belum ada tindakan lanjutan ditambahkan.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
 
                 </fieldset>
 
