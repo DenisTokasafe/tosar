@@ -436,12 +436,37 @@ class HazardForm extends Component
     public function addAction()
     {
         $this->dispatch('validateCkEditorAddAction');
-        $this->validate([
-            'action_description' => 'required|string',
-            'action_due_date' => 'nullable|date',
-            'actual_close_date' => 'nullable|date',
-            'action_responsible_id' => 'nullable|exists:users,id',
-        ]);
+        $this->validate(
+            [
+                'action_description'       => 'required|string',
+                'action_responsible_id'    => 'required|integer',
+                // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
+                'action_due_date'       => [
+                    'required',
+                    'date_format:d-m-Y',
+                    'before_or_equal:action_actual_close_date'
+                ],
+
+                // Actual close date harus sesudah atau sama dengan due date
+                'action_actual_close_date' => [
+                    'nullable',
+                    'date_format:d-m-Y',
+                    'after_or_equal:action_due_date'
+                ],
+            ],
+            [
+                'action_description.required'  => 'Deskripsi tindakan wajib diisi.',
+                'action_due_date.required'     => 'Tanggal batas waktu wajib diisi.',
+                'action_due_date.date_format'  => 'Format tanggal harus dd-mm-YYYY.',
+                'action_due_date.before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.',
+
+                'action_actual_close_date.date_format'    => 'Format tanggal harus dd-mm-YYYY.',
+                'action_actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
+
+                'action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
+            ]
+
+        );
         $this->actions[] = [
             'description' => $this->action_description,
             'due_date' => $this->action_due_date,
