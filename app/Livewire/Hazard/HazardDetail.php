@@ -926,7 +926,7 @@ class HazardDetail extends Component
 
         ActionHazard::create([
             'hazard_id'        => $this->hazard->id,
-            'orginal_date'     => now(), // atau bisa diambil dari form jika ada
+            'orginal_date'     => $this->action_due_date, // atau bisa diambil dari form jika ada
             'description'      => $this->action_description,
             'due_date'         => Carbon::parse($this->action_due_date),
             'actual_close_date' => $this->action_actual_close_date
