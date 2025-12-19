@@ -558,11 +558,38 @@
                                     <span class="font-semibold">{!! $action['description'] !!}</span>
                                 </div>
                                 <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                    <span class="text-sm">Batas Waktu:
+                                    <span class="text-sm badge badge-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                            <path d="M12 6v6l4 2" />
+                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                            <path d="m22 16-5.5 5.5L14 19" />
+                                        </svg>
+                                        Batas Waktu:
                                         {{ $action['due_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm">Tgl Selesai:
+                                    <span class="text-sm badge badge-info">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                            <path d="M12 6v6l4 2" />
+                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                            <path d="m22 16-5.5 5.5L14 19" />
+                                        </svg>
+                                        Tgl Selesai:
                                         {{ $action['close_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm">PIC:
+                                    <span class="text-sm badge badge-success">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-user-check-icon lucide-user-check">
+                                            <path d="m16 11 2 2 4-4" />
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                        </svg>
+                                        PIC:
                                         {{ $action['reported_by_name'] ?? 'N/A' }}</span>
                                     <div class="flex gap-2 mt-1 md:mt-0">
 
