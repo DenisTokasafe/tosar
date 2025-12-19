@@ -691,7 +691,7 @@
                     </div>
                 </fieldset>
                 <div class="mx-auto mb-4 ">
-                    <fieldset class="p-3 mt-2 mb-4 border border-gray-200 shadow-md fieldset bg-base-100">
+                   <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                         <legend class="text-sm font-semibold card-title ">Tindakan Lanjutan</legend>
                         <div class="card-body ">
                             <!-- Deskripsi Tindakan -->
@@ -704,7 +704,7 @@
                                     id="action_description">
                                 <x-label-error :messages="$errors->get('action_description')" />
                             </fieldset>
-                            <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
+                           <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
                                 <!-- Tanggal & Waktu -->
                                 <fieldset class="fieldset md:col-span-1">
                                     <x-form.label label="Batas Waktu Penyelesaian" required />
