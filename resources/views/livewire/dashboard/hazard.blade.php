@@ -125,6 +125,11 @@
                 <livewire:dashboard.hazard.hazard-user-report />
             </div>
         </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 my-2">
+            <div class="bg-white rounded-xl shadow">
+                <livewire:dashboard.hazard.status-by-cont-dept />
+            </div>
+        </div>
 
         {{-- Daftar Laporan Terbaru --}}
         <div class="bg-white p-4 rounded-xl shadow">
