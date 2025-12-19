@@ -24,7 +24,7 @@
                 },
                 legend: {
                     data: ['Open', 'Closed'],
-                    top: 50
+
                 },
                 grid: {
                     top: 100,
