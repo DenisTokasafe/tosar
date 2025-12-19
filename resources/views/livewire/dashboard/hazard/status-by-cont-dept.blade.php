@@ -26,13 +26,29 @@
                     data: ['Open', 'Closed'],
                     bottom: 0
                 },
+                // --- MAKSIMALKAN GRID ---
                 grid: {
-top: '15%',
-                    left: '3%',
-                    right: '4%',
-                    bottom: '30%', // Beri ruang yang luas untuk label sumbu X
-                    containLabel: true
+                    top: 80, // Jarak dari judul/legenda
+                    left: '2%', // Perkecil margin kiri
+                    right: '2%', // Perkecil margin kanan
+                    bottom: 120, // Sesuaikan dengan panjang label
+                    containLabel: true // Memastikan label tetap terlihat tanpa membuang space luar
                 },
+                // --- TAMBAHKAN DATA ZOOM (Opsional tapi sangat membantu) ---
+                // Ini menghilangkan whitespace jika bar terlalu banyak dengan slider
+                dataZoom: [{
+                        type: 'inside', // Bisa scroll pakai mouse wheel
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        show: true, // Munculkan slider di bawah jika data sangat padat
+                        type: 'slider',
+                        top: '90%',
+                        start: 0,
+                        end: 100
+                    }
+                ],
                 xAxis: {
                     type: 'category',
                     data: rawData.labels,
@@ -41,7 +57,7 @@ top: '15%',
                         rotate: 45, // Miringkan 45 derajat agar teks panjang terbaca
                         fontSize: 10,
                         // Memotong teks jika lebih dari 15 karakter agar tidak merusak layout
-                        formatter: function (value) {
+                        formatter: function(value) {
                             return value.length > 15 ? value.substring(0, 15) + '...' : value;
                         }
                     }
