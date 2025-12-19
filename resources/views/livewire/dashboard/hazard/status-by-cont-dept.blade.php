@@ -31,7 +31,7 @@
                     top: 80, // Jarak dari judul/legenda
                     left: '2%', // Perkecil margin kiri
                     right: '2%', // Perkecil margin kanan
-                    bottom: 120, // Sesuaikan dengan panjang label
+                    bottom: 10, // Sesuaikan dengan panjang label
                     containLabel: true // Memastikan label tetap terlihat tanpa membuang space luar
                 },
                 // --- TAMBAHKAN DATA ZOOM (Opsional tapi sangat membantu) ---
