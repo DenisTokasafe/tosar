@@ -4,11 +4,7 @@
         <!-- Load ECharts dari CDN -->
         <script type="module">
              setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
-            const rawData = @json($status ? json_decode($status, true) : [
-                'labels' => [],
-                'open' => [],
-                'closed' => []
-            ]);
+            const rawData = @json($status);
             var dom = document.getElementById('hazardStatusByContDept');
             var myChart = echarts.init(dom);
 
@@ -34,7 +30,7 @@
                 },
                 xAxis: {
                     type: 'category',
-                    data: rawData.labels || [],
+                    data: rawData.labels ,
                     axisLabel: {
                         interval: 0,
                         rotate: 30
@@ -51,7 +47,7 @@
                             color: '#F87171', // Merah muda/Orange untuk Open
                             borderRadius: [0, 0, 0, 0] // [TopLeft, TopRight, BottomRight, BottomLeft]
                         },
-                        data: rawData.open || []
+                        data: rawData.open
                     },
                     {
                         name: 'Closed',
@@ -61,7 +57,7 @@
                             color: '#34D399', // Hijau untuk Closed
                             borderRadius: [5, 5, 0, 0] // Memberi efek melengkung hanya di bagian atas bar tertinggi
                         },
-                        data: rawData.closed || []
+                        data: rawData.closed
                     }
                 ]
             };
