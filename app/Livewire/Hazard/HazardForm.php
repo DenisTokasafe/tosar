@@ -444,11 +444,11 @@ class HazardForm extends Component
                 'action_due_date'       => [
                     'required',
                     'date_format:d-m-Y',
-                    'before_or_equal:action_actual_close_date'
+                    'before_or_equal:actual_close_date'
                 ],
 
                 // Actual close date harus sesudah atau sama dengan due date
-                'action_actual_close_date' => [
+                'actual_close_date' => [
                     'nullable',
                     'date_format:d-m-Y',
                     'after_or_equal:action_due_date'
@@ -460,8 +460,8 @@ class HazardForm extends Component
                 'action_due_date.date_format'  => 'Format tanggal harus dd-mm-YYYY.',
                 'action_due_date.before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.',
 
-                'action_actual_close_date.date_format'    => 'Format tanggal harus dd-mm-YYYY.',
-                'action_actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
+                'actual_close_date.date_format'    => 'Format tanggal harus dd-mm-YYYY.',
+                'actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
 
                 'action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
             ]
