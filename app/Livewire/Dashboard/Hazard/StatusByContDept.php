@@ -11,7 +11,7 @@ class StatusByContDept extends Component
 {
     public $start_date;
     public $end_date;
-    public $status;
+    public $statusDeptCont;
 
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
@@ -69,9 +69,9 @@ class StatusByContDept extends Component
             'open'   => $openData
         ];
 
-        $this->status = json_encode($chartData);
+        $this->statusDeptCont = json_encode($chartData);
         // Dispatch event ke browser/AlpineJS
-        $this->dispatch('hazardStatus_DeptOrCont',$this->status);
+        $this->dispatch('hazardStatus_DeptOrCont', $this->statusDeptCont);
     }
 
     public function render()
