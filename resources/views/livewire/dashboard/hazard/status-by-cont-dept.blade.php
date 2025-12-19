@@ -44,7 +44,7 @@
                 series: [{
                         name: 'Open',
                         type: 'bar',
-                        stack: 'total', // Nama stack harus sama agar bertumpuk
+                        // Nama stack harus sama agar bertumpuk
                         itemStyle: {
                             color: '#F87171', // Merah muda/Orange untuk Open
                             borderRadius: [0, 0, 0, 0] // [TopLeft, TopRight, BottomRight, BottomLeft]
@@ -54,7 +54,7 @@
                     {
                         name: 'Closed',
                         type: 'bar',
-                        stack: 'total',
+
                         itemStyle: {
                             color: '#34D399', // Hijau untuk Closed
                             borderRadius: [5, 5, 0, 0] // Memberi efek melengkung hanya di bagian atas bar tertinggi
