@@ -133,7 +133,6 @@ class HazardDetail extends Component
         'before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.'
     ])]
     public $action_due_date;
-
     #[Validate([
         'nullable',
         'date_format:d-m-Y',
