@@ -31,7 +31,7 @@ class StatusByContDept extends Component
     public function loadData()
     {
         $hazards = Hazard::with(['department', 'contractor'])
-            ->whereYear('tanggal', Carbon::now()->year)
+
             ->when($this->start_date && $this->end_date, function ($q) {
                 $q->whereBetween('tanggal', [$this->start_date, $this->end_date]);
             })->get();
