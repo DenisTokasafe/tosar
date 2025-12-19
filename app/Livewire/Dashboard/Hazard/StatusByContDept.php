@@ -71,7 +71,7 @@ class StatusByContDept extends Component
 
         $this->status = json_encode($chartData);
         // Dispatch event ke browser/AlpineJS
-        $this->dispatch('hazardStatus_DeptOrCont', data: $this->status);
+        $this->dispatch('hazardStatus_DeptOrCont',$this->status);
     }
 
     public function render()
