@@ -4,7 +4,11 @@
         <!-- Load ECharts dari CDN -->
         <script type="module">
              setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
-            const rawData = @json(json_decode($status, true));
+            const rawData = @json($status ? json_decode($status, true) : [
+                'labels' => [],
+                'open' => [],
+                'closed' => []
+            ]);
             var dom = document.getElementById('hazardStatusByContDept');
             var myChart = echarts.init(dom);
 
