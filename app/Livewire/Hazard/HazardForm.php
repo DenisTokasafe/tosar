@@ -100,10 +100,31 @@ class HazardForm extends Component
     public $manualActPelaporName = '';
     // input action
     public $actions = []; // kumpulan action sebelum disimpan
+    #[Validate('required|string', message: 'Deskripsi tindakan wajib diisi.')]
     public $action_description;
-    public $action_due_date;
-    public $actual_close_date;
+
+    #[Validate('nullable')]
     public $action_responsible_id;
+
+    #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'before_or_equal:action_actual_close_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.'
+    ])]
+    public $action_due_date;
+
+    #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'after_or_equal:action_due_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.'
+    ])]
+    public $actual_close_date;
     public function rules()
     {
         $baseRules = [

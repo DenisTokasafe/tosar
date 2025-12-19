@@ -118,10 +118,31 @@ class HazardDetail extends Component
     public $hazard_id;
 
     // Data Action Hazard
+    #[Validate('required|string', message: 'Deskripsi tindakan wajib diisi.')]
     public $action_description;
-    public $action_due_date;
-    public $action_actual_close_date;
+
+  #[Validate('nullable')]
     public $action_responsible_id;
+
+    #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'before_or_equal:action_actual_close_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.'
+    ])]
+    public $action_due_date;
+
+    #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'after_or_equal:action_due_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.'
+    ])]
+    public $action_actual_close_date;
 
     public $manualActPelaporModeEdit = false;
     public $showActPelaporDropdownEdit = false;
@@ -129,9 +150,27 @@ class HazardDetail extends Component
     public $searchActResponsibilityEdit = '';
     public $manualActPelaporNameEdit = '';
 
+     #[Validate('required|string', message: 'Deskripsi tindakan wajib diisi.')]
     public $edit_action_id;
+   #[Validate('nullable')]
     public $edit_action_description;
+     #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'before_or_equal:action_actual_close_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.'
+    ])]
     public $edit_action_due_date;
+    #[Validate([
+        'nullable',
+        'date_format:d-m-Y',
+        'after_or_equal:action_due_date'
+    ], message: [
+        'date_format' => 'Format tanggal harus dd-mm-YYYY.',
+        'after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.'
+    ])]
     public $edit_action_actual_close_date;
     public $edit_action_responsible_id;
     public $edit_searchResponsibility;
