@@ -18,7 +18,6 @@ class StatusByContDept extends Component
     {
         $this->start_date = $data['start'];
         $this->end_date   = $data['end'];
-        $this->loadData();
     }
 
     // Trigger awal saat komponen dimuat
@@ -78,7 +77,6 @@ class StatusByContDept extends Component
 
     public function render()
     {
-        $this->loadData();
         return view('livewire.dashboard.hazard.status-by-cont-dept');
     }
 }
