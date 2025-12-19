@@ -80,6 +80,8 @@
 
             Livewire.on('hazardStatus_DeptOrCont', event => {
                 let payload = JSON.parse(event);
+                console.log(payload);
+
                 myChart.setOption({
                     xAxis: {
                         data: payload.labels
