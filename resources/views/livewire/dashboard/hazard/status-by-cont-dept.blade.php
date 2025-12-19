@@ -3,8 +3,10 @@
     @push('scripts')
         <!-- Load ECharts dari CDN -->
         <script type="module">
-             setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
+            setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
             const rawData = @json($status);
+            console.log($status);
+
             var dom = document.getElementById('hazardStatusByContDept');
             var myChart = echarts.init(dom);
 
@@ -30,7 +32,7 @@
                 },
                 xAxis: {
                     type: 'category',
-                    data: rawData.labels ,
+                    data: rawData.labels,
                     axisLabel: {
                         interval: 0,
                         rotate: 30
