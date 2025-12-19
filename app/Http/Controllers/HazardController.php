@@ -40,7 +40,7 @@ class HazardController extends Controller
             'Deskripsi_Hazard' => $hazard->description,
             'Tingkat_Risiko' => $hazard->risk_level ?? '',
             'Penanggung_Jawab' => $hazard->penanggungJawab->name ?? '',
-            'Lokasi' => $hazard->location->location_name ?? '',
+            'Lokasi' => $hazard->location->name ?? '',
             'Konsekuensi' => $hazard->consequence->consequence_name ?? '',
             'Kemungkinan' => $hazard->likelihood->likelihood_name ?? '',
             'lokasi_spesifik' => $hazard->location_specific,
