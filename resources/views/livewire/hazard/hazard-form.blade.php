@@ -590,7 +590,7 @@
                                             <circle cx="9" cy="7" r="4" />
                                         </svg>
                                         PIC:
-                                        {{ $action['reported_by_name'] ?? 'N/A' }}</span>
+                                        {{  optional(\App\Models\User::find($action['responsible_id']))->name ?? '-' ?? 'N/A' }}</span>
                                     <div class="flex gap-2 mt-1 md:mt-0">
 
                                         <flux:button variant="danger" size="xs"
