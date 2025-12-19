@@ -558,7 +558,7 @@
                                     <span class="font-semibold">{!! $action['description'] !!}</span>
                                 </div>
                                 <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                    <span class="text-sm badge badge-primary">
+                                    <span class="text-sm badge badge-primary badge-outline">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -569,7 +569,7 @@
                                         </svg>
                                         Batas Waktu:
                                         {{ $action['due_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm badge badge-info">
+                                    <span class="text-sm badge badge-info badge-outline">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -580,7 +580,7 @@
                                         </svg>
                                         Tgl Selesai:
                                         {{ $action['close_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm badge badge-success">
+                                    <span class="text-sm badge badge-success badge-outline">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
