@@ -29,26 +29,39 @@ class StatusByContDept extends Component
             $q->dateRange($this->start_date, $this->end_date);
         })->whereYear('tanggal', Carbon::now()->year)->get();
         // Grouping data berdasarkan Departemen (atau gabungan Dept & Kontraktor)
-        $grouped = $hazards->groupBy(function ($item) {
-            return $item->department->name ?? ($item->contractor->name ?? 'N/A');
-        });
-        foreach ($grouped as $name => $items) {
-            $labels[] = $name;
+        // 2. Kumpulkan semua label unik (Dept + Contractor)
+        $deptNames = $hazards->whereNotNull('department_id')->pluck('department.department_name')->unique();
+        $contNames = $hazards->whereNotNull('contractor_id')->pluck('contractor.contractor_name')->unique();
+
+        // Gabungkan dan urutkan secara alfabetis
+        $labels = $deptNames->merge($contNames)->sort()->values()->toArray();
+
+        $closedData = [];
+        $openData = [];
+
+        // 3. Hitung status untuk setiap label
+        foreach ($labels as $name) {
+            // Cari laporan yang department-nya bernama $name ATAU contractor-nya bernama $name
+            $reportsForLabel = $hazards->filter(function ($report) use ($name) {
+                return ($report->department->name ?? '') === $name ||
+                    ($report->contractor->name ?? '') === $name;
+            });
 
             // Hitung Closed
-            $closedData[] = $items->where('status', 'closed')->count();
+            $closedData[] = $reportsForLabel->where('status', 'closed')->count();
 
             // Hitung Open (Bukan closed dan bukan cancel)
-            $openData[] = $items->whereNotIn('status', ['closed', 'cancel'])->count();
+            $openData[] = $reportsForLabel->whereNotIn('status', ['closed', 'cancel'])->count();
         }
-        $chartData = [
-        'labels' => $labels,
-        'closed' => $closedData,
-        'open'   => $openData
-    ];
 
-    $this->status = json_encode($chartData);
-    $this->dispatch('hazardStatus_DeptOrCont', $this->status);
+        $chartData = [
+            'labels' => $labels,
+            'closed' => $closedData,
+            'open'   => $openData
+        ];
+
+        $this->status = json_encode($chartData);
+        $this->dispatch('hazardStatus_DeptOrCont', $this->status);
     }
     public function render()
     {
