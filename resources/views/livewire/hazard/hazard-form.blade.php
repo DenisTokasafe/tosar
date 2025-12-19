@@ -550,23 +550,30 @@
                     </div>
                     <!-- List Actions -->
                     <div class="my-2 divider">Daftar Tindakan</div>
-                    <ul class="space-y-2">
-                        @forelse($actions as $index => $act)
-                            <li
-                                class="flex flex-col justify-between p-3 border rounded md:flex-row md:items-center bg-base-50">
-                                <div class="mb-2 md:mb-0">
-                                    <p><strong>{!! $act['description'] !!}</strong></p>
-                                    <p class="text-sm text-gray-500">
-                                        Batas Waktu Penyelesaian: {{ $act['due_date'] }} |
-                                        Tanggal Penyelesaian Tindakan: {{ $act['actual_close_date'] }} |
-                                        PIC: {{ optional(\App\Models\User::find($act['responsible_id']))->name }}
-                                    </p>
+                    <ul>
+                        @forelse ($actions as $index => $action)
+                            <li class="p-3 mb-2 border rounded-md shadow-sm bg-base-100">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <h3 class="font-semibold">Tindakan {{ $index + 1 }}</h3>
+                                        <div class="text-sm text-gray-600"
+                                            dangerouslySetInnerHTML="{{ $action['description'] }}">
+                                            {!! $action['description'] !!}
+                                        </div>
+                                        <p class="text-xs text-gray-500">
+                                            Batas Waktu: {{ $action['due_date'] ?? 'N/A' }} |
+                                            Penyelesaian: {{ $action['close_date'] ?? 'N/A' }} |
+                                            Dilaporkan Oleh: {{ $action['reported_by_name'] ?? 'N/A' }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <flux:button size="xs" wire:click="removeAction({{ $index }})"
+                                            icon="trash" variant="danger">Hapus</flux:button>
+                                    </div>
                                 </div>
-                                <button type="button" wire:click="removeAction({{ $index }})"
-                                    class="self-start btn btn-error btn-xs md:self-center">Hapus</button>
                             </li>
                         @empty
-                            <li class="text-sm text-gray-500">Belum ada tindakan lanjutan ditambahkan.</li>
+                            <p class="text-sm text-gray-500">Belum ada tindakan yang ditambahkan.</p>
                         @endforelse
                     </ul>
 
