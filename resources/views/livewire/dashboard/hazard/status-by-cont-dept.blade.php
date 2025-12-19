@@ -36,19 +36,7 @@
                 },
                 // --- TAMBAHKAN DATA ZOOM (Opsional tapi sangat membantu) ---
                 // Ini menghilangkan whitespace jika bar terlalu banyak dengan slider
-                dataZoom: [{
-                        type: 'inside', // Bisa scroll pakai mouse wheel
-                        start: 0,
-                        end: 100
-                    },
-                    {
-                        show: true, // Munculkan slider di bawah jika data sangat padat
-                        type: 'slider',
-                        top: '90%',
-                        start: 0,
-                        end: 100
-                    }
-                ],
+
                 xAxis: {
                     type: 'category',
                     data: rawData.labels,
