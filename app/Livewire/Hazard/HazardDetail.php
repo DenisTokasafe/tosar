@@ -904,23 +904,33 @@ class HazardDetail extends Component
         $this->validate(
             [
                 'action_description'       => 'required|string',
-                'action_due_date'          => 'nullable|date',
-                'action_actual_close_date' => 'nullable|date',
-                'action_responsible_id'    => 'nullable|integer|exists:users,id',
+                'action_responsible_id'    => 'required|integer',
+                // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
+                'action_due_date'       => [
+                    'required',
+                    'date_format:d-m-Y',
+                    'before_or_equal:action_actual_close_date'
+                ],
+
+                // Actual close date harus sesudah atau sama dengan due date
+                'action_actual_close_date' => [
+                    'nullable',
+                    'date_format:d-m-Y',
+                    'after_or_equal:action_due_date'
+                ],
             ],
             [
-                'action_description.required'       => 'Deskripsi tindakan wajib diisi.',
-                'action_description.string'         => 'Deskripsi tindakan harus berupa teks.',
+                'action_description.required'  => 'Deskripsi tindakan wajib diisi.',
+                'action_due_date.required'     => 'Tanggal batas waktu wajib diisi.',
+                'action_due_date.date_format'  => 'Format tanggal harus dd-mm-YYYY.',
+                'action_due_date.before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.',
 
-                'action_due_date.required'          => 'Batas waktu penyelesaian wajib diisi.',
-                'action_due_date.date'              => 'Batas waktu penyelesaian harus berupa tanggal yang valid.',
+                'action_actual_close_date.date_format'    => 'Format tanggal harus dd-mm-YYYY.',
+                'action_actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
 
-                'action_actual_close_date.date'     => 'Tanggal penyelesaian tindakan harus berupa tanggal yang valid.',
-
-                'action_responsible_id.required'    => 'Penanggung jawab wajib dipilih.',
-                'action_responsible_id.integer'     => 'Penanggung jawab tidak valid.',
-                'action_responsible_id.exists'      => 'Penanggung jawab yang dipilih tidak ditemukan.',
+                'action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
             ]
+
         );
 
 
@@ -1033,22 +1043,33 @@ class HazardDetail extends Component
         $this->validate(
             [
                 'edit_action_description'       => 'required|string',
-                'edit_action_due_date'          => 'required|date_format:d-m-Y',
-                'edit_action_actual_close_date'  => 'nullable|date_format:d-m-Y',
                 'edit_action_responsible_id'    => 'required|integer',
+                // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
+                'edit_action_due_date'       => [
+                    'required',
+                    'date_format:d-m-Y',
+                    'before_or_equal:edit_action_actual_close_date'
+                ],
+
+                // Actual close date harus sesudah atau sama dengan due date
+                'edit_action_actual_close_date' => [
+                    'nullable',
+                    'date_format:d-m-Y',
+                    'after_or_equal:edit_action_due_date'
+                ],
             ],
             [
-                'edit_action_description.required'      => 'Deskripsi tindakan wajib diisi.',
-                'edit_action_description.string'        => 'Deskripsi tindakan harus berupa teks.',
+                'edit_action_description.required'  => 'Deskripsi tindakan wajib diisi.',
+                'edit_action_due_date.required'     => 'Tanggal batas waktu wajib diisi.',
+                'edit_action_due_date.date_format'  => 'Format tanggal harus dd-mm-YYYY.',
+                'edit_action_due_date.before_or_equal' => 'Tanggal batas waktu tidak boleh melampaui tanggal penyelesaian.',
 
-                'edit_action_due_date.required'         => 'Tanggal batas waktu wajib diisi.',
-                'edit_action_due_date.date_format'      => 'Tanggal batas waktu harus dalam format dd-mm-YYYY.',
+                'edit_action_actual_close_date.date_format'    => 'Format tanggal harus dd-mm-YYYY.',
+                'edit_action_actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
 
-                'edit_action_actual_close_date.date_format' => 'Tanggal penyelesaian harus dalam format dd-mm-YYYY.',
-
-                'edit_action_responsible_id.required'   => 'Penanggung jawab wajib dipilih.',
-                'edit_action_responsible_id.integer'    => 'Penanggung jawab tidak valid.',
+                'edit_action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
             ]
+
         );
 
         $action = ActionHazard::findOrFail($this->edit_action_id);
