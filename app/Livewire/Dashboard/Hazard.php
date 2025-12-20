@@ -14,30 +14,42 @@ class Hazard extends Component
     public $end_date;
     public function updatedRangeDate($value)
     {
-        // Cek apakah nilai tidak kosong
         if (!empty($value)) {
-            // Pisahkan string berdasarkan " to "
+            // Gunakan separator yang konsisten dengan JS Anda
             $dates = explode(' Ke ', $value);
 
-            // Pastikan ada dua tanggal yang valid
             if (count($dates) === 2) {
-                $this->start_date = $dates[0];
-                $this->end_date = $dates[1];
-                $this->dispatch('dateRangeUpdated', [
-                    'start' => $this->start_date,
-                    'end'   => $this->end_date,
-                ]);
+                try {
+                    // Bersihkan spasi dan pastikan formatnya benar
+                    $this->start_date = trim($dates[0]);
+                    $this->end_date = trim($dates[1]);
+
+                    $this->dispatch('dateRangeUpdated', [
+                        'start' => $this->start_date,
+                        'end'   => $this->end_date,
+                    ]);
+                } catch (\Exception $e) {
+                    // Jika gagal parsing tanggal, reset
+                    $this->resetDates();
+                }
             }
         } else {
-            $this->reset('start_date', 'end_date');
-            $this->dispatch('dateRangeUpdated', [
-                'start' => null,
-                'end'   => null,
-            ]);
+            $this->resetDates();
         }
     }
-    public function clearFilter(){
-        $this->reset('range_date','start_date','end_date');
+
+    // Pisahkan fungsi reset agar kode lebih rapi (DRY)
+    private function resetDates()
+    {
+        $this->reset(['start_date', 'end_date']);
+        $this->dispatch('dateRangeUpdated', [
+            'start' => null,
+            'end'   => null,
+        ]);
+    }
+    public function clearFilter()
+    {
+        $this->resetDates();
     }
     public function render()
     {
