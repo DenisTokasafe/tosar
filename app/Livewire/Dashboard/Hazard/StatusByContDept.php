@@ -76,6 +76,7 @@ class StatusByContDept extends Component
 
     public function render()
     {
+         $this->loadData();
         return view('livewire.dashboard.hazard.status-by-cont-dept');
     }
 }
