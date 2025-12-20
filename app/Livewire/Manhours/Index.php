@@ -88,9 +88,9 @@ class Index extends Component
 
 
     public $hide = [
-        'supervisor'     => false,
-        'operational'    => false,
-        'Administrator' => false,
+        'supervisor'     => true,
+        'operational'    => true,
+        'Administrator' => true,
     ];
 
     // jobclass setup
