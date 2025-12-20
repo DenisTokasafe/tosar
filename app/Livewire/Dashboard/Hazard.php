@@ -23,10 +23,7 @@ class Hazard extends Component
             if (count($dates) === 2) {
                 $this->start_date = $dates[0];
                 $this->end_date = $dates[1];
-                $this->dispatch('dateRangeUpdated', [
-                    'start' => $this->start_date,
-                    'end'   => $this->end_date,
-                ]);
+                $this->dispatch('dateRangeUpdated', ['start' => $this->start_date,'end'   => $this->end_date,]);
             }
         } else {
             $this->reset('start_date', 'end_date');
