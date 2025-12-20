@@ -20,10 +20,24 @@ class HazardDistribusiDivisi extends Component
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {
-        $this->start_date = $data['start'];
-        $this->end_date   = $data['end'];
-        // 🔁 Misalnya langsung panggil refresh data
-        $this->loadData();
+        if (empty($data['start']) || empty($data['end'])) {
+            // Ambil tanggal paling pertama
+            $firstDateRaw = Hazard::min('tanggal');
+            $firstDate = $firstDateRaw ? Carbon::parse($firstDateRaw)->format('Y-m-d') : null;
+
+            // Ambil tanggal paling akhir
+            $lastDateRaw = Hazard::max('tanggal');
+            $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw)->format('Y-m-d') : null;
+            $this->start_date =  $firstDate;
+            $this->end_date   =  $lastDate;
+            // 🔁 Misalnya langsung panggil refresh data
+            $this->loadData();
+        } else {
+            $this->start_date = $data['start'];
+            $this->end_date   = $data['end'];
+            // 🔁 Misalnya langsung panggil refresh data
+            $this->loadData();
+        }
     }
     public function loadData()
     {

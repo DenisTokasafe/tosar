@@ -824,7 +824,7 @@
                         @forelse($actionHazards as $act)
                             <li class="p-2 border rounded-md shadow-sm bg-base-100">
                                 <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                                    <div class="md:w-96 bg-base-200 rounded">
+                                    <div class="md:w-96 xl:w-full xl:max-w-auto bg-base-200 rounded">
                                         <span class="font-semibold">{!! $act['description'] !!}</span>
                                     </div>
                                     <div class="flex flex-col gap-1 md:flex-row md:items-center">
