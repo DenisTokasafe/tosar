@@ -167,7 +167,7 @@
                         <tr>
                             @foreach ($latestHazardReports as $report)
                         <tr>
-                            <td class="px-3 py-2 border">{{ $report->reference }}</td>
+                            <td class="px-3 py-2 border">{{ $report->no_referensi }}</td>
                             <td class="px-3 py-2 border">
                                 {{-- Bersihkan Tag HTML dari Deskripsi --}}
                                 @php
@@ -192,7 +192,7 @@
                                         x-transition:leave="transition ease-in duration-100"
                                         x-transition:leave-start="opacity-100 scale-100"
                                         x-transition:leave-end="opacity-0 scale-90"
-                                        class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
+                                        class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-64">
 
                                         <strong>Deskripsi Lengkap:</strong>
                                         {{-- Teks lengkap (sudah bersih dari HTML) --}}
