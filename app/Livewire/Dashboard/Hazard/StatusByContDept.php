@@ -30,9 +30,8 @@ class StatusByContDept extends Component
     public function loadData()
     {
         $hazards = Hazard::with(['department', 'contractor'])
-
             ->when($this->start_date && $this->end_date, function ($q) {
-                $q->whereBetween('tanggal', [$this->start_date, $this->end_date]);
+                $q->dateRange($this->start_date, $this->end_date);
             })->get();
 
         // 1. Ambil label unik (Dept + Contractor)
