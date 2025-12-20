@@ -122,8 +122,8 @@ class Index extends Component
 
         foreach ($this->jobclasses as $key => $label) {
             // Jika $this->hide[$key] TRUE (dicentang), input dianggap nullable (diabaikan)
-            $rules["manhours.$key"] = $this->hide[$key] ? 'nullable' : 'required|numeric|min:0';
-            $rules["manpower.$key"] = $this->hide[$key] ? 'nullable' : 'required|numeric|min:0';
+            $rules["manhours.$key"] = $this->hide[$key] ? 'required|numeric|min:0' : 'nullable';
+            $rules["manpower.$key"] = $this->hide[$key] ? 'required|numeric|min:0' : 'nullable';
         }
 
         return $rules;
