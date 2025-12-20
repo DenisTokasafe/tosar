@@ -156,8 +156,8 @@
                 <table class="table table-xs">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-3 py-2 border">ID</th>
-                            <th class="px-3 py-2 border">Judul</th>
+                            <th class="px-3 py-2 border">Referensi</th>
+                            <th class="px-3 py-2 border">Deskripsi</th>
                             <th class="px-3 py-2 border">Status</th>
                             <th class="px-3 py-2 border">Pelapor</th>
                             <th class="px-3 py-2 border">Tanggal</th>
