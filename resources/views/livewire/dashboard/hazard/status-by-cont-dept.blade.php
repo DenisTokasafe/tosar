@@ -4,6 +4,7 @@
     @push('scripts')
         <!-- Load ECharts dari CDN -->
         <script type="module">
+            setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
             const rawData = @json($statusDeptCont);
             console.log(rawData);
 
