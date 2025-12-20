@@ -238,24 +238,34 @@ class Hazard extends Model
         }
         return $query->whereIn('contractor_id', $contractorIds);
     }
-    public function scopeDateRange(Builder $query, string $startDate, string $endDate): void
+    public function scopeDateRange(Builder $query, ?string $startDate, ?string $endDate): void
     {
-        if (is_null($startDate) && is_null($endDate)) {
+        // Jika keduanya kosong, langsung return agar query tidak berubah
+        if (empty($startDate) && empty($endDate)) {
             return;
         }
-        elseif (!is_null($startDate) && is_null($endDate)) {
-            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
-            $query->whereDate('tanggal', '===', $startDateFormatted);
+
+        // 1. Jika hanya Start Date yang diisi
+        if (!empty($startDate) && empty($endDate)) {
+            $start = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
+            $query->whereDate('tanggal', '>=', $start);
             return;
         }
-        elseif (is_null($startDate) && !is_null($endDate)) {
-            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
-            $query->whereDate('tanggal', '<=', $endDateFormatted);
+
+        // 2. Jika hanya End Date yang diisi
+        if (empty($startDate) && !empty($endDate)) {
+            $end = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
+            $query->whereDate('tanggal', '<=', $end);
             return;
-        } elseif (!is_null($startDate) && !is_null($endDate)) {
-            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
-            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
-            $query->whereDate('tanggal', '>=', $startDateFormatted)->whereDate('tanggal', '<=', $endDateFormatted)->get();
+        }
+
+        // 3. Jika keduanya diisi (Range)
+        if (!empty($startDate) && !empty($endDate)) {
+            $start = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
+            $end = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
+
+            // Menggunakan whereBetween lebih efisien untuk range datetime
+            $query->whereBetween('tanggal', [$start, $end]);
         }
     }
 
