@@ -177,7 +177,11 @@ class Index extends Component
     {
         // Tutup modal
         $this->reset('modalOpen', 'selectedId');
-
+        $this->hide = [
+            'supervisor'    => false,
+            'operational'   => false,
+            'Administrator' => false,
+        ];
         // Reset semua input form ke default
         $this->reset([
             'date',
