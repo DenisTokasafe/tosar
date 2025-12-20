@@ -29,14 +29,7 @@ class Hazard extends Component
     }
     public function loadDashboardData()
     {
-        // Gunakan format standar database Y-m-d untuk query
-        $this->start_date ? Carbon::createFromFormat('d-m-Y', $this->start_date)->format('Y-m-d') : null;
-        $this->end_date ? Carbon::createFromFormat('d-m-Y', $this->end_date)->format('Y-m-d') : null;
 
-        // Contoh filter query
-        // $query->when($start, fn($q) => $q->whereBetween('created_at', [$start, $end]));
-
-        // Penting: Kirim sinyal ke child components (chart) untuk ikut refresh
         $this->dispatch('dateRangeUpdated', start: $this->start_date, end: $this->end_date);
     }
 
