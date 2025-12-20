@@ -1,10 +1,9 @@
 <div>
-    {{ $end_date }}
+
     <div wire:ignore id="hazardStatusByContDept" style="height: 320px;" class="w-full"></div>
     @push('scripts')
         <!-- Load ECharts dari CDN -->
         <script type="module">
-            setInterval(() => Livewire.dispatch('hazardStatusByCont_Dept'), 1000);
             const rawData = @json($statusDeptCont);
             console.log(rawData);
 

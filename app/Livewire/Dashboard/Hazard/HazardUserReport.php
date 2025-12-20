@@ -25,7 +25,7 @@ class HazardUserReport extends Component
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
-    #[On('datePelaporUpdated')]
+
     public function loadData()
     {
         // Ambil semua hazard beserta relasi

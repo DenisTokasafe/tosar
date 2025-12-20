@@ -1,7 +1,6 @@
 <div wire:ignore id="container" style="height: 320px"></div>
 @push('scripts')
 <script type="module">
-    setInterval(() => Livewire.dispatch('dateDivisiUpdated'), 1000);
     var dom_divis = document.getElementById('container');
     const categories = @json($categories);
     var myChart_divis = echarts.init(dom_divis, null, {

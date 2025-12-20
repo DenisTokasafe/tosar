@@ -2,7 +2,6 @@
     @push('scripts')
     <!-- Load ECharts dari CDN -->
     <script type="module">
-        setInterval(() => Livewire.dispatch('chartTrandUpdated'), 1000);
         const data = @json($data);
         var dom = document.getElementById('hazardTrend');
         var myChart = echarts.init(dom);

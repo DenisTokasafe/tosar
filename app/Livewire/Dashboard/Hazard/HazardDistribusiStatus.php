@@ -26,7 +26,6 @@ class HazardDistribusiStatus extends Component
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
-    #[On('chartUpdated')]
     public function loadData()
     {
         $dataHazard = Hazard::when($this->start_date && $this->end_date, function ($q) {

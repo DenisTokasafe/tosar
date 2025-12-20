@@ -2,7 +2,6 @@
     @push('scripts')
     <!-- Load ECharts dari CDN -->
      <script type="module">
-        setInterval(() => Livewire.dispatch('chartUpdated'), 1000);
         var dom_status = document.getElementById('chart-container');
         // 🧠 Ambil data dari Livewire (JSON string → object JS)
         // const chartData = JSON.parse('<?php echo $statusChart ?>');

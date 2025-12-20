@@ -27,7 +27,7 @@ class StatusByContDept extends Component
         $this->end_date   = $data['end'];
         $this->loadData();
     }
-    #[On('hazardStatusByCont_Dept')]
+
     public function loadData()
     {
         $hazards = Hazard::with(['department', 'contractor'])

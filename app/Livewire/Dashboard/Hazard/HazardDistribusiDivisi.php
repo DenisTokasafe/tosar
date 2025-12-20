@@ -25,7 +25,6 @@ class HazardDistribusiDivisi extends Component
         // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
-    #[On('dateDivisiUpdated')]
     public function loadData()
     {
         // Ambil semua hazard beserta relasi
