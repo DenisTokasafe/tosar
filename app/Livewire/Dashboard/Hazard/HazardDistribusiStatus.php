@@ -18,10 +18,12 @@ class HazardDistribusiStatus extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-    public function updateDateRange($start, $end)
+    public function updateDateRange($data)
     {
-        $this->start_date = $start;
-        $this->end_date   = $end;
+        $this->start_date = $data['start'];
+        $this->end_date   = $data['end'];
+
+        // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
     #[On('chartUpdated')]

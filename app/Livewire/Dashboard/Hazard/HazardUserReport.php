@@ -18,10 +18,11 @@ class HazardUserReport extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-    public function updateDateRange($start, $end)
+    public function updateDateRange($data)
     {
-        $this->start_date = $start;
-        $this->end_date   = $end;
+        $this->start_date = $data['start'];
+        $this->end_date   = $data['end'];
+        // 🔁 Misalnya langsung panggil refresh data
         $this->loadData();
     }
     #[On('datePelaporUpdated')]
@@ -42,7 +43,7 @@ class HazardUserReport extends Component
             }
         });
         // Hitung jumlah per kategori dan urutkan dari terbesar ke terkecil
-        $counts = $grouped->map->count()->sortDesc()->take(10);
+        $counts = $grouped->map->count()->sortDesc() ->take(10);
         // Hitung jumlah per kategori
         $value = [
             'year' => $year,

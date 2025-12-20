@@ -21,10 +21,10 @@ class StatusByContDept extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-    public function updateDateRange($start, $end)
+    public function updateDateRange($data)
     {
-        $this->start_date = $start;
-        $this->end_date   = $end;
+        $this->start_date = $data['start'];
+        $this->end_date   = $data['end'];
         $this->loadData();
     }
     #[On('hazardStatusByCont_Dept')]
