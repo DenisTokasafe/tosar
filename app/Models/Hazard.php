@@ -240,19 +240,7 @@ class Hazard extends Model
     }
     public function scopeDateRange(Builder $query, string $startDate, string $endDate): void
     {
-        if (is_null($startDate) && is_null($endDate)) {
-            return;
-        }
-        elseif (!is_null($startDate) && is_null($endDate)) {
-            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
-            $query->whereDate('tanggal', '===', $startDateFormatted);
-            return;
-        }
-        elseif (is_null($startDate) && !is_null($endDate)) {
-            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
-            $query->whereDate('tanggal', '<=', $endDateFormatted);
-            return;
-        } elseif (!is_null($startDate) && !is_null($endDate)) {
+        if (!is_null($startDate) && !is_null($endDate)) {
             $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
             $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
             $query->whereDate('tanggal', '>=', $startDateFormatted)->whereDate('tanggal', '<=', $endDateFormatted)->get();
