@@ -12,6 +12,11 @@ class HazardUserReport extends Component
     public $pelapor; // nama department atau contractor
     public $start_date;
     public $end_date;
+    // Trigger awal saat komponen dimuat
+    public function mount()
+    {
+        $this->loadData();
+    }
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {

@@ -12,7 +12,12 @@ class HazardDistribusiDivisi extends Component
     public $categories; // nama department atau contractor
     public $start_date;
     public $end_date;
-     #[On('dateRangeUpdated')]
+    // Trigger awal saat komponen dimuat
+    public function mount()
+    {
+        $this->loadData();
+    }
+    #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {
         $this->start_date = $data['start'];

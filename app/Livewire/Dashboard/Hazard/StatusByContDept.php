@@ -13,20 +13,20 @@ class StatusByContDept extends Component
     public $end_date;
     public $statusDeptCont;
 
-    #[On('dateRangeUpdated')]
-    public function updateDateRange($data)
-    {
-        $this->start_date = $data['start'];
-        $this->end_date   = $data['end'];
-          $this->loadData();
-    }
+
 
     // Trigger awal saat komponen dimuat
     public function mount()
     {
         $this->loadData();
     }
-
+    #[On('dateRangeUpdated')]
+    public function updateDateRange($data)
+    {
+        $this->start_date = $data['start'];
+        $this->end_date   = $data['end'];
+        $this->loadData();
+    }
     #[On('hazardStatusByCont_Dept')]
     public function loadData()
     {
@@ -77,7 +77,7 @@ class StatusByContDept extends Component
 
     public function render()
     {
-         $this->loadData();
+        $this->loadData();
         return view('livewire.dashboard.hazard.status-by-cont-dept');
     }
 }
