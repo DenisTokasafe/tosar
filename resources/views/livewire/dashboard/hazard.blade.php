@@ -146,11 +146,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
+                       <tr>
+                            @foreach ($latestHazardReports as $report)
+                                <tr>
+                                    <td class="px-3 py-2 border">{{ $report->id }}</td>
+                                    <td class="px-3 py-2 border">{{ $report->title }}</td>
+                                    <td class="px-3 py-2 border">
+                                        <span class="badge badge-sm badge-{{ $report->status_badge_class }}">
+                                            {{ ucfirst(str_replace('_', ' ', $report->status)) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-3 py-2 border">{{ $report->reporter_name }}</td>
+                                    <td class="px-3 py-2 border">{{ $report->created_at->format('d M Y') }}</td>
+                                </tr>
+                            @endforeach
+                       </tr>
                     </tbody>
                 </table>
             </div>
