@@ -250,25 +250,29 @@ class Hazard extends Model
         }
 
         // Filter jika hanya tanggal awal yang ada
-        if (!is_null($startDate) && is_null($endDate)) {
-            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
+        elseif (!is_null($startDate) && is_null($endDate)) {
+            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
             $query->where('tanggal', '===', $startDateFormatted);
             return;
         }
 
         // Filter jika hanya tanggal akhir yang ada
-        if (is_null($startDate) && !is_null($endDate)) {
-            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
+        elseif (is_null($startDate) && !is_null($endDate)) {
+            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
             $query->where('tanggal', '<=', $endDateFormatted);
             return;
         }
+        elseif (!is_null($startDate) && !is_null($endDate)) {
+            // Lanjut ke filter rentang penuh di bawah
 
-        // Filter jika kedua tanggal ada (rentang penuh)
-        $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay();
-        $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay();
+            // Filter jika kedua tanggal ada (rentang penuh)
+            $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
+            $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
 
-        $query->whereBetween('tanggal', [$startDateFormatted, $endDateFormatted]);
-    }
+            $query->whereBetween('tanggal', [$startDateFormatted, $endDateFormatted]);
+        }
+        }
+
 
     public function scopeWithHazardCounts($query)
     {
