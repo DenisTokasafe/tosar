@@ -18,6 +18,7 @@ class StatusByContDept extends Component
     {
         $this->start_date = $data['start'];
         $this->end_date   = $data['end'];
+          $this->loadData();
     }
 
     // Trigger awal saat komponen dimuat

@@ -233,44 +233,29 @@ class Hazard extends Model
      */
     public function scopeByContractors(Builder $query, array $contractorIds): Builder
     {
-        // Hanya terapkan whereIn jika array ID tidak kosong.
         if (empty($contractorIds)) {
             return $query;
         }
-
-        // PENTING: Jika Anda perlu menangani NULL, Anda harus menggunakan logika where yang lebih kompleks
-        // Contoh: $query->where(fn($q) => $q->whereIn('contractor_id', $contractorIds)->orWhereNull('contractor_id'));
         return $query->whereIn('contractor_id', $contractorIds);
     }
     public function scopeDateRange(Builder $query, string $startDate, string $endDate): void
     {
-        // Jika tidak ada tanggal yang dipilih, jangan terapkan filter
         if (is_null($startDate) && is_null($endDate)) {
             return;
         }
-
-        // Filter jika hanya tanggal awal yang ada
         elseif (!is_null($startDate) && is_null($endDate)) {
             $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
             $query->whereDate('tanggal', '===', $startDateFormatted);
             return;
         }
-
-        // Filter jika hanya tanggal akhir yang ada
         elseif (is_null($startDate) && !is_null($endDate)) {
             $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
             $query->whereDate('tanggal', '<=', $endDateFormatted);
             return;
         } elseif (!is_null($startDate) && !is_null($endDate)) {
-            // Lanjut ke filter rentang penuh di bawah
-
-            // Filter jika kedua tanggal ada (rentang penuh)
             $startDateFormatted = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
             $endDateFormatted = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
-
-            $query->whereDate('tanggal', '>=', $startDateFormatted)
-                ->whereDate('tanggal', '<=', $endDateFormatted)
-                ->get();
+            $query->whereDate('tanggal', '>=', $startDateFormatted)->whereDate('tanggal', '<=', $endDateFormatted)->get();
         }
     }
 
