@@ -307,7 +307,7 @@ class Index extends Component
                 ->where('job_class', $label);
 
             // 🔹 Jika checkbox dicentang atau kosong → hapus record lama
-            if ($this->hide[$key] || (empty($this->manhours[$key]) && empty($this->manpower[$key]))) {
+            if (empty($this->hide[$key]) || (empty($this->manhours[$key]) && empty($this->manpower[$key]))) {
                 $query->delete();
                 continue;
             }
