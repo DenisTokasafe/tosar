@@ -51,7 +51,10 @@ class Hazard extends Component
         $statusHazard = $hazardByStatus->select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total', 'status')->toArray();
         return view('livewire.dashboard.hazard', [
             'totalHazard' => $totalHazard,
-            'hazardByStatus' => $statusHazard
+            'hazardByStatus' => $statusHazard,
+            'latestHazardReports' => ModelsHazard::when($this->start_date && $this->end_date, function ($q) {
+                $q->dateRange($this->start_date, $this->end_date);
+            })->latest()->limit(5)->get(),
         ]);
     }
 }
