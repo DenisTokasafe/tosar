@@ -88,9 +88,9 @@ class Index extends Component
 
 
     public $hide = [
-        'supervisor'     => true,
-        'operational'    => true,
-        'Administrator' => true,
+        'supervisor'     => false,
+        'operational'    => false,
+        'Administrator' => false,
     ];
 
     // jobclass setup
@@ -151,7 +151,7 @@ class Index extends Component
             $this->updatedDepartment();
             // reset dulu
             foreach ($this->jobclasses as $key => $label) {
-                $this->hide[$key]     = true;
+                $this->hide[$key]     = false;
                 $this->manhours[$key] = null;
                 $this->manpower[$key] = null;
             }
@@ -165,8 +165,8 @@ class Index extends Component
 
             foreach ($manhoursData as $row) {
                 $key = array_search($row->job_class, $this->jobclasses);
-                if ($key !== false) {
-                    $this->hide[$key]     = false;
+                if ($key !== true) {
+                    $this->hide[$key]     = true;
                     $this->manhours[$key] = $row->manhours;
                     $this->manpower[$key] = $row->manpower;
                 }
