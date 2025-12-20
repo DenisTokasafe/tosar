@@ -167,7 +167,15 @@
                         <tr>
                             @foreach ($latestHazardReports as $report)
                         <tr>
-                            <td class="px-3 py-2 border">{{ $report->no_referensi }}</td>
+                            <td class="px-3 py-2 border">
+                                @can('view', $report)
+                                    <a href="{{ route('hazard-detail', $report) }}"
+                                        class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
+                                @else
+                                    <span
+                                        class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
+                                @endcan
+                            </td>
                             <td class="px-3 py-2 border">
                                 {{-- Bersihkan Tag HTML dari Deskripsi --}}
                                 @php
