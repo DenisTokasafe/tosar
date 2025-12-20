@@ -15,6 +15,14 @@ class HazardDistribusiDivisi extends Component
     // Trigger awal saat komponen dimuat
     public function mount()
     {
+        $firstDateRaw = Hazard::min('tanggal');
+        $firstDate = $firstDateRaw ? Carbon::parse($firstDateRaw)->format('d-m-Y') : null;
+
+        // Ambil tanggal paling akhir
+        $lastDateRaw = Hazard::max('tanggal');
+        $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw)->format('d-m-Y') : null;
+        $this->start_date =  $firstDate;
+        $this->end_date   =  $lastDate;
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
