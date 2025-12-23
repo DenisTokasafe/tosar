@@ -4,6 +4,7 @@
     <!-- Load ECharts dari CDN -->
     <script type="module">
         const rawData = @json($statusDeptCont);
+
         var dom = document.getElementById('hazardStatusByContDept');
         var myChart = echarts.init(dom);
 
@@ -77,7 +78,6 @@
 
         Livewire.on('hazardStatus_DeptOrCont', event => {
             let payload = JSON.parse(event);
-            console.log(payload);
 
             myChart.setOption({
                 xAxis: {
