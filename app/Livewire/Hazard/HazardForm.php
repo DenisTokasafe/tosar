@@ -503,45 +503,27 @@ class HazardForm extends Component
     }
     public function submit()
     {
-        // 1. Panggil Event Validasi CKEditor (yang tidak ditangani oleh $this->validate())
-        // Pastikan event ini menghentikan eksekusi jika validasi JS gagal.
+
         $this->dispatch('validateCkEditor');
         $this->dispatch('validateCkEditorAddAction');
         $this->dispatch('validateCkEditorImmediateCorrectiveAction');
         $this->dispatch('validateCkEditorDescription');
-
-        // PENTING: Panggil validasi Tindakan Lanjutan yang belum ditambahkan
-        // Validasi ini memastikan bahwa jika action_description diisi,
-        // maka due_date dan responsible_id juga harus diisi.
         if (!empty($this->action_description)) {
             try {
-                // Kita panggil validasi hanya untuk field Tindakan Lanjutan
                 $this->validate([
                     'action_description'    => 'required|string',
                 ], [], [
-                    // Tentukan nama atribut agar pesan error lebih jelas
                     'action_description'    => 'Deskripsi Tindakan Lanjutan',
                 ]);
 
-                // Jika validasi di atas sukses, artinya field Tindakan Lanjutan sudah lengkap,
-                // tetapi belum diklik 'Tambah'.
-                // Lanjutkan ke logika error di bawah.
-
             } catch (\Illuminate\Validation\ValidationException $e) {
-                // Jika validasi gagal (misal: action_due_date kosong padahal action_description diisi),
-                // Livewire akan menampilkan error, dan eksekusi berhenti di sini.
                 throw $e;
             }
         }
-        // Panggil validasi utama (yang ada di fungsi rules() atau $rules property)
-        // Ini menangani field utama form.
         $this->validate();
-        // 2. Logika Pencegahan Tindakan Lanjutan yang Belum Ditambahkan
-        // (Jika validasi di atas sukses, dan field ini masih terisi, tampilkan alert)
         $hasPartialAction = !empty($this->action_description);
 
         if ($hasPartialAction) {
-            // Tampilkan alert bahwa Tindakan Lanjutan sudah diisi tetapi belum diklik TAMBAH
             $this->dispatch('alert', [
                 'text' => "Anda sudah mengisi Tindakan Lanjutan tetapi belum mengklik tombol TAMBAH!",
                 'duration' => 6000,
