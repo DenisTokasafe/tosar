@@ -1,10 +1,10 @@
 <section class="w-full">
     <x-toast />
     @push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     @endpush
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     @include('partials.manhours')
     <div class="flex flex-col items-center px-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
@@ -41,7 +41,11 @@
                 <div class="join" wire:ignore x-data="{
                     fp: null,
                     initFlatpickr() {
+                        // Pastikan elemen ada sebelum inisialisasi
+                        if (!this.$refs.tanggalInput2) return;
+
                         if (this.fp) this.fp.destroy();
+
                         this.fp = flatpickr(this.$refs.tanggalInput2, {
                             disableMobile: true,
                             enableTime: false,
@@ -49,33 +53,38 @@
                             altFormat: 'd-M-Y',
                             dateFormat: 'd-m-Y',
                             mode: 'range',
-                            onChange: (dates, str) => $wire.set('range_date', str),
+                            onChange: (dates, str) => {
+                                $wire.set('range_date', str);
+                            },
                             locale: { rangeSeparator: ' Ke ' },
                         });
                     },
                     clearDate() {
-                        if (this.fp) this.fp.clear(); // 🔥 kosongkan input di flatpickr
-                        $wire.set('range_date', null); // 🔥 kosongkan properti Livewire
+                        if (this.fp) this.fp.clear();
+                        $wire.set('range_date', null);
                     }
-                }" x-init="initFlatpickr();
-                Livewire.hook('message.processed', () => initFlatpickr());" x-ref="wrapper">
+                }" x-init="$nextTick(() => { initFlatpickr(); });
+                /* Gunakan hook Livewire yang lebih modern jika menggunakan v3 */
+                Livewire.hook('morph.updated', (el) => {
+                    if (el.component) initFlatpickr();
+                });">
 
                     <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
                         placeholder="Pilih Rentang Tanggal"
                         class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
-                    <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item"
-                        title="Bersihkan Filter">
+                    <button type="button" @click="clearDate(); $wire.call('clearFilter')"
+                        class="btn btn-xs btn-neutral join-item" title="Bersihkan Filter">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw">
+                            stroke-linejoin="round" class="lucide lucide-refresh-cw">
                             <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
                             <path d="M21 3v5h-5" />
                             <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
                             <path d="M8 16H3v5" />
                         </svg>
-                    </label>
+                    </button>
                 </div>
             </div>
         </div>
