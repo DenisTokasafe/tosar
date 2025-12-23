@@ -20,9 +20,6 @@
         });
         var app = {};
         var option_status;
-
-
-
         option_status = {
             title: {
                 text: 'Distribusi Status'

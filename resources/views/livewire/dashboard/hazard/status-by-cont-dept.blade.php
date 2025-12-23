@@ -4,8 +4,6 @@
     <!-- Load ECharts dari CDN -->
     <script type="module">
         const rawData = @json($statusDeptCont);
-        console.log(rawData);
-
         var dom = document.getElementById('hazardStatusByContDept');
         var myChart = echarts.init(dom);
 
