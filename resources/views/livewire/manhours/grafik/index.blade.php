@@ -2,7 +2,6 @@
     <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
-    @push('scripts')
         <script type="module">
             // CATATAN: Karena Livewire me-render data awal, pastikan data awal juga mengandung 'hidden_legends' jika Anda ingin legend disembunyikan pada load pertama.
             // Jika tidak, legend akan mengikuti data awal default (aktif semua).
@@ -241,5 +240,4 @@
             }
             window.addEventListener('resize', myChart_mp.resize);
         </script>
-    @endpush
 </div>
