@@ -126,7 +126,6 @@
         <script type="module">
             const data_manpower = @json($manpowerData);
             const currentYear = @json($years);
-
             var dom_mp = document.getElementById('grafik-manpower');
             var myChart_mp = echarts.init(dom_mp);
             var option_mp;
