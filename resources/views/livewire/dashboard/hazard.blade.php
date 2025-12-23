@@ -32,7 +32,7 @@
 
                     <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
                         placeholder="Pilih Tanggal"
-                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
+                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
                     <label @click="clearDate(); $wire.call('clearFilter')" class="btn btn-xs btn-neutral join-item"
@@ -53,7 +53,7 @@
 
     <x-tabs-dashboard.layout>
         {{-- Statistik Ringkas --}}
-        <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+        <div class="w-full shadow stats stats-vertical lg:stats-horizontal">
 
             {{-- Total Laporan --}}
             <div class="stat">
@@ -127,31 +127,31 @@
 
         </div>
         {{-- Grafik --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 my-2">
-            <div class="bg-white rounded-xl lg:col-span-2 shadow">
+        <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-3" wire:poll>
+            <div class="bg-white shadow rounded-xl lg:col-span-2">
                 <livewire:dashboard.hazard.hazard-trand-chart />
             </div>
-            <div class="bg-white p-4 rounded-xl shadow">
+            <div class="p-4 bg-white shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-status />
             </div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 my-2">
-            <div class="bg-white rounded-xl shadow">
+        <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-2">
+            <div class="bg-white shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-divisi />
             </div>
-            <div class="bg-white p-4 rounded-xl shadow">
+            <div class="p-4 bg-white shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-user-report />
             </div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 my-2">
-            <div class="bg-white rounded-xl shadow">
+        <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-2">
+            <div class="bg-white shadow rounded-xl">
                 <livewire:dashboard.hazard.status-by-cont-dept />
             </div>
         </div>
 
         {{-- Daftar Laporan Terbaru --}}
-        <div class="bg-white p-4 rounded-xl shadow">
-            <h3 class="font-semibold mb-4">Laporan Hazard Terbaru</h3>
+        <div class="p-4 bg-white shadow rounded-xl">
+            <h3 class="mb-4 font-semibold">Laporan Hazard Terbaru</h3>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
                     <thead class="bg-gray-100">
@@ -200,7 +200,7 @@
                                         x-transition:leave="transition ease-in duration-100"
                                         x-transition:leave-start="opacity-100 scale-100"
                                         x-transition:leave-end="opacity-0 scale-90"
-                                        class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-64">
+                                        class="absolute z-50 w-64 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full">
 
                                         <strong>Deskripsi Lengkap:</strong>
                                         {{-- Teks lengkap (sudah bersih dari HTML) --}}
