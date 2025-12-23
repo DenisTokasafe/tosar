@@ -127,7 +127,7 @@
 
         </div>
         {{-- Grafik --}}
-        <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-3" wire:poll>
+        <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-3">
             <div class="bg-white shadow rounded-xl lg:col-span-2">
                 <livewire:dashboard.hazard.hazard-trand-chart />
             </div>

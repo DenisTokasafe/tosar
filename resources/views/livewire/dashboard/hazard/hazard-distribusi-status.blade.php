@@ -1,5 +1,5 @@
-    <div wire:ignore id="chart-container" style="height: 320px;" class="w-full"></div>
-    @push('scripts')
+<div>
+        <div wire:ignore id="chart-container" style="height: 320px;" class="w-full"></div>
     <!-- Load ECharts dari CDN -->
      <script type="module">
         var dom_status = document.getElementById('chart-container');
@@ -95,4 +95,4 @@
         window.addEventListener('resize', myChart_status.resize);
 
     </script>
-    @endpush
+</div>

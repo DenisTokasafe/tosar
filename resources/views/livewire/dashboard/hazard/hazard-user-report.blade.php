@@ -1,5 +1,5 @@
-<div wire:ignore id="container_reportby" style="height: 320px"></div>
-@push('scripts')
+<div>
+    <div wire:ignore id="container_reportby" style="height: 320px"></div>
 <script type="module">
     var dom_reportBy = document.getElementById('container_reportby');
     const pelapor = @json($pelapor);
@@ -65,4 +65,4 @@
 
     window.addEventListener('resize', myChart_reportBy.resize);
 </script>
-@endpush
+</div>

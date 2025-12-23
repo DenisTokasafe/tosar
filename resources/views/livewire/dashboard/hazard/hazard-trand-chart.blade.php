@@ -1,5 +1,5 @@
-    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
-    @push('scripts')
+<div>
+        <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     <!-- Load ECharts dari CDN -->
     <script type="module">
         const data = @json($data);
@@ -127,4 +127,4 @@
         window.addEventListener('resize', myChart.resize);
 
     </script>
-    @endpush
+</div>

@@ -1,5 +1,5 @@
-<div wire:ignore id="container" style="height: 320px"></div>
-@push('scripts')
+<div>
+    <div wire:ignore id="container" style="height: 320px"></div>
 <script type="module">
     var dom_divis = document.getElementById('container');
     const categories = @json($categories);
@@ -104,4 +104,4 @@
     window.addEventListener('resize', myChart_divis.resize);
 
 </script>
-@endpush
+</div>
