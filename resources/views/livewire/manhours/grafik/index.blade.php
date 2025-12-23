@@ -4,8 +4,6 @@
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
     @push('scripts')
         <script type="module">
-            setInterval(() => Livewire.dispatch('chartManhoursUpdate'), 1000);
-
             // CATATAN: Karena Livewire me-render data awal, pastikan data awal juga mengandung 'hidden_legends' jika Anda ingin legend disembunyikan pada load pertama.
             // Jika tidak, legend akan mengikuti data awal default (aktif semua).
             const data = @json($data);
@@ -126,8 +124,6 @@
             window.addEventListener('resize', myChart.resize);
         </script>
         <script type="module">
-            setInterval(() => Livewire.dispatch('chartManpowerUpdate'), 1000);
-
             const data_manpower = @json($manpowerData);
             const currentYear = @json($years);
 
