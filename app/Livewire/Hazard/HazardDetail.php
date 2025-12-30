@@ -192,6 +192,12 @@ class HazardDetail extends Component
         'new_doc_corrective.max'    => 'Ukuran file tindakan perbaikan maksimal 2 MB.',
     ];
 
+    public function getRandomBadgeColor()
+{
+    $colors = ['primary', 'secondary', 'accent', 'neutral', 'info', 'success', 'warning', 'error'];
+    return $colors[array_rand($colors)];
+}
+
     public function mount(Hazard $hazard)
     {
 

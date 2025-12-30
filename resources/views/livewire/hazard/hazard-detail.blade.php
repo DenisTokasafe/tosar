@@ -36,15 +36,26 @@
                     <label class="label">
                         <span class="text-xs font-semibold label-text">Lanjutkan Ke</span>
                     </label>
-                    <select wire:model.live="proceedTo"
-                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                        <option value="">-- Pilih Aksi --</option>
-                        @foreach ($availableTransitions as $label => $status)
-                            <option value="{{ $status }}">
-                                {{ $label }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="dropdown">
+                        <div tabindex="0" role="button" class="btn btn-xs btn-outline">
+                            {{ $proceedTo ?: '-- Pilih Aksi --' }}
+                        </div>
+
+                        <ul tabindex="0" class="p-2 shadow dropdown-content z-1 menu bg-base-100 rounded-box w-52">
+                            @foreach ($availableTransitions as $label => $status)
+                                <li>
+                                    <button type="button" wire:click="$set('proceedTo', '{{ $status }}')"
+                                        class="flex items-center justify-between">
+                                        {{ $label }}
+                                        {{-- Badge dengan warna random --}}
+                                        <span class="badge badge-{{ $this->getRandomBadgeColor() }} badge-sm">
+                                            {{ $label }}
+                                        </span>
+                                    </button>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
 
                 {{-- PILIH ERM --}}
@@ -829,36 +840,36 @@
                                     </div>
                                     <div class="flex flex-col gap-1 md:flex-row md:items-center">
                                         <span class="text-[9px] badge badge-primary badge-outline">
-                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-clock-check-icon lucide-clock-check">
+                                                <path d="M12 6v6l4 2" />
+                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                                <path d="m22 16-5.5 5.5L14 19" />
+                                            </svg>
                                             Batas Waktu:
-                                            {{$act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') :'' }}</span>
+                                            {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}</span>
                                         <span class="text-[9px] badge badge-info badge-outline">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-clock-check-icon lucide-clock-check">
+                                                <path d="M12 6v6l4 2" />
+                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                                <path d="m22 16-5.5 5.5L14 19" />
+                                            </svg>
                                             Tgl Selesai:
                                             {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
                                         <span class="text-[9px] badge badge-success badge-outline">
-                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-user-check-icon lucide-user-check">
-                                            <path d="m16 11 2 2 4-4" />
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                            <circle cx="9" cy="7" r="4" />
-                                        </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-user-check-icon lucide-user-check">
+                                                <path d="m16 11 2 2 4-4" />
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                                <circle cx="9" cy="7" r="4" />
+                                            </svg>
                                             PIC:
                                             {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
                                         <div class="flex gap-2 mt-1 md:mt-0">
