@@ -998,22 +998,22 @@
                     <table class="table mb-4 table-xs">
 
                         <tr>
-                            <th class="w-40 text-xs border-2 border-slate-400">Potential Risk Rating</th>
-                            <td class="pl-2 text-xs border-2 border-slate-400">
+                            <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
+                            <td class="pl-2 text-xs border border-slate-200">
                                 {{ $RiskAssessment->name }}</td>
                         </tr>
                         <tr>
-                            <th class="w-40 text-xs border-2 border-slate-400">Notify</th>
-                            <td class="pl-2 text-xs border-2 border-slate-400">
+                            <th class="w-40 text-xs border border-slate-200">Notify</th>
+                            <td class="pl-2 text-xs border border-slate-200">
                                 {{ $RiskAssessment->reporting_obligation }}</td>
                         </tr>
                         <tr>
-                            <th class="w-40 text-xs border-2 border-slate-400">Deadline</th>
-                            <td class="pl-2 text-xs border-2 border-slate-400">{{ $RiskAssessment->notes }}</td>
+                            <th class="w-40 text-xs border border-slate-200">Deadline</th>
+                            <td class="pl-2 text-xs border border-slate-200">{{ $RiskAssessment->notes }}</td>
                         </tr>
                         <tr>
-                            <th class="w-40 text-xs border-2 border-slate-400">Coordinator</th>
-                            <td class="pl-2 text-xs border-2 border-slate-400">
+                            <th class="w-40 text-xs border border-slate-200">Coordinator</th>
+                            <td class="pl-2 text-xs border border-slate-200">
                                 {{ $RiskAssessment->coordinator }}
                             </td>
                         </tr>
