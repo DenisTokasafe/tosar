@@ -707,7 +707,7 @@
                     <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
                         <!-- Tanggal & Waktu -->
                         <fieldset class="fieldset md:col-span-1">
-                            <x-form.label label="Batas Waktu Penyelesaian" required />
+                            <x-form.label label="Batas Waktu Penyelesaian"  />
                             <div class="relative" wire:ignore x-data="{
                                 fp: null,
                                 initFlatpickr() {
@@ -731,7 +731,7 @@
                             <x-label-error :messages="$errors->get('action_due_date')" />
                         </fieldset>
                         <fieldset class="fieldset md:col-span-1">
-                            <x-form.label label="Tanggal Penyelesaian Tindakan" required />
+                            <x-form.label label="Tanggal Penyelesaian Tindakan"  />
                             <div class="relative" wire:ignore x-data="{
                                 fp: null,
                                 initFlatpickr() {
@@ -756,7 +756,7 @@
                         </fieldset>
                         <!-- Dilaporkan Oleh -->
                         <fieldset class="relative fieldset md:col-span-1">
-                            <x-form.label label="Dilaporkan Oleh" required />
+                            <x-form.label label="Dilaporkan Oleh"  />
                             <div class="relative">
                                 <input {{ $isDisabled ? 'disabled' : '' }} name="searchActResponsibility"
                                     type="text" wire:model.live.debounce.300ms="searchActResponsibility"
