@@ -195,14 +195,14 @@ class HazardDetail extends Component
     public function getRandomBadgeColor($status)
     {
         $map = [
-            'cancelled'   => 'error',
-            'closed'      => 'success',
-            'in_progress' => 'warning',
-            'pending'     => 'accent',
-            'submitted'   => 'info',
+            'cancelled'   => 'badge-error',
+            'closed'      => 'badge-success',
+            'in_progress' => 'badge-warning',
+            'pending'     => 'badge-accent',
+            'submitted'   => 'badge-info',
         ];
 
-        return $map[$status] ?? 'neutral';
+        return $map[$status] ?? 'badge-neutral';
     }
 
     public function mount(Hazard $hazard)

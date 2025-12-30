@@ -15,7 +15,7 @@
                     <label class="label">
                         <span class="text-xs font-semibold label-text">Status :</span>
                     </label>
-                    <span class="badge-xs italic badge badge-{{ $this->getRandomBadgeColor($hazard->status) }} capitalize">
+                    <span class="badge-xs italic badge {{ $this->getRandomBadgeColor($hazard->status) }} capitalize">
                         {{ $hazard->status }}
                     </span>
                 </div>
