@@ -206,6 +206,13 @@
                                                                 \App\Models\RiskConsequence::find($new)?->name ??
                                                                 $newValue;
                                                             break;
+                                                        case 'likelihood_id':
+                                                            $oldValue =
+                                                                $activity->subject->likelihood?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\Likelihood::find($new)?->name ??
+                                                                $newValue;
+                                                            break;
                                                     }
                                                     $label = ucfirst(str_replace('_', ' ', $field));
                                                 @endphp
