@@ -47,6 +47,18 @@ class HazardReportPanel extends Component
     public array $filterEventSubType = [];
     // Data filter
     public $filterOptions = [];
+     public function getRandomBadgeColor($status)
+    {
+        $map = [
+            'cancelled'   => 'error',
+            'closed'      => 'success',
+            'in_progress' => 'warning',
+            'pending'     => 'accent',
+            'submitted'   => 'info',
+        ];
+
+        return $map[$status] ?? 'neutral';
+    }
     public function mount()
     {
         $eventTypes = Hazard::select('event_type_id')

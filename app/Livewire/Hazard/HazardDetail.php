@@ -121,7 +121,7 @@ class HazardDetail extends Component
     #[Validate('required|string', message: 'Deskripsi tindakan wajib diisi.')]
     public $action_description;
 
-  #[Validate('nullable')]
+    #[Validate('nullable')]
     public $action_responsible_id;
 
     #[Validate([
@@ -193,17 +193,17 @@ class HazardDetail extends Component
     ];
 
     public function getRandomBadgeColor($status)
-{
-   $map = [
-        'cancelled'   => 'error',
-        'closed'      => 'success',
-        'in_progress' => 'warning',
-        'pending'     => 'accent',
-        'submitted'   => 'info',
-    ];
+    {
+        $map = [
+            'cancelled'   => 'error',
+            'closed'      => 'success',
+            'in_progress' => 'warning',
+            'pending'     => 'accent',
+            'submitted'   => 'info',
+        ];
 
-    return $map[$status] ?? 'neutral';
-}
+        return $map[$status] ?? 'neutral';
+    }
 
     public function mount(Hazard $hazard)
     {
