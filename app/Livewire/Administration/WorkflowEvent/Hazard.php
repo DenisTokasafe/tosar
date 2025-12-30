@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\HazardWorkflow;
 use Illuminate\Support\Facades\Route;
+
 class Hazard extends Component
 {
     use WithPagination;
@@ -20,13 +21,29 @@ class Hazard extends Component
 
     // Properti untuk mengontrol modal
     public $isModalOpen = false;
+    public function getRandomBadgeColor($status)
+    {
+        $map = [
+            'cancelled'   => 'error',
+            'closed'      => 'success',
+            'in_progress' => 'warning',
+            'pending'     => 'accent',
+            'submitted'   => 'info',
+        ];
 
+        return $map[$status] ?? 'neutral';
+    }
     // Daftar status dan peran yang mungkin (opsional, untuk dropdown)
     public $statusOptions = [
-        'submitted', 'pending', 'in_progress', 'closed', 'cancelled'
+        'submitted',
+        'pending',
+        'in_progress',
+        'closed',
+        'cancelled'
     ];
     public $roleOptions = [
-        'moderator', 'erm'
+        'moderator',
+        'erm'
     ];
 
     protected $rules = [
@@ -38,7 +55,7 @@ class Hazard extends Component
     ];
 
     // Properti yang menentukan tab mana yang harus ditampilkan
-    public $activeTab,$heaading,$subheading;
+    public $activeTab, $heaading, $subheading;
 
     public function mount()
     {
@@ -123,7 +140,7 @@ class Hazard extends Component
     }
     public function render()
     {
-        return view('livewire.administration.workflow-event.hazard',[
+        return view('livewire.administration.workflow-event.hazard', [
             'workflows' => HazardWorkflow::paginate(20),
         ]);
     }

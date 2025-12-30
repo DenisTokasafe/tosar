@@ -34,11 +34,11 @@
                 <tbody>
                     @foreach ($workflows as $workflow)
                         <tr wire:key="{{ $workflow->id }}">
-                            <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->from_status }}
+                            <td class="badge badge-xs badge-soft badge-{{ $this->getRandomBadgeColor($workflow->from_status) }} bg-white border-b border-gray-200 ">{{ $workflow->from_status }}
                             </td>
                             <td class="text-sm bg-white border-b border-gray-200 ">
                                 {{ $workflow->from_inisial }}</td>
-                            <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->to_status }}
+                            <td class="badge badge-xs badge-soft badge-{{ $this->getRandomBadgeColor($workflow->to_status) }} bg-white border-b border-gray-200 ">{{ $workflow->to_status }}
                             </td>
                             <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->to_inisial }}
                             </td>
