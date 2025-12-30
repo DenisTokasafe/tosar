@@ -50,6 +50,6 @@
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 @stack('styles')
-@stack('dropdowns')
-@fluxAppearance
+{{-- @stack('dropdowns') --}}
 @vite(['resources/css/app.css', 'resources/js/app.js'])
+@fluxAppearance
