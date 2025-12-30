@@ -252,7 +252,7 @@
                             {{ $report->department->department_name ?? $report->contractor->contractor_name }}</td>
                         <td class="border">
                             <span
-                                class="badge badge-sm badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
+                                class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
                                 {{ str_replace('_', ' ', $report->status) }}
                             </span>
                         </td>
