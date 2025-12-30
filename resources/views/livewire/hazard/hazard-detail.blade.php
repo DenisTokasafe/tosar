@@ -192,6 +192,32 @@
                                                                 \App\Models\UnsafeCondition::find($new)
                                                                     ?->name ?? $newValue;
                                                             break;
+                                                        case 'tindakan_tidak_aman_id':
+                                                            $oldValue =
+                                                                $activity->subject->hazardTindakanTidakAman
+                                                                    ?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\UnsafeAct::find($new)
+                                                                    ?->name ?? $newValue;
+                                                            break;
+                                                        case 'consequence_id':
+                                                            $oldValue =
+                                                                $activity->subject->consequence
+                                                                    ?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\RiskConsequence::find($new)
+                                                                    ?->name ?? $newValue;
+                                                            break;
+                                                    }
+                                                    $label = ucfirst(str_replace('_', ' ', $field));
+                                                @endphp
+
+                                                <div class="mb-1">
+                                                    <strong>{{ $label }}</strong>:
+                                                    <span class="text-red-500">{{ $oldValue }}</span>
+                                                    →
+                                                                    ?->name ?? $newValue;
+                                                            break;
                                                     }
                                                     $label = ucfirst(str_replace('_', ' ', $field));
                                                 @endphp
