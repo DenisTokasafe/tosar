@@ -18,7 +18,9 @@ class Custodian extends Component
     public $legend;
     #[Validate('required', message: 'kolom ini tidak boleh kosong!!!')]
     public $contractor_id, $department_id, $status;
-    public $search_department, $custodian_id, $contractor_enabled, $contractor_name= 'semua perusahaan';
+    public $search_department, $custodian_id, $contractor_enabled, $contractor_name = 'semua perusahaan';
+    public $selectedDeptId;
+    public $selectedContractorId;
     public function resetFilds()
     {
         $this->reset('contractor_id', 'department_id', 'status', 'custodian_id');
@@ -75,25 +77,32 @@ class Custodian extends Component
         );
         $this->resetFilds();
     }
-    public function confirmDelete()
+    public function confirmDelete($deptId, $contractorId)
     {
+        // Simpan ID ke dalam property agar bisa diakses saat tombol "Delete" di klik
+        $this->selectedDeptId = $deptId;
+        $this->selectedContractorId = $contractorId;
+
         Flux::modal('delete-custodian')->show();
     }
-    public function delete(Department $dept, Contractor $comp)
+
+    public function delete()
     {
-        $dept->contractors()->detach($comp->id);
-        $this->resetFilds();
-        $this->dispatch(
-            'alert',
-            [
-                'text' => "Data berhasil di hapus!!!",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
-            ]
-        );
+        // Cari data berdasarkan property yang sudah di-set tadi
+        $dept = \App\Models\Department::find($this->selectedDeptId);
+
+        if ($dept) {
+            $dept->contractors()->detach($this->selectedContractorId);
+        }
+
+        $this->resetFilds(); // Pastikan typo 'filds' sesuai dengan nama fungsi Anda
+
+        $this->dispatch('alert', [
+            'text' => "Data berhasil di hapus!!!",
+            'duration' => 5000,
+            'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+        ]);
+
         Flux::modal('delete-custodian')->close();
     }
     public function id_contractor(Contractor $id)
@@ -114,7 +123,7 @@ class Custodian extends Component
             'Departments' => Department::with('contractors')->searchdept(trim($this->search_department))->paginate(20)
         ]);
     }
-        public function paginationView()
+    public function paginationView()
     {
         return 'paginate.pagination';
     }
