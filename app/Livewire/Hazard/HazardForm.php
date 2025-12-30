@@ -442,7 +442,7 @@ class HazardForm extends Component
                 'action_responsible_id'    => 'required|integer',
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
                 'action_due_date'       => [
-                    'required',
+                    'nullable',
                     'date_format:d-m-Y',
                     'before_or_equal:actual_close_date'
                 ],

@@ -949,10 +949,10 @@ class HazardDetail extends Component
         $this->validate(
             [
                 'action_description'       => 'required|string',
-                'action_responsible_id'    => 'required|integer',
+                'action_responsible_id'    => 'nullable|exists:users,id',
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
                 'action_due_date'       => [
-                    'required',
+                    'nullable',
                     'date_format:d-m-Y',
                     'before_or_equal:action_actual_close_date'
                 ],
