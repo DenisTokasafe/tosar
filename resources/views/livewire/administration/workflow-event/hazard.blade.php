@@ -35,12 +35,12 @@
                     @foreach ($workflows as $workflow)
                         <tr wire:key="{{ $workflow->id }}">
                             <td class="bg-white border-b border-gray-200 "> <span
-                                    class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($workflow->from_status) }}">{{ $workflow->from_status }}</span>
+                                    class="badge badge-sm badge-soft {{ $this->getRandomBadgeColor($workflow->from_status) }}">{{ $workflow->from_status }}</span>
                             </td>
                             <td class="text-sm bg-white border-b border-gray-200 ">
                                 {{ $workflow->from_inisial }}</td>
                             <td class="bg-white border-b border-gray-200 "><span
-                                    class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($workflow->to_status) }}">{{ $workflow->to_status }}</span>
+                                    class="badge badge-sm badge-soft {{ $this->getRandomBadgeColor($workflow->to_status) }}">{{ $workflow->to_status }}</span>
                             </td>
                             <td class="text-sm bg-white border-b border-gray-200 ">{{ $workflow->to_inisial }}
                             </td>
