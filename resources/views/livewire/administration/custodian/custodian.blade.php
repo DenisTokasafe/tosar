@@ -1,6 +1,8 @@
 <section class="w-full">
     <x-toast />
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    @endpush
     @include('partials.kustodian-heading')
 
     <div class="flex justify-between">
@@ -13,7 +15,7 @@
     </div>
 
     <x-manhours.layout>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" wire:key="container-kustodian-table">
             <table class="table table-xs table-zebra">
                 <thead class="text-center">
                     <tr>
@@ -28,7 +30,7 @@
                         <th class="text-center">{{ $Departments->firstItem() + $no }}</th>
                         <th>
                             <div class='flex justify-center'>
-                                <span class="w-full  max-w-40">{{$dept->department_name }}</span>
+                                <span class="w-full max-w-40">{{$dept->department_name }}</span>
                             </div>
                         </th>
                         <th class='flex justify-center'>
@@ -52,7 +54,7 @@
 
                                             <flux:tooltip content="hapus" position="top" wire:key="tooltip-del-{{ $contractor->id }}">
                                                 {{-- Pastikan confirmDelete mengirim ID agar modal tahu apa yang dihapus --}}
-                                                <flux:button wire:click="confirmDelete({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="trash" variant="danger"></flux:button>
+                                                <flux:button wire:click="confirmDelete({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="trash" variant="danger" wire:loading.attr="disabled"></flux:button>
                                             </flux:tooltip>
                                         </th>
                                     </tr>
