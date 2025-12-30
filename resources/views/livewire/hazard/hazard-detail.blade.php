@@ -40,7 +40,7 @@
                         class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                         <option value="">-- Pilih Aksi --</option>
                         @foreach ($availableTransitions as $label => $status)
-                            <option class="text-{{ $this->getRandomBadgeColor() }}" value="{{ $status }}">
+                            <option class="text-{{ $this->getRandomBadgeColor($status) }}" value="{{ $status }}">
                                 {{ $label }}
                             </option>
                         @endforeach
