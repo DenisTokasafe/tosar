@@ -192,6 +192,18 @@ class HazardDetail extends Component
         'new_doc_corrective.max'    => 'Ukuran file tindakan perbaikan maksimal 2 MB.',
     ];
 
+    public function getTextColor($status)
+    {
+        $map = [
+            'cancelled'   => 'error',
+            'closed'      => 'success',
+            'in_progress' => 'warning',
+            'pending'     => 'accent',
+            'submitted'   => 'info',
+        ];
+
+        return $map[$status] ?? 'neutral';
+    }
     public function getRandomBadgeColor($status)
     {
         $map = [
