@@ -828,7 +828,7 @@
                                         <span class="font-semibold">{!! $act['description'] !!}</span>
                                     </div>
                                     <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                        <span class="text-xs badge badge-primary badge-outline">
+                                        <span class="text-[9px] badge badge-primary badge-outline">
                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -839,7 +839,7 @@
                                         </svg>
                                             Batas Waktu:
                                             {{$act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') :'' }}</span>
-                                        <span class="text-xs badge badge-info badge-outline">
+                                        <span class="text-[9px] badge badge-info badge-outline">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -850,7 +850,7 @@
                                         </svg>
                                             Tgl Selesai:
                                             {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
-                                        <span class="text-xs badge badge-success badge-outline">
+                                        <span class="text-[9px] badge badge-success badge-outline">
                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
