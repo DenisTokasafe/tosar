@@ -184,6 +184,14 @@
                                                                 \App\Models\EventSubType::find($new)
                                                                     ?->event_sub_type_name ?? $newValue;
                                                             break;
+                                                        case 'kondisi_tidak_aman_id':
+                                                            $oldValue =
+                                                                $activity->subject->hazardKondisiTidakAman
+                                                                    ?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\UnsafeCondition::find($new)
+                                                                    ?->name ?? $newValue;
+                                                            break;
                                                     }
                                                     $label = ucfirst(str_replace('_', ' ', $field));
                                                 @endphp
