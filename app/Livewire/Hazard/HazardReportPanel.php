@@ -47,17 +47,17 @@ class HazardReportPanel extends Component
     public array $filterEventSubType = [];
     // Data filter
     public $filterOptions = [];
-     public function getRandomBadgeColor($status)
+    public function getRandomBadgeColor($status)
     {
-        $map = [
-            'cancelled'   => 'error',
-            'closed'      => 'success',
-            'in_progress' => 'warning',
-            'pending'     => 'accent',
-            'submitted'   => 'info',
-        ];
+      $map = [
+        'cancelled'   => 'badge-error',   // Tulis lengkap
+        'closed'      => 'badge-success',
+        'in_progress' => 'badge-warning',
+        'pending'     => 'badge-accent',
+        'submitted'   => 'badge-info',
+    ];
 
-        return $map[$status] ?? 'neutral';
+    return $map[$status] ?? 'badge-neutral';
     }
     public function mount()
     {
@@ -73,7 +73,7 @@ class HazardReportPanel extends Component
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
         ];
     }
-     public function updatingSearch()
+    public function updatingSearch()
     {
         $this->resetPage(); // Reset pagination ketika search berubah
     }

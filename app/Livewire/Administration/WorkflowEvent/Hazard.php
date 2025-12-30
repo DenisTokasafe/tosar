@@ -24,14 +24,14 @@ class Hazard extends Component
     public function getRandomBadgeColor($status)
     {
         $map = [
-            'cancelled'   => 'error',
-            'closed'      => 'success',
-            'in_progress' => 'warning',
-            'pending'     => 'accent',
-            'submitted'   => 'info',
+            'cancelled'   => 'badge-error',   // Tulis lengkap
+            'closed'      => 'badge-success',
+            'in_progress' => 'badge-warning',
+            'pending'     => 'badge-accent',
+            'submitted'   => 'badge-info',
         ];
 
-        return $map[$status] ?? 'neutral';
+        return $map[$status] ?? 'badge-neutral';
     }
     // Daftar status dan peran yang mungkin (opsional, untuk dropdown)
     public $statusOptions = [
