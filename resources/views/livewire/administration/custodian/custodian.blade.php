@@ -49,12 +49,12 @@
                                         <td>{{ $contractor->contractor_name }}</td>
                                         <th class='flex flex-row justify-center gap-2'>
                                             <flux:tooltip content="edit" position="top" wire:key="tooltip-edit-{{ $contractor->id }}">
-                                                <flux:button wire:click="modalEdit({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="pencil-square" variant="subtle"></flux:button>
+                                                <flux:button wire:key="btn-edit-{{ $dept->id }}-{{ $contractor->id }}" wire:click="modalEdit({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="pencil-square" variant="subtle"></flux:button>
                                             </flux:tooltip>
 
                                             <flux:tooltip content="hapus" position="top" wire:key="tooltip-del-{{ $contractor->id }}">
                                                 {{-- Pastikan confirmDelete mengirim ID agar modal tahu apa yang dihapus --}}
-                                                <flux:button wire:click="confirmDelete({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="trash" variant="danger" wire:loading.attr="disabled"></flux:button>
+                                                <flux:button wire:key="btn-delete-{{ $dept->id }}-{{ $contractor->id }}" wire:click="confirmDelete({{ $dept->id }}, {{ $contractor->id }})" size="xs" icon="trash" variant="danger" wire:loading.attr="disabled"></flux:button>
                                             </flux:tooltip>
                                         </th>
                                     </tr>
