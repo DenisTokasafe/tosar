@@ -79,6 +79,7 @@ class HazardTrandChart extends Component
     public function render()
     {
         // Opsional: Jika loadData berat, pertimbangkan memanggilnya hanya saat filter berubah
+         $this->loadData();
         return view('livewire.dashboard.hazard.hazard-trand-chart');
     }
 }

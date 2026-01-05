@@ -43,27 +43,43 @@ class HazardDistribusiStatus extends Component
     }
     public function loadData()
     {
-        $dataHazard = Hazard::with(['department', 'contractor']) // Sertakan eager loading jika perlu
-            // 1. Jika ada rentang tanggal, gunakan scope dateRange
+        // 1. Definisikan Filter Utama (Base Query)
+        $baseQuery = Hazard::query()
             ->when($this->start_date && $this->end_date, function ($q) {
-                $q->dateRange($this->start_date, $this->end_date);
+                return $q->dateRange($this->start_date, $this->end_date);
             })
-            // 2. Jika rentang tanggal kosong, maka filter berdasarkan tahun
             ->when(!$this->start_date || !$this->end_date, function ($q) {
-                $q->whereYear('tanggal', $this->years);
-            })
-            ->get();
-        $data = $dataHazard->select('status', DB::raw('COUNT(*) as total'))->groupBy('status')->orderBy('status')->get();
+                $yearFilter = $this->years ?? now()->subMonth()->year;
+                return $q->whereYear('tanggal', $yearFilter);
+            });
 
+        // 2. Query untuk List Data (Jika butuh ditampilkan di tabel)
+        // $this->hazards = (clone $baseQuery)->with(['department', 'contractor'])->latest('tanggal')->get();
+
+        // 3. Query untuk Grafik Distribusi Status (Gunakan clone agar filter tetap terbawa)
+        $statusStats = (clone $baseQuery)
+            ->select('status')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('status')
+            ->orderBy('status')
+            ->get();
+
+        // 4. Format data untuk Chart (Labels & Values)
         $value = [
-            'labels' => $data->pluck('status')->toArray(),
-            'values' => $data->pluck('total')->toArray(),
+            'labels' => $statusStats->pluck('status')->toArray(),
+            'values' => $statusStats->pluck('total')->toArray(),
         ];
+
         $this->statusChart = json_encode($value);
+
+        // 5. Kirim data ke Browser
         $this->dispatch('distribusiStatus', $this->statusChart);
     }
+
     public function render()
     {
+        // loadData dipanggil di sini agar setiap ada perubahan filter (start_date/years)
+        // grafik langsung ter-update otomatis.
         $this->loadData();
         return view('livewire.dashboard.hazard.hazard-distribusi-status');
     }
