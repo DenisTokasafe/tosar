@@ -329,19 +329,7 @@ class Index extends Component
                     'manpower'         => $this->manpower[$key],
                 ]);
 
-                // 🔹 Kirim Email setelah save
-                MailHelper::sendNotification(
-                    Auth::user()->email,
-                    'Notifikasi Laporan Manhours',
-                    'emails.notification',
-                    [
-                        'subject'       => 'Laporan Manhours',
-                        'title'         => 'Notifikasi Laporan Manhours',
-                        'messageText'   => "Telah dibuat laporan Manhours baru.\nSilakan lakukan pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: HZ-2025-0041\nStatus: Submitted",
-                        'actionUrl'     => route('manhours')
-                    ]
-                );
+                $this->close_modal();
             }
 
             // 🔹 Kalau update → updateOrCreate
