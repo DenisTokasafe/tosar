@@ -29,11 +29,12 @@ class HazardTrandChart extends Component
 
     public function loadData()
     {
+        $year = Carbon::now()->subMonth()->year;
         $dataHazard = ModelsHazard::when($this->start_date && $this->end_date, function ($q) {
             $q->dateRange($this->start_date, $this->end_date);
         });
         $dataHazard->selectRaw('MONTH(tanggal) as month, COUNT(*) as total')
-            ->whereYear('tanggal', Carbon::now()->year)
+            ->whereYear('tanggal', $year)
             ->groupBy('month')
             ->orderBy('month')
             ->get();

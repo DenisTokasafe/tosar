@@ -29,7 +29,7 @@ class HazardUserReport extends Component
     public function loadData()
     {
         // Ambil semua hazard beserta relasi
-        $year = Carbon::now()->year;
+        $year = Carbon::now()->subMonth()->year;
         $hazards = Hazard::with('pelapor')->when($this->start_date && $this->end_date, function ($q) {
             $q->dateRange($this->start_date, $this->end_date);
         })->whereYear('tanggal', Carbon::now()->year)->get();
