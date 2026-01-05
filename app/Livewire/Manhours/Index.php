@@ -378,15 +378,15 @@ class Index extends Component
         ]);
     }
 
+    public function update($id)
+    {
+        $this->saveManhours('update', $id);
+    }
     public function store()
     {
         $this->saveManhours('create');
     }
 
-    public function update($id)
-    {
-        $this->saveManhours('update', $id);
-    }
     // Saat tombol hapus ditekan
     public function showDelete($id)
     {

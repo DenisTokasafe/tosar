@@ -171,7 +171,7 @@
                                             }
                                         }" x-init="initFlatpickr()"
                                             x-effect="if($wire.date) fp.setDate($wire.date, true)" wire:ignore>
-                                            <input x-ref="input" type="text" wire:model.live="date"
+                                            <input x-ref="input" type="text" wire:model.live="date" readonly
                                                 class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                                                 placeholder="Pilih bulan" />
                                         </div>
