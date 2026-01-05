@@ -12,7 +12,7 @@ class StatusByContDept extends Component
     public $start_date;
     public $end_date;
     public $statusDeptCont;
-
+    public $years;
 
 
     // Trigger awal saat komponen dimuat
@@ -21,10 +21,25 @@ class StatusByContDept extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-    public function updateDateRange($data)
+   public function updateDateRange($data)
     {
-        $this->start_date = $data['start'];
-        $this->end_date   = $data['end'];
+        // Cek apakah data start dan end tersedia dan tidak kosong
+        if (!empty($data['start']) && !empty($data['end'])) {
+            $this->start_date = $data['start'];
+            $this->end_date   = $data['end'];
+
+            // Opsional: Jika menggunakan range, mungkin Anda ingin mereset filter tahun
+            // agar tidak bentrok dengan filter tanggal spesifik
+            $this->years = null;
+        } else {
+            // Kondisi jika filter tanggal dihapus (Kosong)
+            $this->start_date = null;
+            $this->end_date   = null;
+
+            // Set tahun ke tahun dari bulan lalu
+            $this->years = Carbon::now()->subMonth()->year;
+        }
+
         $this->loadData();
     }
 
@@ -33,6 +48,8 @@ class StatusByContDept extends Component
         $hazards = Hazard::with(['department', 'contractor'])
             ->when($this->start_date && $this->end_date, function ($q) {
                 $q->dateRange($this->start_date, $this->end_date);
+            })->when(!$this->start_date || !$this->end_date, function ($q) {
+                $q->whereYear('tanggal', $this->years);
             })->get();
 
         // 1. Ambil label unik (Dept + Contractor)

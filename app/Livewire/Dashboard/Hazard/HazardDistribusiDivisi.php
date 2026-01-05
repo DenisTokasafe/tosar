@@ -12,12 +12,12 @@ class HazardDistribusiDivisi extends Component
     public $categories; // nama department atau contractor
     public $start_date;
     public $end_date;
+    public $years;
     // Trigger awal saat komponen dimuat
     public function mount()
     {
         $firstDateRaw = Hazard::min('tanggal');
         $firstDate = $firstDateRaw ? Carbon::parse($firstDateRaw)->format('d-m-Y') : null;
-
         // Ambil tanggal paling akhir
         $lastDateRaw = Hazard::max('tanggal');
         $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw)->format('d-m-Y') : null;
@@ -28,20 +28,38 @@ class HazardDistribusiDivisi extends Component
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {
-
+        // Cek apakah data start dan end tersedia dan tidak kosong
+        if (!empty($data['start']) && !empty($data['end'])) {
             $this->start_date = $data['start'];
             $this->end_date   = $data['end'];
-            // 🔁 Misalnya langsung panggil refresh data
-            $this->loadData();
 
+            // Opsional: Jika menggunakan range, mungkin Anda ingin mereset filter tahun
+            // agar tidak bentrok dengan filter tanggal spesifik
+            $this->years = null;
+        } else {
+            // Kondisi jika filter tanggal dihapus (Kosong)
+            $this->start_date = null;
+            $this->end_date   = null;
+
+            // Set tahun ke tahun dari bulan lalu
+            $this->years = Carbon::now()->subMonth()->year;
+        }
+
+        $this->loadData();
     }
     public function loadData()
     {
-        // Ambil semua hazard beserta relasi
-       $year = Carbon::now()->subMonth()->year;
-        $hazards = Hazard::with(['department', 'contractor'])->when($this->start_date && $this->end_date, function ($q) {
-            $q->dateRange($this->start_date, $this->end_date);
-        })->whereYear('tanggal', Carbon::now()->year)->get();
+            // Ambil semua hazard beserta relasi
+        $hazards = Hazard::with(['department', 'contractor'])
+            // 1. Jika ada filter Range Tanggal, gunakan dateRange
+            ->when($this->start_date && $this->end_date, function ($q) {
+                $q->dateRange($this->start_date, $this->end_date);
+            })
+            // 2. Jika TIDAK ADA filter Range Tanggal, maka gunakan filter Tahun
+            ->when(!$this->start_date || !$this->end_date, function ($q) {
+                $q->whereYear('tanggal', $this->years);
+            })
+            ->get();
 
         // Kumpulkan kategori (nama department jika ada, kalau kosong pakai contractor)
         $grouped = $hazards->groupBy(function ($hazard) {
@@ -57,7 +75,7 @@ class HazardDistribusiDivisi extends Component
         $counts = $grouped->map->count()->sortDesc();
         // Hitung jumlah per kategori
         $value = [
-            'year' => $year,
+            'year' => $this->years ?? Carbon::now()->year,
             'label'  => $counts->keys()->values()->toArray(),   // urutan label mengikuti sortDesc()
             'counts' => $counts->values()->toArray(),            // urutan data sesuai label
 
