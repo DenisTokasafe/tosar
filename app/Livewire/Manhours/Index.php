@@ -304,55 +304,38 @@ class Index extends Component
         $bulan = Carbon::createFromFormat('M-Y', $this->date)->startOfMonth();
 
         foreach ($this->jobclasses as $key => $label) {
-            $query = Manhour::where('date', $bulan->format('Y/m/d'))
+
+            // 1. Cek apakah record untuk job_class ini sudah ada di database
+            $existingRecord = Manhour::where('date', $bulan)
                 ->where('company', $this->company)
                 ->where('department', $this->department)
                 ->where('dept_group', $this->dept_group)
-                ->where('job_class', $label);
-
-            // 🔹 Jika checkbox dicentang atau kosong → hapus record lama
+                ->where('job_class', $label)
+                ->first();
+            // 2. Jika checkbox TIDAK dicentang ATAU input kosong -> Hapus jika ada
             if (empty($this->hide[$key]) || (empty($this->manhours[$key]) && empty($this->manpower[$key]))) {
-                $query->delete();
+                if ($existingRecord) {
+                    $existingRecord->delete();
+                }
                 continue;
             }
-
-            // 🔹 Kalau create → buat baru
-            if ($mode === 'create') {
-                Manhour::create([
-                    'date'             => $bulan->format('Y/m/d'),
+            // 3. Gunakan updateOrCreate berdasarkan kriteria unik (Bukan cuma ID)
+            Manhour::updateOrCreate(
+                [
+                    'date'       => $bulan,
+                    'company'    => $this->company,
+                    'department' => $this->department,
+                    'dept_group' => $this->dept_group,
+                    'job_class'  => $label,
+                ],
+                [
                     'company_category' => $company_category,
-                    'company'          => $this->company,
-                    'department'       => $this->department,
-                    'dept_group'       => $this->dept_group,
-                    'job_class'        => $label,
                     'manhours'         => $this->manhours[$key],
                     'manpower'         => $this->manpower[$key],
-                ]);
-
-                $this->close_modal();
-            }
-
-            // 🔹 Kalau update → updateOrCreate
-            if ($mode === 'update') {
-                Manhour::updateOrCreate(
-                    [
-                        'id'               => $this->selectedId,
-                    ],
-                    [
-                        'date'             => $bulan->format('Y/m/d'),
-                        'company_category' => $company_category,
-                        'company'          => $this->company,
-                        'department'       => $this->department,
-                        'dept_group'       => $this->dept_group,
-                        'job_class'        => $label,
-                        'manhours'         => $this->manhours[$key],
-                        'manpower'         => $this->manpower[$key],
-                    ]
-                );
-                $this->close_modal();
-            }
+                ]
+            );
         }
-
+        $this->close_modal();
         $this->dispatch('alert', [
             'text'            => $mode === 'create' ? "Data berhasil di input!!!" : "Data berhasil diperbarui!!!",
             'duration'        => 5000,
