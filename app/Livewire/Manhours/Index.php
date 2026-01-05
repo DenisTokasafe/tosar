@@ -353,9 +353,6 @@ class Index extends Component
             }
         }
 
-
-
-
         $this->dispatch('alert', [
             'text'            => $mode === 'create' ? "Data berhasil di input!!!" : "Data berhasil diperbarui!!!",
             'duration'        => 5000,
