@@ -78,7 +78,7 @@
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-                    <x-form.upload label="Foto Dokumentasi Deskripsi" model="doc_deskripsi" :file="$doc_deskripsi" />
+                    <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_deskripsi" :file="$doc_deskripsi" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
                         @if ($doc_deskripsi)
                             @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
