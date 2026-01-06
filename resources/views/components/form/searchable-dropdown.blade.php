@@ -9,12 +9,25 @@
     'required' => false
 ])
 
+{{-- Ambil nilai saat ini untuk perbandingan di sisi server --}}
+@php
+    $currentSearch = $this->{$modelsearch} ?? '';
+    $currentId = $this->{$modelid} ?? null;
+@endphp
+
 <fieldset class="w-full fieldset">
     @if($label)
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div class="relative" x-data="{ open: @entangle($showdropdown) }" @click.away="open = false">
+    {{-- Alpine.js menangani 'open' untuk interaksi yang lebih cepat --}}
+    <div class="relative"
+         x-data="{
+            open: @entangle($showdropdown),
+            search: @entangle($modelsearch)
+         }"
+         @click.away="open = false">
+
         <div class="relative flex items-center">
             <input
                 type="text"
@@ -25,13 +38,14 @@
                 {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
             />
 
+            {{-- Loading Spinner --}}
             <div wire:loading wire:target="{{ $modelsearch }}" class="absolute right-2">
                 <span class="loading loading-spinner loading-xs text-info"></span>
             </div>
         </div>
 
-        {{-- PERBAIKAN: Menggunakan $this->{$modelsearch} untuk cek panjang karakter --}}
-        @if ($showdropdown && strlen($this->{$modelsearch}) > 0)
+        {{-- Gunakan variabel $currentSearch yang sudah diproses di blok @php --}}
+        @if ($showdropdown && strlen($currentSearch) > 0)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
@@ -45,8 +59,8 @@
 
                         <span>{{ $option->$labelfield }}</span>
 
-                        {{-- PERBAIKAN: Cek id terpilih menggunakan $this->{$modelid} --}}
-                        @if($this->{$modelid} == $option->id)
+                        {{-- Gunakan variabel $currentId hasil pengecekan @php --}}
+                        @if($currentId == $option->id)
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                             </svg>
@@ -54,8 +68,7 @@
                     </li>
                 @empty
                     <li class="px-4 py-3 text-xs italic text-gray-500 bg-base-100">
-                        {{-- PERBAIKAN: Menampilkan teks pencarian yang sedang diketik --}}
-                        Data "{{ $this->{$modelsearch} }}" tidak ditemukan...
+                        Data "{{ $currentSearch }}" tidak ditemukan...
                     </li>
                 @endforelse
             </ul>
