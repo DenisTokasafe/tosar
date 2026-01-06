@@ -78,7 +78,7 @@
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-
+                    <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_deskripsi" :file="$doc_deskripsi" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
                         @if ($doc_deskripsi)
                             @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
@@ -243,6 +243,7 @@
                     @endif
                 </fieldset>
             </div>
+
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
@@ -256,8 +257,7 @@
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-                    <x-form.upload label="Lampirkan foto atau dokumentasi"
-                        model="doc_corrective":file="$doc_corrective" />
+                        <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_corrective" :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
                             @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
