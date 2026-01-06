@@ -45,7 +45,7 @@ class HazardForm extends Component
     public $pelaporsAct = [];
     public $departments = [];
     public $showDropdown = false;
-    public $showLocationDropdown = false;
+    public $show_location = false;
     public $showPelaporDropdown = false;
     public $showActPelaporDropdown = false;
     public $searchContractor = '';
@@ -328,17 +328,17 @@ class HazardForm extends Component
                 ->orderBy('name')
                 ->limit(10)
                 ->get();
-            $this->showLocationDropdown = true;
+            $this->show_location = true;
         } else {
             $this->locations = [];
-            $this->showLocationDropdown = false;
+            $this->show_location = false;
         }
     }
     public function selectLocation($id, $name)
     {
         $this->location_id = $id;
         $this->searchLocation = $name;
-        $this->showLocationDropdown = false;
+        $this->show_location = false;
         $this->validateOnly('location_id');
     }
     public function updatedSearchPelapor()

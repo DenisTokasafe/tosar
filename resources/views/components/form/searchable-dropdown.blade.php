@@ -4,7 +4,7 @@
     'modelSearch' => null,     {{-- Nama property: searchLocation --}}
     'modelId' => null,         {{-- Nama property: location_id --}}
     'options' => [],           {{-- Data dari backend --}}
-    'showDropdown' => false,   {{-- State: showLocationDropdown --}}
+    'showdropdown' => false,   {{-- State: showLocationDropdown --}}
     'labelField' => 'name',    {{-- Kolom database yang ditampilkan --}}
     'required' => false
 ])
