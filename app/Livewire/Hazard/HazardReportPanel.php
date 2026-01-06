@@ -21,7 +21,7 @@ class HazardReportPanel extends Component
     public bool $filterByAuth = false;
     public array $filterStatus = [];
     public $role;
-    public $filterEventType;
+    // public $filterEventType;
     public $openDropdownId = null;
     public $deptCont = 'department'; // default departemen
     public $search = '';
@@ -44,7 +44,7 @@ class HazardReportPanel extends Component
     // Properties untuk menampung ID yang dicentang
     public array $filterDepartment = [];
     public array $filterContractor = [];
-    public array $filterEvent_Type = [];
+    public array $filterEventType = [];
     public array $filterEventSubType = [];
     // Data filter
     public $filterOptions = [];

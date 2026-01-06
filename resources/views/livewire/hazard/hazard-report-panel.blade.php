@@ -83,7 +83,7 @@
                         {{-- Button Trigger Popover --}}
                         <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
                             <span class="text-xs text-blue-600">
-                                @if (empty($filterEvent_Type))
+                                @if (empty($filterEventType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
