@@ -122,7 +122,7 @@
                             placeholder="Cari Lokasi..."
                             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                         <!-- Dropdown hasil search -->
-                        @if ($showLocationDropdown && count($locations) > 0)
+                        @if ($show_location && count($locations) > 0)
                             <ul
                                 class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                 <!-- Spinner ketika klik -->
