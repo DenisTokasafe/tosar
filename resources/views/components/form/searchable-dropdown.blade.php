@@ -22,7 +22,6 @@
             @focus="open = true"
             class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has($modelId) ? 'ring-1 ring-rose-500 focus:ring-rose-500' : '' }}"
         />
-
         @if ($showDropdown && count($options) > 0)
             <ul class="absolute z-20 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                 @foreach ($options as $option)
