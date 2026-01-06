@@ -1,15 +1,16 @@
 @props([
     'label' => 'Lampirkan foto atau dokumentasi',
-    'id' => 'upload-' . uniqid(), // ID unik otomatis jika tidak diisi
-    'model' => null,              // Target wire:model
-    'file' => null,               // Variabel file dari Livewire untuk cek status
+    'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()), // ID lebih konsisten berdasarkan nama model
+    'model' => null,
+    'file' => null,
     'optional' => true
 ])
 
 <div class="flex flex-col gap-1">
     <x-form.label :label="$label . ($optional ? ' (optional)' : '')" />
 
-    <label wire:ignore for="{{ $id }}"
+    {{-- Hapus wire:ignore agar Livewire bisa mengupdate konten span di dalamnya --}}
+    <label for="{{ $id }}"
         class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
 
         <span class="btn btn-info btn-xs">
@@ -17,15 +18,20 @@
         </span>
 
         {{-- Loading State --}}
-        <span wire:loading.class.remove='hidden' class="hidden" wire:target="{{ $model }}">
-            <span class="mr-2 loading loading-bars loading-xs text-info"></span>
-            <span class="text-xs text-info">Mengunggah...</span>
+        <span wire:loading wire:target="{{ $model }}">
+            <span class="flex items-center gap-1 px-2">
+                <span class="loading loading-bars loading-xs text-info"></span>
+                <span class="text-xs text-info">Mengunggah...</span>
+            </span>
         </span>
 
         {{-- File Name State --}}
-        <span id="name-{{ $id }}" class="text-xs text-gray-500" wire:loading.remove wire:target="{{ $model }}">
+        <span wire:loading.remove wire:target="{{ $model }}" class="px-2 text-xs text-gray-500 truncate">
             @if ($file && is_object($file))
                 {{ $file->getClientOriginalName() }}
+            @elseif ($file && is_string($file))
+                {{-- Menampilkan nama file jika input berupa string/path dari database --}}
+                {{ basename($file) }}
             @else
                 Belum ada file
             @endif
@@ -33,9 +39,11 @@
     </label>
 
     <input
-        {{ $attributes->merge(['type' => 'file', 'id' => $id, 'class' => 'hidden']) }}
-        wire:model.live="{{ $model }}"
-        onchange="document.getElementById('name-{{ $id }}').textContent = this.files[0]?.name ?? 'Belum ada file'"
+        type="file"
+        id="{{ $id }}"
+        {{ $attributes->whereDoesntStartWith('wire:model') }}
+        wire:model="{{ $model }}"
+        class="hidden"
     />
 
     @error($model)
