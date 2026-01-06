@@ -78,27 +78,7 @@
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-                    <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
-                    <label wire:ignore for="upload-deskripsi"
-                        class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                        <!-- Tombol custom -->
-                        <span class="btn btn-info btn-xs">
-                            Pilih file atau gambar
-                        </span>
-                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_deskripsi">
-                            <span class="mr-2 loading loading-bars loading-xs text-info"></span>
-                            <span class="text-xs text-info">Mengunggah...</span>
-                        </span>
-                        <!-- Nama file -->
-                        <span id="file-name" class="text-xs text-gray-500" wire:loading.remove
-                            wire:target="doc_deskripsi">
-                            {!! $doc_deskripsi ? $doc_deskripsi->getClientOriginalName() : 'Belum ada file' !!}
-                        </span>
-                    </label>
-                    <!-- Input asli (disembunyikan) -->
-                    <input name="doc_deskripsi" id="upload-deskripsi" wire:model.live='doc_deskripsi' type="file"
-                        class="hidden"
-                        onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
+                    <x-form.upload label="Foto Dokumentasi Deskripsi" model="doc_deskripsi" :file="$doc_deskripsi" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
                         @if ($doc_deskripsi)
                             @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
@@ -277,7 +257,8 @@
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="doc_corrective" :file="$doc_corrective" />
+                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="doc_corrective"
+                        :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
                             @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
