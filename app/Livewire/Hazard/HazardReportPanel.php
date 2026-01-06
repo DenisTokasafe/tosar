@@ -70,7 +70,7 @@ class HazardReportPanel extends Component
         $this->filterOptions = [
             'Department' => Department::all(['id', 'department_name']),
             'Contractors' => Contractor::all(['id', 'contractor_name']),
-            'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->all(['id', 'event_type_name']),
+            'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
         ];
     }
