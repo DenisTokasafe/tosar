@@ -1,11 +1,11 @@
 @props([
     'label' => null,
     'placeholder' => 'Cari...',
-    'modelSearch' => null,     {{-- Nama property: searchLocation --}}
-    'modelId' => null,         {{-- Nama property: location_id --}}
+    'modelsearch' => null,     {{-- Nama property: searchLocation --}}
+    'modelid' => null,         {{-- Nama property: location_id --}}
     'options' => [],           {{-- Data dari backend --}}
     'showdropdown' => false,   {{-- State: showLocationDropdown --}}
-    'labelField' => 'name',    {{-- Kolom database yang ditampilkan --}}
+    'labelfield' => 'name',    {{-- Kolom database yang ditampilkan --}}
     'required' => false
 ])
 
@@ -20,21 +20,21 @@
         <div class="relative flex items-center">
             <input
                 type="text"
-                wire:model.live.debounce.300ms="{{ $modelSearch }}"
+                wire:model.live.debounce.300ms="{{ $modelsearch }}"
                 placeholder="{{ $placeholder }}"
                 @focus="open = true"
                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs
-                {{ $errors->has($modelId) ? 'border-error ring-1 ring-error' : '' }}"
+                {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
             />
 
             {{-- Loading Spinner saat ngetik --}}
-            <div wire:loading wire:target="{{ $modelSearch }}" class="absolute right-2">
+            <div wire:loading wire:target="{{ $modelsearch }}" class="absolute right-2">
                 <span class="loading loading-spinner loading-xs text-info"></span>
             </div>
         </div>
 
         {{-- Dropdown Menu --}}
-        @if ($showdropdown && strlen($modelSearch) > 0)
+        @if ($showdropdown && strlen($modelsearch) > 0)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 {{-- State: Loading saat pilih data --}}
@@ -44,13 +44,13 @@
 
                 @forelse ($options as $option)
                     <li wire:key="item-{{ $option->id }}"
-                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelField) }}')"
+                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelfield) }}')"
                         class="flex items-center justify-between px-4 py-2 text-xs transition-colors duration-150 border-b cursor-pointer hover:bg-info hover:text-white border-base-200 last:border-none">
 
-                        <span>{{ $option->$labelField }}</span>
+                        <span>{{ $option->$labelfield }}</span>
 
                         {{-- Icon Check jika sudah terpilih --}}
-                        @if($modelId == $option->id)
+                        @if($modelid == $option->id)
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                             </svg>
@@ -58,7 +58,7 @@
                     </li>
                 @empty
                     <li class="px-4 py-3 text-xs italic text-gray-500 bg-base-100">
-                        Data "{{ $modelSearch }}" tidak ditemukan...
+                        Data "{{ $modelsearch }}" tidak ditemukan...
                     </li>
                 @endforelse
             </ul>
@@ -66,8 +66,8 @@
     </div>
 
     {{-- Error Message --}}
-    @if($modelId)
-        <x-label-error :messages="$errors->get($modelId)" />
+    @if($modelid)
+        <x-label-error :messages="$errors->get($modelid)" />
     @endif
 </fieldset>
 

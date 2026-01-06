@@ -116,7 +116,7 @@
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <x-form.searchable-dropdown label="Lokasi" placeholder="Cari lokasi..."
-                    modelSearch="searchLocation" modelId="location_id" :options="$locations" :showdropdown="$show_location" labelField="name" required />
+                    modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" labelfield="name" required />
                 {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                 @if ($location_id)
                     <fieldset class="fieldset">
