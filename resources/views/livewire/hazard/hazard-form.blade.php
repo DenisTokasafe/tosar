@@ -277,29 +277,8 @@
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
                 <fieldset class=" fieldset">
-                    <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
-                    <label class="block"></label>
-
-                    <label wire:ignore for="upload-corrective"
-                        class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-
-                        <span class="btn btn-info btn-xs">
-                            Pilih file atau gambar
-                        </span>
-
-                        <span wire:loading.class.remove='hidden' class="hidden" wire:target="doc_corrective">
-                            <span class="mr-2 loading loading-bars loading-xs text-info"></span>
-                            <span class="text-xs text-info">Mengunggah...</span>
-                        </span>
-
-                        <span id="file-name-corrective" class="text-xs text-gray-500" wire:loading.remove
-                            wire:target="doc_corrective">
-                            {!! $doc_corrective ? $doc_corrective->getClientOriginalName() : 'Belum ada file' !!}
-                        </span>
-                    </label>
-                    <input name="doc_corrective" id="upload-corrective" wire:model.live='doc_corrective'
-                        type="file" class="hidden"
-                        onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
+                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="doc_corrective"
+                        :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
                             @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
@@ -333,8 +312,6 @@
                             @endif
                         @endif
                     </div>
-
-
                     <x-label-error :messages="$errors->get('doc_corrective')" />
                 </fieldset>
             </div>
@@ -590,7 +567,7 @@
                                             <circle cx="9" cy="7" r="4" />
                                         </svg>
                                         PIC:
-                                        {{  optional(\App\Models\User::find($action['responsible_id']))->name ?? '-' ?? 'N/A' }}</span>
+                                        {{ optional(\App\Models\User::find($action['responsible_id']))->name ?? ('-' ?? 'N/A') }}</span>
                                     <div class="flex gap-2 mt-1 md:mt-0">
 
                                         <flux:button variant="danger" size="xs"
