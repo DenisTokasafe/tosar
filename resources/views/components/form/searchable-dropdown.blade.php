@@ -4,20 +4,12 @@
     'modelsearch' => null,
     'modelid' => null,
     'options' => [],
-    // 'showdropdown' => false,
     'labelfield' => 'name',
     'required' => false
 ])
 
 @php
-    // Ambil nilai real-time dari Livewire. Gunakan ?? '' untuk mencegah null error
     $currentSearch = $this->{$modelsearch} ?? '';
-    if ($this->{$modelsearch} !== null && $this->{$modelsearch} !== '') {
-        $showdropdown = true;
-    } else {
-        $showdropdown = false;
-    }
-
 @endphp
 
 <fieldset class="w-full fieldset">
@@ -25,8 +17,13 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- Gunakan .live pada entangle agar AlpineJS sinkron seketika dengan Livewire --}}
-    <div class="relative" x-data="{ open: @entangle($showdropdown).live }" @click.away="open = false">
+    {{-- MODIFIKASI DISINI: x-data menggunakan 'search' untuk kontrol tampilan --}}
+    <div class="relative"
+         x-data="{
+            search: @entangle($modelsearch).live,
+            open: false
+         }"
+         @click.away="open = false">
 
         <div class="relative flex items-center">
             <input
@@ -34,6 +31,8 @@
                 wire:model.live.debounce.300ms="{{ $modelsearch }}"
                 placeholder="{{ $placeholder }}"
                 @focus="open = true"
+                {{-- Input otomatis tutup jika teks dihapus --}}
+                @input="open = search.length > 1"
                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs
                 {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
             />
@@ -43,9 +42,10 @@
             </div>
         </div>
 
-        {{-- PENGKONDISIAN: Dropdown hanya muncul jika showdropdown TRUE DAN karakter > 1 --}}
-        @if ($showdropdown && strlen($currentSearch) > 1)
-            <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
+        {{-- Dropdown muncul hanya jika karakter > 1 --}}
+        @if (strlen($currentSearch) > 1)
+            <ul x-show="open"
+                class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
                     <span class="loading loading-bars loading-xs text-secondary"></span>
@@ -53,7 +53,7 @@
 
                 @forelse ($options as $option)
                     <li wire:key="item-{{ $option->id }}"
-                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelfield) }}')"
+                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelfield) }}'); open = false"
                         class="flex items-center justify-between px-4 py-2 text-xs transition-colors duration-150 border-b cursor-pointer hover:bg-info hover:text-white border-base-200 last:border-none">
 
                         <span>{{ $option->$labelfield }}</span>
