@@ -79,7 +79,51 @@
                 <tr class="bg-gray-100">
                     <th class="border">#</th>
                     <th class="border">reference</th>
-                    <th class="border">Tipe Bahaya</th>
+                    <th class="border">Tipe Bahaya
+                        {{-- Button Trigger Popover --}}
+                        <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
+                            <span class="text-xs text-blue-600">
+                                @if (empty($filterEvent_Type))
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-list-filter">
+                                        <path d="M2 5h20" />
+                                        <path d="M6 12h12" />
+                                        <path d="M9 19h6" />
+                                    </svg>
+                                @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-arrow-down-wide-narrow">
+                                        <path d="m3 16 4 4 4-4" />
+                                        <path d="M7 20V4" />
+                                        <path d="M11 4h10" />
+                                        <path d="M11 8h7" />
+                                        <path d="M11 12h4" />
+                                    </svg>
+                                @endif
+                            </span>
+                        </button>
+
+                        {{-- Popover Content --}}
+                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
+                            popover id="eventType" style="position-anchor:--eventType; inset-area: bottom span-right;">
+
+                            @foreach ($filterOptions['EventType'] as $event_type)
+                                <li>
+                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                        <input type="checkbox" wire:model.live="filterEventType"
+                                            value="{{ $event_type->id }}" class="text-blue-600 rounded form-checkbox">
+                                        <span class="ml-2 text-xs capitalize">
+                                            {{ $event_type->event_type_name }}
+                                        </span>
+                                    </label>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </th>
                     <th class="border">Jenis Bahaya
                         <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
                             style="anchor-name:--eventSubType">

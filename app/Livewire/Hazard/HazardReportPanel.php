@@ -44,6 +44,7 @@ class HazardReportPanel extends Component
     // Properties untuk menampung ID yang dicentang
     public array $filterDepartment = [];
     public array $filterContractor = [];
+    public array $filterEvent_Type = [];
     public array $filterEventSubType = [];
     // Data filter
     public $filterOptions = [];
