@@ -323,23 +323,22 @@ class HazardForm extends Component
     }
     public function updatedSearchLocation()
     {
-        if (strlen($this->searchLocation) > 2) {
-            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+        // Bersihkan spasi di awal/akhir
+        $search = trim($this->searchLocation);
+
+        // Pengkondisian: Jika lebih dari 1 karakter (mulai dari 2 karakter)
+        if (strlen($search) > 1) {
+            $this->locations = Location::where('name', 'like', '%' . $search . '%')
                 ->orderBy('name')
                 ->limit(10)
                 ->get();
+
             $this->show_location = true;
         } else {
+            // Jika hanya 1 huruf atau kosong, reset list dan tutup dropdown
             $this->locations = [];
             $this->show_location = false;
         }
-    }
-    public function selectLocation($id, $name)
-    {
-        $this->location_id = $id;
-        $this->searchLocation = $name;
-        $this->show_location = false;
-        $this->validateOnly('location_id');
     }
     public function updatedSearchPelapor()
     {
@@ -515,7 +514,6 @@ class HazardForm extends Component
                 ], [], [
                     'action_description'    => 'Deskripsi Tindakan Lanjutan',
                 ]);
-
             } catch (\Illuminate\Validation\ValidationException $e) {
                 throw $e;
             }

@@ -10,7 +10,7 @@
 ])
 
 @php
-    // Mengambil nilai asli dari property Livewire untuk ditampilkan kembali
+    // Ambil nilai real-time dari Livewire. Gunakan ?? '' untuk mencegah null error
     $currentSearch = $this->{$modelsearch} ?? '';
 @endphp
 
@@ -19,9 +19,9 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div class="relative" x-data="{ open: @entangle($showdropdown) }" @click.away="open = false">
+    {{-- Gunakan .live pada entangle agar AlpineJS sinkron seketika dengan Livewire --}}
+    <div class="relative" x-data="{ open: @entangle($showdropdown).live }" @click.away="open = false">
 
-        {{-- Container Input --}}
         <div class="relative flex items-center">
             <input
                 type="text"
@@ -32,17 +32,15 @@
                 {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
             />
 
-            {{-- Loading Spinner --}}
             <div wire:loading wire:target="{{ $modelsearch }}" class="absolute right-2">
                 <span class="loading loading-spinner loading-xs text-info"></span>
             </div>
         </div>
 
-        {{-- Dropdown Menu --}}
-        @if ($showdropdown && strlen($currentSearch) > 2)
+        {{-- PENGKONDISIAN: Dropdown hanya muncul jika showdropdown TRUE DAN karakter > 1 --}}
+        @if ($showdropdown && strlen($currentSearch) > 1)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
-                {{-- Spinner ketika klik --}}
                 <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
                     <span class="loading loading-bars loading-xs text-secondary"></span>
                 </div>
@@ -54,7 +52,6 @@
 
                         <span>{{ $option->$labelfield }}</span>
 
-                        {{-- Icon Check jika sudah terpilih --}}
                         @if($this->{$modelid} == $option->id)
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
@@ -74,10 +71,3 @@
         <x-label-error :messages="$errors->get($modelid)" />
     @endif
 </fieldset>
-
-<style>
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-</style>
