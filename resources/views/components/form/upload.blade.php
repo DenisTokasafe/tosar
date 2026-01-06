@@ -18,7 +18,7 @@
         </span>
 
         {{-- Loading State --}}
-        <span wire:loading wire:target="{{ $model }}">
+        <span class="hidden" wire:loading.remove.class='hidden' wire:target="{{ $model }}">
             <span class="flex items-center gap-1 px-2">
                 <span class="loading loading-bars loading-xs text-info"></span>
                 <span class="text-xs text-info">Mengunggah...</span>
