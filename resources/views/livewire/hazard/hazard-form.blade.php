@@ -115,8 +115,15 @@
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+                @php
+                    if ($searchLocation) {
+                        $showlocation = true;
+                    } else {
+                        $showlocation = false;
+                    }
+                @endphp
                 <x-form.searchable-dropdown label="Lokasi" placeholder="Cari lokasi..." modelsearch="searchLocation"
-                    modelid="location_id" :options="$locations" :showdropdown="$show_location" labelfield="name" required />
+                    modelid="location_id" :options="$locations" :showdropdown="$showlocation" labelfield="name" required />
                 {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                 @if ($location_id)
                     <fieldset class="fieldset">
