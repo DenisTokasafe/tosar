@@ -1,32 +1,79 @@
 @props([
     'label' => null,
     'placeholder' => 'Cari...',
-    'modelSearch' => null,
-    'modelId' => null,
-    'options' => [],
-    'showDropdown' => false,
-    'labelField' => 'name', // <-- Tambahkan properti ini (default: name)
-    'required' => false,
+    'modelSearch' => null,     {{-- Nama property: searchLocation --}}
+    'modelId' => null,         {{-- Nama property: location_id --}}
+    'options' => [],           {{-- Data dari backend --}}
+    'showDropdown' => false,   {{-- State: showLocationDropdown --}}
+    'labelField' => 'name',    {{-- Kolom database yang ditampilkan --}}
+    'required' => false
 ])
 
-<fieldset class="fieldset">
-    @if ($label)
+<fieldset class="w-full fieldset">
+    @if($label)
         <x-form.label :label="$label" :required="$required" />
     @endif
+
     <div class="relative" x-data="{ open: @entangle($showDropdown) }" @click.away="open = false">
-        <input type="text" wire:model.live.debounce.300ms="{{ $modelSearch }}" placeholder="{{ $placeholder }}"
-            @focus="open = true"
-            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has($modelId) ? 'ring-1 ring-rose-500 focus:ring-rose-500' : '' }}" />
-        @if ($showDropdown && count($options) > 0)
-            <ul class="absolute z-20 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                @foreach ($options as $option)
-                    {{-- Ganti $option->name menjadi $option->$labelField --}}
-                    <li wire:click="selectLocation({{ $option->id }}, '{{ $option->$labelField }}')"
-                        @click="open = false" class="px-3 py-2 text-xs cursor-pointer hover:bg-base-200">
-                        {{ $option->$labelField }}
+
+        {{-- Container Input --}}
+        <div class="relative flex items-center">
+            <input
+                type="text"
+                wire:model.live.debounce.300ms="{{ $modelSearch }}"
+                placeholder="{{ $placeholder }}"
+                @focus="open = true"
+                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs
+                {{ $errors->has($modelId) ? 'border-error ring-1 ring-error' : '' }}"
+            />
+
+            {{-- Loading Spinner saat ngetik --}}
+            <div wire:loading wire:target="{{ $modelSearch }}" class="absolute right-2">
+                <span class="loading loading-spinner loading-xs text-info"></span>
+            </div>
+        </div>
+
+        {{-- Dropdown Menu --}}
+        @if ($showDropdown && strlen($$modelSearch) > 0)
+            <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
+
+                {{-- State: Loading saat pilih data --}}
+                <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
+                    <span class="loading loading-bars loading-xs text-secondary"></span>
+                </div>
+
+                @forelse ($options as $option)
+                    <li wire:key="item-{{ $option->id }}"
+                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelField) }}')"
+                        class="flex items-center justify-between px-4 py-2 text-xs transition-colors duration-150 border-b cursor-pointer hover:bg-info hover:text-white border-base-200 last:border-none">
+
+                        <span>{{ $option->$labelField }}</span>
+
+                        {{-- Icon Check jika sudah terpilih --}}
+                        @if($$modelId == $option->id)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        @endif
                     </li>
-                @endforeach
+                @empty
+                    <li class="px-4 py-3 text-xs italic text-gray-500 bg-base-100">
+                        Data "{{ $$modelSearch }}" tidak ditemukan...
+                    </li>
+                @endforelse
             </ul>
         @endif
     </div>
+
+    {{-- Error Message --}}
+    @if($modelId)
+        <x-label-error :messages="$errors->get($modelId)" />
+    @endif
 </fieldset>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+</style>
