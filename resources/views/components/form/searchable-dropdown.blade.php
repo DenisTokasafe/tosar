@@ -9,7 +9,6 @@
 ])
 
 @php
-    // Ambil nilai real-time dari Livewire untuk pengecekan di sisi Server
     $currentSearch = $this->{$modelsearch} ?? '';
 @endphp
 
@@ -18,10 +17,11 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
+    {{-- MODIFIKASI DISINI: x-data menggunakan 'search' untuk kontrol tampilan --}}
     <div class="relative"
          x-data="{
-            open: false,
-            search: @entangle($modelsearch).live
+            search: @entangle($modelsearch).live,
+            open: false
          }"
          @click.away="open = false">
 
@@ -30,9 +30,8 @@
                 type="text"
                 wire:model.live.debounce.300ms="{{ $modelsearch }}"
                 placeholder="{{ $placeholder }}"
-                {{-- Dropdown terbuka saat fokus JIKA karakter > 1 --}}
-                @focus="if(search.length > 1) open = true"
-                {{-- Otomatis buka/tutup saat mengetik berdasarkan panjang karakter --}}
+                @focus="open = true"
+                {{-- Input otomatis tutup jika teks dihapus --}}
                 @input="open = search.length > 1"
                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs
                 {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
@@ -43,13 +42,9 @@
             </div>
         </div>
 
-        {{-- Dropdown Menu --}}
-        {{-- Pengecekan Server-side strlen agar tidak render HTML kosong --}}
+        {{-- Dropdown muncul hanya jika karakter > 1 --}}
         @if (strlen($currentSearch) > 1)
             <ul x-show="open"
-                x-transition:enter="transition ease-out duration-100"
-                x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100"
                 class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
@@ -58,8 +53,7 @@
 
                 @forelse ($options as $option)
                     <li wire:key="item-{{ $option->id }}"
-                        {{-- DISINI LOGIKANYA: Jalankan selectLocation lalu set open = false --}}
-                        @click="$wire.selectLocation({{ $option->id }}, '{{ addslashes($option->$labelfield) }}'); open = false"
+                        wire:click="selectLocation({{ $option->id }}, '{{ addslashes($option->$labelfield) }}'); open = false"
                         class="flex items-center justify-between px-4 py-2 text-xs transition-colors duration-150 border-b cursor-pointer hover:bg-info hover:text-white border-base-200 last:border-none">
 
                         <span>{{ $option->$labelfield }}</span>
