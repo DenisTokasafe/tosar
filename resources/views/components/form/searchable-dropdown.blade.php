@@ -14,7 +14,7 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div class="relative" x-data="{ open: @entangle($showDropdown) }" @click.away="open = false">
+    <div class="relative" x-data="{ open: @entangle($showdropdown) }" @click.away="open = false">
 
         {{-- Container Input --}}
         <div class="relative flex items-center">
@@ -34,7 +34,7 @@
         </div>
 
         {{-- Dropdown Menu --}}
-        @if ($showDropdown && strlen($modelSearch) > 0)
+        @if ($showdropdown && strlen($modelSearch) > 0)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 {{-- State: Loading saat pilih data --}}
