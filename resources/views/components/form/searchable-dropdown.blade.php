@@ -1,11 +1,11 @@
 @props([
     'label' => null,
     'placeholder' => 'Cari...',
-    'modelsearch' => null,     {{-- Nama property: searchLocation --}}
-    'modelid' => null,         {{-- Nama property: location_id --}}
-    'options' => [],           {{-- Data dari backend --}}
-    'showdropdown' => false,   {{-- State: showLocationDropdown --}}
-    'labelfield' => 'name',    {{-- Kolom database yang ditampilkan --}}
+    'modelsearch' => null,
+    'modelid' => null,
+    'options' => [],
+    'showdropdown' => false,
+    'labelfield' => 'name',
     'required' => false
 ])
 
@@ -15,8 +15,6 @@
     @endif
 
     <div class="relative" x-data="{ open: @entangle($showdropdown) }" @click.away="open = false">
-
-        {{-- Container Input --}}
         <div class="relative flex items-center">
             <input
                 type="text"
@@ -27,17 +25,15 @@
                 {{ $errors->has($modelid) ? 'border-error ring-1 ring-error' : '' }}"
             />
 
-            {{-- Loading Spinner saat ngetik --}}
             <div wire:loading wire:target="{{ $modelsearch }}" class="absolute right-2">
                 <span class="loading loading-spinner loading-xs text-info"></span>
             </div>
         </div>
 
-        {{-- Dropdown Menu --}}
-        @if ($showdropdown && strlen($modelsearch) > 0)
+        {{-- PERBAIKAN: Menggunakan $this->{$modelsearch} untuk cek panjang karakter --}}
+        @if ($showdropdown && strlen($this->{$modelsearch}) > 0)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
-                {{-- State: Loading saat pilih data --}}
                 <div wire:loading wire:target="selectLocation" class="p-3 text-center bg-base-200">
                     <span class="loading loading-bars loading-xs text-secondary"></span>
                 </div>
@@ -49,8 +45,8 @@
 
                         <span>{{ $option->$labelfield }}</span>
 
-                        {{-- Icon Check jika sudah terpilih --}}
-                        @if($modelid == $option->id)
+                        {{-- PERBAIKAN: Cek id terpilih menggunakan $this->{$modelid} --}}
+                        @if($this->{$modelid} == $option->id)
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                             </svg>
@@ -58,22 +54,15 @@
                     </li>
                 @empty
                     <li class="px-4 py-3 text-xs italic text-gray-500 bg-base-100">
-                        Data "{{ $modelsearch }}" tidak ditemukan...
+                        {{-- PERBAIKAN: Menampilkan teks pencarian yang sedang diketik --}}
+                        Data "{{ $this->{$modelsearch} }}" tidak ditemukan...
                     </li>
                 @endforelse
             </ul>
         @endif
     </div>
 
-    {{-- Error Message --}}
     @if($modelid)
         <x-label-error :messages="$errors->get($modelid)" />
     @endif
 </fieldset>
-
-<style>
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-</style>
