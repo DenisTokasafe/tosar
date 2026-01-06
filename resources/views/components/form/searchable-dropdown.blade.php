@@ -13,7 +13,6 @@
     @if($label)
         <x-form.label :label="$label" :required="$required" />
     @endif
-
     <div class="relative" x-data="{ open: @entangle($showDropdown) }" @click.away="open = false">
         <input
             type="text"
