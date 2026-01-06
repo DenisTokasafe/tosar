@@ -34,7 +34,7 @@
         </div>
 
         {{-- Dropdown Menu --}}
-        @if ($showDropdown && strlen($$modelSearch) > 0)
+        @if ($showDropdown && strlen($modelSearch) > 0)
             <ul class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60 custom-scrollbar">
 
                 {{-- State: Loading saat pilih data --}}
