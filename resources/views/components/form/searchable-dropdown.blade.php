@@ -4,7 +4,7 @@
     'modelsearch' => null,
     'modelid' => null,
     'options' => [],
-    'showdropdown' => false,
+    // 'showdropdown' => false,
     'labelfield' => 'name',
     'required' => false
 ])
@@ -12,6 +12,12 @@
 @php
     // Ambil nilai real-time dari Livewire. Gunakan ?? '' untuk mencegah null error
     $currentSearch = $this->{$modelsearch} ?? '';
+    if ($this->{$modelsearch} !== null && $this->{$modelsearch} !== '') {
+        $showdropdown = true;
+    } else {
+        $showdropdown = false;
+    }
+
 @endphp
 
 <fieldset class="w-full fieldset">
