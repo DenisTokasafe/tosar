@@ -18,6 +18,7 @@
 
     <div class="relative" x-data="{ open: @entangle($attributes->wire('model').'.live') }">
         <input
+        {{ $disabled ? 'disabled' : '' }}
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ $placeholder }}"
