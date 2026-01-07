@@ -576,15 +576,22 @@ class HazardForm extends Component
 
             // 2. Simpan semua action
             foreach ($this->actions as $act) {
-                $due_date = Carbon::createFromFormat('d-m-Y', $act['due_date'])->format('Y-m-d');
-                $actual_close_date = Carbon::createFromFormat('d-m-Y', $act['actual_close_date'])->format('Y-m-d');
+                // Gunakan ternary untuk mengecek apakah input tersedia
+                $due_date = !empty($act['due_date'])
+                    ? Carbon::createFromFormat('d-m-Y', $act['due_date'])->format('Y-m-d')
+                    : null;
+
+                $actual_close_date = !empty($act['actual_close_date'])
+                    ? Carbon::createFromFormat('d-m-Y', $act['actual_close_date'])->format('Y-m-d')
+                    : null;
+
                 ActionHazard::create([
-                    'hazard_id'     => $hazard->id,
+                    'hazard_id'         => $hazard->id,
                     'original_date'     => $tanggal,
-                    'description'   => $act['description'],
-                    'due_date'      => $due_date,
-                    'actual_close_date'      => $actual_close_date,
-                    'responsible_id' => $act['responsible_id'],
+                    'description'       => $act['description'],
+                    'due_date'          => $due_date,
+                    'actual_close_date' => $actual_close_date,
+                    'responsible_id'    => $act['responsible_id'],
                 ]);
             }
 
