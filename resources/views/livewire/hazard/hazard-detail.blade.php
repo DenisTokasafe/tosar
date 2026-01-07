@@ -210,8 +210,7 @@
                                                             $oldValue =
                                                                 $activity->subject->likelihood?->name ?? $oldValue;
                                                             $newValue =
-                                                                \App\Models\Likelihood::find($new)?->name ??
-                                                                $newValue;
+                                                                \App\Models\Likelihood::find($new)?->name ?? $newValue;
                                                             break;
                                                     }
                                                     $label = ucfirst(str_replace('_', ' ', $field));
@@ -407,8 +406,9 @@
                     </fieldset>
                 </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                    <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation" modelid="location_id"
-                    :options="$locations" :showdropdown="$showLocationDropdown" clickaction="selectLocation" :disabled="$isDisabled" namedb="name" />
+                    <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation"
+                        modelid="location_id" :options="$locations" :showdropdown="$showLocationDropdown" clickaction="selectLocation"
+                        :disabled="$isDisabled" namedb="name" />
 
                     {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                     @if ($location_id)
@@ -456,11 +456,12 @@
                         <x-label-error :messages="$errors->get('tanggal')" />
                     </fieldset>
 
-                 <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}}
-                        :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
+                        :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
                         manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                        addManualAction="addPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled"/>
+                        addManualAction="addActPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled" />
+                </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="mb-4 fieldset md:col-span-2">
                         <x-form.label label="Tindakan perbaikan langsung" required />
@@ -709,11 +710,12 @@
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
                         </fieldset>
                         <!-- Dilaporkan Oleh -->
-                         <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
-                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
-                        manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
-                        addManualAction="addActPelaporManual" clickaction="selectActPelapor" :disabled="$isDisabled"/>
+                        <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                            modelsearch="searchActResponsibility" modelid="action_responsible_id"
+                            {{-- ID asli di DB --}} :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}}
+                            :manualMode="$manualActPelaporMode" manualModelName="manualActPelaporName"
+                            enableManualAction="enableManualActPelapor" addManualAction="addActPelaporManual"
+                            clickaction="selectActPelapor" :disabled="$isDisabled" />
                     </div>
                     <!-- Tombol Tambah -->
                     <div class="flex justify-end ">
@@ -766,12 +768,14 @@
                                             {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
                                         <div class="flex gap-2 mt-1 md:mt-0">
 
-                                            <flux:button variant="subtle" size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                            <flux:button variant="subtle" size="xs"
+                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                                 wire:click="loadEditAction({{ $act['id'] }})"
                                                 icon="pencil-square">
                                             </flux:button>
 
-                                            <flux:button variant="danger" size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                            <flux:button variant="danger" size="xs"
+                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                                 wire:click="removeAction({{ $act['id'] }})"
                                                 wire:confirm="Yakin hapus tindakan ini?" icon="trash">
                                             </flux:button>
