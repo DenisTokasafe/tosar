@@ -936,7 +936,7 @@
     <div x-data="{ open: false }" x-on:open-edit-action.window="open = true" x-show="open" x-transition
         class="fixed inset-0 z-50 flex items-center justify-center modal modal-open bg-black/50"
         style="display:none;">
-        <div class="w-11/12 max-w-4xl modal-box">
+        <div class="w-11/12 max-w-4xl modal-box !overflow-visible">
             <h3 class="mb-4 text-lg font-bold">Edit Tindakan Lanjutan </h3>
 
             {{-- === Form Update === --}}
