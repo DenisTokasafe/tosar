@@ -36,11 +36,11 @@
 
                 @foreach ($options as $opt)
                     <li
-                        wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{{ $namedb }}) }}')"
+                        wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$namedb}) }}')"
                         wire:key="opt-{{ $opt->id }}"
                         class="px-3 py-2 text-sm cursor-pointer hover:bg-base-200"
                     >
-                        {{ $opt->name }}
+                        {{ $opt->{$namedb} }}
                     </li>
                 @endforeach
             </ul>
