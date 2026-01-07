@@ -421,7 +421,7 @@
                     <!-- Dilaporkan Oleh -->
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- Gunakan action_responsible_id sesuai class --}}
-                        :options="$pelaporsAct" :showdropdown="$show_act_pelapor_dropdown" {{-- Nama variabel harus sama dengan di class --}} :manualmode="$manualActPelaporMode"
+                        :options="$pelaporsAct" :showdropdown="$show_act_pelapor_dropdown" {{-- Nama variabel harus sama dengan di class --}} :manualmode="$manual_act_pelapor_mode"
                         {{-- Nama variabel harus sama dengan di class --}} manualmodelname="manualActPelaporName"
                         enablemanualaction="enableManualActPelapor" addmanualaction="addActPelaporManual"
                         clickaction="selectActPelapor" columnname="name" />
