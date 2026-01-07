@@ -289,40 +289,17 @@
                         <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
-
                                 <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
                                     :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
                                     namedb="department_name" />
-
-                        </div>
-                        <div class="hidden mt-2 peer-checked/company:block">
-                            {{-- Contractor --}}
-                            <div class="relative mb-1">
-                                <!-- Input Search -->
-                                <input name="searchContractor" type="text"
-                                    wire:model.live.debounce.300ms="searchContractor" placeholder="Cari kontraktor..."
-                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('contractor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                <!-- Dropdown hasil search -->
-                                @if ($showContractorDropdown && count($contractors) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik -->
-                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($contractors as $contractor)
-                                            <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $contractor->contractor_name }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
                             </div>
-                            @if ($deptCont === 'company')
-                                <x-label-error :messages="$errors->get('contractor_id')" />
-                            @endif
-                        </div>
+                            <div class="hidden mt-2 peer-checked/company:block">
+                                {{-- Contractor --}}
+                                <div class="relative mb-1">
+                                    <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                        modelid="contractor_id" :options="$contractors" :showdropdown="$showDropdown"
+                                        clickaction="selectContractor" namedb="contractor_name" />
+                                </div>
                     </fieldset>
                     <fieldset class="fieldset">
                         <x-form.label label="PIC" required />
