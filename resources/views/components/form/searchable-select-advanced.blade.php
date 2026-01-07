@@ -22,24 +22,20 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- PERBAIKAN: Menggunakan $showdropdown langsung pada @entangle untuk stabilitas Livewire v3 --}}
-    <div class="relative" x-data="{ open: @entangle($showdropdown).live }" x-on:click.outside="open = false">
-
+    <div class="relative" x-data="{ open: @entangle($attributes->wire('model') . '.live') }">
         {{-- Input Search --}}
         <input type="text" {{ $disabled ? 'disabled' : '' }} wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ $placeholder }}" x-on:focus="open = true" @class([
-                'input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs',
+                'input input-bordered  w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs',
                 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' =>
-                    $errors->has($modelid) || ($manualModelName && $errors->has($manualModelName)),
+                    $errors->has($modelid) || $errors->has($manualModelName),
                 'bg-base-200 opacity-70' => $disabled,
             ]) />
 
         {{-- Dropdown --}}
         @if (!$disabled && $showdropdown)
-            {{-- PERBAIKAN: Menambahkan z-[100] agar muncul di atas modal --}}
             <ul x-show="open"
-                x-transition
-                class="absolute z-[100] w-full mt-1 overflow-auto border rounded-md shadow-xl bg-base-100 max-h-60">
+                class="absolute z-[9999] w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
                 <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}" class="p-2 text-center">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
