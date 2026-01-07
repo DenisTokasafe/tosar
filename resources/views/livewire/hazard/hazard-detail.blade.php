@@ -397,90 +397,9 @@
                             id="immediate_corrective_action">
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
-                    <fieldset class=" fieldset">
-                        <x-form.label label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)" />
+                    <x-form.file-upload label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)" model="new_doc_corrective"
+                        :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
 
-                        <label wire:ignore for="upload-corrective"
-                            class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                            <span class="btn btn-info btn-xs {{ $isDisabled ? 'btn btn-disabled' : '' }}">
-                                Pilih file atau gambar
-                            </span>
-                            <span id="file-name-corrective" class="text-[9px] text-gray-500 truncate max-w-sm">
-                                {!! $new_doc_corrective ? $new_doc_corrective->getClientOriginalName() : $doc_corrective !!}
-                            </span>
-                        </label>
-
-                        @php
-                            // Tentukan file yang akan dipreview
-                            $fileToPreviewCorrective =
-                                $new_doc_corrective ?? ($doc_corrective ? (object) ['name' => $doc_corrective] : null);
-
-                            // Ambil nama file atau path
-                            $fileNameCorrective = $fileToPreviewCorrective
-                                ? ($fileToPreviewCorrective instanceof
-                                \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
-                                    ? $fileToPreviewCorrective->getClientOriginalName()
-                                    : $fileToPreviewCorrective->name)
-                                : null;
-
-                            // Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
-                            $extensionCorrective = $fileNameCorrective
-                                ? strtolower(pathinfo($fileNameCorrective, PATHINFO_EXTENSION))
-                                : null;
-
-                            // Tentukan apakah file adalah gambar
-                            $isImageCorrective = in_array($extensionCorrective, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-
-                            // Tentukan URL/Path file lama atau URL sementara untuk file baru
-                            $fileUrlCorrective = $new_doc_corrective
-                                ? $new_doc_corrective->temporaryUrl()
-                                : ($doc_corrective
-                                    ? asset('storage/' . $doc_corrective)
-                                    : null);
-                        @endphp
-
-                        @if ($fileToPreviewCorrective)
-                            <div class="text-xs {{ $new_doc_corrective ? 'text-green-600' : 'text-gray-600' }}">
-                                {{ $new_doc_corrective ? 'Preview file baru:' : 'File lama:' }}
-                            </div>
-
-                            @if ($isImageCorrective)
-                                <img src="{{ $fileUrlCorrective }}" class="h-24 mt-1 border rounded">
-                                <a href="{{ $fileUrlCorrective }}" target="_blank"
-                                    class="text-xs text-blue-500 hover:underline">Lihat File</a>
-                            @else
-                                <div class="flex items-center gap-2 mt-2">
-                                    @if ($extensionCorrective == 'pdf')
-                                        <x-icon.pdf class="w-8 h-8 " />
-                                        <span class="text-sm text-red-600">{{ $fileNameCorrective }}</span>
-                                    @elseif (in_array($extensionCorrective, ['doc', 'docx']))
-                                        <x-icon.word class="w-8 h-8 " />
-                                        <span class="text-sm text-blue-600">{{ $fileNameCorrective }}</span>
-                                    @else
-                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                        </svg>
-                                        <span class="text-sm text-gray-600">File
-                                            {{ strtoupper($extensionCorrective) }}:
-                                            {{ $fileNameCorrective }}</span>
-                                    @endif
-                                </div>
-                                @if (!$new_doc_corrective)
-                                    <a href="{{ $fileUrlCorrective }}" target="_blank"
-                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
-                                @endif
-                            @endif
-                        @else
-                            <span class="text-xs text-gray-400">Belum ada file</span>
-                        @endif
-
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="upload-corrective"
-                            wire:model.live='new_doc_corrective' type="file" class="hidden"
-                            onchange="document.getElementById('file-name-corrective').textContent = this.files[0]?.name ?? 'Belum ada file'" />
-                        <x-label-error :messages="$errors->get('new_doc_corrective')" />
-                    </fieldset>
                 </div>
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">Penanggung Jawab</legend>
