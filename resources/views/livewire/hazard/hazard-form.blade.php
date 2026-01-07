@@ -421,9 +421,9 @@
                     <!-- Dilaporkan Oleh -->
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchActResponsibility" modelid="responsible_id" {{-- ID asli di DB --}}
-                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
-                        manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
-                        addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
+                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualmode="$manualActPelaporMode"
+                        manualmodelname="manualActPelaporName" enablemanualaction="enableManualActPelapor"
+                        addmanualaction="addActPelaporManual" clickaction="selectActPelapor" columnname="name" />
                 </div>
 
                 <!-- Tombol Tambah -->
