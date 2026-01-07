@@ -272,7 +272,7 @@
                     <x-label-error :messages="$errors->get('doc_corrective')" />
                 </fieldset>
             </div>
-            <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+            <fieldset class="p-3 border border-gray-300 shadow-md fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title ">Penanggung Jawab</legend>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                     <fieldset>
@@ -358,7 +358,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+            <fieldset class="p-3 border border-gray-500 shadow-md fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title "> Tindakan Lanjutan</legend>
                 <!-- Deskripsi Tindakan -->
                 <fieldset class="fieldset md:col-span-1">
