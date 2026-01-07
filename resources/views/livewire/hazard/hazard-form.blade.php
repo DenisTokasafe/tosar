@@ -189,7 +189,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
-                <fieldset >
+                <fieldset class="fieldset ">
                     <x-form.label label="Dilaporkan Oleh" required />
 
                     {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
@@ -257,7 +257,7 @@
                         wire:model.live="immediate_corrective_action" id="immediate_corrective_action">
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
-                <fieldset class="fieldset">
+                <fieldset class="mt-1 fieldset">
                     <x-form.upload label="Lampirkan Foto Dokumentasi Perbaikan" model="doc_corrective"
                         :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
