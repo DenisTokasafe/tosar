@@ -326,85 +326,8 @@
                         <input type="hidden" wire:model.live="description" id="description">
                         <x-label-error :messages="$errors->get('description')" />
                     </fieldset>
-                    <fieldset class=" fieldset">
-                        <x-form.label label="Lampirkan foto atau dokumentasi (optional)" />
-                        <label wire:ignore for="upload-deskripsi"
-                            class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
-                            <span class="btn btn-info btn-xs {{ $isDisabled ? 'btn btn-disabled' : '' }}">
-                                Pilih file atau gambar
-                            </span>
-                            <span id="file-name" class="text-[9px] text-gray-500 truncate max-w-sm">
-                                {!! $new_doc_deskripsi ? $new_doc_deskripsi->getClientOriginalName() : $doc_deskripsi !!}
-                            </span>
-                        </label>
-
-                        @php
-                            // Tentukan file yang akan dipreview
-                            $fileToPreview =
-                                $new_doc_deskripsi ?? ($doc_deskripsi ? (object) ['name' => $doc_deskripsi] : null);
-
-                            // Ambil nama file atau path
-                            $fileName = $fileToPreview
-                                ? ($fileToPreview instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
-                                    ? $fileToPreview->getClientOriginalName()
-                                    : $fileToPreview->name)
-                                : null;
-
-                            // Ambil ekstensi file (misalnya 'pdf', 'docx', 'jpg')
-                            $extension = $fileName ? strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) : null;
-
-                            // Tentukan apakah file adalah gambar
-                            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-
-                            // Tentukan URL/Path file lama atau URL sementara untuk file baru
-                            $fileUrl = $new_doc_deskripsi
-                                ? $new_doc_deskripsi->temporaryUrl()
-                                : ($doc_deskripsi
-                                    ? asset('storage/' . $doc_deskripsi)
-                                    : null);
-                        @endphp
-
-                        @if ($fileToPreview)
-                            <div class="text-xs {{ $new_doc_deskripsi ? 'text-green-600' : 'text-gray-600' }}">
-                                {{ $new_doc_deskripsi ? 'Preview file baru:' : 'File lama:' }}
-                            </div>
-
-                            @if ($isImage)
-                                <img src="{{ $fileUrl }}" class="h-24 mt-1 border rounded">
-                                <a href="{{ $fileUrl }}" target="_blank"
-                                    class="text-xs text-blue-500 hover:underline">Lihat File</a>
-                            @else
-                                <div class="flex items-center gap-2 mt-2">
-                                    @if ($extension == 'pdf')
-                                        <x-icon.pdf class="w-8 h-8 " />
-                                        <span class="text-sm text-red-600">{{ $fileName }}</span>
-                                    @elseif (in_array($extension, ['doc', 'docx']))
-                                        <x-icon.word class="w-8 h-8 " />
-                                        <span class="text-sm text-blue-600">{{ $fileName }}</span>
-                                    @else
-                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                        </svg>
-                                        <span class="text-sm text-gray-600">File {{ strtoupper($extension) }}:
-                                            {{ $fileName }}</span>
-                                    @endif
-                                </div>
-                                @if (!$new_doc_deskripsi)
-                                    <a href="{{ $fileUrl }}" target="_blank"
-                                        class="text-xs text-blue-500 hover:underline">Lihat File</a>
-                                @endif
-                            @endif
-                        @else
-                            <span class="text-xs text-gray-400">Belum ada file</span>
-                        @endif
-
-                        <input {{ $isDisabled ? 'disabled' : '' }} id="upload-deskripsi"
-                            wire:model.live='new_doc_deskripsi' type="file" class="hidden"
-                            onchange="document.getElementById('file-name').textContent = this.files[0]?.name ?? 'Belum ada file'" />
-                        <x-label-error :messages="$errors->get('new_doc_deskripsi')" />
-                    </fieldset>
+                    <x-form.file-upload label="Lampirkan foto atau dokumentasi" model="new_doc_deskripsi"
+                        :existingFile="$doc_deskripsi" :newFile="$new_doc_deskripsi" :isDisabled="$isDisabled" />
                 </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                     <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation"
