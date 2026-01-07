@@ -169,7 +169,7 @@
                                                         this.fp = flatpickr(this.$refs.input, {
                                                             plugins: [
                                                                 new monthSelectPlugin({
-                                                                    disableMobile: true,
+                                                                    disableMobile: false,
                                                                     shorthand: true,
                                                                     dateFormat: 'M-Y',
                                                                     altFormat: 'F Y',
