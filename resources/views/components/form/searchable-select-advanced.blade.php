@@ -22,7 +22,7 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-   <div class="relative" x-data="{ open: @entangle($showdropdown).live }" x-on:click.outside="open = false">
+    <div class="relative" x-data="{ open: @entangle($showdropdown) }" x-on:click.outside="open = false">
         {{-- Input Search --}}
         <input
             type="text"
