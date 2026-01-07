@@ -96,7 +96,7 @@ class HazardForm extends Component
     public $tanggal;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
-    public $manualActPelaporMode = false;
+    public $manual_act_pelapor_mode = false;
     public $manualActPelaporName = '';
     // input action
     public $actions = []; // kumpulan action sebelum disimpan
@@ -388,7 +388,7 @@ class HazardForm extends Component
     public function updatedSearchActResponsibility()
     {
         $this->reset('manualActPelaporName');
-        $this->manualActPelaporMode = false;
+        $this->manual_act_pelapor_mode = false;
         if (strlen($this->searchActResponsibility) > 1) {
             $this->pelaporsAct = User::where('name', 'like', '%' . $this->searchActResponsibility . '%')
                 ->orderBy('name')
@@ -405,12 +405,12 @@ class HazardForm extends Component
         $this->action_responsible_id = $id;
         $this->searchActResponsibility = $name;
         $this->show_act_elapor_dropdown = false;
-        $this->manualActPelaporMode = false;
+        $this->manual_act_pelapor_mode = false;
         $this->validateOnly('action_responsible_id');
     }
     public function enableManualActPelapor()
     {
-        $this->manualActPelaporMode = true;
+        $this->manual_act_pelapor_mode = true;
         $this->manualActPelaporName = $this->searchPelapor; // isi default sama dengan isi search
     }
     public function updatedManualActPelaporName($value)
