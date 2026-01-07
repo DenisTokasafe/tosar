@@ -1,15 +1,15 @@
 @props([
     'label' => 'Lampirkan foto atau dokumentasi',
-    'id' => 'upload-' . uniqid(),
-    'model' => null, // wire:model untuk file baru (e.g., new_doc_deskripsi)
-    'existingFile' => null, // Variabel untuk path file lama (e.g., $doc_deskripsi)
-    'newFile' => null, // Variabel untuk object TemporaryUploadedFile (e.g., $new_doc_deskripsi)
+    // PERBAIKAN: Gunakan hash dari nama model agar ID stabil saat re-render
+    'id' => 'upload-' . md5($model ?? uniqid()),
+    'model' => null,
+    'existingFile' => null,
+    'newFile' => null,
     'isDisabled' => false,
     'optional' => true,
 ])
 
 @php
-    // Logika penentuan file yang akan dipreview
     $fileToPreview = $newFile ?? ($existingFile ? (object) ['name' => $existingFile] : null);
 
     $fileName = null;
@@ -18,23 +18,27 @@
     $fileUrl = null;
 
     if ($fileToPreview) {
-        $fileName =
-            $newFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
+        $fileName = $newFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
                 ? $newFile->getClientOriginalName()
-                : (is_object($fileToPreview)
-                    ? $fileToPreview->name
-                    : $existingFile);
+                : (is_object($fileToPreview) ? $fileToPreview->name : $existingFile);
 
         $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
 
-        $fileUrl = $newFile
-            ? (method_exists($newFile, 'temporaryUrl')
-                ? $newFile->temporaryUrl()
-                : null)
-            : ($existingFile
-                ? asset('storage/' . $existingFile)
-                : null);
+        // Filter Previewable Extensions (Default Livewire)
+        $previewableExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
+
+        if ($newFile) {
+            if (in_array($extension, $previewableExtensions) && method_exists($newFile, 'temporaryUrl')) {
+                try {
+                    $fileUrl = $newFile->temporaryUrl();
+                } catch (\Exception $e) {
+                    $fileUrl = null;
+                }
+            }
+        } else {
+            $fileUrl = $existingFile ? asset('storage/' . $existingFile) : null;
+        }
     }
 @endphp
 
@@ -42,18 +46,24 @@
     <x-form.label :label="$label . ($optional ? ' (optional)' : '')" />
 
     {{-- Trigger Area --}}
-    <label wire:ignore for="{{ $id }}"
+    {{-- Hapus wire:ignore agar tampilan nama file sinkron dengan state Livewire --}}
+    <label for="{{ $id }}"
         class="flex items-center gap-2 {{ $isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer' }} border border-info rounded hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden transition-all">
 
         <span class="btn btn-info btn-xs {{ $isDisabled ? 'btn-disabled' : '' }}">
             Pilih file atau gambar
         </span>
 
-        <span id="name-{{ $id }}" class="text-[9px] text-gray-500 truncate max-w-sm">
+        {{-- Loading State --}}
+        <div wire:loading wire:target="{{ $model }}">
+            <span class="loading loading-spinner loading-xs"></span>
+        </div>
+
+        <span wire:loading.remove wire:target="{{ $model }}" class="text-[9px] text-gray-500 truncate max-w-sm">
             @if ($newFile)
                 {{ $newFile->getClientOriginalName() }}
             @elseif($existingFile)
-                {{ $existingFile }}
+                {{ basename($existingFile) }}
             @else
                 Belum ada file
             @endif
@@ -61,7 +71,7 @@
     </label>
 
     {{-- Preview Area --}}
-    <div class="mt-2">
+    <div class="mt-2" wire:loading.remove wire:target="{{ $model }}">
         @if ($fileToPreview)
             <div class="text-[10px] font-medium {{ $newFile ? 'text-green-600' : 'text-gray-600' }}">
                 {{ $newFile ? 'Preview file baru:' : 'File lama:' }}
@@ -83,34 +93,41 @@
                         <x-icon.excel class="w-8 h-8" />
                     @else
                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
                         </svg>
                     @endif
 
                     <div class="flex flex-col">
-                        <span
-                            class="text-xs font-semibold truncate max-w-[200px] {{ $extension == 'pdf' ? 'text-red-600' : ($extension == 'doc' || $extension == 'docx' ? 'text-blue-600' : 'text-gray-600') }}">
+                        <span class="text-xs font-semibold truncate max-w-[200px]
+                            {{ $extension == 'pdf' ? 'text-red-600' : '' }}
+                            {{ in_array($extension, ['doc', 'docx']) ? 'text-blue-600' : '' }}
+                            {{ in_array($extension, ['xlsx', 'xls', 'csv']) ? 'text-green-600' : '' }}">
                             {{ $fileName }}
                         </span>
-                        @if ($fileUrl && !$newFile)
+
+                        @if ($fileUrl)
                             <a href="{{ $fileUrl }}" target="_blank"
-                                class="text-[10px] text-blue-500 hover:underline">Download / Lihat</a>
+                                class="text-[10px] text-blue-500 hover:underline">
+                                {{ $newFile ? 'Pratinjau' : 'Download / Lihat' }}
+                            </a>
                         @endif
                     </div>
                 </div>
             @endif
-        @else
-            <span class="text-xs text-gray-400">Belum ada file</span>
         @endif
     </div>
 
     {{-- Hidden Input --}}
-    <input type="file" id="{{ $id }}" {{ $isDisabled ? 'disabled' : '' }}
-        wire:model.live="{{ $model }}" class="hidden"
-        onchange="document.getElementById('name-{{ $id }}').textContent = this.files[0]?.name ?? 'Belum ada file'" />
+    {{-- Hapus onchange manual karena Livewire akan mengupdate UI lewat $newFile --}}
+    <input type="file"
+        id="{{ $id }}"
+        {{ $isDisabled ? 'disabled' : '' }}
+        wire:model="{{ $model }}"
+        class="hidden" />
 
     @if ($model)
-        <x-label-error :messages="$errors->get($model)" />
+        @error($model)
+            <span class="text-xs text-red-500">{{ $message }}</span>
+        @enderror
     @endif
 </fieldset>
