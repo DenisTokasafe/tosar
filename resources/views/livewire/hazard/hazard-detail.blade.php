@@ -509,6 +509,11 @@
                         <x-label-error :messages="$errors->get('pelapor_id')" />
                     @endif
                 </div>
+                 <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}}
+                        :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                        addManualAction="addPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled"/>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="mb-4 fieldset md:col-span-2">
                         <x-form.label label="Tindakan perbaikan langsung" required />
