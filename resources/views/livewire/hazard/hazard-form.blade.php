@@ -114,32 +114,8 @@
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                <fieldset class="fieldset ">
-                    <x-form.label label="Lokasi" required />
-                    <div class="relative">
-                        <!-- Input Search -->
-                        <input type="text" wire:model.live.debounce.300ms="searchLocation"
-                            placeholder="Cari Lokasi..."
-                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                        <!-- Dropdown hasil search -->
-                        @if ($show_location && count($locations) > 0)
-                            <ul
-                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                <!-- Spinner ketika klik -->
-                                <div wire:loading wire:target="selectLocation" class="p-2 text-center">
-                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                </div>
-                                @foreach ($locations as $loc)
-                                    <li wire:click="selectLocation({{ $loc->id }}, '{{ $loc->name }}')"
-                                        class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                        {{ $loc->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                    <x-label-error :messages="$errors->get('location_id')" />
-                </fieldset>
+                 <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation" modelid="location_id"
+                    :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
                 {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                 @if ($location_id)
                     <fieldset class="fieldset">
