@@ -36,7 +36,6 @@
                 ($disabled ? ' bg-base-200 cursor-not-allowed opacity-70' : '')
             ]) }}
         />
-
         {{-- Dropdown hanya muncul jika variabel $showdropdown bernilai true --}}
         @if ($showdropdown)
             <ul x-show="open" class="absolute z-50 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
@@ -45,7 +44,6 @@
                 <div wire:loading wire:target="{{ $clickaction }}, {{ $enablemanualaction }}" class="p-2 text-center">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
                 </div>
-
                 {{-- LOOP DATA HASIL PENCARIAN --}}
                 @if (count($options) > 0)
                     @foreach ($options as $opt)
