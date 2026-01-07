@@ -151,30 +151,39 @@
                                     {{-- Bulan --}}
                                     <fieldset class="fieldset">
                                         <x-form.label label="Bulan" required />
-                                        <div x-data="{
+
+                                        <div wire:ignore wire:key="manhours-month-picker" x-data="{
                                             fp: null,
+                                            dateValue: @entangle('date').live,
                                             initFlatpickr() {
+                                                // Hancurkan instance lama jika ada
+                                                if (this.fp) this.fp.destroy();
+
                                                 this.fp = flatpickr(this.$refs.input, {
                                                     plugins: [
                                                         new monthSelectPlugin({
                                                             disableMobile: true,
-                                                            shorthand: true, // Jan, Feb, ...
-                                                            dateFormat: 'M-Y', // format yang dikirim ke Livewire
-                                                            altFormat: 'F Y', // format yang ditampilkan ke user (September 2025)
+                                                            shorthand: true,
+                                                            dateFormat: 'M-Y',
+                                                            altFormat: 'F Y',
                                                             theme: 'light'
                                                         })
                                                     ],
+                                                    // Gunakan nilai dari Livewire sebagai default
+                                                    defaultDate: this.dateValue,
                                                     onChange: (selectedDates, dateStr) => {
-                                                        $wire.set('date', dateStr)
+                                                        this.dateValue = dateStr;
                                                     }
-                                                })
+                                                });
                                             }
-                                        }" x-init="initFlatpickr()"
-                                            x-effect="if($wire.date) fp.setDate($wire.date, true)" wire:ignore>
-                                            <input x-ref="input" type="text" wire:model.live="date" readonly
+                                        }"
+                                            x-init="initFlatpickr()" x-effect="if(dateValue) fp.setDate(dateValue, false)">
+
+                                            <input x-ref="input" type="text" readonly
                                                 class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                                                 placeholder="Pilih bulan" />
                                         </div>
+
                                         <x-label-error :messages="$errors->get('date')" />
                                     </fieldset>
 
