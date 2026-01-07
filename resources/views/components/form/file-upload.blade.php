@@ -55,7 +55,7 @@
         </span>
 
         {{-- Loading State --}}
-        <div wire:loading wire:target="{{ $model }}">
+        <div class="hidden" wire:loading.remove.class='hidden' wire:target="{{ $model }}">
             <span class="loading loading-spinner loading-xs"></span>
         </div>
 
