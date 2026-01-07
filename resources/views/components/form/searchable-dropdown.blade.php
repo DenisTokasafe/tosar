@@ -6,6 +6,7 @@
     'options' => [],          // Data array/collection hasil search
     'showdropdown' => false,  // Boolean untuk kontrol visibility dropdown
     'required' => false,
+    'disabled' => false, // Tambahkan prop disabled
     'clickaction' => 'selectLocation',
     'namedb' => 'name' // Nama fungsi di Parent
 ])
