@@ -155,7 +155,7 @@ class HazardDetail extends Component
     public $edit_action_actual_close_date;
     public $edit_action_responsible_id;
     public $edit_searchResponsibility;
-
+    public $audit_name;
     // Untuk menampilkan daftar ActionHazard terkait hazard
     public $actionHazards = [];
 
@@ -250,6 +250,7 @@ class HazardDetail extends Component
         if ($this->pelapor_id) {
             // ✅ Jika pelapor_id ada → ambil nama user
             $this->searchPelapor = User::find($this->pelapor_id)?->name ?? '';
+            $this->audit_name = User::find($this->pelapor_id)?->name ?? '';
             $this->manualPelaporName = $this->searchPelapor; // biar konsisten juga
         } else {
             // ✅ Jika pelapor_id null → pakai manualPelaporName dari DB
@@ -1137,7 +1138,7 @@ class HazardDetail extends Component
                 'backgroundColor' => "background: linear-gradient(135deg, #42a5f5, #478ed1);",
             ]
         );
-         $this->loadActionHazards();
+        $this->loadActionHazards();
     }
     public function loadActionHazards()
     {
