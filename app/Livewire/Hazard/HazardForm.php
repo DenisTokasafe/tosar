@@ -508,18 +508,7 @@ class HazardForm extends Component
         $this->dispatch('validateCkEditorAddAction');
         $this->dispatch('validateCkEditorImmediateCorrectiveAction');
         $this->dispatch('validateCkEditorDescription');
-        if (!empty($this->action_description)) {
-            try {
-                $this->validate([
-                    'action_description'    => 'required|string',
-                ], [], [
-                    'action_description'    => 'Deskripsi Tindakan Lanjutan',
-                ]);
 
-            } catch (\Illuminate\Validation\ValidationException $e) {
-                throw $e;
-            }
-        }
         $this->validate();
         $hasPartialAction = !empty($this->action_description);
 
