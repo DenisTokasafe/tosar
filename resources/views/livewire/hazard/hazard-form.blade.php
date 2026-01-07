@@ -298,7 +298,7 @@
                             {{-- Contractor --}}
                             <div class="relative mb-1">
                                 <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
-                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showDropdown"
+                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showContractorDropdown"
                                     clickaction="selectContractor" namedb="contractor_name" />
                             </div>
                         </div>
