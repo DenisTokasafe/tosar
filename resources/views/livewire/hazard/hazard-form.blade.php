@@ -419,62 +419,11 @@
                         <x-label-error :messages="$errors->get('actual_close_date')" />
                     </fieldset>
                     <!-- Dilaporkan Oleh -->
-                    <fieldset class="relative fieldset md:col-span-1">
-                        <x-form.label label="Dilaporkan Oleh" />
-                        <div class="relative">
-                            <input name="searchActResponsibility" type="text"
-                                wire:model.live.debounce.300ms="searchActResponsibility"
-                                placeholder="Cari Nama Pelapor..."
-                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-
-                            <!-- Dropdown hasil search -->
-                            @if ($showActPelaporDropdown)
-                                <ul
-                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                    <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    </div>
-                                    @if (count($pelaporsAct) > 0)
-                                        @foreach ($pelaporsAct as $pelapor)
-                                            <li wire:click="selectActPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
-                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                {{ $pelapor->name }}
-                                            </li>
-                                        @endforeach
-                                    @else
-                                        @if (!$manualActPelaporMode)
-                                            <li wire:click="enableManualActPelapor"
-                                                class="px-3 py-2 cursor-pointer text-warning hover:bg-base-200">
-                                                Tidak ditemukan, tambah pelapor manual
-                                            </li>
-                                        @endif
-                                    @endif
-
-                                    @if ($manualActPelaporMode)
-                                        <li class="p-2">
-                                            <div class="relative w-full">
-                                                <input name="manualActPelaporName" type="text"
-                                                    wire:model.live="manualActPelaporName"
-                                                    placeholder="Masukkan nama..."
-                                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('manualPelaporName') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                                <div class="absolute right-0 -translate-y-1/2 top-1/2">
-                                                    <flux:button size="xs" wire:click="addActPelaporManual"
-                                                        icon="plus" variant="primary">
-                                                        Tambah
-                                                    </flux:button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
-                                </ul>
-                            @endif
-                        </div>
-                        @if ($manualPelaporMode)
-                            <x-label-error :messages="$errors->get('manualPelaporName')" />
-                        @else
-                            <x-label-error :messages="$errors->get('responsible_id')" />
-                        @endif
-                    </fieldset>
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchActResponsibility" modelid="responsible_id" {{-- ID asli di DB --}}
+                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
+                        manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
+                        addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
                 </div>
 
                 <!-- Tombol Tambah -->
