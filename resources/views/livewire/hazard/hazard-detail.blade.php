@@ -120,7 +120,7 @@
                                     <tr>
                                         <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
                                         </td>
-                                        <td class="px-2 py-1 border">{{ $activity->causer->name ?? $audit_name }}</td>
+                                        <td class="px-2 py-1 border">{{ $activity->causer->name ?? $manualPelaporName }}</td>
                                         <td class="px-2 py-1 border">
                                             @if (str_contains($activity->description, 'ActionHazard'))
                                                 {{-- Log khusus ActionHazard --}}

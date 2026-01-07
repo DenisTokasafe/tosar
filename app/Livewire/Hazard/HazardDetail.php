@@ -249,8 +249,8 @@ class HazardDetail extends Component
         // ✅ Load nama untuk ditampilkan di search input
         if ($this->pelapor_id) {
             // ✅ Jika pelapor_id ada → ambil nama user
-            $this->searchPelapor = User::find($this->pelapor_id)?->name ?? '';
-            $this->audit_name = User::find($this->pelapor_id)?->name ?? '';
+            $this->searchPelapor = User::find($this->pelapor_id)?->name ?? $this->hazard->manualPelaporName??'';
+            $this->audit_name = User::find($this->pelapor_id)?->name ?? $this->hazard->manualPelaporName;
             $this->manualPelaporName = $this->searchPelapor; // biar konsisten juga
         } else {
             // ✅ Jika pelapor_id null → pakai manualPelaporName dari DB
