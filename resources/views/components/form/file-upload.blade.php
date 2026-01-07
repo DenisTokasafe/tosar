@@ -18,9 +18,12 @@
     $fileUrl = null;
 
     if ($fileToPreview) {
-        $fileName = $newFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
+        $fileName =
+            $newFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile
                 ? $newFile->getClientOriginalName()
-                : (is_object($fileToPreview) ? $fileToPreview->name : $existingFile);
+                : (is_object($fileToPreview)
+                    ? $fileToPreview->name
+                    : $existingFile);
 
         $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
@@ -56,7 +59,10 @@
 
         {{-- Loading State --}}
         <div class="hidden" wire:loading.remove.class='hidden' wire:target="{{ $model }}">
-            <span class="loading loading-spinner loading-xs"></span>
+            <span class="flex items-center gap-1 px-2">
+                <span class="loading loading-bars loading-xs text-info"></span>
+                <span class="text-xs text-info">Mengunggah...</span>
+            </span>
         </div>
 
         <span wire:loading.remove wire:target="{{ $model }}" class="text-[9px] text-gray-500 truncate max-w-sm">
@@ -93,12 +99,14 @@
                         <x-icon.excel class="w-8 h-8" />
                     @else
                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
                         </svg>
                     @endif
 
                     <div class="flex flex-col">
-                        <span class="text-xs font-semibold truncate max-w-[200px]
+                        <span
+                            class="text-xs font-semibold truncate max-w-[200px]
                             {{ $extension == 'pdf' ? 'text-red-600' : '' }}
                             {{ in_array($extension, ['doc', 'docx']) ? 'text-blue-600' : '' }}
                             {{ in_array($extension, ['xlsx', 'xls', 'csv']) ? 'text-green-600' : '' }}">
@@ -119,11 +127,8 @@
 
     {{-- Hidden Input --}}
     {{-- Hapus onchange manual karena Livewire akan mengupdate UI lewat $newFile --}}
-    <input type="file"
-        id="{{ $id }}"
-        {{ $isDisabled ? 'disabled' : '' }}
-        wire:model="{{ $model }}"
-        class="hidden" />
+    <input type="file" id="{{ $id }}" {{ $isDisabled ? 'disabled' : '' }}
+        wire:model="{{ $model }}" class="hidden" />
 
     @if ($model)
         @error($model)
