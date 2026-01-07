@@ -47,7 +47,7 @@ class HazardForm extends Component
     public $showDropdown = false;
     public $show_location = false;
     public $showPelaporDropdown = false;
-    public $show_act_pelapor_dropdown = false;
+    public $showActPelaporDropdown = false;
     public $searchContractor = '';
     public $contractors = [];
     public $showContractorDropdown = false;
@@ -96,7 +96,7 @@ class HazardForm extends Component
     public $tanggal;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
-    public $manual_act_pelapor_mode = false;
+    public $manualActPelaporMode = false;
     public $manualActPelaporName = '';
     // input action
     public $actions = []; // kumpulan action sebelum disimpan
@@ -388,29 +388,29 @@ class HazardForm extends Component
     public function updatedSearchActResponsibility()
     {
         $this->reset('manualActPelaporName');
-        $this->manual_act_pelapor_mode = false;
+        $this->manualActPelaporMode = false;
         if (strlen($this->searchActResponsibility) > 1) {
             $this->pelaporsAct = User::where('name', 'like', '%' . $this->searchActResponsibility . '%')
                 ->orderBy('name')
                 ->limit(50)
                 ->get();
-            $this->show_act_pelapor_dropdown = true;
+            $this->showActPelaporDropdown = true;
         } else {
             $this->pelaporsAct = [];
-            $this->show_act_pelapor_dropdown = false;
+            $this->showActPelaporDropdown = false;
         }
     }
     public function selectActPelapor($id, $name)
     {
         $this->action_responsible_id = $id;
         $this->searchActResponsibility = $name;
-        $this->show_act_pelapor_dropdown = false;
-        $this->manual_act_pelapor_mode = false;
+        $this->showActPelaporDropdown = false;
+        $this->manualActPelaporMode = false;
         $this->validateOnly('action_responsible_id');
     }
     public function enableManualActPelapor()
     {
-        $this->manual_act_pelapor_mode = true;
+        $this->manualActPelaporMode = true;
         $this->manualActPelaporName = $this->searchPelapor; // isi default sama dengan isi search
     }
     public function updatedManualActPelaporName($value)
@@ -421,7 +421,7 @@ class HazardForm extends Component
     public function addActPelaporManual()
     {
         $this->searchActResponsibility = $this->manualActPelaporName;
-        $this->show_act_pelapor_dropdown = false;
+        $this->showActPelaporDropdown = false;
         $this->action_responsible_id = null;
     }
     public function getIsFormValidProperty()
