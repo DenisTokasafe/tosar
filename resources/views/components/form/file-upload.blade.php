@@ -79,6 +79,8 @@
                         <x-icon.pdf class="w-8 h-8" />
                     @elseif (in_array($extension, ['doc', 'docx']))
                         <x-icon.word class="w-8 h-8" />
+                    @elseif (in_array($extension, ['xlsx', 'xls', 'csv', 'xlsm']))
+                        <x-icon.excel class="w-8 h-8" />
                     @else
                         <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                             <path
