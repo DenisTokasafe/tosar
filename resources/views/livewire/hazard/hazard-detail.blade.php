@@ -456,7 +456,7 @@
                         <x-label-error :messages="$errors->get('tanggal')" />
                     </fieldset>
                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchActResponsibility" modelid="responsible_id" {{-- ID asli di DB --}}
+                        modelsearch="searchActResponsibility" modelid="pelapor_id" {{-- ID asli di DB --}}
                         :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
                         manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
                         addManualAction="addActPelaporManual" clickaction="selectActPelapor" :disabled="$isDisabled"/>

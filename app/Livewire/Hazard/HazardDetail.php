@@ -1126,7 +1126,6 @@ class HazardDetail extends Component
         ]);
         $this->dispatch('close-modal', id: 'editActionModal');
         // Refresh list
-
         $this->dispatch(
             'alert',
             [
