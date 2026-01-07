@@ -421,7 +421,7 @@
                     <!-- Dilaporkan Oleh -->
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchActResponsibility" modelid="responsible_id"
-                        :options="$pelaporsAct" :showdropdown="$show_act_elapor_dropdown":manualmode="$manual_act_pelapor_mode"
+                        :options="$pelaporsAct" :showdropdown="$show_act_pelapor_dropdown":manualmode="$manual_act_pelapor_mode"
                         manualmodelname="manualActPelaporName" enablemanualaction="enableManualActPelapor"
                         addmanualaction="addActPelaporManual" clickaction="selectActPelapor" columnname="name" />
                 </div>
