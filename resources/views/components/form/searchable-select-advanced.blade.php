@@ -36,7 +36,6 @@
                 'bg-base-200 opacity-70' => $disabled
             ])
         />
-
         {{-- Dropdown --}}
         @if ( $showdropdown)
             <ul x-show="open" class="absolute z-50 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
