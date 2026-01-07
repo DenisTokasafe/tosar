@@ -32,7 +32,7 @@
             x-on:focus="open = true"
             @class([
                 'input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs',
-                'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' => $errors->has($modelid) || $errors->has($manualModelName),
+                'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' => $errors->has($modelid) || $errors->has($manualmodelname),
                 'bg-base-200 opacity-70' => $disabled
             ])
         />
