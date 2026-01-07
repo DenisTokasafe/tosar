@@ -289,6 +289,10 @@
                         <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
+
+                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
+                                    :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
+                                    namedb="department_name" />
                                 <!-- Input Search -->
                                 <input name="search" type="text" wire:model.live.debounce.300ms="search"
                                     placeholder="Cari departemen..."
