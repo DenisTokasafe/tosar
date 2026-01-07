@@ -439,7 +439,7 @@ class HazardForm extends Component
         $this->validate(
             [
                 'action_description'       => 'required|string',
-                'action_responsible_id'    => 'required|integer',
+                'action_responsible_id'    => 'nullable|integer',
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
                 'action_due_date'       => [
                     'nullable',
