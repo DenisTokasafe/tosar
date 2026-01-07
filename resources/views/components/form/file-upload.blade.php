@@ -1,15 +1,14 @@
 @props([
     'label' => 'Lampirkan foto atau dokumentasi',
     'id' => 'upload-' . uniqid(),
-    'model' => null, // wire:model untuk file baru (e.g., new_doc_deskripsi)
-    'existingFile' => null, // Variabel untuk path file lama (e.g., $doc_deskripsi)
-    'newFile' => null, // Variabel untuk object TemporaryUploadedFile (e.g., $new_doc_deskripsi)
+    'model' => null,
+    'existingFile' => null,
+    'newFile' => null,
     'isDisabled' => false,
     'optional' => true,
 ])
 
 @php
-    // Logika penentuan file yang akan dipreview
     $fileToPreview = $newFile ?? ($existingFile ? (object) ['name' => $existingFile] : null);
 
     $fileName = null;
@@ -26,15 +25,27 @@
                     : $existingFile);
 
         $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        // Cek apakah file termasuk gambar
         $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
 
-        $fileUrl = $newFile
-            ? (method_exists($newFile, 'temporaryUrl')
-                ? $newFile->temporaryUrl()
-                : null)
-            : ($existingFile
-                ? asset('storage/' . $existingFile)
-                : null);
+        // Tentukan ekstensi yang didukung untuk temporaryUrl() (Default Livewire: Image & PDF)
+        $previewableExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf','excel','xlsx','xls','csv','xlsm','doc','docx'];
+
+        if ($newFile) {
+            // HANYA panggil temporaryUrl jika ekstensi diizinkan, untuk mencegah error FileNotPreviewableException
+            if (in_array($extension, $previewableExtensions) && method_exists($newFile, 'temporaryUrl')) {
+                try {
+                    $fileUrl = $newFile->temporaryUrl();
+                } catch (\Exception $e) {
+                    $fileUrl = null;
+                }
+            } else {
+                $fileUrl = null; // File Excel, Word, dll tidak memiliki temporaryUrl
+            }
+        } else {
+            $fileUrl = $existingFile ? asset('storage/' . $existingFile) : null;
+        }
     }
 @endphp
 
@@ -90,12 +101,20 @@
 
                     <div class="flex flex-col">
                         <span
-                            class="text-xs font-semibold truncate max-w-[200px] {{ $extension == 'pdf' ? 'text-red-600' : ($extension == 'doc' || $extension == 'docx' ? 'text-blue-600' : 'text-gray-600') }}">
+                            class="text-xs font-semibold truncate max-w-[200px]
+                            {{ $extension == 'pdf' ? 'text-red-600' : '' }}
+                            {{ in_array($extension, ['doc', 'docx']) ? 'text-blue-600' : '' }}
+                            {{ in_array($extension, ['xlsx', 'xls', 'csv']) ? 'text-green-600' : '' }}
+                            {{ !in_array($extension, ['pdf', 'doc', 'docx', 'xlsx', 'xls', 'csv']) ? 'text-gray-600' : '' }}">
                             {{ $fileName }}
                         </span>
-                        @if ($fileUrl && !$newFile)
+
+                        {{-- Link Lihat hanya untuk file lama atau file baru yang previewable (PDF) --}}
+                        @if ($fileUrl)
                             <a href="{{ $fileUrl }}" target="_blank"
-                                class="text-[10px] text-blue-500 hover:underline">Download / Lihat</a>
+                                class="text-[10px] text-blue-500 hover:underline">
+                                {{ $newFile ? 'Pratinjau' : 'Download / Lihat' }}
+                            </a>
                         @endif
                     </div>
                 </div>
