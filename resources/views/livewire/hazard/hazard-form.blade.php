@@ -419,7 +419,7 @@
                         <x-label-error :messages="$errors->get('actual_close_date')" />
                     </fieldset>
                     <!-- Dilaporkan Oleh -->
-                    <x-form.searchable-select label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchActResponsibility" modelid="responsible_id" :options="$pelaporsAct"
                         :showdropdown="$showActPelaporDropdown"  {{-- jika ada kondisi disabled --}} {{-- Logic Manual (Biarkan kosong jika tidak butuh manual) --}}
                         :manualmode="$manualActPelaporMode" manualmodelname="manualActPelaporName"
