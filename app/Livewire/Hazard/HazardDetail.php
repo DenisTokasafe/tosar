@@ -1088,7 +1088,7 @@ class HazardDetail extends Component
         $this->validate(
             [
                 'edit_action_description'       => 'required|string',
-                'edit_action_responsible_id'    => 'required|integer',
+                'edit_action_responsible_id'    => 'nullable|integer',
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
                 'edit_action_due_date'       => [
                     'required',
