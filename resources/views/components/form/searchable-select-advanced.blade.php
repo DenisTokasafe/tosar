@@ -38,7 +38,7 @@
         />
 
         {{-- Dropdown --}}
-        @if ($showdropdown)
+        @if ( $showdropdown)
             <ul x-show="open" class="absolute z-50 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
                 <div wire:loading wire:target="{{ $clickaction }}, {{ $enablemanualaction }}" class="p-2 text-center">
