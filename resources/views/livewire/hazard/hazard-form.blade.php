@@ -189,7 +189,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
-                <fieldset class="fieldset ">
+                <fieldset >
                     <x-form.label label="Dilaporkan Oleh" required />
 
                     {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
