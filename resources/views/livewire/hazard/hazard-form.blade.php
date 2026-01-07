@@ -420,11 +420,10 @@
                     </fieldset>
                     <!-- Dilaporkan Oleh -->
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchActResponsibility" modelid="responsible_id" :options="$pelaporsAct"
-                        :showdropdown="$showActPelaporDropdown"  {{-- jika ada kondisi disabled --}} {{-- Logic Manual (Biarkan kosong jika tidak butuh manual) --}}
-                        :manualmode="$manualActPelaporMode" manualmodelname="manualActPelaporName"
-                        enablemanualaction="enableManualActPelapor" addmanualaction="addActPelaporManual"
-                        clickaction="selectActPelapor" namedb="name" />
+                        modelsearch="searchActResponsibility" modelid="responsible_id" {{-- ID asli di DB --}}
+                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualmode="$manualActPelaporMode"
+                        manualmodelname="manualActPelaporName" enablemanualaction="enableManualActPelapor"
+                        addmanualaction="addActPelaporManual" clickaction="selectActPelapor" columnname="name" />
                 </div>
 
                 <!-- Tombol Tambah -->
