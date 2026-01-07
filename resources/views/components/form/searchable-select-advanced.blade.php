@@ -41,7 +41,7 @@
         @if (!$disabled && $showdropdown)
             <ul x-show="open" class="absolute z-50 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
-                <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}" class="p-2 text-center">
+                <div wire:loading wire:target="{{ $clickaction }}, {{ $enablemanualaction }}" class="p-2 text-center">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
                 </div>
 
