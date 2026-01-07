@@ -77,9 +77,8 @@
                     <input name="description" type="hidden" wire:model.live="description" id="description">
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
-                <fieldset class="fieldset">
-                    <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_deskripsi"
-                        :file="$doc_deskripsi" />
+                <fieldset class=" fieldset">
+                    <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_deskripsi" :file="$doc_deskripsi" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
                         @if ($doc_deskripsi)
                             @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
@@ -114,9 +113,33 @@
                     <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation" modelid="location_id"
-                    :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+                <fieldset class="fieldset ">
+                    <x-form.label label="Lokasi" required />
+                    <div class="relative">
+                        <!-- Input Search -->
+                        <input type="text" wire:model.live.debounce.300ms="searchLocation"
+                            placeholder="Cari Lokasi..."
+                            class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                        <!-- Dropdown hasil search -->
+                        @if ($show_location && count($locations) > 0)
+                            <ul
+                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                <!-- Spinner ketika klik -->
+                                <div wire:loading wire:target="selectLocation" class="p-2 text-center">
+                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                </div>
+                                @foreach ($locations as $loc)
+                                    <li wire:click="selectLocation({{ $loc->id }}, '{{ $loc->name }}')"
+                                        class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                        {{ $loc->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                    <x-label-error :messages="$errors->get('location_id')" />
+                </fieldset>
                 {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                 @if ($location_id)
                     <fieldset class="fieldset">
@@ -221,8 +244,8 @@
                 </fieldset>
             </div>
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <fieldset class="mb-4 fieldset lg:col-span-2">
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+                <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div wire:ignore>
@@ -233,8 +256,8 @@
                         wire:model.live="immediate_corrective_action" id="immediate_corrective_action">
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
-                <fieldset class="mt-1 fieldset">
-                    <x-form.upload label="Lampirkan Foto Dokumentasi Perbaikan" model="doc_corrective"
+                <fieldset class=" fieldset">
+                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="doc_corrective"
                         :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
