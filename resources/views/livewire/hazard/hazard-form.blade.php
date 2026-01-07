@@ -293,13 +293,15 @@
                                     :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
                                     namedb="department_name" />
                             </div>
-                            <div class="hidden mt-2 peer-checked/company:block">
-                                {{-- Contractor --}}
-                                <div class="relative mb-1">
-                                    <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
-                                        modelid="contractor_id" :options="$contractors" :showdropdown="$showDropdown"
-                                        clickaction="selectContractor" namedb="contractor_name" />
-                                </div>
+                        </div>
+                        <div class="hidden mt-2 peer-checked/company:block">
+                            {{-- Contractor --}}
+                            <div class="relative mb-1">
+                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showDropdown"
+                                    clickaction="selectContractor" namedb="contractor_name" />
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset class="fieldset">
                         <x-form.label label="PIC" required />
