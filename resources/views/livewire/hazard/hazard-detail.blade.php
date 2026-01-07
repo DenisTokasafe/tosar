@@ -460,7 +460,7 @@
                         modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
                         :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
                         manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                        addManualAction="addActPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled" />
+                        addManualAction="addPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled" />
                 </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="mb-4 fieldset md:col-span-2">
