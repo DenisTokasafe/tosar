@@ -290,11 +290,29 @@
                             {{-- Department --}}
                             <div class="relative mb-1">
                                 <!-- Input Search -->
-                                <x-form.searchable-dropdown required modelsearch="search"
-                                    modelid="department_id" :options="$departments" :showdropdown="$showDropdown"
-                                    clickaction="selectDepartment" namedb="department_name" />
-
-
+                                <input name="search" type="text" wire:model.live.debounce.300ms="search"
+                                    placeholder="Cari departemen..."
+                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('department_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                <!-- Dropdown hasil search -->
+                                @if ($showDropdown && count($departments) > 0)
+                                    <ul
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                        <!-- Spinner ketika klik salah satu -->
+                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        </div>
+                                        @foreach ($departments as $dept)
+                                            <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                {{ $dept->department_name }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                            @if ($deptCont === 'department')
+                                <x-label-error :messages="$errors->get('department_id')" />
+                            @endif
                         </div>
                         <div class="hidden mt-2 peer-checked/company:block">
                             {{-- Contractor --}}
