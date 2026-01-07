@@ -47,7 +47,7 @@ class HazardForm extends Component
     public $showDropdown = false;
     public $show_location = false;
     public $showPelaporDropdown = false;
-    public $showActPelaporDropdown = false;
+    public $show_act_elapor_dropdown = false;
     public $searchContractor = '';
     public $contractors = [];
     public $showContractorDropdown = false;
@@ -394,17 +394,17 @@ class HazardForm extends Component
                 ->orderBy('name')
                 ->limit(50)
                 ->get();
-            $this->showActPelaporDropdown = true;
+            $this->show_act_elapor_dropdown = true;
         } else {
             $this->pelaporsAct = [];
-            $this->showActPelaporDropdown = false;
+            $this->show_act_elapor_dropdown = false;
         }
     }
     public function selectActPelapor($id, $name)
     {
         $this->action_responsible_id = $id;
         $this->searchActResponsibility = $name;
-        $this->showActPelaporDropdown = false;
+        $this->show_act_elapor_dropdown = false;
         $this->manualActPelaporMode = false;
         $this->validateOnly('action_responsible_id');
     }
@@ -421,7 +421,7 @@ class HazardForm extends Component
     public function addActPelaporManual()
     {
         $this->searchActResponsibility = $this->manualActPelaporName;
-        $this->showActPelaporDropdown = false;
+        $this->show_act_elapor_dropdown = false;
         $this->action_responsible_id = null;
     }
     public function getIsFormValidProperty()
