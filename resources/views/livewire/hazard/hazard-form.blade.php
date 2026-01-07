@@ -167,14 +167,12 @@
                 </fieldset>
                 <fieldset class="fieldset ">
                     <x-form.label label="Dilaporkan Oleh" required />
-
                     {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
                     <div class="relative">
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
                             placeholder="Cari Nama Pelapor..."
                             class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                             {{-- x-ref="searchInput" TIDAK LAGI DIBUTUHKAN --}} />
-
                         {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
                         @if ($showPelaporDropdown)
                             <ul
@@ -211,7 +209,6 @@
                                 @endif
                             </ul>
                         @endif
-
                     </div>
                     @if ($manualPelaporMode)
                         <x-label-error :messages="$errors->get('manualPelaporName')" />
@@ -220,7 +217,6 @@
                     @endif
                 </fieldset>
             </div>
-
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
                     <label class="block"></label>
