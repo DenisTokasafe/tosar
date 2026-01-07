@@ -814,12 +814,12 @@
                                             {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
                                         <div class="flex gap-2 mt-1 md:mt-0">
 
-                                            <flux:button variant="subtle" size="xs"
+                                            <flux:button variant="subtle" size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                                 wire:click="loadEditAction({{ $act['id'] }})"
                                                 icon="pencil-square">
                                             </flux:button>
 
-                                            <flux:button variant="danger" size="xs"
+                                            <flux:button variant="danger" size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                                 wire:click="removeAction({{ $act['id'] }})"
                                                 wire:confirm="Yakin hapus tindakan ini?" icon="trash">
                                             </flux:button>
