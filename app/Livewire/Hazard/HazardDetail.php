@@ -1126,7 +1126,7 @@ class HazardDetail extends Component
         ]);
         $this->dispatch('close-modal', id: 'editActionModal');
         // Refresh list
-        $this->loadActionHazards();
+
         $this->dispatch(
             'alert',
             [
@@ -1138,6 +1138,7 @@ class HazardDetail extends Component
                 'backgroundColor' => "background: linear-gradient(135deg, #42a5f5, #478ed1);",
             ]
         );
+         $this->loadActionHazards();
     }
     public function loadActionHazards()
     {
