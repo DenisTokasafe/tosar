@@ -152,32 +152,39 @@
                                     <fieldset class="fieldset">
                                         <x-form.label label="Bulan" required />
 
-                                        <div wire:ignore wire:key="manhours-month-picker" x-data="{
-                                            fp: null,
-                                            dateValue: @entangle('date').live,
-                                            initFlatpickr() {
-                                                // Hancurkan instance lama jika ada
-                                                if (this.fp) this.fp.destroy();
+                                        <div wire:ignore wire:key="manhours-month-picker-{{ time() }}"
+                                            x-data="{
+                                                fp: null,
+                                                dateValue: @entangle('date').live,
+                                                initFlatpickr() {
+                                                    // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
+                                                    this.$nextTick(() => {
+                                                        if (this.fp) {
+                                                            this.fp.destroy();
+                                                        }
 
-                                                this.fp = flatpickr(this.$refs.input, {
-                                                    plugins: [
-                                                        new monthSelectPlugin({
-                                                            disableMobile: false,
-                                                            shorthand: true,
-                                                            dateFormat: 'M-Y',
-                                                            altFormat: 'F Y',
-                                                            theme: 'light'
-                                                        })
-                                                    ],
-                                                    // Gunakan nilai dari Livewire sebagai default
-                                                    defaultDate: this.dateValue,
-                                                    onChange: (selectedDates, dateStr) => {
-                                                        this.dateValue = dateStr;
-                                                    }
-                                                });
-                                            }
-                                        }"
-                                            x-init="initFlatpickr()" x-effect="if(dateValue) fp.setDate(dateValue, false)">
+                                                        // Pastikan x-ref input tersedia
+                                                        if (!this.$refs.input) return;
+
+                                                        this.fp = flatpickr(this.$refs.input, {
+                                                            plugins: [
+                                                                new monthSelectPlugin({
+                                                                    disableMobile: true,
+                                                                    shorthand: true,
+                                                                    dateFormat: 'M-Y',
+                                                                    altFormat: 'F Y',
+                                                                    theme: 'light'
+                                                                })
+                                                            ],
+                                                            defaultDate: this.dateValue,
+                                                            onChange: (selectedDates, dateStr) => {
+                                                                this.dateValue = dateStr;
+                                                            }
+                                                        });
+                                                    });
+                                                }
+                                            }" x-init="initFlatpickr()"
+                                            x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
 
                                             <input x-ref="input" type="text" readonly
                                                 class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
