@@ -20,7 +20,7 @@ class Index extends Component
     public function mount()
     {
         // Ambil tanggal paling akhir dari database sebagai titik acuan
-        $lastDateRaw = Manhour::max('tanggal');
+        $lastDateRaw = Manhour::max('date');
 
         if ($lastDateRaw) {
             $lastDate = Carbon::parse($lastDateRaw);
@@ -46,7 +46,7 @@ class Index extends Component
     {
         if (empty($data['start']) || empty($data['end'])) {
             // Jika filter dihapus (kosong), kembalikan ke logika 12 bulan berjalan
-            $lastDateRaw = Manhour::max('tanggal');
+            $lastDateRaw = Manhour::max('date');
             $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw) : Carbon::now();
 
             $this->end_date = $lastDate->format('Y-m-d');
