@@ -19,7 +19,7 @@ class HazardTrandChart extends Component
         $lastDateRaw = ModelsHazard::max('tanggal');
 
         if ($lastDateRaw) {
-            $lastDate =Carbon::parse($lastDateRaw);
+            $lastDate = Carbon::parse($lastDateRaw);
 
             // End date adalah tanggal terakhir tersebut
             $this->end_date = $lastDate->format('d-m-Y');
@@ -46,7 +46,7 @@ class HazardTrandChart extends Component
         } else {
             // Jika filter dihapus, kembalikan ke logika 12 bulan berjalan dari data terakhir
             $lastDateRaw = ModelsHazard::max('tanggal');
-            $lastDate = $lastDateRaw ?Carbon::parse($lastDateRaw) :Carbon::now();
+            $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw) : Carbon::now();
 
             $this->end_date   = $lastDate->format('d-m-Y');
             $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
@@ -60,38 +60,36 @@ class HazardTrandChart extends Component
 
     public function loadData()
     {
-        // 1. Inisialisasi Base Query (Kriteria Filter Utama)
+        // 1. Inisialisasi Base Query (Kriteria Filter Utama) - Tetap sama
         $baseQuery = ModelsHazard::query()
             ->when($this->start_date && $this->end_date, function ($q) {
                 return $q->dateRange($this->start_date, $this->end_date);
             })
             ->when(!$this->start_date || !$this->end_date, function ($q) {
-                // Gunakan years dari properti, fallback ke tahun dari bulan lalu jika null
                 $yearFilter = $this->years ?? now()->subMonth()->year;
                 return $q->whereYear('tanggal', $yearFilter);
             });
 
-        // 2. Ambil Data Statistik untuk Grafik (Gunakan clone agar baseQuery tidak rusak)
+        // 2. Ambil Data Statistik (DITAMBAHKAN YEAR agar urutan kronologis benar)
         $chartStats = (clone $baseQuery)
-            ->selectRaw('MONTH(tanggal) as month, COUNT(*) as total')
-            ->groupBy('month')
+            ->selectRaw('YEAR(tanggal) as year, MONTH(tanggal) as month, COUNT(*) as total')
+            ->groupBy('year', 'month')
+            ->orderBy('year')
             ->orderBy('month')
             ->get();
 
-        // 3. Format data untuk Chart (Jan, Feb, Mar, dst)
+        // 3. Format data untuk Chart (Disesuaikan agar mengambil dari koleksi yang memiliki year)
         $data = [
-            'months' => $chartStats->pluck('month')->map(function ($m) {
-                return Carbon::create()->month($m)->format('M');
+            'months' => $chartStats->map(function ($stat) {
+                // Menghasilkan format "Jan 25" atau "Jan" tergantung kebutuhan Anda
+                return Carbon::create($stat->year, $stat->month, 1)->format('M Y');
             })->toArray(),
             'counts' => $chartStats->pluck('total')->toArray()
         ];
 
-        // 4. Simpan ke property dan Dispatch
+        // 4. Simpan ke property dan Dispatch - Tetap sama
         $this->data = json_encode($data);
         $this->dispatch('trandChart', $this->data);
-
-        // Jika Anda butuh list datanya untuk tabel di view yang sama:
-        // $this->hazards = $baseQuery->latest('tanggal')->get();
     }
 
     public function render()
