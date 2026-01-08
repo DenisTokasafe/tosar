@@ -118,7 +118,7 @@ class Index extends Component
 
             // Key pluck menggunakan kombinasi Year-Month
             return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
-                ->groupBy('year_month')
+                ->groupByRaw("YEAR(date), MONTH(date)")
                 ->pluck('total_data', 'year_month')
                 ->toArray();
         };
