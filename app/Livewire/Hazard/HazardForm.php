@@ -505,7 +505,6 @@ class HazardForm extends Component
     {
 
         $this->dispatch('validateCkEditor');
-        $this->dispatch('validateCkEditorAddAction');
         $this->dispatch('validateCkEditorImmediateCorrectiveAction');
         $this->dispatch('validateCkEditorDescription');
 
