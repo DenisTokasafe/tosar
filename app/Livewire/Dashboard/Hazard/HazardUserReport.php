@@ -16,61 +16,87 @@ class HazardUserReport extends Component
     // Trigger awal saat komponen dimuat
     public function mount()
     {
+        // Ambil tanggal paling akhir dari database
+        $lastDateRaw = Hazard::max('tanggal');
+
+        if ($lastDateRaw) {
+            $lastDate = Carbon::parse($lastDateRaw);
+
+            // End date adalah tanggal terakhir tersebut
+            $this->end_date = $lastDate->format('d-m-Y');
+
+            // Start date adalah 11 bulan sebelumnya (total 12 bulan termasuk bulan terakhir)
+            // Kita gunakan startOfMonth agar range-nya rapi mencakup satu bulan penuh
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        } else {
+            // Fallback jika database masih kosong
+            $this->end_date = now()->format('d-m-Y');
+            $this->start_date = now()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        }
+
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
     public function updateDateRange($data)
     {
-        // Cek apakah data start dan end tersedia dan tidak kosong
         if (!empty($data['start']) && !empty($data['end'])) {
+            // Jika user memilih tanggal manual
             $this->start_date = $data['start'];
             $this->end_date   = $data['end'];
-
-            // Opsional: Jika menggunakan range, mungkin Anda ingin mereset filter tahun
-            // agar tidak bentrok dengan filter tanggal spesifik
-            $this->years = null;
+            $this->years      = null;
         } else {
-            // Kondisi jika filter tanggal dihapus (Kosong)
-            $this->start_date = null;
-            $this->end_date   = null;
+            // Jika filter dihapus, kembalikan ke logika 12 bulan berjalan dari data terakhir
+            $lastDateRaw = Hazard::max('tanggal');
+            $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw) : Carbon::now();
 
-            // Set tahun ke tahun dari bulan lalu
-            $this->years = Carbon::now()->subMonth()->year;
+            $this->end_date   = $lastDate->format('d-m-Y');
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+
+            // Pastikan years di-null agar query loadData fokus pada range tanggal
+            $this->years = null;
         }
 
         $this->loadData();
     }
 
-    public function loadData()
-    {
-        // Ambil semua hazard beserta relasi
+   public function loadData()
+{
+    // 1. Ambil data hazard dengan relasi pelapor dan filter range yang konsisten
+    $hazards = Hazard::with('pelapor')
+        ->when($this->start_date && $this->end_date, function ($q) {
+            // Gunakan scope dateRange yang sudah kita buat
+            return $q->dateRange($this->start_date, $this->end_date);
+        })
+        ->when(!$this->start_date || !$this->end_date, function ($q) {
+            // Fallback: Jika range kosong, gunakan filter years atau tahun dari bulan lalu
+            $yearFilter = $this->years ?? now()->subMonth()->year;
+            return $q->whereYear('tanggal', $yearFilter);
+        })
+        ->get();
 
-        $hazards = Hazard::with('pelapor')->when($this->start_date && $this->end_date, function ($q) {
-            $q->dateRange($this->start_date, $this->end_date);
-        })->when(!$this->start_date || !$this->end_date, function ($q) {
-            $q->whereYear('tanggal', $this->years);
-        })->get();
+    // 2. Kumpulkan kategori berdasarkan nama pelapor
+    $grouped = $hazards->groupBy(function ($hazard) {
+        return $hazard->pelapor ? $hazard->pelapor->name : 'Tidak Diketahui';
+    });
 
-        // Kumpulkan kategori (nama department jika ada, kalau kosong pakai contractor)
-        $grouped = $hazards->groupBy(function ($hazard) {
-            if ($hazard->pelapor) {
-                return $hazard->pelapor->name;
-            } else {
-                return 'Tidak Diketahui';
-            }
-        });
-        // Hitung jumlah per kategori dan urutkan dari terbesar ke terkecil
-        $counts = $grouped->map->count()->sortDesc()->take(10);
-        // Hitung jumlah per kategori
-        $value = [
-            'year' => $this->years ?? Carbon::now()->year,
-            'label'  => $counts->keys()->values()->toArray(),   // urutan label mengikuti sortDesc()
-            'counts' => $counts->values()->toArray(),            // urutan data sesuai label
+    // 3. Hitung jumlah laporan per orang, urutkan terbesar ke terkecil, dan ambil TOP 10
+    $counts = $grouped->map->count()
+        ->sortDesc()
+        ->take(10);
 
-        ];
-        $this->pelapor = json_encode($value);
-        $this->dispatch('distribusiPelapor', $this->pelapor);
-    }
+    // 4. Format data untuk Chart (menggunakan 'range' agar lebih informatif daripada sekedar 'year')
+    $value = [
+        'year'  => ($this->start_date && $this->end_date)
+                    ? $this->start_date . ' s/d ' . $this->end_date
+                    : ($this->years ?? now()->year),
+        'label'  => $counts->keys()->values()->toArray(), // Nama-nama pelapor top 10
+        'counts' => $counts->values()->toArray(),         // Jumlah laporan mereka
+    ];
+
+    // 5. Simpan ke property dan Dispatch ke frontend
+    $this->pelapor = json_encode($value);
+    $this->dispatch('distribusiPelapor', $this->pelapor);
+}
     public function render()
     {
         $this->loadData();
