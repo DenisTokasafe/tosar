@@ -43,6 +43,19 @@ use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 
+Route::get('/.well-known/assetlinks.json', function () {
+    return response()->json([
+        [
+            "relation" => ["delegate_permission/common.handle_all_urls"],
+            "target" => [
+                "namespace" => "android_app",
+                "package_name" => "com.archimining.tosar",
+                "sha256_cert_fingerprints" => ["72:A4:4A:B3:44:C1:56:4A:8F:EF:C4:83:38:A2:DC:CA:88:E2:65:10:89:C0:88:B4:DE:79:84:6A:BC:9E:1A:4E"]
+            ]
+        ]
+    ]);
+});
+
 Route::get('dashboard', Hazard::class)->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/', 'dashboard');
 Route::redirect('/eventReport/hazardReportGuest/3','/hazard/form',301);
