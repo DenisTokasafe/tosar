@@ -60,41 +60,49 @@ class HazardDistribusiDivisi extends Component
         $this->loadData();
     }
     public function loadData()
-    {
-        // Ambil semua hazard beserta relasi
-        $hazards = Hazard::with(['department', 'contractor'])
-            // 1. Jika ada filter Range Tanggal, gunakan dateRange
-            ->when($this->start_date && $this->end_date, function ($q) {
-                $q->dateRange($this->start_date, $this->end_date);
-            })
-            // 2. Jika TIDAK ADA filter Range Tanggal, maka gunakan filter Tahun
-            ->when(!$this->start_date || !$this->end_date, function ($q) {
-                $q->whereYear('tanggal', $this->years);
-            })
-            ->get();
+{
+    // 1. Ambil data dengan filter yang konsisten
+    $hazards = Hazard::with(['department', 'contractor'])
+        // Gunakan range tanggal (baik dari 12 bulan otomatis maupun pilihan user)
+        ->when($this->start_date && $this->end_date, function ($q) {
+            return $q->dateRange($this->start_date, $this->end_date);
+        })
+        // Fallback jika start/end_date kosong (misal saat inisialisasi awal sekali)
+        ->when(!$this->start_date || !$this->end_date, function ($q) {
+            $yearFilter = $this->years ?? now()->subMonth()->year;
+            return $q->whereYear('tanggal', $yearFilter);
+        })
+        ->get();
 
-        // Kumpulkan kategori (nama department jika ada, kalau kosong pakai contractor)
-        $grouped = $hazards->groupBy(function ($hazard) {
-            if ($hazard->department) {
-                return $hazard->department->department_name;
-            } elseif ($hazard->contractor) {
-                return $hazard->contractor->contractor_name;
-            } else {
-                return 'Tidak Diketahui';
-            }
-        });
-        // Hitung jumlah per kategori dan urutkan dari terbesar ke terkecil
-        $counts = $grouped->map->count()->sortDesc();
-        // Hitung jumlah per kategori
-        $value = [
-            'year' => $this->years ?? Carbon::now()->year,
-            'label'  => $counts->keys()->values()->toArray(),   // urutan label mengikuti sortDesc()
-            'counts' => $counts->values()->toArray(),            // urutan data sesuai label
+    // 2. Kumpulkan kategori (Department atau Contractor)
+    $grouped = $hazards->groupBy(function ($hazard) {
+        if ($hazard->department) {
+            return $hazard->department->department_name;
+        } elseif ($hazard->contractor) {
+            return $hazard->contractor->contractor_name;
+        } else {
+            return 'Tidak Diketahui';
+        }
+    });
 
-        ];
-        $this->categories = json_encode($value);
-        $this->dispatch('distribusiDivisi', $this->categories);
-    }
+    // 3. Hitung jumlah per kategori dan urutkan dari terbesar ke terkecil (High to Low)
+    $counts = $grouped->map->count()->sortDesc();
+
+    // 4. Format data untuk Chart Distribusi Divisi
+    $value = [
+        // Jika start_date ada, tampilkan range-nya di title/info chart
+        'year'  => ($this->start_date && $this->end_date)
+                    ? $this->start_date . ' s/d ' . $this->end_date
+                    : ($this->years ?? now()->year),
+        'label'  => $counts->keys()->values()->toArray(),
+        'counts' => $counts->values()->toArray(),
+    ];
+
+    $this->categories = json_encode($value);
+
+    // 5. Kirim data ke Browser/Javascript
+    $this->dispatch('distribusiDivisi', $this->categories);
+}
     public function render()
     {
         $this->loadData();
