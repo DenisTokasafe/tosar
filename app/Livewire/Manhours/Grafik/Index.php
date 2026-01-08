@@ -98,8 +98,14 @@ class Index extends Component
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
             $query = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch);
 
-            if ($companyFilter) $query->where('company', $companyFilter);
-            if ($categoryFilter) $query->where('company_category', $categoryFilter);
+            if ($companyFilter) {
+                // Laravel akan otomatis membungkus 'PT. MSM' dengan tanda kutip
+                $query->where('company', $companyFilter);
+            }
+
+            if ($categoryFilter) {
+                $query->where('company_category', $categoryFilter);
+            }
 
             return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
                 ->groupByRaw('YEAR(date), MONTH(date)')
@@ -111,7 +117,9 @@ class Index extends Component
         $ttnData = $getMonthlyData('manhours', 'PT. TTN');
         $contractorData = $getMonthlyData('manhours', null, 'CONTRACTOR');
 
-        $msm = []; $ttn = []; $contractor = [];
+        $msm = [];
+        $ttn = [];
+        $contractor = [];
 
         foreach ($monthsRaw as $m) {
             $key = $m->year . '-' . $m->month;
@@ -168,7 +176,9 @@ class Index extends Component
         $ttnData = $getMonthlyManpowerData('PT. TTN');
         $contractorData = $getMonthlyManpowerData(null, 'CONTRACTOR');
 
-        $msm_mp = []; $ttn_mp = []; $contractor_mp = [];
+        $msm_mp = [];
+        $ttn_mp = [];
+        $contractor_mp = [];
 
         foreach ($monthsRaw as $m) {
             $key = $m->year . '-' . $m->month;
