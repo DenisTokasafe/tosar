@@ -117,18 +117,25 @@ class Index extends Component
         // Format label sumbu X (contoh: Jan 25)
         $months = $monthsRaw->map(fn($m) => \Carbon\Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
 
-        // 2. Fungsi pembantu mengambil data (Gunakan CONCAT Year-Month sebagai Key untuk mapping)
+        // --- Fungsi pembantu baru yang lebih stabil ---
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
-            $query = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch);
+            // 1. Ambil data mentah yang difilter
+            $data = (clone $baseQuery)
+                ->dateRange($this->start_date, $this->end_date)
+                ->search($this->filterSearch)
+                ->when($companyFilter, fn($q) => $q->where('company', $companyFilter))
+                ->when($categoryFilter, fn($q) => $q->where('company_category', $categoryFilter))
+                ->select('date', $columnName) // Ambil kolom tanggal dan nilai saja
+                ->get();
 
-            if ($companyFilter) $query->where('company', $companyFilter);
-            if ($categoryFilter) $query->where('company_category', $categoryFilter);
-
-            // Gunakan alias year_month untuk mempermudah pluck di PHP
-            return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
-                ->groupByRaw('YEAR(date), MONTH(date)')
-                ->pluck('total_data', 'year_month')
-                ->toArray();
+            // 2. Gunakan Collection Laravel untuk grouping (Proses di Memory PHP, bukan SQL)
+            return $data->groupBy(function ($item) {
+                // Buat key format "YYYY-n" (contoh: 2025-1)
+                return \Carbon\Carbon::parse($item->date)->format('Y-n');
+            })->map(function ($group) use ($columnName) {
+                // Jumlahkan nilai dalam grup tersebut
+                return $group->sum($columnName);
+            })->toArray();
         };
 
         $msmData = $getMonthlyData('manhours', 'PT. MSM');
@@ -140,7 +147,9 @@ class Index extends Component
         $contractor = [];
 
         foreach ($monthsRaw as $m) {
+            // Sesuaikan key agar sama dengan format Carbon 'Y-n'
             $key = $m->year . '-' . $m->month;
+
             $msm[]        = $msmData[$key] ?? 0;
             $ttn[]        = $ttnData[$key] ?? 0;
             $contractor[] = $contractorData[$key] ?? 0;
