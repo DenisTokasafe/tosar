@@ -19,19 +19,12 @@ class Index extends Component
 
     public function mount()
     {
-        // 1. Logika Rolling 12 Bulan dari data terakhir di database
-        $lastDateRaw = Manhour::max('date');
-
-        if ($lastDateRaw) {
-            $lastDate = Carbon::parse($lastDateRaw);
-            $this->end_date = $lastDate->format('Y-m-d');
-            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('Y-m-d');
-        } else {
+        // Default filter tanggal
+        if (!$this->start_date || !$this->end_date) {
             $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
             $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         }
-
-        $this->years = Carbon::parse($this->end_date)->year;
+        $this->years = Carbon::now()->year;
         $this->loadData();
         $this->loadDataManpower();
     }
@@ -47,8 +40,9 @@ class Index extends Component
     #[On('dateRangeManhours')]
     public function updateDateRange($data)
     {
-        if (empty($data['start']) || empty($data['end'])) {
-            $this->mount(); // Reset ke default rolling 12 bulan
+        if (!$data['start'] || !$data['end']) {
+            $this->start_date = Carbon::now()->startOfYear()->format('Y-m-d');
+            $this->end_date = Carbon::now()->endOfYear()->format('Y-m-d');
         } else {
             $this->start_date = $data['start'];
             $this->end_date  = $data['end'];
@@ -57,14 +51,20 @@ class Index extends Component
         $this->loadDataManpower();
     }
 
+    /**
+     * Helper function to get the base query builder based on user role.
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     private function getBaseQuery(): Builder
     {
         Gate::authorize('viewAny', Manhour::class);
         $user = auth()->user();
 
         if ($user->roles()->where('role_id', 1)->exists()) {
+            // Admin: Lihat semua data
             return Manhour::query();
         } else {
+            // Kontraktor: Lihat hanya data kontraktornya sendiri
             $contractorNames = $user->contractors()->pluck('contractor_name');
             return Manhour::whereIn('company', $contractorNames);
         }
@@ -73,123 +73,162 @@ class Index extends Component
     #[On('chartManhoursUpdate')]
     public function loadData()
     {
+        // Gunakan getBaseQuery() untuk mendapatkan query builder yang sudah difilter peran
         $baseQuery = $this->getBaseQuery();
 
-        // Ambil Tahun & Bulan unik agar urutan kronologis benar
+        // Query untuk mengambil bulan unik. Kita harus CLONE baseQuery
         $monthsRaw = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)
-            ->selectRaw('YEAR(date) as year, MONTH(date) as month')
-            ->groupByRaw('YEAR(date), MONTH(date)')
-            ->orderBy('year', 'asc')
-            ->orderBy('month', 'asc')
-            ->get();
+            ->selectRaw('DISTINCT MONTH(date) as month')
+            ->orderBy('month')
+            ->pluck('month')
+            ->toArray();
 
-        $monthsLabels = $monthsRaw->map(fn($m) => Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
+        // Format bulan ke teks (Jan, Feb, Mar)
+        $months = array_map(
+            fn($m) => Carbon::create()->month($m)->format('M'),
+            $monthsRaw
+        );
 
-        // --- Fungsi pembantu untuk mengambil data per bulan dengan filter ---
         // --- Fungsi pembantu untuk mengambil data per bulan dengan filter ---
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
-            // Clone base query agar tidak merusak query asli
-            $query = (clone $baseQuery)
-                ->dateRange($this->start_date, $this->end_date)
-                ->search($this->filterSearch);
+            $query = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch);
 
-            // PERBAIKAN: Gunakan fungsi where standar agar Laravel otomatis memberi tanda kutip (Binding)
             if ($companyFilter) {
                 $query->where('company', $companyFilter);
             }
-
             if ($categoryFilter) {
                 $query->where('company_category', $categoryFilter);
             }
 
-            // PERBAIKAN: Gunakan selectRaw HANYA untuk kalkulasi, hilangkan filter dari string Raw
-            return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
-                ->groupByRaw('YEAR(date), MONTH(date)')
-                ->pluck('total_data', 'year_month')
+            // Perhatikan SELECT RAW: hanya mengambil kolom yang di GROUP BY (month) dan kolom agregat
+            return $query->selectRaw("MONTH(date) as month, SUM({$columnName}) as total_data")
+                ->groupBy('month')
+                ->pluck('total_data', 'month')
                 ->toArray();
         };
 
+        // === PT. MSM (Manhours) ===
         $msmData = $getMonthlyData('manhours', 'PT. MSM');
+
+        // === PT. TTN (Manhours) ===
         $ttnData = $getMonthlyData('manhours', 'PT. TTN');
+
+        // === CONTRACTOR (Manhours) ===
         $contractorData = $getMonthlyData('manhours', null, 'CONTRACTOR');
 
+        // Format data: pastikan semua bulan ada (0 jika kosong)
         $msm = [];
         $ttn = [];
         $contractor = [];
         foreach ($monthsRaw as $m) {
-            $key = $m->year . '-' . $m->month;
-            $msm[] = $msmData[$key] ?? 0;
-            $ttn[] = $ttnData[$key] ?? 0;
-            $contractor[] = $contractorData[$key] ?? 0;
+            $msm[]    = $msmData[$m] ?? 0;
+            $ttn[]    = $ttnData[$m] ?? 0;
+            $contractor[] = $contractorData[$m] ?? 0;
         }
 
+        // --- Logika untuk Menonaktifkan Legend ---
         $hiddenLegends = [];
-        if (array_sum($msm) === 0) $hiddenLegends[] = 'PT. MSM';
-        if (array_sum($ttn) === 0) $hiddenLegends[] = 'PT. TTN';
-        if (array_sum($contractor) === 0) $hiddenLegends[] = 'CONTRACTOR';
+        if (array_sum($msm) === 0) {
+            $hiddenLegends[] = 'PT. MSM';
+        }
+        if (array_sum($ttn) === 0) {
+            $hiddenLegends[] = 'PT. TTN';
+        }
+        if (array_sum($contractor) === 0) {
+            $hiddenLegends[] = 'CONTRACTOR';
+        }
 
-        $this->data = json_encode([
-            'months' => $monthsLabels,
-            'msm' => $msm,
-            'ttn' => $ttn,
+        // Data final untuk chart
+        $payload = [
+            'months' => $months,
+            'msm'  => $msm,
+            'ttn'  => $ttn,
             'contractor' => $contractor,
             'hidden_legends' => $hiddenLegends,
-        ]);
+        ];
+
+        $this->data = json_encode($payload);
         $this->dispatch('manhoursChart', $this->data);
     }
 
     #[On('chartManpowerUpdate')]
     public function loadDataManpower()
     {
-        $baseQuery = $this->getBaseQuery();
+        $baseQuery = $this->getBaseQuery(); // Ambil base query yang sudah difilter peran
 
+        // Query untuk mengambil bulan unik. Kita harus CLONE baseQuery
         $monthsRaw = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch)
-            ->selectRaw('YEAR(date) as year, MONTH(date) as month')
-            ->groupByRaw('YEAR(date), MONTH(date)')
-            ->orderBy('year', 'asc')
-            ->orderBy('month', 'asc')
-            ->get();
+            ->selectRaw('DISTINCT MONTH(date) as month')
+            ->orderBy('month')
+            ->pluck('month')
+            ->toArray();
 
-        $monthsLabels = $monthsRaw->map(fn($m) => Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
+        // Format bulan ke teks (Jan, Feb, Mar)
+        $months = array_map(
+            fn($m) => Carbon::create()->month($m)->format('M'),
+            $monthsRaw
+        );
 
+        // --- Fungsi pembantu untuk mengambil data per bulan dengan filter (untuk Manpower) ---
         $getMonthlyManpowerData = function (string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
             $query = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch);
 
-            if ($companyFilter) $query->where('company', $companyFilter);
-            if ($categoryFilter) $query->where('company_category', $categoryFilter);
+            if ($companyFilter) {
+                $query->where('company', $companyFilter);
+            }
+            if ($categoryFilter) {
+                $query->where('company_category', $categoryFilter);
+            }
 
-            return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM(manpower) as total_manpower")
-                ->groupByRaw('YEAR(date), MONTH(date)')
-                ->pluck('total_manpower', 'year_month')
+            // Perhatikan SELECT RAW: hanya mengambil kolom yang di GROUP BY (month) dan kolom agregat
+            return $query->selectRaw("MONTH(date) as month, SUM(manpower) as total_manpower")
+                ->groupBy('month')
+                ->pluck('total_manpower', 'month')
                 ->toArray();
         };
 
-        $msm_mp_raw = $getMonthlyManpowerData('PT. MSM');
-        $ttn_mp_raw = $getMonthlyManpowerData('PT. TTN');
-        $contractor_mp_raw = $getMonthlyManpowerData(null, 'CONTRACTOR');
+        // === PT. MSM (Manpower) ===
+        $msmData = $getMonthlyManpowerData('PT. MSM');
 
+        // === PT. TTN (Manpower) ===
+        $ttnData = $getMonthlyManpowerData('PT. TTN');
+
+        // === CONTRACTOR (Manpower) ===
+        $contractorData = $getMonthlyManpowerData(null, 'CONTRACTOR');
+
+        // Format data: pastikan semua bulan ada (0 jika kosong)
         $msm_mp = [];
         $ttn_mp = [];
         $contractor_mp = [];
+
         foreach ($monthsRaw as $m) {
-            $key = $m->year . '-' . $m->month;
-            $msm_mp[] = $msm_mp_raw[$key] ?? 0;
-            $ttn_mp[] = $ttn_mp_raw[$key] ?? 0;
-            $contractor_mp[] = $contractor_mp_raw[$key] ?? 0;
+            $msm_mp[] = $msmData[$m] ?? 0;
+            $ttn_mp[] = $ttnData[$m] ?? 0;
+            $contractor_mp[] = $contractorData[$m] ?? 0;
         }
 
+        // --- Logika untuk Menonaktifkan Legend ---
         $hiddenLegends_mp = [];
-        if (array_sum($msm_mp) === 0) $hiddenLegends_mp[] = 'PT. MSM';
-        if (array_sum($ttn_mp) === 0) $hiddenLegends_mp[] = 'PT. TTN';
-        if (array_sum($contractor_mp) === 0) $hiddenLegends_mp[] = 'CONTRACTOR';
+        if (array_sum($msm_mp) === 0) {
+            $hiddenLegends_mp[] = 'PT. MSM';
+        }
+        if (array_sum($ttn_mp) === 0) {
+            $hiddenLegends_mp[] = 'PT. TTN';
+        }
+        if (array_sum($contractor_mp) === 0) {
+            $hiddenLegends_mp[] = 'CONTRACTOR';
+        }
 
-        $this->manpowerData = json_encode([
-            'months' => $monthsLabels,
-            'msm' => $msm_mp,
-            'ttn' => $ttn_mp,
+        // Data final untuk chart
+        $payload_manpower = [
+            'months' => $months,
+            'msm'  => $msm_mp,
+            'ttn'  => $ttn_mp,
             'contractor' => $contractor_mp,
             'hidden_legends' => $hiddenLegends_mp,
-        ]);
+        ];
+
+        $this->manpowerData = json_encode($payload_manpower);
         $this->dispatch('manpowerChart', $this->manpowerData);
     }
 
