@@ -86,13 +86,14 @@ class Index extends Component
         $monthsLabels = $monthsRaw->map(fn($m) => Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
 
         // --- Fungsi pembantu untuk mengambil data per bulan dengan filter ---
+        // --- Fungsi pembantu untuk mengambil data per bulan dengan filter ---
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
             // Clone base query agar tidak merusak query asli
             $query = (clone $baseQuery)
                 ->dateRange($this->start_date, $this->end_date)
                 ->search($this->filterSearch);
 
-            // Gunakan fungsi where standar agar Laravel otomatis memberi tanda kutip (Binding)
+            // PERBAIKAN: Gunakan fungsi where standar agar Laravel otomatis memberi tanda kutip (Binding)
             if ($companyFilter) {
                 $query->where('company', $companyFilter);
             }
@@ -101,7 +102,7 @@ class Index extends Component
                 $query->where('company_category', $categoryFilter);
             }
 
-            // Gunakan selectRaw hanya untuk bagian kalkulasi dan alias
+            // PERBAIKAN: Gunakan selectRaw HANYA untuk kalkulasi, hilangkan filter dari string Raw
             return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
                 ->groupByRaw('YEAR(date), MONTH(date)')
                 ->pluck('total_data', 'year_month')
