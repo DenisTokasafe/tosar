@@ -116,7 +116,6 @@
                                 data: payload_trand.contractor
                             }
                         ]
-
                     });
                 });
             }
