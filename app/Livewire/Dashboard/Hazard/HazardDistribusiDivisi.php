@@ -16,13 +16,24 @@ class HazardDistribusiDivisi extends Component
     // Trigger awal saat komponen dimuat
     public function mount()
     {
-        $firstDateRaw = Hazard::min('tanggal');
-        $firstDate = $firstDateRaw ? Carbon::parse($firstDateRaw)->format('d-m-Y') : null;
-        // Ambil tanggal paling akhir
+        // 1. Ambil tanggal paling akhir (Data terbaru)
         $lastDateRaw = Hazard::max('tanggal');
-        $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw)->format('d-m-Y') : null;
-        $this->start_date =  $firstDate;
-        $this->end_date   =  $lastDate;
+
+        if ($lastDateRaw) {
+            $lastDate = Carbon::parse($lastDateRaw);
+
+            // 2. Set end_date ke tanggal terbaru
+            $this->end_date = $lastDate->format('d-m-Y');
+
+            // 3. Set start_date ke 12 bulan sebelumnya dari tanggal terbaru
+            // Gunakan startOfMonth agar mencakup bulan penuh jika diinginkan
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        } else {
+            // Fallback jika database kosong
+            $this->start_date = now()->subMonths(11)->startOfMonth()->format('d-m-Y');
+            $this->end_date = now()->format('d-m-Y');
+        }
+
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
@@ -31,25 +42,26 @@ class HazardDistribusiDivisi extends Component
         // Cek apakah data start dan end tersedia dan tidak kosong
         if (!empty($data['start']) && !empty($data['end'])) {
             $this->start_date = $data['start'];
-            $this->end_date   = $data['end'];
-
-            // Opsional: Jika menggunakan range, mungkin Anda ingin mereset filter tahun
-            // agar tidak bentrok dengan filter tanggal spesifik
-            $this->years = null;
+            $this->end_date = $data['end'];
+            $this->years = null; // Reset filter tahun
         } else {
-            // Kondisi jika filter tanggal dihapus (Kosong)
-            $this->start_date = null;
-            $this->end_date   = null;
+            // Kondisi jika filter tanggal dihapus oleh user
+            $lastDateRaw = Hazard::max('tanggal');
+            $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw) : Carbon::now();
 
-            // Set tahun ke tahun dari bulan lalu
-            $this->years = Carbon::now()->subMonth()->year;
+            // Kembalikan ke 12 bulan terakhir
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+            $this->end_date = $lastDate->format('d-m-Y');
+
+            // Opsional: Karena Anda menggunakan range 12 bulan, filter single year mungkin tidak relevan lagi
+            $this->years = null;
         }
 
         $this->loadData();
     }
     public function loadData()
     {
-            // Ambil semua hazard beserta relasi
+        // Ambil semua hazard beserta relasi
         $hazards = Hazard::with(['department', 'contractor'])
             // 1. Jika ada filter Range Tanggal, gunakan dateRange
             ->when($this->start_date && $this->end_date, function ($q) {
