@@ -16,28 +16,46 @@ class StatusByContDept extends Component
 
 
     // Trigger awal saat komponen dimuat
-    public function mount()
+     public function mount()
     {
+        // Ambil tanggal paling akhir dari database
+        $lastDateRaw = Hazard::max('tanggal');
+
+        if ($lastDateRaw) {
+            $lastDate = Carbon::parse($lastDateRaw);
+
+            // End date adalah tanggal terakhir tersebut
+            $this->end_date = $lastDate->format('d-m-Y');
+
+            // Start date adalah 11 bulan sebelumnya (total 12 bulan termasuk bulan terakhir)
+            // Kita gunakan startOfMonth agar range-nya rapi mencakup satu bulan penuh
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        } else {
+            // Fallback jika database masih kosong
+            $this->end_date = now()->format('d-m-Y');
+            $this->start_date = now()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        }
+
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
    public function updateDateRange($data)
     {
-        // Cek apakah data start dan end tersedia dan tidak kosong
-        if (!empty($data['start']) && !empty($data['end'])) {
+       if (!empty($data['start']) && !empty($data['end'])) {
+            // Jika user memilih tanggal manual
             $this->start_date = $data['start'];
             $this->end_date   = $data['end'];
-
-            // Opsional: Jika menggunakan range, mungkin Anda ingin mereset filter tahun
-            // agar tidak bentrok dengan filter tanggal spesifik
-            $this->years = null;
+            $this->years      = null;
         } else {
-            // Kondisi jika filter tanggal dihapus (Kosong)
-            $this->start_date = null;
-            $this->end_date   = null;
+            // Jika filter dihapus, kembalikan ke logika 12 bulan berjalan dari data terakhir
+            $lastDateRaw = Hazard::max('tanggal');
+            $lastDate = $lastDateRaw ? Carbon::parse($lastDateRaw) : Carbon::now();
 
-            // Set tahun ke tahun dari bulan lalu
-            $this->years = Carbon::now()->subMonth()->year;
+            $this->end_date   = $lastDate->format('d-m-Y');
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+
+            // Pastikan years di-null agar query loadData fokus pada range tanggal
+            $this->years = null;
         }
 
         $this->loadData();

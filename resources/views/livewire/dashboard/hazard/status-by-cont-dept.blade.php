@@ -3,96 +3,139 @@
     <div wire:ignore id="hazardStatusByContDept" style="height: 320px;" class="w-full"></div>
     <!-- Load ECharts dari CDN -->
     <script type="module">
-        const rawData = @json($statusDeptCont);
+    // Mengambil data awal dari Livewire
+    let rawData = @json(json_decode($statusDeptCont, true));
 
-        var dom = document.getElementById('hazardStatusByContDept');
-        var myChart = echarts.init(dom);
+    var dom = document.getElementById('hazardStatusByContDept');
+    var myChart = echarts.init(dom);
 
-        var option = {
+    var option = {
+        title: {
+            text: 'Status Laporan per Departemen/Kontraktor',
+            left: 'center',
+            // Dinamis mengambil range tanggal (misal: "01-02-2025 s/d 08-01-2026")
+            subtext: rawData.range ? 'Periode: ' + rawData.range : '12 Bulan Terakhir',
+            subtextStyle: {
+                color: '#6B7280',
+                fontSize: 12
+            }
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            // Custom tooltip agar menampilkan total saat di-hover
+            formatter: function (params) {
+                let res = '<b>' + params[0].name + '</b>';
+                let total = 0;
+                params.forEach(item => {
+                    res += '<br/>' + item.marker + ' ' + item.seriesName + ': ' + item.value;
+                    total += item.value;
+                });
+                res += '<br/><b>Total: ' + total + '</b>';
+                return res;
+            }
+        },
+        legend: {
+            data: ['Open', 'Closed'],
+            bottom: 5
+        },
+        grid: {
+            top: 80,
+            left: '3%',
+            right: '4%',
+            bottom: '15%', // Memberi ruang untuk rotasi label xAxis
+            containLabel: true
+        },
+        // Fitur Zoom/Slider jika data departemen sangat banyak
+        dataZoom: [
+            {
+                type: 'inside',
+                start: 0,
+                end: 100
+            },
+            {
+                show: true,
+                type: 'slider',
+                top: 'bottom',
+                start: 0,
+                end: 100,
+                height: 20
+            }
+        ],
+        xAxis: {
+            type: 'category',
+            data: rawData.labels,
+            axisLabel: {
+                interval: 0,
+                rotate: 35, // Kemiringan optimal untuk keterbacaan
+                fontSize: 10,
+                // Memotong teks panjang agar tidak menabrak batas bawah
+                formatter: function(value) {
+                    return value.length > 12 ? value.substring(0, 12) + '...' : value;
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            name: 'Jumlah Laporan',
+            splitLine: {
+                lineStyle: {
+                    type: 'dashed'
+                }
+            }
+        },
+        series: [
+            {
+                name: 'Open',
+                type: 'bar',
+                stack: 'total',
+                barMaxWidth: 40, // Membatasi lebar bar agar tidak terlalu gemuk jika data sedikit
+                itemStyle: {
+                    color: '#F87171', // Red-400 (Tailwind)
+                },
+                emphasis: { focus: 'series' },
+                data: rawData.open
+            },
+            {
+                name: 'Closed',
+                type: 'bar',
+                stack: 'total',
+                barMaxWidth: 40,
+                itemStyle: {
+                    color: '#34D399', // Emerald-400 (Tailwind)
+                    borderRadius: [4, 4, 0, 0] // Melengkung hanya di atas bar tumpukan
+                },
+                emphasis: { focus: 'series' },
+                data: rawData.closed
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+
+    // Listener untuk update data dari Livewire (Filter dinamis)
+    Livewire.on('hazardStatus_DeptOrCont', event => {
+        let payload = JSON.parse(event);
+
+        myChart.setOption({
             title: {
-                text: 'Status Laporan per Departemen/Kontraktor',
-                left: 'center',
-                subtext: 'Tahun Berjalan'
+                subtext: payload.range ? 'Periode: ' + payload.range : '12 Bulan Terakhir'
             },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            legend: {
-                data: ['Open', 'Closed'],
-                bottom: 0
-            },
-            // --- MAKSIMALKAN GRID ---
-            grid: {
-                top: 80, // Jarak dari judul/legenda
-                left: '2%', // Perkecil margin kiri
-                right: '2%', // Perkecil margin kanan
-                bottom: 10, // Sesuaikan dengan panjang label
-                containLabel: true // Memastikan label tetap terlihat tanpa membuang space luar
-            },
-            // --- TAMBAHKAN DATA ZOOM (Opsional tapi sangat membantu) ---
-            // Ini menghilangkan whitespace jika bar terlalu banyak dengan slider
-
             xAxis: {
-                type: 'category',
-                data: rawData.labels,
-                axisLabel: {
-                    interval: 0,
-                    rotate: 45, // Miringkan 45 derajat agar teks panjang terbaca
-                    fontSize: 10,
-                    // Memotong teks jika lebih dari 15 karakter agar tidak merusak layout
-                    formatter: function(value) {
-                        return value.length > 15 ? value.substring(0, 15) + '...' : value;
-                    }
-                }
+                data: payload.labels
             },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                    name: 'Open',
-                    type: 'bar',
-                    stack: 'total', // Nama stack harus sama agar bertumpuk
-                    itemStyle: {
-                        color: '#F87171', // Merah muda/Orange untuk Open
-                        borderRadius: [0, 0, 0, 0] // [TopLeft, TopRight, BottomRight, BottomLeft]
-                    },
-                    data: rawData.open
-                },
-                {
-                    name: 'Closed',
-                    type: 'bar',
-                    stack: 'total',
-                    itemStyle: {
-                        color: '#34D399', // Hijau untuk Closed
-                        borderRadius: [5, 5, 0, 0] // Memberi efek melengkung hanya di bagian atas bar tertinggi
-                    },
-                    data: rawData.closed
-                }
+            series: [
+                { data: payload.open },
+                { data: payload.closed }
             ]
-        };
-
-        myChart.setOption(option);
-
-        Livewire.on('hazardStatus_DeptOrCont', event => {
-            let payload = JSON.parse(event);
-
-            myChart.setOption({
-                xAxis: {
-                    data: payload.labels
-                },
-                series: [{
-                        data: payload.open
-                    },
-                    {
-                        data: payload.closed
-                    }
-                ]
-            });
         });
+    });
 
-        window.addEventListener('resize', myChart.resize);
-    </script>
+    // Responsif saat ukuran layar berubah
+    window.addEventListener('resize', () => {
+        myChart.resize();
+    });
+</script>
 </div>
