@@ -173,12 +173,12 @@ class Index extends Component
         $this->dispatch('manhoursChart', $this->data);
     }
 
-    #[On('chartManhoursUpdate')]
-    public function loadData()
+    #[On('chartManpowerUpdate')]
+    public function loadDataManpower()
     {
         $baseQuery = $this->getBaseQuery();
 
-        // 1. Ambil Tahun & Bulan unik secara kronologis untuk label sumbu X
+        // 1. Ambil Tahun & Bulan unik secara kronologis
         $monthsRaw = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)
             ->selectRaw('YEAR(date) as year, MONTH(date) as month')
             ->groupByRaw('YEAR(date), MONTH(date)')
@@ -188,53 +188,54 @@ class Index extends Component
 
         $monthsLabels = $monthsRaw->map(fn($m) => \Carbon\Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
 
-        // 2. Fungsi pembantu menggunakan metode Collection (Tanpa CONCAT SQL)
-        $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
+        // 2. Fungsi pembantu Manpower menggunakan metode Collection
+        $getMonthlyManpowerData = function (string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
             $data = (clone $baseQuery)
                 ->dateRange($this->start_date, $this->end_date)
                 ->search($this->filterSearch)
                 ->when($companyFilter, fn($q) => $q->where('company', $companyFilter))
                 ->when($categoryFilter, fn($q) => $q->where('company_category', $categoryFilter))
-                ->select('date', $columnName)
+                ->select('date', 'manpower')
                 ->get();
 
             return $data->groupBy(function ($item) {
                 return \Carbon\Carbon::parse($item->date)->format('Y-n');
-            })->map(function ($group) use ($columnName) {
-                return $group->sum($columnName);
+            })->map(function ($group) {
+                return $group->sum('manpower');
             })->toArray();
         };
 
-        $msmData = $getMonthlyData('manhours', 'PT. MSM');
-        $ttnData = $getMonthlyData('manhours', 'PT. TTN');
-        $contractorData = $getMonthlyData('manhours', null, 'CONTRACTOR');
+        $msmDataMp = $getMonthlyManpowerData('PT. MSM');
+        $ttnDataMp = $getMonthlyManpowerData('PT. TTN');
+        $contractorDataMp = $getMonthlyManpowerData(null, 'CONTRACTOR');
 
         // 3. Mapping data ke array Chart
-        $msm = [];
-        $ttn = [];
-        $contractor = [];
+        $msm_mp = [];
+        $ttn_mp = [];
+        $contractor_mp = [];
         foreach ($monthsRaw as $m) {
             $key = $m->year . '-' . $m->month;
-            $msm[]        = $msmData[$key] ?? 0;
-            $ttn[]        = $ttnData[$key] ?? 0;
-            $contractor[] = $contractorData[$key] ?? 0;
+            $msm_mp[]        = $msmDataMp[$key] ?? 0;
+            $ttn_mp[]        = $ttnDataMp[$key] ?? 0;
+            $contractor_mp[] = $contractorDataMp[$key] ?? 0;
         }
 
         // 4. Deteksi Legend Kosong
-        $hiddenLegends = [];
-        if (array_sum($msm) === 0) $hiddenLegends[] = 'PT. MSM';
-        if (array_sum($ttn) === 0) $hiddenLegends[] = 'PT. TTN';
-        if (array_sum($contractor) === 0) $hiddenLegends[] = 'CONTRACTOR';
+        $hiddenLegends_mp = [];
+        if (array_sum($msm_mp) === 0) $hiddenLegends_mp[] = 'PT. MSM';
+        if (array_sum($ttn_mp) === 0) $hiddenLegends_mp[] = 'PT. TTN';
+        if (array_sum($contractor_mp) === 0) $hiddenLegends_mp[] = 'CONTRACTOR';
 
-        $this->data = json_encode([
+        $payload_manpower = [
             'months' => $monthsLabels,
-            'msm'    => $msm,
-            'ttn'    => $ttn,
-            'contractor' => $contractor,
-            'hidden_legends' => $hiddenLegends,
-        ]);
+            'msm'    => $msm_mp,
+            'ttn'    => $ttn_mp,
+            'contractor' => $contractor_mp,
+            'hidden_legends' => $hiddenLegends_mp,
+        ];
 
-        $this->dispatch('manhoursChart', $this->data);
+        $this->manpowerData = json_encode($payload_manpower);
+        $this->dispatch('manpowerChart', $this->manpowerData);
     }
 
     public function render()
