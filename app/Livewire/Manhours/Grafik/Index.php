@@ -88,10 +88,15 @@ class Index extends Component
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
             $query = (clone $baseQuery)->dateRange($this->start_date, $this->end_date)->search($this->filterSearch);
 
-            if ($companyFilter) $query->where('company', $companyFilter);
-            if ($categoryFilter) $query->where('company_category', $categoryFilter);
+            if ($companyFilter) {
+                // Gunakan parameter binding standar Laravel agar otomatis diberi tanda kutip
+                $query->where('company', $companyFilter);
+            }
 
-            // Gunakan kombinasi YEAR-MONTH sebagai key pluck
+            if ($categoryFilter) {
+                $query->where('company_category', $categoryFilter);
+            }
+
             return $query->selectRaw("CONCAT(YEAR(date), '-', MONTH(date)) as year_month, SUM({$columnName}) as total_data")
                 ->groupByRaw('YEAR(date), MONTH(date)')
                 ->pluck('total_data', 'year_month')
@@ -102,7 +107,9 @@ class Index extends Component
         $ttnData = $getMonthlyData('manhours', 'PT. TTN');
         $contractorData = $getMonthlyData('manhours', null, 'CONTRACTOR');
 
-        $msm = []; $ttn = []; $contractor = [];
+        $msm = [];
+        $ttn = [];
+        $contractor = [];
         foreach ($monthsRaw as $m) {
             $key = $m->year . '-' . $m->month;
             $msm[] = $msmData[$key] ?? 0;
@@ -155,7 +162,9 @@ class Index extends Component
         $ttn_mp_raw = $getMonthlyManpowerData('PT. TTN');
         $contractor_mp_raw = $getMonthlyManpowerData(null, 'CONTRACTOR');
 
-        $msm_mp = []; $ttn_mp = []; $contractor_mp = [];
+        $msm_mp = [];
+        $ttn_mp = [];
+        $contractor_mp = [];
         foreach ($monthsRaw as $m) {
             $key = $m->year . '-' . $m->month;
             $msm_mp[] = $msm_mp_raw[$key] ?? 0;
