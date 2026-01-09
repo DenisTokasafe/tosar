@@ -150,7 +150,7 @@
                                 {{-- Gunakan array .index agar tidak bentrok antar baris --}} modelsearch="searchPetugas.{{ $index }}"
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                 :manualMode="$manualActPelaporMode" {{-- Kirim $index ke fungsi select --}}
-                                clickaction="selectActPelapor($name, {{ $index }})" {{-- ... properti lainnya ... --}} />
+                               clickaction="selectActPelapor(option.id, option.name, {{ $index }})"/>
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)

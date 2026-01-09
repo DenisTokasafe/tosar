@@ -68,15 +68,16 @@ class Index extends Component
         }
     }
 
-    public function selectActPelapor( $name, $index)
+    public function selectActPelapor($id, $name, $index)
     {
-        // Set data ke array inspectors berdasarkan index barisnya
+        // Update data di array inspectors berdasarkan index
         $this->inspectors[$index]['name'] = $name;
+        // Anda juga bisa menyimpan ID jika diperlukan
+        // $this->inspectors[$index]['id_number'] = $id;
 
-        // Update tampilan input search baris tersebut
+        // Reset status pencarian dan tutup dropdown
         $this->searchPetugas[$index] = $name;
         $this->showDropdownPetugas[$index] = false;
-        $this->manualActPelaporMode = false;
     }
 
     public function addInspector()
