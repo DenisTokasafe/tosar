@@ -6,7 +6,7 @@
             <div class="p-6 border-b border-gray-200 bg-gray-50">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
-                        <div class="flex items-center">
+                        <div class="flex flex-row">
                             <fieldset class="relative fieldset">
                                 <x-form.label label="Tanggal & Waktu" required />
                                 <div
