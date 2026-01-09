@@ -8,7 +8,7 @@
                     <div class="space-y-4">
                         <div class="flex items-center">
 
-                            <fieldset class="fieldset md:col-span-1">
+                            <fieldset class="fieldset ">
                                 <x-form.label label="Tanggal / Date" />
                                 <div class="relative" wire:ignore x-data="{
                                     fp: null,
