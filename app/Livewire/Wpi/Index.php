@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\WpiReport;
 use App\Models\Contractor;
 use App\Models\Department;
+use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
 
@@ -167,7 +168,32 @@ class Index extends Component
             ]);
         }
     }
+    public function removeFinding($index)
+    {
+        // 1. Cek apakah baris ini sudah ada di database (untuk mode Edit)
+        // Jika ada, kita mungkin perlu menghapus file fisiknya dari storage
+        if (isset($this->findings[$index]['id'])) {
+            $finding = WpiFinding::find($this->findings[$index]['id']);
+            if ($finding && $finding->photos) {
+                foreach ($finding->photos as $path) {
+                    // Gunakan helper untuk hapus file agar storage tidak penuh
+                    FileHelper::deleteFile($path);
+                }
+            }
+        }
 
+        // 2. Hapus baris dari array findings
+        unset($this->findings[$index]);
+
+        // 3. Reset index array agar tetap berurutan (0, 1, 2...)
+        // Penting agar wire:key tidak error
+        $this->findings = array_values($this->findings);
+
+        // 4. Opsional: Pastikan minimal selalu ada 1 baris
+        if (empty($this->findings)) {
+            $this->addFinding();
+        }
+    }
     public function save()
     {
         $this->validate([
