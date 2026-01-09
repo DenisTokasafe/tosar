@@ -91,16 +91,6 @@
                     </div>
 
                     <div class="space-y-4">
-                        <div class="flex items-center">
-                            <label class="w-32 text-sm font-medium text-gray-600">Department</label>
-                            <select wire:model="dept_cont"
-                                class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Pilih Department</option>
-                                <option value="Geoteknik & Hidrogeologi">Geoteknik & Hidrogeologi</option>
-                                <option value="Mining Operation">Mining Operation</option>
-                                <option value="OHS Operational">OHS Operational</option>
-                            </select>
-                        </div>
                         <fieldset>
                             <input id="department" value="department" wire:model="deptCont"
                                 class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont"
