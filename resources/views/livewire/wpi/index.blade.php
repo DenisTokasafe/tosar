@@ -84,11 +84,7 @@
                             </div>
                             <x-label-error :messages="$errors->get('report_time')" />
                         </fieldset>
-                        <div class="flex items-center">
-                            <label class="w-32 text-sm font-medium text-gray-600">Lokasi / Location</label>
-                            <input type="text" wire:model="location" placeholder="e.g. Toka Pit, Araren Pit"
-                                class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
+
                         <x-form.searchable-dropdown label="Lokasi / Location" required modelsearch="searchLocation"
                             modelid="location" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                             namedb="name" />
