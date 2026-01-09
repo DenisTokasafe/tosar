@@ -42,6 +42,7 @@ use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
+use App\Livewire\Wpi\Index as WpiIndex;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -68,6 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
     Route::get('manhours', Index::class)->name('manhours');
+    Route::get('wpi/form', WpiIndex::class)->name('wpi-index');
     Route::get('hazard', HazardReportPanel::class)->name('hazard');
     Route::get('hazard/{hazard}', HazardDetail::class)->name('hazard-detail');
 });

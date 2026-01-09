@@ -32,4 +32,10 @@ class FileHelper
 
         return $path;
     }
+    public static function deleteFile($path)
+{
+    if ($path && Storage::disk('public')->exists($path)) {
+        Storage::disk('public')->delete($path);
+    }
+}
 }
