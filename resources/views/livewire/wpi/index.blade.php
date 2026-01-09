@@ -147,10 +147,10 @@
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
 
                             <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
-                                {{-- Gunakan array .index agar tidak bentrok antar baris --}} modelsearch="searchPetugas.{{ $index }}"
+                                modelsearch="searchPetugas.{{ $index }}"
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
-                                :manualMode="$manualActPelaporMode" {{-- Kirim $index ke fungsi select --}}
-                               clickaction="selectActPelapor(option.id, option.name, {{ $index }})"/>
+                                :manualMode="$manualActPelaporMode" {{-- Gunakan placeholder $id dan $name dengan tanda kutip --}}
+                                clickaction="selectActPelapor('$id', '$name', {{ $index }})" />
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)

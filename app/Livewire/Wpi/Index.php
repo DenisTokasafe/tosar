@@ -70,14 +70,20 @@ class Index extends Component
 
     public function selectActPelapor($id, $name, $index)
     {
-        // Update data di array inspectors berdasarkan index
+        // 1. Simpan Nama ke array inspectors agar muncul di form
         $this->inspectors[$index]['name'] = $name;
-        // Anda juga bisa menyimpan ID jika diperlukan
-        // $this->inspectors[$index]['id_number'] = $id;
 
-        // Reset status pencarian dan tutup dropdown
+        // 2. Simpan ID/NIK ke array inspectors (Penting untuk database)
+        $this->inspectors[$index]['id_number'] = $id;
+
+        // 3. Update teks di input search baris tersebut agar sesuai pilihan
         $this->searchPetugas[$index] = $name;
+
+        // 4. Tutup dropdown khusus baris ini
         $this->showDropdownPetugas[$index] = false;
+
+        // 5. Reset hasil pencarian global agar tidak mengganggu baris lain
+        $this->pelaporsAct = [];
     }
 
     public function addInspector()
