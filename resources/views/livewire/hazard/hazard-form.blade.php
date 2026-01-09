@@ -282,7 +282,7 @@
                         <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
                             required />
 
-                        <div class="hidden mt-2 peer-checked/department:block">
+                        <div class="hidden peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
                                 <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id" placeholder="Cari Departemen..."
@@ -290,7 +290,7 @@
                                     namedb="department_name" />
                             </div>
                         </div>
-                        <div class="hidden mt-2 peer-checked/company:block">
+                        <div class="hidden peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
                                 <x-form.searchable-dropdown-without-label modelsearch="searchContractor" placeholder="Cari Kontraktor..."
