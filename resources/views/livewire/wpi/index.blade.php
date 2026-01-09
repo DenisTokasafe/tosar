@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-wpi.layout heading="Work Permit to Install" subheading="Form WPI">
+    <x-tabs-wpi.layout heading="Work Permit to Install" subheading="Form WPI">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -176,5 +176,5 @@
                 </div>
             </div>
         </form>
-    </x-wpi.layout>
+    </x-tabs-wpi.layout>
 </section>
