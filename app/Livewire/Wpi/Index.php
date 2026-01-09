@@ -46,7 +46,6 @@ class Index extends Component
         $this->location = $id;
         $this->searchLocation = $name;
         $this->show_location = false;
-        $this->validateOnly('location');
     }
     public function loadData($id)
     {
