@@ -114,7 +114,7 @@
                                         {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
                                         <x-form.upload label="Lampirkan foto temuan"
                                             wire:model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
-                                            multiple />
+                                             />
 
                                         <div class="mt-2" wire:loading.remove
                                             wire:target="findings.{{ $index }}.new_photos">
