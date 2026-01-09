@@ -266,6 +266,7 @@
                                     </div>
                                 </td>
                                 <td class="p-2 text-center border border-gray-300">
+                                    @if (count($findings) > 1)
                                     <button type="button" wire:click="removeFinding({{ $index }})"
                                         class="text-red-400 hover:text-red-600">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -275,6 +276,7 @@
                                             </path>
                                         </svg>
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
