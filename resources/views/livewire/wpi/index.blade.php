@@ -119,11 +119,14 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <div class="flex items-center">
-                            <label class="w-32 text-sm font-medium text-gray-600">Site Name</label>
-                            <input type="text" value="Tokatindung" disabled
-                                class="flex-1 text-gray-500 bg-gray-100 border-gray-300 rounded-md shadow-sm">
-                        </div>
+                        <fieldset class="fieldset">
+                            <x-form.label label="Lokasi Spesifik" required />
+                            <input name="location_specific" type="text" wire:model.live="location_specific"
+                                placeholder="Masukkan detail lokasi spesifik..." value="Tokatindung" disabled
+                                class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                            <x-label-error :messages="$errors->get('location_specific')" />
+                        </fieldset>
+
                     </div>
                 </div>
             </div>
