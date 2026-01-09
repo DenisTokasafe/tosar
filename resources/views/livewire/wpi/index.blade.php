@@ -148,7 +148,7 @@
                             <span
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
                             <div class="flex-1">
-                                <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
+                                <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}" placeholder="Cari nama..."
                                     modelsearch="searchPetugas.{{ $index }}"
                                     modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                     :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
