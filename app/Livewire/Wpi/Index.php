@@ -72,7 +72,6 @@ class Index extends Component
     {
         // Cari index mana yang dropdown-nya sedang terbuka
         $index = collect($this->showDropdownPetugas)->search(true);
-        dd($index,$id,$name);
         if ($index !== false) {
             // 1. Simpan data ke array inspectors sesuai barisnya
             $this->inspectors[$index]['name'] = $name;
