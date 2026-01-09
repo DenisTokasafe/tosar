@@ -16,10 +16,10 @@
                                         if (this.fp) this.fp.destroy();
                                         this.fp = flatpickr(this.$refs.tanggalInput, {
                                             disableMobile: true,
-                                            enableTime: true,
-                                            time_24hr: true,
+                                            enableTime: false,
+                                            time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
-                                            dateFormat: 'd-m-Y H:i',
+                                            dateFormat: 'd-m-Y',
                                             clickOpens: true,
                                             // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
                                             // appendTo: this.$refs.wrapper,
@@ -44,11 +44,46 @@
                             </div>
                             <x-label-error :messages="$errors->get('report_date')" />
                         </fieldset>
-                        <div class="flex items-center">
-                            <label class="w-32 text-sm font-medium text-gray-600">Jam / Time</label>
-                            <input type="time" wire:model="report_time"
-                                class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
+
+                        <fieldset class="relative fieldset">
+                            <x-form.label label="Jam / Time" required />
+                            <div
+                                class="{{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+                                <div class="relative " wire:ignore x-data="{
+                                    fp: null,
+                                    initFlatpickr() {
+                                        if (this.fp) this.fp.destroy();
+                                        this.fp = flatpickr(this.$refs.tanggalInput, {
+                                            disableMobile: true,
+                                            enableTime: true,
+                                            noCalendar: true,
+                                            time_24hr: false,
+                                            defaultDate: this.$wire.entangle('report_time').defer,
+                                            dateFormat: 'd-m-Y',
+                                            clickOpens: true,
+                                            // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                            // appendTo: this.$refs.wrapper,
+
+                                            // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                            position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+
+                                            onChange: (selectedDates, dateStr) => {
+                                                this.$wire.set('report_time', dateStr);
+                                            }
+                                        });
+                                    }
+                                }" x-ref="wrapper"
+                                    x-init="initFlatpickr();
+                                    Livewire.hook('message.processed', () => {
+                                        initFlatpickr();
+                                    });">
+                                    <input type="text" x-ref="tanggalInput" wire:model.live='report_time'
+                                        placeholder="Pilih Tanggal dan Waktu..." readonly
+                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                </div>
+                            </div>
+                            <x-label-error :messages="$errors->get('report_time')" />
+                        </fieldset>
                         <div class="flex items-center">
                             <label class="w-32 text-sm font-medium text-gray-600">Lokasi / Location</label>
                             <input type="text" wire:model="location" placeholder="e.g. Toka Pit, Araren Pit"
