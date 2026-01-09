@@ -143,7 +143,7 @@
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     @foreach ($inspectors as $index => $inspector)
-                        <div class="flex space-x-2 bg-blue-600" wire:key="ins-{{ $index }}">
+                        <div class="space-x-2 bg-blue-600 " wire:key="ins-{{ $index }}">
                             <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
 
