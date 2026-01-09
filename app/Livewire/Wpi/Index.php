@@ -156,6 +156,7 @@ class Index extends Component
             'pic_responsible' => '',
             'due_date' => '',
             'photos' => [],
+            'photos_prevention' => [],
             'new_photos' => [],
             'new_photos_prevention' => [],
         ];
@@ -182,6 +183,12 @@ class Index extends Component
             $finding = WpiFinding::find($this->findings[$index]['id']);
             if ($finding && $finding->photos) {
                 foreach ($finding->photos as $path) {
+                    // Gunakan helper untuk hapus file agar storage tidak penuh
+                    FileHelper::deleteFile($path);
+                }
+            }
+            if ($finding && $finding->photos_prevention) {
+                foreach ($finding->photos_prevention as $path) {
                     // Gunakan helper untuk hapus file agar storage tidak penuh
                     FileHelper::deleteFile($path);
                 }
