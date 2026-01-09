@@ -70,6 +70,7 @@ class Index extends Component
 
     public function selectActPelapor($id, $name, $index)
     {
+        dd($id, $name, $index);
         // 1. Simpan Nama ke array inspectors agar muncul di form
         $this->inspectors[$index]['name'] = $name;
 
