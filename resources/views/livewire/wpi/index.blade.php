@@ -238,6 +238,8 @@
                                                                         <x-icon.pdf class="w-8 h-8" />
                                                                     @elseif(in_array($extension, ['doc', 'docx']))
                                                                         <x-icon.word class="w-8 h-8" />
+                                                                    @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
+                                                                        <x-icon.excel class="w-8 h-8" />
                                                                     @endif
                                                                     <span
                                                                         class="text-[8px] mt-1 truncate w-full px-1 text-center">
@@ -293,6 +295,8 @@
                                                                         <x-icon.pdf class="w-8 h-8" />
                                                                     @elseif(in_array($extension, ['doc', 'docx']))
                                                                         <x-icon.word class="w-8 h-8" />
+                                                                    @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
+                                                                        <x-icon.excel class="w-8 h-8" />
                                                                     @endif
                                                                     <span
                                                                         class="text-[8px] mt-1 truncate w-full px-1 text-center">
