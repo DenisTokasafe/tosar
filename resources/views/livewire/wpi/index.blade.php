@@ -143,16 +143,14 @@
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     @foreach ($inspectors as $index => $inspector)
-                        <fieldset class="flex space-x-2 bg-blue-600 fildset" wire:key="ins-{{ $index }}">
+                        <div class="flex space-x-2 bg-blue-600" wire:key="ins-{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
 
                             <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
                                 modelsearch="searchPetugas.{{ $index }}"
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
-                                :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
-
+                                :manualMode="$manualActPelaporMode"clickaction="selectActPelapor" />
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
-                            <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)
@@ -164,8 +162,9 @@
                                         </path>
                                     </svg>
                                 </button>
-                            @endif
-                        </fieldset>
+                                @endif
+                            </div>
+                            <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                     @endforeach
                 </div>
             </div>
