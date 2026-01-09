@@ -58,8 +58,6 @@ class Index extends Component
         $this->showDropdown = false;
 
         // Ambil user dari erm_assignments berdasarkan department_id
-
-        $this->validateOnly('department_id');
     }
     public function updatedSearchContractor()
     {
@@ -82,8 +80,6 @@ class Index extends Component
         $this->searchContractor = $name;
         $this->showContractorDropdown = false;
         // Ambil user dari erm_assignments berdasarkan contractor_id
-
-        $this->validateOnly('contractor_id');
     }
     public function updatedSearchLocation()
     {
