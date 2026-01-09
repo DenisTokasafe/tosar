@@ -156,7 +156,8 @@ class Index extends Component
             'pic_responsible' => '',
             'due_date' => '',
             'photos' => [],
-            'new_photos' => []
+            'new_photos' => [],
+            'new_photos_prevention' => [],
         ];
     }
 
@@ -165,6 +166,11 @@ class Index extends Component
         if (str_ends_with($key, '.new_photos')) {
             $this->validateOnly($key, [
                 'findings.*.new_photos.*' => 'image|max:2048',
+            ]);
+        }
+        if (str_ends_with($key, '.new_photos_prevention')) {
+            $this->validateOnly($key, [
+                'findings.*.new_photos_prevention.*' => 'image|max:2048',
             ]);
         }
     }

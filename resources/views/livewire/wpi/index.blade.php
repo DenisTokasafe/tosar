@@ -148,8 +148,8 @@
                             <span
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
                             <div class="flex-1">
-                                <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}" placeholder="Cari nama..."
-                                    modelsearch="searchPetugas.{{ $index }}"
+                                <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
+                                    placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
                                     modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                     :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
                             </div>
@@ -253,22 +253,40 @@
                                     </div>
                                 </td>
                                 <td class="p-2 border border-gray-300">
+                                    {{-- Input Textarea untuk Tindakan Pencegahan --}}
                                     <textarea wire:model="findings.{{ $index }}.prevention_action" placeholder="Tindakan korektif..."
-                                        class="w-full text-xs border-gray-300 rounded" rows="3"></textarea>
+                                        class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
+
                                     <div class="mt-1">
-                                        <x-form.upload label="Lampirkan foto temuan"
-                                            model="findings.{{ $index }}.new_photos_prevention" :file="$findings[$index]['new_photos_prevention'] ?? null" />
+                                        {{-- Komponen Upload Khusus Foto Pencegahan --}}
+                                        <x-form.upload label="Lampirkan foto pencegahan"
+                                            model="findings.{{ $index }}.new_photos_prevention"
+                                            :file="$findings[$index]['new_photos_prevention'] ?? null" />
+
+                                        {{-- Logika Preview Foto Baru (Temporary) --}}
                                         <div class="mt-2" wire:loading.remove
                                             wire:target="findings.{{ $index }}.new_photos_prevention">
-                                            @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']))
-                                                <div class="flex flex-wrap gap-2">
-                                                    @foreach ($findings[$index]['new_photos_prevention'] as $newFile)
-                                                        <div class="relative">
-                                                            @if ($newFile instanceof \Illuminate\Http\UploadedFile)
+                                            @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
+                                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                                    @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
+                                                        <div class="relative p-1 border rounded bg-gray-50"
+                                                            wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
+
+                                                            @php
+                                                                $isUploadedFile = method_exists(
+                                                                    $newFile,
+                                                                    'temporaryUrl',
+                                                                );
+                                                                $extension = $isUploadedFile
+                                                                    ? strtolower($newFile->getClientOriginalExtension())
+                                                                    : '';
+                                                            @endphp
+
+                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" />
+                                                                    class="w-40 h-auto mt-2 border rounded" />
                                                             @else
-                                                                {{-- Fallback jika bukan gambar (PDF/Word) --}}
+                                                                {{-- Fallback Icons --}}
                                                                 <div
                                                                     class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
                                                                     @if ($extension == 'pdf')
@@ -300,15 +318,15 @@
                                 </td>
                                 <td class="p-2 text-center border border-gray-300">
                                     @if (count($findings) > 1)
-                                    <button type="button" wire:click="removeFinding({{ $index }})"
-                                        class="text-red-400 hover:text-red-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                            </path>
-                                        </svg>
-                                    </button>
+                                        <button type="button" wire:click="removeFinding({{ $index }})"
+                                            class="text-red-400 hover:text-red-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
+                                        </button>
                                     @endif
                                 </td>
                             </tr>
