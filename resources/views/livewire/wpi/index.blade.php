@@ -26,7 +26,7 @@
                                     x-ref="wrapper">
                                     <input name="report_date" type="text" x-ref="tanggalInput2"
                                         wire:model.live="report_date" placeholder="Pilih Tanggal"
-                                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                                        class="input input-bordered  focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                         readonly />
                                 </div>
                                 <x-label-error :messages="$errors->get('report_date')" />
