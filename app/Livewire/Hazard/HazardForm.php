@@ -36,13 +36,13 @@ class HazardForm extends Component
     use WithFileUploads;
     // field tambahan tanpa aturan validasi
     public $deptCont = 'department'; // default departemen
-    public $search = '';
     public $searchLocation = '';
     public $searchPelapor = '';
     public $searchActResponsibility = '';
     public $locations = [];
     public $pelapors = [];
     public $pelaporsAct = [];
+    public $search = '';
     public $departments = [];
     public $showDropdown = false;
     public $show_location = false;

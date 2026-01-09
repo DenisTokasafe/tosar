@@ -93,7 +93,7 @@
                     <div class="space-y-4">
                         <div class="flex items-center">
                             <label class="w-32 text-sm font-medium text-gray-600">Department</label>
-                            <select wire:model="department"
+                            <select wire:model="dept_cont"
                                 class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Pilih Department</option>
                                 <option value="Geoteknik & Hidrogeologi">Geoteknik & Hidrogeologi</option>
@@ -101,6 +101,34 @@
                                 <option value="OHS Operational">OHS Operational</option>
                             </select>
                         </div>
+                        <fieldset>
+                            <input id="department" value="department" wire:model="deptCont"
+                                class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont"
+                                checked />
+                            <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
+                                label="PT. MSM & PT. TTN" required />
+                            <input id="company" value="company" wire:model="deptCont"
+                                class="peer/company radio radio-xs radio-primary" type="radio" name="deptCont" />
+                            <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
+                                required />
+
+                            <div class="hidden mt-2 peer-checked/department:block">
+                                {{-- Department --}}
+                                <div class="relative mb-1">
+                                    <x-form.searchable-dropdown-without-label modelsearch="search"
+                                        modelid="department_id" placeholder="Cari Departemen..." :options="$departments"
+                                        :showdropdown="$showDropdown" clickaction="selectDepartment" namedb="department_name" />
+                                </div>
+                            </div>
+                            <div class="hidden mt-2 peer-checked/company:block">
+                                {{-- Contractor --}}
+                                <div class="relative mb-1">
+                                    <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                        placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                                        :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
+                                </div>
+                            </div>
+                        </fieldset>
                         <div class="flex items-center">
                             <label class="w-32 text-sm font-medium text-gray-600">Site Name</label>
                             <input type="text" value="Tokatindung" disabled

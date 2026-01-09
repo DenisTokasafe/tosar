@@ -5,6 +5,8 @@ namespace App\Livewire\Wpi;
 use Livewire\Component;
 use App\Models\Location;
 use App\Models\WpiReport;
+use App\Models\Contractor;
+use App\Models\Department;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
 
@@ -13,12 +15,19 @@ class Index extends Component
     use WithFileUploads;
 
     public $reportId; // Jika ada ID, berarti mode EDIT
-    public $report_date, $report_time, $location, $department;
+    public $report_date, $report_time, $location, $dept_cont;
     public $inspectors = [['name' => '', 'id_number' => '']];
     public $findings = [];
     public $locations = [];
     public $show_location = false;
     public $searchLocation = '';
+    public $search = '';
+    public $departments = [];
+    public $showDropdown = false;
+    public $searchContractor = '';
+    public $contractors = [];
+    public $showContractorDropdown = false;
+    public $deptCont = 'department'; // default departemen
     public function mount($id = null)
     {
         if ($id) {
@@ -27,6 +36,54 @@ class Index extends Component
             $this->report_date = now()->format('Y-m-d');
             $this->addFinding();
         }
+    }
+        public function updatedSearch()
+    {
+        if (strlen($this->search) > 1) {
+            $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
+                ->orderBy('department_name')
+                ->limit(10)
+                ->get();
+            $this->showDropdown = true;
+        } else {
+            $this->departments = [];
+            $this->showDropdown = false;
+        }
+    }
+    public function selectDepartment($id, $name)
+    {
+        $this->reset('searchContractor');
+        $this->search = $name;
+        $this->dept_cont = $name;
+        $this->showDropdown = false;
+
+        // Ambil user dari erm_assignments berdasarkan department_id
+
+        $this->validateOnly('department_id');
+    }
+    public function updatedSearchContractor()
+    {
+        if (strlen($this->searchContractor) > 1) {
+            $this->contractors = Contractor::query()
+                ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
+                ->orderBy('contractor_name')
+                ->limit(10)
+                ->get();
+            $this->showContractorDropdown = true;
+        } else {
+            $this->contractors = [];
+            $this->showContractorDropdown = true;
+        }
+    }
+    public function selectContractor($id, $name)
+    {
+        $this->reset('search');
+        $this->dept_cont = $name;
+        $this->searchContractor = $name;
+        $this->showContractorDropdown = false;
+        // Ambil user dari erm_assignments berdasarkan contractor_id
+
+        $this->validateOnly('contractor_id');
     }
     public function updatedSearchLocation()
     {
