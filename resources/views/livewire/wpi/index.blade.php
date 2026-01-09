@@ -111,18 +111,20 @@
                                         class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
 
                                     <div class="mt-1">
-                                        <input type="file" wire:model="findings.{{ $index }}.new_photos"
-                                            multiple
-                                            class="text-[10px] block w-full text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                        <div wire:loading wire:target="findings.{{ $index }}.new_photos"
-                                            class="text-blue-500 text-[10px]">Mengunggah...</div>
+                                        {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
+                                        <x-form.upload label="Lampirkan foto temuan"
+                                            wire:model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
+                                            multiple />
 
+                                        {{-- Preview Foto dari Database (Jika Ada) --}}
                                         <div class="flex flex-wrap gap-1 mt-2">
                                             @if (!empty($finding['photos']))
-                                                {{-- Foto dari DB --}}
                                                 @foreach ($finding['photos'] as $photoPath)
-                                                    <img src="{{ Storage::url($photoPath) }}"
-                                                        class="object-cover w-12 h-12 border rounded shadow-sm">
+                                                    <div class="relative group">
+                                                        <img src="{{ Storage::url($photoPath) }}"
+                                                            class="object-cover w-12 h-12 border rounded shadow-sm">
+                                                        {{-- Opsional: Tombol hapus foto spesifik bisa ditambahkan di sini --}}
+                                                    </div>
                                                 @endforeach
                                             @endif
                                         </div>
