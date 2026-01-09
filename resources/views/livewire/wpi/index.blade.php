@@ -255,6 +255,39 @@
                                 <td class="p-2 border border-gray-300">
                                     <textarea wire:model="findings.{{ $index }}.prevention_action" placeholder="Tindakan korektif..."
                                         class="w-full text-xs border-gray-300 rounded" rows="3"></textarea>
+                                    <div class="mt-1">
+                                        <x-form.upload label="Lampirkan foto temuan"
+                                            model="findings.{{ $index }}.new_photos_prevention" :file="$findings[$index]['new_photos_prevention'] ?? null" />
+                                        <div class="mt-2" wire:loading.remove
+                                            wire:target="findings.{{ $index }}.new_photos_prevention">
+                                            @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']))
+                                                <div class="flex flex-wrap gap-2">
+                                                    @foreach ($findings[$index]['new_photos_prevention'] as $newFile)
+                                                        <div class="relative">
+                                                            @if ($newFile instanceof \Illuminate\Http\UploadedFile)
+                                                                <img src="{{ $newFile->temporaryUrl() }}"
+                                                                    class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" />
+                                                            @else
+                                                                {{-- Fallback jika bukan gambar (PDF/Word) --}}
+                                                                <div
+                                                                    class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-8 h-8" />
+                                                                    @elseif(in_array($extension, ['doc', 'docx']))
+                                                                        <x-icon.word class="w-8 h-8" />
+                                                                    @endif
+                                                                    <span
+                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center">
+                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                    </span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <input type="text" wire:model="findings.{{ $index }}.pic_responsible"

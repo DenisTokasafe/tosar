@@ -219,10 +219,16 @@ class Index extends Component
 
         foreach ($this->findings as $finding) {
             $photoPaths = $finding['photos'] ?? [];
+            $photoPrevention = $finding['photos_prevention'] ?? [];
 
             if (!empty($finding['new_photos'])) {
                 foreach ($finding['new_photos'] as $photo) {
                     $photoPaths[] = FileHelper::compressAndStore($photo, 'wpi-photos', 800, 75);
+                }
+            }
+            if (!empty($finding['new_photos_prevention'])) {
+                foreach ($finding['new_photos_prevention'] as $photo) {
+                    $photoPrevention[] = FileHelper::compressAndStore($photo, 'wpi-photos-prevention', 800, 75);
                 }
             }
 
@@ -233,6 +239,7 @@ class Index extends Component
                 'pic_responsible' => $finding['pic_responsible'],
                 'due_date' => $finding['due_date'],
                 'photos' => $photoPaths,
+                'photos_prevention' => $photoPrevention,
             ]);
         }
 
