@@ -7,9 +7,30 @@
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
                         <div class="flex items-center">
-                            <label class="w-32 text-sm font-medium text-gray-600">Tanggal / Date</label>
-                            <input type="date" wire:model="report_date"
-                                class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+
+                            <fieldset class="fieldset md:col-span-1">
+                                <x-form.label label="Tanggal / Date" />
+                                <div class="relative" wire:ignore x-data="{
+                                    fp: null,
+                                    initFlatpickr() {
+                                        if (this.fp) this.fp.destroy();
+                                        this.fp = flatpickr(this.$refs.tanggalInput2, {
+                                            disableMobile: true,
+                                            enableTime: false,
+                                            dateFormat: 'd-m-Y',
+                                            onChange: (dates, str) => $wire.set('report_date', str),
+                                        });
+                                    }
+                                }" x-init="initFlatpickr();
+                                Livewire.hook('message.processed', () => initFlatpickr());"
+                                    x-ref="wrapper">
+                                    <input name="report_date" type="text" x-ref="tanggalInput2"
+                                        wire:model.live="report_date" placeholder="Pilih Tanggal"
+                                        class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                                        readonly />
+                                </div>
+                                <x-label-error :messages="$errors->get('report_date')" />
+                            </fieldset>
                         </div>
                         <div class="flex items-center">
                             <label class="w-32 text-sm font-medium text-gray-600">Jam / Time</label>
@@ -107,8 +128,8 @@
 
                                     <div class="mt-1">
                                         {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
-                                        <x-form.upload label="Lampirkan foto temuan" model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
-                                             />
+                                        <x-form.upload label="Lampirkan foto temuan"
+                                            model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
 
                                         <div class="mt-2" wire:loading.remove
                                             wire:target="findings.{{ $index }}.new_photos">
@@ -132,7 +153,7 @@
 
                                                             @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                     class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" />
+                                                                    class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" />
                                                             @else
                                                                 {{-- Fallback jika bukan gambar (PDF/Word) --}}
                                                                 <div
