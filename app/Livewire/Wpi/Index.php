@@ -49,13 +49,50 @@ class Index extends Component
             'new_photos' => [] // Temporary storage untuk upload
         ];
     }
+    public function removeInspector($index)
+    {
+        // Hapus elemen berdasarkan index
+        unset($this->inspectors[$index]);
 
+        // Re-index array agar urutan nomor (1, 2, 3) di Blade tetap konsisten
+        $this->inspectors = array_values($this->inspectors);
+    }
+
+    public function addInspector()
+    {
+        // Maksimal 6 sesuai form fisik, atau biarkan dinamis
+        if (count($this->inspectors) < 6) {
+            $this->inspectors[] = ['name' => '', 'id_number' => ''];
+        }
+    }
+    public function removeFinding($index)
+    {
+        // Jika sedang mode EDIT dan finding sudah ada di database,
+        // Anda mungkin ingin menghapus fotonya terlebih dahulu (Opsional)
+        if (isset($this->findings[$index]['id'])) {
+            $finding = \App\Models\WpiFinding::find($this->findings[$index]['id']);
+            if ($finding && $finding->photos) {
+                foreach ($finding->photos as $path) {
+                    FileHelper::deleteFile($path);
+                }
+            }
+        }
+
+        unset($this->findings[$index]);
+        $this->findings = array_values($this->findings);
+
+        // Pastikan minimal ada 1 baris temuan jika semua dihapus
+        if (empty($this->findings)) {
+            $this->addFinding();
+        }
+    }
     public function save()
     {
         $this->validate([
             'report_date' => 'required|date',
             'location' => 'required',
             'findings.*.description' => 'required',
+            'findings.*.new_photos.*' => 'nullable|image|max:2048', // Validasi foto maks 2MB
         ]);
 
         // 1. Simpan Header
