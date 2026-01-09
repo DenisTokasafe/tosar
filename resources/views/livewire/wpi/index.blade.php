@@ -145,10 +145,17 @@
                     @foreach ($inspectors as $index => $inspector)
                         <div class="flex items-start space-x-2" wire:key="ins-{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
-                            <input type="text" wire:model="inspectors.{{ $index }}.name"
-                                placeholder="Nama Lengkap" class="flex-1 text-sm border-gray-300 rounded">
-                            <input type="text" wire:model="inspectors.{{ $index }}.id_number"
-                                placeholder="ID/NIK" class="w-24 text-sm border-gray-300 rounded">
+                            {{-- <input type="text" wire:model="inspectors.{{ $index }}.name"
+                                placeholder="Nama Lengkap" class="flex-1 text-sm border-gray-300 rounded"> --}}
+
+
+                            <x-form.searchable-select-advanced label="Dilaporkan Oleh"
+                                placeholder="Nama Lengkap..." modelsearch="searchActResponsibility"
+                                modelid="inspectors.{{ $index }}.name" {{-- ID asli di DB --}} :options="$pelaporsAct"
+                                :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
+                                manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
+                                addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
+
                             @if (count($inspectors) > 1)
                                 <button type="button" wire:click="removeInspector({{ $index }})"
                                     class="mt-2 text-red-500 hover:text-red-700">

@@ -41,12 +41,12 @@ class HazardForm extends Component
     public $searchActResponsibility = '';
     public $locations = [];
     public $pelapors = [];
-    public $pelaporsAct = [];
     public $search = '';
     public $departments = [];
     public $showDropdown = false;
     public $show_location = false;
     public $showPelaporDropdown = false;
+    public $pelaporsAct = [];
     public $showActPelaporDropdown = false;
     public $searchContractor = '';
     public $contractors = [];
@@ -385,6 +385,7 @@ class HazardForm extends Component
     {
         $this->pelapor_id = null;
     }
+
     public function updatedSearchActResponsibility()
     {
         $this->reset('manualActPelaporName');

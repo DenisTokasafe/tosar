@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Wpi;
 
+use App\Models\User;
 use Livewire\Component;
 use App\Models\Location;
 use App\Models\WpiReport;
@@ -28,6 +29,13 @@ class Index extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $deptCont = 'department'; // default departemen
+    public $showPelaporDropdown = false;
+    public $pelaporsAct = [];
+    public $showActPelaporDropdown = false;
+        public $manualActPelaporMode = false;
+    public $manualActPelaporName = '';
+    public $searchActResponsibility = '';
+    public $action_responsible_id = null;
     public function mount($id = null)
     {
         if ($id) {
@@ -37,7 +45,7 @@ class Index extends Component
             $this->addFinding();
         }
     }
-        public function updatedSearch()
+    public function updatedSearch()
     {
         if (strlen($this->search) > 1) {
             $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
@@ -50,6 +58,46 @@ class Index extends Component
             $this->showDropdown = false;
         }
     }
+    public function updatedSearchActResponsibility()
+    {
+        $this->reset('manualActPelaporName');
+        $this->manualActPelaporMode = false;
+        if (strlen($this->searchActResponsibility) > 1) {
+            $this->pelaporsAct = User::where('name', 'like', '%' . $this->searchActResponsibility . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+            $this->showActPelaporDropdown = true;
+        } else {
+            $this->pelaporsAct = [];
+            $this->showActPelaporDropdown = false;
+        }
+    }
+    public function selectActPelapor($id, $name)
+    {
+        $this->action_responsible_id = $id;
+        $this->searchActResponsibility = $name;
+        $this->showActPelaporDropdown = false;
+        $this->manualActPelaporMode = false;
+        $this->validateOnly('action_responsible_id');
+    }
+    public function enableManualActPelapor()
+    {
+        $this->manualActPelaporMode = true;
+        $this->manualActPelaporName = $this->searchPelapor; // isi default sama dengan isi search
+    }
+    public function updatedManualActPelaporName($value)
+    {
+        $this->action_responsible_id = null;
+    }
+
+    public function addActPelaporManual()
+    {
+        $this->searchActResponsibility = $this->manualActPelaporName;
+        $this->showActPelaporDropdown = false;
+        $this->action_responsible_id = null;
+    }
+
     public function selectDepartment($id, $name)
     {
         $this->reset('searchContractor');
@@ -107,7 +155,7 @@ class Index extends Component
         $this->report_date = $report->report_date->format('Y-m-d');
         $this->report_time = $report->report_time;
         $this->location = $report->location;
-        $this->department = $report->department;
+        $this->dept_cont = $report->department;
         $this->inspectors = $report->inspectors;
 
         $this->findings = $report->findings->toArray();
