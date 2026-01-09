@@ -79,7 +79,6 @@ class Index extends Component
         $this->searchActResponsibility = $name;
         $this->showActPelaporDropdown = false;
         $this->manualActPelaporMode = false;
-        $this->validateOnly('action_responsible_id');
     }
     public function enableManualActPelapor()
     {
