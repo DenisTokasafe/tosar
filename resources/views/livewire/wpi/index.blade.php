@@ -145,20 +145,17 @@
                     @foreach ($inspectors as $index => $inspector)
                         <div class="flex items-start space-x-2" wire:key="ins-{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
-                            {{-- <input type="text" wire:model="inspectors.{{ $index }}.name"
-                                placeholder="Nama Lengkap" class="flex-1 text-sm border-gray-300 rounded"> --}}
 
+                            <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
+                                {{-- Gunakan array .index agar tidak bentrok antar baris --}} modelsearch="searchPetugas.{{ $index }}"
+                                modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
+                                :manualMode="$manualActPelaporMode" {{-- Kirim $index ke fungsi select --}}
+                                clickaction="selectActPelapor($id, $name, {{ $index }})" {{-- ... properti lainnya ... --}} />
 
-                            <x-form.searchable-select-advanced label="Dilaporkan Oleh"
-                                placeholder="Nama Lengkap..." modelsearch="searchActResponsibility"
-                                modelid="inspectors.{{ $index }}.name" {{-- ID asli di DB --}} :options="$pelaporsAct"
-                                :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
-                                manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
-                                addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
-
+                            {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)
                                 <button type="button" wire:click="removeInspector({{ $index }})"
-                                    class="mt-2 text-red-500 hover:text-red-700">
+                                    class="mt-2 text-red-500">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
