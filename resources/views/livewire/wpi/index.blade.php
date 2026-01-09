@@ -150,7 +150,7 @@
                                 modelsearch="searchPetugas.{{ $index }}"
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                 :manualMode="$manualActPelaporMode" {{-- Gunakan placeholder $id dan $name dengan tanda kutip --}}
-                                clickaction="selectActPelapor('$id', '$name', {{ $index }})" />
+                                clickaction="selectActPelapor('$id', 'name', {{ $index }})" />
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)
