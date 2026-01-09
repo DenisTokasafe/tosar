@@ -68,11 +68,10 @@ class Index extends Component
         }
     }
 
-    public function selectActPelapor($id, $name, $index)
+    public function selectActPelapor( $name, $index)
     {
         // Set data ke array inspectors berdasarkan index barisnya
         $this->inspectors[$index]['name'] = $name;
-        $this->inspectors[$index]['id_number'] = $id;
 
         // Update tampilan input search baris tersebut
         $this->searchPetugas[$index] = $name;
