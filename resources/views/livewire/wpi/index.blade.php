@@ -143,7 +143,7 @@
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     @foreach ($inspectors as $index => $inspector)
-                        <div class="flex space-x-2 bg-blue-600" wire:key="ins-{{ $index }}">
+                        <fieldset class="flex space-x-2 bg-blue-600 fildset" wire:key="ins-{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
 
                             <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
@@ -165,7 +165,7 @@
                                     </svg>
                                 </button>
                             @endif
-                        </div>
+                        </fieldset>
                     @endforeach
                 </div>
             </div>
