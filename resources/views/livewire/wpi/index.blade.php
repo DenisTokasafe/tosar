@@ -116,16 +116,67 @@
                                             wire:model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
                                             multiple />
 
-                                        {{-- Preview Foto dari Database (Jika Ada) --}}
-                                        <div class="flex flex-wrap gap-1 mt-2">
-                                            @if (!empty($finding['photos']))
-                                                @foreach ($finding['photos'] as $photoPath)
-                                                    <div class="relative group">
-                                                        <img src="{{ Storage::url($photoPath) }}"
-                                                            class="object-cover w-12 h-12 border rounded shadow-sm">
-                                                        {{-- Opsional: Tombol hapus foto spesifik bisa ditambahkan di sini --}}
+                                        <div class="mt-2" wire:loading.remove
+                                            wire:target="findings.{{ $index }}.new_photos">
+                                            {{-- Loop melalui file-file yang baru saja diunggah (Temporary Files) --}}
+                                            @if (!empty($findings[$index]['new_photos']))
+                                                @foreach ($findings[$index]['new_photos'] as $newFile)
+                                                    @php
+                                                        $extension = strtolower($newFile->getClientOriginalExtension());
+                                                    @endphp
+
+                                                    <div
+                                                        class="flex items-center gap-2 p-1 mt-2 border rounded bg-gray-50">
+                                                        {{-- Preview jika Gambar --}}
+                                                        @if (in_array($extension, ['jpg', 'jpeg', 'png']))
+                                                            <img src="{{ $newFile->temporaryUrl() }}"
+                                                                class="w-20 h-auto border rounded shadow-sm" />
+                                                            <span
+                                                                class="text-[10px] text-gray-500 truncate w-32">{{ $newFile->getClientOriginalName() }}</span>
+
+                                                            {{-- Preview jika PDF --}}
+                                                        @elseif ($extension == 'pdf')
+                                                            <div class="flex items-center gap-2">
+                                                                <x-icon.pdf class="w-8 h-8" />
+                                                                <span
+                                                                    class="text-[10px] text-red-600 truncate w-40">{{ $newFile->getClientOriginalName() }}</span>
+                                                            </div>
+
+                                                            {{-- Preview jika Word --}}
+                                                        @elseif (in_array($extension, ['doc', 'docx']))
+                                                            <div class="flex items-center gap-2">
+                                                                <x-icon.word class="w-8 h-8" />
+                                                                <span
+                                                                    class="text-[10px] text-blue-600 truncate w-40">{{ $newFile->getClientOriginalName() }}</span>
+                                                            </div>
+
+                                                            {{-- Fallback untuk file lainnya --}}
+                                                        @else
+                                                            <div class="flex items-center gap-2">
+                                                                <svg class="w-8 h-8 text-gray-400" fill="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path
+                                                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                                                </svg>
+                                                                <span
+                                                                    class="text-[10px] text-gray-600 truncate w-40">{{ $newFile->getClientOriginalName() }}</span>
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 @endforeach
+                                            @endif
+
+                                            {{-- Tetap tampilkan preview foto yang SUDAH ada di database (Permanent Files) --}}
+                                            @if (!empty($finding['photos']))
+                                                <div class="flex flex-wrap gap-1 pt-2 mt-2 border-t">
+                                                    <p
+                                                        class="text-[9px] text-gray-400 w-full mb-1 uppercase tracking-tighter italic">
+                                                        File Tersimpan:</p>
+                                                    @foreach ($finding['photos'] as $photoPath)
+                                                        <img src="{{ Storage::url($photoPath) }}"
+                                                            class="object-cover w-10 h-10 border rounded shadow-sm opacity-70">
+                                                    @endforeach
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
