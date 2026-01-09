@@ -112,8 +112,7 @@
 
                                     <div class="mt-1">
                                         {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
-                                        <x-form.upload label="Lampirkan foto temuan"
-                                            wire:model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
+                                        <x-form.upload label="Lampirkan foto temuan" model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
                                              />
 
                                         <div class="mt-2" wire:loading.remove
