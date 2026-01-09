@@ -132,7 +132,7 @@
 
                                                             @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="object-cover w-full h-20 rounded shadow-sm" />
+                                                                     class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" /> />
                                                             @else
                                                                 {{-- Fallback jika bukan gambar (PDF/Word) --}}
                                                                 <div
