@@ -163,8 +163,8 @@
                                         </path>
                                     </svg>
                                 </button>
-                                @endif
-                            </div>
+                            @endif
+                        </div>
                     @endforeach
                 </div>
             </div>
