@@ -49,6 +49,17 @@ class Index extends Component
             'new_photos' => [] // Temporary storage untuk upload
         ];
     }
+    public function updatedFindings($value, $key)
+{
+    // Cek jika yang diupdate adalah field new_photos
+    // Format key: findings.0.new_photos
+    if (str_ends_with($key, '.new_photos')) {
+        // Validasi real-time agar temporary URL terbentuk
+        $this->validateOnly($key, [
+            'findings.*.new_photos.*' => 'image|max:2048',
+        ]);
+    }
+}
     public function removeInspector($index)
     {
         // Hapus elemen berdasarkan index
