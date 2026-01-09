@@ -110,45 +110,55 @@
                                     <textarea wire:model="findings.{{ $index }}.description" placeholder="Deskripsikan temuan..."
                                         class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
 
-                                    <div class="mt-2" wire:loading.remove
-                                        wire:target="findings.{{ $index }}.new_photos">
-                                        @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
-                                            <div class="grid grid-cols-2 gap-2 mt-2">
-                                                @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
-                                                    {{-- Gunakan wire:key unik gabungan index finding dan index file --}}
-                                                    <div class="relative p-1 border rounded bg-gray-50"
-                                                        wire:key="preview-{{ $index }}-{{ $fileKey }}">
+                                    <div class="mt-1">
+                                        {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
+                                        <x-form.upload label="Lampirkan foto temuan"
+                                            wire:model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null"
+                                            multiple />
 
-                                                        @php
-                                                            // Pastikan file adalah objek UploadedFile sebelum panggil method
-                                                            $isUploadedFile = method_exists($newFile, 'temporaryUrl');
-                                                            $extension = $isUploadedFile
-                                                                ? strtolower($newFile->getClientOriginalExtension())
-                                                                : '';
-                                                        @endphp
+                                        <div class="mt-2" wire:loading.remove
+                                            wire:target="findings.{{ $index }}.new_photos">
+                                            @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
+                                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                                    @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
+                                                        {{-- Gunakan wire:key unik gabungan index finding dan index file --}}
+                                                        <div class="relative p-1 border rounded bg-gray-50"
+                                                            wire:key="preview-{{ $index }}-{{ $fileKey }}">
 
-                                                        @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                            <img src="{{ $newFile->temporaryUrl() }}"
-                                                                class="object-cover w-full h-20 rounded shadow-sm" />
-                                                        @else
-                                                            {{-- Fallback jika bukan gambar (PDF/Word) --}}
-                                                            <div
-                                                                class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
-                                                                @if ($extension == 'pdf')
-                                                                    <x-icon.pdf class="w-8 h-8" />
-                                                                @elseif(in_array($extension, ['doc', 'docx']))
-                                                                    <x-icon.word class="w-8 h-8" />
-                                                                @endif
-                                                                <span
-                                                                    class="text-[8px] mt-1 truncate w-full px-1 text-center">
-                                                                    {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
-                                                                </span>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
+                                                            @php
+                                                                // Pastikan file adalah objek UploadedFile sebelum panggil method
+                                                                $isUploadedFile = method_exists(
+                                                                    $newFile,
+                                                                    'temporaryUrl',
+                                                                );
+                                                                $extension = $isUploadedFile
+                                                                    ? strtolower($newFile->getClientOriginalExtension())
+                                                                    : '';
+                                                            @endphp
+
+                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                                <img src="{{ $newFile->temporaryUrl() }}"
+                                                                    class="object-cover w-full h-20 rounded shadow-sm" />
+                                                            @else
+                                                                {{-- Fallback jika bukan gambar (PDF/Word) --}}
+                                                                <div
+                                                                    class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-8 h-8" />
+                                                                    @elseif(in_array($extension, ['doc', 'docx']))
+                                                                        <x-icon.word class="w-8 h-8" />
+                                                                    @endif
+                                                                    <span
+                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center">
+                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                    </span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="p-2 border border-gray-300">
