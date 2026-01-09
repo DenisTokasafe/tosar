@@ -68,23 +68,22 @@ class Index extends Component
         }
     }
 
-    public function selectActPelapor($id, $name, $index)
+    public function selectActPelapor($id, $name)
     {
-        dd($id, $name, $index);
-        // 1. Simpan Nama ke array inspectors agar muncul di form
-        $this->inspectors[$index]['name'] = $name;
+        // Cari index mana yang dropdown-nya sedang terbuka
+        $index = collect($this->showDropdownPetugas)->search(true);
 
-        // 2. Simpan ID/NIK ke array inspectors (Penting untuk database)
-        $this->inspectors[$index]['id_number'] = $id;
+        if ($index !== false) {
+            // 1. Simpan data ke array inspectors sesuai barisnya
+            $this->inspectors[$index]['name'] = $name;
+            $this->inspectors[$index]['id_number'] = $id;
 
-        // 3. Update teks di input search baris tersebut agar sesuai pilihan
-        $this->searchPetugas[$index] = $name;
+            // 2. Update search input agar sinkron di UI
+            $this->searchPetugas[$index] = $name;
 
-        // 4. Tutup dropdown khusus baris ini
-        $this->showDropdownPetugas[$index] = false;
-
-        // 5. Reset hasil pencarian global agar tidak mengganggu baris lain
-        $this->pelaporsAct = [];
+            // 3. Tutup dropdown untuk baris tersebut
+            $this->showDropdownPetugas[$index] = false;
+        }
     }
 
     public function addInspector()

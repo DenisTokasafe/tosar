@@ -149,8 +149,10 @@
                             <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
                                 modelsearch="searchPetugas.{{ $index }}"
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
-                                :manualMode="$manualActPelaporMode" {{-- Gunakan placeholder $id dan $name dengan tanda kutip --}}
-                                clickaction="selectActPelapor('$id', '$name', {{ $index }})" />
+                                :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
+
+                            {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
+                            <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)
