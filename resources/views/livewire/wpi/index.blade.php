@@ -143,28 +143,31 @@
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     @foreach ($inspectors as $index => $inspector)
-                        <div class="space-x-2 bg-blue-600 " wire:key="ins-{{ $index }}">
+                        <div class="flex space-x-2 bg-blue-600" wire:key="ins-{{ $index }}">
                             <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
-                            <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
-
-                            <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
-                                modelsearch="searchPetugas.{{ $index }}"
-                                modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
-                                :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
-
+                            <span
+                                class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
+                            <div class="flex-1">
+                                <x-form.searchable-select-advanced label="Petugas Inspeksi" placeholder="Cari nama..."
+                                    modelsearch="searchPetugas.{{ $index }}"
+                                    modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
+                                    :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
+                            </div>
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
-
                             {{-- Tombol Remove --}}
-                            @if (count($inspectors) > 1)
-                                <button type="button" wire:click="removeInspector({{ $index }})"
-                                    class="mt-2 text-red-500">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg>
-                                </button>
-                            @endif
+                            <div class="flex-none w-14">
+                                @if (count($inspectors) > 1)
+                                    <button type="button" wire:click="removeInspector({{ $index }})"
+                                        class="mt-2 text-red-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>
