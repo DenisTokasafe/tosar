@@ -1,14 +1,9 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="Work Permit to Install" subheading="Form WPI">
+    <x-tabs-wpi.layout heading="Formulir Laporan WPI KPLH" subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl italic font-bold text-gray-800 uppercase">Formulir Laporan WPI KPLH</h2>
-                    <span class="text-sm font-semibold text-gray-500">TT-MGT-FRS-024A</span>
-                </div>
-
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
                         <div class="flex items-center">
