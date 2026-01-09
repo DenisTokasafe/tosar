@@ -151,6 +151,7 @@
                                 modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                 :manualMode="$manualActPelaporMode"clickaction="selectActPelapor" />
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
+                            <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
 
                             {{-- Tombol Remove --}}
                             @if (count($inspectors) > 1)
@@ -164,7 +165,6 @@
                                 </button>
                                 @endif
                             </div>
-                            <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                     @endforeach
                 </div>
             </div>
