@@ -141,7 +141,7 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 bg-blue-600 md:grid-cols-2">
                     @foreach ($inspectors as $index => $inspector)
                         <div class="flex items-start space-x-2" wire:key="ins-{{ $index }}">
                             <span class="mt-2 text-xs font-bold text-gray-400">{{ $index + 1 }}.</span>
