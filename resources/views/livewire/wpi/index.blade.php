@@ -6,47 +6,44 @@
             <div class="p-6 border-b border-gray-200 bg-gray-50">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
-                        <div class="flex flex-row">
-                            <fieldset class="relative fieldset">
-                                <x-form.label label="Tanggal & Waktu" required />
-                                <div
-                                    class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
-                                    <div class="relative " wire:ignore x-data="{
-                                        fp: null,
-                                        initFlatpickr() {
-                                            if (this.fp) this.fp.destroy();
-                                            this.fp = flatpickr(this.$refs.tanggalInput, {
-                                                disableMobile: true,
-                                                enableTime: true,
-                                                time_24hr: true,
-                                                defaultDate: this.$wire.entangle('report_date').defer,
-                                                dateFormat: 'd-m-Y H:i',
-                                                clickOpens: true,
-                                                // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
-                                                // appendTo: this.$refs.wrapper,
+                        <fieldset class="relative fieldset">
+                            <x-form.label label="Tanggal & Waktu" required />
+                            <div
+                                class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+                                <div class="relative " wire:ignore x-data="{
+                                    fp: null,
+                                    initFlatpickr() {
+                                        if (this.fp) this.fp.destroy();
+                                        this.fp = flatpickr(this.$refs.tanggalInput, {
+                                            disableMobile: true,
+                                            enableTime: true,
+                                            time_24hr: true,
+                                            defaultDate: this.$wire.entangle('report_date').defer,
+                                            dateFormat: 'd-m-Y H:i',
+                                            clickOpens: true,
+                                            // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                            // appendTo: this.$refs.wrapper,
 
-                                                // TAMBAHKAN ATAU UBAH OPSI POSITION
-                                                position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+                                            // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                            position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
 
-                                                onChange: (selectedDates, dateStr) => {
-                                                    this.$wire.set('report_date', dateStr);
-                                                }
-                                            });
-                                        }
-                                    }" x-ref="wrapper"
-                                        x-init="initFlatpickr();
-                                        Livewire.hook('message.processed', () => {
-                                            initFlatpickr();
-                                        });">
-                                        <input type="text" x-ref="tanggalInput" wire:model.live='report_date'
-                                            placeholder="Pilih Tanggal dan Waktu..." readonly
-                                            class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                    </div>
+                                            onChange: (selectedDates, dateStr) => {
+                                                this.$wire.set('report_date', dateStr);
+                                            }
+                                        });
+                                    }
+                                }" x-ref="wrapper"
+                                    x-init="initFlatpickr();
+                                    Livewire.hook('message.processed', () => {
+                                        initFlatpickr();
+                                    });">
+                                    <input type="text" x-ref="tanggalInput" wire:model.live='report_date'
+                                        placeholder="Pilih Tanggal dan Waktu..." readonly
+                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                 </div>
-                                <x-label-error :messages="$errors->get('report_date')" />
-                            </fieldset>
-
-                        </div>
+                            </div>
+                            <x-label-error :messages="$errors->get('report_date')" />
+                        </fieldset>
                         <div class="flex items-center">
                             <label class="w-32 text-sm font-medium text-gray-600">Jam / Time</label>
                             <input type="time" wire:model="report_time"
