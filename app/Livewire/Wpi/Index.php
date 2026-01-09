@@ -3,6 +3,7 @@
 namespace App\Livewire\Wpi;
 
 use Livewire\Component;
+use App\Models\Location;
 use App\Models\WpiReport;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
@@ -15,7 +16,9 @@ class Index extends Component
     public $report_date, $report_time, $location, $department;
     public $inspectors = [['name' => '', 'id_number' => '']];
     public $findings = [];
-
+    public $locations = [];
+    public $show_location = false;
+    public $searchLocation = '';
     public function mount($id = null)
     {
         if ($id) {
@@ -24,6 +27,26 @@ class Index extends Component
             $this->report_date = now()->format('Y-m-d');
             $this->addFinding();
         }
+    }
+    public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')
+                ->limit(10)
+                ->get();
+            $this->show_location = true;
+        } else {
+            $this->locations = [];
+            $this->show_location = false;
+        }
+    }
+    public function selectLocation($id, $name)
+    {
+        $this->location = $id;
+        $this->searchLocation = $name;
+        $this->show_location = false;
+        $this->validateOnly('location');
     }
     public function loadData($id)
     {
@@ -50,16 +73,16 @@ class Index extends Component
         ];
     }
     public function updatedFindings($value, $key)
-{
-    // Cek jika yang diupdate adalah field new_photos
-    // Format key: findings.0.new_photos
-    if (str_ends_with($key, '.new_photos')) {
-        // Validasi real-time agar temporary URL terbentuk
-        $this->validateOnly($key, [
-            'findings.*.new_photos.*' => 'image|max:2048',
-        ]);
+    {
+        // Cek jika yang diupdate adalah field new_photos
+        // Format key: findings.0.new_photos
+        if (str_ends_with($key, '.new_photos')) {
+            // Validasi real-time agar temporary URL terbentuk
+            $this->validateOnly($key, [
+                'findings.*.new_photos.*' => 'image|max:2048',
+            ]);
+        }
     }
-}
     public function removeInspector($index)
     {
         // Hapus elemen berdasarkan index

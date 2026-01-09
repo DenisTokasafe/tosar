@@ -7,7 +7,7 @@
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
                         <fieldset class="relative fieldset">
-                            <x-form.label label="Tanggal & Waktu" required />
+                            <x-form.label label="Tanggal / Date" required />
                             <div
                                 class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
                                 <div class="relative " wire:ignore x-data="{
@@ -89,6 +89,9 @@
                             <input type="text" wire:model="location" placeholder="e.g. Toka Pit, Araren Pit"
                                 class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         </div>
+                        <x-form.searchable-dropdown label="Lokasi / Location" required modelsearch="searchLocation"
+                            modelid="location" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                            namedb="name" />
                     </div>
 
                     <div class="space-y-4">
