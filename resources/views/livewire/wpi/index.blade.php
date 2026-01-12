@@ -19,6 +19,7 @@
                                             enableTime: false,
                                             time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
+                                            altFormat: 'F j, Y',
                                             dateFormat: 'd-m-Y',
                                             clickOpens: true,
                                             // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
@@ -429,11 +430,47 @@
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <input type="text" wire:model="findings.{{ $index }}.pic_responsible"
                                         placeholder="Nama PIC" class="w-full text-xs border-gray-300 rounded">
-                                    <div class="flex items-center space-x-1 text-[10px]">
-                                        <span class="text-gray-500">Due:</span>
-                                        <input type="date" wire:model="findings.{{ $index }}.due_date"
-                                            class="flex-1 p-1 text-xs border-gray-300 rounded">
-                                    </div>
+
+                                    <fieldset class="relative fieldset">
+                                        <x-form.label label="Due:" required />
+                                        <div
+                                            class="{{ $errors->has('findings.{{ $index }}.due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+                                            <div class="relative " wire:ignore x-data="{
+                                                fp: null,
+                                                initFlatpickr() {
+                                                    if (this.fp) this.fp.destroy();
+                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                        disableMobile: true,
+                                                        enableTime: false,
+                                                        time_24hr: false,
+                                                        defaultDate: this.$wire.entangle('findings.{{ $index }}.due_date').defer,
+                                                        altFormat: 'F j, Y',
+                                                        dateFormat: 'd-m-Y',
+                                                        clickOpens: true,
+                                                        // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                                        // appendTo: this.$refs.wrapper,
+
+                                                        // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                                        position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+
+                                                        onChange: (selectedDates, dateStr) => {
+                                                            this.$wire.set('findings.{{ $index }}.due_date', dateStr);
+                                                        }
+                                                    });
+                                                }
+                                            }"
+                                                x-ref="wrapper" x-init="initFlatpickr();
+                                                Livewire.hook('message.processed', () => {
+                                                    initFlatpickr();
+                                                });">
+                                                <input type="text" x-ref="tanggalInput"
+                                                    wire:model.live='findings.{{ $index }}.due_date'
+                                                    placeholder="Pilih Tanggal dan Waktu..." readonly
+                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('findings.{{ $index }}.due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                            </div>
+                                        </div>
+                                        <x-label-error :messages="$errors->get('findings.{{ $index }}.due_date')" />
+                                    </fieldset>
                                 </td>
                                 <td class="p-2 text-center border border-gray-300">
                                     @if (count($findings) > 1)
