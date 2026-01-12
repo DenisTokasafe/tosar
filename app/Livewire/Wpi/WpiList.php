@@ -51,9 +51,7 @@ class WpiList extends Component
     public function render()
     {
         // Query dengan pencarian pada departemen atau lokasi
-        $reports = WpiReport::query()
-            ->with(['locationRelation']) // Pastikan relasi ke model Location sudah ada
-            ->where('department', 'like', '%' . $this->search . '%')
+        $reports = WpiReport::query()->where('department', 'like', '%' . $this->search . '%')
             ->orderBy('report_date', 'desc')
             ->paginate(10);
 
