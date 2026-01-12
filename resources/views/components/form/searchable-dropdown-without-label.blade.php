@@ -9,7 +9,7 @@
     'namedb' => 'name' // Nama fungsi di Parent
 ])
 
-    <div class="relative mb-0.5" x-data="{ open: @entangle($attributes->wire('model').'.live') }">
+    <div class="relative mb-1" x-data="{ open: @entangle($attributes->wire('model').'.live') }">
         <input
         {{ $disabled ? 'disabled' : '' }}
             type="text"
