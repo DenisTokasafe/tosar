@@ -128,9 +128,9 @@ class Index extends Component
         // Cari index mana yang dropdown-nya sedang terbuka
         $index = collect($this->showDropdown_pic)->search(true);
         if ($index !== false) {
-            // 1. Simpan data ke array inspectors sesuai barisnya
-            $this->inspectors[$index]['name'] = $name;
-            $this->inspectors[$index]['id_number'] = $id;
+            // 1. Simpan data ke array findings sesuai barisnya
+            $this->findings[$index]['pic_responsible'] = $name;
+
 
             // 2. Update search input agar sinkron di UI
             $this->search_pic[$index] = $name;
