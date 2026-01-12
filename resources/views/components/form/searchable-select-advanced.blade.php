@@ -23,13 +23,16 @@
 
     <div class="relative" x-data="{ open: @entangle($attributes->wire('model') . '.live') }">
         {{-- Input Search --}}
-        <input type="text" {{ $disabled ? 'disabled' : '' }} wire:model.live.debounce.300ms="{{ $modelsearch }}"
-            placeholder="{{ $placeholder }}" x-on:focus="open = true" @class([
-                'input input-bordered  w-full  focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs',
-                'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' =>
-                    $errors->has($modelid) || $errors->has($manualModelName),
-                'bg-base-200 opacity-70' => $disabled,
-            ]) />
+        <input {{ $disabled ? 'disabled' : '' }} type="text" wire:model.live.debounce.300ms="{{ $modelsearch }}"
+            placeholder="{{ $placeholder }}" x-on:focus="open = true"
+            {{ $attributes->merge([
+                'class' =>
+                    'input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs ' .
+                    ($disabled ? 'bg-base-200 opacity-70 ' : '') .
+                    ($errors->has($modelid) || ($manualModelName && $errors->has($manualModelName))
+                        ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500'
+                        : ''),
+            ]) }} />
 
         {{-- Dropdown --}}
         @if (!$disabled && $showdropdown)
