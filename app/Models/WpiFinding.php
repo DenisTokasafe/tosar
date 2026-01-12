@@ -13,6 +13,7 @@ class WpiFinding extends Model
     'prevention_action',
     'pic_responsible',
     'due_date',
+    'completion_date',
     'photos',
     'photos_prevention'
 ];
