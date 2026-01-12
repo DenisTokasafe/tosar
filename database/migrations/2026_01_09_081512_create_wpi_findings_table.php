@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('due_date');
             $table->date('completion_date')->nullable();
             $table->json('photos')->nullable(); // Path lokasi foto
+            $table->json('photos_prevention')->nullable(); // Path lokasi foto tindakan pencegahan
             $table->timestamps();
         });
     }

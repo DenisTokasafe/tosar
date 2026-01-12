@@ -50,6 +50,53 @@ class Index extends Component
             $this->addFinding();
         }
     }
+    public function loadData($id)
+    {
+        // 1. Ambil data report beserta relasi findings-nya
+        $report = WpiReport::with('findings')->find($id);
+
+        if (!$report) {
+            return redirect()->to('/wpi-list')->with('error', 'Data tidak ditemukan');
+        }
+
+        // 2. Isi Properti Header
+        $this->reportId = $report->id;
+        $this->report_date = $report->report_date;
+        $this->report_time = $report->report_time;
+        $this->location = $report->location;
+        $this->dept_cont = $report->department;
+
+        // Sinkronisasi data pencarian agar input teks di UI terisi
+        $this->searchLocation = Location::find($report->location)?->name;
+        $this->search = $report->department;
+        // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
+
+        // 3. Isi Properti Inspectors (Array)
+        // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
+        $this->inspectors = $report->inspectors ?? [['name' => '', 'id_number' => '']];
+
+        // Isi searchPetugas agar input pencarian per baris sinkron
+        foreach ($this->inspectors as $index => $inspector) {
+            $this->searchPetugas[$index] = $inspector['name'];
+        }
+
+        // 4. Isi Properti Findings (Array)
+        $this->findings = []; // Reset findings
+        foreach ($report->findings as $finding) {
+            $this->findings[] = [
+                'id' => $finding->id,
+                'ohs_risk' => $finding->ohs_risk,
+                'description' => $finding->description,
+                'prevention_action' => $finding->prevention_action,
+                'pic_responsible' => $finding->pic_responsible,
+                'due_date' => $finding->due_date,
+                'photos' => $finding->photos ?? [],
+                'photos_prevention' => $finding->photos_prevention ?? [],
+                'new_photos' => [], // Selalu kosongkan saat load
+                'new_photos_prevention' => [], // Selalu kosongkan saat load
+            ];
+        }
+    }
 
     /**
      * Logika Pencarian Petugas Inspeksi (Multi-row)
@@ -267,79 +314,6 @@ class Index extends Component
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
         ]);
     }
-    public function save()
-    {
-        $this->validate([
-            'report_date' => 'required|date',
-            'report_time' => 'required',
-            'location' => 'required',
-            'findings.*.description' => 'required',
-            'findings.*.prevention_action' => 'required|string',
-            // Inspectors Validation (Array)
-            'inspectors'          => 'required|array|min:1',
-            'inspectors.*.name'   => 'required|string|min:3',
-            'inspectors.*.id_number' => 'required',
-            'dept_cont' => 'required',
-        ], [
-            'report_date.required' => 'Tanggal laporan wajib diisi',
-            'report_time.required' => 'Waktu laporan wajib diisi',
-            'report_date.date' => 'Format tanggal tidak valid',
-            'location.required' => 'Lokasi wajib dipilih',
-            'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
-            'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
-            'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
-            'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
-            'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
-        ]);
-
-        $report = WpiReport::updateOrCreate(
-            ['id' => $this->reportId],
-            [
-                'report_date' => $this->report_date,
-                'report_time' => $this->report_time,
-                'location'    => $this->location,
-                'department'  => $this->dept_cont,
-                'inspectors'  => $this->inspectors,
-            ]
-        );
-
-        if ($this->reportId) {
-            $report->findings()->delete();
-        }
-
-        foreach ($this->findings as $finding) {
-            $photoPaths = $finding['photos'] ?? [];
-            $photoPrevention = $finding['photos_prevention'] ?? [];
-
-            if (!empty($finding['new_photos'])) {
-                foreach ($finding['new_photos'] as $photo) {
-                    $photoPaths[] = FileHelper::compressAndStore($photo, 'wpi-photos', 800, 75);
-                }
-            }
-            if (!empty($finding['new_photos_prevention'])) {
-                foreach ($finding['new_photos_prevention'] as $photo) {
-                    $photoPrevention[] = FileHelper::compressAndStore($photo, 'wpi-photos-prevention', 800, 75);
-                }
-            }
-
-            $report->findings()->create([
-                'ohs_risk' => $finding['ohs_risk'],
-                'description' => $finding['description'],
-                'prevention_action' => $finding['prevention_action'],
-                'pic_responsible' => $finding['pic_responsible'],
-                'due_date' => $finding['due_date'],
-                'photos' => $photoPaths,
-                'photos_prevention' => $photoPrevention,
-            ]);
-        }
-
-        $this->dispatch('alert', [
-            'text' => $this->reportId ? 'Data berhasil diperbarui' : 'Data berhasil disimpan',
-            'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
-        ]);
-
-        return redirect()->to('/wpi-list');
-    }
     // Menghapus foto yang baru diunggah (masih di memori/temporary)
     public function removeTempPhoto($findingIndex, $fileKey)
     {
@@ -401,7 +375,7 @@ class Index extends Component
             $pathToDelete = $this->findings[$findingIndex]['prevention_photos'][$photoKey];
 
             // Hapus file fisik
-           FileHelper::deleteFile($pathToDelete);
+            FileHelper::deleteFile($pathToDelete);
 
             // Update array state
             unset($this->findings[$findingIndex]['prevention_photos'][$photoKey]);
@@ -414,6 +388,80 @@ class Index extends Component
             }
         }
     }
+    public function save()
+    {
+        $this->validate([
+            'report_date' => 'required|date',
+            'report_time' => 'required',
+            'location' => 'required',
+            'findings.*.description' => 'required',
+            'findings.*.prevention_action' => 'required|string',
+            // Inspectors Validation (Array)
+            'inspectors'          => 'required|array|min:1',
+            'inspectors.*.name'   => 'required|string|min:3',
+            'inspectors.*.id_number' => 'required',
+            'dept_cont' => 'required',
+        ], [
+            'report_date.required' => 'Tanggal laporan wajib diisi',
+            'report_time.required' => 'Waktu laporan wajib diisi',
+            'report_date.date' => 'Format tanggal tidak valid',
+            'location.required' => 'Lokasi wajib dipilih',
+            'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
+            'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
+            'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
+            'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
+            'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
+        ]);
+        $formattedTime = date('H:i:s', strtotime($this->report_time));
+        $report = WpiReport::updateOrCreate(
+            ['id' => $this->reportId],
+            [
+                'report_date' => $this->report_date,
+                'report_time' => $formattedTime,
+                'location'    => $this->location,
+                'department'  => $this->dept_cont,
+                'inspectors'  => $this->inspectors,
+            ]
+        );
+
+        if ($this->reportId) {
+            $report->findings()->delete();
+        }
+
+        foreach ($this->findings as $finding) {
+            $photoPaths = $finding['photos'] ?? [];
+            $photoPrevention = $finding['photos_prevention'] ?? [];
+
+            if (!empty($finding['new_photos'])) {
+                foreach ($finding['new_photos'] as $photo) {
+                    $photoPaths[] = FileHelper::compressAndStore($photo, 'wpi-photos', 800, 75);
+                }
+            }
+            if (!empty($finding['new_photos_prevention'])) {
+                foreach ($finding['new_photos_prevention'] as $photo) {
+                    $photoPrevention[] = FileHelper::compressAndStore($photo, 'wpi-photos-prevention', 800, 75);
+                }
+            }
+
+            $report->findings()->create([
+                'ohs_risk' => $finding['ohs_risk'],
+                'description' => $finding['description'],
+                'prevention_action' => $finding['prevention_action'],
+                'pic_responsible' => $finding['pic_responsible'],
+                'due_date' => $finding['due_date'],
+                'photos' => $photoPaths,
+                'photos_prevention' => $photoPrevention,
+            ]);
+        }
+
+        $this->dispatch('alert', [
+            'text' => $this->reportId ? 'Data berhasil diperbarui' : 'Data berhasil disimpan',
+            'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
+        ]);
+
+        return redirect()->to('/wpi-list');
+    }
+
 
     public function render()
     {

@@ -57,7 +57,7 @@
                                             disableMobile: true,
                                             enableTime: true,
                                             noCalendar: true,
-                                            time_24hr: false,
+                                            time_24hr: true,
                                             defaultDate: this.$wire.entangle('report_time').defer,
                                             dateFormat: 'd-m-Y',
                                             clickOpens: true,

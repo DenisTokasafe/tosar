@@ -13,11 +13,13 @@ class WpiFinding extends Model
     'prevention_action',
     'pic_responsible',
     'due_date',
-    'photos'
+    'photos',
+    'photos_prevention'
 ];
     // App/Models/WpiFinding.php
     protected $casts = [
         'photos' => 'array',
+        'photos_prevention' => 'array',
         'due_date' => 'date'
     ];
 }
