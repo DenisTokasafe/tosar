@@ -20,7 +20,7 @@
                                             time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
                                             altFormat: 'F j, Y',
-                                            dateFormat: 'd-m-Y',
+                                            dateFormat: 'Y-m-d',
                                             clickOpens: true,
                                             // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
                                             // appendTo: this.$refs.wrapper,
@@ -445,7 +445,7 @@
                                                         time_24hr: false,
                                                         defaultDate: this.$wire.entangle('findings.{{ $index }}.due_date').defer,
                                                         altFormat: 'F j, Y',
-                                                        dateFormat: 'd-m-Y',
+                                                        dateFormat: 'Y-m-d',
                                                         clickOpens: true,
                                                         // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
                                                         // appendTo: this.$refs.wrapper,
