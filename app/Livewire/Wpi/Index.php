@@ -196,7 +196,13 @@ class Index extends Component
     public function addInspector()
     {
         if (count($this->inspectors) < 6) {
-            $this->inspectors[] = ['name' => '', 'id_number' => ''];
+           $this->inspectors[] = [
+            'name' => '',
+            'id_number' => '',
+            'dept_con' => ''
+        ];
+           $this->searchPetugas[] = '';
+           $this->showDropdownPetugas[] = false;
         }
     }
 
