@@ -2,14 +2,14 @@
     <x-toast />
     <x-tabs-wpi.layout heading="Daftar Laporan WPI" subheading="Work Permit Inspection - KPLH Site Tokatindung">
         <div class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
-            <div>
+            {{-- <div>
                 <h1 class="text-xl font-bold tracking-wider text-gray-800 uppercase">Daftar Laporan WPI</h1>
                 <p class="text-xs italic text-gray-500">Work Permit Inspection - KPLH Site Tokatindung</p>
-            </div>
+            </div> --}}
 
             <div class="flex items-center gap-3">
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari Departemen..."
-                    class="w-64 input input-bordered input-sm focus:ring-info" />
+                {{-- <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari Departemen..."
+                    class="w-64 input input-bordered input-sm focus:ring-info" /> --}}
 
                 <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
                     + Laporan Baru
