@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "barryvdh/laravel-dompdf": "*",
+        "barryvdh/laravel-dompdf": "^3.1",
         "diglactic/laravel-breadcrumbs": "^10.0",
         "directorytree/ldaprecord-laravel": "^3.4",
         "intervention/image": "^3.11",
