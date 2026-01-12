@@ -274,30 +274,34 @@
 
                                                     <div class="relative group"
                                                         wire:key="saved-{{ $index }}-{{ $photoKey }}">
-                                                        {{-- Link Download/Pratinjau --}}
-                                                        <a href="{{ $isImage ? Storage::url($photoPath) : route('file.download', ['path' => $photoPath]) }}"
-                                                            target="{{ $isImage ? '_blank' : '_self' }}"
-                                                            class="block">
-                                                            @if ($isImage)
+
+                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                        @if ($isImage)
+                                                            <a href="{{ Storage::url($photoPath) }}" target="_blank">
                                                                 <img src="{{ Storage::url($photoPath) }}"
                                                                     class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
-                                                            @else
-                                                                <div
-                                                                    class="flex flex-col items-center justify-center w-12 h-12 transition-colors bg-gray-100 border rounded hover:bg-gray-200">
-                                                                    @if ($extension == 'pdf')
-                                                                        <x-icon.pdf class="w-6 h-6 text-red-500" />
-                                                                    @elseif(in_array($extension, ['xls', 'xlsx']))
-                                                                        <x-icon.excel class="w-6 h-6 text-green-600" />
-                                                                    @else
-                                                                        <x-icon.word class="w-6 h-6 text-blue-500" />
-                                                                    @endif
-                                                                    <span
-                                                                        class="text-[6px] mt-0.5 text-gray-500 uppercase">{{ $extension }}</span>
-                                                                </div>
-                                                            @endif
-                                                        </a>
+                                                            </a>
 
-                                                        {{-- Tombol Hapus Permanent --}}
+                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
+                                                        @else
+                                                            <button type="button"
+                                                                wire:click="downloadFile('{{ $photoPath }}')"
+                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                title="Klik untuk unduh">
+
+                                                                @if ($extension == 'pdf')
+                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                @else
+                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                @endif
+                                                                <span
+                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                            </button>
+                                                        @endif
+
+                                                        {{-- Tombol Hapus Permanent tetap di sini --}}
                                                         <x-button.remove
                                                             click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
                                                             key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"

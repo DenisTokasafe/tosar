@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
@@ -351,23 +352,37 @@ class Index extends Component
 
     // Menghapus foto yang sudah tersimpan di database (permanent)
     public function removeSavedPhoto($findingIndex, $photoKey)
-{
-    if (isset($this->findings[$findingIndex]['photos'][$photoKey])) {
-        $pathToDelete = $this->findings[$findingIndex]['photos'][$photoKey];
+    {
+        if (isset($this->findings[$findingIndex]['photos'][$photoKey])) {
+            $pathToDelete = $this->findings[$findingIndex]['photos'][$photoKey];
 
-        // 1. Hapus file fisik via Helper
-        FileHelper::deleteFile($pathToDelete);
+            // 1. Hapus file fisik via Helper
+            FileHelper::deleteFile($pathToDelete);
 
-        // 2. Update array state
-        unset($this->findings[$findingIndex]['photos'][$photoKey]);
-        $this->findings[$findingIndex]['photos'] = array_values($this->findings[$findingIndex]['photos']);
+            // 2. Update array state
+            unset($this->findings[$findingIndex]['photos'][$photoKey]);
+            $this->findings[$findingIndex]['photos'] = array_values($this->findings[$findingIndex]['photos']);
 
-        // 3. Update database jika record sudah ada
-        if (isset($this->findings[$findingIndex]['id'])) {
-            WpiFinding::where('id', $this->findings[$findingIndex]['id'])
-                ->update(['photos' => $this->findings[$findingIndex]['photos']]);
+            // 3. Update database jika record sudah ada
+            if (isset($this->findings[$findingIndex]['id'])) {
+                WpiFinding::where('id', $this->findings[$findingIndex]['id'])
+                    ->update(['photos' => $this->findings[$findingIndex]['photos']]);
+            }
         }
     }
+    public function downloadFile($path)
+{
+    // Validasi keberadaan file di disk public
+    if (Storage::disk('public')->exists($path)) {
+        // Mengembalikan response download langsung
+        return Storage::disk('public')->download($path);
+    }
+
+    // Berikan alert jika file tidak ditemukan
+    $this->dispatch('alert', [
+        'text' => 'File tidak ditemukan di server.',
+        'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
+    ]);
 }
 
     public function render()
