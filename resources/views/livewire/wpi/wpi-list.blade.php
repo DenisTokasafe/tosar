@@ -11,7 +11,7 @@
                 <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari Departemen..."
                     class="w-64 input input-bordered input-sm focus:ring-info" />
 
-                <a href="/wpi/create" class="text-xs uppercase btn btn-primary btn-sm">
+                <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
                     + Laporan Baru
                 </a>
             </div>
@@ -45,7 +45,7 @@
                                 <div class="flex flex-row justify-center gap-2" wire:key="actions-{{ $report->id }}">
                                     {{-- Tombol Edit --}}
                                     <flux:tooltip content="edit" position="top">
-                                        <flux:button href="/wpi/form/{{ $report->id }}" size="xs"
+                                        <flux:button href="{{ route('wpi.edit', $report->id) }}" size="xs"
                                             icon="pencil-square" variant="subtle">
                                         </flux:button>
                                     </flux:tooltip>
