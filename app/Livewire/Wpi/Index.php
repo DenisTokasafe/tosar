@@ -213,6 +213,10 @@ class Index extends Component
             'report_date' => 'required|date',
             'location' => 'required',
             'findings.*.description' => 'required',
+            // Inspectors Validation (Array)
+            'inspectors'          => 'required|array|min:1',
+            'inspectors.*.name'   => 'required|string|min:3',
+            'inspectors.*.id_number' => 'required',
         ]);
 
         $report = WpiReport::updateOrCreate(
