@@ -168,7 +168,7 @@ class Index extends Component
 
     public function selectLocation($id, $name)
     {
-        $this->location = $id;
+        $this->location = $name;
         $this->searchLocation = $name;
         $this->show_location = false;
     }

@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="Formulir Laporan WPI KPLH" subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -496,8 +496,8 @@
                         class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
                     <button type="submit"
                         class="flex items-center justify-center flex-1 px-8 py-2 text-sm font-bold text-white transition bg-green-600 rounded-md shadow-lg md:flex-none hover:bg-green-700">
-                        <span wire:loading.remove wire:target="save italic">Simpan Laporan (Submit)</span>
-                        <span wire:loading wire:target="save">Memproses...</span>
+                        <span wire:loading.remove wire:target="save italic">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
+                        <span class="hidden" wire:loading.remove.class='hidden' wire:target="save">Memproses...</span>
                     </button>
                 </div>
             </div>

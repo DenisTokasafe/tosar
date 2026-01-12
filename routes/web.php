@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Livewire\Wpi\WpiList;
 use App\Livewire\Manhours\Index;
 use App\Livewire\Dashboard\Hazard;
 use App\Livewire\Settings\Profile;
@@ -9,6 +10,7 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Hazard\HazardDetail;
 use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Wpi\Index as WpiForm;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HazardController;
@@ -42,7 +44,6 @@ use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
-use App\Livewire\Wpi\Index as WpiIndex;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -59,7 +60,7 @@ Route::get('/.well-known/assetlinks.json', function () {
 
 Route::get('dashboard', Hazard::class)->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/', 'dashboard');
-Route::redirect('/eventReport/hazardReportGuest/3','/hazard/form',301);
+Route::redirect('/eventReport/hazardReportGuest/3', '/hazard/form', 301);
 Route::get('hazard/form', HazardForm::class)->name('hazard-form');
 Route::get('api/hazards/data', [HazardController::class, 'getExcelData'])->name('hazards.excel.data');
 Route::get('api/manhours', [ManhoursController::class, 'getExcelData'])->name('manhours.excel.data');
@@ -69,7 +70,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
     Route::get('manhours', Index::class)->name('manhours');
-    Route::get('wpi/form', WpiIndex::class)->name('wpi-index');
+    Route::get('wpi-list', WpiList::class)->name('wpi.list');
+    Route::get('wpi/create', WpiForm::class)->name('wpi.create');
+    Route::get('wpi/edit/{id?}', WpiForm::class)->name('wpi.edit');
     Route::get('hazard', HazardReportPanel::class)->name('hazard');
     Route::get('hazard/{hazard}', HazardDetail::class)->name('hazard-detail');
 });
