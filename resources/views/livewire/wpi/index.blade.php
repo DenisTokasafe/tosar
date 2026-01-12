@@ -316,7 +316,7 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea --}}
-                                    <x-form.textarea placeholder="Tindakan pencegahan..."
+                                    <x-form.textarea label="Tindakan pencegahan" placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
 
                                     <div class="mt-1">
@@ -433,7 +433,7 @@
                                     modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic" :showdropdown="$showDropdown_pic[$index] ?? false"
                                     :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectPicPelapor" />
                                     <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Jatuh Tempo:" required />
+                                        <x-form.label label="Tanggal Jatuh Tempo:"  />
                                         <div
                                             class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                             <div class="relative" wire:ignore x-data="{
@@ -466,7 +466,7 @@
                                         <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                     </fieldset>
                                     <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Selesai:" required />
+                                        <x-form.label label="Tanggal Selesai:"  />
                                         <div
                                             class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                             <div class="relative" wire:ignore x-data="{
