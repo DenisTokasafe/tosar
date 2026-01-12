@@ -141,6 +141,10 @@ class Index extends Component
             $this->showDropdown_pic[$index] = false;
         }
     }
+
+     /**
+     * Logika Pencarian Petugas Inspeksi (Multi-row)
+     */
     public function updatedSearchPetugas($value, $key)
     {
         // Ambil index dari key, misal "searchPetugas.0" -> index = 0
@@ -164,6 +168,7 @@ class Index extends Component
         if ($index !== false) {
             // 1. Simpan data ke array findings sesuai barisnya
             $this->inspectors[$index]['name'] = $name;
+            $this->inspectors[$index]['id_number'] = $id;
 
 
             // 2. Update search input agar sinkron di UI
