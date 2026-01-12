@@ -237,7 +237,7 @@
                                                                 {{-- Preview File Non-Gambar (PDF/Word/Excel) --}}
                                                             @else
                                                                 <div
-                                                                    class="flex flex-col items-center justify-center h-24 mt-2 bg-gray-200 rounded">
+                                                                    class="flex flex-col items-center justify-center w-16 mt-2 bg-gray-200 rounded">
                                                                     @if ($extension == 'pdf')
                                                                         <x-icon.pdf class="w-8 h-8 text-red-500" />
                                                                     @elseif(in_array($extension, ['doc', 'docx']))
