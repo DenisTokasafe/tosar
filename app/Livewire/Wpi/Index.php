@@ -97,6 +97,7 @@ class Index extends Component
                 'prevention_action' => $finding->prevention_action,
                 'pic_responsible' => $finding->pic_responsible,
                 'due_date' => date('d-m-Y', strtotime($finding->due_date)),
+                'completion_date' => date('d-m-Y', strtotime($finding->completion_date)),
                 'photos' => $finding->photos ?? [],
                 'photos_prevention' => $finding->photos_prevention ?? [],
                 'new_photos' => [], // Selalu kosongkan saat load
@@ -237,6 +238,7 @@ class Index extends Component
             'prevention_action' => '',
             'pic_responsible' => '',
             'due_date' => '',
+            'completion_date' => '',
             'photos' => [],
             'photos_prevention' => [],
             'new_photos' => [],
@@ -403,6 +405,9 @@ class Index extends Component
             'location' => 'required',
             'findings.*.description' => 'required',
             'findings.*.prevention_action' => 'required|string',
+            'findings.*.due_date' => 'nullable|date',
+            'findings.*.completion_date' => 'nullable|date',
+            'findings.*.pic_responsible' => 'required|string',
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
@@ -458,6 +463,10 @@ class Index extends Component
                 'due_date' => isset($finding['due_date']) && $finding['due_date']
                     ? date('Y-m-d', strtotime($finding['due_date']))
                     : null,
+                'completion_date' => isset($finding['completion_date']) && $finding['completion_date']
+                    ? date('Y-m-d', strtotime($finding['completion_date']))
+                    : null,
+
                 'photos' => $photoPaths,
                 'photos_prevention' => $photoPrevention,
             ]);

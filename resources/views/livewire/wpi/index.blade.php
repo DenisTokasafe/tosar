@@ -465,6 +465,39 @@
                                         </div>
                                         <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                     </fieldset>
+                                    <fieldset class="relative fieldset">
+                                        <x-form.label label="Due:" required />
+                                        <div
+                                            class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            <div class="relative" wire:ignore x-data="{
+                                                fp: null,
+                                                initFlatpickr() {
+                                                    if (this.fp) this.fp.destroy();
+                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                        disableMobile: true,
+                                                        enableTime: false,
+                                                        // Gunakan entangle dengan format string PHP yang benar
+                                                        defaultDate: @entangle('findings.' . $index . '.completion_date'),
+
+                                                        dateFormat: 'Y-m-d',
+                                                        clickOpens: true,
+                                                        position: 'auto-below',
+                                                        onChange: (selectedDates, dateStr) => {
+                                                            $wire.set('findings.{{ $index }}.completion_date', dateStr);
+                                                        }
+                                                    });
+                                                }
+                                            }"
+                                                x-init="initFlatpickr()">
+
+                                                <input type="text" x-ref="tanggalInput"
+                                                    wire:model.live="findings.{{ $index }}.completion_date"
+                                                    placeholder="Pilih Tanggal..." readonly
+                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
+                                            </div>
+                                        </div>
+                                        <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
+                                    </fieldset>
                                 </td>
                                 <td class="p-2 text-center border border-gray-300">
                                     @if (count($findings) > 1)
