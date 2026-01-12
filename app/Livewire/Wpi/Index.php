@@ -197,13 +197,13 @@ class Index extends Component
     public function addInspector()
     {
         if (count($this->inspectors) < 6) {
-           $this->inspectors[] = [
-            'name' => '',
-            'id_number' => '',
-            'dept_con' => ''
-        ];
-           $this->searchPetugas[] = '';
-           $this->showDropdownPetugas[] = false;
+            $this->inspectors[] = [
+                'name' => '',
+                'id_number' => '',
+                'dept_con' => ''
+            ];
+            $this->searchPetugas[] = '';
+            $this->showDropdownPetugas[] = false;
         }
     }
 
@@ -538,17 +538,17 @@ class Index extends Component
         return redirect()->to('/wpi-list');
     }
     public function exportPDF($id)
-{
-    $report = WpiReport::with(['findings', 'locationRelation'])->findOrFail($id);
+    {
+        $report = \App\Models\WpiReport::with(['findings'])->findOrFail($id);
 
-    // Kirim data ke view blade khusus PDF
-    $pdf = Pdf::loadView('pdf.wpi-report', compact('report'))
-              ->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('pdf.wpi-report', [
+            'report' => $report,
+        ])->setPaper('a4', 'portrait');
 
-    return response()->streamDownload(function () use ($pdf) {
-        echo $pdf->stream();
-    }, "WPI_Report_{$report->id}.pdf");
-}
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, "Laporan_WPI_" . $report->report_date . ".pdf");
+    }
 
 
     public function render()
