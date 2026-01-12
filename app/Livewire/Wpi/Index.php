@@ -96,8 +96,13 @@ class Index extends Component
                 'description' => $finding->description,
                 'prevention_action' => $finding->prevention_action,
                 'pic_responsible' => $finding->pic_responsible,
-                'due_date' => date('d-m-Y', strtotime($finding->due_date)),
-                'completion_date' => date('d-m-Y', strtotime($finding->completion_date)),
+                'due_date' => ($finding->due_date)
+                    ? date('Y-m-d', strtotime($finding->due_date))
+                    : null,
+
+                'completion_date' => ($finding->completion_date)
+                    ? date('Y-m-d', strtotime($finding->completion_date))
+                    : null,
                 'photos' => $finding->photos ?? [],
                 'photos_prevention' => $finding->photos_prevention ?? [],
                 'new_photos' => [], // Selalu kosongkan saat load
@@ -142,7 +147,7 @@ class Index extends Component
         }
     }
 
-     /**
+    /**
      * Logika Pencarian Petugas Inspeksi (Multi-row)
      */
     public function updatedSearchPetugas($value, $key)
