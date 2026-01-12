@@ -430,7 +430,10 @@
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <input type="text" wire:model="findings.{{ $index }}.pic_responsible"
                                         placeholder="Nama PIC" class="w-full text-xs border-gray-300 rounded">
-
+                                    <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
+                                    placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
+                                    modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic" :showdropdown="$showDropdown_pic[$index] ?? false"
+                                    :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectPicPelapor" />
                                     <fieldset class="relative fieldset">
                                         <x-form.label label="Due:" required />
                                         <div

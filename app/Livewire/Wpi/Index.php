@@ -40,6 +40,12 @@ class Index extends Component
     public $showDropdownPetugas = [];
     public $manualActPelaporMode = false;
     public $manualActPelaporName = '';
+    // Properti Pencarian Petugas (Independen per Baris)
+    public $pelapors_pic = [];
+    public $search_pic = [];
+    public $showDropdown_pic = [];
+    public $manualPICPelaporMode = false;
+    public $manualPICPelaporName = '';
 
     public function mount($id = null)
     {
@@ -101,36 +107,36 @@ class Index extends Component
     /**
      * Logika Pencarian Petugas Inspeksi (Multi-row)
      */
-    public function updatedSearchPetugas($value, $key)
+    public function updatedSearchPic($value, $key)
     {
         // Ambil index dari key, misal "searchPetugas.0" -> index = 0
         $index = explode('.', $key)[0];
 
         if (strlen($value) > 1) {
-            $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
+            $this->pelapors_pic = User::where('name', 'like', '%' . $value . '%')
                 ->orderBy('name')
                 ->limit(20)
                 ->get();
-            $this->showDropdownPetugas[$index] = true;
+            $this->showDropdown_pic[$index] = true;
         } else {
-            $this->showDropdownPetugas[$index] = false;
+            $this->showDropdown_pic[$index] = false;
         }
     }
 
-    public function selectActPelapor($id, $name)
+    public function selectPicPelapor($id, $name)
     {
         // Cari index mana yang dropdown-nya sedang terbuka
-        $index = collect($this->showDropdownPetugas)->search(true);
+        $index = collect($this->showDropdown_pic)->search(true);
         if ($index !== false) {
             // 1. Simpan data ke array inspectors sesuai barisnya
             $this->inspectors[$index]['name'] = $name;
             $this->inspectors[$index]['id_number'] = $id;
 
             // 2. Update search input agar sinkron di UI
-            $this->searchPetugas[$index] = $name;
+            $this->search_pic[$index] = $name;
 
             // 3. Tutup dropdown untuk baris tersebut
-            $this->showDropdownPetugas[$index] = false;
+            $this->showDropdown_pic[$index] = false;
         }
     }
 
