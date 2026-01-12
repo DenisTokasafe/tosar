@@ -142,6 +142,33 @@ class Index extends Component
         $this->search = $name;
         $this->dept_cont = $name;
         $this->showDropdown = false;
+         $this->validateOnly('dept_cont', [
+            'dept_cont' => 'required',
+        ]);
+    }
+    public function updatedSearchContractor()
+    {
+        if (strlen($this->searchContractor) > 1) {
+            $this->contractors = Contractor::query()
+                ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
+                ->orderBy('contractor_name')
+                ->limit(10)
+                ->get();
+            $this->showContractorDropdown = true;
+        } else {
+            $this->contractors = [];
+            $this->showContractorDropdown = true;
+        }
+    }
+    public function selectContractor($id, $name)
+    {
+        $this->reset('search');
+        $this->dept_cont = $name;
+        $this->searchContractor = $name;
+        $this->showContractorDropdown = false;
+        $this->validateOnly('dept_cont', [
+            'dept_cont' => 'required',
+        ]);
     }
 
     /**
@@ -218,7 +245,8 @@ class Index extends Component
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
             'inspectors.*.id_number' => 'required',
-        ],[
+            'dept_cont' => 'required',
+        ], [
             'report_date.required' => 'Tanggal laporan wajib diisi',
             'report_time.required' => 'Waktu laporan wajib diisi',
             'report_date.date' => 'Format tanggal tidak valid',
@@ -226,6 +254,7 @@ class Index extends Component
             'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
             'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
+            'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
         ]);
 
         $report = WpiReport::updateOrCreate(
