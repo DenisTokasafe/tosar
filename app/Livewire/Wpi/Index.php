@@ -445,7 +445,6 @@ class Index extends Component
             'findings.*.completion_date' => 'nullable|date',
             'findings.*.pic_responsible' => 'required|string',
             // Inspectors Validation (Array)
-            'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
             'dept_cont' => 'required',
         ], [
