@@ -1,6 +1,7 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
+        subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -148,13 +149,39 @@
                             <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                             <span
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
-                            <div class="flex-col flex-1">
-                                <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
-                                    placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
-                                    modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
-                                    :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
-                                <span class="text-xs italic text-gray-400">{{ $inspectors[$index]['id_number'] }}</span>
-                                <span class="text-xs italic text-gray-400">{{ $inspectors[$index]['dept_con'] }}</span>
+                            <div class="flex-1">
+                                {{-- Menggunakan Grid untuk membagi menjadi 3 kolom pada layar sedang/besar --}}
+                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 md:items-end">
+
+                                    {{-- Kolom 1: Dropdown Pencarian --}}
+                                    <div class="flex flex-col">
+                                        <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
+                                            placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
+                                            modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
+                                            :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
+                                    </div>
+
+                                    {{-- Kolom 2: ID Number --}}
+                                    <div class="flex flex-col pb-1">
+                                        <span class="text-[10px] font-semibold uppercase text-gray-500">ID
+                                            Number</span>
+                                        <div
+                                            class="px-2 py-1 text-xs italic border rounded bg-gray-50 border-gray-200 text-gray-600 min-h-[28px] flex items-center">
+                                            {{ $inspectors[$index]['id_number'] ?: '-' }}
+                                        </div>
+                                    </div>
+
+                                    {{-- Kolom 3: Department/Contractor --}}
+                                    <div class="flex flex-col pb-1">
+                                        <span
+                                            class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
+                                        <div
+                                            class="px-2 py-1 text-xs italic border rounded bg-gray-50 border-gray-200 text-gray-600 min-h-[28px] flex items-center">
+                                            {{ $inspectors[$index]['dept_con'] ?: '-' }}
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
                             {{-- Tombol Remove --}}
@@ -182,8 +209,10 @@
                         <tr>
                             <th class="w-8 p-2 text-center border border-gray-300">#</th>
                             <th class="w-16 p-2 text-center border border-gray-300">OHS Risk</th>
-                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act & Photo</th>
-                            <th class="p-2 border border-gray-300">Tindakan Pencegahan  & Foto / Prevention Action & Photo</th>
+                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act & Photo
+                            </th>
+                            <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
+                                Photo</th>
                             <th class="w-48 p-2 border border-gray-300">Tindak Lanjut/ Follow Up</th>
                             <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
                         </tr>
@@ -431,11 +460,12 @@
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <x-form.searchable-select-advanced label="Person in charge (PIC)"
-                                    placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
-                                    modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic" :showdropdown="$showDropdown_pic[$index] ?? false"
-                                    :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectPicPelapor" />
+                                        placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
+                                        modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
+                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}}
+                                        clickaction="selectPicPelapor" />
                                     <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Jatuh Tempo:"  />
+                                        <x-form.label label="Tanggal Jatuh Tempo:" />
                                         <div
                                             class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                             <div class="relative" wire:ignore x-data="{
@@ -468,7 +498,7 @@
                                         <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                     </fieldset>
                                     <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Selesai:"  />
+                                        <x-form.label label="Tanggal Selesai:" />
                                         <div
                                             class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                             <div class="relative" wire:ignore x-data="{
@@ -532,8 +562,10 @@
                         class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
                     <button type="submit"
                         class="flex items-center justify-center flex-1 px-8 py-2 text-sm font-bold text-white transition bg-green-600 rounded-md shadow-lg md:flex-none hover:bg-green-700">
-                        <span wire:loading.remove wire:target="save">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
-                        <span class="hidden" wire:loading.remove.class='hidden' wire:target="save">Memproses...</span>
+                        <span wire:loading.remove
+                            wire:target="save">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
+                        <span class="hidden" wire:loading.remove.class='hidden'
+                            wire:target="save">Memproses...</span>
                     </button>
                 </div>
             </div>
