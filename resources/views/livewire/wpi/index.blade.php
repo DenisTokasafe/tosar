@@ -1,7 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
-        subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -429,12 +428,11 @@
                                     </div>
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
-
-                                    <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
-                                        placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
-                                        modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
-                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}}
-                                        clickaction="selectPicPelapor" />
+                                    {{-- Input Selectable PIC Petugas Inspeksi --}}
+                                    <x-form.searchable-select-advanced label="Person in charge (PIC)"
+                                    placeholder="Cari nama..." modelsearch=" {{ $reportId ? 'findings.{{ $index }}.pic_responsible' : 'search_pic.{{ $index }}' }}"
+                                    modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic" :showdropdown="$showDropdown_pic[$index] ?? false"
+                                    :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectPicPelapor" />
                                     <fieldset class="relative fieldset">
                                         <x-form.label label="Due:" required />
                                         <div
@@ -500,10 +498,8 @@
                         class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
                     <button type="submit"
                         class="flex items-center justify-center flex-1 px-8 py-2 text-sm font-bold text-white transition bg-green-600 rounded-md shadow-lg md:flex-none hover:bg-green-700">
-                        <span wire:loading.remove
-                            wire:target="save italic">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
-                        <span class="hidden" wire:loading.remove.class='hidden'
-                            wire:target="save">Memproses...</span>
+                        <span wire:loading.remove wire:target="save italic">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
+                        <span class="hidden" wire:loading.remove.class='hidden' wire:target="save">Memproses...</span>
                     </button>
                 </div>
             </div>
