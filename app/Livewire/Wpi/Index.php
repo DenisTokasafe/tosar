@@ -51,52 +51,52 @@ class Index extends Component
         }
     }
     public function loadData($id)
-{
-    // 1. Ambil data report beserta relasi findings-nya
-    $report = WpiReport::with('findings')->find($id);
+    {
+        // 1. Ambil data report beserta relasi findings-nya
+        $report = WpiReport::with('findings')->find($id);
 
-    if (!$report) {
-        return redirect()->to('/wpi-list')->with('error', 'Data tidak ditemukan');
+        if (!$report) {
+            return redirect()->to('/wpi-list')->with('error', 'Data tidak ditemukan');
+        }
+
+        // 2. Isi Properti Header
+        $this->reportId = $report->id;
+        $this->report_date = $report->report_date;
+        $this->report_time = $report->report_time;
+        $this->location = $report->location;
+        $this->dept_cont = $report->department;
+
+        // Sinkronisasi data pencarian agar input teks di UI terisi
+        $this->searchLocation = Location::find($report->location)?->name;
+        $this->search = $report->department;
+        // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
+
+        // 3. Isi Properti Inspectors (Array)
+        // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
+        $this->inspectors = $report->inspectors ?? [['name' => '', 'id_number' => '']];
+
+        // Isi searchPetugas agar input pencarian per baris sinkron
+        foreach ($this->inspectors as $index => $inspector) {
+            $this->searchPetugas[$index] = $inspector['name'];
+        }
+
+        // 4. Isi Properti Findings (Array)
+        $this->findings = []; // Reset findings
+        foreach ($report->findings as $finding) {
+            $this->findings[] = [
+                'id' => $finding->id,
+                'ohs_risk' => $finding->ohs_risk,
+                'description' => $finding->description,
+                'prevention_action' => $finding->prevention_action,
+                'pic_responsible' => $finding->pic_responsible,
+                'due_date' => $finding->due_date,
+                'photos' => $finding->photos ?? [],
+                'photos_prevention' => $finding->photos_prevention ?? [],
+                'new_photos' => [], // Selalu kosongkan saat load
+                'new_photos_prevention' => [], // Selalu kosongkan saat load
+            ];
+        }
     }
-
-    // 2. Isi Properti Header
-    $this->reportId = $report->id;
-    $this->report_date = $report->report_date;
-    $this->report_time = $report->report_time;
-    $this->location = $report->location;
-    $this->dept_cont = $report->department;
-
-    // Sinkronisasi data pencarian agar input teks di UI terisi
-    $this->searchLocation = Location::find($report->location)?->name;
-    $this->search = $report->department;
-    // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
-
-    // 3. Isi Properti Inspectors (Array)
-    // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
-    $this->inspectors = $report->inspectors ?? [['name' => '', 'id_number' => '']];
-
-    // Isi searchPetugas agar input pencarian per baris sinkron
-    foreach ($this->inspectors as $index => $inspector) {
-        $this->searchPetugas[$index] = $inspector['name'];
-    }
-
-    // 4. Isi Properti Findings (Array)
-    $this->findings = []; // Reset findings
-    foreach ($report->findings as $finding) {
-        $this->findings[] = [
-            'id' => $finding->id,
-            'ohs_risk' => $finding->ohs_risk,
-            'description' => $finding->description,
-            'prevention_action' => $finding->prevention_action,
-            'pic_responsible' => $finding->pic_responsible,
-            'due_date' => $finding->due_date,
-            'photos' => $finding->photos ?? [],
-            'photos_prevention' => $finding->photos_prevention ?? [],
-            'new_photos' => [], // Selalu kosongkan saat load
-            'new_photos_prevention' => [], // Selalu kosongkan saat load
-        ];
-    }
-}
 
     /**
      * Logika Pencarian Petugas Inspeksi (Multi-row)
@@ -314,7 +314,7 @@ class Index extends Component
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
         ]);
     }
-        // Menghapus foto yang baru diunggah (masih di memori/temporary)
+    // Menghapus foto yang baru diunggah (masih di memori/temporary)
     public function removeTempPhoto($findingIndex, $fileKey)
     {
         if (isset($this->findings[$findingIndex]['new_photos'][$fileKey])) {
@@ -375,7 +375,7 @@ class Index extends Component
             $pathToDelete = $this->findings[$findingIndex]['prevention_photos'][$photoKey];
 
             // Hapus file fisik
-           FileHelper::deleteFile($pathToDelete);
+            FileHelper::deleteFile($pathToDelete);
 
             // Update array state
             unset($this->findings[$findingIndex]['prevention_photos'][$photoKey]);
@@ -448,7 +448,9 @@ class Index extends Component
                 'description' => $finding['description'],
                 'prevention_action' => $finding['prevention_action'],
                 'pic_responsible' => $finding['pic_responsible'],
-                'due_date' => $finding->due_date ? date('Y-m-d', strtotime($finding->due_date)) : null,
+                'due_date' => isset($finding['due_date']) && $finding['due_date']
+                    ? date('Y-m-d', strtotime($finding['due_date']))
+                    : null,
                 'photos' => $photoPaths,
                 'photos_prevention' => $photoPrevention,
             ]);
