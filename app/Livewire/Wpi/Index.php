@@ -179,7 +179,11 @@ class Index extends Component
         if ($index !== false) {
             // 1. Simpan data ke array findings sesuai barisnya
             $this->inspectors[$index]['name'] = $name;
-            $this->inspectors[$index]['id_number'] = $id;
+            $inspector = User::where('name', $name)->first();
+            if ($inspector) {
+                $this->inspectors[$index]['id_number'] = $inspector->employee_id;
+                $this->inspectors[$index]['dept_con'] = $inspector->department_name;
+            }
 
             // 2. Update search input agar sinkron di UI
             $this->searchPetugas[$index] = $name;
