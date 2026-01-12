@@ -537,18 +537,7 @@ class Index extends Component
 
         return redirect()->to('/wpi-list');
     }
-    public function exportPDF($id)
-    {
-        $report = WpiReport::with(['findings'])->findOrFail($id);
 
-        $pdf = Pdf::loadView('pdf.wpi-report', [
-            'report' => $report,
-        ])->setPaper('a4', 'portrait');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, "Laporan_WPI_" . $report->report_date . ".pdf");
-    }
 
 
     public function render()
