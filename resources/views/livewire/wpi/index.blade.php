@@ -153,8 +153,8 @@
                                     placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
                                     modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                     :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
-                                <span>{{ $inspectors[$index]['id_number'] }}</span>
-                                <span>{{ $inspectors[$index]['dept_con'] }}</span>
+                                <span class="text-xs italic text-gray-400">{{ $inspectors[$index]['id_number'] }}</span>
+                                <span class="text-xs italic text-gray-400">{{ $inspectors[$index]['dept_con'] }}</span>
                             </div>
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
                             {{-- Tombol Remove --}}
