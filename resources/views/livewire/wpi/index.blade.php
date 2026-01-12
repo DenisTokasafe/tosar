@@ -148,11 +148,13 @@
                             <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                             <span
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
-                            <div class="flex-1">
+                            <div class="flex-col flex-1">
                                 <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
                                     placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
                                     modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct" :showdropdown="$showDropdownPetugas[$index] ?? false"
                                     :manualMode="$manualActPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectActPelapor" />
+                                <span>{{ $inspectors[$index]['id_number'] }}</span>
+                                <span>{{ $inspectors[$index]['dept_con'] }}</span>
                             </div>
                             {{-- Sembunyikan index di input tersembunyi agar bisa dibaca saat method dipanggil --}}
                             {{-- Tombol Remove --}}

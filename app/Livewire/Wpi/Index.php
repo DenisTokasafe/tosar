@@ -56,6 +56,7 @@ class Index extends Component
             $this->addFinding();
         }
     }
+
     public function loadData($id)
     {
         // 1. Ambil data report beserta relasi findings-nya
@@ -79,11 +80,16 @@ class Index extends Component
 
         // 3. Isi Properti Inspectors (Array)
         // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
-        $this->inspectors = $report->inspectors ?? [['name' => '', 'id_number' => '']];
+        $this->inspectors = $report->inspectors ?? [['name' => '',]];
 
         // Isi searchPetugas agar input pencarian per baris sinkron
         foreach ($this->inspectors as $index => $inspector) {
             $this->searchPetugas[$index] = $inspector['name'];
+            $inspector = User::where('name', $inspector['name'])->first();
+            if ($inspector) {
+                $this->inspectors[$index]['id_number'] = $inspector->employee_id;
+                $this->inspectors[$index]['dept_con'] = $inspector->department_name;
+            }
         }
 
         // 4. Isi Properti Findings (Array)
