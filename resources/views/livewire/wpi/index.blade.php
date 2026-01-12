@@ -232,7 +232,7 @@
                                                             {{-- Preview Gambar --}}
                                                             @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="object-cover w-full h-auto mt-2 border rounded max-h-32" />
+                                                                    class="object-cover w-24 h-auto mt-2 border rounded max-h-32" />
 
                                                                 {{-- Preview File Non-Gambar (PDF/Word/Excel) --}}
                                                             @else
