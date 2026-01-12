@@ -211,12 +211,10 @@
                                             @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
                                                 <div class="grid grid-cols-2 gap-2 mt-2">
                                                     @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
-                                                        {{-- Gunakan wire:key unik gabungan index finding dan index file --}}
                                                         <div class="relative p-1 border rounded bg-gray-50"
                                                             wire:key="preview-{{ $index }}-{{ $fileKey }}">
 
                                                             @php
-                                                                // Pastikan file adalah objek UploadedFile sebelum panggil method
                                                                 $isUploadedFile = method_exists(
                                                                     $newFile,
                                                                     'temporaryUrl',
@@ -226,47 +224,41 @@
                                                                     : '';
                                                             @endphp
 
+                                                            {{-- Tombol Hapus Menggunakan Komponen Reusable --}}
+                                                            <x-button.remove
+                                                                click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
+                                                                key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
+
+                                                            {{-- Preview Gambar --}}
                                                             @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="mt-2 {{ $newFile ? 'w-40' : '' }} h-auto rounded border" />
+                                                                    class="object-cover w-full h-auto mt-2 border rounded max-h-32" />
+
+                                                                {{-- Preview File Non-Gambar (PDF/Word/Excel) --}}
                                                             @else
-                                                                {{-- Fallback jika bukan gambar (PDF/Word) --}}
                                                                 <div
-                                                                    class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
+                                                                    class="flex flex-col items-center justify-center h-24 mt-2 bg-gray-200 rounded">
                                                                     @if ($extension == 'pdf')
-                                                                        <x-icon.pdf class="w-8 h-8" />
+                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
                                                                     @elseif(in_array($extension, ['doc', 'docx']))
-                                                                        <x-icon.word class="w-8 h-8" />
+                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
                                                                     @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
-                                                                        <x-icon.excel class="w-8 h-8" />
+                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
+                                                                    @else
+                                                                        <svg class="w-8 h-8 text-gray-400"
+                                                                            fill="none" stroke="currentColor"
+                                                                            viewBox="0 0 24 24">
+                                                                            <path
+                                                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                                            </path>
+                                                                        </svg>
                                                                     @endif
                                                                     <span
-                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center">
+                                                                        class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
                                                                         {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
                                                                     </span>
                                                                 </div>
                                                             @endif
-                                                            <label
-                                                                wire:click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
-                                                                wire:key="btn-remove-temp-{{ $index }}-{{ $fileKey }}"
-                                                                class="absolute cursor-pointer -top-2 -right-2 btn btn-circle btn-xs btn-ghost hover:bg-rose-500 hover:text-white">
-                                                                <svg class="w-3 h-3" fill="none"
-                                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round" stroke-width="2"
-                                                                        d="M6 18L18 6M6 6l12 12"></path>
-                                                                </svg>
-                                                            </label>
-
-                                                            @php
-                                                                $isUploadedFile = method_exists(
-                                                                    $newFile,
-                                                                    'temporaryUrl',
-                                                                );
-                                                                $extension = $isUploadedFile
-                                                                    ? strtolower($newFile->getClientOriginalExtension())
-                                                                    : '';
-                                                            @endphp
                                                         </div>
                                                     @endforeach
                                                 </div>
