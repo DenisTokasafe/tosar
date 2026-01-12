@@ -180,9 +180,9 @@
                         <tr>
                             <th class="w-8 p-2 text-center border border-gray-300">#</th>
                             <th class="w-16 p-2 text-center border border-gray-300">OHS Risk</th>
-                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto</th>
-                            <th class="p-2 border border-gray-300">Tindakan Pencegahan</th>
-                            <th class="w-48 p-2 border border-gray-300">Follow Up (PIC & Due Date)</th>
+                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act & Photo</th>
+                            <th class="p-2 border border-gray-300">Tindakan Pencegahan  & Foto / Prevention Action & Photo</th>
+                            <th class="w-48 p-2 border border-gray-300">Tindak Lanjut/ Follow Up</th>
                             <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
                         </tr>
                     </thead>
