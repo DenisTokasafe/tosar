@@ -420,6 +420,7 @@ class Index extends Component
             'location.required' => 'Lokasi wajib dipilih',
             'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
+            'findings.*.pic_responsible.required' => 'PIC wajib diisi',
             'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
             'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
