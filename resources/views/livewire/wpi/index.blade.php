@@ -434,42 +434,35 @@
                                     <fieldset class="relative fieldset">
                                         <x-form.label label="Due:" required />
                                         <div
-                                            class="{{ $errors->has('findings.{{ $index }}.due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
-                                            <div class="relative " wire:ignore x-data="{
+                                            class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            <div class="relative" wire:ignore x-data="{
                                                 fp: null,
                                                 initFlatpickr() {
                                                     if (this.fp) this.fp.destroy();
                                                     this.fp = flatpickr(this.$refs.tanggalInput, {
                                                         disableMobile: true,
                                                         enableTime: false,
-                                                        time_24hr: false,
-                                                        defaultDate: this.$wire.entangle('findings.{{ $index }}.due_date').defer,
+                                                        // Gunakan entangle dengan format string PHP yang benar
+                                                        defaultDate: @entangle('findings.' . $index . '.due_date'),
                                                         altFormat: 'F j, Y',
                                                         dateFormat: 'Y-m-d',
                                                         clickOpens: true,
-                                                        // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
-                                                        // appendTo: this.$refs.wrapper,
-
-                                                        // TAMBAHKAN ATAU UBAH OPSI POSITION
-                                                        position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
-
+                                                        position: 'auto-below',
                                                         onChange: (selectedDates, dateStr) => {
-                                                            this.$wire.set('findings.{{ $index }}.due_date', dateStr);
+                                                            $wire.set('findings.{{ $index }}.due_date', dateStr);
                                                         }
                                                     });
                                                 }
                                             }"
-                                                x-ref="wrapper" x-init="initFlatpickr();
-                                                Livewire.hook('message.processed', () => {
-                                                    initFlatpickr();
-                                                });">
+                                                x-init="initFlatpickr()">
+
                                                 <input type="text" x-ref="tanggalInput"
-                                                    wire:model.live='findings.{{ $index }}.due_date'
-                                                    placeholder="Pilih Tanggal dan Waktu..." readonly
-                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('findings.{{ $index }}.due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                                    wire:model.live="findings.{{ $index }}.due_date"
+                                                    placeholder="Pilih Tanggal..." readonly
+                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
                                             </div>
                                         </div>
-                                        <x-label-error :messages="$errors->get('findings.{{ $index }}.due_date')" />
+                                        <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                     </fieldset>
                                 </td>
                                 <td class="p-2 text-center border border-gray-300">

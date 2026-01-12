@@ -448,7 +448,7 @@ class Index extends Component
                 'description' => $finding['description'],
                 'prevention_action' => $finding['prevention_action'],
                 'pic_responsible' => $finding['pic_responsible'],
-                'due_date' => $finding['due_date'],
+                'due_date' => $finding->due_date ? date('Y-m-d', strtotime($finding->due_date)) : null,
                 'photos' => $photoPaths,
                 'photos_prevention' => $photoPrevention,
             ]);
