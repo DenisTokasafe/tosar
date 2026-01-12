@@ -255,6 +255,7 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea untuk Tindakan Pencegahan --}}
+
                                     <x-form.textarea placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
                                     <div class="mt-1">
