@@ -141,6 +141,38 @@ class Index extends Component
             $this->showDropdown_pic[$index] = false;
         }
     }
+    public function updatedSearchPetugas($value, $key)
+    {
+        // Ambil index dari key, misal "searchPetugas.0" -> index = 0
+        $index = explode('.', $key)[0];
+
+        if (strlen($value) > 1) {
+            $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
+                ->orderBy('name')
+                ->limit(20)
+                ->get();
+            $this->showDropdownPetugas[$index] = true;
+        } else {
+            $this->showDropdownPetugas[$index] = false;
+        }
+    }
+
+    public function selectActPelapor($id, $name)
+    {
+        // Cari index mana yang dropdown-nya sedang terbuka
+        $index = collect($this->showDropdownPetugas)->search(true);
+        if ($index !== false) {
+            // 1. Simpan data ke array findings sesuai barisnya
+            $this->findings[$index]['pic_responsible'] = $name;
+
+
+            // 2. Update search input agar sinkron di UI
+            $this->searchPetugas[$index] = $name;
+
+            // 3. Tutup dropdown untuk baris tersebut
+            $this->showDropdownPetugas[$index] = false;
+        }
+    }
 
     public function addInspector()
     {
