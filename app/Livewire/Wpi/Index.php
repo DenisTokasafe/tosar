@@ -45,7 +45,7 @@ class Index extends Component
         if ($id) {
             $this->loadData($id);
         } else {
-            $this->report_date = now()->format('Y-m-d');
+
             $this->addFinding();
         }
     }
