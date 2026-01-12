@@ -371,19 +371,49 @@ class Index extends Component
         }
     }
     public function downloadFile($path)
-{
-    // Validasi keberadaan file di disk public
-    if (Storage::disk('public')->exists($path)) {
-        // Mengembalikan response download langsung
-        return Storage::disk('public')->download($path);
+    {
+        // Validasi keberadaan file di disk public
+        if (Storage::disk('public')->exists($path)) {
+            // Mengembalikan response download langsung
+            return Storage::disk('public')->download($path);
+        }
+
+        // Berikan alert jika file tidak ditemukan
+        $this->dispatch('alert', [
+            'text' => 'File tidak ditemukan di server.',
+            'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
+        ]);
     }
 
-    // Berikan alert jika file tidak ditemukan
-    $this->dispatch('alert', [
-        'text' => 'File tidak ditemukan di server.',
-        'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
-    ]);
-}
+    // Menghapus foto pencegahan sementara
+    public function removeTempPhotoPrevention($findingIndex, $fileKey)
+    {
+        if (isset($this->findings[$findingIndex]['new_photos_prevention'][$fileKey])) {
+            unset($this->findings[$findingIndex]['new_photos_prevention'][$fileKey]);
+            $this->findings[$findingIndex]['new_photos_prevention'] = array_values($this->findings[$findingIndex]['new_photos_prevention']);
+        }
+    }
+
+    // Menghapus foto pencegahan permanen dari DB & Storage
+    public function removeSavedPhotoPrevention($findingIndex, $photoKey)
+    {
+        if (isset($this->findings[$findingIndex]['prevention_photos'][$photoKey])) {
+            $pathToDelete = $this->findings[$findingIndex]['prevention_photos'][$photoKey];
+
+            // Hapus file fisik
+           FileHelper::deleteFile($pathToDelete);
+
+            // Update array state
+            unset($this->findings[$findingIndex]['prevention_photos'][$photoKey]);
+            $this->findings[$findingIndex]['prevention_photos'] = array_values($this->findings[$findingIndex]['prevention_photos']);
+
+            // Update database jika sudah ada ID
+            if (isset($this->findings[$findingIndex]['id'])) {
+                WpiFinding::where('id', $this->findings[$findingIndex]['id'])
+                    ->update(['prevention_photos' => $this->findings[$findingIndex]['prevention_photos']]);
+            }
+        }
+    }
 
     public function render()
     {

@@ -314,12 +314,12 @@
                                     </div>
                                 </td>
                                 <td class="p-2 border border-gray-300">
-                                    {{-- Input Textarea untuk Tindakan Pencegahan --}}
-
+                                    {{-- Input Textarea --}}
                                     <x-form.textarea placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
+
                                     <div class="mt-1">
-                                        {{-- Komponen Upload Khusus Foto Pencegahan --}}
+                                        {{-- Komponen Upload --}}
                                         <x-form.upload label="Lampirkan foto pencegahan"
                                             model="findings.{{ $index }}.new_photos_prevention"
                                             :file="$findings[$index]['new_photos_prevention'] ?? null" />
@@ -332,6 +332,11 @@
                                                     @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
                                                         <div class="relative p-1 border rounded bg-gray-50"
                                                             wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
+
+                                                            {{-- Tombol Hapus Temp Photo --}}
+                                                            <x-button.remove
+                                                                click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
+                                                                key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
 
                                                             @php
                                                                 $isUploadedFile = method_exists(
@@ -347,18 +352,17 @@
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
                                                                     class="w-40 h-auto mt-2 border rounded" />
                                                             @else
-                                                                {{-- Fallback Icons --}}
                                                                 <div
-                                                                    class="flex flex-col items-center justify-center h-20 bg-gray-200 rounded">
+                                                                    class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
                                                                     @if ($extension == 'pdf')
-                                                                        <x-icon.pdf class="w-8 h-8" />
+                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
                                                                     @elseif(in_array($extension, ['doc', 'docx']))
-                                                                        <x-icon.word class="w-8 h-8" />
+                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
                                                                     @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
-                                                                        <x-icon.excel class="w-8 h-8" />
+                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
                                                                     @endif
                                                                     <span
-                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center">
+                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center text-gray-600">
                                                                         {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
                                                                     </span>
                                                                 </div>
@@ -368,6 +372,58 @@
                                                 </div>
                                             @endif
                                         </div>
+
+                                        {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
+                                        @if (!empty($finding['prevention_photos']))
+                                            <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
+                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
+                                                    Pencegahan Tersimpan:</p>
+                                                @foreach ($finding['prevention_photos'] as $photoKey => $photoPath)
+                                                    @php
+                                                        $extension = strtolower(
+                                                            pathinfo($photoPath, PATHINFO_EXTENSION),
+                                                        );
+                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
+                                                    @endphp
+                                                    <div class="relative group"
+                                                        wire:key="saved-{{ $index }}-{{ $photoKey }}">
+
+                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                        @if ($isImage)
+                                                            <a href="{{ Storage::url($photoPath) }}" target="_blank">
+                                                                <img src="{{ Storage::url($photoPath) }}"
+                                                                    class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                            </a>
+
+                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
+                                                        @else
+                                                            <button type="button"
+                                                                wire:click="downloadFile('{{ $photoPath }}')"
+                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                title="Klik untuk unduh">
+
+                                                                @if ($extension == 'pdf')
+                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                @else
+                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                @endif
+                                                                <span
+                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                            </button>
+                                                        @endif
+
+                                                        {{-- Tombol Hapus Permanent --}}
+                                                        <x-button.remove
+                                                            click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
+                                                            key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
+                                                            confirm="Hapus file pencegahan ini secara permanen?"
+                                                            class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
