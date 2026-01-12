@@ -21,33 +21,34 @@ class WpiList extends Component
 
     public function deleteReport($id)
     {
-        // Ambil laporan beserta relasi findings-nya
-        $report = WpiReport::with('findings')->find($id);
+        $report = \App\Models\WpiReport::with('findings')->find($id);
 
         if ($report) {
-            // 1. Hapus file fisik di storage agar tidak memenuhi disk
+            // Loop setiap temuan untuk menghapus foto fisik
             foreach ($report->findings as $finding) {
-                // Hapus foto temuan
+                // Hapus foto temuan utama
                 if ($finding->photos) {
-                    foreach ($finding->photos as $path) FileHelper::deleteFile($path);
+                    foreach ($finding->photos as $path) {
+                        \App\Helpers\FileHelper::deleteFile($path);
+                    }
                 }
-                // Hapus foto pencegahan
+                // Hapus foto tindakan pencegahan
                 if ($finding->photos_prevention) {
-                    foreach ($finding->photos_prevention as $path) FileHelper::deleteFile($path);
+                    foreach ($finding->photos_prevention as $path) {
+                        \App\Helpers\FileHelper::deleteFile($path);
+                    }
                 }
             }
 
-            // 2. Hapus data dari database
+            // Hapus data laporan (cascade delete ke findings jika diatur di migrasi)
             $report->delete();
 
-            // 3. Kirim notifikasi sukses
             $this->dispatch('alert', [
-                'text' => 'Laporan dan lampiran berhasil dihapus secara permanen.',
+                'text' => 'Laporan berhasil dihapus secara permanen.',
                 'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
             ]);
         }
     }
-
     public function render()
     {
         // Query dengan pencarian pada departemen atau lokasi
