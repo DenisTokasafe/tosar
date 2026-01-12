@@ -106,7 +106,7 @@
                                 {{-- Department --}}
                                 <div class="relative mb-1 ">
                                     <x-form.searchable-dropdown-without-label modelsearch="search"
-                                        modelid="department_id" placeholder="Cari Departemen..." :options="$departments"
+                                        modelid="dept_cont" placeholder="Cari Departemen..." :options="$departments"
                                         :showdropdown="$showDropdown" clickaction="selectDepartment" namedb="department_name" />
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                                 {{-- Contractor --}}
                                 <div class="relative mb-1 ">
                                     <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
-                                        placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                                        placeholder="Cari Kontraktor..." modelid="dept_cont" :options="$contractors"
                                         :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
                                 </div>
                             </div>
