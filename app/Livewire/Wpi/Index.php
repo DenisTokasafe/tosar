@@ -241,7 +241,7 @@ class Index extends Component
             'report_time' => 'required',
             'location' => 'required',
             'findings.*.description' => 'required',
-            'findings.*.prevention_action' => 'nullable|string',
+            'findings.*.prevention_action' => 'required|string',
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
