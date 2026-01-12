@@ -36,7 +36,7 @@
                             {{ date('d-m-Y', strtotime($report->report_date)) }}
                             <span class="block text-[10px] text-gray-400">{{ $report->report_time }}</span>
                         </td>
-                        <td>{{ $report->locationRelation->name ?? 'N/A' }}</td>
+                        <td>{{ $report->location }}</td>
                         <td class="font-bold uppercase text-info">{{ $report->department }}</td>
                         <td class="text-center">
                             <span class="font-normal badge badge-ghost badge-sm">{{ count($report->inspectors) }} Orang</span>
