@@ -163,7 +163,7 @@ class Index extends Component
         $index = collect($this->showDropdownPetugas)->search(true);
         if ($index !== false) {
             // 1. Simpan data ke array findings sesuai barisnya
-            $this->findings[$index]['name'] = $name;
+            $this->inspectors[$index]['name'] = $name;
 
 
             // 2. Update search input agar sinkron di UI
