@@ -7,7 +7,7 @@
 ])
 
 <div class="w-full">
-    <label class="w-full floating-label">
+    <label class="w-full mb-1 floating-label">
         <textarea
             {{ $model ? "wire:model.live=$model" : '' }}
             placeholder="{{ $placeholder ?: $label }}"
