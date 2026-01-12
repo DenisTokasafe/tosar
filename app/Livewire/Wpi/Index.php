@@ -539,7 +539,7 @@ class Index extends Component
     }
     public function exportPDF($id)
     {
-        $report = \App\Models\WpiReport::with(['findings'])->findOrFail($id);
+        $report = WpiReport::with(['findings'])->findOrFail($id);
 
         $pdf = Pdf::loadView('pdf.wpi-report', [
             'report' => $report,
