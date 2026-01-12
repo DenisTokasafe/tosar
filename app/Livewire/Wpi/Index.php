@@ -371,20 +371,20 @@ class Index extends Component
     // Menghapus foto pencegahan permanen dari DB & Storage
     public function removeSavedPhotoPrevention($findingIndex, $photoKey)
     {
-        if (isset($this->findings[$findingIndex]['prevention_photos'][$photoKey])) {
-            $pathToDelete = $this->findings[$findingIndex]['prevention_photos'][$photoKey];
+        if (isset($this->findings[$findingIndex]['photos_prevention'][$photoKey])) {
+            $pathToDelete = $this->findings[$findingIndex]['photos_prevention'][$photoKey];
 
             // Hapus file fisik
             FileHelper::deleteFile($pathToDelete);
 
             // Update array state
-            unset($this->findings[$findingIndex]['prevention_photos'][$photoKey]);
-            $this->findings[$findingIndex]['prevention_photos'] = array_values($this->findings[$findingIndex]['prevention_photos']);
+            unset($this->findings[$findingIndex]['photos_prevention'][$photoKey]);
+            $this->findings[$findingIndex]['photos_prevention'] = array_values($this->findings[$findingIndex]['photos_prevention']);
 
             // Update database jika sudah ada ID
             if (isset($this->findings[$findingIndex]['id'])) {
                 WpiFinding::where('id', $this->findings[$findingIndex]['id'])
-                    ->update(['prevention_photos' => $this->findings[$findingIndex]['prevention_photos']]);
+                    ->update(['photos_prevention' => $this->findings[$findingIndex]['photos_prevention']]);
             }
         }
     }
