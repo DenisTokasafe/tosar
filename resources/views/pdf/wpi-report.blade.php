@@ -1,92 +1,130 @@
+<!DOCTYPE html>
 <html>
 <head>
     <style>
-        body { font-family: sans-serif; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        th, td { border: 1px solid black; padding: 4px; text-align: left; }
-        .header-table td { border: none; }
-        .logo { width: 80px; }
-        .bg-gray { background-color: #f2f2f2; }
+        @page {
+            margin: 1cm;
+        }
+        body {
+            /* Mengatur font ke Times New Roman */
+            font-family: "Times New Roman", Times, serif;
+            font-size: 9pt;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+        .header-table, .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            table-layout: fixed;
+        }
+        .header-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: middle;
+        }
+        .main-table th, .main-table td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+        .bg-gray {
+            background-color: #e2e8f0;
+            font-weight: bold;
+        }
         .center { text-align: center; }
+        .footer-text {
+            font-size: 8pt;
+            font-style: italic;
+            color: #b91c1c; /* Merah sesuai template Archi */
+            text-align: center;
+            margin-top: 10px;
+        }
+        img.photo {
+            width: 140px;
+            height: auto;
+            margin: 5px;
+            border: 0.5px solid #000;
+        }
     </style>
 </head>
 <body>
-    <table>
+    <table class="header-table">
         <tr>
-            <td width="20%"><img src="logo-msm.png" class="logo"></td>
-            <td width="60%" class="center">
-                <h3>TOKA TINDUNG PROJECT</h3>
-                <h2>Formulir Laporan WPI KPLH</h2>
+            <td width="15%" class="center"><img src="{{ public_path('images/logo-msm.png') }}" width="60"></td>
+            <td width="70%" class="center">
+                <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
+                <strong style="font-size: 12pt;">Formulir Laporan WPI KPLH</strong><br>
+                <span>TT-MGT-FRS-024A</span>
             </td>
-            <td width="20%" class="center">TT-MGT-FRS-024A</td>
+            <td width="15%" class="center"><img src="{{ public_path('images/logo-archi.png') }}" width="60"></td>
         </tr>
     </table>
 
-    <table>
+    <table class="main-table">
         <tr>
-            <td class="bg-gray">Tanggal / Date</td>
-            <td>{{ date('d F Y', strtotime($report->report_date)) }}</td>
-            <td class="bg-gray" rowspan="4">Nama Petugas Inspeksi</td>
-            <td rowspan="4">
-                @foreach($report->inspectors as $ins)
-                    {{ $loop->iteration }}. {{ $ins['name'] }} ({{ $ins['id_number'] }})<br>
-                @endforeach
-            </td>
+            <td width="15%" class="bg-gray">Tanggal /Date</td>
+            <td width="35%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
+            <td width="20%" class="bg-gray center">Nama Petugas Inspeksi</td>
+            <td width="10%" class="bg-gray center">ID</td>
+            <td width="20%" class="bg-gray center">Dept/Cont</td>
         </tr>
+        @foreach($report->inspectors as $key => $ins)
         <tr>
-            <td class="bg-gray">Jam / Time</td>
-            <td>{{ $report->report_time }}</td>
+            <td class="bg-gray">Jam /Time</td>
+            @if($loop->first) <td>{{ $report->report_time }}</td> @else <td style="border:none"></td> @endif
+            <td>{{ $key+1 }}. {{ $ins['name'] }}</td>
+            <td class="center">{{ $ins['id_number'] }}</td>
+            <td class="center">{{ $ins['dept_con'] }}</td>
         </tr>
-        <tr>
-            <td class="bg-gray">Lokasi / Location</td>
-            <td>{{ $report->locationRelation->name ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="bg-gray">Dept / Contractor</td>
-            <td>{{ $report->department }}</td>
-        </tr>
+        @endforeach
     </table>
 
-    <table>
-        <thead class="bg-gray">
-            <tr>
-                <th>#</th>
-                <th>OHS Risk</th>
-                <th>Uraian Temuan & Foto</th>
-                <th>Tindakan Pencegahan & Foto</th>
-                <th>Follow Up (PIC & Due)</th>
+    <table class="main-table">
+        <thead>
+            <tr class="bg-gray center">
+                <th width="3%">No</th>
+                <th width="5%">OHS Risk</th>
+                <th width="30%">Uraian Tindakan Tidak Aman / Kondisi Tidak Aman</th>
+                <th width="30%">Jenis Tindakan Pencegahan</th>
+                <th width="32%">Tindak Lanjut / Follow Up</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($report->findings as $find)
+            @foreach($report->findings as $index => $find)
             <tr>
-                <td class="center">{{ $loop->iteration }}</td>
+                <td class="center">{{ $index + 1 }}</td>
                 <td class="center">{{ $find->ohs_risk }}</td>
                 <td>
-                    {{ $find->description }}
-                    <br>
+                    {{ $find->description }}<br><br>
                     @if(!empty($find->photos))
                         @foreach($find->photos as $p)
-                            <img src="{{ public_path('storage/'.$p) }}" width="100">
+                            <img src="{{ public_path('storage/'.$p) }}" class="photo">
                         @endforeach
                     @endif
                 </td>
                 <td>
-                    {{ $find->prevention_action }}
-                    <br>
-                    @if(!empty($find->prevention_photos))
-                        @foreach($find->prevention_photos as $pp)
-                            <img src="{{ public_path('storage/'.$pp) }}" width="100">
+                    {{ $find->prevention_action }}<br><br>
+                    @if(!empty($find->photos_prevention))
+                        @foreach($find->photos_prevention as $pp)
+                            <img src="{{ public_path('storage/'.$pp) }}" class="photo">
                         @endforeach
                     @endif
                 </td>
                 <td>
-                    PIC: {{ $find->pic_responsible }}<br>
-                    Due: {{ $find->due_date ? date('d/m/Y', strtotime($find->due_date)) : '-' }}
+                    <strong>PIC:</strong> {{ $find->pic_responsible }}<br>
+                    <strong>Due:</strong> {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
+                    <strong>Selesai:</strong> {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+
+    <div class="footer-text">
+        Dokumen terkendali dan valid hanya ada di sharepoint Archi Indonesia
+    </div>
 </body>
 </html>
