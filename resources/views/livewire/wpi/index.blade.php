@@ -105,9 +105,9 @@
                             <div class="hidden peer-checked/department:block">
                                 {{-- Department --}}
                                 <div class="relative mb-1 ">
-                                    <x-form.searchable-dropdown-without-label modelsearch="search"
-                                        modelid="dept_cont" placeholder="Cari Departemen..." :options="$departments"
-                                        :showdropdown="$showDropdown" clickaction="selectDepartment" namedb="department_name" />
+                                    <x-form.searchable-dropdown-without-label modelsearch="search" modelid="dept_cont"
+                                        placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
+                                        clickaction="selectDepartment" namedb="department_name" />
                                 </div>
                             </div>
                             <div class="hidden peer-checked/company:block">
@@ -199,9 +199,8 @@
                                     </select>
                                 </td>
                                 <td class="p-2 border border-gray-300">
-                                    <textarea wire:model.live="findings.{{ $index }}.description" placeholder="Deskripsikan temuan..."
-                                        class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
-
+                                    <x-form.textarea placeholder="Deskripsikan temuan..."
+                                        model="findings.{{ $index }}.description" rows="3" />
                                     <div class="mt-1">
                                         {{-- Menggunakan komponen x-form.upload berdasarkan gambar 2 --}}
                                         <x-form.upload label="Lampirkan foto temuan"
