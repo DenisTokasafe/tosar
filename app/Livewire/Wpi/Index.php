@@ -351,28 +351,24 @@ class Index extends Component
 
     // Menghapus foto yang sudah tersimpan di database (permanent)
     public function removeSavedPhoto($findingIndex, $photoKey)
-    {
-        $findingData = $this->findings[$findingIndex];
+{
+    if (isset($this->findings[$findingIndex]['photos'][$photoKey])) {
+        $pathToDelete = $this->findings[$findingIndex]['photos'][$photoKey];
 
-        if (isset($findingData['photos'][$photoKey])) {
-            $pathToDelete = $findingData['photos'][$photoKey];
+        // 1. Hapus file fisik via Helper
+        FileHelper::deleteFile($pathToDelete);
 
-            // 1. Hapus file fisik dari storage menggunakan Helper
-            \App\Helpers\FileHelper::deleteFile($pathToDelete);
+        // 2. Update array state
+        unset($this->findings[$findingIndex]['photos'][$photoKey]);
+        $this->findings[$findingIndex]['photos'] = array_values($this->findings[$findingIndex]['photos']);
 
-            // 2. Hapus dari array state di komponen
-            unset($this->findings[$findingIndex]['photos'][$photoKey]);
-            $this->findings[$findingIndex]['photos'] = array_values($this->findings[$findingIndex]['photos']);
-
-            // 3. Update database secara langsung jika dalam mode EDIT
-            if (isset($findingData['id'])) {
-                $finding = \App\Models\WpiFinding::find($findingData['id']);
-                if ($finding) {
-                    $finding->update(['photos' => $this->findings[$findingIndex]['photos']]);
-                }
-            }
+        // 3. Update database jika record sudah ada
+        if (isset($this->findings[$findingIndex]['id'])) {
+            WpiFinding::where('id', $this->findings[$findingIndex]['id'])
+                ->update(['photos' => $this->findings[$findingIndex]['photos']]);
         }
     }
+}
 
     public function render()
     {

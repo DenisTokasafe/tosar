@@ -59,7 +59,7 @@ Route::get('/.well-known/assetlinks.json', function () {
 
 Route::get('dashboard', Hazard::class)->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/', 'dashboard');
-Route::redirect('/eventReport/hazardReportGuest/3','/hazard/form',301);
+Route::redirect('/eventReport/hazardReportGuest/3', '/hazard/form', 301);
 Route::get('hazard/form', HazardForm::class)->name('hazard-form');
 Route::get('api/hazards/data', [HazardController::class, 'getExcelData'])->name('hazards.excel.data');
 Route::get('api/manhours', [ManhoursController::class, 'getExcelData'])->name('manhours.excel.data');
@@ -103,5 +103,21 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/userManager/people', User::class)->name('people');
     Route::get('administration/workflows/hazard', WorkflowEventHazard::class)->name('hazard.workflows');
 });
+// route download storage files
+Route::get('/download-attachment', function (Request $request) {
+    $path = $request->query('path');
+
+    // Pastikan path tidak kosong dan file ada di disk public
+    if (!$path || !Storage::disk('public')->exists($path)) {
+        abort(404, 'File tidak ditemukan.');
+    }
+
+    // Opsional: Batasi hanya bisa unduh dari folder tertentu untuk keamanan
+    if (!str_starts_with($path, 'wpi-photos/') && !str_starts_with($path, 'prevention-photos/')) {
+        abort(403, 'Akses ditolak.');
+    }
+
+    return Storage::disk('public')->download($path);
+})->name('file.download');
 
 require __DIR__ . '/auth.php';
