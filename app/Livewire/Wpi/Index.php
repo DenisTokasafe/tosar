@@ -163,7 +163,7 @@ class Index extends Component
         $index = collect($this->showDropdownPetugas)->search(true);
         if ($index !== false) {
             // 1. Simpan data ke array findings sesuai barisnya
-            $this->findings[$index]['pic_responsible'] = $name;
+            $this->findings[$index]['name'] = $name;
 
 
             // 2. Update search input agar sinkron di UI
@@ -443,7 +443,6 @@ class Index extends Component
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
-            'inspectors.*.id_number' => 'required',
             'dept_cont' => 'required',
         ], [
             'report_date.required' => 'Tanggal laporan wajib diisi',
