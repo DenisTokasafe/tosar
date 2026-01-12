@@ -246,6 +246,26 @@
                                                                     </span>
                                                                 </div>
                                                             @endif
+                                                            <button type="button"
+                                                                wire:click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
+                                                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow-md hover:bg-red-700 z-10">
+                                                                <svg class="w-3 h-3" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M6 18L18 6M6 6l12 12"></path>
+                                                                </svg>
+                                                            </button>
+
+                                                            @php
+                                                                $isUploadedFile = method_exists(
+                                                                    $newFile,
+                                                                    'temporaryUrl',
+                                                                );
+                                                                $extension = $isUploadedFile
+                                                                    ? strtolower($newFile->getClientOriginalExtension())
+                                                                    : '';
+                                                            @endphp
                                                         </div>
                                                     @endforeach
                                                 </div>

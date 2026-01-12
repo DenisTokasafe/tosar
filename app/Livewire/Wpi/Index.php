@@ -142,7 +142,7 @@ class Index extends Component
         $this->search = $name;
         $this->dept_cont = $name;
         $this->showDropdown = false;
-         $this->validateOnly('dept_cont', [
+        $this->validateOnly('dept_cont', [
             'dept_cont' => 'required',
         ]);
     }
@@ -234,6 +234,38 @@ class Index extends Component
             $this->addFinding();
         }
     }
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName, [
+            'report_date' => 'required|date',
+            'report_time' => 'required',
+            'location'    => 'required',
+            'dept_cont'   => 'required',
+
+            // Validation untuk Array Inspectors
+            'inspectors'             => 'required|array|min:1',
+            'inspectors.*.name'      => 'required|string|min:3',
+            'inspectors.*.id_number' => 'required',
+
+            // Validation untuk Array Findings
+            'findings.*.description'       => 'required',
+            'findings.*.prevention_action' => 'required|string',
+        ], [
+            // Custom Messages
+            'report_date.required' => 'Tanggal laporan wajib diisi',
+            'report_time.required' => 'Waktu laporan wajib diisi',
+            'report_date.date'     => 'Format tanggal tidak valid',
+            'location.required'    => 'Lokasi wajib dipilih',
+            'dept_cont.required'    => 'Departemen atau Kontraktor wajib diisi',
+
+            'inspectors.required'          => 'Minimal harus ada 1 petugas inspeksi',
+            'inspectors.*.name.required'   => 'Nama petugas inspeksi wajib diisi',
+            'inspectors.*.name.min'        => 'Nama petugas minimal 3 karakter',
+
+            'findings.*.description.required'       => 'Deskripsi temuan wajib diisi',
+            'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
+        ]);
+    }
     public function save()
     {
         $this->validate([
@@ -306,6 +338,40 @@ class Index extends Component
         ]);
 
         return redirect()->to('/wpi-list');
+    }
+    // Menghapus foto yang baru diunggah (masih di memori/temporary)
+    public function removeTempPhoto($findingIndex, $fileKey)
+    {
+        if (isset($this->findings[$findingIndex]['new_photos'][$fileKey])) {
+            unset($this->findings[$findingIndex]['new_photos'][$fileKey]);
+            // Re-index array agar tidak ada key yang melompat
+            $this->findings[$findingIndex]['new_photos'] = array_values($this->findings[$findingIndex]['new_photos']);
+        }
+    }
+
+    // Menghapus foto yang sudah tersimpan di database (permanent)
+    public function removeSavedPhoto($findingIndex, $photoKey)
+    {
+        $findingData = $this->findings[$findingIndex];
+
+        if (isset($findingData['photos'][$photoKey])) {
+            $pathToDelete = $findingData['photos'][$photoKey];
+
+            // 1. Hapus file fisik dari storage menggunakan Helper
+            \App\Helpers\FileHelper::deleteFile($pathToDelete);
+
+            // 2. Hapus dari array state di komponen
+            unset($this->findings[$findingIndex]['photos'][$photoKey]);
+            $this->findings[$findingIndex]['photos'] = array_values($this->findings[$findingIndex]['photos']);
+
+            // 3. Update database secara langsung jika dalam mode EDIT
+            if (isset($findingData['id'])) {
+                $finding = \App\Models\WpiFinding::find($findingData['id']);
+                if ($finding) {
+                    $finding->update(['photos' => $this->findings[$findingIndex]['photos']]);
+                }
+            }
+        }
     }
 
     public function render()
