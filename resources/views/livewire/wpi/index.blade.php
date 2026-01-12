@@ -375,11 +375,11 @@
                                         </div>
 
                                         {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
-                                        @if (!empty($finding['prevention_photos']))
+                                        @if (!empty($finding['photos_prevention']))
                                             <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
                                                 <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
                                                     Pencegahan Tersimpan:</p>
-                                                @foreach ($finding['prevention_photos'] as $photoKey => $photoPath)
+                                                @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
                                                     @php
                                                         $extension = strtolower(
                                                             pathinfo($photoPath, PATHINFO_EXTENSION),
