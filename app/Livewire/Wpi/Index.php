@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
@@ -536,6 +537,18 @@ class Index extends Component
 
         return redirect()->to('/wpi-list');
     }
+    public function exportPDF($id)
+{
+    $report = WpiReport::with(['findings', 'locationRelation'])->findOrFail($id);
+
+    // Kirim data ke view blade khusus PDF
+    $pdf = Pdf::loadView('pdf.wpi-report', compact('report'))
+              ->setPaper('a4', 'portrait');
+
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->stream();
+    }, "WPI_Report_{$report->id}.pdf");
+}
 
 
     public function render()

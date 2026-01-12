@@ -57,6 +57,12 @@
                                             size="xs" icon="trash" variant="danger">
                                         </flux:button>
                                     </flux:tooltip>
+                                    {{-- Tombol Download PDF --}}
+                                    <flux:tooltip content="Download PDF" position="top">
+                                        <flux:button wire:click="exportPDF({{ $report->id }})" size="xs"
+                                            icon="document-arrow-down" variant="ghost">
+                                        </flux:button>
+                                    </flux:tooltip>
                                 </div>
                             </td>
                         </tr>
