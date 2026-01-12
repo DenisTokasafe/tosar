@@ -211,6 +211,7 @@ class Index extends Component
     {
         $this->validate([
             'report_date' => 'required|date',
+            'report_time' => 'required',
             'location' => 'required',
             'findings.*.description' => 'required',
             // Inspectors Validation (Array)
@@ -218,6 +219,11 @@ class Index extends Component
             'inspectors.*.name'   => 'required|string|min:3',
             'inspectors.*.id_number' => 'required',
         ],[
+            'report_date.required' => 'Tanggal laporan wajib diisi',
+            'report_time.required' => 'Waktu laporan wajib diisi',
+            'report_date.date' => 'Format tanggal tidak valid',
+            'location.required' => 'Lokasi wajib dipilih',
+            'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
             'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
         ]);
