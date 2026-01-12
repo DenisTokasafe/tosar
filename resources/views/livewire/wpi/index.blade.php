@@ -199,7 +199,7 @@
                                     </select>
                                 </td>
                                 <td class="p-2 border border-gray-300">
-                                    <textarea wire:model="findings.{{ $index }}.description" placeholder="Deskripsikan temuan..."
+                                    <textarea wire:model.live="findings.{{ $index }}.description" placeholder="Deskripsikan temuan..."
                                         class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
 
                                     <div class="mt-1">
@@ -256,7 +256,7 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea untuk Tindakan Pencegahan --}}
-                                    <textarea wire:model="findings.{{ $index }}.prevention_action" placeholder="Tindakan korektif..."
+                                    <textarea wire:model.live="findings.{{ $index }}.prevention_action" placeholder="Tindakan korektif..."
                                         class="w-full mb-2 text-xs border-gray-300 rounded" rows="3"></textarea>
 
                                     <div class="mt-1">
