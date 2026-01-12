@@ -170,7 +170,6 @@ class Index extends Component
             $this->inspectors[$index]['name'] = $name;
             $this->inspectors[$index]['id_number'] = $id;
 
-        dd($this->inspectors);
             // 2. Update search input agar sinkron di UI
             $this->searchPetugas[$index] = $name;
 
