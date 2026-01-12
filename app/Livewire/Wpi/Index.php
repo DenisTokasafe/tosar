@@ -217,6 +217,9 @@ class Index extends Component
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
             'inspectors.*.id_number' => 'required',
+        ],[
+            'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
+            'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
         ]);
 
         $report = WpiReport::updateOrCreate(
