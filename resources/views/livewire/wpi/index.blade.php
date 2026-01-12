@@ -19,7 +19,7 @@
                                             enableTime: false,
                                             time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
-                                            altFormat: 'F j, Y',
+
                                             dateFormat: 'Y-m-d',
                                             clickOpens: true,
                                             // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
@@ -444,7 +444,7 @@
                                                         enableTime: false,
                                                         // Gunakan entangle dengan format string PHP yang benar
                                                         defaultDate: @entangle('findings.' . $index . '.due_date'),
-                                                        altFormat: 'F j, Y',
+
                                                         dateFormat: 'Y-m-d',
                                                         clickOpens: true,
                                                         position: 'auto-below',

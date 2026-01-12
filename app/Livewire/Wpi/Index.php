@@ -89,7 +89,7 @@ class Index extends Component
                 'description' => $finding->description,
                 'prevention_action' => $finding->prevention_action,
                 'pic_responsible' => $finding->pic_responsible,
-                'due_date' => $finding->due_date,
+                'due_date' => date('d-m-Y', strtotime($finding->due_date)),
                 'photos' => $finding->photos ?? [],
                 'photos_prevention' => $finding->photos_prevention ?? [],
                 'new_photos' => [], // Selalu kosongkan saat load
