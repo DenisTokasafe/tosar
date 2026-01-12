@@ -497,7 +497,7 @@
                         class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
                     <button type="submit"
                         class="flex items-center justify-center flex-1 px-8 py-2 text-sm font-bold text-white transition bg-green-600 rounded-md shadow-lg md:flex-none hover:bg-green-700">
-                        <span wire:loading.remove wire:target="save italic">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
+                        <span wire:loading.remove wire:target="save">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
                         <span class="hidden" wire:loading.remove.class='hidden' wire:target="save">Memproses...</span>
                     </button>
                 </div>
