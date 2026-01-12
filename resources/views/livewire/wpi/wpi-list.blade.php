@@ -21,9 +21,9 @@
             <table class="table w-full border border-collapse border-gray-200 table-xs">
                 <thead class="bg-gray-800 text-white italic uppercase text-[10px]">
                     <tr>
-                        <th class="p-3 border border-gray-700">Tanggal</th>
-                        <th class="border border-gray-700">Lokasi</th>
-                        <th class="border border-gray-700">Departemen / Kontraktor</th>
+                        <th class="p-3 text-center border border-gray-700">Tanggal</th>
+                        <th class="text-center border border-gray-700">Lokasi</th>
+                        <th class="text-center border border-gray-700">Departemen / Kontraktor</th>
                         <th class="text-center border border-gray-700">Petugas</th>
                         <th class="text-center border border-gray-700">Aksi</th>
                     </tr>
