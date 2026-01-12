@@ -428,9 +428,8 @@
                                     </div>
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
-                                    {{-- Input Selectable PIC Petugas Inspeksi --}}
-                                    <x-form.searchable-select-advanced label="Person in charge (PIC)"
-                                    placeholder="Cari nama..." modelsearch=" {{ $reportId ? 'findings.{{ $index }}.pic_responsible' : 'search_pic.{{ $index }}' }}"
+                                    <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
+                                    placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
                                     modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic" :showdropdown="$showDropdown_pic[$index] ?? false"
                                     :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}} clickaction="selectPicPelapor" />
                                     <fieldset class="relative fieldset">
