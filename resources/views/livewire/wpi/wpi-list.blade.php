@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="List Laporan WPI KPLH" subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout heading="Daftar Laporan WPI" subheading="Work Permit Inspection - KPLH Site Tokatindung">
         <div class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
             <div>
                 <h1 class="text-xl font-bold tracking-wider text-gray-800 uppercase">Daftar Laporan WPI</h1>
