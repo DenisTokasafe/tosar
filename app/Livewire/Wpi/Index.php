@@ -241,6 +241,7 @@ class Index extends Component
             'report_time' => 'required',
             'location' => 'required',
             'findings.*.description' => 'required',
+            'findings.*.prevention_action' => 'nullable|string',
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
@@ -252,6 +253,7 @@ class Index extends Component
             'report_date.date' => 'Format tanggal tidak valid',
             'location.required' => 'Lokasi wajib dipilih',
             'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
+            'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
             'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
             'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
