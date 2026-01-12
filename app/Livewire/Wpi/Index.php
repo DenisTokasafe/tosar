@@ -89,6 +89,7 @@ class Index extends Component
         // 4. Isi Properti Findings (Array)
         $this->findings = []; // Reset findings
         foreach ($report->findings as $finding) {
+            $this->search_pic[] = $finding->pic_responsible;
             $this->findings[] = [
                 'id' => $finding->id,
                 'ohs_risk' => $finding->ohs_risk,
