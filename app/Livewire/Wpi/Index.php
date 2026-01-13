@@ -60,60 +60,40 @@ class Index extends Component
 
     public function loadData($id)
     {
-        // 1. Ambil data report beserta relasi findings-nya
         $report = WpiReport::with('findings')->find($id);
+        if (!$report) return redirect()->to('/wpi-list');
 
-        if (!$report) {
-            return redirect()->to('/wpi-list')->with('error', 'Data tidak ditemukan');
-        }
+        // ... code header lainnya ...
 
-        // 2. Isi Properti Header
-        $this->reportId = $report->id;
-        $this->report_date = $report->report_date;
-        $this->report_time = $report->report_time;
-        $this->location = $report->location;
-        $this->dept_cont = $report->department;
-
-        // Sinkronisasi data pencarian agar input teks di UI terisi
-        $this->searchLocation = $report->location;
-        $this->search = $report->department;
-        // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
-
-        // 3. Isi Properti Inspectors (Array)
-        // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
-        $this->inspectors = $report->inspectors ?? [['name' => '',]];
-
-        // Isi searchPetugas agar input pencarian per baris sinkron
-        foreach ($this->inspectors as $index => $inspector) {
-            $this->searchPetugas[$index] = $inspector['name'];
-            $inspector = User::where('name', $inspector['name'])->first();
-            if ($inspector) {
-                $this->inspectors[$index]['id_number'] = $inspector->employee_id;
-                $this->inspectors[$index]['dept_con'] = $inspector->department_name;
-            }
-        }
-
-        // 4. Isi Properti Findings (Array)
-        $this->findings = []; // Reset findings
+        $this->findings = [];
         foreach ($report->findings as $finding) {
-            $this->search_pic[] = $finding->pic_responsible;
+            // Logika konversi PIC ke array
+            $existingPics = $finding->pic_responsible;
+
+            // Jika di DB disimpan sebagai string (misal: "Budi, Andi"), pecah jadi array
+            if (is_string($existingPics)) {
+                $existingPics = array_map('trim', explode(',', $existingPics));
+            }
+            // Jika null, jadikan array kosong
+            elseif (is_null($existingPics)) {
+                $existingPics = [];
+            }
+
             $this->findings[] = [
                 'id' => $finding->id,
                 'ohs_risk' => $finding->ohs_risk,
                 'description' => $finding->description,
                 'prevention_action' => $finding->prevention_action,
-                'pic_responsible' => $finding->pic_responsible,
-                'due_date' => ($finding->due_date)
-                    ? date('Y-m-d', strtotime($finding->due_date))
-                    : null,
 
-                'completion_date' => ($finding->completion_date)
-                    ? date('Y-m-d', strtotime($finding->completion_date))
-                    : null,
+                // Simpan sebagai array agar UI Badge muncul
+                'pic_responsible' => $existingPics,
+
+                'due_date' => $finding->due_date ? date('Y-m-d', strtotime($finding->due_date)) : null,
+                'completion_date' => $finding->completion_date ? date('Y-m-d', strtotime($finding->completion_date)) : null,
                 'photos' => $finding->photos ?? [],
                 'photos_prevention' => $finding->photos_prevention ?? [],
-                'new_photos' => [], // Selalu kosongkan saat load
-                'new_photos_prevention' => [], // Selalu kosongkan saat load
+                'new_photos' => [],
+                'new_photos_prevention' => [],
             ];
         }
     }
@@ -137,34 +117,34 @@ class Index extends Component
         }
     }
 
-   public function selectPicPelapor($id, $name)
-{
-    // Cari index baris mana yang dropdown-nya aktif
-    $index = collect($this->showDropdown_pic)->search(true);
+    public function selectPicPelapor($id, $name)
+    {
+        // Cari index baris mana yang dropdown-nya aktif
+        $index = collect($this->showDropdown_pic)->search(true);
 
-    if ($index !== false) {
-        // 1. Pastikan pic_responsible adalah array
-        if (!is_array($this->findings[$index]['pic_responsible'])) {
-            $this->findings[$index]['pic_responsible'] = [];
+        if ($index !== false) {
+            // 1. Pastikan pic_responsible adalah array
+            if (!is_array($this->findings[$index]['pic_responsible'])) {
+                $this->findings[$index]['pic_responsible'] = [];
+            }
+
+            // 2. Tambahkan nama jika belum ada di list (mencegah duplikat)
+            if (!in_array($name, $this->findings[$index]['pic_responsible'])) {
+                $this->findings[$index]['pic_responsible'][] = $name;
+            }
+
+            // 3. Reset input pencarian agar user bisa cari nama lain
+            $this->search_pic[$index] = '';
+            $this->showDropdown_pic[$index] = false;
         }
-
-        // 2. Tambahkan nama jika belum ada di list (mencegah duplikat)
-        if (!in_array($name, $this->findings[$index]['pic_responsible'])) {
-            $this->findings[$index]['pic_responsible'][] = $name;
-        }
-
-        // 3. Reset input pencarian agar user bisa cari nama lain
-        $this->search_pic[$index] = '';
-        $this->showDropdown_pic[$index] = false;
     }
-}
 
-// Method untuk menghapus salah satu PIC yang sudah dipilih
-public function removePic($findingIndex, $picIndex)
-{
-    unset($this->findings[$findingIndex]['pic_responsible'][$picIndex]);
-    $this->findings[$findingIndex]['pic_responsible'] = array_values($this->findings[$findingIndex]['pic_responsible']);
-}
+    // Method untuk menghapus salah satu PIC yang sudah dipilih
+    public function removePic($findingIndex, $picIndex)
+    {
+        unset($this->findings[$findingIndex]['pic_responsible'][$picIndex]);
+        $this->findings[$findingIndex]['pic_responsible'] = array_values($this->findings[$findingIndex]['pic_responsible']);
+    }
 
     /**
      * Logika Pencarian Petugas Inspeksi (Multi-row)
@@ -306,7 +286,7 @@ public function removePic($findingIndex, $picIndex)
             'ohs_risk' => 'L',
             'description' => '',
             'prevention_action' => '',
-          'pic_responsible' => [], // Ubah dari '' menjadi []
+            'pic_responsible' => [], // Ubah dari '' menjadi []
             'due_date' => '',
             'completion_date' => '',
             'photos' => [],
@@ -529,7 +509,9 @@ public function removePic($findingIndex, $picIndex)
                 'ohs_risk' => $finding['ohs_risk'],
                 'description' => $finding['description'],
                 'prevention_action' => $finding['prevention_action'],
-                'pic_responsible' => $finding['pic_responsible'],
+                'pic_responsible' => is_array($finding['pic_responsible'])
+                             ? implode(', ', $finding['pic_responsible'])
+                             : $finding['pic_responsible'],
                 'due_date' => isset($finding['due_date']) && $finding['due_date']
                     ? date('Y-m-d', strtotime($finding['due_date']))
                     : null,
