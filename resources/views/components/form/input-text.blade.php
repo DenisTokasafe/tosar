@@ -17,7 +17,6 @@
     <input
         type="{{ $type }}"
         {{ $model ? "wire:model.live=$model" : '' }}
-        {{ $required ? 'required' : '' }}
         placeholder="{{ $placeholder ?: $label }}"
         {{ $attributes->merge([
             'class' => "input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden $size border-gray-300 rounded " .
