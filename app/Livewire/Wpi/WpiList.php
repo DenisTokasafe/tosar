@@ -4,7 +4,6 @@ namespace App\Livewire\Wpi;
 
 use Livewire\Component;
 use App\Models\WpiReport;
-use App\Helpers\FileHelper;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -22,7 +21,7 @@ class WpiList extends Component
 
     public function deleteReport($id)
     {
-        $report = \App\Models\WpiReport::with('findings')->find($id);
+        $report = WpiReport::with('findings')->find($id);
 
         if ($report) {
             // Loop setiap temuan untuk menghapus foto fisik

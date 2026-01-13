@@ -83,9 +83,9 @@
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
 
-                // Koordinat X: 480 (kanan), Y: 808 (baris terakhir footer)
+                // Koordinat X: 480 (kanan), Y: 809 (baris terakhir footer)
                 // Jika posisi masih kurang pas di halaman 2, coba ubah 806 menjadi 800
-                $pdf->text(480, 808, $pageText, $font, $size);
+                $pdf->text(480, 809, $pageText, $font, $size);
             ');
         }
     </script>
