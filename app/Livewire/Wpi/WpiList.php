@@ -56,7 +56,9 @@ class WpiList extends Component
 
         $pdf = Pdf::loadView('pdf.wpi-report', [
             'report' => $report,
-        ])->setPaper('a4', 'portrait');
+        ])
+        ->setOption(['isPhpEnabled' => true])
+        ->setPaper('a4', 'portrait');
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
