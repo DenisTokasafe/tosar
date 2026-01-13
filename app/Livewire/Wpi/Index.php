@@ -63,7 +63,55 @@ class Index extends Component
         $report = WpiReport::with('findings')->find($id);
         if (!$report) return redirect()->to('/wpi-list');
 
-        // ... code header lainnya ...
+           // 2. Isi Properti Header
+
+        $this->reportId = $report->id;
+
+        $this->report_date = $report->report_date;
+
+        $this->report_time = $report->report_time;
+
+        $this->location = $report->location;
+
+        $this->dept_cont = $report->department;
+
+
+
+        // Sinkronisasi data pencarian agar input teks di UI terisi
+
+        $this->searchLocation = $report->location;
+
+        $this->search = $report->department;
+
+        // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
+
+
+
+        // 3. Isi Properti Inspectors (Array)
+
+        // Asumsi: kolom inspectors di DB disimpan sebagai JSON/Array
+
+        $this->inspectors = $report->inspectors ?? [['name' => '',]];
+
+
+
+        // Isi searchPetugas agar input pencarian per baris sinkron
+
+        foreach ($this->inspectors as $index => $inspector) {
+
+            $this->searchPetugas[$index] = $inspector['name'];
+
+            $inspector = User::where('name', $inspector['name'])->first();
+
+            if ($inspector) {
+
+                $this->inspectors[$index]['id_number'] = $inspector->employee_id;
+
+                $this->inspectors[$index]['dept_con'] = $inspector->department_name;
+
+            }
+
+        }
 
         $this->findings = [];
         foreach ($report->findings as $finding) {
