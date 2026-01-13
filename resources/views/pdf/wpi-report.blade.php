@@ -238,7 +238,7 @@
         <table class="main-table">
             <thead>
                 <tr class="bg-label center">
-                    <th width="4%">No</th>
+                    <th width="6%">No</th>
                     <th width="8%">OHS Risk</th>
                     <th width="32%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
                             style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span>
