@@ -74,7 +74,7 @@ class Index extends Component
         $this->location = $report->location;
 
         if (Contractor::pluck('contractor_name',$report->department)->exists()) {
-            $this->deptCont = 'contractor';
+            $this->deptCont = 'company';
         } else {
             $this->deptCont = 'department';
         }
