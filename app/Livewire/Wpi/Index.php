@@ -73,16 +73,15 @@ class Index extends Component
 
         $this->location = $report->location;
         $this->area = $report->area;
-         if (Contractor::where('contractor_name',$report->department)->exists()) {
+        if (Contractor::where('contractor_name', $report->department)->exists()) {
             $this->deptCont = 'company';
             $this->searchContractor = $report->department;
             $this->search = '';
-        } elseif (Department::where('department_name',$report->department)->exists()) {
+        } elseif (Department::where('department_name', $report->department)->exists()) {
             $this->deptCont = 'department';
             $this->search = $report->department;
             $this->searchContractor = '';
-
-        }else{
+        } else {
             $this->deptCont = 'department';
             $this->search = $report->department;
         }
@@ -250,7 +249,7 @@ class Index extends Component
             ];
             $this->searchPetugas[] = '';
             $this->showDropdownPetugas[] = false;
-        }else{
+        } else {
             $this->dispatch('alert', [
                 'text' => 'Maksimal 6 petugas inspeksi.',
                 'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
