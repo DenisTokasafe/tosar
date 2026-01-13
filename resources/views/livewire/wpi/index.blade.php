@@ -9,8 +9,8 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-    <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
-        subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout id="{{ $repordId ? '$reportId' : 'null' }}"
+        heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -167,7 +167,8 @@
                                     {{-- Kolom 1: Dropdown Pencarian --}}
                                     <div class="flex flex-col">
                                         <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
-                                            placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
+                                            placeholder="Cari nama..."
+                                            modelsearch="searchPetugas.{{ $index }}"
                                             modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
                                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                                     </div>
