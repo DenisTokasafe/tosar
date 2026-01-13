@@ -121,13 +121,8 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <fieldset class="fieldset">
-                            {{-- Area kerja --}}
-                            <x-label-req>{{ __('Area kerja') }} </x-label-req>
-                            <input name="area" type="text" wire:model.live="area" placeholder="Area kerja..."
-                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('area') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                            <x-label-error :messages="$errors->get('area')" />
-                        </fieldset>
+                        {{-- Menggunakan komponen baru --}}
+                        <x-form.input-text label="Area Kerja" model="area" placeholder="Area kerja..." required />
                         <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
                             <input name="location_specific" type="text" wire:model.live="location_specific"
@@ -162,9 +157,8 @@
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
                                     <div class="flex flex-col">
-                                        <x-form.searchable-select-advanced
-                                            label="Petugas Inspeksi {{ $index + 1 }}" placeholder="Cari nama..."
-                                            modelsearch="searchPetugas.{{ $index }}"
+                                        <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
+                                            placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
                                             modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
                                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                                     </div>
