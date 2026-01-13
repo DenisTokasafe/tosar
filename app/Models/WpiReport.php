@@ -12,7 +12,8 @@ class WpiReport extends Model
         'location',
         'department',
         'inspectors',
-        'site_name'
+        'site_name',
+        'area'
     ];
     protected $casts = [
         'inspectors' => 'array',
