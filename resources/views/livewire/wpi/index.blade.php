@@ -1,5 +1,17 @@
 <section class="w-full">
     <x-toast />
+    <div class="flex justify-start mb-2 " wire:ignore>
+        @if (Route::is('wpi.edit'))
+            @if (Breadcrumbs::exists('wpi.edit'))
+                {!! Breadcrumbs::render('wpi.edit', $reportId) !!}
+            @endif
+        @endif
+        @if (Route::is('wpi.create'))
+            @if (Breadcrumbs::exists('wpi.create'))
+                {!! Breadcrumbs::render('wpi.create') !!}
+            @endif
+        @endif
+    </div>
     <x-tabs-wpi.layout heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
         subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">

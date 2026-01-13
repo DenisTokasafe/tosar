@@ -44,3 +44,18 @@ Breadcrumbs::for('hazard-detail', function (Trail $trail, $hazard) {
 
     $trail->push($title, $url);
 });
+
+// WPI List
+Breadcrumbs::for('wpi.list', function (Trail $trail) {
+    $trail->push('WPI Reports', route('wpi.list'));
+});
+// WPI Create
+Breadcrumbs::for('wpi.create', function (Trail $trail) {
+    $trail->parent('wpi.list');
+    $trail->push('Create WPI Report', route('wpi.create'));
+});
+// WPI Edit
+Breadcrumbs::for('wpi.edit', function (Trail $trail, $id) {
+    $trail->parent('wpi.list');
+    $trail->push('Edit WPI Report', route('wpi.edit', $id));
+});
