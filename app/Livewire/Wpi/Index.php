@@ -63,7 +63,7 @@ class Index extends Component
         $report = WpiReport::with('findings')->find($id);
         if (!$report) return redirect()->to('/wpi-list');
 
-           // 2. Isi Properti Header
+        // 2. Isi Properti Header
 
         $this->reportId = $report->id;
 
@@ -108,23 +108,23 @@ class Index extends Component
                 $this->inspectors[$index]['id_number'] = $inspector->employee_id;
 
                 $this->inspectors[$index]['dept_con'] = $inspector->department_name;
-
             }
-
         }
 
         $this->findings = [];
         foreach ($report->findings as $finding) {
-            // Logika konversi PIC ke array
-            $existingPics = $finding->pic_responsible;
+            // Ambil data dari database
+            $rawPic = $finding->pic_responsible;
+            $existingPics = [];
 
-            // Jika di DB disimpan sebagai string (misal: "Budi, Andi"), pecah jadi array
-            if (is_string($existingPics)) {
-                $existingPics = array_map('trim', explode(',', $existingPics));
-            }
-            // Jika null, jadikan array kosong
-            elseif (is_null($existingPics)) {
-                $existingPics = [];
+            if (is_string($rawPic) && !empty($rawPic)) {
+                /** * Menggunakan explode dengan '|' karena nama user
+                 * mengandung koma (Contoh: "BANEA, Yoman Denis")
+                 */
+                $existingPics = array_map('trim', explode('|', $rawPic));
+            } elseif (is_array($rawPic)) {
+                // Jika kolom DB sudah bertipe JSON/Array
+                $existingPics = $rawPic;
             }
 
             $this->findings[] = [
@@ -133,7 +133,7 @@ class Index extends Component
                 'description' => $finding->description,
                 'prevention_action' => $finding->prevention_action,
 
-                // Simpan sebagai array agar UI Badge muncul
+                // Simpan sebagai array agar UI Badge muncul di Blade
                 'pic_responsible' => $existingPics,
 
                 'due_date' => $finding->due_date ? date('Y-m-d', strtotime($finding->due_date)) : null,
@@ -557,9 +557,10 @@ class Index extends Component
                 'ohs_risk' => $finding['ohs_risk'],
                 'description' => $finding['description'],
                 'prevention_action' => $finding['prevention_action'],
+                // Gabungkan kembali array menjadi string dengan pemisah pipe
                 'pic_responsible' => is_array($finding['pic_responsible'])
-                             ? implode(', ', $finding['pic_responsible'])
-                             : $finding['pic_responsible'],
+                    ? implode('|', $finding['pic_responsible'])
+                    : $finding['pic_responsible'],
                 'due_date' => isset($finding['due_date']) && $finding['due_date']
                     ? date('Y-m-d', strtotime($finding['due_date']))
                     : null,
