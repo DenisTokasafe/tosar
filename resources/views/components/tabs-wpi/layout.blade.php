@@ -8,13 +8,21 @@
             <div class="flex items-center gap-3">
                 @if (Route::is('wpi.list'))
                     <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-plus-icon lucide-plus">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
                             <path d="M5 12h14" />
                             <path d="M12 5v14" />
                         </svg> Laporan Baru
                     </a>
+                @endif
+                @if (Route::is('wpi.edit'))
+                    {{-- Tombol Download PDF --}}
+                    <flux:tooltip content="Download PDF" position="top">
+                        <flux:button x-on:click="$dispatch('trigger-export-pdf', { id: {{ $report->id }} })"
+                            size="xs" icon="document-arrow-down" variant="primary" color="blue">
+                        </flux:button>
+                    </flux:tooltip>
                 @endif
             </div>
         </div>

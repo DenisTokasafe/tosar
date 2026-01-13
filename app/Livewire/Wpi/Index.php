@@ -10,6 +10,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
+use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -603,8 +604,20 @@ class Index extends Component
 
         return redirect()->to('/wpi-list');
     }
+    #[On('trigger-export-pdf')]
+    public function exportPDF($id)
+    {
+        $report = WpiReport::with(['findings'])->findOrFail($id);
+        $isContractor = Contractor::where('contractor_name', $report->department)->exists();
+        $deptLabel = $isContractor ? 'Contractor' : 'Department';
+        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
+            ->setOption(['isPhpEnabled' => true])
+            ->setPaper('a4', 'portrait');
 
-
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, "Laporan_WPI_" . $report->report_date . ".pdf");
+    }
 
     public function render()
     {
