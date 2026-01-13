@@ -85,16 +85,9 @@ class Index extends Component
             $this->deptCont = 'department';
             $this->search = $report->department;
         }
-
-
-
-
         // Sinkronisasi data pencarian agar input teks di UI terisi
 
         $this->searchLocation = $report->location;
-
-        $this->search = $report->department;
-
         // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
 
 
