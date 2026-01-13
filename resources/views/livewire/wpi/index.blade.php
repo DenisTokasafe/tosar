@@ -166,7 +166,7 @@
                                         <span class="text-[10px] font-semibold uppercase text-gray-500">ID
                                             Number</span>
                                         <div
-                                            class="px-2 py-1 text-xs italic border rounded  text-gray-600 min-h-[28px] flex items-center">
+                                            class="flex items-center badge badge-soft badge-info">
                                             {{ $inspectors[$index]['id_number'] ?: '-' }}
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@
                                         <span
                                             class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
                                         <div
-                                            class="px-2 py-1 text-xs italic border rounded  text-gray-600 min-h-[28px] flex items-center">
+                                            class="flex items-center badge badge-soft badge-info">
                                             {{ $inspectors[$index]['dept_con'] ?? ($inspectors[$index]['dept_con'] ?? '-') }}
                                         </div>
                                     </div>
