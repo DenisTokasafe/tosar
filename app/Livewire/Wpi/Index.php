@@ -410,6 +410,7 @@ class Index extends Component
             // Validation untuk Array Findings
             'findings.*.description'       => 'required',
             'findings.*.prevention_action' => 'required|string',
+            'findings.*.due_date'            => 'nullable|date',
         ], [
             // Custom Messages
             'report_date.required' => 'Tanggal laporan wajib diisi',
@@ -421,9 +422,12 @@ class Index extends Component
             'inspectors.required'          => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required'   => 'Nama petugas inspeksi wajib diisi',
             'inspectors.*.name.min'        => 'Nama petugas minimal 3 karakter',
+            'findings.*.due_date.date'        => 'Format tanggal tidak valid',
+            'findings.*.due_date.required'        => 'Tanggal jatuh tempo wajib diisi',
 
             'findings.*.description.required'       => 'Deskripsi temuan wajib diisi',
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
+
         ]);
     }
     // Menghapus foto yang baru diunggah (masih di memori/temporary)
