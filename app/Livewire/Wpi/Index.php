@@ -250,6 +250,11 @@ class Index extends Component
             ];
             $this->searchPetugas[] = '';
             $this->showDropdownPetugas[] = false;
+        }else{
+            $this->dispatch('alert', [
+                'text' => 'Maksimal 6 petugas inspeksi.',
+                'backgroundColor' => "linear-gradient(to right, #ef4444, #991b1b)",
+            ]);
         }
     }
 
