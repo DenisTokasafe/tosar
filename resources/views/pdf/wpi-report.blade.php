@@ -294,28 +294,28 @@
                         Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5 (misalnya, bekerja di ketinggian scaffolding atau tower tanpa mengenakan full body harness dan dua lanyard, atau memasuki ruang terbatas tanpa mendapatkan izin dan melakukan uji gas/udara sebagaimana mestinya).<br>
                         <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous to life or health with the potential event Level 4 or 5 event (e.g., working at height on scaffolding or tower without wearing fullbody harness and double lanyard, or entering a confined space without a permit and proper oxygen/gas testing).</span>
                     </td>
-                    <td class="center bg-extrim">E - Ekstrim<br><span class="en">E - Extreme</span></td>
+                    <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
                 </tr>
                 <tr>
                     <td>
                         Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang membahayakan keselamatan manusia, merusak properti dan menggangu proses kerja (misalnya, melakukan pengelasan di unit/bangunan tanpa dilengkapi dengan ijin kerja dan alat pemadam kebakaran atau mengamati pekerja yang menggunakan peralatan kerja yang tidak sesuai dengan jenis pekerjaan).<br>
                         <span class="en">"High (H)" Priority actions address a condition or practice which could cause harm to people, property and processes (e.g., welding on unit/building without work permit and proper fire suppression support or observing someone using an incorrect hand tool for the job).</span>
                     </td>
-                    <td class="center bg-tinggi">T - Tinggi<br><span class="en">T - Tinggi</span></td>
+                    <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - Tinggi</span></td>
                 </tr>
                 <tr>
                     <td>
                         Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan meskipun tidak begitu berbahaya, atau memerlukan upaya pencegahan agar tidak timbul kejadian serupa di kemudian hari (misalnya, tempat cuci mata yang rusak, akses keluar atau akses menuju lokasi alat pemadam kebakaran yang terhambat, pelindung yang rusak atau retak, atau label peringatan pipa).<br>
                         <span class="en">"Moderate (M)" Priority actions address safety violations or deficiencies requiring corrective action but are not immediately dangerous, or a preventative measure to prevent the same (e.g., inoperable eye wash station, blocking an exit or fire extinguisher, broken or cracked guards, or labeling of pipelines).</span>
                     </td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en">M - Moderate</span></td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span></td>
                 </tr>
                 <tr>
                     <td>
                         Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan yang tidak begitu siknifikan dampaknya terhadap manusia maupun lingkungan. (misalnya, sampah berceceran di lantai, rembesan air, balon lampu mati, label tanda peringatan buram dll..<br>
                         <span class="en">Priority action "Low (L)": Addressing violations of K3 regulations or there are deficiencies that require corrective actions that have little impact on humans or the environment. (e.g., trash splattered on the floor, water seepage, balloon lights out, blurry warning labels etc..</span>
                     </td>
-                    <td class="center bg-rendah">L - Rendah<br><span class="en">L - Low</span></td>
+                    <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
                 </tr>
             </tbody>
         </table>
