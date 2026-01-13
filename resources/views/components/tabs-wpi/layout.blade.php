@@ -24,7 +24,7 @@
                 @if (Route::is('wpi.edit'))
                     {{-- Tombol Download PDF --}}
                     <flux:tooltip content="Download PDF" position="top">
-                        <flux:button x-on:click="$dispatch('trigger-export-pdf', { id: {{ $report->id }} })"
+                        <flux:button x-on:click="$dispatch('trigger-export-pdf', { id: {{ $id }} })"
                             size="xs" icon="document-arrow-down" variant="primary" color="blue">
                         </flux:button>
                     </flux:tooltip>
