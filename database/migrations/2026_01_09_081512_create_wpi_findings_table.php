@@ -17,7 +17,7 @@ return new class extends Migration
             $table->char('ohs_risk', 1);
             $table->text('description');
             $table->text('prevention_action');
-            $table->string('pic_responsible');
+            $table->json('pic_responsible')->nullable();
             $table->date('due_date');
             $table->date('completion_date')->nullable();
             $table->json('photos')->nullable(); // Path lokasi foto
