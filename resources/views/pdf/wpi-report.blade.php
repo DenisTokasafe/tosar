@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         @page {
             /* Menentukan ukuran kertas A4 Portrait */
@@ -36,14 +37,19 @@
             line-height: 1.1;
         }
 
-        .main-table, .footer-table, .header-table {
+        .main-table,
+        .footer-table,
+        .header-table {
             width: 100%;
             border-collapse: collapse;
             /* Memaksa tabel mengikuti ukuran layout kertas A4 */
             table-layout: fixed;
         }
 
-        .main-table td, .main-table th, .footer-table td, .header-table td {
+        .main-table td,
+        .main-table th,
+        .footer-table td,
+        .header-table td {
             border: 1px solid rgba(0, 0, 0, 0.8);
             padding: 3px 5px;
             vertical-align: middle;
@@ -57,12 +63,30 @@
             page-break-inside: avoid;
         }
 
-        .en { color: #1e40af; font-style: italic; }
-        .red-note { color: #ff0000; font-weight: bold; font-size: 9pt; text-align: center; }
-        .bg-label { background-color: rgba(226, 232, 240, 0.7); font-weight: bold; }
+        .en {
+            color: #1e40af;
+            font-style: italic;
+        }
 
-        .center { text-align: center; }
-        .right { text-align: right; }
+        .red-note {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 9pt;
+            text-align: center;
+        }
+
+        .bg-label {
+            background-color: rgba(226, 232, 240, 0.7);
+            font-weight: bold;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
 
         img.photo {
             width: 130px;
@@ -73,9 +97,10 @@
         }
     </style>
 </head>
+
 <body>
 
-   <script type="text/php">
+    <script type="text/php">
         if (isset($pdf)) {
             // page_script memastikan teks dicetak ulang pada setiap halaman baru
             $pdf->page_script('
@@ -99,7 +124,8 @@
                     <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
                     <span>TT-MGT-FRS-024A</span>
                 </td>
-                <td width="15%" class="center"><img src="{{ public_path('images/logo-archi.png') }}" width="60"></td>
+                <td width="15%" class="center"><img src="{{ public_path('images/logo-archi.png') }}" width="60">
+                </td>
             </tr>
         </table>
     </header>
@@ -144,30 +170,31 @@
             </tr>
             @php $maxRows = 6; @endphp
             @for ($i = 0; $i < $maxRows; $i++)
-            <tr>
-                @if ($i == 0)
-                    <td class="bg-label">Jam /Time</td>
-                    <td>{{ $report->report_time }}</td>
-                @elseif ($i == 1)
-                    <td class="bg-label">Lokasi/Location</td>
-                    <td>{{ $report->locationRelation->name ?? '-' }}</td>
-                @elseif ($i == 2)
-                    <td class="bg-label">Site Name</td>
-                    <td>Tokatindung</td>
-                @elseif ($i == 3)
-                    <td class="bg-label">Area</td>
-                    <td>Mining</td>
-                @elseif ($i == 4)
-                    <td class="bg-label">Company</td>
-                    <td>PT MSM</td>
-                @elseif ($i == 5)
-                    <td class="bg-label">Department</td>
-                    <td>{{ $report->department }}</td>
-                @endif
-                <td>{{ isset($report->inspectors[$i]) ? ($i + 1) . '. ' . $report->inspectors[$i]['name'] : '' }}</td>
-                <td class="center">{{ $report->inspectors[$i]['id_number'] ?? '' }}</td>
-                <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
-            </tr>
+                <tr>
+                    @if ($i == 0)
+                        <td class="bg-label">Jam /Time</td>
+                        <td>{{ $report->report_time }}</td>
+                    @elseif ($i == 1)
+                        <td class="bg-label">Lokasi/Location</td>
+                        <td>{{ $report->locationRelation->name ?? '-' }}</td>
+                    @elseif ($i == 2)
+                        <td class="bg-label">Site Name</td>
+                        <td>Tokatindung</td>
+                    @elseif ($i == 3)
+                        <td class="bg-label">Area</td>
+                        <td>Mining</td>
+                    @elseif ($i == 4)
+                        <td class="bg-label">Company</td>
+                        <td>PT MSM</td>
+                    @elseif ($i == 5)
+                        <td class="bg-label">Department</td>
+                        <td>{{ $report->department }}</td>
+                    @endif
+                    <td>{{ isset($report->inspectors[$i]) ? $i + 1 . '. ' . $report->inspectors[$i]['name'] : '' }}
+                    </td>
+                    <td class="center">{{ $report->inspectors[$i]['id_number'] ?? '' }}</td>
+                    <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
+                </tr>
             @endfor
         </table>
 
@@ -182,35 +209,55 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($report->findings as $index => $find)
-                <tr>
-                    <td class="center">{{ $index + 1 }}</td>
-                    <td class="center">{{ $find->ohs_risk }}</td>
-                    <td style="vertical-align: top;">
-                        {{ $find->description }}<br>
-                        @if(!empty($find->photos))
-                            @foreach($find->photos as $p)
-                                <img src="{{ public_path('storage/'.$p) }}" class="photo">
-                            @endforeach
-                        @endif
-                    </td>
-                    <td style="vertical-align: top;">
-                        {{ $find->prevention_action }}<br>
-                        @if(!empty($find->photos_prevention))
-                            @foreach($find->photos_prevention as $pp)
-                                <img src="{{ public_path('storage/'.$pp) }}" class="photo">
-                            @endforeach
-                        @endif
-                    </td>
-                    <td style="vertical-align: top;">
-                        <strong>PIC:</strong> {{ $find->pic_responsible }}<br>
-                        <strong>Due:</strong> {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
-                        <strong>Selesai:</strong> {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
-                    </td>
-                </tr>
+                @foreach ($report->findings as $index => $find)
+                    <tr>
+                        <td class="center">{{ $index + 1 }}</td>
+                        <td class="center">{{ $find->ohs_risk }}</td>
+                        <td style="vertical-align: top;">
+                            {{ $find->description }}<br>
+                            @if (!empty($find->photos))
+                                @foreach ($find->photos as $p)
+                                    <img src="{{ public_path('storage/' . $p) }}" class="photo">
+                                @endforeach
+                            @endif
+                        </td>
+                        <td style="vertical-align: top;">
+                            {{ $find->prevention_action }}<br>
+                            @if (!empty($find->photos_prevention))
+                                @foreach ($find->photos_prevention as $pp)
+                                    <img src="{{ public_path('storage/' . $pp) }}" class="photo">
+                                @endforeach
+                            @endif
+                        </td>
+                        <td style="vertical-align: top;">
+                            <strong>PIC:</strong><br>
+                            @if (!empty($find->pic_responsible))
+                                @php
+                                    // Memecah string berdasarkan karakter pipe (|)
+                                    $picList = explode('|', $find->pic_responsible);
+                                @endphp
+
+                                <ul style="margin: 0; padding-left: 12px; list-style-type: none;">
+                                    @foreach ($picList as $picName)
+                                        <li style="margin-bottom: 2px;">• {{ trim($picName) }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                -
+                            @endif
+
+                            <div style="margin-top: 5px; border-top: 0.5px solid #ccc; pt-2">
+                                <strong>Due:</strong>
+                                {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
+                                <strong>Selesai:</strong>
+                                {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
     </main>
 </body>
+
 </html>
