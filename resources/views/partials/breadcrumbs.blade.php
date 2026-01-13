@@ -7,7 +7,7 @@ $crumbs = ($routeName && $routeName !== 'livewire.update' && Breadcrumbs::exists
 : collect();
 @endphp
 @if ($crumbs->isNotEmpty())
-<nav  class="breadcrumbs text-xs font-semibold hidden md:block">
+<nav  class="breadcrumbs text-[10px] font-semibold hidden md:block">
     <ul>
         @foreach ($crumbs as $crumb)
         <li>
