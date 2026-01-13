@@ -142,7 +142,7 @@
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(460, 808, $pageText, $font, $size);
+                $pdf->text(460, 810, $pageText, $font, $size);
             ');
         }
     </script>
