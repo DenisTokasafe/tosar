@@ -75,13 +75,16 @@
 </head>
 <body>
 
-    <script type="text/php">
+   <script type="text/php">
         if (isset($pdf)) {
+            // page_script memastikan teks dicetak ulang pada setiap halaman baru
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
-                // Koordinat X (kanan) dan Y (baris terakhir footer)
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
+
+                // Koordinat X: 480 (kanan), Y: 806 (baris terakhir footer)
+                // Jika posisi masih kurang pas di halaman 2, coba ubah 806 menjadi 800
                 $pdf->text(480, 806, $pageText, $font, $size);
             ');
         }
