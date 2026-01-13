@@ -4,6 +4,7 @@ namespace App\Livewire\Wpi;
 
 use Livewire\Component;
 use App\Models\WpiReport;
+use App\Models\Contractor;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -52,10 +53,11 @@ class WpiList extends Component
     public function exportPDF($id)
     {
         $report = WpiReport::with(['findings'])->findOrFail($id);
-
-      $pdf = Pdf::loadView('pdf.wpi-report', compact('report'))
-          ->setOption(['isPhpEnabled' => true])
-          ->setPaper('a4', 'portrait');
+        $isContractor = Contractor::where('contractor_name', $report->department)->exists();
+        $deptLabel = $isContractor ? 'Contractor' : 'Department';
+        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
+            ->setOption(['isPhpEnabled' => true])
+            ->setPaper('a4', 'portrait');
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();

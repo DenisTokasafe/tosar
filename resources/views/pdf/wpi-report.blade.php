@@ -208,7 +208,7 @@
                         <td class="bg-label">Company</td>
                         <td>PT MSM</td>
                     @elseif ($i == 5)
-                        <td class="bg-label">Department</td>
+                        <td class="bg-label">{{ $deptLabel }}</td>
                         <td>{{ $report->department }}</td>
                     @endif
                     <td>{{ isset($report->inspectors[$i]) ? $i + 1 . '. ' . $report->inspectors[$i]['name'] : '' }}
