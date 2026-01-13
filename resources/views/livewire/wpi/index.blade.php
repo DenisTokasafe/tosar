@@ -9,8 +9,7 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-    <x-tabs-wpi.layout :id="$reportId"
-        heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
