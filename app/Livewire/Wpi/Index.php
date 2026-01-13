@@ -19,7 +19,7 @@ class Index extends Component
     use WithFileUploads;
 
     public $reportId;
-    public $report_date, $report_time, $location, $dept_cont;
+    public $report_date, $report_time, $location, $dept_cont, $area;
     public $inspectors = [['name' => '', 'id_number' => '']];
     public $findings = [];
 
@@ -72,6 +72,7 @@ class Index extends Component
         $this->report_time = $report->report_time;
 
         $this->location = $report->location;
+        $this->area = $report->area;
          if (Contractor::where('contractor_name',$report->department)->exists()) {
             $this->deptCont = 'company';
             $this->searchContractor = $report->department;
@@ -401,6 +402,7 @@ class Index extends Component
             'report_time' => 'required',
             'location'    => 'required',
             'dept_cont'   => 'required',
+            'area'        => 'required',
 
             // Validation untuk Array Inspectors
             'inspectors'             => 'required|array|min:1',
@@ -417,6 +419,7 @@ class Index extends Component
             'report_time.required' => 'Waktu laporan wajib diisi',
             'report_date.date'     => 'Format tanggal tidak valid',
             'location.required'    => 'Lokasi wajib dipilih',
+            'area.required'        => 'Area wajib diisi',
             'dept_cont.required'    => 'Departemen atau Kontraktor wajib diisi',
 
             'inspectors.required'          => 'Minimal harus ada 1 petugas inspeksi',
@@ -510,6 +513,7 @@ class Index extends Component
             'report_date' => 'required|date',
             'report_time' => 'required',
             'location' => 'required',
+            'area' => 'required',
             'findings.*.description' => 'required',
             'findings.*.prevention_action' => 'required|string',
             'findings.*.due_date' => 'nullable|date',
@@ -525,6 +529,7 @@ class Index extends Component
             'report_time.required' => 'Waktu laporan wajib diisi',
             'report_date.date' => 'Format tanggal tidak valid',
             'location.required' => 'Lokasi wajib dipilih',
+            'area.required' => 'Area wajib diisi',
             'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
             'findings.*.pic_responsible.required' => 'PIC wajib diisi',
@@ -542,6 +547,7 @@ class Index extends Component
                 'report_date' => $this->report_date,
                 'report_time' => $this->report_time,
                 'location'    => $this->location,
+                'area'        => $this->area,
                 'department'  => $this->dept_cont,
                 'inspectors'  => $this->inspectors,
             ]

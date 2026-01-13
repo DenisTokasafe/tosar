@@ -122,6 +122,20 @@
                             </div>
                         </fieldset>
                         <fieldset class="fieldset">
+                            {{-- Area kerja --}}
+                            <x-label-req>{{ __('Area kerja') }} </x-label-req>
+                            <input name="area" type="text" wire:model.live="area" placeholder="Area kerja..."
+                                class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('area') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                            <x-label-error :messages="$errors->get('area')" />
+                            {{-- Status --}}
+                            <x-label-req>{{ __('Status') }} </x-label-req>
+                            <flux:select size="xs" wire:model.live="status" placeholder="Choose Status...">
+                                <flux:select.option value="enabled">enabled</flux:select.option>
+                                <flux:select.option value="disabled">disabled</flux:select.option>
+                            </flux:select>
+                            <x-label-error :messages="$errors->get('status')" />
+                        </fieldset>
+                        <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
                             <input name="location_specific" type="text" wire:model.live="location_specific"
                                 placeholder="Masukkan detail lokasi spesifik..." value="Tokatindung" disabled
@@ -155,8 +169,9 @@
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
                                     <div class="flex flex-col">
-                                        <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
-                                            placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
+                                        <x-form.searchable-select-advanced
+                                            label="Petugas Inspeksi {{ $index + 1 }}" placeholder="Cari nama..."
+                                            modelsearch="searchPetugas.{{ $index }}"
                                             modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
                                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                                     </div>
@@ -165,8 +180,7 @@
                                     <div class="flex flex-col pb-1">
                                         <span class="text-[10px] font-semibold uppercase text-gray-500">ID
                                             Number</span>
-                                        <div
-                                            class="flex items-center badge badge-soft badge-info">
+                                        <div class="flex items-center badge badge-soft badge-info text-[10px]">
                                             {{ $inspectors[$index]['id_number'] ?: '-' }}
                                         </div>
                                     </div>
@@ -175,8 +189,7 @@
                                     <div class="flex flex-col pb-1">
                                         <span
                                             class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
-                                        <div
-                                            class="flex items-center badge badge-soft badge-info">
+                                        <div class="flex items-center badge badge-soft badge-info text-[10px]">
                                             {{ $inspectors[$index]['dept_con'] ?? ($inspectors[$index]['dept_con'] ?? '-') }}
                                         </div>
                                     </div>
@@ -347,7 +360,8 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea --}}
-                                    <x-form.textarea label="Tindakan pencegahan" required placeholder="Tindakan pencegahan..."
+                                    <x-form.textarea label="Tindakan pencegahan" required
+                                        placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
 
                                     <div class="mt-1">
