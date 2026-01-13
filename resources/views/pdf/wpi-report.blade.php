@@ -283,10 +283,11 @@
                                 -
                             @endif
                             <div style="margin-top: 10px; padding-top: 5px; border-top: 1px dashed #000;">
-                                <strong>Jatuh Tempo:</strong>
-                                {{ $find->due_date ? date('d/m/yyyy', strtotime($find->due_date)) : '-' }}<br>
+                                <strong>Due:</strong>
+                                {{ $find->due_date ? date('d-m-Y', strtotime($find->due_date)) : '-' }}<br>
+
                                 <strong>Selesai:</strong>
-                                {{ $find->completion_date ? date('d/m/yyyy', strtotime($find->completion_date)) : '-' }}
+                                {{ $find->completion_date ? date('d-m-Y', strtotime($find->completion_date)) : '-' }}
                             </div>
                         </td>
                     </tr>
@@ -333,7 +334,8 @@
                         <span class="en">"Moderate (M)" Priority actions address safety violations or
                             deficiencies...</span>
                     </td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span></td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span>
+                    </td>
                 </tr>
                 <tr>
                     <td>
