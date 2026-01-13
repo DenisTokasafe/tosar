@@ -4,8 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Memberikan ruang untuk header (95px) dan footer (105px) agar tidak tertimpa konten */
-            margin: 110px 1cm 115px 1cm;
+            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
+            margin: 110px 1cm 110px 1cm;
         }
 
         header {
@@ -18,10 +18,10 @@
 
         footer {
             position: fixed;
-            bottom: -105px;
+            bottom: -95px;
             left: 0;
             right: 0;
-            height: 105px;
+            height: 100px;
         }
 
         body {
@@ -30,6 +30,7 @@
             margin: 0;
             padding: 0;
             line-height: 1.1;
+
         }
 
         .main-table, .footer-table, .header-table {
@@ -59,32 +60,18 @@
 
         .center { text-align: center; }
         .right { text-align: right; }
-        .bg-label { background-color: #e2e8f0; font-weight: bold; }
+
+        /* Penomoran Halaman */
+        .pagenum:before { content: counter(page); }
+        .totalpage:before { content: counter(pages); }
 
         /* Style khusus konten utama */
         main .main-table td { vertical-align: top; }
+        .bg-label { background-color: #e2e8f0; font-weight: bold; }
         img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
     </style>
 </head>
 <body>
-
-    <script type="text/php">
-        if (isset($pdf)) {
-            // Koordinat posisi teks (X, Y)
-            // X = 485 (Pojok kanan bawah)
-            // Y = 788 (Tepat di dalam baris ke-4 footer)
-            $x = 485;
-            $y = 788;
-            $text = "Halaman {PAGE_NUM} dari {PAGE_COUNT}";
-            $font = $fontMetrics->get_font("Times-Roman", "bold");
-            $size = 8.5;
-            $color = array(0,0,0);
-            $word_space = 0.0;
-            $char_space = 0.0;
-            $angle = 0.0;
-            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
-        }
-    </script>
 
     <header>
         <table class="header-table">
@@ -129,7 +116,7 @@
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
                 <td class="right">
-                    &nbsp;
+                    <strong>Halaman <span class="pagenum"></span> dari <span class="totalpage"></span></strong>
                 </td>
             </tr>
         </table>
