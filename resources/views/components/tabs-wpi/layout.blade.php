@@ -6,14 +6,16 @@
                 <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-plus-icon lucide-plus">
-                        <path d="M5 12h14" />
-                        <path d="M12 5v14" />
-                    </svg> Laporan Baru
-                </a>
+                @if (current_route_is('wpi.create'))
+                    <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-plus-icon lucide-plus">
+                            <path d="M5 12h14" />
+                            <path d="M12 5v14" />
+                        </svg> Laporan Baru
+                    </a>
+                @endif
             </div>
         </div>
         <div
