@@ -176,7 +176,7 @@
                         <td>{{ $report->report_time }}</td>
                     @elseif ($i == 1)
                         <td class="bg-label">Lokasi/Location</td>
-                        <td>{{ $report->locationRelation->name ?? '-' }}</td>
+                        <td>{{ $report->location ?? '-' }}</td>
                     @elseif ($i == 2)
                         <td class="bg-label">Site Name</td>
                         <td>Tokatindung</td>
