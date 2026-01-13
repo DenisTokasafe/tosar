@@ -74,9 +74,9 @@
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
-                // Koordinat X: 480 (kanan), Y: 804 (sejajar baris 4 footer)
+                // Koordinat X: 480 (kanan), Y: 808 (sejajar baris 4 footer)
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(480, 804, $pageText, $font, $size);
+                $pdf->text(480, 808, $pageText, $font, $size);
             ');
         }
     </script>
