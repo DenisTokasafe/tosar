@@ -177,7 +177,7 @@
                                             class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
                                         <div
                                             class="px-2 py-1 text-xs italic border rounded bg-gray-50 border-gray-200 text-gray-600 min-h-[28px] flex items-center">
-                                           {{ $inspectors[$index]['dept_con'] ?? ($inspectors[$index]['dept_con'] ?? '-') }}
+                                            {{ $inspectors[$index]['dept_con'] ?? ($inspectors[$index]['dept_con'] ?? '-') }}
                                         </div>
                                     </div>
 
