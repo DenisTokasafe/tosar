@@ -5,7 +5,7 @@
     <style>
         @page {
             /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
-            margin: 110px 1cm 110px 1cm;
+            margin: 110px 1cm 115px 1cm;
         }
 
         header {
@@ -18,10 +18,10 @@
 
         footer {
             position: fixed;
-            bottom: -95px;
+            bottom: -105px;
             left: 0;
             right: 0;
-            height: 100px;
+            height: 105px;
         }
 
         body {
@@ -30,7 +30,6 @@
             margin: 0;
             padding: 0;
             line-height: 1.1;
-
         }
 
         .main-table, .footer-table, .header-table {
@@ -60,18 +59,27 @@
 
         .center { text-align: center; }
         .right { text-align: right; }
-
-        /* Penomoran Halaman */
-        .pagenum:before { content: counter(page); }
-        .totalpage:before { content: counter(pages); }
+        .bg-label { background-color: #e2e8f0; font-weight: bold; }
 
         /* Style khusus konten utama */
         main .main-table td { vertical-align: top; }
-        .bg-label { background-color: #e2e8f0; font-weight: bold; }
         img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
     </style>
 </head>
 <body>
+
+    <script type="text/php">
+        if (isset($pdf)) {
+            // page_script memastikan nomor muncul di SETIAP halaman
+            $pdf->page_script('
+                $font = $fontMetrics->get_font("Times-Roman", "bold");
+                $size = 8.5;
+                // Koordinat X: 480 (kanan), Y: 788 (sejajar baris 4 footer)
+                $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
+                $pdf->text(480, 788, $pageText, $font, $size);
+            ');
+        }
+    </script>
 
     <header>
         <table class="header-table">
@@ -116,7 +124,7 @@
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
                 <td class="right">
-                    <strong>Halaman <span class="pagenum"></span> dari <span class="totalpage"></span></strong>
+                    &nbsp;
                 </td>
             </tr>
         </table>
@@ -177,9 +185,9 @@
                 <tr class="bg-label center">
                     <th width="4%">No</th>
                     <th width="6%">OHS Risk</th>
-                    <th width="30%">Uraian Tindakan Tidak Aman / Kondisi Tidak Aman</th>
+                    <th width="32%">Uraian Tindakan Tidak Aman / Kondisi Tidak Aman</th>
                     <th width="30%">Jenis Tindakan Pencegahan</th>
-                    <th width="30%">Tindak Lanjut / Follow Up</th>
+                    <th width="28%">Tindak Lanjut / Follow Up</th>
                 </tr>
             </thead>
             <tbody>
@@ -213,6 +221,5 @@
             </tbody>
         </table>
     </main>
-
 </body>
 </html>
