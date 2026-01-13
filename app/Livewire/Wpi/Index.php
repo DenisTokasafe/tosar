@@ -73,6 +73,15 @@ class Index extends Component
 
         $this->location = $report->location;
 
+        if (in_array($report->department, Contractor::pluck('contractor_name')->toArray())) {
+            $this->deptCont = 'contractor';
+            $this->dept_cont = $report->department;
+
+        } else {
+            $this->deptCont = 'department';
+            $this->dept_cont = $report->department;
+        }
+
         $this->dept_cont = $report->department;
 
 
