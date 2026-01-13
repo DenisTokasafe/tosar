@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Margin yang cukup untuk header & footer agar tidak tertimpa isi main */
+            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
             margin: 110px 1cm 110px 1cm;
         }
 
@@ -43,21 +43,18 @@
             vertical-align: middle;
         }
 
-        .bg-gray {
-            background-color: #ffffff; /* Sesuai gambar, background putih bersih */
-        }
-
-        /* Styling teks bilingual (Biru Muda/Italic untuk Inggris) */
-        .eng-text {
+        /* Styling Label Bilingual (Italic & Blue sesuai gambar) */
+        .en {
             color: #1e40af;
             font-style: italic;
         }
 
-        /* Styling teks merah di tengah footer */
-        .red-warning {
+        /* Styling teks merah di footer */
+        .red-note {
             color: #ff0000;
             font-weight: bold;
-            font-size: 10pt; /* Lebih besar sesuai gambar */
+            font-size: 9pt;
+            text-align: center;
         }
 
         .center { text-align: center; }
@@ -67,8 +64,9 @@
         .pagenum:before { content: counter(page); }
         .totalpage:before { content: counter(pages); }
 
-        /* Khusus untuk Main Content */
+        /* Style khusus konten utama */
         main .main-table td { vertical-align: top; }
+        .bg-label { background-color: #e2e8f0; font-weight: bold; }
         img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
     </style>
 </head>
@@ -95,28 +93,28 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td width="35%">Nama Dokumen/<span class="eng-text">Document Name</span></td>
-                <td width="70%" colspan="3">Formulir Laporan WPI KPLH</td>
+                <td width="25%">Nama Dokumen/<span class="en">Document Name</span></td>
+                <td width="35%">Formulir Laporan WPI KPLH</td>
+                <td width="20%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
+                <td width="20%">15 Maret 2023</td>
             </tr>
             <tr>
-                <td width="35%">Ditetapkan Oleh/<span class="eng-text">Determined By</span></td>
-                <td width="35%">Kepala Teknik Tambang/<span class="eng-text">Mining Technical Head</span></td>
-                <td width="20%">Tanggal Terbit /<span class="eng-text">Date of Issue</span></td>
-                <td width="15%">15 Maret 2023</td>
+                <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
+                <td>Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
+                <td>Tanggal Tinjau Ulang/<span class="en">Review Date</span></td>
+                <td>15 Maret 2026</td>
             </tr>
             <tr>
-                <td width="35%">No Dokumen/<span class="eng-text">No Document</span></td>
-                <td width="35%">TT-MGT-FRS-024A</td>
-                <td width="20%">Tanggal Tinjau Ulang / <span class="eng-text">Review Date</span></td>
-                <td width="15%">15 Maret 2026</td>
+                <td>No Dokumen/<span class="en">No Document</span></td>
+                <td>TT-MGT-FRS-024A</td>
+                <td>No Revisi</td>
+                <td>00</td>
             </tr>
             <tr>
-                <td width="12%">No Revisi</td>
-                <td width="8%" class="center">00</td>
-                <td colspan="2" width="55%" class="center">
-                    <span class="red-warning">Dokumen terkendali dan valid hanya ada di sharepoint Archi Indonesia</span>
+                <td colspan="3" class="red-note">
+                    Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td width="25%" class="right">
+                <td class="right">
                     <strong>Halaman <span class="pagenum"></span> dari <span class="totalpage"></span></strong>
                 </td>
             </tr>
@@ -125,7 +123,7 @@
 
     <main>
         <table class="main-table" style="margin-bottom: 10px;">
-            <tr style="background-color: #e2e8f0; font-weight: bold;">
+            <tr class="bg-label">
                 <td width="15%">Tanggal /Date</td>
                 <td width="30%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
                 <td width="25%" class="center">Nama Petugas Inspeksi/Inspector</td>
@@ -137,22 +135,22 @@
             @for ($i = 0; $i < $maxRows; $i++)
             <tr>
                 @if ($i == 0)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Jam /Time</td>
+                    <td class="bg-label">Jam /Time</td>
                     <td>{{ $report->report_time }}</td>
                 @elseif ($i == 1)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Lokasi/Location</td>
-                    <td>{{ $report->location}}</td>
+                    <td class="bg-label">Lokasi/Location</td>
+                    <td>{{ $report->locationRelation->name ?? '-' }}</td>
                 @elseif ($i == 2)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Site Name</td>
+                    <td class="bg-label">Site Name</td>
                     <td>Tokatindung</td>
                 @elseif ($i == 3)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Area</td>
+                    <td class="bg-label">Area</td>
                     <td>Mining</td>
                 @elseif ($i == 4)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Company</td>
+                    <td class="bg-label">Company</td>
                     <td>PT MSM</td>
                 @elseif ($i == 5)
-                    <td style="background-color: #e2e8f0; font-weight: bold;">Department</td>
+                    <td class="bg-label">Department</td>
                     <td>{{ $report->department }}</td>
                 @endif
 
@@ -162,9 +160,9 @@
             </tr>
             @endfor
             <tr>
-                <td style="background-color: #e2e8f0; font-weight: bold;">Contractor</td>
+                <td class="bg-label">Contractor</td>
                 <td>{{ $report->searchContractor ?? '-' }}</td>
-                <td style="background-color: #e2e8f0; font-weight: bold;" class="center">Direview oleh/Reviewing by:</td>
+                <td class="bg-label center">Direview oleh/Reviewing by:</td>
                 <td colspan="2" class="center">
                     <div style="height: 25px;"></div>
                     <strong>MARDIN</strong><br>
@@ -175,7 +173,7 @@
 
         <table class="main-table">
             <thead>
-                <tr style="background-color: #e2e8f0; font-weight: bold;" class="center">
+                <tr class="bg-label center">
                     <th width="4%">No</th>
                     <th width="6%">OHS Risk</th>
                     <th width="30%">Uraian Tindakan Tidak Aman / Kondisi Tidak Aman</th>
