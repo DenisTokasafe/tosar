@@ -30,7 +30,7 @@
             margin: 0;
             padding: 0;
             line-height: 1.1;
-            counter-reset: page 1;
+
         }
 
         .main-table, .footer-table, .header-table {
