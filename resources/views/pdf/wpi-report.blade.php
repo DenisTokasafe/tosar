@@ -95,17 +95,17 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td width="30%">Nama Dokumen/<span class="eng-text">Document Name</span></td>
+                <td width="35%">Nama Dokumen/<span class="eng-text">Document Name</span></td>
                 <td width="70%" colspan="3">Formulir Laporan WPI KPLH</td>
             </tr>
             <tr>
-                <td width="30%">Ditetapkan Oleh/<span class="eng-text">Determined By</span></td>
+                <td width="35%">Ditetapkan Oleh/<span class="eng-text">Determined By</span></td>
                 <td width="35%">Kepala Teknik Tambang/<span class="eng-text">Mining Technical Head</span></td>
                 <td width="20%">Tanggal Terbit /<span class="eng-text">Date of Issue</span></td>
                 <td width="15%">15 Maret 2023</td>
             </tr>
             <tr>
-                <td width="30%">No Dokumen/<span class="eng-text">No Document</span></td>
+                <td width="35%">No Dokumen/<span class="eng-text">No Document</span></td>
                 <td width="35%">TT-MGT-FRS-024A</td>
                 <td width="20%">Tanggal Tinjau Ulang / <span class="eng-text">Review Date</span></td>
                 <td width="15%">15 Maret 2026</td>
@@ -113,7 +113,7 @@
             <tr>
                 <td width="12%">No Revisi</td>
                 <td width="8%" class="center">00</td>
-                <td width="55%" class="center">
+                <td colspan="2" width="55%" class="center">
                     <span class="red-warning">Dokumen terkendali dan valid hanya ada di sharepoint Archi Indonesia</span>
                 </td>
                 <td width="25%" class="right">
@@ -141,7 +141,7 @@
                     <td>{{ $report->report_time }}</td>
                 @elseif ($i == 1)
                     <td style="background-color: #e2e8f0; font-weight: bold;">Lokasi/Location</td>
-                    <td>{{ $report->locationRelation->name ?? '-' }}</td>
+                    <td>{{ $report->location}}</td>
                 @elseif ($i == 2)
                     <td style="background-color: #e2e8f0; font-weight: bold;">Site Name</td>
                     <td>Tokatindung</td>
