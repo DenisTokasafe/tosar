@@ -72,14 +72,18 @@ class Index extends Component
         $this->report_time = $report->report_time;
 
         $this->location = $report->location;
-
-        if (Contractor::where('contractor_name',$report->department)->exists()) {
+         if (Contractor::where('contractor_name',$report->department)->exists()) {
             $this->deptCont = 'company';
-        } else {
+            $this->searchContractor = $report->department;
+        } elseif (Department::where('department_name',$report->department)->exists()) {
             $this->deptCont = 'department';
+            $this->search = $report->department;
+
+        }else{
+            $this->deptCont = 'department';
+            $this->search = $report->department;
         }
 
-        $this->dept_cont = $report->department;
 
 
 
