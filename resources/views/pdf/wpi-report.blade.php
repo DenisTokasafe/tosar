@@ -4,22 +4,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            margin: 100px 1cm 110px 1cm; /* Atur margin atas dan bawah untuk memberi ruang header & footer */
+            /* Ruang untuk header (100px) dan footer (110px) */
+            margin: 100px 1cm 110px 1cm;
         }
 
-        /* HEADER FIXED */
         header {
             position: fixed;
-            top: -80px; /* Letakkan di margin atas */
+            top: -85px;
             left: 0;
             right: 0;
-            height: 70px;
+            height: 80px;
         }
 
-        /* FOOTER FIXED */
         footer {
             position: fixed;
-            bottom: -90px; /* Letakkan di margin bawah */
+            bottom: -95px;
             left: 0;
             right: 0;
             height: 100px;
@@ -38,9 +37,10 @@
             border-collapse: collapse;
         }
 
+        /* Border hitam tegas sesuai gambar */
         .header-table td, .main-table th, .main-table td, .footer-table td {
             border: 1px solid #000;
-            padding: 3px 5px;
+            padding: 2px 5px;
             vertical-align: top;
             word-wrap: break-word;
         }
@@ -49,14 +49,17 @@
 
         .bg-gray {
             background-color: #e2e8f0;
-            font-weight: bold;
+            font-weight: normal;
         }
 
         .center { text-align: center; }
 
-        .red-text {
-            color: #b91c1c;
+        /* Teks Merah Footer sesuai gambar */
+        .red-warning {
+            color: #ff0000;
             font-weight: bold;
+            font-style: italic;
+            font-size: 8pt;
         }
 
         img.photo {
@@ -67,12 +70,8 @@
         }
 
         /* Penomoran Halaman Otomatis */
-        .pagenum:before {
-            content: counter(page);
-        }
-        .totalpage:before {
-            content: counter(pages);
-        }
+        .pagenum:before { content: counter(page); }
+        .totalpage:before { content: counter(pages); }
     </style>
 </head>
 <body>
@@ -96,12 +95,12 @@
     </header>
 
     <footer>
-        <table class="footer-table" style="font-size: 7.5pt;">
+        <table class="footer-table" style="font-size: 8pt;">
             <tr>
-                <td width="25%" class="bg-gray">Nama Dokumen</td>
-                <td width="40%">Formulir Laporan WPI KPLH</td>
-                <td width="15%" class="bg-gray">Tanggal Terbit</td>
-                <td width="20%">15 Maret 2023</td>
+                <td width="20%" class="bg-gray">Nama Dokumen</td>
+                <td width="30%">Formulir Laporan WPI KPLH</td>
+                <td width="20%" class="bg-gray">Tanggal Terbit</td>
+                <td width="30%">15 Maret 2023</td>
             </tr>
             <tr>
                 <td class="bg-gray">Ditetapkan Oleh</td>
@@ -112,16 +111,16 @@
             <tr>
                 <td class="bg-gray">No Dokumen</td>
                 <td>TT-MGT-FRS-024A</td>
-                <td colspan="2" rowspan="2" class="center" style="vertical-align: middle;">
-                    <span class="red-text">Dokumen terkendali dan valid hanya ada di sharepoint Archi Indonesia</span>
+                <td colspan="2" rowspan="2" class="center" style="vertical-align: middle; border-bottom: none;">
+                    <span class="red-warning">Dokumen terkendali dan valid hanya ada di sharepoint Archi Indonesia</span>
                 </td>
             </tr>
             <tr>
-                <td class="bg-gray">No Revisi</td>
-                <td class="center">00</td>
+                <td class="bg-gray" style="border-bottom: 1px solid #000;">No Revisi</td>
+                <td class="center" style="border-bottom: 1px solid #000;">00</td>
             </tr>
         </table>
-        <div style="text-align: right; font-size: 8pt; margin-top: 5px; font-weight: bold;">
+        <div style="text-align: right; font-size: 9pt; margin-top: -15px; font-weight: bold; background: white; width: 120px; float: right; position: relative; z-index: 10;">
             Halaman <span class="pagenum"></span> dari <span class="totalpage"></span>
         </div>
     </footer>
