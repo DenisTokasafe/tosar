@@ -3,7 +3,7 @@
         <div class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
             <div>
                 <flux:heading>{{ $heading ?? '' }}</flux:heading>
-                <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
+                <flux:subheading size='sm'>{{ $subheading ?? '' }}</flux:subheading>
             </div>
             <div class="flex items-center gap-3">
                 @if (Route::is('wpi.list'))
