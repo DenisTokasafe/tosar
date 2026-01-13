@@ -221,7 +221,7 @@
                         <td>{{ $report->area }}</td>
                     @elseif ($i == 4)
                         <td class="bg-label">Company</td>
-                        <td>PT MSM</td>
+                        <td>PT. MSM/PT. TTN</td>
                     @elseif ($i == 5)
                         <td class="bg-label">{{ $deptLabel }}</td>
                         <td>{{ $report->department }}</td>
