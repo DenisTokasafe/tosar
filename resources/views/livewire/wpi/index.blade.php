@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <div class="flex justify-start mb-1 " wire:ignore>
+    <div class="flex justify-start " wire:ignore>
         @php
             $currentRoute = Route::currentRouteName();
         @endphp
