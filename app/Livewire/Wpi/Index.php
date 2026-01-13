@@ -75,9 +75,11 @@ class Index extends Component
          if (Contractor::where('contractor_name',$report->department)->exists()) {
             $this->deptCont = 'company';
             $this->searchContractor = $report->department;
+            $this->search = '';
         } elseif (Department::where('department_name',$report->department)->exists()) {
             $this->deptCont = 'department';
             $this->search = $report->department;
+            $this->searchContractor = '';
 
         }else{
             $this->deptCont = 'department';
