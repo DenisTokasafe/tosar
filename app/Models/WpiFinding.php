@@ -21,6 +21,8 @@ class WpiFinding extends Model
     protected $casts = [
         'photos' => 'array',
         'photos_prevention' => 'array',
-        'due_date' => 'date'
+        'due_date' => 'date',
+        'completion_date' => 'date',
+        'pic_responsible' => 'array', // Otomatis mengubah Array ke JSON saat simpan, dan sebaliknya
     ];
 }
