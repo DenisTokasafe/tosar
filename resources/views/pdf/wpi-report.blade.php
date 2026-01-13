@@ -95,6 +95,31 @@
             margin: 3px;
             border: 0.5px solid #000;
         }
+
+        /* --- Style Tambahan Untuk Tabel Risk Level --- */
+        .page-break {
+            page-break-before: always;
+        }
+
+        .risk-table-page {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 10px;
+        }
+
+        .risk-table-page td,
+        .risk-table-page th {
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 8.5pt;
+            vertical-align: middle;
+        }
+
+        .bg-extrim { background-color: #ff0000; color: white; font-weight: bold; }
+        .bg-tinggi { background-color: #ffff00; color: black; font-weight: bold; }
+        .bg-menengah { background-color: #0070c0; color: white; font-weight: bold; }
+        .bg-rendah { background-color: #92d050; color: black; font-weight: bold; }
     </style>
 </head>
 
@@ -102,14 +127,10 @@
 
     <script type="text/php">
         if (isset($pdf)) {
-            // page_script memastikan teks dicetak ulang pada setiap halaman baru
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-
-                // Koordinat X: 480 (kanan), Y: 809 (baris terakhir footer)
-                // Jika posisi masih kurang pas di halaman 2, coba ubah 806 menjadi 800
                 $pdf->text(480, 809, $pageText, $font, $size);
             ');
         }
@@ -233,7 +254,6 @@
                             <strong>PIC:</strong><br>
                             @if (!empty($find->pic_responsible))
                                 @php
-                                    // Memecah string berdasarkan karakter pipe (|)
                                     $picList = explode('|', $find->pic_responsible);
                                 @endphp
 
@@ -255,6 +275,48 @@
                         </td>
                     </tr>
                 @endforeach
+            </tbody>
+        </table>
+
+        <div class="page-break"></div>
+
+        <h3 class="center">Level Resiko/ Risk Level</h3>
+        <table class="risk-table-page">
+            <thead>
+                <tr class="bg-label center">
+                    <th width="80%">Deskripsi / Description</th>
+                    <th width="20%">Kode OHS Risk / Code of OHS Risk</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5 (misalnya, bekerja di ketinggian scaffolding atau tower tanpa mengenakan full body harness dan dua lanyard, atau memasuki ruang terbatas tanpa mendapatkan izin dan melakukan uji gas/udara sebagaimana mestinya).<br>
+                        <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous to life or health with the potential event Level 4 or 5 event (e.g., working at height on scaffolding or tower without wearing fullbody harness and double lanyard, or entering a confined space without a permit and proper oxygen/gas testing).</span>
+                    </td>
+                    <td class="center bg-extrim">E - Ekstrim<br><span class="en">E - Extreme</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang membahayakan keselamatan manusia, merusak properti dan menggangu proses kerja (misalnya, melakukan pengelasan di unit/bangunan tanpa dilengkapi dengan ijin kerja dan alat pemadam kebakaran atau mengamati pekerja yang menggunakan peralatan kerja yang tidak sesuai dengan jenis pekerjaan).<br>
+                        <span class="en">"High (H)" Priority actions address a condition or practice which could cause harm to people, property and processes (e.g., welding on unit/building without work permit and proper fire suppression support or observing someone using an incorrect hand tool for the job).</span>
+                    </td>
+                    <td class="center bg-tinggi">T - Tinggi<br><span class="en">T - Tinggi</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan meskipun tidak begitu berbahaya, atau memerlukan upaya pencegahan agar tidak timbul kejadian serupa di kemudian hari (misalnya, tempat cuci mata yang rusak, akses keluar atau akses menuju lokasi alat pemadam kebakaran yang terhambat, pelindung yang rusak atau retak, atau label peringatan pipa).<br>
+                        <span class="en">"Moderate (M)" Priority actions address safety violations or deficiencies requiring corrective action but are not immediately dangerous, or a preventative measure to prevent the same (e.g., inoperable eye wash station, blocking an exit or fire extinguisher, broken or cracked guards, or labeling of pipelines).</span>
+                    </td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en">M - Moderate</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan yang tidak begitu siknifikan dampaknya terhadap manusia maupun lingkungan. (misalnya, sampah berceceran di lantai, rembesan air, balon lampu mati, label tanda peringatan buram dll..<br>
+                        <span class="en">Priority action "Low (L)": Addressing violations of K3 regulations or there are deficiencies that require corrective actions that have little impact on humans or the environment. (e.g., trash splattered on the floor, water seepage, balloon lights out, blurry warning labels etc..</span>
+                    </td>
+                    <td class="center bg-rendah">L - Rendah<br><span class="en">L - Low</span></td>
+                </tr>
             </tbody>
         </table>
     </main>
