@@ -127,13 +127,6 @@
                             <input name="area" type="text" wire:model.live="area" placeholder="Area kerja..."
                                 class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('area') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                             <x-label-error :messages="$errors->get('area')" />
-                            {{-- Status --}}
-                            <x-label-req>{{ __('Status') }} </x-label-req>
-                            <flux:select size="xs" wire:model.live="status" placeholder="Choose Status...">
-                                <flux:select.option value="enabled">enabled</flux:select.option>
-                                <flux:select.option value="disabled">disabled</flux:select.option>
-                            </flux:select>
-                            <x-label-error :messages="$errors->get('status')" />
                         </fieldset>
                         <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
