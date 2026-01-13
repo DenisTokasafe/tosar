@@ -90,7 +90,7 @@ class Index extends Component
 
         $this->searchLocation = $report->location;
         // Jika dept_cont bisa berasal dari Contractor, tambahkan logika pengecekan jika perlu
-
+        $this->dept_cont = $report->department;
 
 
         // 3. Isi Properti Inspectors (Array)
