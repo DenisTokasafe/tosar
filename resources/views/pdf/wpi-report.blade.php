@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Pastikan margin bawah (115px) cukup luas agar konten tidak menimpa footer */
+            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
             margin: 110px 1cm 115px 1cm;
         }
 
@@ -43,7 +43,7 @@
             vertical-align: middle;
         }
 
-        /* Styling Label Bilingual */
+        /* Styling Label Bilingual (Italic & Blue sesuai gambar) */
         .en {
             color: #1e40af;
             font-style: italic;
@@ -70,12 +70,11 @@
 
     <script type="text/php">
         if (isset($pdf)) {
-            // page_script memastikan nomor tercetak di SETIAP halaman setelah render selesai
+            // page_script memastikan nomor muncul di SETIAP halaman
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
-                // Koordinat X: 480 (sisi kanan)
-                // Koordinat Y: 806 (Diturunkan agar masuk tepat ke baris merah footer)
+                // Koordinat X: 480 (kanan), Y: 806 (sejajar baris 4 footer)
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
                 $pdf->text(480, 806, $pageText, $font, $size);
             ');
@@ -124,7 +123,7 @@
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" width="25%">
+                <td class="right">
                     &nbsp;
                 </td>
             </tr>
