@@ -60,7 +60,7 @@
                                     {{-- Tombol Download PDF --}}
                                     <flux:tooltip content="Download PDF" position="top">
                                         <flux:button wire:click="exportPDF({{ $report->id }})" size="xs"
-                                            icon="document-arrow-down" variant="ghost">
+                                            icon="document-arrow-down" variant="primary" color="blue">
                                         </flux:button>
                                     </flux:tooltip>
                                 </div>
