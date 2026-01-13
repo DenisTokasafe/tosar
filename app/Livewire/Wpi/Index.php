@@ -139,31 +139,19 @@ class Index extends Component
 
     public function selectPicPelapor($id, $name)
     {
-        // Cari index baris mana yang dropdown-nya aktif
+        // Cari index mana yang dropdown-nya sedang terbuka
         $index = collect($this->showDropdown_pic)->search(true);
-
         if ($index !== false) {
-            // 1. Pastikan pic_responsible adalah array
-            if (!is_array($this->findings[$index]['pic_responsible'])) {
-                $this->findings[$index]['pic_responsible'] = [];
-            }
+            // 1. Simpan data ke array findings sesuai barisnya
+            $this->findings[$index]['pic_responsible'] = $name;
 
-            // 2. Tambahkan nama jika belum ada di list (mencegah duplikat)
-            if (!in_array($name, $this->findings[$index]['pic_responsible'])) {
-                $this->findings[$index]['pic_responsible'][] = $name;
-            }
 
-            // 3. Reset input pencarian agar user bisa cari nama lain
-            $this->search_pic[$index] = '';
+            // 2. Update search input agar sinkron di UI
+            $this->search_pic[$index] = $name;
+
+            // 3. Tutup dropdown untuk baris tersebut
             $this->showDropdown_pic[$index] = false;
         }
-    }
-
-    // Method untuk menghapus salah satu PIC yang sudah dipilih
-    public function removePic($findingIndex, $picIndex)
-    {
-        unset($this->findings[$findingIndex]['pic_responsible'][$picIndex]);
-        $this->findings[$findingIndex]['pic_responsible'] = array_values($this->findings[$findingIndex]['pic_responsible']);
     }
 
     /**
@@ -306,7 +294,7 @@ class Index extends Component
             'ohs_risk' => 'L',
             'description' => '',
             'prevention_action' => '',
-            'pic_responsible' => [],
+            'pic_responsible' => '',
             'due_date' => '',
             'completion_date' => '',
             'photos' => [],
@@ -477,7 +465,7 @@ class Index extends Component
             'findings.*.prevention_action' => 'required|string',
             'findings.*.due_date' => 'nullable|date',
             'findings.*.completion_date' => 'nullable|date',
-            'findings.*.pic_responsible' => 'required|array|min:1',
+            'findings.*.pic_responsible' => 'required|string',
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
