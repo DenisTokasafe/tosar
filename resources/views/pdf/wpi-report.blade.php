@@ -5,36 +5,36 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         @page {
-            /* Menentukan ukuran kertas A4 Portrait */
             size: a4 portrait;
-            /* Margin untuk memberi ruang bagi Header (top) dan Footer (bottom) */
-            margin: 115px 1cm 120px 1cm;
+            /* Margin disesuaikan agar isi tidak tertabrak header/footer */
+            margin: 130px 1.5cm 140px 1.5cm;
         }
 
         header {
             position: fixed;
             top: -100px;
+            /* Posisi absolut di area margin atas */
             left: 0;
             right: 0;
-            height: 90px;
-            opacity: 0.9;
+            height: 100px;
         }
 
         footer {
             position: fixed;
             bottom: -110px;
+            /* Posisi absolut di area margin bawah */
             left: 0;
             right: 0;
-            height: 105px;
-            opacity: 0.9;
+            height: 120px;
         }
 
         body {
             font-family: "Times New Roman", Times, serif;
-            font-size: 8.5pt;
+            font-size: 9pt;
+            /* Ukuran standar dokumen kantor */
             margin: 0;
             padding: 0;
-            line-height: 1.1;
+            line-height: 1.2;
         }
 
         .main-table,
@@ -42,23 +42,25 @@
         .header-table {
             width: 100%;
             border-collapse: collapse;
-            /* Memaksa tabel mengikuti ukuran layout kertas A4 */
             table-layout: fixed;
         }
 
+        /* Border lebih tegas sesuai format dokumen resmi */
         .main-table td,
         .main-table th,
         .footer-table td,
         .header-table td {
-            border: 1px solid rgba(0, 0, 0, 0.8);
-            padding: 3px 5px;
-            vertical-align: middle;
-            /* Mencegah teks panjang atau gambar merusak layout kolom */
+            border: 1px solid #000;
+            padding: 5px 6px;
+            vertical-align: top;
             word-wrap: break-word;
-            overflow: hidden;
         }
 
-        /* Menghindari baris temuan terpotong secara vertikal saat ganti halaman */
+        .header-table td {
+            vertical-align: middle;
+        }
+
+        /* Menghindari baris terpotong antar halaman */
         .main-table tr {
             page-break-inside: avoid;
         }
@@ -66,17 +68,19 @@
         .en {
             color: #1e40af;
             font-style: italic;
+            font-size: 8pt;
         }
 
         .red-note {
             color: #ff0000;
             font-weight: bold;
-            font-size: 9pt;
+            font-size: 8pt;
             text-align: center;
         }
 
         .bg-label {
-            background-color: rgba(226, 232, 240, 0.7);
+            background-color: #f1f5f9;
+            /* Warna abu-abu soft yang lebih profesional */
             font-weight: bold;
         }
 
@@ -89,49 +93,56 @@
         }
 
         img.photo {
-            width: 130px;
-            max-width: 100%;
+            width: 140px;
             height: auto;
-            margin: 3px;
-            border: 0.5px solid #000;
+            margin: 5px 2px;
+            border: 1px solid #000;
         }
 
-        /* --- Style Tambahan Untuk Tabel Risk Level --- */
         .page-break {
             page-break-before: always;
         }
 
-        .risk-table-page {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            margin-top: 10px;
+        /* Gaya Khusus Tabel Risk Level */
+        .risk-table-page td {
+            font-size: 8pt;
+            line-height: 1.3;
         }
 
-        .risk-table-page td,
-        .risk-table-page th {
-            border: 1px solid #000;
-            padding: 5px;
-            font-size: 8.5pt;
-            vertical-align: middle;
+        .bg-extrim {
+            background-color: #ff0000 !important;
+            color: white;
+            font-weight: bold;
         }
 
-        .bg-extrim { background-color: #ff0000; color: white; font-weight: bold; }
-        .bg-tinggi { background-color: #ffff00; color: black; font-weight: bold; }
-        .bg-menengah { background-color: #0070c0; color: white; font-weight: bold; }
-        .bg-rendah { background-color: #92d050; color: black; font-weight: bold; }
+        .bg-tinggi {
+            background-color: #ffff00 !important;
+            color: black;
+            font-weight: bold;
+        }
+
+        .bg-menengah {
+            background-color: #0070c0 !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bg-rendah {
+            background-color: #92d050 !important;
+            color: black;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
-
     <script type="text/php">
         if (isset($pdf)) {
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(480, 809, $pageText, $font, $size);
+                $pdf->text(460, 790, $pageText, $font, $size);
             ');
         }
     </script>
@@ -139,13 +150,16 @@
     <header>
         <table class="header-table">
             <tr>
-                <td width="15%" class="center"><img src="{{ public_path('images/logo-msm.png') }}" width="60"></td>
-                <td width="70%" class="center">
-                    <strong style="font-size: 13pt;">TOKA TINDUNG PROJECT</strong><br>
-                    <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
-                    <span>TT-MGT-FRS-024A</span>
+                <td width="15%" class="center">
+                    <img src="{{ public_path('images/logo-msm.png') }}" width="65">
                 </td>
-                <td width="15%" class="center"><img src="{{ public_path('images/logo-archi.png') }}" width="60">
+                <td width="70%" class="center">
+                    <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
+                    <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
+                    <span style="font-size: 9pt;">TT-MGT-FRS-024A</span>
+                </td>
+                <td width="15%" class="center">
+                    <img src="{{ public_path('images/logo-archi.png') }}" width="65">
                 </td>
             </tr>
         </table>
@@ -153,20 +167,20 @@
 
     <footer>
         <table class="footer-table">
-            <tr>
-                <td width="25%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td width="35%">Formulir Laporan WPI KPLH</td>
-                <td width="20%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
+            <tr style="font-size: 8pt;">
+                <td width="25%">Nama Dokumen/<br><span class="en">Document Name</span></td>
+                <td width="30%">Formulir Laporan WPI KPLH</td>
+                <td width="25%">Tanggal Terbit/<br><span class="en">Date of Issue</span></td>
                 <td width="20%">15 Maret 2023</td>
             </tr>
-            <tr>
-                <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
-                <td>Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-                <td>Tanggal Tinjau Ulang/<span class="en">Review Date</span></td>
+            <tr style="font-size: 8pt;">
+                <td>Ditetapkan Oleh/<br><span class="en">Determined By</span></td>
+                <td>Kepala Teknik Tambang/<br><span class="en">Mining Technical Head</span></td>
+                <td>Tanggal Tinjau Ulang/<br><span class="en">Review Date</span></td>
                 <td>15 Maret 2026</td>
             </tr>
-            <tr>
-                <td>No Dokumen/<span class="en">No Document</span></td>
+            <tr style="font-size: 8pt;">
+                <td>No Dokumen/<br><span class="en">No Document</span></td>
                 <td>TT-MGT-FRS-024A</td>
                 <td>No Revisi</td>
                 <td>00</td>
@@ -175,28 +189,29 @@
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right">&nbsp;</td>
+                <td class="right" style="font-size: 8pt; border-left: none;"></td>
             </tr>
         </table>
     </footer>
 
     <main>
-        <table class="main-table" style="margin-bottom: 10px;">
-            <tr class="bg-label">
-                <td width="15%">Tanggal /Date</td>
-                <td width="30%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
-                <td width="25%" class="center">Nama Petugas Inspeksi/Inspector</td>
-                <td width="10%" class="center">ID</td>
-                <td width="20%" class="center">Dept/Cont</td>
+        <table class="main-table" style="margin-bottom: 15px;">
+            <tr>
+                <td width="18%" class="bg-label">Tanggal / <span class="en" style="color:black">Date</span></td>
+                <td width="32%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
+                <td width="25%" class="bg-label center">Nama Petugas Inspeksi / <br><span class="en"
+                        style="color:black">Inspector Name</span></td>
+                <td width="10%" class="bg-label center">ID</td>
+                <td width="15%" class="bg-label center">Dept/Cont</td>
             </tr>
             @php $maxRows = 6; @endphp
             @for ($i = 0; $i < $maxRows; $i++)
                 <tr>
                     @if ($i == 0)
-                        <td class="bg-label">Jam /Time</td>
+                        <td class="bg-label">Jam / <span class="en" style="color:black">Time</span></td>
                         <td>{{ $report->report_time }}</td>
                     @elseif ($i == 1)
-                        <td class="bg-label">Lokasi/Location</td>
+                        <td class="bg-label">Lokasi / <span class="en" style="color:black">Location</span></td>
                         <td>{{ $report->location ?? '-' }}</td>
                     @elseif ($i == 2)
                         <td class="bg-label">Site Name</td>
@@ -211,6 +226,7 @@
                         <td class="bg-label">{{ $deptLabel }}</td>
                         <td>{{ $report->department }}</td>
                     @endif
+
                     <td>{{ isset($report->inspectors[$i]) ? $i + 1 . '. ' . $report->inspectors[$i]['name'] : '' }}
                     </td>
                     <td class="center">{{ $report->inspectors[$i]['id_number'] ?? '' }}</td>
@@ -223,50 +239,50 @@
             <thead>
                 <tr class="bg-label center">
                     <th width="4%">No</th>
-                    <th width="7%">OHS Risk</th>
-                    <th width="32%">Uraian Tindakan/Kondisi Tidak Aman</th>
-                    <th width="30%">Jenis Tindakan Pencegahan</th>
-                    <th width="27%">Tindak Lanjut / Follow Up</th>
+                    <th width="8%">OHS Risk</th>
+                    <th width="32%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
+                            style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span>
+                    </th>
+                    <th width="28%">Jenis Tindakan Pencegahan<br><span class="en"
+                            style="color:black; font-weight:normal">Type of Preventive Action</span></th>
+                    <th width="28%">Tindak Lanjut / <span class="en"
+                            style="color:black; font-weight:normal">Follow Up</span></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($report->findings as $index => $find)
                     <tr>
                         <td class="center">{{ $index + 1 }}</td>
-                        <td class="center">{{ $find->ohs_risk }}</td>
-                        <td style="vertical-align: top;">
-                            {{ $find->description }}<br>
+                        <td class="center" style="font-weight: bold;">{{ $find->ohs_risk }}</td>
+                        <td>
+                            {{ $find->description }}<br><br>
                             @if (!empty($find->photos))
                                 @foreach ($find->photos as $p)
                                     <img src="{{ public_path('storage/' . $p) }}" class="photo">
                                 @endforeach
                             @endif
                         </td>
-                        <td style="vertical-align: top;">
-                            {{ $find->prevention_action }}<br>
+                        <td>
+                            {{ $find->prevention_action }}<br><br>
                             @if (!empty($find->photos_prevention))
                                 @foreach ($find->photos_prevention as $pp)
                                     <img src="{{ public_path('storage/' . $pp) }}" class="photo">
                                 @endforeach
                             @endif
                         </td>
-                        <td style="vertical-align: top;">
-                            <strong>PIC:</strong><br>
+                        <td>
+                            <strong>PIC:</strong>
                             @if (!empty($find->pic_responsible))
-                                @php
-                                    $picList = explode('|', $find->pic_responsible);
-                                @endphp
-
-                                <ul style="margin: 0; padding-left: 12px; list-style-type: none;">
+                                @php $picList = explode('|', $find->pic_responsible); @endphp
+                                <ul style="margin: 0; padding-left: 15px; list-style-type: disc;">
                                     @foreach ($picList as $picName)
-                                        <li style="margin-bottom: 2px;">• {{ trim($picName) }}</li>
+                                        <li>{{ trim($picName) }}</li>
                                     @endforeach
                                 </ul>
                             @else
                                 -
                             @endif
-
-                            <div style="margin-top: 5px; border-top: 0.5px solid #ccc; pt-2">
+                            <div style="margin-top: 10px; padding-top: 5px; border-top: 1px dashed #000;">
                                 <strong>Due:</strong>
                                 {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
                                 <strong>Selesai:</strong>
@@ -280,42 +296,53 @@
 
         <div class="page-break"></div>
 
-        <h3 class="center">Level Resiko/ Risk Level</h3>
-        <table class="risk-table-page">
+        <h3 class="center" style="text-decoration: underline;">Level Resiko / <span class="en">Risk Level</span>
+        </h3>
+        <table class="main-table risk-table-page">
             <thead>
                 <tr class="bg-label center">
-                    <th width="80%">Deskripsi / Description</th>
-                    <th width="20%">Kode OHS Risk / Code of OHS Risk</th>
+                    <th width="75%">Deskripsi / <span class="en"
+                            style="color:black; font-weight:normal">Description</span></th>
+                    <th width="25%">Kode OHS Risk / <br><span class="en"
+                            style="color:black; font-weight:normal">Code of OHS Risk</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5 (misalnya, bekerja di ketinggian scaffolding atau tower tanpa mengenakan full body harness dan dua lanyard, atau memasuki ruang terbatas tanpa mendapatkan izin dan melakukan uji gas/udara sebagaimana mestinya).<br>
-                        <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous to life or health with the potential event Level 4 or 5 event (e.g., working at height on scaffolding or tower without wearing fullbody harness and double lanyard, or entering a confined space without a permit and proper oxygen/gas testing).</span>
+                        Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam
+                        keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5...<br>
+                        <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous
+                            to life or health...</span>
                     </td>
-                    <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
+                    <td class="center bg-extrim">E - Ekstrim<br><span class="en">E - Extreme</span></td>
                 </tr>
                 <tr>
                     <td>
-                        Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang membahayakan keselamatan manusia, merusak properti dan menggangu proses kerja (misalnya, melakukan pengelasan di unit/bangunan tanpa dilengkapi dengan ijin kerja dan alat pemadam kebakaran atau mengamati pekerja yang menggunakan peralatan kerja yang tidak sesuai dengan jenis pekerjaan).<br>
-                        <span class="en">"High (H)" Priority actions address a condition or practice which could cause harm to people, property and processes (e.g., welding on unit/building without work permit and proper fire suppression support or observing someone using an incorrect hand tool for the job).</span>
+                        Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang
+                        membahayakan keselamatan manusia...<br>
+                        <span class="en">"High (H)" Priority actions address a condition or practice which could
+                            cause harm to people...</span>
                     </td>
-                    <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - Tinggi</span></td>
+                    <td class="center bg-tinggi">T - Tinggi<br><span class="en">T - High</span></td>
                 </tr>
                 <tr>
                     <td>
-                        Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan meskipun tidak begitu berbahaya, atau memerlukan upaya pencegahan agar tidak timbul kejadian serupa di kemudian hari (misalnya, tempat cuci mata yang rusak, akses keluar atau akses menuju lokasi alat pemadam kebakaran yang terhambat, pelindung yang rusak atau retak, atau label peringatan pipa).<br>
-                        <span class="en">"Moderate (M)" Priority actions address safety violations or deficiencies requiring corrective action but are not immediately dangerous, or a preventative measure to prevent the same (e.g., inoperable eye wash station, blocking an exit or fire extinguisher, broken or cracked guards, or labeling of pipelines).</span>
+                        Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau
+                        terdapat kekurangan yang membutuhkan tindakan perbaikan...<br>
+                        <span class="en">"Moderate (M)" Priority actions address safety violations or
+                            deficiencies...</span>
                     </td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span></td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en">M - Moderate</span></td>
                 </tr>
                 <tr>
                     <td>
-                        Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau terdapat kekurangan yang membutuhkan tindakan perbaikan yang tidak begitu siknifikan dampaknya terhadap manusia maupun lingkungan. (misalnya, sampah berceceran di lantai, rembesan air, balon lampu mati, label tanda peringatan buram dll..<br>
-                        <span class="en">Priority action "Low (L)": Addressing violations of K3 regulations or there are deficiencies that require corrective actions that have little impact on humans or the environment. (e.g., trash splattered on the floor, water seepage, balloon lights out, blurry warning labels etc..</span>
+                        Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau
+                        terdapat kekurangan yang tidak begitu signifikan dampaknya...<br>
+                        <span class="en">"Low (L)" Priority action: Addressing violations of K3
+                            regulations...</span>
                     </td>
-                    <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
+                    <td class="center bg-rendah">L - Rendah<br><span class="en">L - Low</span></td>
                 </tr>
             </tbody>
         </table>
