@@ -283,10 +283,10 @@
                                 -
                             @endif
                             <div style="margin-top: 10px; padding-top: 5px; border-top: 1px dashed #000;">
-                                <strong>Due:</strong>
-                                {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
+                                <strong>Jatuh Tempo:</strong>
+                                {{ $find->due_date ? date('d/m/yyyy', strtotime($find->due_date)) : '-' }}<br>
                                 <strong>Selesai:</strong>
-                                {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
+                                {{ $find->completion_date ? date('d/m/yyyy', strtotime($find->completion_date)) : '-' }}
                             </div>
                         </td>
                     </tr>
