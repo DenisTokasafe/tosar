@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
+            /* Memberikan ruang untuk header (95px) dan footer (100px) */
             margin: 110px 1cm 110px 1cm;
         }
 
@@ -18,10 +18,10 @@
 
         footer {
             position: fixed;
-            bottom: -95px;
+            bottom: -100px;
             left: 0;
             right: 0;
-            height: 100px;
+            height: 105px;
         }
 
         body {
@@ -43,13 +43,13 @@
             vertical-align: middle;
         }
 
-        /* Styling Label Bilingual (Italic & Blue sesuai gambar) */
+        /* Styling teks Inggris (Biru & Italic) sesuai gambar */
         .en {
             color: #1e40af;
             font-style: italic;
         }
 
-        /* Styling teks merah di footer */
+        /* Styling teks merah peringatan */
         .red-note {
             color: #ff0000;
             font-weight: bold;
@@ -59,18 +59,29 @@
 
         .center { text-align: center; }
         .right { text-align: right; }
-
-        /* Penomoran Halaman */
-        .pagenum:before { content: counter(page); }
-        .totalpage:before { content: counter(pages); }
-
-        /* Style khusus konten utama */
-        main .main-table td { vertical-align: top; }
         .bg-label { background-color: #e2e8f0; font-weight: bold; }
+
+        /* Khusus untuk Main Content */
+        main .main-table td { vertical-align: top; }
         img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
     </style>
 </head>
 <body>
+
+    <script type="text/php">
+        if (isset($pdf)) {
+            $x = 480; // Koordinat horizontal
+            $y = 788; // Koordinat vertikal (sesuaikan agar pas di kotak footer kanan bawah)
+            $text = "Halaman {PAGE_NUM} dari {PAGE_COUNT}";
+            $font = $fontMetrics->get_font("Times-Roman", "bold");
+            $size = 8.5;
+            $color = array(0,0,0);
+            $word_space = 0.0;
+            $char_space = 0.0;
+            $angle = 0.0;
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+        }
+    </script>
 
     <header>
         <table class="header-table">
@@ -115,7 +126,7 @@
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
                 <td class="right">
-                    <strong>Halaman <span class="pagenum"></span> dari <span class="totalpage"></span></strong>
+                    &nbsp;
                 </td>
             </tr>
         </table>
@@ -204,8 +215,8 @@
                     </td>
                     <td>
                         <strong>PIC:</strong> {{ $find->pic_responsible }}<br>
-                        <strong>Due:</strong> {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
-                        <strong>Selesai:</strong> {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
+                        <strong>Due:</strong> {{ $find->due_date ? date('d/m/Y', strtotime($find->due_date)) : '-' }}<br>
+                        <strong>Selesai:</strong> {{ $find->completion_date ? date('d/m/Y', strtotime($find->completion_date)) : '-' }}
                     </td>
                 </tr>
                 @endforeach
