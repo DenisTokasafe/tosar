@@ -4,8 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
-            margin: 110px 1cm 115px 1cm;
+            /* Margin bawah ditambahkan sedikit (120px) agar footer memiliki ruang napas */
+            margin: 110px 1cm 120px 1cm;
         }
 
         header {
@@ -43,13 +43,11 @@
             vertical-align: middle;
         }
 
-        /* Styling Label Bilingual (Italic & Blue sesuai gambar) */
         .en {
             color: #1e40af;
             font-style: italic;
         }
 
-        /* Styling teks merah di footer */
         .red-note {
             color: #ff0000;
             font-weight: bold;
@@ -61,7 +59,6 @@
         .right { text-align: right; }
         .bg-label { background-color: #e2e8f0; font-weight: bold; }
 
-        /* Style khusus konten utama */
         main .main-table td { vertical-align: top; }
         img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
     </style>
@@ -70,13 +67,14 @@
 
     <script type="text/php">
         if (isset($pdf)) {
-            // page_script memastikan nomor muncul di SETIAP halaman
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
-                // Koordinat X: 480 (kanan), Y: 806 (sejajar baris 4 footer)
+
+                // Koordinat X: 480 (kanan)
+                // Koordinat Y: 805 (Diturunkan agar tepat di baris merah footer)
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(480, 806, $pageText, $font, $size);
+                $pdf->text(480, 805, $pageText, $font, $size);
             ');
         }
     </script>
@@ -123,7 +121,7 @@
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right">
+                <td class="right" width="25%">
                     &nbsp;
                 </td>
             </tr>
