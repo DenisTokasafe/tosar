@@ -515,6 +515,7 @@ class Index extends Component
             'findings.*.due_date' => 'nullable|date',
             'findings.*.completion_date' => 'nullable|date',
             'findings.*.pic_responsible' => 'required|array|min:1',
+            'findings.*.due_date' => 'required|date',
             // Inspectors Validation (Array)
             'inspectors'          => 'required|array|min:1',
             'inspectors.*.name'   => 'required|string|min:3',
@@ -527,6 +528,9 @@ class Index extends Component
             'findings.*.description.required' => 'Deskripsi temuan wajib diisi',
             'findings.*.prevention_action.required' => 'Tindakan pencegahan wajib diisi',
             'findings.*.pic_responsible.required' => 'PIC wajib diisi',
+            'findings.*.due_date.required' => 'Tanggal jatuh tempo wajib diisi',
+            'findings.*.due_date.date' => 'Format tanggal tidak valid',
+
             'inspectors.required' => 'Minimal harus ada 1 petugas inspeksi',
             'inspectors.*.name.required' => 'Nama petugas inspeksi wajib diisi',
             'dept_cont.required' => 'Departemen atau Kontraktor wajib diisi',
