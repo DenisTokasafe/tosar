@@ -6,7 +6,7 @@
                 <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
             </div>
             <div class="flex items-center gap-3">
-                @if (current_route_is('wpi.create'))
+                @if (!current_route_is('wpi.create'))
                     <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
