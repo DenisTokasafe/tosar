@@ -460,10 +460,29 @@
                                 </td>
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <x-form.searchable-select-advanced label="Person in charge (PIC)"
-                                        placeholder="Cari nama..." modelsearch="search_pic.{{ $index }}"
+                                        placeholder="Cari dan klik nama..."
+                                        modelsearch="search_pic.{{ $index }}"
                                         modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
-                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" {{-- Cukup kirim nama method, index akan ditangani oleh helper select di backend --}}
-                                        clickaction="selectPicPelapor" />
+                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
+
+                                    <div class="flex flex-wrap gap-1 mt-2">
+                                        @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
+                                            @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-sm">
+                                                    {{ $picName }}
+                                                    <button type="button"
+                                                        wire:click="removePic({{ $index }}, {{ $picKey }})"
+                                                        class="ml-1 text-blue-400 hover:text-blue-600">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                     <fieldset class="relative fieldset">
                                         <x-form.label label="Tanggal Jatuh Tempo:" />
                                         <div
