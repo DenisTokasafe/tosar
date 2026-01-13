@@ -218,7 +218,7 @@
                         <td>Tokatindung</td>
                     @elseif ($i == 3)
                         <td class="bg-label">Area</td>
-                        <td>Mining</td>
+                        <td>{{ $report->area }}</td>
                     @elseif ($i == 4)
                         <td class="bg-label">Company</td>
                         <td>PT MSM</td>
