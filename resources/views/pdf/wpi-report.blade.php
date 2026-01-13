@@ -315,7 +315,7 @@
                         <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous
                             to life or health...</span>
                     </td>
-                    <td class="center bg-extrim">E - Ekstrim<br><span class="en">E - Extreme</span></td>
+                    <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
                 </tr>
                 <tr>
                     <td>
@@ -324,7 +324,7 @@
                         <span class="en">"High (H)" Priority actions address a condition or practice which could
                             cause harm to people...</span>
                     </td>
-                    <td class="center bg-tinggi">T - Tinggi<br><span class="en">T - High</span></td>
+                    <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - High</span></td>
                 </tr>
                 <tr>
                     <td>
@@ -333,7 +333,7 @@
                         <span class="en">"Moderate (M)" Priority actions address safety violations or
                             deficiencies...</span>
                     </td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en">M - Moderate</span></td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span></td>
                 </tr>
                 <tr>
                     <td>
@@ -342,7 +342,7 @@
                         <span class="en">"Low (L)" Priority action: Addressing violations of K3
                             regulations...</span>
                     </td>
-                    <td class="center bg-rendah">L - Rendah<br><span class="en">L - Low</span></td>
+                    <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
                 </tr>
             </tbody>
         </table>
