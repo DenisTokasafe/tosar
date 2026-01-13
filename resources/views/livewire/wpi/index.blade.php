@@ -232,7 +232,7 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea Deskripsi --}}
-                                    <x-form.textarea label="Deskripsi Temuan"
+                                    <x-form.textarea label="Deskripsi Temuan" required
                                         model="findings.{{ $index }}.description" />
 
                                     <div class="mt-1">
@@ -347,7 +347,7 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea --}}
-                                    <x-form.textarea label="Tindakan pencegahan" placeholder="Tindakan pencegahan..."
+                                    <x-form.textarea label="Tindakan pencegahan" required placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
 
                                     <div class="mt-1">
