@@ -4,24 +4,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @page {
-            /* Margin 110px atas/bawah untuk ruang header & footer agar tidak tertimpa konten */
-            margin: 110px 1cm 115px 1cm;
+            /* Menentukan ukuran kertas A4 Portrait */
+            size: a4 portrait;
+            /* Margin untuk memberi ruang bagi Header (top) dan Footer (bottom) */
+            margin: 115px 1cm 120px 1cm;
         }
 
         header {
             position: fixed;
-            top: -95px;
+            top: -100px;
             left: 0;
             right: 0;
             height: 90px;
+            opacity: 0.9;
         }
 
         footer {
             position: fixed;
-            bottom: -105px;
+            bottom: -110px;
             left: 0;
             right: 0;
             height: 105px;
+            opacity: 0.9;
         }
 
         body {
@@ -35,46 +39,48 @@
         .main-table, .footer-table, .header-table {
             width: 100%;
             border-collapse: collapse;
+            /* Memaksa tabel mengikuti ukuran layout kertas A4 */
+            table-layout: fixed;
         }
 
         .main-table td, .main-table th, .footer-table td, .header-table td {
-            border: 1px solid #000;
-            padding: 2px 4px;
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            padding: 3px 5px;
             vertical-align: middle;
+            /* Mencegah teks panjang atau gambar merusak layout kolom */
+            word-wrap: break-word;
+            overflow: hidden;
         }
 
-        /* Styling Label Bilingual (Italic & Blue sesuai gambar) */
-        .en {
-            color: #1e40af;
-            font-style: italic;
+        /* Menghindari baris temuan terpotong secara vertikal saat ganti halaman */
+        .main-table tr {
+            page-break-inside: avoid;
         }
 
-        /* Styling teks merah di footer */
-        .red-note {
-            color: #ff0000;
-            font-weight: bold;
-            font-size: 9pt;
-            text-align: center;
-        }
+        .en { color: #1e40af; font-style: italic; }
+        .red-note { color: #ff0000; font-weight: bold; font-size: 9pt; text-align: center; }
+        .bg-label { background-color: rgba(226, 232, 240, 0.7); font-weight: bold; }
 
         .center { text-align: center; }
         .right { text-align: right; }
-        .bg-label { background-color: #e2e8f0; font-weight: bold; }
 
-        /* Style khusus konten utama */
-        main .main-table td { vertical-align: top; }
-        img.photo { width: 130px; height: auto; margin: 3px; border: 0.5px solid #000; }
+        img.photo {
+            width: 130px;
+            max-width: 100%;
+            height: auto;
+            margin: 3px;
+            border: 0.5px solid #000;
+        }
     </style>
 </head>
 <body>
 
     <script type="text/php">
         if (isset($pdf)) {
-            // page_script memastikan nomor muncul di SETIAP halaman
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
-                // Koordinat X: 480 (kanan), Y: 806 (sejajar baris 4 footer)
+                // Koordinat X (kanan) dan Y (baris terakhir footer)
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
                 $pdf->text(480, 806, $pageText, $font, $size);
             ');
@@ -84,17 +90,13 @@
     <header>
         <table class="header-table">
             <tr>
-                <td width="15%" class="center">
-                    <img src="{{ public_path('images/logo-msm.png') }}" width="60">
-                </td>
+                <td width="15%" class="center"><img src="{{ public_path('images/logo-msm.png') }}" width="60"></td>
                 <td width="70%" class="center">
                     <strong style="font-size: 13pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
                     <span>TT-MGT-FRS-024A</span>
                 </td>
-                <td width="15%" class="center">
-                    <img src="{{ public_path('images/logo-archi.png') }}" width="60">
-                </td>
+                <td width="15%" class="center"><img src="{{ public_path('images/logo-archi.png') }}" width="60"></td>
             </tr>
         </table>
     </header>
@@ -123,9 +125,7 @@
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right">
-                    &nbsp;
-                </td>
+                <td class="right">&nbsp;</td>
             </tr>
         </table>
     </footer>
@@ -137,9 +137,8 @@
                 <td width="30%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
                 <td width="25%" class="center">Nama Petugas Inspeksi/Inspector</td>
                 <td width="10%" class="center">ID</td>
-                <td width="20%" class="center">Department/Contractor</td>
+                <td width="20%" class="center">Dept/Cont</td>
             </tr>
-
             @php $maxRows = 6; @endphp
             @for ($i = 0; $i < $maxRows; $i++)
             <tr>
@@ -162,32 +161,21 @@
                     <td class="bg-label">Department</td>
                     <td>{{ $report->department }}</td>
                 @endif
-
                 <td>{{ isset($report->inspectors[$i]) ? ($i + 1) . '. ' . $report->inspectors[$i]['name'] : '' }}</td>
                 <td class="center">{{ $report->inspectors[$i]['id_number'] ?? '' }}</td>
                 <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
             </tr>
             @endfor
-            <tr>
-                <td class="bg-label">Contractor</td>
-                <td>{{ $report->searchContractor ?? '-' }}</td>
-                <td class="bg-label center">Direview oleh/Reviewing by:</td>
-                <td colspan="2" class="center">
-                    <div style="height: 25px;"></div>
-                    <strong>MARDIN</strong><br>
-                    ID: 3242289
-                </td>
-            </tr>
         </table>
 
         <table class="main-table">
             <thead>
                 <tr class="bg-label center">
                     <th width="4%">No</th>
-                    <th width="6%">OHS Risk</th>
-                    <th width="32%">Uraian Tindakan Tidak Aman / Kondisi Tidak Aman</th>
+                    <th width="7%">OHS Risk</th>
+                    <th width="32%">Uraian Tindakan/Kondisi Tidak Aman</th>
                     <th width="30%">Jenis Tindakan Pencegahan</th>
-                    <th width="28%">Tindak Lanjut / Follow Up</th>
+                    <th width="27%">Tindak Lanjut / Follow Up</th>
                 </tr>
             </thead>
             <tbody>
@@ -195,23 +183,23 @@
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
                     <td class="center">{{ $find->ohs_risk }}</td>
-                    <td>
-                        {{ $find->description }}<br><br>
+                    <td style="vertical-align: top;">
+                        {{ $find->description }}<br>
                         @if(!empty($find->photos))
                             @foreach($find->photos as $p)
                                 <img src="{{ public_path('storage/'.$p) }}" class="photo">
                             @endforeach
                         @endif
                     </td>
-                    <td>
-                        {{ $find->prevention_action }}<br><br>
+                    <td style="vertical-align: top;">
+                        {{ $find->prevention_action }}<br>
                         @if(!empty($find->photos_prevention))
                             @foreach($find->photos_prevention as $pp)
                                 <img src="{{ public_path('storage/'.$pp) }}" class="photo">
                             @endforeach
                         @endif
                     </td>
-                    <td>
+                    <td style="vertical-align: top;">
                         <strong>PIC:</strong> {{ $find->pic_responsible }}<br>
                         <strong>Due:</strong> {{ $find->due_date ? date('d/m/y', strtotime($find->due_date)) : '-' }}<br>
                         <strong>Selesai:</strong> {{ $find->completion_date ? date('d/m/y', strtotime($find->completion_date)) : '-' }}
