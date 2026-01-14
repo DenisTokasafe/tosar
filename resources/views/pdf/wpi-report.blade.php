@@ -6,8 +6,10 @@
     <style>
         @page {
             size: a4 portrait;
-            /* Margin bawah diperbesar menjadi 170px untuk memberi jarak isi dokumen ke footer */
-            margin: 130px 1.5cm 170px 1.5cm;
+            /** * Tinggi footer total sekitar 120px.
+             * Untuk mendapatkan jarak 10px, margin-bottom harus 130px.
+             */
+            margin: 130px 1.5cm 130px 1.5cm;
         }
 
         header {
@@ -20,8 +22,10 @@
 
         footer {
             position: fixed;
-            /* Posisi footer diturunkan sedikit untuk menjauh dari area teks utama */
-            bottom: -135px;
+            /**
+             * Posisi bottom disetel agar tepat berada di bawah batas margin dokumen.
+             */
+            bottom: -115px;
             left: 0;
             right: 0;
             height: 120px;
@@ -43,7 +47,7 @@
             table-layout: fixed;
         }
 
-        /* Teks footer tetap 8px sesuai permintaan sebelumnya */
+        /* Teks footer tetap 8px */
         .footer-table td {
             font-size: 8px !important;
             border: 1px solid #000;
@@ -147,8 +151,8 @@
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                // Posisi Y diatur ke 825 agar nomor halaman berada tepat di bawah tabel footer
-                $pdf->text(460, 825, $pageText, $font, $size);
+                // Koordinat Y disesuaikan agar nomor halaman berada di bawah footer
+                $pdf->text(460, 815, $pageText, $font, $size);
             ');
         }
     </script>
@@ -206,7 +210,7 @@
                 <td width="18%" class="bg-label">Tanggal / <span class="en" style="color:black">Date</span></td>
                 <td width="32%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
                 <td width="25%" class="bg-label center">Nama Petugas Inspeksi / <br><span class="en"
-                        style="color:black">Inspector Name</span></td>
+                        [cite_start]style="color:black">Inspector Name</span></td>
                 <td width="10%" class="bg-label center">ID</td>
                 <td width="15%" class="bg-label center">Dept/Cont</td>
             </tr>
@@ -247,12 +251,13 @@
                     <th width="6%">No</th>
                     <th width="8%">OHS Risk</th>
                     <th width="32%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
-                            style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span>
+                            [cite_start]style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition
+                            Description</span>
                     </th>
                     <th width="28%">Jenis Tindakan Pencegahan<br><span class="en"
-                            style="color:black; font-weight:normal">Type of Preventive Action</span></th>
+                            [cite_start]style="color:black; font-weight:normal">Type of Preventive Action</span></th>
                     <th width="28%">Tindak Lanjut / <span class="en"
-                            style="color:black; font-weight:normal">Follow Up</span></th>
+                            [cite_start]style="color:black; font-weight:normal">Follow Up</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -298,60 +303,6 @@
                         </td>
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
-
-        <div class="page-break"></div>
-
-        <h3 class="center" style="text-decoration: underline;">Level Resiko / <span class="en">Risk Level</span>
-        </h3>
-        <table class="main-table risk-table-page">
-            <thead>
-                <tr class="bg-label center">
-                    <th width="75%">Deskripsi / <span class="en"
-                            style="color:black; font-weight:normal">Description</span></th>
-                    <th width="25%">Kode OHS Risk / <br><span class="en"
-                            style="color:black; font-weight:normal">Code of OHS Risk</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam
-                        keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5...<br>
-                        <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous
-                            to life or health...</span>
-                    </td>
-                    <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
-                </tr>
-                <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang
-                        membahayakan keselamatan manusia...<br>
-                        <span class="en">"High (H)" Priority actions address a condition or practice which could
-                            cause harm to people...</span>
-                    </td>
-                    <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - High</span></td>
-                </tr>
-                <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau
-                        terdapat kekurangan yang membutuhkan tindakan perbaikan...<br>
-                        <span class="en">"Moderate (M)" Priority actions address safety violations or
-                            deficiencies...</span>
-                    </td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau
-                        terdapat kekurangan yang tidak begitu signifikan dampaknya...<br>
-                        <span class="en">"Low (L)" Priority action: Addressing violations of K3
-                            regulations...</span>
-                    </td>
-                    <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
-                </tr>
             </tbody>
         </table>
     </main>
