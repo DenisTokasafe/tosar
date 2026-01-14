@@ -2,8 +2,8 @@
 <div class="flex flex-col ">
     <div class="w-full md:w-60">
         <flux:navlist-horizontal>
-            <flux:navlist-horizontal.item :href="route('hazard.workflows')"
-                wire:navigate>{{ __('Hazard Workflow Administration') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('hazard.workflows')" wire:navigate>{{ __('Hazard Workflow Administration') }}</flux:navlist-horizontal.item>
+            <flux:navlist-horizontal.item :href="route('wpi.workflows')" wire:navigate>{{ __('WPI Workflow Administration') }}</flux:navlist-horizontal.item>
         </flux:navlist-horizontal>
     </div>
     <div class="py-2 ">

@@ -39,6 +39,7 @@ use App\Livewire\Administration\EventGeneral\EventCategory;
 use App\Livewire\Administration\RiskAssessment\Assessement;
 use App\Livewire\Administration\RiskLikelihood\RiskLikelihood;
 use App\Livewire\Administration\RiskConsequence\RiskConsequence;
+use App\Livewire\Administration\WorkflowEvent\WpiWorkflowManager;
 use App\Livewire\Administration\EventGeneral\ErmAssignmentManager;
 use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
@@ -105,6 +106,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/userManager/user_roles', UserRole::class)->name('user_roles');
     Route::get('administration/userManager/people', User::class)->name('people');
     Route::get('administration/workflows/hazard', WorkflowEventHazard::class)->name('hazard.workflows');
+    Route::get('administration/workflows/wpi', WpiWorkflowManager::class)->name('wpi.workflows');
 });
 // route download storage files
 
