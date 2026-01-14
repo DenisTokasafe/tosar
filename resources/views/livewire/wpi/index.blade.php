@@ -176,7 +176,7 @@
                                     </div>
 
                                     {{-- Kolom 3: Department/Contractor --}}
-                                    <div class="pb-1 bg-green-200 md:col-span-2 md:col-start-3">
+                                    <div class="pb-1 bg-green-200 md:col-span-2 md:col-end-3">
                                         <span
                                             class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
                                         <div class="flex items-center badge badge-soft badge-info text-[10px]">
