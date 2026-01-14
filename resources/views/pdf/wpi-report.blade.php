@@ -179,9 +179,8 @@
         <table class="footer-table">
             <tr>
                 <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td width="10%"></td>
-                <td width="45%">Formulir Laporan WPI KPLH</td>
-                <td width="25%"></td>
+                <td colspan="3" >Formulir Laporan WPI KPLH</td>
+
             </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
