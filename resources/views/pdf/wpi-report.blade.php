@@ -43,11 +43,10 @@
             table-layout: fixed;
         }
 
-        /* Border khusus untuk Header dan Footer menggunakan warna OKLCH (di-konversi ke Hex untuk PDF) */
+        /* Border khusus untuk Header dan Footer menggunakan warna #717171 */
         .header-table td,
         .footer-table td {
-            /* oklch(55.2% 0.016 285.938) ≈ #7289da atau abu-abu kebiruan gelap */
-            border: 1px solid #7289da;
+            border: 1px solid #717171;
             padding: 4px 6px;
             vertical-align: top;
             word-wrap: break-word;
@@ -58,7 +57,7 @@
             font-size: 8px !important;
         }
 
-        /* Main table tetap menggunakan border hitam pekat sesuai standar */
+        /* Main table tetap menggunakan border hitam pekat (#000) */
         .main-table td,
         .main-table th {
             border: 1px solid #000;
