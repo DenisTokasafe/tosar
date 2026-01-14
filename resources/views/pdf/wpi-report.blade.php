@@ -13,7 +13,6 @@
         header {
             position: fixed;
             top: -100px;
-            /* Posisi absolut di area margin atas */
             left: 0;
             right: 0;
             height: 100px;
@@ -22,7 +21,6 @@
         footer {
             position: fixed;
             bottom: -110px;
-            /* Posisi absolut di area margin bawah */
             left: 0;
             right: 0;
             height: 120px;
@@ -31,7 +29,6 @@
         body {
             font-family: "Times New Roman", Times, serif;
             font-size: 9pt;
-            /* Ukuran standar dokumen kantor */
             margin: 0;
             padding: 0;
             line-height: 1.2;
@@ -45,10 +42,17 @@
             table-layout: fixed;
         }
 
-        /* Border lebih tegas sesuai format dokumen resmi */
+        /* Styling khusus teks footer menjadi 8px */
+        .footer-table td {
+            font-size: 8px !important;
+            border: 1px solid #000;
+            padding: 4px 6px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
         .main-table td,
         .main-table th,
-        .footer-table td,
         .header-table td {
             border: 1px solid #000;
             padding: 5px 6px;
@@ -60,7 +64,6 @@
             vertical-align: middle;
         }
 
-        /* Menghindari baris terpotong antar halaman */
         .main-table tr {
             page-break-inside: avoid;
         }
@@ -68,19 +71,24 @@
         .en {
             color: #1e40af;
             font-style: italic;
-            font-size: 8pt;
+            /* Ukuran font EN di footer akan mengikuti 8px dari parent td */
+        }
+
+        .footer-table .en {
+            font-size: 7px;
+            /* Sedikit lebih kecil agar kontras dengan teks utama footer */
         }
 
         .red-note {
             color: #ff0000;
             font-weight: bold;
-            font-size: 8pt;
+            font-size: 8px;
+            /* Mengikuti ukuran footer */
             text-align: center;
         }
 
         .bg-label {
             background-color: #f1f5f9;
-            /* Warna abu-abu soft yang lebih profesional */
             font-weight: bold;
         }
 
@@ -103,7 +111,6 @@
             page-break-before: always;
         }
 
-        /* Gaya Khusus Tabel Risk Level */
         .risk-table-page td {
             font-size: 8pt;
             line-height: 1.3;
@@ -167,19 +174,19 @@
 
     <footer>
         <table class="footer-table">
-            <tr style="font-size: 8pt;">
+            <tr>
                 <td width="25%">Nama Dokumen/<br><span class="en">Document Name</span></td>
                 <td width="30%">Formulir Laporan WPI KPLH</td>
                 <td width="25%">Tanggal Terbit/<br><span class="en">Date of Issue</span></td>
                 <td width="20%">15 Maret 2023</td>
             </tr>
-            <tr style="font-size: 8pt;">
+            <tr>
                 <td>Ditetapkan Oleh/<br><span class="en">Determined By</span></td>
                 <td>Kepala Teknik Tambang/<br><span class="en">Mining Technical Head</span></td>
                 <td>Tanggal Tinjau Ulang/<br><span class="en">Review Date</span></td>
                 <td>15 Maret 2026</td>
             </tr>
-            <tr style="font-size: 8pt;">
+            <tr>
                 <td>No Dokumen/<br><span class="en">No Document</span></td>
                 <td>TT-MGT-FRS-024A</td>
                 <td>No Revisi</td>
@@ -189,7 +196,7 @@
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" style="font-size: 8pt; border-left: none;"></td>
+                <td class="right" style="border-left: none;"></td>
             </tr>
         </table>
     </footer>
