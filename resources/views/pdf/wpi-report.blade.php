@@ -43,18 +43,24 @@
             table-layout: fixed;
         }
 
-        /* Teks footer tetap 8px */
+        /* Border khusus untuk Header dan Footer menggunakan warna OKLCH (di-konversi ke Hex untuk PDF) */
+        .header-table td,
         .footer-table td {
-            font-size: 8px !important;
-            border: 1px solid #000;
+            /* oklch(55.2% 0.016 285.938) ≈ #7289da atau abu-abu kebiruan gelap */
+            border: 1px solid #7289da;
             padding: 4px 6px;
             vertical-align: top;
             word-wrap: break-word;
         }
 
+        /* Teks footer tetap 8px */
+        .footer-table td {
+            font-size: 8px !important;
+        }
+
+        /* Main table tetap menggunakan border hitam pekat sesuai standar */
         .main-table td,
-        .main-table th,
-        .header-table td {
+        .main-table th {
             border: 1px solid #000;
             padding: 5px 6px;
             vertical-align: top;
@@ -147,7 +153,6 @@
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                // Posisi Y disetel ke 815 agar nomor halaman berada di pojok kanan bawah setelah footer
                 $pdf->text(460, 815, $pageText, $font, $size);
             ');
         }
