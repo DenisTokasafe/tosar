@@ -204,7 +204,7 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td width="20%">Nama Dokumen/<br><span class="en">Document Name</span></td>
+                <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
                 <td class=" border-r-none" width="10%"></td>
                 <td class="border-r-none border-l-none" width="45%">Formulir Laporan WPI KPLH</td>
                 <td width="25%"  class="border-l-none "></td>
