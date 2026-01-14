@@ -607,16 +607,18 @@ class Index extends Component
     #[On('trigger-export-pdf')]
     public function exportPDF($id)
     {
-        $report = WpiReport::with(['findings'])->findOrFail($id);
-        $isContractor = Contractor::where('contractor_name', $report->department)->exists();
-        $deptLabel = $isContractor ? 'Contractor' : 'Department';
+        // ... logic data ...
         $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
-            ->setOption(['isPhpEnabled' => true])
+            ->setOption([
+                'isPhpEnabled' => true,
+                'isRemoteEnabled' => true
+            ])
             ->setPaper('a4', 'portrait');
 
         return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, "Laporan_WPI_" . $report->report_date . ".pdf");
+            // Menggunakan output() memastikan seluruh script penomoran diproses
+            echo $pdf->output();
+        }, "Laporan_WPI.pdf");
     }
 
     public function render()

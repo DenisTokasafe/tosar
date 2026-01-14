@@ -196,12 +196,16 @@
 
 <body>
 
-    <script type="text/php">
-    if (isset($pdf)) {
 
-        $pdf->page_text(465, 815, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $fontMetrics->get_font("times", "bold"), 8.5, array(0,0,0));
+   <script type="text/php">
+    if (isset($pdf)) {
+        // Parameter: (X, Y, Text, Font, Size, Color)
+        // Gunakan {PAGE_NUM} dan {PAGE_COUNT} sebagai placeholder otomatis
+        $font = $fontMetrics->get_font("Times-Roman", "bold");
+        $pdf->page_text(455, 788, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, 8.5, array(0,0,0));
     }
     </script>
+
     <header>
         <table class="header-table">
             <tr>
@@ -245,6 +249,7 @@
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
                 <td class="right border-r-none" style="font-weight: bold;">
+                    &nbsp;
                 </td>
             </tr>
         </table>
