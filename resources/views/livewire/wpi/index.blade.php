@@ -153,7 +153,7 @@
                             <input type="hidden" wire:model="currentLoopIndex" value="{{ $index }}">
                             <span
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
-                            <div class="flex-1">
+                            <div class="flex-1 bg-blue-600">
                                 {{-- Menggunakan Grid untuk membagi menjadi 3 kolom pada layar sedang/besar --}}
                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-6 ">
 
