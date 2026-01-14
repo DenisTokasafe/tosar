@@ -68,7 +68,7 @@ class Index extends Component
 
         $this->reportId = $report->id;
 
-        $this->report_date = $report->report_date;
+        $this->report_date = date('d F Y', strtotime($report->report_date));
 
         $this->report_time = $report->report_time;
 

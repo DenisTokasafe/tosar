@@ -28,7 +28,7 @@
                                             enableTime: false,
                                             time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
-
+                                            altFormat: 'd F Y',
                                             dateFormat: 'Y-m-d',
                                             clickOpens: true,
                                             // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
