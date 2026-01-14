@@ -158,7 +158,7 @@
                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3 ">
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
-                                    <div class="pb-1 ">
+                                    <div class="pb-1 bg-red-200">
                                         {{-- Komponen Searchable Select Advanced --}}
                                         <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
                                             placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
@@ -167,7 +167,7 @@
                                     </div>
 
                                     {{-- Kolom 2: ID Number --}}
-                                    <div class="pb-1 w-36">
+                                    <div class="pb-1 w-36 bg-amber-300">
                                         <span class="text-[10px] font-semibold uppercase text-gray-500">ID
                                             Number</span>
                                         <div class="flex items-center badge badge-soft badge-info text-[10px]">
@@ -176,7 +176,7 @@
                                     </div>
 
                                     {{-- Kolom 3: Department/Contractor --}}
-                                    <div class="pb-1 ">
+                                    <div class="pb-1 bg-green-200">
                                         <span
                                             class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
                                         <div class="flex items-center badge badge-soft badge-info text-[10px]">
