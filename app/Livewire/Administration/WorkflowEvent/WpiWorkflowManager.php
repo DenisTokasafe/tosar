@@ -24,7 +24,9 @@ class WpiWorkflowManager extends Component
     public $roleOptions = ['Submitter', 'Event Report Manager', 'Moderator'];
     public function render()
     {
-        return view('livewire.administration.workflow-event.wpi-workflow-manager');
+        return view('livewire.administration.workflow-event.wpi-workflow-manager',[
+            'workflows' => WpiWorkflow::latest()->paginate(20)
+        ]);
     }
 
     public function openModal()
