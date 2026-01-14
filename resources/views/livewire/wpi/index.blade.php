@@ -28,6 +28,7 @@
                                             enableTime: false,
                                             time_24hr: false,
                                             defaultDate: this.$wire.entangle('report_date').defer,
+                                            altInput: true,
                                             altFormat: 'd F Y',
                                             dateFormat: 'Y-m-d',
                                             clickOpens: true,
