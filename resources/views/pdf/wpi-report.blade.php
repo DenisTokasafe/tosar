@@ -222,10 +222,10 @@
             <tr>
                 <td>No Revisi</td>
                 <td class="center">00</td>
-                <td class="red-note">
+                <td class="red-note border-r-none">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" style="font-weight: bold;">
+                <td class="right border-l-none" style="font-weight: bold;">
                 </td>
             </tr>
         </table>
