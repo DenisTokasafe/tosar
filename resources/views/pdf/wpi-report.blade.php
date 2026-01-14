@@ -178,8 +178,8 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td  width="10%" colspan="3" >Formulir Laporan WPI KPLH</td>
+                <td >Nama Dokumen/<span class="en">Document Name</span></td>
+                <td  colspan="3" >Formulir Laporan WPI KPLH</td>
             </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
@@ -192,12 +192,12 @@
                 <td>Tanggal Peninjauan / <span class="en">Review Date</span>: 15 Maret 2026</td>
             </tr>
             <tr>
-                <td>No Revisi</td>
-                <td class="center">00</td>
-                <td class="red-note">
+                <td  width="20%">No Revisi</td>
+                <td  width="10%" class="center">00</td>
+                <td  width="45%" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" style="font-weight: bold;">
+                <td  width="24%" class="right" style="font-weight: bold;">
                 </td>
             </tr>
         </table>
