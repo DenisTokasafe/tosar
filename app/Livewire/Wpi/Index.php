@@ -14,10 +14,19 @@ use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Models\WpiWorkflow;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
     use WithFileUploads;
+    public $status;
+    public string $proceedTo = '';
+    public array $availableTransitions = [];
+    public string $effectiveRole = '';
+    public $asModerator = false;
+    public $asErm = false;
 
     public $reportId;
     public $report_date, $report_time, $location, $dept_cont, $area;
@@ -65,7 +74,7 @@ class Index extends Component
         if (!$report) return redirect()->to('/wpi-list');
 
         // 2. Isi Properti Header
-
+        $this->status = $report->status;
         $this->reportId = $report->id;
 
         $this->report_date = $report->report_date;
@@ -150,6 +159,72 @@ class Index extends Component
                 'new_photos_prevention' => [],
             ];
         }
+    }
+
+    protected function setEffectiveRole($report)
+    {
+        $userId = Auth::id();
+
+        // 1. Cek apakah user adalah Submitter (Pembuat laporan)
+        $isSubmitter = $report->created_by == $userId;
+
+        // 2. Cek apakah user adalah ERM yang ditugaskan
+        // Asumsi: Anda memiliki tabel pivot/relasi wpi_report_erms
+        $isErm = DB::table('erm_assignments')
+            ->where('user_id', $userId)
+            ->where(function($q) use ($report) {
+                // Filter berdasarkan departemen atau kontraktor laporan
+                $q->where('department_id', $report->department_id)
+                  ->orWhere('contractor_id', $report->contractor_id);
+            })->exists();
+
+        // 3. Cek apakah user adalah Moderator
+        $isMod = DB::table('moderator_assignments')->where('user_id', $userId)->exists();
+
+        // Tentukan role berdasarkan prioritas untuk workflow
+        $currentStatus = $report->status;
+        $roles = [];
+        if ($isSubmitter) $roles[] = 'Submitter';
+        if ($isErm) $roles[] = 'Event Report Manager';
+        if ($isMod) $roles[] = 'Moderator';
+
+        // Ambil role yang valid untuk status saat ini dari tabel wpi_workflows
+        $allowedRole = WpiWorkflow::whereIn('role', $roles)
+            ->where('from_status', $currentStatus)
+            ->value('role');
+
+        $this->effectiveRole = $allowedRole ?? '';
+        $this->asModerator = $this->effectiveRole === 'Moderator';
+        $this->asErm = $this->effectiveRole === 'Event Report Manager';
+    }
+
+    protected function loadAvailableTransitions($report)
+    {
+        $this->availableTransitions = WpiWorkflow::getAvailableTransitions(
+            $report->status,
+            $this->effectiveRole
+        );
+    }
+
+    public function processStatusChange($newStatus)
+    {
+        $report = WpiReport::find($this->reportId);
+
+        if (!WpiWorkflow::isValidTransition($report->status, $newStatus, $this->effectiveRole)) {
+            $this->dispatch('alert', ['text' => 'Transisi status tidak diizinkan.', 'backgroundColor' => 'red']);
+            return;
+        }
+
+        $report->update(['status' => $newStatus]);
+        $this->status = $newStatus;
+
+        // Logika Notifikasi (Opsional)
+        if (strtolower($newStatus) === 'assigned') {
+            // Contoh: Kirim email ke ERM
+        }
+
+        $this->loadData($this->reportId);
+        $this->dispatch('alert', ['text' => 'Status berhasil diperbarui ke ' . $newStatus]);
     }
 
     /**
@@ -625,6 +700,11 @@ class Index extends Component
 
     public function render()
     {
+        if ($this->reportId) {
+            $report = WpiReport::find($this->reportId);
+            $this->setEffectiveRole($report);
+            $this->loadAvailableTransitions($report);
+        }
         return view('livewire.wpi.index');
     }
 }
