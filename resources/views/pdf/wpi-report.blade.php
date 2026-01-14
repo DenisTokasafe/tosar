@@ -202,7 +202,7 @@
                 <td colspan="2" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" style="border-left: none;"></td>
+                <td width="25%" class="right"></td>
             </tr>
         </table>
     </footer>
