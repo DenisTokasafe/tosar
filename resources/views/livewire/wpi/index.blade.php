@@ -217,7 +217,7 @@
                     <thead class="italic text-white uppercase bg-gray-800">
                         <tr>
                             <th class="w-8 p-2 text-center border border-gray-300">#</th>
-                            <th class="w-16 p-2 text-center border border-gray-300">OHS Risk</th>
+                            <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
                             <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act & Photo
                             </th>
                             <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
@@ -230,7 +230,7 @@
                         @foreach ($findings as $index => $finding)
                             <tr wire:key="find-{{ $index }}" class="align-top hover:bg-gray-50">
                                 <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}</td>
-                                <td class="w-16 p-2 text-center border border-gray-300">
+                                <td class="p-2 text-center border border-gray-300 ">
                                     {{-- Select OHS Risk --}}
                                     <select  wire:model="findings.{{ $index }}.ohs_risk"
                                         class="select select-xs select-success focus:outline-hidden">
