@@ -230,7 +230,7 @@
                 <td class="border-l-none" width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
                 <td class=" border-r-none" width="10%"></td>
                 <td class="border-r-none border-l-none" width="45%">Formulir Laporan WPI KPLH</td>
-                <td width="25%" class="border-l-none border-r-none "></td>
+                <td width="20%" class="border-l-none border-r-none "></td>
             </tr>
             <tr>
                 <td class="border-l-none">Ditetapkan Oleh/<span class="en">Determined By</span></td>
