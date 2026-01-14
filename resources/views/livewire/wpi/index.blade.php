@@ -9,7 +9,8 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}" subheading="TT-MGT-FRS-024A">
+    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
+        subheading="TT-MGT-FRS-024A">
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
@@ -17,40 +18,32 @@
                     <div class="space-y-4">
                         <fieldset class="relative fieldset">
                             <x-form.label label="Tanggal / Date" required />
-                            <div
-                                class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
-                                <div class="relative " wire:ignore x-data="{
+                            <div class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 rounded' : '' }}">
+                                <div class="relative" wire:ignore x-data="{
+                                    reportDate: @entangle('report_date'),
                                     fp: null,
-                                    initFlatpickr() {
-                                        if (this.fp) this.fp.destroy();
+                                    init() {
                                         this.fp = flatpickr(this.$refs.tanggalInput, {
                                             disableMobile: true,
-                                            enableTime: false,
-                                            time_24hr: false,
-                                            defaultDate: this.$wire.entangle('report_date').defer,
                                             altInput: true,
                                             altFormat: 'd F Y',
                                             dateFormat: 'Y-m-d',
-                                            clickOpens: true,
-                                            // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
-                                            // appendTo: this.$refs.wrapper,
-
-                                            // TAMBAHKAN ATAU UBAH OPSI POSITION
-                                            position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
-
+                                            // Set nilai awal dari Livewire ke Flatpickr
+                                            defaultDate: this.reportDate,
                                             onChange: (selectedDates, dateStr) => {
-                                                this.$wire.set('report_date', dateStr);
+                                                this.reportDate = dateStr;
                                             }
                                         });
+
+                                        // Pantau perubahan dari sisi Livewire (misal: saat reset form atau edit data)
+                                        this.$watch('reportDate', (newVal) => {
+                                            this.fp.setDate(newVal, false);
+                                        });
                                     }
-                                }" x-ref="wrapper"
-                                    x-init="initFlatpickr();
-                                    Livewire.hook('message.processed', () => {
-                                        initFlatpickr();
-                                    });">
-                                    <input type="text" x-ref="tanggalInput" wire:model.live='report_date'
-                                        placeholder="Pilih Tanggal dan Waktu..." readonly
-                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                }">
+
+                                    <input type="text" x-ref="tanggalInput" placeholder="Pilih Tanggal..." readonly
+                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('report_date') ? 'ring-1 ring-rose-500' : '' }}" />
                                 </div>
                             </div>
                             <x-label-error :messages="$errors->get('report_date')" />
@@ -167,8 +160,7 @@
                                     {{-- Kolom 1: Dropdown Pencarian --}}
                                     <div class="flex flex-col">
                                         <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
-                                            placeholder="Cari nama..."
-                                            modelsearch="searchPetugas.{{ $index }}"
+                                            placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
                                             modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
                                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                                     </div>
@@ -233,12 +225,16 @@
                                 <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}</td>
                                 <td class="p-2 text-center border border-gray-300 ">
                                     {{-- Select OHS Risk --}}
-                                    <select  wire:model="findings.{{ $index }}.ohs_risk"
+                                    <select wire:model="findings.{{ $index }}.ohs_risk"
                                         class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success">
-                                        <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span></option>
-                                        <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span></option>
-                                        <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span></option>
-                                        <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span></option>
+                                        <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
+                                        </option>
+                                        <option value="M">Menengah\<span
+                                                class="italic text-blue-400 ">Moderate</span></option>
+                                        <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
+                                        </option>
+                                        <option value="E">Ekstrem\<span
+                                                class="italic text-blue-400 ">Extreme</span></option>
                                     </select>
                                 </td>
                                 <td class="p-2 border border-gray-300">
