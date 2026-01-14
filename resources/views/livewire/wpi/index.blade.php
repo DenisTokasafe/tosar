@@ -191,7 +191,7 @@
                             <div class="flex-none w-14">
                                 @if (count($inspectors) > 1)
                                      {{-- Tombol Hapus --}}
-                                    <flux:tooltip content="hapus" position="top">
+                                    <flux:tooltip content="Hapus Inspector {{ $index + 1 }}" position="top">
                                         <flux:button wire:click="removeInspector({{ $index }})"
                                             size="xs" icon="trash" variant="danger">
                                         </flux:button>
