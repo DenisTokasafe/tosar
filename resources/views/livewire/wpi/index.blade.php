@@ -233,10 +233,10 @@
                                 <td class="p-2 text-center border border-gray-300">
                                     <select wire:model="findings.{{ $index }}.ohs_risk"
                                         class="w-full p-1 text-xs border-gray-300 rounded">
-                                        <option value="R">Rendah</option>
-                                        <option value="M">Menengah</option>
-                                        <option value="T">Tinggi</option>
-                                        <option value="E">Ekstrem</option>
+                                        <option value="R">Rendah\<span class="italic text-blue-400 ">Low</span></option>
+                                        <option value="M">Menengah\<span class="italic text-blue-400 ">Medium</span></option>
+                                        <option value="T">Tinggi\<span class="italic text-blue-400 ">High</span></option>
+                                        <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span></option>
                                     </select>
                                 </td>
                                 <td class="p-2 border border-gray-300">
