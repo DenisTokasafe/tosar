@@ -234,15 +234,13 @@
             </tr>
             <tr>
                 <td class="border-l-none">Ditetapkan Oleh/<span class="en">Determined By</span></td>
-                <td >Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-                <td >Tanggal Terbit / <span class="en">Date of Issue</span></td>
-                <td class="border-r-none">15-03-2023</td>
+                <td colspan="2">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
+                <td class="border-r-none">Tanggal Terbit / <span class="en">Date of Issue</span>: 15-03-2023</td>
             </tr>
             <tr>
                 <td class="border-l-none">No Dokumen/<span class="en">No Document</span></td>
-                <td >TT-MGT-FRS-024A</td>
-                <td >Tanggal Peninjauan / <span class="en">Review Date</span></td>
-                <td >15-03-2026</td>
+                <td colspan="2">TT-MGT-FRS-024A</td>
+                <td class="border-r-none">Tanggal Peninjauan / <span class="en">Review Date</span>: 15-03-2026</td>
             </tr>
             <tr>
                 <td class="border-l-none">No Revisi</td>
