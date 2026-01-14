@@ -186,7 +186,7 @@
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
                 <td>Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
                 <td width="25%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
-                <td width="20%">15 Maret 2023</td>
+                <td>15 Maret 2023</td>
 
             </tr>
             <tr>
