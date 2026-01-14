@@ -179,7 +179,7 @@
         <table class="footer-table">
             <tr>
                 <td >Nama Dokumen/<span class="en">Document Name</span></td>
-                <td  colspan="3" >Formulir Laporan WPI KPLH</td>
+                <td  >Formulir Laporan WPI KPLH</td>
             </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
