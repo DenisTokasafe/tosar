@@ -231,8 +231,8 @@
                             <tr wire:key="find-{{ $index }}" class="align-top hover:bg-gray-50">
                                 <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}</td>
                                 <td class="p-2 text-center border border-gray-300">
-                                    <select wire:model="findings.{{ $index }}.ohs_risk"
-                                        class="w-full p-1 text-xs border-gray-300 rounded">
+                                    <select  wire:model="findings.{{ $index }}.ohs_risk"
+                                        class="select select-xs select-success focus:outline-hidden">
                                         <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span></option>
                                         <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span></option>
                                         <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span></option>
