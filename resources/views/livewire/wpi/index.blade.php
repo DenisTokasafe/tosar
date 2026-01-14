@@ -233,7 +233,7 @@
                                 <td class="p-2 text-center border border-gray-300 ">
                                     {{-- Select OHS Risk --}}
                                     <select  wire:model="findings.{{ $index }}.ohs_risk"
-                                        class="select select-xs select-success focus:outline-hidden">
+                                        class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success">
                                         <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span></option>
                                         <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span></option>
                                         <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span></option>
