@@ -203,7 +203,7 @@
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
                 <td width="25%" class="right" style="border-left: none;"></td>
-                <td></td>
+                <td class="text-white">tes</td>
             </tr>
         </table>
     </footer>
