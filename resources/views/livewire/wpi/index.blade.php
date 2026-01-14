@@ -155,10 +155,10 @@
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
                             <div class="flex-1">
                                 {{-- Menggunakan Grid untuk membagi menjadi 3 kolom pada layar sedang/besar --}}
-                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 ">
+                                <div class="grid grid-cols-1 gap-2 md:grid-cols-6 ">
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
-                                    <div class="pb-1 bg-red-200">
+                                    <div class="col-span-4 col-start-1 pb-1 bg-red-200">
                                         {{-- Komponen Searchable Select Advanced --}}
                                         <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
                                             placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
