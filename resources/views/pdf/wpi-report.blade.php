@@ -54,7 +54,7 @@
 
         /* Teks footer tetap 8px */
         .footer-table td {
-            font-size: 7px !important;
+            font-size: 8px !important;
         }
 
         /* Main table tetap menggunakan border hitam pekat (#000) */
