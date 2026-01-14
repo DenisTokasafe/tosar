@@ -19,6 +19,7 @@
         }
 
         footer {
+            margin-top: 20px;
             position: fixed;
             bottom: -110px;
             left: 0;
