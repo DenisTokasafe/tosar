@@ -6,8 +6,8 @@
     <style>
         @page {
             size: a4 portrait;
-            /* Margin disesuaikan agar isi tidak tertabrak header/footer */
-            margin: 130px 1.5cm 140px 1.5cm;
+            /* Margin bawah diperbesar menjadi 170px untuk memberi jarak isi dokumen ke footer */
+            margin: 130px 1.5cm 170px 1.5cm;
         }
 
         header {
@@ -19,9 +19,9 @@
         }
 
         footer {
-            margin-top: 20px;
             position: fixed;
-            bottom: -110px;
+            /* Posisi footer diturunkan sedikit untuk menjauh dari area teks utama */
+            bottom: -135px;
             left: 0;
             right: 0;
             height: 120px;
@@ -43,7 +43,7 @@
             table-layout: fixed;
         }
 
-        /* Styling khusus teks footer menjadi 8px */
+        /* Teks footer tetap 8px sesuai permintaan sebelumnya */
         .footer-table td {
             font-size: 8px !important;
             border: 1px solid #000;
@@ -72,19 +72,16 @@
         .en {
             color: #1e40af;
             font-style: italic;
-            /* Ukuran font EN di footer akan mengikuti 8px dari parent td */
         }
 
         .footer-table .en {
             font-size: 7px;
-            /* Sedikit lebih kecil agar kontras dengan teks utama footer */
         }
 
         .red-note {
             color: #ff0000;
             font-weight: bold;
             font-size: 8px;
-            /* Mengikuti ukuran footer */
             text-align: center;
         }
 
@@ -150,7 +147,8 @@
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(460, 810, $pageText, $font, $size);
+                // Posisi Y diatur ke 825 agar nomor halaman berada tepat di bawah tabel footer
+                $pdf->text(460, 825, $pageText, $font, $size);
             ');
         }
     </script>
