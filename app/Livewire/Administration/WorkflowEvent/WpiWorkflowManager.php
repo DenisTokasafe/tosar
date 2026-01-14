@@ -94,10 +94,10 @@ class WpiWorkflowManager extends Component
     {
         return match ($status) {
             'Submitted' => 'badge-info',
-            'Pending'   => 'badge-warning',
+            'Final Review'   => 'badge-warning',
             'Closed'    => 'badge-success',
             'Cancelled' => 'badge-error',
-            'InProgress' => 'badge-primary',
+            'Assigned' => 'badge-primary',
             default     => 'badge-ghost',
         };
     }
