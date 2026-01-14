@@ -228,19 +228,21 @@
         <table class="footer-table">
             <tr>
                 <td class="border-l-none" width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td class=" border-r-none" width="45%">Formulir Laporan WPI KPLH</td>
-                <td class="border-r-none border-l-none" width="10%"></td>
+                <td class=" border-r-none" width="10%"></td>
+                <td class="border-r-none border-l-none" width="45%">Formulir Laporan WPI KPLH</td>
                 <td width="25%" class="border-l-none border-r-none "></td>
             </tr>
             <tr>
                 <td class="border-l-none">Ditetapkan Oleh/<span class="en">Determined By</span></td>
                 <td colspan="2">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-                <td class="border-r-none">Tanggal Terbit / <span class="en">Date of Issue</span>: 15-03-2023</td>
+                <td >Tanggal Terbit / <span class="en">Date of Issue</span></td>
+                <td class="border-r-none">15-03-2023</td>
             </tr>
             <tr>
                 <td class="border-l-none">No Dokumen/<span class="en">No Document</span></td>
                 <td colspan="2">TT-MGT-FRS-024A</td>
-                <td class="border-r-none">Tanggal Peninjauan / <span class="en">Review Date</span>: 15-03-2026</td>
+                <td >Tanggal Peninjauan / <span class="en">Review Date</span></td>
+                <td class="border-r-none">15-03-2026</td>
             </tr>
             <tr>
                 <td class="border-l-none">No Revisi</td>
