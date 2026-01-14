@@ -176,33 +176,34 @@
     </header>
 
     <footer>
-    <table class="footer-table">
-        <tr>
-            <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
-            <td colspan="3">Formulir Laporan WPI KPLH</td>
-        </tr>
-        <tr>
-            <td width="20%">Ditetapkan Oleh/<span class="en">Determined By</span></td>
-            <td width="30%">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-            <td width="25%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
-            <td width="25%">15 Maret 2023</td>
-        </tr>
-        <tr>
-            <td>No Dokumen/<span class="en">No Document</span></td>
-            <td>TT-MGT-FRS-024A</td>
-            <td>Tanggal Tinjau Ulang/<span class="en">Review Date</span></td>
-            <td>15 Maret 2026</td>
-        </tr>
-        <tr>
-            <td width="12%">No Revisi</td>
-            <td width="8%">00</td>
-            <td class="red-note">
-                Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
-            </td>
-            <td width="20%" style="border-left: none;"></td>
-        </tr>
-    </table>
-</footer>
+        <table class="footer-table">
+            <tr>
+                <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
+                <td width="10%"></td>
+                <td width="45%">Formulir Laporan WPI KPLH</td>
+                <td width="25%"></td>
+            </tr>
+            <tr>
+                <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
+                <td colspan="2">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
+                <td>Tanggal Terbit / <span class="en">Date of Issue</span>: 15 Maret 2023</td>
+            </tr>
+            <tr>
+                <td>No Dokumen/<span class="en">No Document</span></td>
+                <td colspan="2">TT-MGT-FRS-024A</td>
+                <td>Tanggal Tinjau Ulang / <span class="en">Review Date</span>: 15 Maret 2026</td>
+            </tr>
+            <tr>
+                <td>No Revisi</td>
+                <td class="center">00</td>
+                <td class="red-note">
+                    Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
+                </td>
+                <td class="right" style="font-weight: bold;">
+                </td>
+            </tr>
+        </table>
+    </footer>
 
     <main>
         <table class="main-table" style="margin-bottom: 15px;">
