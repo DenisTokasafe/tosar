@@ -209,7 +209,7 @@
     <header>
         <table class="header-table">
             <tr>
-                <td width="15%" class="center border-b-thick">
+                <td width="15%" class="center border-b-thick border-l-none">
                     <img src="{{ public_path('images/logo-msm.png') }}" width="65">
                 </td>
                 <td width="70%" class="center border-b-thick">
@@ -217,7 +217,7 @@
                     <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
                     <span style="font-size: 9pt;">TT-MGT-FRS-024A</span>
                 </td>
-                <td width="15%" class="center border-b-thick">
+                <td width="15%" class="center border-b-thick border-r-none">
                     <img src="{{ public_path('images/logo-archi.png') }}" width="65">
                 </td>
             </tr>
@@ -227,28 +227,28 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
+                <td class="border-l-none" width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
                 <td class=" border-r-none" width="10%"></td>
                 <td class="border-r-none border-l-none" width="45%">Formulir Laporan WPI KPLH</td>
-                <td width="25%" class="border-l-none "></td>
+                <td width="25%" class="border-l-none border-r-none "></td>
             </tr>
             <tr>
-                <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
+                <td class="border-l-none">Ditetapkan Oleh/<span class="en">Determined By</span></td>
                 <td colspan="2">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-                <td>Tanggal Terbit / <span class="en">Date of Issue</span>: 15 Maret 2023</td>
+                <td class="border-r-none">Tanggal Terbit / <span class="en">Date of Issue</span>: 15 Maret 2023</td>
             </tr>
             <tr>
-                <td>No Dokumen/<span class="en">No Document</span></td>
+                <td class="border-l-none">No Dokumen/<span class="en">No Document</span></td>
                 <td colspan="2">TT-MGT-FRS-024A</td>
-                <td>Tanggal Peninjauan / <span class="en">Review Date</span>: 15 Maret 2026</td>
+                <td class="border-r-none">Tanggal Peninjauan / <span class="en">Review Date</span>: 15 Maret 2026</td>
             </tr>
             <tr>
-                <td>No Revisi</td>
+                <td class="border-l-none">No Revisi</td>
                 <td class="center">00</td>
                 <td class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right" style="font-weight: bold;">
+                <td class="right border-r-none" style="font-weight: bold;">
                 </td>
             </tr>
         </table>
