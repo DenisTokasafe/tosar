@@ -43,10 +43,10 @@
             table-layout: fixed;
         }
 
-        /* Border khusus untuk Header dan Footer menggunakan warna #717171 */
+        /* Border khusus untuk Header dan Footer menggunakan warna #dcdcdc */
         .header-table td,
         .footer-table td {
-            border: 1px solid #717171;
+            border: 1px solid #dcdcdc;
             padding: 4px 6px;
             vertical-align: top;
             word-wrap: break-word;
