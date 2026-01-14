@@ -143,21 +143,44 @@
             font-weight: bold;
         }
 
-        /* Warna Border Custom (Ganti #717171 dengan warna yang Anda inginkan) */
-        .border-t-custom {
+        /* Warna dasar abu-abu #717171 sesuai permintaan */
+        /* Utility untuk Ketebalan 2px (Border Luar) */
+        .border-t-thick {
+            border-top: 2px solid #717171 !important;
+        }
+
+        .border-b-thick {
+            border-bottom: 2px solid #717171 !important;
+        }
+
+        .border-l-thick {
+            border-left: 2px solid #717171 !important;
+        }
+
+        .border-r-thick {
+            border-right: 2px solid #717171 !important;
+        }
+
+        /* Utility untuk Ketebalan 1px (Border Dalam) */
+        .border-t-thin {
             border-top: 1px solid #717171 !important;
         }
 
-        .border-b-custom {
+        .border-b-thin {
             border-bottom: 1px solid #717171 !important;
         }
 
-        .border-l-custom {
+        .border-l-thin {
             border-left: 1px solid #717171 !important;
         }
 
-        .border-r-custom {
+        .border-r-thin {
             border-right: 1px solid #717171 !important;
+        }
+
+        /* Penghilang border */
+        .border-none {
+            border: none !important;
         }
 
         /* Jika ingin menghilangkan border pada sisi tertentu */
@@ -186,15 +209,15 @@
     <header>
         <table class="header-table">
             <tr>
-                <td width="15%" class="center">
+                <td width="15%" class="center border-b-thick">
                     <img src="{{ public_path('images/logo-msm.png') }}" width="65">
                 </td>
-                <td width="70%" class="center">
+                <td width="70%" class="center border-b-thick">
                     <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">Formulir Laporan WPI KPLH</strong><br>
                     <span style="font-size: 9pt;">TT-MGT-FRS-024A</span>
                 </td>
-                <td width="15%" class="center">
+                <td width="15%" class="center border-b-thick">
                     <img src="{{ public_path('images/logo-archi.png') }}" width="65">
                 </td>
             </tr>
@@ -207,7 +230,7 @@
                 <td width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
                 <td class=" border-r-none" width="10%"></td>
                 <td class="border-r-none border-l-none" width="45%">Formulir Laporan WPI KPLH</td>
-                <td width="25%"  class="border-l-none "></td>
+                <td width="25%" class="border-l-none "></td>
             </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
