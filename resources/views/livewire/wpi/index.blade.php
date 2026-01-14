@@ -158,7 +158,7 @@
                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-6 ">
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
-                                    <div class="col-span-4 col-start-1 pb-1 bg-red-200">
+                                    <div class="pb-1 bg-red-200 md:col-span-3 md:col-start-1">
                                         {{-- Komponen Searchable Select Advanced --}}
                                         <x-form.searchable-select-advanced label="Petugas Inspeksi {{ $index + 1 }}"
                                             placeholder="Cari nama..." modelsearch="searchPetugas.{{ $index }}"
