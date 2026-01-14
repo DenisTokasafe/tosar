@@ -195,7 +195,7 @@
             </tr>
             <tr>
                 <td width="15%">No Revisi</td>
-                <td width="10%">00</td>
+                <td width="5%">00</td>
                 <td class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
