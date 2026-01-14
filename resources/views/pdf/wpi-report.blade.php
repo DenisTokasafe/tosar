@@ -191,7 +191,7 @@
             <tr>
                 <td>No Dokumen/<span class="en">No Document</span></td>
                 <td colspan="2">TT-MGT-FRS-024A</td>
-                <td>Tanggal Tinjau Ulang / <span class="en">Review Date</span>: 15 Maret 2026</td>
+                <td>Tanggal Peninjauan / <span class="en">Review Date</span>: 15 Maret 2026</td>
             </tr>
             <tr>
                 <td>No Revisi</td>
