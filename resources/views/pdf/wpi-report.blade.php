@@ -178,7 +178,7 @@
                 $font = $fontMetrics->get_font("Times-Roman", "bold");
                 $size = 8.5;
                 $pageText = "Halaman " . $PAGE_NUM . " dari " . $PAGE_COUNT;
-                $pdf->text(460, 815, $pageText, $font, $size);
+                $pdf->text(460, 780, $pageText, $font, $size);
             ');
         }
     </script>
@@ -222,10 +222,10 @@
             <tr>
                 <td>No Revisi</td>
                 <td class="center">00</td>
-                <td class="red-note border-r-none">
+                <td class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right border-l-none" style="font-weight: bold;">
+                <td class="right" style="font-weight: bold;">
                 </td>
             </tr>
         </table>
