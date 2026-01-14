@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
         // RiskMatrixCellSeeder::class,
         // UserSeeder::class,
-        HazardWorkflowSeeder::class
+        // HazardWorkflowSeeder::class
+        WpiWorkflowSeeder::class,
     ]);
     }
 }
