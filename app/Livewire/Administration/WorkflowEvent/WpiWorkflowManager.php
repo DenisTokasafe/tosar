@@ -98,6 +98,7 @@ class WpiWorkflowManager extends Component
             'Closed'    => 'badge-success',
             'Cancelled' => 'badge-error',
             'Assigned' => 'badge-primary',
+            'Review Event' => 'badge-primary',
             default     => 'badge-ghost',
         };
     }
