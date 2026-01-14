@@ -70,7 +70,7 @@ class Index extends Component
 
         $this->report_date = date('d F Y', strtotime($report->report_date));
 
-        $this->report_time = $report->report_time;
+        $this->report_time = date('H:i', strtotime($report->report_time));
 
         $this->location = $report->location;
         $this->area = $report->area;
