@@ -146,19 +146,19 @@
         /* Warna dasar abu-abu #717171 sesuai permintaan */
         /* Utility untuk Ketebalan 2px (Border Luar) */
         .border-t-thick {
-            border-top: 2px solid #717171 !important;
+            border-top: 2px solid #999999 !important;
         }
 
         .border-b-thick {
-            border-bottom: 2px solid #717171 !important;
+            border-bottom: 2px solid #999999 !important;
         }
 
         .border-l-thick {
-            border-left: 2px solid #717171 !important;
+            border-left: 2px solid #999999 !important;
         }
 
         .border-r-thick {
-            border-right: 2px solid #717171 !important;
+            border-right: 2px solid #999999 !important;
         }
 
         /* Utility untuk Ketebalan 1px (Border Dalam) */
