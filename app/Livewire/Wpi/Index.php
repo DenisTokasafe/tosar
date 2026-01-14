@@ -607,7 +607,9 @@ class Index extends Component
     #[On('trigger-export-pdf')]
     public function exportPDF($id)
     {
-        // ... logic data ...
+        $report = WpiReport::with(['findings'])->findOrFail($id);
+        $isContractor = Contractor::where('contractor_name', $report->department)->exists();
+        $deptLabel = $isContractor ? 'Contractor' : 'Department';
         $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
             ->setOption([
                 'isPhpEnabled' => true,

@@ -50,21 +50,23 @@ class WpiList extends Component
             ]);
         }
     }
-   public function exportPDF($id)
-{
-    // ... logic data ...
-    $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
-        ->setOption([
-            'isPhpEnabled' => true,
-            'isRemoteEnabled' => true
-        ])
-        ->setPaper('a4', 'portrait');
+    public function exportPDF($id)
+    {
+        $report = WpiReport::with(['findings'])->findOrFail($id);
+        $isContractor = Contractor::where('contractor_name', $report->department)->exists();
+        $deptLabel = $isContractor ? 'Contractor' : 'Department';
+        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
+            ->setOption([
+                'isPhpEnabled' => true,
+                'isRemoteEnabled' => true
+            ])
+            ->setPaper('a4', 'portrait');
 
-    return response()->streamDownload(function () use ($pdf) {
-        // Menggunakan output() memastikan seluruh script penomoran diproses
-        echo $pdf->output();
-    }, "Laporan_WPI.pdf");
-}
+        return response()->streamDownload(function () use ($pdf) {
+            // Menggunakan output() memastikan seluruh script penomoran diproses
+            echo $pdf->output();
+        }, "Laporan_WPI.pdf");
+    }
     public function render()
     {
         // Query dengan pencarian pada departemen atau lokasi
