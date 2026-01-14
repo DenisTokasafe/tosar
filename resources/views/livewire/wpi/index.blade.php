@@ -167,7 +167,7 @@
                                     </div>
 
                                     {{-- Kolom 2: ID Number --}}
-                                    <div class="pb-1 ">
+                                    <div class="pb-1 w-36">
                                         <span class="text-[10px] font-semibold uppercase text-gray-500">ID
                                             Number</span>
                                         <div class="flex items-center badge badge-soft badge-info text-[10px]">
