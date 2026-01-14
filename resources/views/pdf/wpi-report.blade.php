@@ -179,23 +179,26 @@
         <table class="footer-table">
             <tr>
                 <td width="25%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td width="30%">Formulir Laporan WPI KPLH</td>
-                <td width="25%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
-                <td width="20%">15 Maret 2023</td>
+                <td colspan="3" width="30%">Formulir Laporan WPI KPLH</td>
+
             </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
                 <td>Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
-                <td>Tanggal Tinjau Ulang/<span class="en">Review Date</span></td>
-                <td>15 Maret 2026</td>
+                <td width="25%">Tanggal Terbit/<span class="en">Date of Issue</span></td>
+                <td width="20%">15 Maret 2023</td>
+
             </tr>
             <tr>
                 <td>No Dokumen/<span class="en">No Document</span></td>
                 <td>TT-MGT-FRS-024A</td>
-                <td>No Revisi</td>
-                <td>00</td>
+                <td>Tanggal Tinjau Ulang/<span class="en">Review Date</span></td>
+                <td>15 Maret 2026</td>
+
             </tr>
             <tr>
+                <td>No Revisi</td>
+                <td>00</td>
                 <td colspan="3" class="red-note">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
