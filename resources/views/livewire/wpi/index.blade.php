@@ -490,7 +490,7 @@
                                             @endforeach
                                         @endif
                                     </div>
-                                    <<fieldset class="relative fieldset">
+                                    <fieldset class="relative fieldset">
                                         <x-form.label label="Tanggal Jatuh Tempo:" required />
                                         <div
                                             class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
