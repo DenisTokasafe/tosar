@@ -142,6 +142,32 @@
             color: black;
             font-weight: bold;
         }
+
+        /* Warna Border Custom (Ganti #717171 dengan warna yang Anda inginkan) */
+        .border-t-custom {
+            border-top: 1px solid #717171 !important;
+        }
+
+        .border-b-custom {
+            border-bottom: 1px solid #717171 !important;
+        }
+
+        .border-l-custom {
+            border-left: 1px solid #717171 !important;
+        }
+
+        .border-r-custom {
+            border-right: 1px solid #717171 !important;
+        }
+
+        /* Jika ingin menghilangkan border pada sisi tertentu */
+        .border-l-none {
+            border-left: none !important;
+        }
+
+        .border-r-none {
+            border-right: none !important;
+        }
     </style>
 </head>
 
@@ -178,11 +204,11 @@
     <footer>
         <table class="footer-table">
             <tr>
-            <td width="20%">Nama Dokumen/<br><span class="en">Document Name</span></td>
-            <td width="10%"></td>
-            <td width="45%">Formulir Laporan WPI KPLH</td>
-            <td width="25%"></td>
-        </tr>
+                <td width="20%">Nama Dokumen/<br><span class="en">Document Name</span></td>
+                <td class="border-l-none border-right" width="10%"></td>
+                <td width="45%">Formulir Laporan WPI KPLH</td>
+                <td width="25%"  class="border-l-none border-right"></td>
+            </tr>
             <tr>
                 <td>Ditetapkan Oleh/<span class="en">Determined By</span></td>
                 <td colspan="2">Kepala Teknik Tambang/<span class="en">Mining Technical Head</span></td>
