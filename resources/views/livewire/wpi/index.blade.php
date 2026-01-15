@@ -11,6 +11,131 @@
     </div>
     <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
         subheading="TT-MGT-FRS-024A">
+        {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
+        @if($reportId)
+        <div class="mb-4 border border-gray-200 shadow-md card bg-base-100">
+            <div class="px-4 py-2 card-body">
+                {{-- STATUS + Tombol Audit Trail --}}
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <label class="label">
+                            <span class="text-xs font-semibold label-text">Status :</span>
+                        </label>
+                        <span class="badge-xs italic badge {{ $this->getRandomBadgeColor($status) }} capitalize px-3 py-2">
+                            {{ $status }}
+                        </span>
+                    </div>
+
+                    {{-- Tombol buka modal Audit Trail --}}
+                    <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
+                        <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()">
+                        </flux:button>
+                    </flux:tooltip>
+                </div>
+
+                {{-- Form Action Workflow --}}
+                <div class="flex flex-col gap-4 mt-2 md:flex-row md:items-end">
+                    {{-- PROCEED TO (Dropdown Transisi) --}}
+                    <div class="w-full max-w-xs">
+                        <label class="py-1 label">
+                            <span class="text-[10px] font-bold uppercase text-gray-500">Lanjutkan Ke / Transition To</span>
+                        </label>
+                        <select wire:model.live="proceedTo"
+                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info">
+                            <option value="">-- Pilih Aksi --</option>
+                            @foreach ($availableTransitions as $label => $targetStatus)
+                                <option value="{{ $targetStatus }}">
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- LOGIKA ASSIGN ERM (Hanya tampil jika aksi yang dipilih mengarah ke InProgress/Assigned) --}}
+                    @if (in_array($proceedTo, ['Assigned', 'InProgress']))
+                        <div class="w-full max-w-xs">
+                            <label class="py-1 label">
+                                <span class="text-[10px] font-bold uppercase text-gray-500">Pilih ERM Utama</span>
+                            </label>
+                            <select wire:model="assignTo1"
+                                class="w-full select select-xs select-bordered focus:ring-1">
+                                <option value="">-- Pilih User --</option>
+                                @foreach ($ermList as $erm)
+                                    <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    {{-- TOMBOL KIRIM ACTION --}}
+                    <div class="flex items-end">
+                        <flux:button size="xs" wire:click="processAction"
+                            icon-trailing="paper-airplane"
+                            variant="primary"
+                            class="px-4"
+                            wire:loading.attr="disabled">
+                            Kirim Aksi
+                        </flux:button>
+                    </div>
+                </div>
+
+                {{-- Modal Audit Trail --}}
+                <dialog class="modal" id="my_modal_2" role="dialog">
+                    <div class="max-w-4xl modal-box">
+                        <form method="dialog">
+                            <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+                        </form>
+                        <h3 class="mb-4 text-lg font-bold">Audit Trail / Riwayat Laporan</h3>
+                        <div class="max-h-[60vh] overflow-y-auto">
+                            <table class="table border table-xs table-pin-rows">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="px-2 py-1 border">Tanggal</th>
+                                        <th class="px-2 py-1 border">User</th>
+                                        <th class="px-2 py-1 border">Perubahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        // Mengambil subject report dari data yang dimount
+                                        $reportData = \App\Models\WpiReport::with('activities.causer')->find($reportId);
+                                    @endphp
+                                    @forelse($reportData->activities as $activity)
+                                        <tr>
+                                            <td class="px-2 py-1 border text-[10px]">{{ $activity->created_at->format('d-m-Y H:i') }}</td>
+                                            <td class="px-2 py-1 italic font-semibold border">{{ $activity->causer->name ?? 'System' }}</td>
+                                            <td class="px-2 py-1 border">
+                                                <span class="text-blue-600 text-[10px] block mb-1 uppercase font-bold">{{ $activity->description }}</span>
+                                                @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
+                                                    @continue($field === 'updated_at')
+                                                    @php
+                                                        $oldValue = $activity->changes['old'][$field] ?? '-';
+                                                        $label = ucfirst(str_replace('_', ' ', $field));
+                                                    @endphp
+                                                    <div class="text-[10px] border-l-2 border-gray-200 pl-2 ml-1">
+                                                        <strong>{{ $label }}</strong>:
+                                                        <span class="text-red-500 line-through">{{ $oldValue }}</span>
+                                                        → <span class="text-green-600">{{ $new }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="py-4 italic text-center text-gray-500">Belum ada riwayat aktivitas.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+            </div>
+        </div>
+        @endif
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
