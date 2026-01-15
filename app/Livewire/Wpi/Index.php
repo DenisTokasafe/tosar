@@ -715,4 +715,16 @@ class Index extends Component
         }
         return view('livewire.wpi.index');
     }
+     public function getRandomBadgeColor($status)
+    {
+        return match ($status) {
+            'Submitted' => 'badge-info',
+            'Final Review'   => 'badge-warning',
+            'Closed'    => 'badge-success',
+            'Cancelled' => 'badge-error',
+            'Assigned' => 'badge-primary',
+            'Review Event' => 'badge-primary',
+            default     => 'badge-ghost',
+        };
+    }
 }
