@@ -27,6 +27,7 @@
                     {{-- Tombol buka modal Audit Trail --}}
                     @if (Route::is('wpi.edit'))
                         {{-- Tombol Download PDF --}}
+                        <div class="flex items-center gap-2">
                         <flux:tooltip content="Download PDF" position="top">
                             <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
                                 icon="document-arrow-down" variant="primary" color="blue">
@@ -37,6 +38,7 @@
                                 onclick="my_modal_2.showModal()">
                             </flux:button>
                         </flux:tooltip>
+                        </div>
                     @endif
                 </div>
 
@@ -231,7 +233,7 @@
             </div>
         </div>
     @endif
-    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
+    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? '' : 'Buat Laporan WPI Baru' }}"
         subheading="{{ $reportId ? '' : 'TT-MGT-FRS-024A' }}">
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">

@@ -18,14 +18,7 @@
                         </svg> Laporan Baru
                     </a>
                 @endif
-                @if (Route::is('wpi.edit'))
-                    {{-- Tombol Download PDF --}}
-                    <flux:tooltip content="Download PDF" position="top">
-                        <flux:button x-on:click="$dispatch('trigger-export-pdf', { id: {{ $id ?? 0 }} })"
-                            size="xs" icon="document-arrow-down" variant="primary" color="blue">
-                        </flux:button>
-                    </flux:tooltip>
-                @endif
+
             </div>
         </div>
         <div
