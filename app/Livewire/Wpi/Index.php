@@ -615,15 +615,11 @@ class Index extends Component
             'area' => 'required',
             'findings.*.description' => 'required',
             'findings.*.prevention_action' => 'required|string',
-            'findings.*.due_date' => 'nullable|date',
-            'findings.*.completion_date' => 'nullable|date',
-            'findings.*.pic_responsible' => 'required|array|min:1',
             'findings.*.due_date' => 'required|date',
+            'findings.*.pic_responsible' => 'required|array|min:1',
             'inspectors' => 'required|array|min:1',
             'inspectors.*.name' => 'required|string|min:3',
             'dept_cont' => 'required',
-        ], [
-            // ... custom messages Anda tetap sama ...
         ]);
 
         // 1. Tentukan data tambahan untuk workflow
@@ -634,7 +630,6 @@ class Index extends Component
             'area'        => $this->area,
             'department'  => $this->dept_cont,
             'inspectors'  => $this->inspectors,
-            // Menyimpan ID relasi untuk filter role ERM/Moderator
             'department_id' => $this->deptCont === 'department' ? Department::where('department_name', $this->dept_cont)->first()?->id : null,
             'contractor_id' => $this->deptCont === 'company' ? Contractor::where('contractor_name', $this->dept_cont)->first()?->id : null,
         ];
@@ -650,16 +645,15 @@ class Index extends Component
             $workflowData
         );
 
-        // 3. Kelola Findings
-        if ($this->reportId) {
-            $report->findings()->delete();
-        }
+        // 3. Kelola Findings (Logika Sinkronisasi agar Audit Trail Detail)
+        $existingFindingIds = $report->findings()->pluck('id')->toArray();
+        $currentFindingIds = [];
 
         foreach ($this->findings as $finding) {
             $photoPaths = $finding['photos'] ?? [];
             $photoPrevention = $finding['photos_prevention'] ?? [];
 
-            // Upload Photos (logic kompresi Anda)
+            // Upload Photos Baru
             if (!empty($finding['new_photos'])) {
                 foreach ($finding['new_photos'] as $photo) {
                     $photoPaths[] = FileHelper::compressAndStore($photo, 'wpi-photos', 800, 75);
@@ -671,33 +665,44 @@ class Index extends Component
                 }
             }
 
-            $report->findings()->create([
-                'ohs_risk' => $finding['ohs_risk'],
-                'description' => $finding['description'],
-                'prevention_action' => $finding['prevention_action'],
-                'pic_responsible' => is_array($finding['pic_responsible'])
-                    ? implode('|', $finding['pic_responsible'])
-                    : $finding['pic_responsible'],
-                'due_date' => isset($finding['due_date']) && $finding['due_date']
-                    ? date('Y-m-d', strtotime($finding['due_date']))
-                    : null,
-                'completion_date' => isset($finding['completion_date']) && $finding['completion_date']
-                    ? date('Y-m-d', strtotime($finding['completion_date']))
-                    : null,
-                'photos' => $photoPaths,
-                'photos_prevention' => $photoPrevention,
-            ]);
+            // MENGGUNAKAN updateOrCreate PER BARIS:
+            // Ini memastikan Spatie merekam 'updated' jika data berubah, atau 'created' jika baru.
+            $findingModel = $report->findings()->updateOrCreate(
+                ['id' => $finding['id'] ?? null], // Cari berdasarkan ID jika ada
+                [
+                    'ohs_risk' => $finding['ohs_risk'],
+                    'description' => $finding['description'],
+                    'prevention_action' => $finding['prevention_action'],
+                    'pic_responsible' => is_array($finding['pic_responsible'])
+                        ? implode('|', $finding['pic_responsible'])
+                        : $finding['pic_responsible'],
+                    'due_date' => $finding['due_date'] ? date('Y-m-d', strtotime($finding['due_date'])) : null,
+                    'completion_date' => $finding['completion_date'] ? date('Y-m-d', strtotime($finding['completion_date'])) : null,
+                    'photos' => $photoPaths,
+                    'photos_prevention' => $photoPrevention,
+                ]
+            );
+
+            $currentFindingIds[] = $findingModel->id;
         }
 
-        // 4. Notifikasi Otomatis ke Moderator (Opsional)
-        // Jika laporan baru, kirim email ke moderator yang relevan
-        if (!$this->reportId) {
-            $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
-            foreach ($moderatorIds as $userId) {
-                // Panggil MailHelper atau Notification Anda di sini
-                // \App\Helpers\MailHelper::sendToUserId($userId, ...);
-            }
+        // PROSES DELETE: Hapus temuan yang tidak ada lagi di form
+        $findingsToDelete = array_diff($existingFindingIds, $currentFindingIds);
+        if (!empty($findingsToDelete)) {
+            // Ini akan memicu event 'deleted' di Audit Trail untuk setiap item yang dihapus
+            WpiFinding::whereIn('id', $findingsToDelete)->get()->each->delete();
         }
+
+        // 4. Notifikasi Otomatis ke Moderator
+        // if (!$this->reportId) {
+        //     $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
+        //     foreach ($moderatorIds as $userId) {
+        //         $user = User::find($userId);
+        //         if ($user) {
+        //             $user->notify(new \App\Notifications\WpiSubmittedNotification($report));
+        //         }
+        //     }
+        // }
 
         $this->dispatch('alert', [
             'text' => $this->reportId ? 'Data berhasil diperbarui' : 'Data berhasil disimpan',
@@ -731,11 +736,11 @@ class Index extends Component
             $report = WpiReport::find($this->reportId);
             $this->setEffectiveRole($report);
             $this->loadAvailableTransitions($report);
-             $this->loadErmList();
+            $this->loadErmList();
         }
         return view('livewire.wpi.index');
     }
-     public function getRandomBadgeColor($status)
+    public function getRandomBadgeColor($status)
     {
         return match ($status) {
             'Submitted' => 'badge-info',
