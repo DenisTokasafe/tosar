@@ -1,7 +1,12 @@
-<div class="flex aspect-square size-9  items-center justify-center rounded-full bg-accent-content text-accent-foreground">
-    <x-app-logo-icon class="fill-current text-white dark:text-black" />
+<div
+    class="flex items-center justify-center rounded-full aspect-square size-9 bg-accent-content text-accent-foreground">
+    <div class="avatar">
+        <div class="w-24 rounded-full">
+            <x-app-logo-icon class="text-white fill-current dark:text-black" />
+        </div>
+    </div>
 </div>
-<div class="ms-1 grid flex-1 text-start text-sm">
-    <span class=" truncate leading-tight font-semibold">Tosar</span>
+<div class="grid flex-1 text-sm ms-1 text-start">
+    <span class="font-semibold leading-tight truncate ">Tosar</span>
     <span class="mb-0.5 truncate leading-tight font-extralight text-[8px]">TokaSafe Administration Reporting</span>
 </div>
