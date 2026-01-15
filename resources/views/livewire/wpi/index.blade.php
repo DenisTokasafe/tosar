@@ -73,7 +73,7 @@
                         {{-- TOMBOL KIRIM ACTION --}}
                         <div class="flex items-end">
                             <flux:button size="xs" {{-- Mengirim variabel proceedTo (nama status tujuan) ke fungsi di Component --}}
-                                wire:click="processStatusChange(proceedTo)" icon-trailing="paper-airplane"
+                                wire:click="processStatusChange('{{ $proceedTo }}')" icon-trailing="paper-airplane"
                                 variant="primary" class="px-4" wire:loading.attr="disabled">
                                 Kirim Aksi
                             </flux:button>
