@@ -27,7 +27,7 @@ class Index extends Component
     public string $effectiveRole = '';
     public $asModerator = false;
     public $asErm = false;
-
+    public array $ermList = [];
     public $reportId;
     public $report_date, $report_time, $location, $dept_cont, $area;
     public $inspectors = [['name' => '', 'id_number' => '']];
@@ -200,10 +200,27 @@ class Index extends Component
 
     protected function loadAvailableTransitions($report)
     {
-        $this->availableTransitions = WpiWorkflow::getAvailableTransitions(
-            $report->status,
-            $this->effectiveRole
-        );
+        $this->availableTransitions = WpiWorkflow::getAvailableTransitions($report->status, $this->effectiveRole);
+    }
+    protected function loadErmList(): void
+    {
+        $dept = $this->hazard->department_id;
+        $cont = $this->hazard->contractor_id;
+        $userIds = DB::table('erm_assignments')
+            ->select('user_id')
+            ->when($dept || $cont, function ($q) use ($dept, $cont) {
+                $q->where(function ($q2) use ($dept, $cont) {
+                    if ($dept) {
+                        $q2->orWhere('department_id', $dept);
+                    }
+                    if ($cont) {
+                        $q2->orWhere('contractor_id', $cont);
+                    }
+                });
+            })
+            ->pluck('user_id')
+            ->toArray();
+        $this->ermList = User::whereIn('id', $userIds)->get()->toArray();
     }
 
     public function processStatusChange($newStatus)
@@ -712,6 +729,7 @@ class Index extends Component
             $report = WpiReport::find($this->reportId);
             $this->setEffectiveRole($report);
             $this->loadAvailableTransitions($report);
+             $this->loadErmList();
         }
         return view('livewire.wpi.index');
     }
