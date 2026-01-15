@@ -88,7 +88,7 @@ class WpiReport extends Model
 
     public function assignedErms(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'wpi_report_user', 'wpi_report_id', 'user_id')
+        return $this->belongsToMany(User::class, 'wpi_report_user_pivot', 'wpi_report_id', 'user_id')
                     ->withTimestamps();
     }
 
