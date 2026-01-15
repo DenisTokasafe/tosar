@@ -380,7 +380,7 @@
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
                             <div class="flex-1 ">
                                 {{-- Menggunakan Grid untuk membagi menjadi 3 kolom pada layar sedang/besar --}}
-                                <div class="grid grid-cols-1 gap-2 lg:grid-cols-6 ">
+                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-6 ">
 
                                     {{-- Kolom 1: Dropdown Pencarian --}}
                                     <div class="pb-1 lg:col-span-3 lg:col-start-1">
