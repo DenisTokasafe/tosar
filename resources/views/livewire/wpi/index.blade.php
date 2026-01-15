@@ -29,19 +29,19 @@
 
                     {{-- Tombol buka modal Audit Trail --}}
 
-                        {{-- Tombol Download PDF --}}
-                        <div wire:ignore class="flex items-center gap-2">
-                            <flux:tooltip content="Download PDF" position="top">
-                                <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
-                                    icon="document-arrow-down" variant="primary" color="blue">
-                                </flux:button>
-                            </flux:tooltip>
-                            <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
-                                <flux:button size="xs" variant="accent" icon='clock'
-                                    onclick="my_modal_2.showModal()">
-                                </flux:button>
-                            </flux:tooltip>
-                        </div>
+                    {{-- Tombol Download PDF --}}
+                    <div wire:ignore class="flex items-center gap-2">
+                        <flux:tooltip content="Download PDF" position="top">
+                            <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
+                                icon="document-arrow-down" variant="primary" color="blue">
+                            </flux:button>
+                        </flux:tooltip>
+                        <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
+                            <flux:button size="xs" variant="accent" icon='clock'
+                                onclick="my_modal_2.showModal()">
+                            </flux:button>
+                        </flux:tooltip>
+                    </div>
 
                 </div>
 
@@ -81,7 +81,8 @@
                             <label class="py-1 label">
                                 <span class="text-[10px] font-bold uppercase text-gray-500">Pilih ERM </span>
                             </label>
-                            <select wire:model="assignTo2 " class="w-full select select-xs select-bordered focus:ring-1">
+                            <select wire:model="assignTo2 "
+                                class="w-full select select-xs select-bordered focus:ring-1">
                                 <option value="">-- Pilih User --</option>
                                 @foreach ($ermList as $erm)
                                     <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
@@ -157,7 +158,8 @@
                                                     @continue($field === 'updated_at' || $field === 'wpi_report_id' || str_ends_with($field, '_label'))
 
                                                     @php
-                                                        $oldValue = $activity->changes['old'][$field] ?? '-';$newValue = $new;
+                                                        $oldValue = $activity->changes['old'][$field] ?? '-';
+                                                        $newValue = $new;
 
                                                         // Logic Switch untuk merubah ID menjadi Nama (Human Readable)
                                                         switch ($field) {
@@ -248,7 +250,7 @@
     @endif
 
     {{-- BAGIAN CONTENT UTAMA --}}
-    <x-dynamic-component :component="$layoutComponent">
+    <x-dynamic-component :component="$layoutComponent":id="$reportId" :heading="$reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru'" subheading="TT-MGT-FRS-024A">
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
@@ -324,7 +326,8 @@
                                         initFlatpickr();
                                     });">
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
-                                        wire:model.live='report_time' placeholder="Pilih Tanggal dan Waktu..." readonly
+                                        wire:model.live='report_time' placeholder="Pilih Tanggal dan Waktu..."
+                                        readonly
                                         class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs  {{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                 </div>
                             </div>
