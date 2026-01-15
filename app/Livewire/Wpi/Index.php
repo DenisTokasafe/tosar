@@ -27,6 +27,8 @@ class Index extends Component
     public string $effectiveRole = '';
     public $asModerator = false;
     public $asErm = false;
+    public $assignTo1 = '';
+    public $assignTo2 = '';
     public array $ermList = [];
     public $reportId;
     public $report_date, $report_time, $location, $dept_cont, $area;
