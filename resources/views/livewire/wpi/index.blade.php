@@ -250,7 +250,7 @@
     @endif
 
     {{-- BAGIAN CONTENT UTAMA --}}
-    <x-dynamic-component :component="$layoutComponent" :heading="$reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru'" subheading="TT-MGT-FRS-024A">
+    <x-dynamic-component :component="$layoutComponent" :heading="$reportId ? '' : 'Buat Laporan WPI Baru'" subheading="$reportId ? '' :TT-MGT-FRS-024A">
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
