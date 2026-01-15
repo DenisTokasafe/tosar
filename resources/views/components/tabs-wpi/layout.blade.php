@@ -1,4 +1,4 @@
-@if (Route::is('wpi.list'))
+@if (Route::is('wpi.list') || Route::is('wpi.create'))
     <div class="z-30 flex max-md:flex-col ">
         <div class="self-stretch flex-1 max-md:pt-6">
             <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
