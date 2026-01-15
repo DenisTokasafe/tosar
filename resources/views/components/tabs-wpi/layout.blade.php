@@ -28,8 +28,7 @@
             </div>
         </div>
     </div>
-@endif
-@if (Route::is('wpi.edit'))
+@else
     <div class="z-30 flex items-start max-md:flex-col ">
         <div class="self-stretch flex-1 max-md:pt-3">
             <div
