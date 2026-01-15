@@ -72,8 +72,9 @@
 
                         {{-- TOMBOL KIRIM ACTION --}}
                         <div class="flex items-end">
-                            <flux:button size="xs" wire:click="processAction" icon-trailing="paper-airplane"
-                                variant="primary" class="px-4" wire:loading.attr="disabled">
+                            <flux:button size="xs"wire:click="processStatusChange(proceedTo)"
+                                icon-trailing="paper-airplane" variant="primary" class="px-4"
+                                wire:loading.attr="disabled">
                                 Kirim Aksi
                             </flux:button>
                         </div>
