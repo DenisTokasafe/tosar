@@ -153,6 +153,16 @@
                                                                         \App\Models\User::find($newValue)?->name ??
                                                                         $newValue;
                                                                     break;
+                                                                // MENGGUNAKAN LABEL HASIL tapActivity UNTUK INSPECTORS
+                                                                case 'inspectors':
+                                                                    $oldValue =
+                                                                        $activity->changes['old']['inspectors_label'] ??
+                                                                        '-';
+                                                                    $newValue =
+                                                                        $activity->changes['attributes'][
+                                                                            'inspectors_label'
+                                                                        ] ?? '-';
+                                                                    break;
                                                                 case 'department_id':
                                                                     $oldValue =
                                                                         \App\Models\Department::find($oldValue)
