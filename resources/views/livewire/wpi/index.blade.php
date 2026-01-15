@@ -2,7 +2,7 @@
     <x-toast />
     <div class="flex justify-start " wire:ignore>
         @php
-            $layoutComponent = Route::is('wpi.edit') ? 'tabs-wpi.layout-edit' : 'tabs-wpi.layout';
+            $layoutComponent = $reportId ? 'tabs-wpi.layout-edit' : 'tabs-wpi.layout';
             $currentRoute = Route::currentRouteName();
             $currentStatus = strtolower($status ?? '');
             $isDisabled = in_array($currentStatus, ['closed', 'cancelled']);
@@ -157,8 +157,7 @@
                                                     @continue($field === 'updated_at' || $field === 'wpi_report_id' || str_ends_with($field, '_label'))
 
                                                     @php
-                                                        $oldValue = $activity->changes['old'][$field] ?? '-';
-                                                        $newValue = $new;
+                                                        $oldValue = $activity->changes['old'][$field] ?? '-';$newValue = $new;
 
                                                         // Logic Switch untuk merubah ID menjadi Nama (Human Readable)
                                                         switch ($field) {
