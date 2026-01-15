@@ -204,8 +204,9 @@ class Index extends Component
     }
     protected function loadErmList(): void
     {
-        $dept = $this->hazard->department_id;
-        $cont = $this->hazard->contractor_id;
+        $wpi_report = WpiReport::find($this->reportId);
+        $dept = $wpi_report->department_id;
+        $cont = $wpi_report->contractor_id;
         $userIds = DB::table('erm_assignments')
             ->select('user_id')
             ->when($dept || $cont, function ($q) use ($dept, $cont) {
