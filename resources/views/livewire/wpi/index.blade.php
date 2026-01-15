@@ -237,7 +237,7 @@
     @endif
 
     {{-- BAGIAN CONTENT UTAMA --}}
-    @if (Route::is('wpi.create'))
+    @if (Route::is('wpi.create') || Route::is('wpi.list'))
         <x-tabs-wpi.layout heading="Buat Laporan WPI Baru" subheading="TT-MGT-FRS-024A">
         @elseif (Route::is('wpi.edit'))
             <x-tabs-wpi.layout-edit>
@@ -841,7 +841,7 @@
             </div>
         </div>
     </form>
-    @if (Route::is('wpi.create'))
+    @if (Route::is('wpi.create') || Route::is('wpi.list'))
         </x-tabs-wpi.layout>
     @elseif (Route::is('wpi.edit'))
         </x-tabs-wpi.layout>
