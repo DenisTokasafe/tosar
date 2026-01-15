@@ -127,25 +127,68 @@
                                                 <td class="px-2 py-1 italic font-semibold border">
                                                     {{ $activity->causer->name ?? 'System' }}</td>
                                                 <td class="px-2 py-1 border">
-                                                    {{-- Badge pembeda apakah perubahan di Report atau Finding --}}
+                                                    {{-- Badge Tipe Aktivitas --}}
                                                     <span
-                                                        class="badge {{ $activity->subject_type == \App\Models\WpiReport::class ? 'badge-info' : 'badge-warning' }} badge-xs mb-1">
-                                                        {{ $activity->subject_type == \App\Models\WpiReport::class ? 'REPORT' : 'FINDING' }}
+                                                        class="badge {{ $activity->subject_type == \App\Models\WpiReport::class ? 'badge-info' : 'badge-warning' }} badge-xs mb-1 uppercase font-bold text-[8px]">
+                                                        {{ $activity->subject_type == \App\Models\WpiReport::class ? 'Report' : 'Finding' }}
                                                     </span>
 
                                                     <span
                                                         class="text-blue-600 text-[10px] block mb-1 uppercase font-bold">{{ $activity->description }}</span>
 
                                                     @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
-                                                        @continue(in_array($field, ['updated_at', 'wpi_report_id']) || str_ends_with($field, '_label'))
+                                                        @continue($field === 'updated_at' || $field === 'wpi_report_id' || str_ends_with($field, '_label'))
 
                                                         @php
-                                                            $oldValue =
-                                                                $activity->changes['old'][$field . '_label'] ??
-                                                                ($activity->changes['old'][$field] ?? '-');
-                                                            $newValue =
-                                                                $activity->changes['attributes'][$field . '_label'] ??
-                                                                $new;
+                                                            $oldValue = $activity->changes['old'][$field] ?? '-';
+                                                            $newValue = $new;
+
+                                                            // Logic Switch untuk merubah ID menjadi Nama (Human Readable)
+                                                            switch ($field) {
+                                                                case 'created_by':
+                                                                    $oldValue =
+                                                                        \App\Models\User::find($oldValue)?->name ??
+                                                                        $oldValue;
+                                                                    $newValue =
+                                                                        \App\Models\User::find($newValue)?->name ??
+                                                                        $newValue;
+                                                                    break;
+                                                                case 'department_id':
+                                                                    $oldValue =
+                                                                        \App\Models\Department::find($oldValue)
+                                                                            ?->department_name ?? $oldValue;
+                                                                    $newValue =
+                                                                        \App\Models\Department::find($newValue)
+                                                                            ?->department_name ?? $newValue;
+                                                                    break;
+                                                                case 'contractor_id':
+                                                                    $oldValue =
+                                                                        \App\Models\Contractor::find($oldValue)
+                                                                            ?->contractor_name ?? $oldValue;
+                                                                    $newValue =
+                                                                        \App\Models\Contractor::find($newValue)
+                                                                            ?->contractor_name ?? $newValue;
+                                                                    break;
+                                                                case 'inspectors':
+                                                                case 'pic_responsible':
+                                                                case 'photos':
+                                                                case 'photos_prevention':
+                                                                    // Jika data berupa array atau JSON, buat string yang enak dibaca
+                                                                    $oldValue = is_array($oldValue)
+                                                                        ? implode(
+                                                                            ', ',
+                                                                            collect($oldValue)->flatten()->toArray(),
+                                                                        )
+                                                                        : $oldValue;
+                                                                    $newValue = is_array($newValue)
+                                                                        ? implode(
+                                                                            ', ',
+                                                                            collect($newValue)->flatten()->toArray(),
+                                                                        )
+                                                                        : $newValue;
+                                                                    break;
+                                                            }
+
                                                             $label = ucfirst(
                                                                 str_replace(['_id', '_'], ['', ' '], $field),
                                                             );
@@ -153,11 +196,12 @@
 
                                                         <div
                                                             class="text-[10px] border-l-2 border-gray-200 pl-2 ml-1 mb-1">
-                                                            <strong>{{ $label }}</strong>:
+                                                            <strong class="text-gray-600">{{ $label }}</strong>:
                                                             <span
-                                                                class="text-red-500 line-through">{{ is_array($oldValue) ? 'Data Array' : $oldValue }}</span>
-                                                            → <span
-                                                                class="font-medium text-green-600">{{ is_array($newValue) ? 'Data Array' : $newValue }}</span>
+                                                                class="text-red-500 line-through">{{ $oldValue ?: '-' }}</span>
+                                                            <span class="mx-1">→</span>
+                                                            <span
+                                                                class="font-medium text-green-600">{{ $newValue ?: '-' }}</span>
                                                         </div>
                                                     @endforeach
                                                 </td>
