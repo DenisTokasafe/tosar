@@ -1,8 +1,10 @@
 <div class="flex flex-col gap-6 md:max-w-sm">
     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-        <span class="flex items-center justify-center mb-1 rounded-md h-9 w-9">
-            <x-app-logo-icon class="bg-white fill-current size-9 dark:text-white" />
-        </span>
+        <div class="avatar">
+            <div class="w-24 rounded-full">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo">
+            </div>
+        </div>
         <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
     </a>
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your username or email and password below to log in')" />
