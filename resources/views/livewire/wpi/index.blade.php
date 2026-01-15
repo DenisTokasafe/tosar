@@ -247,7 +247,7 @@
                             <x-form.label label="Tanggal / Date" required />
                             <div class="{{ $errors->has('report_date') ? 'ring-1 ring-rose-500 rounded' : '' }}">
                                 <div class="relative" wire:ignore x-data="{
-                                    isDisabled: @js($isDisabled),
+
                                     reportDate: @entangle('report_date'),
                                     fp: null,
                                     init() {
@@ -270,8 +270,8 @@
                                     }
                                 }">
 
-                                    <input type="text" x-ref="tanggalInput" placeholder="Pilih Tanggal..." readonly
-                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $isDisabled ? 'bg-gray-100 cursor-not-allowed' : '' }} {{ $errors->has('report_date') ? 'ring-1 ring-rose-500' : '' }}" />
+                                    <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput" placeholder="Pilih Tanggal..." readonly
+                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs  {{ $errors->has('report_date') ? 'ring-1 ring-rose-500' : '' }}" />
                                 </div>
                             </div>
                             <x-label-error :messages="$errors->get('report_date')" />
@@ -282,7 +282,7 @@
                             <div
                                 class="{{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
                                 <div class="relative " wire:ignore x-data="{
-                                    isDisabled: @js($isDisabled),
+
                                     fp: null,
                                     initFlatpickr() {
                                         if (this.fp) this.fp.destroy();
@@ -310,9 +310,9 @@
                                     Livewire.hook('message.processed', () => {
                                         initFlatpickr();
                                     });">
-                                    <input type="text" x-ref="tanggalInput" wire:model.live='report_time'
+                                    <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput" wire:model.live='report_time'
                                         placeholder="Pilih Tanggal dan Waktu..." readonly
-                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $isDisabled ? 'bg-gray-100 cursor-not-allowed' : '' }} {{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs  {{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                 </div>
                             </div>
                             <x-label-error :messages="$errors->get('report_time')" />
