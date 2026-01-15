@@ -28,7 +28,7 @@
                     </div>
 
                     {{-- Tombol buka modal Audit Trail --}}
-                    @if (Route::is('wpi.edit'))
+
                         {{-- Tombol Download PDF --}}
                         <div wire:ignore class="flex items-center gap-2">
                             <flux:tooltip content="Download PDF" position="top">
@@ -42,7 +42,7 @@
                                 </flux:button>
                             </flux:tooltip>
                         </div>
-                    @endif
+
                 </div>
 
                 {{-- Form Action Workflow --}}
