@@ -30,6 +30,7 @@
                             <td class="p-3 border border-gray-200">
                                 <div class="flex flex-row justify-center gap-2" wire:key="actions-{{ $report->id }}">
                                     {{-- Tombol Edit --}}
+                                      @can('view', $report)
                                     <flux:tooltip content="edit" position="top">
                                         <flux:button href="{{ route('wpi.edit', $report->id) }}" size="xs"
                                             icon="pencil-square" variant="subtle">
@@ -49,6 +50,9 @@
                                             icon="document-arrow-down" variant="primary" color="blue">
                                         </flux:button>
                                     </flux:tooltip>
+                                     @else
+                                        <span class="italic text-gray-400">No Actions Available</span>
+                                     @endcan
                                 </div>
                             </td>
                         </tr>
