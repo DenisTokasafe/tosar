@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
     Route::get('manhours', Index::class)->name('manhours');
-    Route::get('wpi-list', WpiList::class)->name('wpi.list');
+    Route::get('wpi', WpiList::class)->name('wpi.list');
     Route::get('wpi/create', WpiForm::class)->name('wpi.create');
     Route::get('wpi/edit/{id?}', WpiForm::class)->name('wpi.edit');
     Route::get('hazard', HazardReportPanel::class)->name('hazard');
