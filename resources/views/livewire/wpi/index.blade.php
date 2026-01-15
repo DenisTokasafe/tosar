@@ -9,231 +9,231 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
-        subheading="TT-MGT-FRS-024A">
-        {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
-        @if ($reportId)
-            <div class="mb-4 border border-gray-200 shadow-md card bg-base-100">
-                <div class="px-4 py-2 card-body">
-                    {{-- STATUS + Tombol Audit Trail --}}
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <label class="label">
-                                <span class="text-xs font-semibold label-text">Status :</span>
-                            </label>
-                            <span
-                                class="badge-xs italic badge {{ $this->getRandomBadgeColor($status) }} capitalize px-3 py-2">
-                                {{ $status }}
-                            </span>
+            @if ($reportId)
+                <div class="mb-4 border border-gray-200 shadow-md card bg-base-100">
+                    <div class="px-4 py-2 card-body">
+                        {{-- STATUS + Tombol Audit Trail --}}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <label class="label">
+                                    <span class="text-xs font-semibold label-text">Status :</span>
+                                </label>
+                                <span
+                                    class="badge-xs italic badge {{ $this->getRandomBadgeColor($status) }} capitalize px-3 py-2">
+                                    {{ $status }}
+                                </span>
+                            </div>
+
+                            {{-- Tombol buka modal Audit Trail --}}
+                            <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
+                                <flux:button size="xs" variant="accent" icon='clock'
+                                    onclick="my_modal_2.showModal()">
+                                </flux:button>
+                            </flux:tooltip>
                         </div>
 
-                        {{-- Tombol buka modal Audit Trail --}}
-                        <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
-                            <flux:button size="xs" variant="accent" icon='clock'
-                                onclick="my_modal_2.showModal()">
-                            </flux:button>
-                        </flux:tooltip>
-                    </div>
-
-                    {{-- Form Action Workflow --}}
-                    <div class="flex flex-col gap-4 mt-2 md:flex-row md:items-end">
-                        {{-- PROCEED TO (Dropdown Transisi) --}}
-                        <div class="w-full max-w-xs">
-                            <label class="py-1 label">
-                                <span class="text-[10px] font-bold uppercase text-gray-500">Lanjutkan Ke / Transition
-                                    To</span>
-                            </label>
-                            <select wire:model.live="proceedTo"
-                                class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info">
-                                <option value="">-- Pilih Aksi --</option>
-                                @foreach ($availableTransitions as $label => $targetStatus)
-                                    <option value="{{ $targetStatus }}">
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- LOGIKA ASSIGN ERM (Hanya tampil jika aksi yang dipilih mengarah ke InProgress/Assigned) --}}
-                        @if (in_array($proceedTo, ['Assigned', 'InProgress']))
+                        {{-- Form Action Workflow --}}
+                        <div class="flex flex-col gap-4 mt-2 md:flex-row md:items-end">
+                            {{-- PROCEED TO (Dropdown Transisi) --}}
                             <div class="w-full max-w-xs">
                                 <label class="py-1 label">
-                                    <span class="text-[10px] font-bold uppercase text-gray-500">Pilih ERM Utama</span>
+                                    <span class="text-[10px] font-bold uppercase text-gray-500">Lanjutkan Ke / Transition
+                                        To</span>
                                 </label>
-                                <select wire:model="assignTo1"
-                                    class="w-full select select-xs select-bordered focus:ring-1">
-                                    <option value="">-- Pilih User --</option>
-                                    @foreach ($ermList as $erm)
-                                        <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                                <select wire:model.live="proceedTo"
+                                    class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info">
+                                    <option value="">-- Pilih Aksi --</option>
+                                    @foreach ($availableTransitions as $label => $targetStatus)
+                                        <option value="{{ $targetStatus }}">
+                                            {{ $label }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
-                        @endif
 
-                        {{-- TOMBOL KIRIM ACTION --}}
-                        <div class="flex items-end">
-                            <flux:button size="xs" {{-- Mengirim variabel proceedTo (nama status tujuan) ke fungsi di Component --}}
-                                wire:click="processStatusChange('{{ $proceedTo }}')" icon-trailing="paper-airplane"
-                                variant="primary" class="px-4" wire:loading.attr="disabled">
-                                Kirim Aksi
-                            </flux:button>
-                        </div>
-                    </div>
+                            {{-- LOGIKA ASSIGN ERM (Hanya tampil jika aksi yang dipilih mengarah ke InProgress/Assigned) --}}
+                            @if (in_array($proceedTo, ['Assigned', 'InProgress']))
+                                <div class="w-full max-w-xs">
+                                    <label class="py-1 label">
+                                        <span class="text-[10px] font-bold uppercase text-gray-500">Pilih ERM Utama</span>
+                                    </label>
+                                    <select wire:model="assignTo1"
+                                        class="w-full select select-xs select-bordered focus:ring-1">
+                                        <option value="">-- Pilih User --</option>
+                                        @foreach ($ermList as $erm)
+                                            <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
 
-                    {{-- Modal Audit Trail --}}
-                    <dialog class="modal" id="my_modal_2" role="dialog">
-                        <div class="max-w-4xl modal-box">
-                            <form method="dialog">
-                                <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
-                            </form>
-                            <h3 class="mb-4 text-lg font-bold">Audit Trail / Riwayat Laporan</h3>
-                            <div class="max-h-[60vh] overflow-y-auto">
-                                <table class="table border table-xs table-pin-rows">
-                                    <thead>
-                                        <tr class="bg-gray-100">
-                                            <th class="px-2 py-1 border">Tanggal</th>
-                                            <th class="px-2 py-1 border">User</th>
-                                            <th class="px-2 py-1 border">Perubahan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            // Ambil aktivitas milik Report Utama
-                                            $reportActivities = Spatie\Activitylog\Models\Activity::where(
-                                                'subject_type',
-                                                \App\Models\WpiReport::class,
-                                            )->where('subject_id', $reportId);
-
-                                            // Ambil aktivitas milik Finding yang berelasi dengan Report ini
-                                            $findingIds = \App\Models\WpiFinding::where(
-                                                'wpi_report_id',
-                                                $reportId,
-                                            )->pluck('id');
-                                            $findingActivities = Spatie\Activitylog\Models\Activity::where(
-                                                'subject_type',
-                                                \App\Models\WpiFinding::class,
-                                            )->whereIn('subject_id', $findingIds);
-
-                                            // Gabungkan dan urutkan berdasarkan waktu terbaru
-                                            $allActivities = $reportActivities
-                                                ->union($findingActivities)
-                                                ->latest()
-                                                ->get();
-                                        @endphp
-
-                                        @forelse($allActivities as $activity)
-                                            <tr>
-                                                <td class="px-2 py-1 border text-[10px]">
-                                                    {{ $activity->created_at->format('d-m-Y H:i') }}</td>
-                                                <td class="px-2 py-1 italic font-semibold border">
-                                                    {{ $activity->causer->name ?? 'System' }}</td>
-                                                <td class="px-2 py-1 border">
-                                                    {{-- Badge Tipe Aktivitas --}}
-                                                    <span
-                                                        class="badge {{ $activity->subject_type == \App\Models\WpiReport::class ? 'badge-info' : 'badge-warning' }} badge-xs mb-1 uppercase font-bold text-[8px]">
-                                                        {{ $activity->subject_type == \App\Models\WpiReport::class ? 'Report' : 'Finding' }}
-                                                    </span>
-
-                                                    <span
-                                                        class="text-blue-600 text-[10px] block mb-1 uppercase font-bold">{{ $activity->description }}</span>
-
-                                                    @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
-                                                        @continue($field === 'updated_at' || $field === 'wpi_report_id' || str_ends_with($field, '_label'))
-
-                                                        @php
-                                                            $oldValue = $activity->changes['old'][$field] ?? '-';
-                                                            $newValue = $new;
-
-                                                            // Logic Switch untuk merubah ID menjadi Nama (Human Readable)
-                                                            switch ($field) {
-                                                                case 'created_by':
-                                                                    $oldValue =
-                                                                        \App\Models\User::find($oldValue)?->name ??
-                                                                        $oldValue;
-                                                                    $newValue =
-                                                                        \App\Models\User::find($newValue)?->name ??
-                                                                        $newValue;
-                                                                    break;
-                                                                // MENGGUNAKAN LABEL HASIL tapActivity UNTUK INSPECTORS
-                                                                case 'inspectors':
-                                                                    $oldValue =
-                                                                        $activity->changes['old']['inspectors_label'] ??
-                                                                        '-';
-                                                                    $newValue =
-                                                                        $activity->changes['attributes'][
-                                                                            'inspectors_label'
-                                                                        ] ?? '-';
-                                                                    break;
-                                                                case 'department_id':
-                                                                    $oldValue =
-                                                                        \App\Models\Department::find($oldValue)
-                                                                            ?->department_name ?? $oldValue;
-                                                                    $newValue =
-                                                                        \App\Models\Department::find($newValue)
-                                                                            ?->department_name ?? $newValue;
-                                                                    break;
-                                                                case 'contractor_id':
-                                                                    $oldValue =
-                                                                        \App\Models\Contractor::find($oldValue)
-                                                                            ?->contractor_name ?? $oldValue;
-                                                                    $newValue =
-                                                                        \App\Models\Contractor::find($newValue)
-                                                                            ?->contractor_name ?? $newValue;
-                                                                    break;
-                                                                case 'inspectors':
-                                                                case 'pic_responsible':
-                                                                case 'photos':
-                                                                case 'photos_prevention':
-                                                                    // Jika data berupa array atau JSON, buat string yang enak dibaca
-                                                                    $oldValue = is_array($oldValue)
-                                                                        ? implode(
-                                                                            ', ',
-                                                                            collect($oldValue)->flatten()->toArray(),
-                                                                        )
-                                                                        : $oldValue;
-                                                                    $newValue = is_array($newValue)
-                                                                        ? implode(
-                                                                            ', ',
-                                                                            collect($newValue)->flatten()->toArray(),
-                                                                        )
-                                                                        : $newValue;
-                                                                    break;
-                                                            }
-
-                                                            $label = ucfirst(
-                                                                str_replace(['_id', '_'], ['', ' '], $field),
-                                                            );
-                                                        @endphp
-
-                                                        <div
-                                                            class="text-[10px] border-l-2 border-gray-200 pl-2 ml-1 mb-1">
-                                                            <strong class="text-gray-600">{{ $label }}</strong>:
-                                                            <span
-                                                                class="text-red-500 line-through">{{ $oldValue ?: '-' }}</span>
-                                                            <span class="mx-1">→</span>
-                                                            <span
-                                                                class="font-medium text-green-600">{{ $newValue ?: '-' }}</span>
-                                                        </div>
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="3" class="py-4 italic text-center text-gray-500">Belum
-                                                    ada riwayat aktivitas.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
+                            {{-- TOMBOL KIRIM ACTION --}}
+                            <div class="flex items-end">
+                                <flux:button size="xs" {{-- Mengirim variabel proceedTo (nama status tujuan) ke fungsi di Component --}}
+                                    wire:click="processStatusChange('{{ $proceedTo }}')" icon-trailing="paper-airplane"
+                                    variant="primary" class="px-4" wire:loading.attr="disabled">
+                                    Kirim Aksi
+                                </flux:button>
                             </div>
                         </div>
-                        <form method="dialog" class="modal-backdrop">
-                            <button>close</button>
-                        </form>
-                    </dialog>
+
+                        {{-- Modal Audit Trail --}}
+                        <dialog class="modal" id="my_modal_2" role="dialog">
+                            <div class="max-w-4xl modal-box">
+                                <form method="dialog">
+                                    <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+                                </form>
+                                <h3 class="mb-4 text-lg font-bold">Audit Trail / Riwayat Laporan</h3>
+                                <div class="max-h-[60vh] overflow-y-auto">
+                                    <table class="table border table-xs table-pin-rows">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="px-2 py-1 border">Tanggal</th>
+                                                <th class="px-2 py-1 border">User</th>
+                                                <th class="px-2 py-1 border">Perubahan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                // Ambil aktivitas milik Report Utama
+                                                $reportActivities = Spatie\Activitylog\Models\Activity::where(
+                                                    'subject_type',
+                                                    \App\Models\WpiReport::class,
+                                                )->where('subject_id', $reportId);
+
+                                                // Ambil aktivitas milik Finding yang berelasi dengan Report ini
+                                                $findingIds = \App\Models\WpiFinding::where(
+                                                    'wpi_report_id',
+                                                    $reportId,
+                                                )->pluck('id');
+                                                $findingActivities = Spatie\Activitylog\Models\Activity::where(
+                                                    'subject_type',
+                                                    \App\Models\WpiFinding::class,
+                                                )->whereIn('subject_id', $findingIds);
+
+                                                // Gabungkan dan urutkan berdasarkan waktu terbaru
+                                                $allActivities = $reportActivities
+                                                    ->union($findingActivities)
+                                                    ->latest()
+                                                    ->get();
+                                            @endphp
+
+                                            @forelse($allActivities as $activity)
+                                                <tr>
+                                                    <td class="px-2 py-1 border text-[10px]">
+                                                        {{ $activity->created_at->format('d-m-Y H:i') }}</td>
+                                                    <td class="px-2 py-1 italic font-semibold border">
+                                                        {{ $activity->causer->name ?? 'System' }}</td>
+                                                    <td class="px-2 py-1 border">
+                                                        {{-- Badge Tipe Aktivitas --}}
+                                                        <span
+                                                            class="badge {{ $activity->subject_type == \App\Models\WpiReport::class ? 'badge-info' : 'badge-warning' }} badge-xs mb-1 uppercase font-bold text-[8px]">
+                                                            {{ $activity->subject_type == \App\Models\WpiReport::class ? 'Report' : 'Finding' }}
+                                                        </span>
+
+                                                        <span
+                                                            class="text-blue-600 text-[10px] block mb-1 uppercase font-bold">{{ $activity->description }}</span>
+
+                                                        @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
+                                                            @continue($field === 'updated_at' || $field === 'wpi_report_id' || str_ends_with($field, '_label'))
+
+                                                            @php
+                                                                $oldValue = $activity->changes['old'][$field] ?? '-';
+                                                                $newValue = $new;
+
+                                                                // Logic Switch untuk merubah ID menjadi Nama (Human Readable)
+                                                                switch ($field) {
+                                                                    case 'created_by':
+                                                                        $oldValue =
+                                                                            \App\Models\User::find($oldValue)?->name ??
+                                                                            $oldValue;
+                                                                        $newValue =
+                                                                            \App\Models\User::find($newValue)?->name ??
+                                                                            $newValue;
+                                                                        break;
+                                                                    // MENGGUNAKAN LABEL HASIL tapActivity UNTUK INSPECTORS
+                                                                    case 'inspectors':
+                                                                        $oldValue =
+                                                                            $activity->changes['old']['inspectors_label'] ??
+                                                                            '-';
+                                                                        $newValue =
+                                                                            $activity->changes['attributes'][
+                                                                                'inspectors_label'
+                                                                            ] ?? '-';
+                                                                        break;
+                                                                    case 'department_id':
+                                                                        $oldValue =
+                                                                            \App\Models\Department::find($oldValue)
+                                                                                ?->department_name ?? $oldValue;
+                                                                        $newValue =
+                                                                            \App\Models\Department::find($newValue)
+                                                                                ?->department_name ?? $newValue;
+                                                                        break;
+                                                                    case 'contractor_id':
+                                                                        $oldValue =
+                                                                            \App\Models\Contractor::find($oldValue)
+                                                                                ?->contractor_name ?? $oldValue;
+                                                                        $newValue =
+                                                                            \App\Models\Contractor::find($newValue)
+                                                                                ?->contractor_name ?? $newValue;
+                                                                        break;
+                                                                    case 'inspectors':
+                                                                    case 'pic_responsible':
+                                                                    case 'photos':
+                                                                    case 'photos_prevention':
+                                                                        // Jika data berupa array atau JSON, buat string yang enak dibaca
+                                                                        $oldValue = is_array($oldValue)
+                                                                            ? implode(
+                                                                                ', ',
+                                                                                collect($oldValue)->flatten()->toArray(),
+                                                                            )
+                                                                            : $oldValue;
+                                                                        $newValue = is_array($newValue)
+                                                                            ? implode(
+                                                                                ', ',
+                                                                                collect($newValue)->flatten()->toArray(),
+                                                                            )
+                                                                            : $newValue;
+                                                                        break;
+                                                                }
+
+                                                                $label = ucfirst(
+                                                                    str_replace(['_id', '_'], ['', ' '], $field),
+                                                                );
+                                                            @endphp
+
+                                                            <div
+                                                                class="text-[10px] border-l-2 border-gray-200 pl-2 ml-1 mb-1">
+                                                                <strong class="text-gray-600">{{ $label }}</strong>:
+                                                                <span
+                                                                    class="text-red-500 line-through">{{ $oldValue ?: '-' }}</span>
+                                                                <span class="mx-1">→</span>
+                                                                <span
+                                                                    class="font-medium text-green-600">{{ $newValue ?: '-' }}</span>
+                                                            </div>
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="3" class="py-4 italic text-center text-gray-500">Belum
+                                                        ada riwayat aktivitas.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <form method="dialog" class="modal-backdrop">
+                                <button>close</button>
+                            </form>
+                        </dialog>
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
+    <x-tabs-wpi.layout :id="$reportId" heading="{{ $reportId ? 'Edit Laporan WPI' : 'Buat Laporan WPI Baru' }}"
+        subheading="TT-MGT-FRS-024A">
+        {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
             <div class="p-6 border-b border-gray-200 bg-gray-50">
