@@ -716,7 +716,7 @@
                                                     {{ $picName }}
                                                     <button type="button"
                                                         wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                        class="ml-1 text-blue-400 hover:text-red-500">
+                                                        class="btn btn-xs btn-error btn-square hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -803,7 +803,7 @@
                                 <td class="p-2 text-center border border-gray-300">
                                     @if (count($findings) > 1)
                                         <button type="button" wire:click="removeFinding({{ $index }})"
-                                            class="text-red-400 hover:text-red-600">
+                                            class="btn btn-xs btn-square btn-error {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
