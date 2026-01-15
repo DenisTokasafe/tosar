@@ -250,7 +250,9 @@ class Index extends Component
             ], ['assignTo1.required' => 'Pilih ERM Utama untuk menindaklanjuti laporan ini.']);
 
             // Simpan data penugasan
-            $report->assigned_erm_id = $this->assignTo1;
+             $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
+            $report->assignedErms()->sync($assignIds);
+
 
             // Kirim Notifikasi ke ERM (Logic yang Anda inginkan)
             $ermUser = User::find($this->assignTo1);
