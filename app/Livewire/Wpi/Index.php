@@ -39,6 +39,7 @@ class Index extends Component
     public $searchLocation = '';
     public $search = '';
     public $departments = [];
+    public $departement_id;
     public $showDropdown = false;
     public $searchContractor = '';
     public $contractors = [];
