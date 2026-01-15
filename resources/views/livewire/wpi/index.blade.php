@@ -728,7 +728,7 @@
                                                     {{ $picName }}
                                                     <button type="button"
                                                         wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                        class="btn btn-xs btn-error btn-square hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                        class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
