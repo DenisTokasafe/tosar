@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
@@ -10,6 +14,7 @@ use Spatie\Activitylog\Models\Activity;
 class WpiReport extends Model
 {
     use LogsActivity;
+
     protected $fillable = [
         'report_date',
         'report_time',
@@ -23,101 +28,94 @@ class WpiReport extends Model
         'department_id',
         'contractor_id'
     ];
+
     protected $casts = [
         'inspectors' => 'array',
         'report_date' => 'date'
     ];
+
     /**
-     * Activity Log Options
+     * Activity Log Configuration
      */
     public function getActivitylogOptions(): LogOptions
     {
-        // Catat semua field, tapi log *_id diganti nama lewat accessor
         return LogOptions::defaults()
             ->useLogName($this->getTable())
             ->logAll()
-            ->logOnlyDirty();
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 
-    /**
-     * Tap activity untuk menambahkan nama relasi
-     */
     /**
      * Memanipulasi properti activity log sebelum disimpan agar ID
      * berubah menjadi Nama yang dapat dibaca.
      */
-   public function tapActivity(Activity $activity, string $eventName)
-{
-    // Mapping ID ke Nama berdasarkan relasi yang ada di model WpiReport
-    $map = [
-        'created_by'    => fn($id) => $id ? User::find($id)?->name : 'System',
-        'department_id' => fn($id) => $id ? $this->department_rel?->department_name : null,
-        'contractor_id' => fn($id) => $id ? $this->contractor_rel?->contractor_name : null,
-    ];
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $map = [
+            'created_by'    => fn($id) => $id ? User::find($id)?->name : 'System',
+            'department_id' => fn($id) => $id ? $this->department_rel?->department_name : null,
+            'contractor_id' => fn($id) => $id ? $this->contractor_rel?->contractor_name : null,
+        ];
 
-    $properties = $activity->properties->toArray();
+        $properties = $activity->properties->toArray();
 
-    foreach (['attributes', 'old'] as $key) {
-        if (!isset($properties[$key])) {
-            continue;
-        }
+        foreach (['attributes', 'old'] as $key) {
+            if (!isset($properties[$key])) continue;
 
-        // 1. Resolving Foreign IDs ke Nama (Created By, Dept, Cont)
-        foreach ($map as $field => $resolver) {
-            if (isset($properties[$key][$field])) {
-                // Menyimpan label dengan suffix '_label'
-                $properties[$key][$field . '_label'] = $resolver($properties[$key][$field]);
+            // 1. Resolving Foreign IDs (Created By, Dept, Cont)
+            foreach ($map as $field => $resolver) {
+                if (isset($properties[$key][$field])) {
+                    $properties[$key][$field . '_label'] = $resolver($properties[$key][$field]);
+                }
+            }
+
+            // 2. Resolving JSON Inspectors Array
+            if (isset($properties[$key]['inspectors'])) {
+                $inspectors = $properties[$key]['inspectors'];
+                if (is_array($inspectors)) {
+                    $names = collect($inspectors)->pluck('name')->filter()->implode(', ');
+                    $properties[$key]['inspectors_label'] = $names ?: '-';
+                }
             }
         }
 
-        // 2. Resolving Data Array/JSON Inspectors
-        // Mengubah format [{"name": "User A", ...}] menjadi "User A, User B"
-        if (isset($properties[$key]['inspectors'])) {
-            $inspectors = $properties[$key]['inspectors'];
-
-            if (is_array($inspectors)) {
-                $names = collect($inspectors)
-                    ->pluck('name')
-                    ->filter()
-                    ->implode(', ');
-
-                $properties[$key]['inspectors_label'] = $names ?: '-';
-            }
-        }
+        $activity->properties = $properties;
     }
 
-    // Simpan kembali properti yang telah dimodifikasi
-    $activity->properties = $properties;
-}
-    /** RELATIONS */
-    public function activities()
+    /** * RELATIONS
+     */
+
+    public function assignedErms(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'wpi_report_user', 'wpi_report_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function activities(): MorphMany
     {
         return $this->morphMany(Activity::class, 'subject');
     }
 
-    public function findings()
+    public function findings(): HasMany
     {
         return $this->hasMany(WpiFinding::class);
     }
-    /**
-     * Relasi ke Department untuk filter Moderator/ERM
-     */
-    public function department_rel()
+
+    public function department_rel(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
 
-    /**
-     * Relasi ke Contractor untuk filter Moderator/ERM
-     */
-    public function contractor_rel()
+    public function contractor_rel(): BelongsTo
     {
         return $this->belongsTo(Contractor::class, 'contractor_id');
     }
 
     /**
-     * Helper untuk cek jika laporan sudah selesai
+     * HELPERS
      */
+
     public function isClosed(): bool
     {
         return in_array(strtolower($this->status), ['closed', 'cancelled']);

@@ -77,6 +77,17 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="w-full max-w-xs">
+                            <label class="py-1 label">
+                                <span class="text-[10px] font-bold uppercase text-gray-500">Pilih ERM </span>
+                            </label>
+                            <select wire:model="assignTo2 " class="w-full select select-xs select-bordered focus:ring-1">
+                                <option value="">-- Pilih User --</option>
+                                @foreach ($ermList as $erm)
+                                    <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     @endif
 
                     {{-- TOMBOL KIRIM ACTION --}}
