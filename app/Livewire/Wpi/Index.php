@@ -227,7 +227,7 @@ class Index extends Component
 
     public function processStatusChange($newStatus)
     {
-        // 1. Validasi Awal
+        // 1. Validasi Input
         if (!$newStatus) {
             $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
             return;
@@ -235,47 +235,44 @@ class Index extends Component
 
         $report = WpiReport::find($this->reportId);
 
-        // 2. Validasi Workflow (Cek role dan ketersediaan transisi)
+        // 2. Validasi Transisi Workflow (Cek apakah Role user berhak memindahkan status ini)
         if (!WpiWorkflow::isValidTransition($report->status, $newStatus, $this->effectiveRole)) {
-            $this->dispatch('alert', ['text' => 'Transisi status tidak diizinkan.', 'backgroundColor' => 'red']);
+            $this->dispatch('alert', ['text' => 'Anda tidak memiliki otoritas untuk aksi ini.', 'backgroundColor' => 'red']);
             return;
         }
 
-        // 3. Logika Khusus Penugasan ERM (Sequence 1 atau 6 di gambar)
+        // 3. Logika Khusus Penugasan ERM (Jika Sequence menuju Assigned / InProgress)
         if (in_array($newStatus, ['Assigned', 'InProgress'])) {
             $this->validate([
-                'assignTo1' => 'required', // ERM Utama wajib dipilih jika mau lanjut ke Assigned
-            ], [
-                'assignTo1.required' => 'Silakan pilih ERM Utama terlebih dahulu.'
-            ]);
+                'assignTo1' => 'required',
+            ], ['assignTo1.required' => 'Pilih ERM Utama untuk menindaklanjuti laporan ini.']);
 
-            // Simpan penugasan ERM ke tabel pivot (jika Anda memiliki tabel wpi_report_erms)
-            // Jika hanya disimpan di kolom, sesuaikan kodenya:
-            $report->update([
-                'assigned_erm_id' => $this->assignTo1,
-                // 'additional_erm_id' => $this->assignTo2,
-            ]);
+            // Simpan data penugasan
+            $report->assigned_erm_id = $this->assignTo1;
 
-            // Kirim Notifikasi ke ERM yang dipilih
+            // Kirim Notifikasi ke ERM (Logic yang Anda inginkan)
             $ermUser = User::find($this->assignTo1);
             if ($ermUser) {
                 // $ermUser->notify(new WpiAssignedNotification($report));
             }
         }
 
-        // 4. Update Status Utama
-        $report->update(['status' => $newStatus]);
-        $this->status = $newStatus;
+        // 4. Update Status & Catat di Audit Trail
+        // Karena trait LogsActivity aktif, perubahan status ini akan otomatis terekam di modal audit trail
+        $report->status = $newStatus;
+        $report->save();
 
-        // 5. Audit Trail & UI Refresh
-        // Karena report diupdate, trait LogsActivity akan otomatis mencatat di Audit Trail
+        // 5. Reset UI & Beri Feedback
         $this->reset(['proceedTo', 'assignTo1', 'assignTo2']);
-        $this->loadData($this->reportId);
+        $this->status = $newStatus; // Sync local property
 
         $this->dispatch('alert', [
-            'text' => 'Status berhasil diperbarui ke ' . $newStatus,
-            'backgroundColor' => 'green'
+            'text' => 'Status Berhasil diperbarui ke ' . $newStatus,
+            'backgroundColor' => "linear-gradient(to right, #00c853, #00bfa5)"
         ]);
+
+        // Refresh data untuk mengupdate tombol aksi yang tersedia selanjutnya
+        $this->loadData($this->reportId);
     }
 
     /**
