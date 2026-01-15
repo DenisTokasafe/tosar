@@ -28,16 +28,16 @@
                     @if (Route::is('wpi.edit'))
                         {{-- Tombol Download PDF --}}
                         <div class="flex items-center gap-2">
-                        <flux:tooltip content="Download PDF" position="top">
-                            <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
-                                icon="document-arrow-down" variant="primary" color="blue">
-                            </flux:button>
-                        </flux:tooltip>
-                        <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
-                            <flux:button size="xs" variant="accent" icon='clock'
-                                onclick="my_modal_2.showModal()">
-                            </flux:button>
-                        </flux:tooltip>
+                            <flux:tooltip content="Download PDF" position="top">
+                                <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
+                                    icon="document-arrow-down" variant="primary" color="blue">
+                                </flux:button>
+                            </flux:tooltip>
+                            <flux:tooltip content="Lihat Riwayat Perubahan" position="left">
+                                <flux:button size="xs" variant="accent" icon='clock'
+                                    onclick="my_modal_2.showModal()">
+                                </flux:button>
+                            </flux:tooltip>
                         </div>
                     @endif
                 </div>
@@ -380,33 +380,39 @@
                                 class="flex-none mt-2 text-xs font-bold text-gray-400 w-14">{{ $index + 1 }}.</span>
                             <div class="flex-1 ">
                                 {{-- Menggunakan Grid untuk membagi menjadi 3 kolom pada layar sedang/besar --}}
-                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-6 ">
+                                {{-- Container Utama dengan Grid Responsif --}}
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1">
 
-                                    {{-- Kolom 1: Dropdown Pencarian --}}
-                                    <div class="pb-1 lg:col-span-3 lg:col-start-1">
-                                        {{-- Komponen Searchable Select Advanced --}}
-                                        <x-form.searchable-select-advanced
-                                            label="Petugas Inspeksi {{ $index + 1 }}" placeholder="Cari nama..."
-                                            modelsearch="searchPetugas.{{ $index }}"
-                                            modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
-                                            :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
-                                    </div>
-
-                                    {{-- Kolom 2: ID Number --}}
-                                    <div class="pb-1 w-34 ">
-                                        <span class="text-[10px] font-semibold uppercase text-gray-500">ID
-                                            Number</span>
-                                        <div class="flex items-center badge badge-soft badge-info text-[10px]">
-                                            {{ $inspectors[$index]['id_number'] ?: '-' }}
+                                    <div class="flex flex-col w-full">
+                                        {{-- Bagian Input: Full width di semua device --}}
+                                        <div class="relative w-full">
+                                            <x-form.searchable-select-advanced
+                                                label="Petugas Inspeksi {{ $index + 1 }}"
+                                                placeholder="Cari nama..."
+                                                modelsearch="searchPetugas.{{ $index }}"
+                                                modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
+                                                :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                                         </div>
-                                    </div>
 
-                                    {{-- Kolom 3: Department/Contractor --}}
-                                    <div class="pb-1 lg:col-span-2 lg:col-end-3">
-                                        <span
-                                            class="text-[10px] font-semibold uppercase text-gray-500">Dept/Cont</span>
-                                        <div class="flex items-center badge badge-soft badge-info text-[10px]">
-                                            {{ $inspectors[$index]['dept_con'] ?? ($inspectors[$index]['dept_con'] ?? '-') }}
+                                        {{-- Bagian Detail: Responsif --}}
+                                        {{-- HP: Stack vertical/wrap | Laptop/PC: Horizontal inline --}}
+                                        <div
+                                            class="flex flex-wrap items-center mt-1 gap-x-2 gap-y-1 text-[8px] leading-none text-gray-600 uppercase tracking-tight">
+
+                                            <div class="flex items-center whitespace-nowrap">
+                                                <span class="font-bold">ID NUMBER:</span>
+                                                <span
+                                                    class="ml-1 text-gray-800">{{ $inspectors[$index]['id_number'] ?: '-' }}</span>
+                                            </div>
+
+                                            {{-- Pemisah (Hidden di HP jika layar terlalu sempit/wrap) --}}
+                                            <div class="hidden text-gray-300 sm:block">|</div>
+
+                                            <div class="flex items-center whitespace-nowrap">
+                                                <span class="font-bold">DEPT/CONT:</span>
+                                                <span
+                                                    class="ml-1 text-gray-800">{{ $inspectors[$index]['dept_con'] ?? '-' }}</span>
+                                            </div>
                                         </div>
                                     </div>
 
