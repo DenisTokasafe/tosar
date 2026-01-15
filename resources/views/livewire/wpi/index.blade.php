@@ -318,7 +318,7 @@
                             <x-label-error :messages="$errors->get('report_time')" />
                         </fieldset>
 
-                        <x-form.searchable-dropdown label="Lokasi / Location" required modelsearch="searchLocation"
+                        <x-form.searchable-dropdown label="Lokasi / Location" required modelsearch="searchLocation" :disabled="$isDisabled"
                             modelid="location" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                             namedb="name" />
                     </div>
