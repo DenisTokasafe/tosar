@@ -41,7 +41,7 @@ class WpiWorkflow extends Model
     /**
      * Mengambil daftar User ID Moderator yang berhak mendapatkan notifikasi berdasarkan data WPI.
      */
-    public static function getModeratorsForStatus(string $status, Wpi $wpi): array
+    public static function getModeratorsForStatus(string $status, WpiReport $wpi): array
     {
         // Secara default, notifikasi dikirim saat status pertama kali disubmit.
         // Sesuaikan 'Submitted' dengan case yang Anda gunakan di seeder.
@@ -50,7 +50,7 @@ class WpiWorkflow extends Model
         }
 
         // Mencari moderator yang relevan di tabel ModeratorAssignment
-        $moderatorIds = ModeratorAssignment::where('event_type_id', $wpi->event_type_id)
+        $moderatorIds = ModeratorAssignment::where('event_type_id', 5)
             ->where(function ($query) use ($wpi) {
 
                 // Kriteria 1: Penugasan bersifat umum (global untuk tipe event ini)
