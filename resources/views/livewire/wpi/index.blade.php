@@ -30,7 +30,7 @@
                     {{-- Tombol buka modal Audit Trail --}}
                     @if (Route::is('wpi.edit'))
                         {{-- Tombol Download PDF --}}
-                        <div class="flex items-center gap-2">
+                        <div wire:ignore class="flex items-center gap-2">
                             <flux:tooltip content="Download PDF" position="top">
                                 <flux:button wire:click="exportPDF({{ $reportId }})" size="xs"
                                     icon="document-arrow-down" variant="primary" color="blue">
