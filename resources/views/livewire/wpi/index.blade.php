@@ -4,7 +4,7 @@
         @php
             $currentRoute = Route::currentRouteName();
             $currentStatus = strtolower($status ?? '');
-            $isDisabled = in_array($currentStatus, ['Closed', 'Cancelled']);
+            $isDisabled = in_array($currentStatus, ['closed', 'cancelled']);
         @endphp
 
         @if (Breadcrumbs::exists($currentRoute))
