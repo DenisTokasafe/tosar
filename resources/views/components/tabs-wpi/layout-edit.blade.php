@@ -1,5 +1,14 @@
     <div class="z-30 flex items-start max-md:flex-col ">
         <div class="self-stretch flex-1 max-md:pt-3">
+            <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+                <div>
+                    <flux:heading>{{ $heading ?? '' }}</flux:heading>
+                    <flux:subheading size='sm'>{{ $subheading ?? '' }}</flux:subheading>
+                </div>
+                <div class="flex items-center gap-3">
+
+                </div>
+            </div>
             <div
                 class="flex w-full flex-1 flex-col gap-4 rounded-xl h-full
             max-h-[calc(100vh-20rem)]
