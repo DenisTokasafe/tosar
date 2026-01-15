@@ -1,19 +1,28 @@
 @props([
     'label' => 'Lampirkan foto atau dokumentasi',
-    'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()), // ID lebih konsisten berdasarkan nama model
+    'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()),
     'model' => null,
     'file' => null,
-    'optional' => true
+    'optional' => true,
+    'disabled' => false {{-- Tambahkan prop baru --}}
 ])
 
 <div class="flex flex-col gap-1">
     <x-form.label :label="$label . ($optional ? ' (optional)' : '')" />
 
-    {{-- Hapus wire:ignore agar Livewire bisa mengupdate konten span di dalamnya --}}
-    <label for="{{ $id }}"
-        class="flex items-center gap-2 border rounded cursor-pointer border-info hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden">
+    {{-- Gunakan kondisional class: jika disabled, matikan pointer-events dan ubah visualnya --}}
+    <label for="{{ $disabled ? '' : $id }}"
+        @class([
+            'flex items-center gap-2 border rounded border-info',
+            'cursor-pointer hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden' => !$disabled,
+            'cursor-not-allowed bg-gray-100 opacity-60 border-gray-300' => $disabled,
+        ])>
 
-        <span class="btn btn-info btn-xs">
+        <span @class([
+            'btn btn-xs',
+            'btn-info' => !$disabled,
+            'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled
+        ])>
             Pilih file atau gambar
         </span>
 
@@ -30,7 +39,6 @@
             @if ($file && is_object($file))
                 {{ $file->getClientOriginalName() }}
             @elseif ($file && is_string($file))
-                {{-- Menampilkan nama file jika input berupa string/path dari database --}}
                 {{ basename($file) }}
             @else
                 Belum ada file
@@ -44,6 +52,7 @@
         {{ $attributes->whereDoesntStartWith('wire:model') }}
         wire:model="{{ $model }}"
         class="hidden"
+        @disabled($disabled) {{-- Menonaktifkan input file --}}
     />
 
     @error($model)

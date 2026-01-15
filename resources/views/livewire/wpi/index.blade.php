@@ -338,7 +338,7 @@
                             <div class="hidden peer-checked/department:block">
                                 {{-- Department --}}
                                 <div class="relative mb-1 ">
-                                    <x-form.searchable-dropdown-without-label modelsearch="search" modelid="dept_cont"
+                                    <x-form.searchable-dropdown-without-label modelsearch="search" modelid="dept_cont" :disabled="$isDisabled"
                                         placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
                                         clickaction="selectDepartment" namedb="department_name" />
                                 </div>
@@ -346,7 +346,7 @@
                             <div class="hidden peer-checked/company:block">
                                 {{-- Contractor --}}
                                 <div class="relative mb-1 ">
-                                    <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                    <x-form.searchable-dropdown-without-label modelsearch="searchContractor" :disabled="$isDisabled"
                                         placeholder="Cari Kontraktor..." modelid="dept_cont" :options="$contractors"
                                         :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
                                 </div>
@@ -371,7 +371,7 @@
                     <h3 class="text-sm font-bold tracking-wider text-gray-700 uppercase">Nama Petugas Inspeksi /
                         Inspector</h3>
                     <button type="button" wire:click="addInspector"
-                        class="px-3 py-1 text-xs text-white transition bg-blue-600 rounded hover:bg-blue-700">
+                        class="px-3 py-1 text-xs text-white transition {{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
                         + Tambah Petugas
                     </button>
                 </div>
@@ -390,7 +390,7 @@
                                     <div class="flex flex-col w-full">
                                         {{-- Bagian Input: Full width di semua device --}}
                                         <div class="relative w-full">
-                                            <x-form.searchable-select-advanced
+                                            <x-form.searchable-select-advanced :disabled="$isDisabled"
                                                 label="Petugas Inspeksi {{ $index + 1 }}"
                                                 placeholder="Cari nama..."
                                                 modelsearch="searchPetugas.{{ $index }}"
@@ -428,7 +428,7 @@
                                 @if (count($inspectors) > 1)
                                     {{-- Tombol Hapus --}}
                                     <flux:tooltip content="Hapus Inspector {{ $index + 1 }}" position="top">
-                                        <flux:button wire:click="removeInspector({{ $index }})" size="xs"
+                                        <flux:button class="{{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }} " wire:click="removeInspector({{ $index }})" size="xs"
                                             icon="trash" variant="danger">
                                         </flux:button>
                                     </flux:tooltip>
@@ -459,8 +459,8 @@
                                 <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}</td>
                                 <td class="p-2 text-center border border-gray-300 ">
                                     {{-- Select OHS Risk --}}
-                                    <select wire:model="findings.{{ $index }}.ohs_risk"
-                                        class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success">
+                                    <select wire:model="findings.{{ $index }}.ohs_risk" {{ $isDisabled ? 'disabled' : '' }}
+                                        class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
                                         <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
                                         </option>
                                         <option value="M">Menengah\<span
@@ -473,12 +473,12 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea Deskripsi --}}
-                                    <x-form.textarea label="Deskripsi Temuan" required
+                                    <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
                                         model="findings.{{ $index }}.description" />
 
                                     <div class="mt-1">
                                         {{-- Komponen Upload --}}
-                                        <x-form.upload label="Lampirkan foto temuan"
+                                        <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
                                             model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
 
                                         {{-- AREA PREVIEW FILE BARU (TEMPORARY) --}}
@@ -588,13 +588,13 @@
                                 </td>
                                 <td class="p-2 border border-gray-300">
                                     {{-- Input Textarea --}}
-                                    <x-form.textarea label="Tindakan pencegahan" required
+                                    <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
                                         placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
 
                                     <div class="mt-1">
                                         {{-- Komponen Upload --}}
-                                        <x-form.upload label="Lampirkan foto pencegahan"
+                                        <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
                                             model="findings.{{ $index }}.new_photos_prevention"
                                             :file="$findings[$index]['new_photos_prevention'] ?? null" />
 
@@ -703,6 +703,7 @@
                                 <td class="p-2 space-y-2 border border-gray-300">
                                     <x-form.searchable-select-advanced label="Person in charge (PIC)"
                                         placeholder="Cari dan klik nama..."
+                                        :disabled="$isDisabled"
                                         modelsearch="search_pic.{{ $index }}"
                                         modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
                                         :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
@@ -821,7 +822,7 @@
             <div
                 class="flex flex-col items-center justify-between gap-4 p-6 border-t border-gray-200 bg-gray-50 md:flex-row">
                 <button type="button" wire:click="addFinding"
-                    class="w-full px-4 py-2 text-sm font-bold text-gray-700 transition bg-gray-200 rounded-md md:w-auto hover:bg-gray-300">
+                    class="{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
                     + Tambah Baris Temuan
                 </button>
 
@@ -829,7 +830,7 @@
                     <a href="/wpi-list"
                         class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
                     <button type="submit"
-                        class="flex items-center justify-center flex-1 px-8 py-2 text-sm font-bold text-white transition bg-green-600 rounded-md shadow-lg md:flex-none hover:bg-green-700">
+                        class = "{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-success ' }} ">
                         <span wire:loading.remove
                             wire:target="save">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
                         <span class="hidden" wire:loading.remove.class='hidden'
