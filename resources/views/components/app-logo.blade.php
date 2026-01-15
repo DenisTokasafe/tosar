@@ -1,5 +1,5 @@
 <div
-    class="flex items-center justify-center rounded-full aspect-square size-9 bg-accent-content text-accent-foreground">
+    class="flex items-center justify-center bg-white rounded-full aspect-square size-9 text-accent-foreground">
     <div class="avatar">
         <div class="w-8 rounded-full">
            <img src="{{ asset('images/logo_app.png') }}" alt="Logo">
