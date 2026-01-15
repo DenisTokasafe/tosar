@@ -1,12 +1,12 @@
-<div class="z-30 flex max-md:flex-col ">
-    <div class="self-stretch flex-1 @if ($id) max-md:pt-6 @endif ">
-        <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
-            <div>
-                <flux:heading>{{ $heading ?? '' }}</flux:heading>
-                <flux:subheading size='sm'>{{ $subheading ?? '' }}</flux:subheading>
-            </div>
-            <div class="flex items-center gap-3">
-                @if (Route::is('wpi.list'))
+@if (Route::is('wpi.list'))
+    <div class="z-30 flex max-md:flex-col ">
+        <div class="self-stretch flex-1 max-md:pt-6">
+            <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+                <div>
+                    <flux:heading>{{ $heading ?? '' }}</flux:heading>
+                    <flux:subheading size='sm'>{{ $subheading ?? '' }}</flux:subheading>
+                </div>
+                <div class="flex items-center gap-3">
                     <a href="{{ route('wpi.create') }}" class="text-xs uppercase btn btn-primary btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -15,18 +15,37 @@
                             <path d="M12 5v14" />
                         </svg> Laporan Baru
                     </a>
-                @endif
-
+                </div>
             </div>
-        </div>
-        <div
-            class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
             <div
-                class="flex-1 h-full p-4 overflow-x-hidden overflow-y-auto border rounded-xl border-neutral-200 dark:border-base-200">
-                <div class="w-full max-w-full ">
-                    {{ $slot }}
+                class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
+                <div
+                    class="flex-1 h-full p-4 overflow-x-hidden overflow-y-auto border rounded-xl border-neutral-200 dark:border-base-200">
+                    <div class="w-full max-w-full ">
+                        {{ $slot }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+@endif
+@if (Route::is('wpi.edit'))
+    <div class="z-30 flex items-start max-md:flex-col ">
+        <div class="self-stretch flex-1 max-md:pt-3">
+            <div
+                class="flex w-full flex-1 flex-col gap-4 rounded-xl h-full
+            max-h-[calc(100vh-20rem)]
+            sm:max-h-[calc(100vh-11rem)]
+            md:max-h-[calc(100vh-16rem)]
+            lg:max-h-[calc(100vh-18rem)]
+            2xl:max-h-[calc(100vh-18rem)]">
+                <div
+                    class="flex-1 h-full px-4 py-2 overflow-x-hidden overflow-y-auto border inset-shadow-sm rounded-xl border-neutral-200 dark:border-base-200">
+                    <div class="w-full max-w-full ">
+                        {{ $slot }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
