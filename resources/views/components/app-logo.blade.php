@@ -2,7 +2,7 @@
     class="flex items-center justify-center rounded-full aspect-square size-9 bg-accent-content text-accent-foreground">
     <div class="avatar">
         <div class="w-24 rounded-full">
-           <img src="{{ asset('images/logo.png') }}" alt="Logo">
+           <img src="{{ asset('images/logo_app.png') }}" alt="Logo">
         </div>
     </div>
 </div>
