@@ -227,23 +227,55 @@ class Index extends Component
 
     public function processStatusChange($newStatus)
     {
+        // 1. Validasi Awal
+        if (!$newStatus) {
+            $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
+            return;
+        }
+
         $report = WpiReport::find($this->reportId);
 
+        // 2. Validasi Workflow (Cek role dan ketersediaan transisi)
         if (!WpiWorkflow::isValidTransition($report->status, $newStatus, $this->effectiveRole)) {
             $this->dispatch('alert', ['text' => 'Transisi status tidak diizinkan.', 'backgroundColor' => 'red']);
             return;
         }
 
+        // 3. Logika Khusus Penugasan ERM (Sequence 1 atau 6 di gambar)
+        if (in_array($newStatus, ['Assigned', 'InProgress'])) {
+            $this->validate([
+                'assignTo1' => 'required', // ERM Utama wajib dipilih jika mau lanjut ke Assigned
+            ], [
+                'assignTo1.required' => 'Silakan pilih ERM Utama terlebih dahulu.'
+            ]);
+
+            // Simpan penugasan ERM ke tabel pivot (jika Anda memiliki tabel wpi_report_erms)
+            // Jika hanya disimpan di kolom, sesuaikan kodenya:
+            $report->update([
+                'assigned_erm_id' => $this->assignTo1,
+                // 'additional_erm_id' => $this->assignTo2,
+            ]);
+
+            // Kirim Notifikasi ke ERM yang dipilih
+            $ermUser = User::find($this->assignTo1);
+            if ($ermUser) {
+                // $ermUser->notify(new WpiAssignedNotification($report));
+            }
+        }
+
+        // 4. Update Status Utama
         $report->update(['status' => $newStatus]);
         $this->status = $newStatus;
 
-        // Logika Notifikasi (Opsional)
-        if (strtolower($newStatus) === 'assigned') {
-            // Contoh: Kirim email ke ERM
-        }
-
+        // 5. Audit Trail & UI Refresh
+        // Karena report diupdate, trait LogsActivity akan otomatis mencatat di Audit Trail
+        $this->reset(['proceedTo', 'assignTo1', 'assignTo2']);
         $this->loadData($this->reportId);
-        $this->dispatch('alert', ['text' => 'Status berhasil diperbarui ke ' . $newStatus]);
+
+        $this->dispatch('alert', [
+            'text' => 'Status berhasil diperbarui ke ' . $newStatus,
+            'backgroundColor' => 'green'
+        ]);
     }
 
     /**
