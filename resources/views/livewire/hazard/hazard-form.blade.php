@@ -166,7 +166,7 @@
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
                 <livewire:shared.search-select label="Pelapor" columnName="name" :options="$pelapors"
-                    wire:key="search-pelapor" />
+                    wire:key="searchPelapor" />
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
@@ -236,17 +236,17 @@
                         <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
-                                    placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
-                                    clickaction="selectDepartment" namedb="department_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id" placeholder="Cari Departemen..."
+                                    :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
+                                    namedb="department_name" />
                             </div>
                         </div>
                         <div class="hidden mt-2 peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
-                                    placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
-                                    :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor" placeholder="Cari Kontraktor..."
+                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showContractorDropdown"
+                                    clickaction="selectContractor" namedb="contractor_name" />
                             </div>
                         </div>
                     </fieldset>
