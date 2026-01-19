@@ -165,57 +165,8 @@
                     </div>
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
-                <fieldset class="fieldset ">
-                    <x-form.label label="Dilaporkan Oleh" required />
-                    {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
-                    <div class="relative">
-                        <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
-                            placeholder="Cari Nama Pelapor..."
-                            class="input input-bordered w-full max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                            {{-- x-ref="searchInput" TIDAK LAGI DIBUTUHKAN --}} />
-                        {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
-                        @if ($showPelaporDropdown)
-                            <ul
-                                class="absolute z-10 w-full max-w-sm mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-
-                                {{-- Spinner ketika klik --}}
-                                <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
-                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    {{-- {{ $manualPelaporMode }} --}}
-                                </div>
-
-                                @if (count($pelapors) > 0)
-                                    @foreach ($pelapors as $pelapor)
-                                        <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $pelapor->name }}
-                                        </li>
-                                    @endforeach
-                                @else
-                                    {{-- Logika untuk "Tambah pelapor manual" --}}
-                                    @if (!$manualPelaporMode)
-                                        <li class="px-3 py-2">
-                                            <flux:button size="xs" wire:click="enableManualPelapor"
-                                                icon="plus" class="w-full cursor-pointer text-warning"
-                                                variant="primary" color="cyan">
-                                                Tidak ditemukan, tambah pelapor manual
-                                            </flux:button>
-                                        </li>
-                                    @else
-                                        <li class="px-3 py-2 text-sm text-gray-500">
-                                            Nama Pelapor Manual akan digunakan.
-                                        </li>
-                                    @endif
-                                @endif
-                            </ul>
-                        @endif
-                    </div>
-                    @if ($manualPelaporMode)
-                        <x-label-error :messages="$errors->get('manualPelaporName')" />
-                    @else
-                        <x-label-error :messages="$errors->get('pelapor_id')" />
-                    @endif
-                </fieldset>
+                <livewire:shared.search-select label="Pelapor" columnName="name" :options="$pelapors"
+                    wire:key="search-pelapor" />
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
@@ -285,17 +236,17 @@
                         <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id" placeholder="Cari Departemen..."
-                                    :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
-                                    namedb="department_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
+                                    placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
+                                    clickaction="selectDepartment" namedb="department_name" />
                             </div>
                         </div>
                         <div class="hidden mt-2 peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor" placeholder="Cari Kontraktor..."
-                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showContractorDropdown"
-                                    clickaction="selectContractor" namedb="contractor_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                    placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                                    :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
                             </div>
                         </div>
                     </fieldset>
