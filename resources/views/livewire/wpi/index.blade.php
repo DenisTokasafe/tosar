@@ -891,321 +891,353 @@
                                     </option>
                                 </select>
                             </fieldset>
-                            {{-- Input Textarea Deskripsi --}}
-                            <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
-                                model="findings.{{ $index }}.description" />
 
-                            <div class="mt-1">
-                                {{-- Komponen Upload --}}
-                                <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
-                                    model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
+                            <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+                                <input type="radio" name="my-accordion-2" />
+                                <div class="font-semibold collapse-title">Uraian Temuan & Foto / Descibe Unsafe Act &
+                                    Photo</div>
+                                <div class="collapse-content">
+                                    <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
+                                        model="findings.{{ $index }}.description" />
 
-                                {{-- AREA PREVIEW FILE BARU (TEMPORARY) --}}
-                                <div class="mt-2" wire:loading.remove
-                                    wire:target="findings.{{ $index }}.new_photos">
-                                    @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
-                                        <div class="grid grid-cols-2 gap-2 mt-2">
-                                            @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
-                                                <div class="relative p-1 border rounded bg-gray-50"
-                                                    wire:key="preview-{{ $index }}-{{ $fileKey }}">
+                                    <div class="mt-1">
+                                        {{-- Komponen Upload --}}
+                                        <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
+                                            model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
 
-                                                    @php
-                                                        $isUploadedFile = method_exists($newFile, 'temporaryUrl');
-                                                        $extension = $isUploadedFile
-                                                            ? strtolower($newFile->getClientOriginalExtension())
-                                                            : '';
-                                                    @endphp
+                                        {{-- AREA PREVIEW FILE BARU (TEMPORARY) --}}
+                                        <div class="mt-2" wire:loading.remove
+                                            wire:target="findings.{{ $index }}.new_photos">
+                                            @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
+                                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                                    @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
+                                                        <div class="relative p-1 border rounded bg-gray-50"
+                                                            wire:key="preview-{{ $index }}-{{ $fileKey }}">
 
-                                                    {{-- Tombol Hapus Temporary --}}
-                                                    <x-button.remove
-                                                        click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
-                                                        key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
+                                                            @php
+                                                                $isUploadedFile = method_exists(
+                                                                    $newFile,
+                                                                    'temporaryUrl',
+                                                                );
+                                                                $extension = $isUploadedFile
+                                                                    ? strtolower($newFile->getClientOriginalExtension())
+                                                                    : '';
+                                                            @endphp
 
-                                                    @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                        <img src="{{ $newFile->temporaryUrl() }}"
-                                                            class="object-cover w-full h-20 mt-2 border rounded" />
-                                                    @else
-                                                        <div
-                                                            class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
-                                                            @if ($extension == 'pdf')
-                                                                <x-icon.pdf class="w-8 h-8 text-red-500" />
-                                                            @elseif(in_array($extension, ['doc', 'docx']))
-                                                                <x-icon.word class="w-8 h-8 text-blue-500" />
-                                                            @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                                <x-icon.excel class="w-8 h-8 text-green-600" />
+                                                            {{-- Tombol Hapus Temporary --}}
+                                                            <x-button.remove
+                                                                click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
+                                                                key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
+
+                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                                <img src="{{ $newFile->temporaryUrl() }}"
+                                                                    class="object-cover w-full h-20 mt-2 border rounded" />
                                                             @else
-                                                                <x-icon.file class="w-8 h-8 text-gray-400" />
+                                                                <div
+                                                                    class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                                                    @elseif(in_array($extension, ['doc', 'docx']))
+                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
+                                                                    @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
+                                                                    @else
+                                                                        <x-icon.file class="w-8 h-8 text-gray-400" />
+                                                                    @endif
+                                                                    <span
+                                                                        class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
+                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                    </span>
+                                                                </div>
                                                             @endif
-                                                            <span
-                                                                class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
-                                                                {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
-                                                            </span>
                                                         </div>
-                                                    @endif
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            @endif
                                         </div>
-                                    @endif
-                                </div>
 
-                                {{-- AREA FILE TERSIMPAN (PERMANENT DENGAN FITUR DOWNLOAD) --}}
-                                @if (!empty($finding['photos']))
-                                    <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                        <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
-                                            File
-                                            Tersimpan:</p>
-                                        @foreach ($finding['photos'] as $photoKey => $photoPath)
-                                            @php
-                                                $extension = strtolower(pathinfo($photoPath, PATHINFO_EXTENSION));
-                                                $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
-                                            @endphp
-
-                                            <div class="relative group"
-                                                wire:key="saved-{{ $index }}-{{ $photoKey }}">
-
-                                                {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
-                                                @if ($isImage)
-                                                    <a href="{{ Storage::url($photoPath) }}" target="_blank">
-                                                        <img src="{{ Storage::url($photoPath) }}"
-                                                            class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
-                                                    </a>
-
-                                                    {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
-                                                @else
-                                                    <button type="button"
-                                                        wire:click="downloadFile('{{ $photoPath }}')"
-                                                        class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
-                                                        title="Klik untuk unduh">
-
-                                                        @if ($extension == 'pdf')
-                                                            <x-icon.pdf class="w-6 h-6 text-red-500" />
-                                                        @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                            <x-icon.excel class="w-6 h-6 text-green-600" />
-                                                        @else
-                                                            <x-icon.word class="w-6 h-6 text-blue-500" />
-                                                        @endif
-                                                        <span
-                                                            class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
-                                                    </button>
-                                                @endif
-
-                                                {{-- Tombol Hapus Permanent tetap di sini --}}
-                                                <x-button.remove
-                                                    click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
-                                                    key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"
-                                                    confirm="Hapus file ini secara permanen?"
-                                                    class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                            {{-- Input Textarea --}}
-                            <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
-                                placeholder="Tindakan pencegahan..."
-                                model="findings.{{ $index }}.prevention_action" rows="3" />
-
-                            <div class="mt-1">
-                                {{-- Komponen Upload --}}
-                                <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
-                                    model="findings.{{ $index }}.new_photos_prevention" :file="$findings[$index]['new_photos_prevention'] ?? null" />
-
-                                {{-- Logika Preview Foto Baru (Temporary) --}}
-                                <div class="mt-2" wire:loading.remove
-                                    wire:target="findings.{{ $index }}.new_photos_prevention">
-                                    @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
-                                        <div class="grid grid-cols-2 gap-2 mt-2">
-                                            @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
-                                                <div class="relative p-1 border rounded bg-gray-50"
-                                                    wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
-
-                                                    {{-- Tombol Hapus Temp Photo --}}
-                                                    <x-button.remove
-                                                        click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
-                                                        key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
-
+                                        {{-- AREA FILE TERSIMPAN (PERMANENT DENGAN FITUR DOWNLOAD) --}}
+                                        @if (!empty($finding['photos']))
+                                            <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
+                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
+                                                    File
+                                                    Tersimpan:</p>
+                                                @foreach ($finding['photos'] as $photoKey => $photoPath)
                                                     @php
-                                                        $isUploadedFile = method_exists($newFile, 'temporaryUrl');
-                                                        $extension = $isUploadedFile
-                                                            ? strtolower($newFile->getClientOriginalExtension())
-                                                            : '';
+                                                        $extension = strtolower(
+                                                            pathinfo($photoPath, PATHINFO_EXTENSION),
+                                                        );
+                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
                                                     @endphp
 
-                                                    @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                        <img src="{{ $newFile->temporaryUrl() }}"
-                                                            class="w-40 h-auto mt-2 border rounded" />
-                                                    @else
-                                                        <div
-                                                            class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
-                                                            @if ($extension == 'pdf')
-                                                                <x-icon.pdf class="w-8 h-8 text-red-500" />
-                                                            @elseif(in_array($extension, ['doc', 'docx']))
-                                                                <x-icon.word class="w-8 h-8 text-blue-500" />
-                                                            @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
-                                                                <x-icon.excel class="w-8 h-8 text-green-600" />
-                                                            @endif
-                                                            <span
-                                                                class="text-[8px] mt-1 truncate w-full px-1 text-center text-gray-600">
-                                                                {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
-                                                            </span>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
+                                                    <div class="relative group"
+                                                        wire:key="saved-{{ $index }}-{{ $photoKey }}">
 
-                                {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
-                                @if (!empty($finding['photos_prevention']))
-                                    <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                        <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
-                                            File
-                                            Pencegahan Tersimpan:</p>
-                                        @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
-                                            @php
-                                                $extension = strtolower(pathinfo($photoPath, PATHINFO_EXTENSION));
-                                                $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
-                                            @endphp
-                                            <div class="relative group"
-                                                wire:key="saved-{{ $index }}-{{ $photoKey }}">
+                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                        @if ($isImage)
+                                                            <a href="{{ Storage::url($photoPath) }}"
+                                                                target="_blank">
+                                                                <img src="{{ Storage::url($photoPath) }}"
+                                                                    class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                            </a>
 
-                                                {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
-                                                @if ($isImage)
-                                                    <a href="{{ Storage::url($photoPath) }}" target="_blank">
-                                                        <img src="{{ Storage::url($photoPath) }}"
-                                                            class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
-                                                    </a>
-
-                                                    {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
-                                                @else
-                                                    <button type="button"
-                                                        wire:click="downloadFile('{{ $photoPath }}')"
-                                                        class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
-                                                        title="Klik untuk unduh">
-
-                                                        @if ($extension == 'pdf')
-                                                            <x-icon.pdf class="w-6 h-6 text-red-500" />
-                                                        @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                            <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
                                                         @else
-                                                            <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                            <button type="button"
+                                                                wire:click="downloadFile('{{ $photoPath }}')"
+                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                title="Klik untuk unduh">
+
+                                                                @if ($extension == 'pdf')
+                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                @else
+                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                @endif
+                                                                <span
+                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                            </button>
                                                         @endif
-                                                        <span
-                                                            class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
-                                                    </button>
-                                                @endif
 
-                                                {{-- Tombol Hapus Permanent --}}
-                                                <x-button.remove
-                                                    click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
-                                                    key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
-                                                    confirm="Hapus file pencegahan ini secara permanen?"
-                                                    class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                                        {{-- Tombol Hapus Permanent tetap di sini --}}
+                                                        <x-button.remove
+                                                            click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
+                                                            key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"
+                                                            confirm="Hapus file ini secara permanen?"
+                                                            class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                            <x-form.searchable-select-advanced label="Person in charge (PIC)"
-                                placeholder="Cari dan klik nama..." :disabled="$isDisabled"
-                                modelsearch="search_pic.{{ $index }}"
-                                modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
-                                :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
-
-                            <div class="flex flex-wrap gap-1 mt-2">
-                                @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
-                                    @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded">
-                                            {{ $picName }}
-                                            <button type="button"
-                                                wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <fieldset class="relative fieldset">
-                                <x-form.label label="Tanggal Jatuh Tempo:" required />
-                                <div
-                                    class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
-                                    <div class="relative" wire:ignore x-data="{
-                                        dueDate: @entangle('findings.' . $index . '.due_date'),
-                                        fp: null,
-                                        init() {
-                                            this.fp = flatpickr(this.$refs.tanggalInput, {
-                                                disableMobile: true,
-                                                altInput: true,
-                                                altFormat: 'd F Y',
-                                                dateFormat: 'Y-m-d',
-                                                defaultDate: this.dueDate,
-                                                position: 'auto-below',
-                                                onChange: (selectedDates, dateStr) => {
-                                                    this.dueDate = dateStr;
-                                                }
-                                            });
-
-                                            // Sinkronisasi saat data dari database/Livewire berubah
-                                            this.$watch('dueDate', (newVal) => {
-                                                if (this.fp) {
-                                                    this.fp.setDate(newVal, false);
-                                                }
-                                            });
-                                        }
-                                    }">
-
-                                        <input type="text" x-ref="tanggalInput"
-                                            {{ $isDisabled ? 'disabled' : '' }} placeholder="Pilih Tanggal..."
-                                            readonly
-                                            class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
+                                        @endif
                                     </div>
                                 </div>
-                                <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
-                            </fieldset>
-                            <fieldset class="relative fieldset">
-                                <x-form.label label="Tanggal Selesai:" />
-                                <div
-                                    class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
-                                    <div class="relative" wire:ignore x-data="{
-                                        completionDate: @entangle('findings.' . $index . '.completion_date'),
-                                        fp: null,
-                                        init() {
-                                            this.fp = flatpickr(this.$refs.tanggalInput, {
-                                                disableMobile: true,
-                                                altInput: true,
-                                                altFormat: 'd F Y',
-                                                dateFormat: 'Y-m-d',
-                                                defaultDate: this.completionDate,
-                                                position: 'auto-below',
-                                                onChange: (selectedDates, dateStr) => {
-                                                    this.completionDate = dateStr;
-                                                }
-                                            });
+                            </div>
+                            <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+                                <input type="radio" name="my-accordion-2" />
+                                <div class="font-semibold collapse-title">Tindakan Pencegahan & Foto / Prevention
+                                    Action & Photo</div>
+                                <div class="collapse-content">
+                                    <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
+                                        placeholder="Tindakan pencegahan..."
+                                        model="findings.{{ $index }}.prevention_action" rows="3" />
 
-                                            // Sinkronisasi: Update kalender jika data di Livewire berubah (misal saat edit data)
-                                            this.$watch('completionDate', (newVal) => {
-                                                if (this.fp && newVal) {
-                                                    this.fp.setDate(newVal, false);
-                                                }
-                                            });
-                                        }
-                                    }">
+                                    <div class="mt-1">
+                                        {{-- Komponen Upload --}}
+                                        <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
+                                            model="findings.{{ $index }}.new_photos_prevention"
+                                            :file="$findings[$index]['new_photos_prevention'] ?? null" />
 
-                                        <input type="text" x-ref="tanggalInput"
-                                            {{ $isDisabled ? 'disabled' : '' }} placeholder="Pilih Tanggal..."
-                                            readonly
-                                            class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
+                                        {{-- Logika Preview Foto Baru (Temporary) --}}
+                                        <div class="mt-2" wire:loading.remove
+                                            wire:target="findings.{{ $index }}.new_photos_prevention">
+                                            @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
+                                                <div class="grid grid-cols-2 gap-2 mt-2">
+                                                    @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
+                                                        <div class="relative p-1 border rounded bg-gray-50"
+                                                            wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
+
+                                                            {{-- Tombol Hapus Temp Photo --}}
+                                                            <x-button.remove
+                                                                click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
+                                                                key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
+
+                                                            @php
+                                                                $isUploadedFile = method_exists(
+                                                                    $newFile,
+                                                                    'temporaryUrl',
+                                                                );
+                                                                $extension = $isUploadedFile
+                                                                    ? strtolower($newFile->getClientOriginalExtension())
+                                                                    : '';
+                                                            @endphp
+
+                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                                <img src="{{ $newFile->temporaryUrl() }}"
+                                                                    class="w-40 h-auto mt-2 border rounded" />
+                                                            @else
+                                                                <div
+                                                                    class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                                                    @elseif(in_array($extension, ['doc', 'docx']))
+                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
+                                                                    @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
+                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
+                                                                    @endif
+                                                                    <span
+                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center text-gray-600">
+                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                    </span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
+                                        @if (!empty($finding['photos_prevention']))
+                                            <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
+                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
+                                                    File
+                                                    Pencegahan Tersimpan:</p>
+                                                @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
+                                                    @php
+                                                        $extension = strtolower(
+                                                            pathinfo($photoPath, PATHINFO_EXTENSION),
+                                                        );
+                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
+                                                    @endphp
+                                                    <div class="relative group"
+                                                        wire:key="saved-{{ $index }}-{{ $photoKey }}">
+
+                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                        @if ($isImage)
+                                                            <a href="{{ Storage::url($photoPath) }}"
+                                                                target="_blank">
+                                                                <img src="{{ Storage::url($photoPath) }}"
+                                                                    class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                            </a>
+
+                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
+                                                        @else
+                                                            <button type="button"
+                                                                wire:click="downloadFile('{{ $photoPath }}')"
+                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                title="Klik untuk unduh">
+
+                                                                @if ($extension == 'pdf')
+                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                @else
+                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                @endif
+                                                                <span
+                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                            </button>
+                                                        @endif
+
+                                                        {{-- Tombol Hapus Permanent --}}
+                                                        <x-button.remove
+                                                            click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
+                                                            key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
+                                                            confirm="Hapus file pencegahan ini secara permanen?"
+                                                            class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
-                                <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
-                            </fieldset>
+                            </div>
+                            <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+                                <input type="radio" name="my-accordion-2" />
+                                <div class="font-semibold collapse-title">Tindak Lanjut/ Follow Up</div>
+                                <div class="collapse-content ">
+                                    <x-form.searchable-select-advanced label="Person in charge (PIC)"
+                                        placeholder="Cari dan klik nama..." :disabled="$isDisabled"
+                                        modelsearch="search_pic.{{ $index }}"
+                                        modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
+                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
+
+                                    <div class="flex flex-wrap gap-1 mt-2">
+                                        @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
+                                            @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded">
+                                                    {{ $picName }}
+                                                    <button type="button"
+                                                        wire:click="removePic({{ $index }}, {{ $picKey }})"
+                                                        class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <fieldset class="relative fieldset">
+                                        <x-form.label label="Tanggal Jatuh Tempo:" required />
+                                        <div
+                                            class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            <div class="relative" wire:ignore x-data="{
+                                                dueDate: @entangle('findings.' . $index . '.due_date'),
+                                                fp: null,
+                                                init() {
+                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                        disableMobile: true,
+                                                        altInput: true,
+                                                        altFormat: 'd F Y',
+                                                        dateFormat: 'Y-m-d',
+                                                        defaultDate: this.dueDate,
+                                                        position: 'auto-below',
+                                                        onChange: (selectedDates, dateStr) => {
+                                                            this.dueDate = dateStr;
+                                                        }
+                                                    });
+
+                                                    // Sinkronisasi saat data dari database/Livewire berubah
+                                                    this.$watch('dueDate', (newVal) => {
+                                                        if (this.fp) {
+                                                            this.fp.setDate(newVal, false);
+                                                        }
+                                                    });
+                                                }
+                                            }">
+
+                                                <input type="text" x-ref="tanggalInput"
+                                                    {{ $isDisabled ? 'disabled' : '' }}
+                                                    placeholder="Pilih Tanggal..." readonly
+                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
+                                            </div>
+                                        </div>
+                                        <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
+                                    </fieldset>
+                                    <fieldset class="relative fieldset">
+                                        <x-form.label label="Tanggal Selesai:" />
+                                        <div
+                                            class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            <div class="relative" wire:ignore x-data="{
+                                                completionDate: @entangle('findings.' . $index . '.completion_date'),
+                                                fp: null,
+                                                init() {
+                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                        disableMobile: true,
+                                                        altInput: true,
+                                                        altFormat: 'd F Y',
+                                                        dateFormat: 'Y-m-d',
+                                                        defaultDate: this.completionDate,
+                                                        position: 'auto-below',
+                                                        onChange: (selectedDates, dateStr) => {
+                                                            this.completionDate = dateStr;
+                                                        }
+                                                    });
+
+                                                    // Sinkronisasi: Update kalender jika data di Livewire berubah (misal saat edit data)
+                                                    this.$watch('completionDate', (newVal) => {
+                                                        if (this.fp && newVal) {
+                                                            this.fp.setDate(newVal, false);
+                                                        }
+                                                    });
+                                                }
+                                            }">
+
+                                                <input type="text" x-ref="tanggalInput"
+                                                    {{ $isDisabled ? 'disabled' : '' }}
+                                                    placeholder="Pilih Tanggal..." readonly
+                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
+                                            </div>
+                                        </div>
+                                        <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
+                                    </fieldset>
+                                </div>
+                            </div>
                             <div class="justify-end card-actions">
                                 @if (count($findings) > 1)
                                     <label class="btn btn-error btn-xs "
