@@ -1134,7 +1134,7 @@
                                 </div>
                             </div>
                             <div
-                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.due_date', 'findings.' . $index . '.pic_responsible']) ? 'ring-1 ring-rose-500 rounded' : '' }}">
+                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.due_date', 'findings.' . $index . '.pic_responsible']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Tindak Lanjut/ Follow Up</div>
                                 <div class="collapse-content">
