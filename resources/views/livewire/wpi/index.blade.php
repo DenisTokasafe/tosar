@@ -892,7 +892,9 @@
                                 </select>
                             </fieldset>
                             <div class="justify-end card-actions">
-                                <button class="btn btn-primary">Buy Now</button>
+                                  @if (count($findings) > 1)
+                                <label class="btn btn-error btn-xs " wire:click="removeFinding({{ $index }})">Hapus</label>
+                                 @endif
                             </div>
                         </div>
                     </div>
