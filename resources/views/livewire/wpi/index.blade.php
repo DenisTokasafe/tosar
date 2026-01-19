@@ -873,7 +873,7 @@
             {{-- ===== MOBILE & TABLET VIEW ===== --}}
             <div class="block space-y-3 lg:hidden">
                 @foreach ($findings as $index => $finding)
-                    <div class="shadow-sm card w-96 bg-base-100 card-xs">
+                    <div class="shadow-sm card bg-base-100 card-xs">
                         <div class="card-body">
                             <h2 class="catitlerd-">Temuan {{ $index + 1 }}</h2>
                             <p>A card component has a figure, a body part, and inside body there are title and actions
