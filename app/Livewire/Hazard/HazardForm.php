@@ -341,52 +341,50 @@ class HazardForm extends Component
         $this->show_location = false;
         $this->validateOnly('location_id');
     }
-
-
-    // public function updatedSearchPelapor()
-    // {
-    //     $this->reset('manualPelaporName');
-    //     if (strlen($this->searchPelapor) > 1) {
-    //         $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
-    //             ->orderBy('name')
-    //             ->limit(50)
-    //             ->get();
-    //         $this->showPelaporDropdown = true;
-    //     } else {
-    //         $this->pelapors = [];
-    //         $this->showPelaporDropdown = false;
-    //     }
-    // }
-    // public function selectPelapor($id, $name)
-    // {
-    //     $this->pelapor_id = $id;
-    //     $this->searchPelapor = $name;
-    //     $this->showPelaporDropdown = false;
-    //     $this->manualPelaporMode = false;
-    //     $this->validateOnly('pelapor_id');
-    // }
-    // public function enableManualPelapor()
-    // {
-    //     $this->manualPelaporMode = true;
-    //     $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
-    //     $this->showPelaporDropdown = false;
-    //     $this->pelapor_id = null;
-    //     $this->dispatch(
-    //         'alert',
-    //         [
-    //             'text' => "nama sudah di tambahkan!!!",
-    //             'duration' => 5000,
-    //             'destination' => '/contact',
-    //             'newWindow' => true,
-    //             'close' => true,
-    //             'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-    //         ]
-    //     );
-    // }
-    // public function updatedManualPelaporName($value)
-    // {
-    //     $this->pelapor_id = null;
-    // }
+    public function updatedSearchPelapor()
+    {
+        $this->reset('manualPelaporName');
+        if (strlen($this->searchPelapor) > 1) {
+            $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+            $this->showPelaporDropdown = true;
+        } else {
+            $this->pelapors = [];
+            $this->showPelaporDropdown = false;
+        }
+    }
+    public function selectPelapor($id, $name)
+    {
+        $this->pelapor_id = $id;
+        $this->searchPelapor = $name;
+        $this->showPelaporDropdown = false;
+        $this->manualPelaporMode = false;
+        $this->validateOnly('pelapor_id');
+    }
+    public function enableManualPelapor()
+    {
+        $this->manualPelaporMode = true;
+        $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
+        $this->showPelaporDropdown = false;
+        $this->pelapor_id = null;
+        $this->dispatch(
+            'alert',
+            [
+                'text' => "nama sudah di tambahkan!!!",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+            ]
+        );
+    }
+    public function updatedManualPelaporName($value)
+    {
+        $this->pelapor_id = null;
+    }
 
     public function updatedSearchActResponsibility()
     {
