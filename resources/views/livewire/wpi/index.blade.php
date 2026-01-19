@@ -1133,10 +1133,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+                            <div
+                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.due_date', 'findings.' . $index . '.pic_responsible']) ? 'ring-1 ring-rose-500 rounded' : '' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Tindak Lanjut/ Follow Up</div>
-                                <div class="collapse-content ">
+                                <div class="collapse-content">
+
                                     <x-form.searchable-select-advanced label="Person in charge (PIC)"
                                         placeholder="Cari dan klik nama..." :disabled="$isDisabled"
                                         modelsearch="search_pic.{{ $index }}"
@@ -1151,7 +1153,7 @@
                                                     {{ $picName }}
                                                     <button type="button"
                                                         wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                        class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                        class="text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -1162,10 +1164,11 @@
                                             @endforeach
                                         @endif
                                     </div>
-                                    <fieldset class="relative fieldset">
+
+                                    <fieldset class="relative mt-4 fieldset">
                                         <x-form.label label="Tanggal Jatuh Tempo:" required />
                                         <div
-                                            class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : '' }}">
                                             <div class="relative" wire:ignore x-data="{
                                                 dueDate: @entangle('findings.' . $index . '.due_date'),
                                                 fp: null,
@@ -1176,33 +1179,24 @@
                                                         altFormat: 'd F Y',
                                                         dateFormat: 'Y-m-d',
                                                         defaultDate: this.dueDate,
-                                                        position: 'auto-below',
-                                                        onChange: (selectedDates, dateStr) => {
-                                                            this.dueDate = dateStr;
-                                                        }
+                                                        onChange: (selectedDates, dateStr) => { this.dueDate = dateStr; }
                                                     });
-
-                                                    // Sinkronisasi saat data dari database/Livewire berubah
-                                                    this.$watch('dueDate', (newVal) => {
-                                                        if (this.fp) {
-                                                            this.fp.setDate(newVal, false);
-                                                        }
-                                                    });
+                                                    this.$watch('dueDate', (newVal) => { if (this.fp) this.fp.setDate(newVal, false); });
                                                 }
                                             }">
-
                                                 <input type="text" x-ref="tanggalInput"
                                                     {{ $isDisabled ? 'disabled' : '' }}
                                                     placeholder="Pilih Tanggal..." readonly
-                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
+                                                    class="input input-bordered w-full input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
                                             </div>
                                         </div>
                                         <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                     </fieldset>
-                                    <fieldset class="relative fieldset">
+
+                                    <fieldset class="relative mt-2 fieldset">
                                         <x-form.label label="Tanggal Selesai:" />
                                         <div
-                                            class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                            class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : '' }}">
                                             <div class="relative" wire:ignore x-data="{
                                                 completionDate: @entangle('findings.' . $index . '.completion_date'),
                                                 fp: null,
@@ -1213,29 +1207,20 @@
                                                         altFormat: 'd F Y',
                                                         dateFormat: 'Y-m-d',
                                                         defaultDate: this.completionDate,
-                                                        position: 'auto-below',
-                                                        onChange: (selectedDates, dateStr) => {
-                                                            this.completionDate = dateStr;
-                                                        }
+                                                        onChange: (selectedDates, dateStr) => { this.completionDate = dateStr; }
                                                     });
-
-                                                    // Sinkronisasi: Update kalender jika data di Livewire berubah (misal saat edit data)
-                                                    this.$watch('completionDate', (newVal) => {
-                                                        if (this.fp && newVal) {
-                                                            this.fp.setDate(newVal, false);
-                                                        }
-                                                    });
+                                                    this.$watch('completionDate', (newVal) => { if (this.fp && newVal) this.fp.setDate(newVal, false); });
                                                 }
                                             }">
-
                                                 <input type="text" x-ref="tanggalInput"
                                                     {{ $isDisabled ? 'disabled' : '' }}
                                                     placeholder="Pilih Tanggal..." readonly
-                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
+                                                    class="input input-bordered w-full input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
                                             </div>
                                         </div>
                                         <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
                                     </fieldset>
+
                                 </div>
                             </div>
                             <div class="justify-end card-actions">
