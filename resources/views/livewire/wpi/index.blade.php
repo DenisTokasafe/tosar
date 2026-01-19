@@ -892,7 +892,7 @@
                                 </select>
                             </fieldset>
 
-                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.description']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
+                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.description']) ? 'ring-1 ring-rose-500 rounded collapse-open' : 'collapse-close' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Uraian Temuan & Foto / Descibe Unsafe Act &
                                     Photo</div>
@@ -1013,7 +1013,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.prevention_action']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
+                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.prevention_action']) ? 'ring-1 ring-rose-500 rounded collapse-open' : 'collapse-close' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Tindakan Pencegahan & Foto / Prevention
                                     Action & Photo</div>
@@ -1134,7 +1134,7 @@
                                 </div>
                             </div>
                             <div
-                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.due_date', 'findings.' . $index . '.pic_responsible']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
+                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.due_date', 'findings.' . $index . '.pic_responsible']) ? 'ring-1 ring-rose-500 rounded collapse-open' : 'collapse-close' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Tindak Lanjut/ Follow Up</div>
                                 <div class="collapse-content">
