@@ -873,80 +873,15 @@
             {{-- ===== MOBILE & TABLET VIEW ===== --}}
             <div class="block space-y-3 lg:hidden">
                 @foreach ($findings as $index => $finding)
-                    <div wire:key="mobile-find-{{ $index }}" class="p-3 bg-white border rounded-lg shadow-sm">
-
-                        {{-- HEADER --}}
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="w-32 text-xs font-bold text-gray-600">
-                                Temuan #{{ $index + 1 }}
-                            </span>
-                            <fieldset class=" fieldset">
-                                <x-form.label label="OHS Risk" required />
-                                <select wire:model="findings.{{ $index }}.ohs_risk"
-                                    {{ $isDisabled ? 'disabled' : '' }}
-                                    class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
-                                    <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
-                                    </option>
-                                    <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span>
-                                    </option>
-                                    <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
-                                    </option>
-                                    <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span>
-                                    </option>
-                                </select>
-                            </fieldset>
-                        </div>
-
-                        {{-- DESKRIPSI --}}
-                        <div class="mb-2">
-                            <p class="text-[11px] font-semibold text-gray-500 mb-1">Deskripsi Temuan</p>
-                            <p class="text-xs text-gray-800">
-                                {{ $finding['description'] ?? '-' }}
-                            </p>
-                        </div>
-
-                        {{-- PREVENTION --}}
-                        <div class="mb-2">
-                            <p class="text-[11px] font-semibold text-gray-500 mb-1">
-                                Tindakan Pencegahan
-                            </p>
-                            <p class="text-xs text-gray-800">
-                                {{ $finding['prevention_action'] ?? '-' }}
-                            </p>
-                        </div>
-
-                        {{-- PIC --}}
-                        @if (!empty($finding['pic_responsible']))
-                            <div class="mb-2">
-                                <p class="text-[11px] font-semibold text-gray-500 mb-1">PIC</p>
-                                <div class="flex flex-wrap gap-1">
-                                    @foreach ($finding['pic_responsible'] as $pic)
-                                        <span
-                                            class="px-2 py-0.5 text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded">
-                                            {{ $pic }}
-                                        </span>
-                                    @endforeach
-                                </div>
+                    <div class="shadow-sm card w-96 bg-base-100 card-xs">
+                        <div class="card-body">
+                            <h2 class="catitlerd-">Temuan {{ $index + 1 }}</h2>
+                            <p>A card component has a figure, a body part, and inside body there are title and actions
+                                parts</p>
+                            <div class="justify-end card-actions">
+                                <button class="btn btn-primary">Buy Now</button>
                             </div>
-                        @endif
-
-                        {{-- DUE DATE --}}
-                        <div class="flex justify-between text-[11px] text-gray-600 mt-2">
-                            <span>Due Date:</span>
-                            <span class="font-semibold">
-                                {{ $finding['due_date'] ?? '-' }}
-                            </span>
                         </div>
-
-                        {{-- ACTION --}}
-                        @if (!$isDisabled)
-                            <div class="flex justify-end mt-3">
-                                <button wire:click="removeFinding({{ $index }})"
-                                    class="btn btn-xs btn-error">
-                                    Hapus
-                                </button>
-                            </div>
-                        @endif
                     </div>
                 @endforeach
             </div>
