@@ -458,280 +458,325 @@
                     @endforeach
                 </div>
             </div>
+            <div class="hidden lg:block">
+                <div class="p-6 overflow-x-auto border-t border-gray-200">
+                    <table class="w-full text-xs text-left border border-collapse border-gray-300">
+                        <thead class="italic text-white uppercase bg-gray-800">
+                            <tr>
+                                <th class="w-8 p-2 text-center border border-gray-300">#</th>
+                                <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
+                                <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act &
+                                    Photo
+                                </th>
+                                <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
+                                    Photo</th>
+                                <th class="w-48 p-2 border border-gray-300">Tindak Lanjut/ Follow Up</th>
+                                <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($findings as $index => $finding)
+                                <tr wire:key="find-{{ $index }}" class="align-top hover:bg-gray-50">
+                                    <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}
+                                    </td>
+                                    <td class="p-2 text-center border border-gray-300 ">
+                                        {{-- Select OHS Risk --}}
+                                        <select wire:model="findings.{{ $index }}.ohs_risk"
+                                            {{ $isDisabled ? 'disabled' : '' }}
+                                            class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
+                                            <option value="L">Rendah\<span
+                                                    class="italic text-blue-400 ">Low</span>
+                                            </option>
+                                            <option value="M">Menengah\<span
+                                                    class="italic text-blue-400 ">Moderate</span></option>
+                                            <option value="H">Tinggi\<span
+                                                    class="italic text-blue-400 ">High</span>
+                                            </option>
+                                            <option value="E">Ekstrem\<span
+                                                    class="italic text-blue-400 ">Extreme</span>
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2 border border-gray-300">
+                                        {{-- Input Textarea Deskripsi --}}
+                                        <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
+                                            model="findings.{{ $index }}.description" />
 
-            <div class="p-2 md:p-6 overflow-x-auto border-t border-gray-200">
-                {{-- Ubah display table menjadi block pada mobile agar bisa di-stack --}}
-                <table class="w-full text-xs text-left border-collapse border-gray-300 block lg:table">
+                                        <div class="mt-1">
+                                            {{-- Komponen Upload --}}
+                                            <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
+                                                model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
 
-                    {{-- Sembunyikan Header pada Mobile/Tablet --}}
-                    <thead class="hidden lg:table-header-group italic text-white uppercase bg-gray-800">
-                        <tr>
-                            <th class="w-8 p-2 text-center border border-gray-300">#</th>
-                            <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
-                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Describe Unsafe Act & Photo
-                            </th>
-                            <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
-                                Photo</th>
-                            <th class="w-48 p-2 border border-gray-300">Tindak Lanjut/ Follow Up</th>
-                            <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
-                        </tr>
-                    </thead>
+                                            {{-- AREA PREVIEW FILE BARU (TEMPORARY) --}}
+                                            <div class="mt-2" wire:loading.remove
+                                                wire:target="findings.{{ $index }}.new_photos">
+                                                @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
+                                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                                        @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
+                                                            <div class="relative p-1 border rounded bg-gray-50"
+                                                                wire:key="preview-{{ $index }}-{{ $fileKey }}">
 
-                    <tbody class="block lg:table-row-group">
-                        @foreach ($findings as $index => $finding)
-                            {{--
-                    MODIFIKASI TR:
-                    Di mobile menjadi block, punya background putih, shadow, dan margin bawah (seperti kartu).
-                    Di desktop kembali menjadi table-row.
-                --}}
-                            <tr wire:key="find-{{ $index }}"
-                                class="block lg:table-row align-top bg-white border border-gray-200 rounded-lg shadow-sm mb-6 lg:mb-0 lg:shadow-none lg:rounded-none lg:border-0 hover:bg-gray-50">
+                                                                @php
+                                                                    $isUploadedFile = method_exists(
+                                                                        $newFile,
+                                                                        'temporaryUrl',
+                                                                    );
+                                                                    $extension = $isUploadedFile
+                                                                        ? strtolower(
+                                                                            $newFile->getClientOriginalExtension(),
+                                                                        )
+                                                                        : '';
+                                                                @endphp
 
-                                {{-- KOLOM NOMOR --}}
-                                {{-- Di mobile: jadi header kartu dengan background abu-abu --}}
-                                <td
-                                    class="block lg:table-cell p-2 font-bold text-left lg:text-center border-b lg:border border-gray-300 bg-gray-100 lg:bg-transparent">
-                                    <span class="lg:hidden text-gray-500 mr-2">Finding #</span>
-                                    {{ $index + 1 }}
-                                </td>
+                                                                {{-- Tombol Hapus Temporary --}}
+                                                                <x-button.remove
+                                                                    click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
+                                                                    key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
 
-                                {{-- KOLOM OHS RISK --}}
-                                <td
-                                    class="block lg:table-cell p-4 lg:p-2 text-left lg:text-center border-b lg:border border-gray-300">
-                                    {{-- Label Mobile --}}
-                                    <span class="block mb-1 text-xs font-bold uppercase text-gray-500 lg:hidden">OHS
-                                        Risk</span>
+                                                                @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                                    <img src="{{ $newFile->temporaryUrl() }}"
+                                                                        class="object-cover w-full h-20 mt-2 border rounded" />
+                                                                @else
+                                                                    <div
+                                                                        class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
+                                                                        @if ($extension == 'pdf')
+                                                                            <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                                                            <x-icon.word
+                                                                                class="w-8 h-8 text-blue-500" />
+                                                                        @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                            <x-icon.excel
+                                                                                class="w-8 h-8 text-green-600" />
+                                                                        @else
+                                                                            <x-icon.file
+                                                                                class="w-8 h-8 text-gray-400" />
+                                                                        @endif
+                                                                        <span
+                                                                            class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
+                                                                            {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
 
-                                    <select wire:model="findings.{{ $index }}.ohs_risk"
-                                        {{ $isDisabled ? 'disabled' : '' }}
-                                        class="select select-xs select-success w-full lg:w-auto focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success">
-                                        <option value="L">Rendah (Low)</option>
-                                        <option value="M">Menengah (Moderate)</option>
-                                        <option value="H">Tinggi (High)</option>
-                                        <option value="E">Ekstrem (Extreme)</option>
-                                    </select>
-                                </td>
+                                            {{-- AREA FILE TERSIMPAN (PERMANENT DENGAN FITUR DOWNLOAD) --}}
+                                            @if (!empty($finding['photos']))
+                                                <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
+                                                    <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
+                                                        File
+                                                        Tersimpan:</p>
+                                                    @foreach ($finding['photos'] as $photoKey => $photoPath)
+                                                        @php
+                                                            $extension = strtolower(
+                                                                pathinfo($photoPath, PATHINFO_EXTENSION),
+                                                            );
+                                                            $isImage = in_array($extension, [
+                                                                'jpg',
+                                                                'jpeg',
+                                                                'png',
+                                                                'gif',
+                                                            ]);
+                                                        @endphp
 
-                                {{-- KOLOM URAIAN --}}
-                                <td class="block lg:table-cell p-4 lg:p-2 border-b lg:border border-gray-300">
-                                    {{-- Label Mobile --}}
-                                    <span
-                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Uraian
-                                        Temuan & Foto</span>
+                                                        <div class="relative group"
+                                                            wire:key="saved-{{ $index }}-{{ $photoKey }}">
 
-                                    <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
-                                        model="findings.{{ $index }}.description" />
+                                                            {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                            @if ($isImage)
+                                                                <a href="{{ Storage::url($photoPath) }}"
+                                                                    target="_blank">
+                                                                    <img src="{{ Storage::url($photoPath) }}"
+                                                                        class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                                </a>
 
-                                    <div class="mt-1">
-                                        <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
-                                            model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
-
-                                        {{-- PREVIEW FILE BARU --}}
-                                        <div class="mt-2" wire:loading.remove
-                                            wire:target="findings.{{ $index }}.new_photos">
-                                            @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
-                                                <div class="grid grid-cols-2 gap-2 mt-2">
-                                                    @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
-                                                        <div class="relative p-1 border rounded bg-gray-50"
-                                                            wire:key="preview-{{ $index }}-{{ $fileKey }}">
-                                                            @php
-                                                                $isUploadedFile = method_exists(
-                                                                    $newFile,
-                                                                    'temporaryUrl',
-                                                                );
-                                                                $extension = $isUploadedFile
-                                                                    ? strtolower($newFile->getClientOriginalExtension())
-                                                                    : '';
-                                                            @endphp
-
-                                                            <x-button.remove
-                                                                click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
-                                                                key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
-
-                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                                <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="object-cover w-full h-20 mt-2 border rounded" />
+                                                                {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
                                                             @else
-                                                                <div
-                                                                    class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
-                                                                    <x-icon.file class="w-8 h-8 text-gray-400" />
+                                                                <button type="button"
+                                                                    wire:click="downloadFile('{{ $photoPath }}')"
+                                                                    class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                    title="Klik untuk unduh">
+
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                    @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                        <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                    @else
+                                                                        <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                    @endif
                                                                     <span
-                                                                        class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
-                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
-                                                                    </span>
-                                                                </div>
+                                                                        class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                                </button>
                                                             @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        </div>
 
-                                        {{-- FILE TERSIMPAN --}}
-                                        @if (!empty($finding['photos']))
-                                            <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
-                                                    Tersimpan:</p>
-                                                @foreach ($finding['photos'] as $photoKey => $photoPath)
-                                                    @php
-                                                        $extension = strtolower(
-                                                            pathinfo($photoPath, PATHINFO_EXTENSION),
-                                                        );
-                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
-                                                    @endphp
-                                                    <div class="relative group"
-                                                        wire:key="saved-{{ $index }}-{{ $photoKey }}">
-                                                        @if ($isImage)
-                                                            <a href="{{ Storage::url($photoPath) }}" target="_blank">
-                                                                <img src="{{ Storage::url($photoPath) }}"
-                                                                    class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
-                                                            </a>
-                                                        @else
-                                                            <button type="button"
-                                                                wire:click="downloadFile('{{ $photoPath }}')"
-                                                                class="flex flex-col items-center justify-center w-12 h-12 bg-gray-50 border rounded hover:bg-gray-100">
-                                                                <x-icon.file class="w-6 h-6 text-gray-500" />
-                                                                <span
-                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
-                                                            </button>
-                                                        @endif
-                                                        <x-button.remove
-                                                            click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
-                                                            key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"
-                                                            confirm="Hapus file ini secara permanen?"
-                                                            class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                    </div>
-                                </td>
-
-                                {{-- KOLOM PENCEGAHAN --}}
-                                <td class="block lg:table-cell p-4 lg:p-2 border-b lg:border border-gray-300">
-                                    {{-- Label Mobile --}}
-                                    <span
-                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Tindakan
-                                        Pencegahan</span>
-
-                                    <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
-                                        placeholder="Tindakan pencegahan..."
-                                        model="findings.{{ $index }}.prevention_action" rows="3" />
-
-                                    <div class="mt-1">
-                                        <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
-                                            model="findings.{{ $index }}.new_photos_prevention"
-                                            :file="$findings[$index]['new_photos_prevention'] ?? null" />
-
-                                        {{-- PREVIEW FILE BARU PENCEGAHAN --}}
-                                        <div class="mt-2" wire:loading.remove
-                                            wire:target="findings.{{ $index }}.new_photos_prevention">
-                                            @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
-                                                <div class="grid grid-cols-2 gap-2 mt-2">
-                                                    @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
-                                                        <div class="relative p-1 border rounded bg-gray-50"
-                                                            wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
-                                                            @php
-                                                                $isUploadedFile = method_exists(
-                                                                    $newFile,
-                                                                    'temporaryUrl',
-                                                                );
-                                                                $extension = $isUploadedFile
-                                                                    ? strtolower($newFile->getClientOriginalExtension())
-                                                                    : '';
-                                                            @endphp
+                                                            {{-- Tombol Hapus Permanent tetap di sini --}}
                                                             <x-button.remove
-                                                                click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
-                                                                key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
-
-                                                            @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                                                <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="w-full h-auto mt-2 border rounded" />
-                                                            @else
-                                                                {{-- Fallback icon --}}
-                                                                <div
-                                                                    class="flex items-center justify-center h-20 bg-gray-100 rounded">
-                                                                    <span class="text-xs">File</span>
-                                                                </div>
-                                                            @endif
+                                                                click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
+                                                                key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"
+                                                                confirm="Hapus file ini secara permanen?"
+                                                                class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
                                                         </div>
                                                     @endforeach
                                                 </div>
                                             @endif
                                         </div>
+                                    </td>
+                                    <td class="p-2 border border-gray-300">
+                                        {{-- Input Textarea --}}
+                                        <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
+                                            placeholder="Tindakan pencegahan..."
+                                            model="findings.{{ $index }}.prevention_action" rows="3" />
 
-                                        {{-- FILE PENCEGAHAN TERSIMPAN --}}
-                                        @if (!empty($finding['photos_prevention']))
-                                            <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
-                                                    Pencegahan Tersimpan:</p>
-                                                @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
-                                                    {{-- Logic display image/doc sama seperti di atas --}}
-                                                    @php
-                                                        $extension = strtolower(
-                                                            pathinfo($photoPath, PATHINFO_EXTENSION),
-                                                        );
-                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
-                                                    @endphp
-                                                    <div class="relative group"
-                                                        wire:key="saved-prev-{{ $index }}-{{ $photoKey }}">
-                                                        @if ($isImage)
-                                                            <a href="{{ Storage::url($photoPath) }}" target="_blank">
-                                                                <img src="{{ Storage::url($photoPath) }}"
-                                                                    class="object-cover w-12 h-12 border rounded opacity-80 hover:opacity-100">
-                                                            </a>
-                                                        @else
-                                                            <button type="button"
-                                                                wire:click="downloadFile('{{ $photoPath }}')"
-                                                                class="w-12 h-12 bg-gray-50 border rounded flex items-center justify-center"><span
-                                                                    class="text-[6px] uppercase">{{ $extension }}</span></button>
-                                                        @endif
-                                                        <x-button.remove
-                                                            click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
-                                                            key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
-                                                            confirm="Hapus file?"
-                                                            class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                        <div class="mt-1">
+                                            {{-- Komponen Upload --}}
+                                            <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
+                                                model="findings.{{ $index }}.new_photos_prevention"
+                                                :file="$findings[$index]['new_photos_prevention'] ?? null" />
+
+                                            {{-- Logika Preview Foto Baru (Temporary) --}}
+                                            <div class="mt-2" wire:loading.remove
+                                                wire:target="findings.{{ $index }}.new_photos_prevention">
+                                                @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
+                                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                                        @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
+                                                            <div class="relative p-1 border rounded bg-gray-50"
+                                                                wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
+
+                                                                {{-- Tombol Hapus Temp Photo --}}
+                                                                <x-button.remove
+                                                                    click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
+                                                                    key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
+
+                                                                @php
+                                                                    $isUploadedFile = method_exists(
+                                                                        $newFile,
+                                                                        'temporaryUrl',
+                                                                    );
+                                                                    $extension = $isUploadedFile
+                                                                        ? strtolower(
+                                                                            $newFile->getClientOriginalExtension(),
+                                                                        )
+                                                                        : '';
+                                                                @endphp
+
+                                                                @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                                    <img src="{{ $newFile->temporaryUrl() }}"
+                                                                        class="w-40 h-auto mt-2 border rounded" />
+                                                                @else
+                                                                    <div
+                                                                        class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
+                                                                        @if ($extension == 'pdf')
+                                                                            <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                                                            <x-icon.word
+                                                                                class="w-8 h-8 text-blue-500" />
+                                                                        @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
+                                                                            <x-icon.excel
+                                                                                class="w-8 h-8 text-green-600" />
+                                                                        @endif
+                                                                        <span
+                                                                            class="text-[8px] mt-1 truncate w-full px-1 text-center text-gray-600">
+                                                                            {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
+                                                                        </span>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
                                                     </div>
-                                                @endforeach
+                                                @endif
                                             </div>
-                                        @endif
-                                    </div>
-                                </td>
 
-                                {{-- KOLOM FOLLOW UP --}}
-                                <td
-                                    class="block lg:table-cell p-4 lg:p-2 space-y-4 lg:space-y-2 border-b lg:border border-gray-300">
-                                    {{-- Label Mobile --}}
-                                    <span
-                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Tindak
-                                        Lanjut (PIC & Tanggal)</span>
+                                            {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
+                                            @if (!empty($finding['photos_prevention']))
+                                                <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
+                                                    <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
+                                                        File
+                                                        Pencegahan Tersimpan:</p>
+                                                    @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
+                                                        @php
+                                                            $extension = strtolower(
+                                                                pathinfo($photoPath, PATHINFO_EXTENSION),
+                                                            );
+                                                            $isImage = in_array($extension, [
+                                                                'jpg',
+                                                                'jpeg',
+                                                                'png',
+                                                                'gif',
+                                                            ]);
+                                                        @endphp
+                                                        <div class="relative group"
+                                                            wire:key="saved-{{ $index }}-{{ $photoKey }}">
 
-                                    <x-form.searchable-select-advanced label="Person in charge (PIC)"
-                                        placeholder="Cari dan klik nama..." :disabled="$isDisabled"
-                                        modelsearch="search_pic.{{ $index }}"
-                                        modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
-                                        :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
+                                                            {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                            @if ($isImage)
+                                                                <a href="{{ Storage::url($photoPath) }}"
+                                                                    target="_blank">
+                                                                    <img src="{{ Storage::url($photoPath) }}"
+                                                                        class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                                </a>
 
-                                    <div class="flex flex-wrap gap-1 mt-2 mb-2">
-                                        @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
-                                            @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
-                                                <span
-                                                    class="inline-flex items-center px-2 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded">
-                                                    {{ $picName }}
-                                                    <button type="button"
-                                                        wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                        class="ml-1 text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
-                                                        &times;
-                                                    </button>
-                                                </span>
-                                            @endforeach
-                                        @endif
-                                    </div>
+                                                                {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
+                                                            @else
+                                                                <button type="button"
+                                                                    wire:click="downloadFile('{{ $photoPath }}')"
+                                                                    class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
+                                                                    title="Klik untuk unduh">
 
-                                    {{-- Date Pickers Wrapper --}}
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
+                                                                    @if ($extension == 'pdf')
+                                                                        <x-icon.pdf class="w-6 h-6 text-red-500" />
+                                                                    @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                                        <x-icon.excel class="w-6 h-6 text-green-600" />
+                                                                    @else
+                                                                        <x-icon.word class="w-6 h-6 text-blue-500" />
+                                                                    @endif
+                                                                    <span
+                                                                        class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
+                                                                </button>
+                                                            @endif
+
+                                                            {{-- Tombol Hapus Permanent --}}
+                                                            <x-button.remove
+                                                                click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
+                                                                key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
+                                                                confirm="Hapus file pencegahan ini secara permanen?"
+                                                                class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="p-2 space-y-2 border border-gray-300">
+                                        <x-form.searchable-select-advanced label="Person in charge (PIC)"
+                                            placeholder="Cari dan klik nama..." :disabled="$isDisabled"
+                                            modelsearch="search_pic.{{ $index }}"
+                                            modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
+                                            :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
+
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
+                                                @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
+                                                    <span
+                                                        class="inline-flex items-center px-2 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded">
+                                                        {{ $picName }}
+                                                        <button type="button"
+                                                            wire:click="removePic({{ $index }}, {{ $picKey }})"
+                                                            class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </button>
+                                                    </span>
+                                                @endforeach
+                                            @endif
+                                        </div>
                                         <fieldset class="relative fieldset">
-                                            <x-form.label label="Jatuh Tempo:" required />
+                                            <x-form.label label="Tanggal Jatuh Tempo:" required />
                                             <div
                                                 class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                                 <div class="relative" wire:ignore x-data="{
@@ -744,22 +789,31 @@
                                                             altFormat: 'd F Y',
                                                             dateFormat: 'Y-m-d',
                                                             defaultDate: this.dueDate,
-                                                            onChange: (sd, ds) => { this.dueDate = ds; }
+                                                            position: 'auto-below',
+                                                            onChange: (selectedDates, dateStr) => {
+                                                                this.dueDate = dateStr;
+                                                            }
                                                         });
-                                                        this.$watch('dueDate', (val) => { if (this.fp) this.fp.setDate(val, false); });
+
+                                                        // Sinkronisasi saat data dari database/Livewire berubah
+                                                        this.$watch('dueDate', (newVal) => {
+                                                            if (this.fp) {
+                                                                this.fp.setDate(newVal, false);
+                                                            }
+                                                        });
                                                     }
                                                 }">
+
                                                     <input type="text" x-ref="tanggalInput"
                                                         {{ $isDisabled ? 'disabled' : '' }}
                                                         placeholder="Pilih Tanggal..." readonly
-                                                        class="input input-bordered w-full input-xs" />
+                                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
                                                 </div>
                                             </div>
                                             <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
                                         </fieldset>
-
                                         <fieldset class="relative fieldset">
-                                            <x-form.label label="Selesai:" />
+                                            <x-form.label label="Tanggal Selesai:" />
                                             <div
                                                 class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
                                                 <div class="relative" wire:ignore x-data="{
@@ -772,46 +826,125 @@
                                                             altFormat: 'd F Y',
                                                             dateFormat: 'Y-m-d',
                                                             defaultDate: this.completionDate,
-                                                            onChange: (sd, ds) => { this.completionDate = ds; }
+                                                            position: 'auto-below',
+                                                            onChange: (selectedDates, dateStr) => {
+                                                                this.completionDate = dateStr;
+                                                            }
                                                         });
-                                                        this.$watch('completionDate', (val) => { if (this.fp) this.fp.setDate(val, false); });
+
+                                                        // Sinkronisasi: Update kalender jika data di Livewire berubah (misal saat edit data)
+                                                        this.$watch('completionDate', (newVal) => {
+                                                            if (this.fp && newVal) {
+                                                                this.fp.setDate(newVal, false);
+                                                            }
+                                                        });
                                                     }
                                                 }">
+
                                                     <input type="text" x-ref="tanggalInput"
                                                         {{ $isDisabled ? 'disabled' : '' }}
                                                         placeholder="Pilih Tanggal..." readonly
-                                                        class="input input-bordered w-full input-xs" />
+                                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
                                                 </div>
                                             </div>
                                             <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
                                         </fieldset>
-                                    </div>
-                                </td>
-
-                                {{-- KOLOM AKSI (HAPUS) --}}
-                                <td class="block lg:table-cell p-4 lg:p-2 text-right lg:text-center border-gray-300">
-                                    {{-- Label Mobile --}}
-                                    <span class="lg:hidden text-xs font-bold text-gray-500 mr-2 uppercase">Hapus Baris
-                                        Ini?</span>
-                                    @if (count($findings) > 1)
-                                        <button type="button" wire:click="removeFinding({{ $index }})"
-                                            class="btn btn-sm lg:btn-xs btn-error text-white">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                </path>
-                                            </svg>
-                                            <span class="lg:hidden ml-1">Hapus</span>
-                                        </button>
-                                    @endif
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td class="p-2 text-center border border-gray-300">
+                                        @if (count($findings) > 1)
+                                            <button type="button" wire:click="removeFinding({{ $index }})"
+                                                class="btn btn-xs btn-square btn-error {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            {{-- ===== MOBILE & TABLET VIEW ===== --}}
+            <div class="block space-y-3 lg:hidden">
+                @foreach ($findings as $index => $finding)
+                    <div wire:key="mobile-find-{{ $index }}" class="p-3 bg-white border rounded-lg shadow-sm">
+
+                        {{-- HEADER --}}
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-gray-600">
+                                Temuan #{{ $index + 1 }}
+                            </span>
+
+                            <span
+                                class="px-2 py-0.5 text-xs rounded
+                                @if ($finding['ohs_risk'] === 'H') bg-red-100 text-red-700
+                                @elseif($finding['ohs_risk'] === 'M') bg-yellow-100 text-yellow-700
+                                @elseif($finding['ohs_risk'] === 'L') bg-green-100 text-green-700
+                                @else bg-purple-100 text-purple-700 @endif">
+                                Risk: {{ $finding['ohs_risk'] }}
+                            </span>
+                        </div>
+
+                        {{-- DESKRIPSI --}}
+                        <div class="mb-2">
+                            <p class="text-[11px] font-semibold text-gray-500 mb-1">Deskripsi Temuan</p>
+                            <p class="text-xs text-gray-800">
+                                {{ $finding['description'] ?? '-' }}
+                            </p>
+                        </div>
+
+                        {{-- PREVENTION --}}
+                        <div class="mb-2">
+                            <p class="text-[11px] font-semibold text-gray-500 mb-1">
+                                Tindakan Pencegahan
+                            </p>
+                            <p class="text-xs text-gray-800">
+                                {{ $finding['prevention_action'] ?? '-' }}
+                            </p>
+                        </div>
+
+                        {{-- PIC --}}
+                        @if (!empty($finding['pic_responsible']))
+                            <div class="mb-2">
+                                <p class="text-[11px] font-semibold text-gray-500 mb-1">PIC</p>
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach ($finding['pic_responsible'] as $pic)
+                                        <span
+                                            class="px-2 py-0.5 text-[10px] bg-blue-50 text-blue-700 border border-blue-200 rounded">
+                                            {{ $pic }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- DUE DATE --}}
+                        <div class="flex justify-between text-[11px] text-gray-600 mt-2">
+                            <span>Due Date:</span>
+                            <span class="font-semibold">
+                                {{ $finding['due_date'] ?? '-' }}
+                            </span>
+                        </div>
+
+                        {{-- ACTION --}}
+                        @if (!$isDisabled)
+                            <div class="flex justify-end mt-3">
+                                <button wire:click="removeFinding({{ $index }})"
+                                    class="btn btn-xs btn-error">
+                                    Hapus
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+            {{-- ===== FORM ACTION BUTTONS ===== --}}
 
             <div
                 class="flex flex-col items-center justify-between gap-4 p-6 border-t border-gray-200 bg-gray-50 md:flex-row">
