@@ -342,22 +342,7 @@ class HazardForm extends Component
         $this->validateOnly('location_id');
     }
 
-    #[On('request-data')]
-    public function handleSearch($search)
-    {
-        $this->pelapors = User::where('name', 'like', "%$search%")
-            ->limit(10)
-            ->get()
-            ->toArray(); // Kirim sebagai array agar ringan
-    }
 
-    // Listener untuk menangkap hasil pilihan
-    #[On('option-selected')]
-    public function updatePelapor($id, $name)
-    {
-        $this->pelapor_id = $id;
-        $this->searchPelapor = $name;
-    }
     // public function updatedSearchPelapor()
     // {
     //     $this->reset('manualPelaporName');
