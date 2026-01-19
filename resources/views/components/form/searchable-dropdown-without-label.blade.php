@@ -27,6 +27,7 @@
             ($modelid && $errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '')
         ]) }}
     />
+
     {{-- Gunakan x-show agar AlpineJS bisa menyembunyikan elemen dengan smooth --}}
     <ul x-show="open && @js(count($options) > 0)"
         x-cloak
