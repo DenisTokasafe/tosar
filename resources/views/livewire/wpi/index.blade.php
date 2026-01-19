@@ -881,14 +881,20 @@
                                 Temuan #{{ $index + 1 }}
                             </span>
 
-                            <span
-                                class="px-2 py-0.5 text-xs rounded
-                                @if ($finding['ohs_risk'] === 'H') bg-red-100 text-red-700
-                                @elseif($finding['ohs_risk'] === 'M') bg-yellow-100 text-yellow-700
-                                @elseif($finding['ohs_risk'] === 'L') bg-green-100 text-green-700
-                                @else bg-purple-100 text-purple-700 @endif">
-                                Risk: {{ $finding['ohs_risk'] }}
-                            </span>
+                            <select wire:model="findings.{{ $index }}.ohs_risk"
+                                {{ $isDisabled ? 'disabled' : '' }}
+                                class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
+                                <option value="">OHS Risk</span>
+                                </option>
+                                <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
+                                </option>
+                                <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span>
+                                </option>
+                                <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
+                                </option>
+                                <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span>
+                                </option>
+                            </select>
                         </div>
 
                         {{-- DESKRIPSI --}}
