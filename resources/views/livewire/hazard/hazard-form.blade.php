@@ -165,8 +165,8 @@
                     </div>
                     <x-label-error :messages="$errors->get('tanggal')" />
                 </fieldset>
-                <livewire:shared.search-select label="Pelapor" columnName="name" :options="$pelapors"
-                    wire:key="searchPelapor" />
+                <livewire:shared.search-select label="Pelapor" columnName="name" modelsearch='searchPelapor' :options="$pelapors"
+                    wire:key="search-pelapor" />
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2">
