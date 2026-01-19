@@ -876,8 +876,21 @@
                     <div class="shadow-sm card bg-base-100 card-xs">
                         <div class="card-body">
                             <h2 class="catitlerd-">Temuan {{ $index + 1 }}</h2>
-                            <p>A card component has a figure, a body part, and inside body there are title and actions
-                                parts</p>
+                            <fieldset class="fieldset">
+                                 <x-form.label label="OHS Risk" required />
+                                <select wire:model="findings.{{ $index }}.ohs_risk"
+                                    {{ $isDisabled ? 'disabled' : '' }}
+                                    class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
+                                    <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
+                                    </option>
+                                    <option value="M">Menengah\<span
+                                            class="italic text-blue-400 ">Moderate</span></option>
+                                    <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
+                                    </option>
+                                    <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span>
+                                    </option>
+                                </select>
+                            </fieldset>
                             <div class="justify-end card-actions">
                                 <button class="btn btn-primary">Buy Now</button>
                             </div>
