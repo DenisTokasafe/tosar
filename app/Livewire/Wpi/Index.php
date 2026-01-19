@@ -746,7 +746,7 @@ class Index extends Component
         $this->loadData($this->reportId);
        }
        else {
-        return route('wpi-edit', ['id' => $report->id]);
+        return route('wpi.edit', ['id' => $report->id]);
        }
     }
     #[On('trigger-export-pdf')]
