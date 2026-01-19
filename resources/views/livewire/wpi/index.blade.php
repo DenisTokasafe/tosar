@@ -459,14 +459,16 @@
                 </div>
             </div>
 
-            <div class="p-6 overflow-x-auto border-t border-gray-200">
-                <table class="w-full text-xs text-left border border-collapse border-gray-300">
-                    <thead class="italic text-white uppercase bg-gray-800">
+            <div class="p-2 md:p-6 overflow-x-auto border-t border-gray-200">
+                {{-- Ubah display table menjadi block pada mobile agar bisa di-stack --}}
+                <table class="w-full text-xs text-left border-collapse border-gray-300 block lg:table">
+
+                    {{-- Sembunyikan Header pada Mobile/Tablet --}}
+                    <thead class="hidden lg:table-header-group italic text-white uppercase bg-gray-800">
                         <tr>
                             <th class="w-8 p-2 text-center border border-gray-300">#</th>
                             <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
-                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act &
-                                Photo
+                            <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Describe Unsafe Act & Photo
                             </th>
                             <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
                                 Photo</th>
@@ -474,38 +476,57 @@
                             <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody class="block lg:table-row-group">
                         @foreach ($findings as $index => $finding)
-                            <tr wire:key="find-{{ $index }}" class="align-top hover:bg-gray-50">
-                                <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}
+                            {{--
+                    MODIFIKASI TR:
+                    Di mobile menjadi block, punya background putih, shadow, dan margin bawah (seperti kartu).
+                    Di desktop kembali menjadi table-row.
+                --}}
+                            <tr wire:key="find-{{ $index }}"
+                                class="block lg:table-row align-top bg-white border border-gray-200 rounded-lg shadow-sm mb-6 lg:mb-0 lg:shadow-none lg:rounded-none lg:border-0 hover:bg-gray-50">
+
+                                {{-- KOLOM NOMOR --}}
+                                {{-- Di mobile: jadi header kartu dengan background abu-abu --}}
+                                <td
+                                    class="block lg:table-cell p-2 font-bold text-left lg:text-center border-b lg:border border-gray-300 bg-gray-100 lg:bg-transparent">
+                                    <span class="lg:hidden text-gray-500 mr-2">Finding #</span>
+                                    {{ $index + 1 }}
                                 </td>
-                                <td class="p-2 text-center border border-gray-300 ">
-                                    {{-- Select OHS Risk --}}
+
+                                {{-- KOLOM OHS RISK --}}
+                                <td
+                                    class="block lg:table-cell p-4 lg:p-2 text-left lg:text-center border-b lg:border border-gray-300">
+                                    {{-- Label Mobile --}}
+                                    <span class="block mb-1 text-xs font-bold uppercase text-gray-500 lg:hidden">OHS
+                                        Risk</span>
+
                                     <select wire:model="findings.{{ $index }}.ohs_risk"
                                         {{ $isDisabled ? 'disabled' : '' }}
-                                        class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
-                                        <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
-                                        </option>
-                                        <option value="M">Menengah\<span
-                                                class="italic text-blue-400 ">Moderate</span></option>
-                                        <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
-                                        </option>
-                                        <option value="E">Ekstrem\<span
-                                                class="italic text-blue-400 ">Extreme</span>
-                                        </option>
+                                        class="select select-xs select-success w-full lg:w-auto focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success">
+                                        <option value="L">Rendah (Low)</option>
+                                        <option value="M">Menengah (Moderate)</option>
+                                        <option value="H">Tinggi (High)</option>
+                                        <option value="E">Ekstrem (Extreme)</option>
                                     </select>
                                 </td>
-                                <td class="p-2 border border-gray-300">
-                                    {{-- Input Textarea Deskripsi --}}
+
+                                {{-- KOLOM URAIAN --}}
+                                <td class="block lg:table-cell p-4 lg:p-2 border-b lg:border border-gray-300">
+                                    {{-- Label Mobile --}}
+                                    <span
+                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Uraian
+                                        Temuan & Foto</span>
+
                                     <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
                                         model="findings.{{ $index }}.description" />
 
                                     <div class="mt-1">
-                                        {{-- Komponen Upload --}}
                                         <x-form.upload label="Lampirkan foto temuan" :disabled="$isDisabled"
                                             model="findings.{{ $index }}.new_photos" :file="$findings[$index]['new_photos'] ?? null" />
 
-                                        {{-- AREA PREVIEW FILE BARU (TEMPORARY) --}}
+                                        {{-- PREVIEW FILE BARU --}}
                                         <div class="mt-2" wire:loading.remove
                                             wire:target="findings.{{ $index }}.new_photos">
                                             @if (isset($findings[$index]['new_photos']) && count($findings[$index]['new_photos']) > 0)
@@ -513,7 +534,6 @@
                                                     @foreach ($findings[$index]['new_photos'] as $fileKey => $newFile)
                                                         <div class="relative p-1 border rounded bg-gray-50"
                                                             wire:key="preview-{{ $index }}-{{ $fileKey }}">
-
                                                             @php
                                                                 $isUploadedFile = method_exists(
                                                                     $newFile,
@@ -524,7 +544,6 @@
                                                                     : '';
                                                             @endphp
 
-                                                            {{-- Tombol Hapus Temporary --}}
                                                             <x-button.remove
                                                                 click="removeTempPhoto({{ $index }}, {{ $fileKey }})"
                                                                 key="btn-remove-temp-{{ $index }}-{{ $fileKey }}" />
@@ -535,15 +554,7 @@
                                                             @else
                                                                 <div
                                                                     class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
-                                                                    @if ($extension == 'pdf')
-                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
-                                                                    @elseif(in_array($extension, ['doc', 'docx']))
-                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
-                                                                    @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
-                                                                    @else
-                                                                        <x-icon.file class="w-8 h-8 text-gray-400" />
-                                                                    @endif
+                                                                    <x-icon.file class="w-8 h-8 text-gray-400" />
                                                                     <span
                                                                         class="text-[8px] mt-1 truncate w-full px-2 text-center text-gray-600">
                                                                         {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
@@ -556,11 +567,10 @@
                                             @endif
                                         </div>
 
-                                        {{-- AREA FILE TERSIMPAN (PERMANENT DENGAN FITUR DOWNLOAD) --}}
+                                        {{-- FILE TERSIMPAN --}}
                                         @if (!empty($finding['photos']))
                                             <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
-                                                    File
+                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
                                                     Tersimpan:</p>
                                                 @foreach ($finding['photos'] as $photoKey => $photoPath)
                                                     @php
@@ -569,37 +579,22 @@
                                                         );
                                                         $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
                                                     @endphp
-
                                                     <div class="relative group"
                                                         wire:key="saved-{{ $index }}-{{ $photoKey }}">
-
-                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
                                                         @if ($isImage)
                                                             <a href="{{ Storage::url($photoPath) }}" target="_blank">
                                                                 <img src="{{ Storage::url($photoPath) }}"
                                                                     class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
                                                             </a>
-
-                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
                                                         @else
                                                             <button type="button"
                                                                 wire:click="downloadFile('{{ $photoPath }}')"
-                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
-                                                                title="Klik untuk unduh">
-
-                                                                @if ($extension == 'pdf')
-                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
-                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
-                                                                @else
-                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
-                                                                @endif
+                                                                class="flex flex-col items-center justify-center w-12 h-12 bg-gray-50 border rounded hover:bg-gray-100">
+                                                                <x-icon.file class="w-6 h-6 text-gray-500" />
                                                                 <span
                                                                     class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
                                                             </button>
                                                         @endif
-
-                                                        {{-- Tombol Hapus Permanent tetap di sini --}}
                                                         <x-button.remove
                                                             click="removeSavedPhoto({{ $index }}, {{ $photoKey }})"
                                                             key="btn-remove-saved-{{ $index }}-{{ $photoKey }}"
@@ -611,19 +606,24 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="p-2 border border-gray-300">
-                                    {{-- Input Textarea --}}
+
+                                {{-- KOLOM PENCEGAHAN --}}
+                                <td class="block lg:table-cell p-4 lg:p-2 border-b lg:border border-gray-300">
+                                    {{-- Label Mobile --}}
+                                    <span
+                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Tindakan
+                                        Pencegahan</span>
+
                                     <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
                                         placeholder="Tindakan pencegahan..."
                                         model="findings.{{ $index }}.prevention_action" rows="3" />
 
                                     <div class="mt-1">
-                                        {{-- Komponen Upload --}}
                                         <x-form.upload label="Lampirkan foto pencegahan" :disabled="$isDisabled"
                                             model="findings.{{ $index }}.new_photos_prevention"
                                             :file="$findings[$index]['new_photos_prevention'] ?? null" />
 
-                                        {{-- Logika Preview Foto Baru (Temporary) --}}
+                                        {{-- PREVIEW FILE BARU PENCEGAHAN --}}
                                         <div class="mt-2" wire:loading.remove
                                             wire:target="findings.{{ $index }}.new_photos_prevention">
                                             @if (isset($findings[$index]['new_photos_prevention']) && count($findings[$index]['new_photos_prevention']) > 0)
@@ -631,12 +631,6 @@
                                                     @foreach ($findings[$index]['new_photos_prevention'] as $fileKey => $newFile)
                                                         <div class="relative p-1 border rounded bg-gray-50"
                                                             wire:key="preview-prevention-{{ $index }}-{{ $fileKey }}">
-
-                                                            {{-- Tombol Hapus Temp Photo --}}
-                                                            <x-button.remove
-                                                                click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
-                                                                key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
-
                                                             @php
                                                                 $isUploadedFile = method_exists(
                                                                     $newFile,
@@ -646,24 +640,18 @@
                                                                     ? strtolower($newFile->getClientOriginalExtension())
                                                                     : '';
                                                             @endphp
+                                                            <x-button.remove
+                                                                click="removeTempPhotoPrevention({{ $index }}, {{ $fileKey }})"
+                                                                key="btn-rm-temp-prev-{{ $index }}-{{ $fileKey }}" />
 
                                                             @if ($isUploadedFile && in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
                                                                 <img src="{{ $newFile->temporaryUrl() }}"
-                                                                    class="w-40 h-auto mt-2 border rounded" />
+                                                                    class="w-full h-auto mt-2 border rounded" />
                                                             @else
+                                                                {{-- Fallback icon --}}
                                                                 <div
-                                                                    class="flex flex-col items-center justify-center h-20 mt-2 bg-gray-200 rounded">
-                                                                    @if ($extension == 'pdf')
-                                                                        <x-icon.pdf class="w-8 h-8 text-red-500" />
-                                                                    @elseif(in_array($extension, ['doc', 'docx']))
-                                                                        <x-icon.word class="w-8 h-8 text-blue-500" />
-                                                                    @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
-                                                                        <x-icon.excel class="w-8 h-8 text-green-600" />
-                                                                    @endif
-                                                                    <span
-                                                                        class="text-[8px] mt-1 truncate w-full px-1 text-center text-gray-600">
-                                                                        {{ $isUploadedFile ? $newFile->getClientOriginalName() : 'File Error' }}
-                                                                    </span>
+                                                                    class="flex items-center justify-center h-20 bg-gray-100 rounded">
+                                                                    <span class="text-xs">File</span>
                                                                 </div>
                                                             @endif
                                                         </div>
@@ -672,13 +660,13 @@
                                             @endif
                                         </div>
 
-                                        {{-- AREA FILE TERSIMPAN (PERMANENT) DENGAN FITUR DOWNLOAD --}}
+                                        {{-- FILE PENCEGAHAN TERSIMPAN --}}
                                         @if (!empty($finding['photos_prevention']))
                                             <div class="flex flex-wrap gap-2 pt-2 mt-2 border-t">
-                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">
-                                                    File
+                                                <p class="text-[9px] text-gray-400 w-full mb-1 uppercase italic">File
                                                     Pencegahan Tersimpan:</p>
                                                 @foreach ($finding['photos_prevention'] as $photoKey => $photoPath)
+                                                    {{-- Logic display image/doc sama seperti di atas --}}
                                                     @php
                                                         $extension = strtolower(
                                                             pathinfo($photoPath, PATHINFO_EXTENSION),
@@ -686,39 +674,22 @@
                                                         $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
                                                     @endphp
                                                     <div class="relative group"
-                                                        wire:key="saved-{{ $index }}-{{ $photoKey }}">
-
-                                                        {{-- Jika Gambar: Klik untuk pratinjau di tab baru --}}
+                                                        wire:key="saved-prev-{{ $index }}-{{ $photoKey }}">
                                                         @if ($isImage)
                                                             <a href="{{ Storage::url($photoPath) }}" target="_blank">
                                                                 <img src="{{ Storage::url($photoPath) }}"
-                                                                    class="object-cover w-12 h-12 transition-opacity border rounded shadow-sm opacity-80 hover:opacity-100">
+                                                                    class="object-cover w-12 h-12 border rounded opacity-80 hover:opacity-100">
                                                             </a>
-
-                                                            {{-- Jika Dokumen: Klik untuk memicu public function downloadFile --}}
                                                         @else
                                                             <button type="button"
                                                                 wire:click="downloadFile('{{ $photoPath }}')"
-                                                                class="flex flex-col items-center justify-center w-12 h-12 transition-colors border rounded bg-gray-50 hover:bg-gray-100"
-                                                                title="Klik untuk unduh">
-
-                                                                @if ($extension == 'pdf')
-                                                                    <x-icon.pdf class="w-6 h-6 text-red-500" />
-                                                                @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                                    <x-icon.excel class="w-6 h-6 text-green-600" />
-                                                                @else
-                                                                    <x-icon.word class="w-6 h-6 text-blue-500" />
-                                                                @endif
-                                                                <span
-                                                                    class="text-[6px] mt-0.5 uppercase">{{ $extension }}</span>
-                                                            </button>
+                                                                class="w-12 h-12 bg-gray-50 border rounded flex items-center justify-center"><span
+                                                                    class="text-[6px] uppercase">{{ $extension }}</span></button>
                                                         @endif
-
-                                                        {{-- Tombol Hapus Permanent --}}
                                                         <x-button.remove
                                                             click="removeSavedPhotoPrevention({{ $index }}, {{ $photoKey }})"
                                                             key="btn-rm-saved-prev-{{ $index }}-{{ $photoKey }}"
-                                                            confirm="Hapus file pencegahan ini secara permanen?"
+                                                            confirm="Hapus file?"
                                                             class="transition-opacity scale-75 opacity-0 -top-1 -right-1 group-hover:opacity-100" />
                                                     </div>
                                                 @endforeach
@@ -726,14 +697,22 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="p-2 space-y-2 border border-gray-300">
+
+                                {{-- KOLOM FOLLOW UP --}}
+                                <td
+                                    class="block lg:table-cell p-4 lg:p-2 space-y-4 lg:space-y-2 border-b lg:border border-gray-300">
+                                    {{-- Label Mobile --}}
+                                    <span
+                                        class="block mb-2 text-xs font-bold uppercase text-gray-500 lg:hidden border-b pb-1">Tindak
+                                        Lanjut (PIC & Tanggal)</span>
+
                                     <x-form.searchable-select-advanced label="Person in charge (PIC)"
                                         placeholder="Cari dan klik nama..." :disabled="$isDisabled"
                                         modelsearch="search_pic.{{ $index }}"
                                         modelid="findings.{{ $index }}.pic_responsible" :options="$pelapors_pic"
                                         :showdropdown="$showDropdown_pic[$index] ?? false" :manualMode="$manualPICPelaporMode" clickaction="selectPicPelapor" />
 
-                                    <div class="flex flex-wrap gap-1 mt-2">
+                                    <div class="flex flex-wrap gap-1 mt-2 mb-2">
                                         @if (isset($findings[$index]['pic_responsible']) && is_array($findings[$index]['pic_responsible']))
                                             @foreach ($findings[$index]['pic_responsible'] as $picKey => $picName)
                                                 <span
@@ -741,105 +720,93 @@
                                                     {{ $picName }}
                                                     <button type="button"
                                                         wire:click="removePic({{ $index }}, {{ $picKey }})"
-                                                        class=" text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
+                                                        class="ml-1 text-black hover:text-red-500 {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                                        &times;
                                                     </button>
                                                 </span>
                                             @endforeach
                                         @endif
                                     </div>
-                                    <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Jatuh Tempo:" required />
-                                        <div
-                                            class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
-                                            <div class="relative" wire:ignore x-data="{
-                                                dueDate: @entangle('findings.' . $index . '.due_date'),
-                                                fp: null,
-                                                init() {
-                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
-                                                        disableMobile: true,
-                                                        altInput: true,
-                                                        altFormat: 'd F Y',
-                                                        dateFormat: 'Y-m-d',
-                                                        defaultDate: this.dueDate,
-                                                        position: 'auto-below',
-                                                        onChange: (selectedDates, dateStr) => {
-                                                            this.dueDate = dateStr;
-                                                        }
-                                                    });
 
-                                                    // Sinkronisasi saat data dari database/Livewire berubah
-                                                    this.$watch('dueDate', (newVal) => {
-                                                        if (this.fp) {
-                                                            this.fp.setDate(newVal, false);
-                                                        }
-                                                    });
-                                                }
-                                            }">
-
-                                                <input type="text" x-ref="tanggalInput"
-                                                    {{ $isDisabled ? 'disabled' : '' }} placeholder="Pilih Tanggal..."
-                                                    readonly
-                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.due_date') ? 'border-rose-500' : '' }}" />
+                                    {{-- Date Pickers Wrapper --}}
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
+                                        <fieldset class="relative fieldset">
+                                            <x-form.label label="Jatuh Tempo:" required />
+                                            <div
+                                                class="{{ $errors->has('findings.' . $index . '.due_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                                <div class="relative" wire:ignore x-data="{
+                                                    dueDate: @entangle('findings.' . $index . '.due_date'),
+                                                    fp: null,
+                                                    init() {
+                                                        this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                            disableMobile: true,
+                                                            altInput: true,
+                                                            altFormat: 'd F Y',
+                                                            dateFormat: 'Y-m-d',
+                                                            defaultDate: this.dueDate,
+                                                            onChange: (sd, ds) => { this.dueDate = ds; }
+                                                        });
+                                                        this.$watch('dueDate', (val) => { if (this.fp) this.fp.setDate(val, false); });
+                                                    }
+                                                }">
+                                                    <input type="text" x-ref="tanggalInput"
+                                                        {{ $isDisabled ? 'disabled' : '' }}
+                                                        placeholder="Pilih Tanggal..." readonly
+                                                        class="input input-bordered w-full input-xs" />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
-                                    </fieldset>
-                                    <fieldset class="relative fieldset">
-                                        <x-form.label label="Tanggal Selesai:" />
-                                        <div
-                                            class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
-                                            <div class="relative" wire:ignore x-data="{
-                                                completionDate: @entangle('findings.' . $index . '.completion_date'),
-                                                fp: null,
-                                                init() {
-                                                    this.fp = flatpickr(this.$refs.tanggalInput, {
-                                                        disableMobile: true,
-                                                        altInput: true,
-                                                        altFormat: 'd F Y',
-                                                        dateFormat: 'Y-m-d',
-                                                        defaultDate: this.completionDate,
-                                                        position: 'auto-below',
-                                                        onChange: (selectedDates, dateStr) => {
-                                                            this.completionDate = dateStr;
-                                                        }
-                                                    });
+                                            <x-label-error :messages="$errors->get('findings.' . $index . '.due_date')" />
+                                        </fieldset>
 
-                                                    // Sinkronisasi: Update kalender jika data di Livewire berubah (misal saat edit data)
-                                                    this.$watch('completionDate', (newVal) => {
-                                                        if (this.fp && newVal) {
-                                                            this.fp.setDate(newVal, false);
-                                                        }
-                                                    });
-                                                }
-                                            }">
-
-                                                <input type="text" x-ref="tanggalInput"
-                                                    {{ $isDisabled ? 'disabled' : '' }} placeholder="Pilih Tanggal..."
-                                                    readonly
-                                                    class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs {{ $errors->has('findings.' . $index . '.completion_date') ? 'border-rose-500' : '' }}" />
+                                        <fieldset class="relative fieldset">
+                                            <x-form.label label="Selesai:" />
+                                            <div
+                                                class="{{ $errors->has('findings.' . $index . '.completion_date') ? 'ring-1 ring-rose-500 rounded' : 'ring-base-300 rounded' }}">
+                                                <div class="relative" wire:ignore x-data="{
+                                                    completionDate: @entangle('findings.' . $index . '.completion_date'),
+                                                    fp: null,
+                                                    init() {
+                                                        this.fp = flatpickr(this.$refs.tanggalInput, {
+                                                            disableMobile: true,
+                                                            altInput: true,
+                                                            altFormat: 'd F Y',
+                                                            dateFormat: 'Y-m-d',
+                                                            defaultDate: this.completionDate,
+                                                            onChange: (sd, ds) => { this.completionDate = ds; }
+                                                        });
+                                                        this.$watch('completionDate', (val) => { if (this.fp) this.fp.setDate(val, false); });
+                                                    }
+                                                }">
+                                                    <input type="text" x-ref="tanggalInput"
+                                                        {{ $isDisabled ? 'disabled' : '' }}
+                                                        placeholder="Pilih Tanggal..." readonly
+                                                        class="input input-bordered w-full input-xs" />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
-                                    </fieldset>
+                                            <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
+                                        </fieldset>
+                                    </div>
                                 </td>
-                                <td class="p-2 text-center border border-gray-300">
+
+                                {{-- KOLOM AKSI (HAPUS) --}}
+                                <td class="block lg:table-cell p-4 lg:p-2 text-right lg:text-center border-gray-300">
+                                    {{-- Label Mobile --}}
+                                    <span class="lg:hidden text-xs font-bold text-gray-500 mr-2 uppercase">Hapus Baris
+                                        Ini?</span>
                                     @if (count($findings) > 1)
                                         <button type="button" wire:click="removeFinding({{ $index }})"
-                                            class="btn btn-xs btn-square btn-error {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
+                                            class="btn btn-sm lg:btn-xs btn-error text-white">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
                                                 </path>
                                             </svg>
+                                            <span class="lg:hidden ml-1">Hapus</span>
                                         </button>
                                     @endif
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
