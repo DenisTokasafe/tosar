@@ -880,21 +880,21 @@
                             <span class="w-32 text-xs font-bold text-gray-600">
                                 Temuan #{{ $index + 1 }}
                             </span>
-
-                            <select wire:model="findings.{{ $index }}.ohs_risk"
-                                {{ $isDisabled ? 'disabled' : '' }}
-                                class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
-                                <option value="">OHS Risk</span>
-                                </option>
-                                <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
-                                </option>
-                                <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span>
-                                </option>
-                                <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
-                                </option>
-                                <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span>
-                                </option>
-                            </select>
+                            <fieldset class=" fieldset">
+                                <x-form.label label="OHS Risk" required />
+                                <select wire:model="findings.{{ $index }}.ohs_risk"
+                                    {{ $isDisabled ? 'disabled' : '' }}
+                                    class="select select-xs select-success focus:outline-hidden focus:ring-1 focus:border-success focus:ring-success ">
+                                    <option value="L">Rendah\<span class="italic text-blue-400 ">Low</span>
+                                    </option>
+                                    <option value="M">Menengah\<span class="italic text-blue-400 ">Moderate</span>
+                                    </option>
+                                    <option value="H">Tinggi\<span class="italic text-blue-400 ">High</span>
+                                    </option>
+                                    <option value="E">Ekstrem\<span class="italic text-blue-400 ">Extreme</span>
+                                    </option>
+                                </select>
+                            </fieldset>
                         </div>
 
                         {{-- DESKRIPSI --}}
