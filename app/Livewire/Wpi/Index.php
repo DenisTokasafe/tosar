@@ -742,7 +742,12 @@ class Index extends Component
             'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
         ]);
 
-       $this->loadData($report->id);
+       if ($this->reportId) {
+        $this->loadData($this->reportId);
+       }
+       else {
+        return route('wpi-edit', ['id' => $report->id]);
+       }
     }
     #[On('trigger-export-pdf')]
     public function exportPDF($id)
