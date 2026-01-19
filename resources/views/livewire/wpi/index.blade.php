@@ -877,7 +877,7 @@
 
                         {{-- HEADER --}}
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-gray-600">
+                            <span class="w-32 text-xs font-bold text-gray-600">
                                 Temuan #{{ $index + 1 }}
                             </span>
 
