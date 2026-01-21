@@ -19,7 +19,7 @@
                 @if (count($menu->subMenus) > 0)
                     <flux:navlist.group-list wire:key="menu-group-{{ $menu->id }}" expandable
                         route='{{ $menu->request_route }}' heading="{{ $menu->menu }}" class="grid">
-                        @foreach ($menu->SubMenu as $submenu)
+                        @foreach ($menu->subMenus as $submenu)
                             {{-- LEVEL 2: Extra SubMenu --}}
                             @if (count($submenu->ExtraSubMenu) > 0)
                                 <flux:navlist.group-list wire:key="submenu-group-{{ $submenu->id }}" expandable
