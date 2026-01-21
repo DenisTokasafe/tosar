@@ -17,15 +17,15 @@ class Menu extends Model
         'urutan',
         'icon',
     ];
-    public function SubMenu()
-    {
-        return $this->hasMany(SubMenu::class)->where('status', 'enabled')->urutan();
-    }
     public function scopeStatus($query)
     {
         $query->when(
             fn($query) => $query->where('status', 'enabled')
         );
+    }
+    public function subMenus()
+    {
+        return $this->hasMany(Menu::class, 'parent_id')->status();
     }
     public function scopeUrutan($query)
     {
