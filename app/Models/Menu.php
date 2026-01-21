@@ -19,9 +19,7 @@ class Menu extends Model
     ];
     public function scopeStatus($query)
     {
-        $query->when(
-            fn($query) => $query->where('status', 'enabled')
-        );
+        return $query->where('status', 'enabled');
     }
     public function subMenus()
     {
