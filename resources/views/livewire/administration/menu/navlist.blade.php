@@ -16,7 +16,7 @@
                     @continue
                 @endif
                 {{-- LEVEL 1: Group dengan SubMenu --}}
-                @if (count($menu->SubMenu) > 0)
+                @if (count($menu->subMenus) > 0)
                     <flux:navlist.group-list wire:key="menu-group-{{ $menu->id }}" expandable
                         route='{{ $menu->request_route }}' heading="{{ $menu->menu }}" class="grid">
                         @foreach ($menu->SubMenu as $submenu)
