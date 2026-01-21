@@ -9,11 +9,11 @@ use Livewire\Attributes\On;
 class Navlist extends Component
 {
     #[On('menu-update','submenu-update','xsubmenu-update')]
-   
+
     public function render()
     {
         return view('livewire.administration.menu.navlist',[
-            'Menus'=>Menu::status()->urutan()->get()
+            'Menus'=>Menu::with('subMenus')->status()->urutan()->get()
         ]);
     }
 }
