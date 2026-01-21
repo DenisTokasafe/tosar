@@ -548,6 +548,7 @@ class HazardForm extends Component
             }
 
             $pelaporId = $this->pelapor_id ?: null;
+            $status = ($this->actions) ? 'submitted' : 'closed';
 
             // 1. Simpan hazard
             $hazard = Hazard::create([
@@ -571,6 +572,7 @@ class HazardForm extends Component
                 'consequence_id'         => $this->consequence_id,
                 'likelihood_id'          => $this->likelihood_id,
                 'risk_level'             => $riskLevel,
+                'status'                 => $status,
                 'manualPelaporName'      => $this->pelapor_id ? User::find($this->pelapor_id)?->name : $this->manualPelaporName,
             ]);
 
