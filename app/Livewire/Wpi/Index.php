@@ -238,7 +238,7 @@ class Index extends Component
             return;
         }
         if ($newStatus ==='Assigned' || $newStatus === 'Review Event') {
-            $reviewed = User::find($this->assignTo1);
+            $reviewed = User::where('id', $this->assignTo1)->first();
             $this->review_date = now()->toDateString();
             $this->review_id = $reviewed->employee_id;
             $this->reviewed_by = $reviewed->name;
