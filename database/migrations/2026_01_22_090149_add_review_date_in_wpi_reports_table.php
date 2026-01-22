@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('wpi_reports', function (Blueprint $table) {
-            $table->date('report_date')->after('review_id')->nullable();
+            $table->date('review_date')->after('review_id')->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('wpi_reports', function (Blueprint $table) {
-            $table->date('report_date')->after('review_id')->nullable();
+            $table->date('review_date')->after('review_id')->nullable();
         });
     }
 };
