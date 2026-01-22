@@ -51,7 +51,7 @@
                     <div class="w-full max-w-xs">
                         <label class="py-1 label">
                             <span class="text-[10px] font-bold uppercase text-gray-500">Lanjutkan Ke / Transition
-                                To</span> {{ $$proceedTo }}
+                                To</span> {{ $proceedTo }}
                         </label>
                         <select wire:model.live="proceedTo"
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info">
