@@ -24,6 +24,9 @@ class WpiReport extends Model
         'site_name',
         'area',
         'status',
+        'reviewed_by',
+        'review_id',
+        'review_date',
         'created_by',
         'department_id',
         'contractor_id'
