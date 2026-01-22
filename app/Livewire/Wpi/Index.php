@@ -237,8 +237,8 @@ class Index extends Component
             $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
             return;
         }
-        if ($newStatus ==='Assigned' || $newStatus === 'Review Event') {
-            $reviewed = User::where('id', $this->assignTo1)->first();
+        if ($newStatus ==='Closed') {
+            $reviewed = Auth::user();
             $this->review_date = now()->toDateString();
             $this->review_id = $reviewed->employee_id;
             $this->reviewed_by = $reviewed->name;
@@ -273,6 +273,9 @@ class Index extends Component
         // 4. Update Status & Catat di Audit Trail
         // Karena trait LogsActivity aktif, perubahan status ini akan otomatis terekam di modal audit trail
         $report->status = $newStatus;
+        $report->review_date = $this->review_date;
+        $report->review_id = $this->review_id;
+        $report->reviewed_by = $this->reviewed_by;
         $report->save();
 
         // 5. Reset UI & Beri Feedback
