@@ -65,7 +65,7 @@ Route::redirect('/eventReport/hazardReportGuest/3', '/hazard/form', 301);
 Route::get('hazard/form', HazardForm::class)->name('hazard-form');
 Route::get('api/hazards/data', [HazardController::class, 'getExcelData'])->name('hazards.excel.data');
 Route::get('api/manhours', [ManhoursController::class, 'getExcelData'])->name('manhours.excel.data');
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
