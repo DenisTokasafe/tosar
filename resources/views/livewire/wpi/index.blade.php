@@ -65,7 +65,7 @@
                     </div>
 
                     {{-- LOGIKA ASSIGN ERM (Hanya tampil jika aksi yang dipilih mengarah ke InProgress/Assigned) --}}
-                    @if (in_array($proceedTo, ['Assigned', 'InProgress']))
+                    @if (in_array($proceedTo, ['Assigned', 'Review Event']))
                         <div class="w-full max-w-xs">
                             <label class="py-1 label">
                                 <span class="text-[10px] font-bold uppercase text-gray-500">Di Review Oleh</span>
