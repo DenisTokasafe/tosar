@@ -13,7 +13,7 @@
         @endif
     </div>
     @if ($reportId)
-        <div class="mb-4 border border-gray-200 shadow-md card bg-base-100">
+        <div class="mb-2 border border-gray-200 shadow-md card bg-base-100">
             <div class="px-4 py-2 card-body">
                 {{-- STATUS + Tombol Audit Trail --}}
                 <div class="flex items-center justify-between">
