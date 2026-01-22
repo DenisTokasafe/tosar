@@ -17,7 +17,8 @@ class CheckMenuStatus
         // 2. Cari di database menu yang memiliki request_route atau route mirip segmen tersebut
         $menu = Menu::where(function($query) use ($rootSegment) {
             $query->where('request_route', $rootSegment)
-                  ->orWhere('request_route', $rootSegment . '/*');
+                  ->orWhere('request_route', $rootSegment . '/*')
+                  ->orWhere('request_route', $rootSegment . '*');
         })->first();
 
         // 3. Jika menu ditemukan dan statusnya NOT enabled, blokir akses
