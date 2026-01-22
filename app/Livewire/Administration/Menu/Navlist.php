@@ -13,7 +13,7 @@ class Navlist extends Component
     public function render()
     {
         return view('livewire.administration.menu.navlist',[
-            'Menus'=>Menu::with('subMenus')->status()->urutan()->get()
+            'Menus'=>Menu::with(['subMenus','subMenus.ExtraSubMenu'])->status()->urutan()->get()
         ]);
     }
 }
