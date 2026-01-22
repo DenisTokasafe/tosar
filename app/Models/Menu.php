@@ -23,7 +23,7 @@ class Menu extends Model
     }
     public function subMenus()
     {
-          return $this->hasMany(SubMenu::class)->where('status', 'enabled')->urutan();
+          return $this->hasMany(SubMenu::class, 'menu_id')->status();
     }
     public function scopeUrutan($query)
     {
