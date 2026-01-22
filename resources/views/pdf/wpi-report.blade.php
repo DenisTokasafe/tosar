@@ -197,7 +197,7 @@
 <body>
 
 
-  <script type="text/php">
+    <script type="text/php">
     if (isset($pdf)) {
         $font = $fontMetrics->get_font("Times-Roman", "bold");
         $size = 8.5;
@@ -295,6 +295,25 @@
                     <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
                 </tr>
             @endfor
+            <tr>
+                <td colspan="2" style="vertical-align: top; padding: 5px;">
+                    Direview oleh / <br> <i>Reviewing by:</i>
+                    <div style="margin-top: 5px;">
+                        {{-- @if ($report->reviewed_by)
+                            <img src="{{ $report->reviewer_signature }}" height="40">
+                        @endif --}}
+                        <br>
+                        <strong>{{ $report->reviewed_by ?? '................' }}</strong>
+                    </div>
+                </td>
+                <td colspan="1" style="vertical-align: top;">
+                    ID: {{ $report->review_id ?? '' }}
+                </td>
+                <td colspan="2" style="vertical-align: top;">
+                    Tanggal review / Date: <br>
+                    {{ $report->review_date ? date('d/m/Y', strtotime($report->review_date)) : '' }}
+                </td>
+            </tr>
         </table>
 
         <table class="main-table">
