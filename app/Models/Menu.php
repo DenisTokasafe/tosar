@@ -21,14 +21,14 @@ class Menu extends Model
     {
         return $query->where('status', 'enabled');
     }
-    public function subMenus()
-    {
-          return $this->hasMany(SubMenu::class, 'menu_id')->status();
-    }
     public function scopeUrutan($query)
     {
         $query->when(
             fn($query) => $query->orderBy('urutan', 'ASC')
         );
+    }
+    public function subMenus()
+    {
+        return $this->hasMany(SubMenu::class, 'menu_id')->urutan()->status();
     }
 }
