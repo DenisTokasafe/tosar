@@ -34,6 +34,9 @@ class Index extends Component
     public $report_date, $report_time, $location, $dept_cont, $area;
     public $inspectors = [['name' => '', 'id_number' => '']];
     public $findings = [];
+    public $review_date;
+    public $review_id;
+    public $reviewed_by;
 
     // Properti Pencarian Umum
     public $locations = [];
@@ -233,6 +236,12 @@ class Index extends Component
         if (!$newStatus) {
             $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
             return;
+        }
+        if ($newStatus === "Assigned") {
+            $reviewed = User::find($this->assignTo1);
+            $this->review_date = now()->toDateString();
+            $this->review_id = $reviewed->employee_id;
+            $this->reviewed_by = $reviewed->name;
         }
 
         $report = WpiReport::find($this->reportId);
@@ -665,6 +674,9 @@ class Index extends Component
             'inspectors'  => $this->inspectors,
             'department_id' => $this->deptCont === 'department' ? Department::where('department_name', $this->dept_cont)->first()?->id : null,
             'contractor_id' => $this->deptCont === 'company' ? Contractor::where('contractor_name', $this->dept_cont)->first()?->id : null,
+            'review_date' => $this->review_date,
+            'review_id' => $this->review_id,
+            'reviewed_by' => $this->reviewed_by,
         ];
 
         // 2. Set Status dan Pembuat jika ini adalah laporan baru
