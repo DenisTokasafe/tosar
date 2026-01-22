@@ -237,7 +237,7 @@ class Index extends Component
             $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
             return;
         }
-        if ($newStatus === "Submitted") {
+        if ($newStatus ==='Assigned' || $newStatus === 'Review Event') {
             $reviewed = User::find($this->assignTo1);
             $this->review_date = now()->toDateString();
             $this->review_id = $reviewed->employee_id;
