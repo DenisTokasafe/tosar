@@ -196,7 +196,7 @@ class Index extends Component
 
         // Kalau perlu reset array jobclass manual
         foreach ($this->jobclasses as $key => $label) {
-            $this->hide[$key]     = true;
+            $this->hide[$key]     = false;
             $this->manhours[$key] = null;
             $this->manpower[$key] = null;
         }
