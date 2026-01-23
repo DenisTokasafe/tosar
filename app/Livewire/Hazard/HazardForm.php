@@ -633,7 +633,7 @@ class HazardForm extends Component
                         'subject'       => 'Laporan Hazard Baru',
                         'title'         => 'Notifikasi Laporan Hazard',
                         'messageText'   => "Telah dibuat laporan hazard baru.\nSilakan lakukan pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nStatus:  Submitted",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nStatus:  $status",
                         'actionUrl'     => route('hazard-detail', $hazard->id)
                     ]
                 );
@@ -673,7 +673,7 @@ class HazardForm extends Component
                         'subject'       => 'Laporan Hazard Baru',
                         'title'         => 'Notifikasi Laporan Hazard',
                         'messageText'   => "Telah dibuat laporan hazard baru.\nSilakan lakukan  pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: Submitted",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $status",
                         'actionUrl'     => route('hazard-detail', $hazard->id)
                     ]
                 );
