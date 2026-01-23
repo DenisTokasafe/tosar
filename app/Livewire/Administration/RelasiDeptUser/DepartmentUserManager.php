@@ -71,7 +71,7 @@ class DepartmentUserManager extends Component
                 'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]
         );
-        $this->reset('searchUser', 'selectedUsers');
+        $this->reset('searchUser', 'selectedUsers','searchDepartment','department_id','department_name');
     }
     public function render()
     {
