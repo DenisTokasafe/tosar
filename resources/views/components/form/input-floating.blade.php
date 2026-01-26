@@ -23,4 +23,4 @@
             <x-label-error :messages="$errors->get($model)" />
         @enderror
     @endif
-</div>
+</fieldset>
