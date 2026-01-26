@@ -26,30 +26,48 @@ class FireInspection extends Component
     // Tempat menyimpan hasil checklist
     public $conditions = [];
 
-    public function rules()
+   public function rules()
     {
-        return [
+        $baseRules = [
             'location'        => 'required|string|max:255',
             'inspection_date' => 'required|date',
-            'inspected_by'    => 'required|string|max:255',
+            'inspected_users' => 'required|array|min:1', // Menggunakan array user dari jawaban sebelumnya
             'conditions'      => 'required|array',
             'type'            => 'required|string',
             'area'            => 'required|string|max:255',
-            'dokumentasi'  => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'dokumentasi'     => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ];
+
+        // Tambahkan validasi otomatis untuk setiap item di dalam conditions
+        if (isset($this->fields[$this->type]['inputs'])) {
+            foreach ($this->fields[$this->type]['inputs'] as $input) {
+                $baseRules["conditions.{$input}"] = 'required';
+            }
+        }
+
+        // if (isset($this->fields[$this->type]['checks'])) {
+        //     foreach ($this->fields[$this->type]['checks'] as $check) {
+        //         $baseRules["conditions.{$check}"] = 'required';
+        //     }
+        // }
+
+        return $baseRules;
     }
 
-    protected $messages = [
-        'location.required'        => 'Lokasi inspeksi wajib diisi.',
-        'inspection_date.required' => 'Tanggal inspeksi wajib diisi.',
-        'inspected_by.required'    => 'Nama pemeriksa wajib diisi.',
-        'conditions.required'     => 'Checklist kondisi alat wajib diisi.',
-        'type.required'           => 'Jenis alat wajib diisi.',
-        'area.required'           => 'Area wajib diisi.',
-        'dokumentasi.file'  => 'File dokumentasi harus berupa berkas yang valid.',
-        'dokumentasi.mimes' => 'File dokumentasi hanya boleh dalam format JPG, JPEG, PNG, DOC, DOCX atau PDF.',
-        'dokumentasi.max'   => 'Ukuran file dokumentasi maksimal 2 MB.',
-    ];
+    protected function messages()
+    {
+        return [
+            'location.required'        => 'Lokasi inspeksi wajib diisi.',
+            'inspection_date.required' => 'Tanggal inspeksi wajib diisi.',
+            'inspected_users.required' => 'Minimal satu orang pemeriksa wajib dipilih.',
+            'conditions.required'      => 'Checklist kondisi alat wajib diisi.',
+            'conditions.*.required'    => 'Semua poin checklist wajib diisi/pilih.', // Pesan untuk item dinamis
+            'type.required'            => 'Jenis alat wajib diisi.',
+            'area.required'            => 'Area wajib diisi.',
+            'dokumentasi.max'          => 'Ukuran file dokumentasi maksimal 2 MB.',
+            // ... sisa pesan Anda
+        ];
+    }
 
     public function updatedSearchResponsibility()
     {
