@@ -21,11 +21,12 @@
                 <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @foreach ($fields[$type] as $field)
+                    <fieldset class="fieldset">
                         <label class="label">
                              {{ $field }}
                             <input type="checkbox" wire:model="conditions.{{ $field }}" class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
-
                         </label>
+                    </fieldset>
                     @endforeach
                 </div>
             </div>
