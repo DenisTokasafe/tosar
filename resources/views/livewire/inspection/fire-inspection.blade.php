@@ -23,14 +23,14 @@
                     @foreach ($fields[$type] as $field)
                         <fieldset class="w-64 p-4 border fieldset">
                             <legend class="fieldset-legend">{{ $field }}</legend>
-                            <div class="flex items-center gap-2">
+                            <label class="label">
                                 Yes
-                                <input type="radio"  class="radio radio-xs" wire:model="conditions.{{ $field }}"
+                                <input type="radio" checked="checked" class="radio radio-xs" wire:model="conditions.{{ $field }}"
                                     value="yes" />
                                 No
                                 <input type="radio" class="radio radio-xs" wire:model="conditions.{{ $field }}"
                                     value="no" />
-                            </div>
+                            </label>
                         </fieldset>
                     @endforeach
                 </div>
