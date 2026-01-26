@@ -23,9 +23,8 @@
             </div>
 
             <div class="p-4 border rounded-lg bg-gray-50">
-                <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                    @if (isset($fields[$type]['inputs']))
+                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 ">
+                     @if (isset($fields[$type]['inputs']))
                         @foreach ($fields[$type]['inputs'] as $inputField)
                          <fieldset class="p-2 border rounded-md fieldset">
                             <label class="floating-label">
@@ -36,6 +35,10 @@
                          </fieldset>
                         @endforeach
                     @endif
+                </div>
+                <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+
                     @foreach ($fields[$type]['checks'] as $field)
                         <fieldset class="p-2 border rounded-md fieldset">
                             <label class="label">
