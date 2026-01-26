@@ -32,9 +32,9 @@
                                     @foreach ($item->conditions as $key => $value)
                                         <div class="flex justify-between border-b border-dotted">
                                             <span class="font-medium uppercase">{{ $key }}:</span>
-                                            @if ($value === 'yes')
+                                            @if ($value === 'true')
                                                 <span class="text-success">✔ Good</span>
-                                            @elseif($value === 'no')
+                                            @elseif($value === 'false')
                                                 <span class="font-bold text-error">✘ No Good</span>
                                             @else
                                                 <span class="text-blue-600">{{ $value }}</span>
