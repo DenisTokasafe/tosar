@@ -17,8 +17,8 @@
             </div>
 
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-2">
-                <input type="text" wire:model="location" placeholder="Lokasi (Contoh: Area 23)"
-                    class="p-2 border rounded">
+                <x-form.input-floating label="Lokasi (Contoh: Area 23)" wire:model="location" required />
+
                 <input type="date" wire:model="inspection_date" class="p-2 border rounded">
             </div>
 
