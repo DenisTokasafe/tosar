@@ -46,7 +46,7 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td>
+                            <td class="flex items-center">
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-wrap gap-1">
