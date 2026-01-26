@@ -23,7 +23,7 @@
                             <td>
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
                             </td>
-                            <td class="flex justify-center">
+                            <td>
                                 <div class="text-[10px] opacity-60">{{ $item->area }}</div>
                                 <div class="font-bold">{{ $item->location }}</div>
                             </td>
@@ -46,7 +46,7 @@
                                     @endforeach
                                 </div>
                             </td>
-                             <td class="flex justify-center">
+                            <td>
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-wrap gap-1">
