@@ -18,7 +18,7 @@ class FireProtection extends Model
     ];
     protected $casts = [
     'conditions' => 'array',
-    'inspected_by' => 'string', // Karena Anda menggunakan pembatas '|'
+    'inspected_by' => 'array', // Karena Anda menggunakan pembatas '|'
     'inspection_date' => 'date',
 ];
 }
