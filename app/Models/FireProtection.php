@@ -9,6 +9,7 @@ class FireProtection extends Model
     protected $fillable = [
         'type',
         'location',
+        'area',
         'equipment_no',
         'inspection_date',
         'inspected_by',
