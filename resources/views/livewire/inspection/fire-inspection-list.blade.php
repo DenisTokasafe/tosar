@@ -21,11 +21,11 @@
                         <tr wire:key="row-{{ $item->id }}">
                             <td>{{ $inspections->firstItem() + $index }}</td>
                             <td>
-                                <span class=" badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
+                                <span class="w-32 font-semibold  badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
                             </td>
                             <td>
-                                <div class="font-bold">{{ $item->location }}</div>
                                 <div class="text-[10px] opacity-60">{{ $item->area }}</div>
+                                <div class="font-bold">{{ $item->location }}</div>
                             </td>
                             <td>
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
