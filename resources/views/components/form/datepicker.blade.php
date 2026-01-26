@@ -41,7 +41,7 @@
     {{-- Tampilkan Error --}}
     @if ($model)
         @error($model)
-            <span class="mt-1 text-xs text-error">{{ $message }}</span>
+               <x-label-error :messages="$errors->get($model)" />
         @enderror
     @endif
 </div>
