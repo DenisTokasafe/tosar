@@ -145,13 +145,25 @@ class FireInspection extends Component
     ];
 
     public function updatedType($value)
-    {
-        // Reset checklist saat jenis alat diganti
-        $this->conditions = [];
-        foreach ($this->fields[$value] as $field) {
-            $this->conditions[$field] = 'Good'; // Default status
+{
+    // 1. Reset semua data kondisi sebelumnya
+    $this->conditions = [];
+
+    // 2. Inisialisasi untuk field yang berupa input teks (kosongkan dulu)
+    if (isset($this->fields[$value]['inputs'])) {
+        foreach ($this->fields[$value]['inputs'] as $inputField) {
+            $this->conditions[$inputField] = '';
         }
     }
+
+    // 3. Inisialisasi untuk field checklist (beri default 'yes' atau 'Good')
+    if (isset($this->fields[$value]['checks'])) {
+        foreach ($this->fields[$value]['checks'] as $checkField) {
+            // Gunakan 'yes' jika mengikuti value di radio button sebelumnya
+            $this->conditions[$checkField] = 'yes';
+        }
+    }
+}
 
     public function save()
     {
