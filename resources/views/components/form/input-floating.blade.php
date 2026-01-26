@@ -10,7 +10,7 @@
     <input
         type="{{ $type }}"
         placeholder="{{ $placeholder ?: $label }}"
-        {{ $model ? "wire:model=$model" : '' }}
+        {{ $model ? "wire:model.live=$model" : '' }}
         {{ $attributes->whereDoesntStartWith('class') }}
         class="input input-bordered {{ $size }} w-full focus:border-info focus:ring-info focus:outline-hidden
             border-gray-300 rounded
@@ -24,6 +24,6 @@
 {{-- Tampilkan Error jika menggunakan WireModel --}}
 @if($model)
     @error($model)
-        <span class="mt-1 text-xs text-error">{{ $message }}</span>
+         <x-label-error :messages="$errors->get($model)" />
     @enderror
 @endif

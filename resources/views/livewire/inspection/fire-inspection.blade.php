@@ -17,8 +17,8 @@
             </div>
 
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
-                <x-form.input-floating label="Area" wire:model="area" required />
-                <x-form.input-floating label="Lokasi" wire:model="location" required />
+                <x-form.input-floating label="Area" model="area" required />
+                <x-form.input-floating label="Lokasi" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
