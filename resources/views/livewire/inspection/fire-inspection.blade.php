@@ -25,10 +25,10 @@
                             <legend class="fieldset-legend">{{ $field }}</legend>
                             <label class="label">
                                 Yes
-                                <input type="checkbox" checked="checked" wire:model="conditions.{{ $field }}"
+                                <input type="checkbox" checked="checked" class="checkbox checkbox-xs" wire:model="conditions.{{ $field }}"
                                     value="yes" />
                                 No
-                                <input type="checkbox" class="checkbox" wire:model="conditions.{{ $field }}"
+                                <input type="checkbox" class="checkbox checkbox-xs" wire:model="conditions.{{ $field }}"
                                     value="no" />
                             </label>
                         </fieldset>
