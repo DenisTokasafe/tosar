@@ -21,39 +21,12 @@
                 <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @foreach ($fields[$type] as $field)
-                        <fieldset
-                            class="flex items-center justify-between p-2 font-sans text-xs bg-white border border-gray-100 rounded shadow-sm">
-                            <div class="text-black font-medium min-w-[80px]">
-                                {{ $field }}
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <label class="flex items-center space-x-2 cursor-pointer group">
-                                    <span class="text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-check-icon lucide-check">
-                                            <path d="M20 6 9 17l-5-5" />
-                                        </svg>
-                                    </span>
-                                    <input type="radio" wire:model="conditions.{{ $field }}" value="yes"
-                                        class="shadow-sm radio radio-primary radio-xs" />
-                                </label>
-                                <label class="flex items-center space-x-2 cursor-pointer group">
-                                    <span class="text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-x-icon lucide-x">
-                                            <path d="M18 6 6 18" />
-                                            <path d="m6 6 12 12" />
-                                        </svg>
-                                    </span>
-                                    <input type="radio" wire:model="conditions.{{ $field }}" value="no"
-                                        class="shadow-sm radio radio-primary radio-xs" />
-                                </label>
-                            </div>
-                        </fieldset>
+                        <label class="label">
+                             {{ $field }}
+                            <input type="checkbox" wire:model="conditions.{{ $field }}" class="checkbox" />
+
+                        </label>
+
                     @endforeach
                 </div>
             </div>
