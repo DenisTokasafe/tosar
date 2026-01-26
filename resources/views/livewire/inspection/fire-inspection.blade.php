@@ -27,7 +27,7 @@
                                 {{ $field }}
                             </div>
 
-                            <div class="h-5 w-[1px] bg-gray-300 mx-4"></div>
+
 
                             <div class="flex items-center space-x-4">
                                 <label class="flex items-center space-x-2 cursor-pointer group">
