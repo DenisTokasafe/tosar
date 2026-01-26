@@ -46,7 +46,7 @@
                                     }
                                 }">
 
-                                    <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
+                                    <input  type="text" x-ref="tanggalInput"
                                         placeholder="Pilih Tanggal..." readonly
                                         class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs  {{ $errors->has('inspection_date') ? 'ring-1 ring-rose-500' : '' }}" />
                                 </div>
