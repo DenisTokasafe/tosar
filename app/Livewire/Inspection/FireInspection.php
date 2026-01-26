@@ -187,6 +187,9 @@ class FireInspection extends Component
     public function save()
     {
         $this->validate();
+        $inspectedByString = is_array($this->inspected_users)
+        ? implode('|', array_column($this->inspected_users, 'name'))
+        : $this->inspected_users;
         $documentationPath = null;
         if ($this->dokumentasi) {
             $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
@@ -197,7 +200,7 @@ class FireInspection extends Component
             'area' => $this->area,
             'documentation_path' => $documentationPath,
             'inspection_date' => $this->inspection_date,
-            'inspected_by' => $this->inspected_by,
+            'inspected_by' => $inspectedByString,
             'conditions' => $this->conditions, // Menyimpan array sebagai JSON
             'remarks' => $this->remarks,
         ]);
