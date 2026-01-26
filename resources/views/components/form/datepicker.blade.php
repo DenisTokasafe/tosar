@@ -6,7 +6,7 @@
     'dateFormat' => 'd F Y', // Format yang tampil ke user
 ])
 
-<div class="w-full">
+<fieldset class="fieldset">
     <label {{ $attributes->merge(['class' => 'floating-label w-full']) }} wire:ignore x-data="{
         reportDate: @entangle($model),
         fp: null,
@@ -44,4 +44,4 @@
                <x-label-error :messages="$errors->get($model)" />
         @enderror
     @endif
-</div>
+</fieldset>
