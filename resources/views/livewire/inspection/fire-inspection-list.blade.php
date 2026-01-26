@@ -30,14 +30,17 @@
                             <td>
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
                                     @foreach ($item->conditions as $key => $value)
-                                        <div class="flex justify-between border-b border-dotted">
-                                            <span class="font-medium uppercase">{{ $key }}:</span>
-                                            @if ($value === 'true')
-                                                <span class="text-success">✔ Good</span>
-                                            @elseif($value === 'false')
-                                                <span class="font-bold text-error">✘ No Good</span>
+                                        <div class="flex justify-between py-1 border-b border-dotted">
+                                            <span class="font-medium uppercase text-[10px]">{{ $key }}:</span>
+
+                                            {{-- Hapus tanda petik karena di JSON datanya boolean murni --}}
+                                            @if ($value === true)
+                                                <span class="text-success text-[10px] font-bold">✔ Good</span>
+                                            @elseif($value === false)
+                                                <span class="font-bold text-error text-[10px]">✘ No Good</span>
                                             @else
-                                                <span class="text-blue-600">{{ $value }}</span>
+                                                {{-- Ini untuk data seperti "01" atau "6.8 Kg" --}}
+                                                <span class="text-blue-600 text-[10px]">{{ $value }}</span>
                                             @endif
                                         </div>
                                     @endforeach
