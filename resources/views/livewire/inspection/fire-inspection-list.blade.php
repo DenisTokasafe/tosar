@@ -18,10 +18,10 @@
                 </thead>
                 <tbody>
                     @foreach ($inspections as $index => $item)
-                        <tr wire:key="row-{{ $item->id }}">
+                        <tr wire:key="row-{{ $item->id }}" class="text-center">
                             <td>{{ $inspections->firstItem() + $index }}</td>
                             <td>
-                                <span class="w-32 font-semibold  badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
+                                <span class="w-32 font-semibold badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
                             </td>
                             <td>
                                 <div class="text-[10px] opacity-60">{{ $item->area }}</div>
