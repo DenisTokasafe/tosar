@@ -12,7 +12,9 @@
         placeholder="{{ $placeholder ?: $label }}"
         {{ $model ? "wire:model=$model" : '' }}
         {{ $attributes->whereDoesntStartWith('class') }}
-        class="input {{ $size }} w-full"
+        class="input input-bordered {{ $size }} w-full focus:border-info focus:ring-info focus:outline-hidden
+            border-gray-300 rounded
+            {{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
     />
     @if($label)
         <span>{{ $label }}</span>
