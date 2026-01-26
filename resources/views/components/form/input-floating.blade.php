@@ -5,7 +5,7 @@
     'model' => null,
     'size' => 'input-xs', // default size sesuai permintaan Anda
 ])
-<div class="w-full">
+<fieldset class="fieldset">
     <label {{ $attributes->merge(['class' => 'floating-label w-full']) }}>
         <input type="{{ $type }}" placeholder="{{ $placeholder ?: $label }}"
             {{ $model ? "wire:model.live=$model" : '' }} {{ $attributes->whereDoesntStartWith('class') }}
