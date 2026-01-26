@@ -167,14 +167,15 @@ class FireInspection extends Component
 
     public function save()
     {
+        $documentationPath = null;
         if ($this->dokumentasi) {
-            $docCorrectivePath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
+            $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
         }
         FireInspection::create([
             'type' => $this->type,
             'location' => $this->location,
             'area' => $this->area,
-            'dokumentasi' => $docCorrectivePath,
+            'dokumentasi' => $documentationPath,
             'inspection_date' => $this->inspection_date,
             'inspected_by' => $this->inspected_by,
             'conditions' => $this->conditions, // Menyimpan array sebagai JSON
