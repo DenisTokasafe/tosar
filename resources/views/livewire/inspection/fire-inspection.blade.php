@@ -23,14 +23,14 @@
                     @foreach ($fields[$type] as $field)
                         <fieldset class="w-64 p-4 border fieldset">
                             <legend class="fieldset-legend">{{ $field }}</legend>
-                            <label class="label">
+                            <div class="flex items-center gap-2">
                                 Yes
                                 <input type="checkbox" checked="checked" class="checkbox checkbox-xs" wire:model="conditions.{{ $field }}"
                                     value="yes" />
                                 No
                                 <input type="checkbox" class="checkbox checkbox-xs" wire:model="conditions.{{ $field }}"
                                     value="no" />
-                            </label>
+                            </div>
                         </fieldset>
                     @endforeach
                 </div>
