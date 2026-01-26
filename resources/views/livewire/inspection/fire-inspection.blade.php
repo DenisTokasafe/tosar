@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-wpi.layout heading="Edit Laporan Inspeksi Kebakaran" subheading="Fire Inspection - KPLH Site Tokatindung">
+    <x-tabs-wpi.layout heading="Buat Laporan Inspeksi Kebakaran" subheading="Inspeksi Kebakaran - Site Tokatindung">
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
                 <label class="font-bold">Pilih Jenis Alat:</label>
@@ -11,7 +11,7 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-2">
                 <input type="text" wire:model="location" placeholder="Lokasi (Contoh: Area 23)"
                     class="p-2 border rounded">
                 <input type="date" wire:model="inspection_date" class="p-2 border rounded">
