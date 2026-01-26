@@ -22,7 +22,7 @@
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                     @foreach ($fields[$type] as $field)
                         <fieldset
-                            class="flex items-center p-2 font-sans text-xs bg-white border border-gray-100 rounded shadow-sm">
+                            class="flex items-center justify-between p-2 font-sans text-xs bg-white border border-gray-100 rounded shadow-sm">
                             <div class="text-black font-medium min-w-[80px]">
                                 {{ $field }}
                             </div>
