@@ -39,7 +39,6 @@
                                     <input type="radio" wire:model="conditions.{{ $field }}" value="yes"
                                         class="shadow-sm radio radio-primary radio-xs" />
                                 </label>
-
                                 <label class="flex items-center space-x-2 cursor-pointer group">
                                     <span class="text-gray-600">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
