@@ -27,7 +27,7 @@
             });
         }
     }">
-        <input x-ref="tanggalInput" type="text" {{ $model ? "wire:model.live=$model" : '' }} readonly
+        <input x-ref="tanggalInput" type="text"  {{ $model ? "wire:model.live=$model" : '' }} readonly
             placeholder="{{ $placeholder ?: $label }}" {{ $attributes->whereDoesntStartWith('class') }}
             class="input input-bordered {{ $size }} w-full cursor-pointer focus:border-info focus:ring-info focus:outline-hidden
                 border-gray-300 rounded
