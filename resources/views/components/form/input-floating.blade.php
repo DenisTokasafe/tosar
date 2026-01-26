@@ -1,6 +1,7 @@
 @props([
     'label' => null,
     'type' => 'text',
+    'required' => false,
     'placeholder' => '',
     'model' => null,
     'size' => 'input-xs', // default size sesuai permintaan Anda
@@ -13,7 +14,7 @@
             border-gray-300 rounded
             {{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
         @if ($label)
-            <span>{{ $label }}</span>
+            <span>{{ $label }} @if ($required)<span class="font-bold text-red-500">*</span>@endif</span>
         @endif
     </label>
 
