@@ -118,7 +118,7 @@
                 </div>
             </fieldset>
             <button wire:click="save"
-                class="w-full py-2 mt-4 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
+                class="btn btn-soft btn-success btn-xs hover:btn-success/80">
                 Simpan Laporan
             </button>
         </div>
