@@ -26,13 +26,13 @@
                  <div class="grid grid-cols-1 gap-4 md:grid-cols-3 ">
                      @if (isset($fields[$type]['inputs']))
                         @foreach ($fields[$type]['inputs'] as $inputField)
-                         <fieldset class="p-2 border rounded-md fieldset">
+
                             <label class="floating-label">
                                 <input type="text" wire:key="condition-{{ $inputField }}" wire:model.live="conditions.{{ $inputField }}" placeholder="{{ $inputField }}" class=" input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                 <span>{{ $inputField }}</span>
                             </label>
                              <x-label-error :messages="$errors->get('conditions.{{ $inputField }}')" />
-                         </fieldset>
+
                         @endforeach
                     @endif
                 </div>
