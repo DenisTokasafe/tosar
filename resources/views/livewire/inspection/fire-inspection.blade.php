@@ -22,7 +22,7 @@
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
-            <div class="p-4 border rounded-lg bg-gray-50">
+            <div class="p-4 mb-4 border rounded-lg bg-gray-50">
                  <div class="grid grid-cols-1 gap-4 md:grid-cols-3 ">
                      @if (isset($fields[$type]['inputs']))
                         @foreach ($fields[$type]['inputs'] as $inputField)
