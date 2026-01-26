@@ -3,7 +3,7 @@
     <x-tabs-wpi.layout heading="Buat Laporan Inspeksi Kebakaran" subheading="Inspeksi Kebakaran - Site Tokatindung">
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
-                <fieldset class="fieldset">
+                <fieldset class="w-full fieldset md:max-w-80">
                     <x-form.label label="Pilih Jenis Alat" required />
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
