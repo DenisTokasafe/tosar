@@ -4,7 +4,7 @@
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
                 <label class="font-bold">Pilih Jenis Alat:</label>
-                <select wire:model.live="type" class="w-full p-2 border rounded">
+                <select wire:model.live="type" class="select select-xs select-info">
                     @foreach (array_keys($fields) as $key)
                         <option value="{{ $key }}">{{ $key }}</option>
                     @endforeach
