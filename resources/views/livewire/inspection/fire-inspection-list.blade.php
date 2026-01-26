@@ -21,7 +21,7 @@
                         <tr wire:key="row-{{ $item->id }}">
                             <td>{{ $inspections->firstItem() + $index }}</td>
                             <td>
-                                <span class="badge badge-soft badge-info">{{ $item->type }}</span>
+                                <span class=" badge badge-soft badge-info"><span class="text-xs">{{ $item->type }}</span></span>
                             </td>
                             <td>
                                 <div class="font-bold">{{ $item->location }}</div>
