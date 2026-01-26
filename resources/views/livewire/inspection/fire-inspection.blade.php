@@ -19,7 +19,7 @@
 
             <div class="p-4 border rounded-lg bg-gray-50">
                 <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @foreach ($fields[$type] as $field)
                         <fieldset
                             class="flex items-center justify-between p-2 font-sans text-xs bg-white border border-gray-100 rounded shadow-sm">
