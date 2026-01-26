@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class FireInspection extends Component
 {
-    public $type = 'APAR'; // Default
+    public $type = 'Fire Extinguisher'; // Default
     public $location, $inspection_date, $inspected_by, $remarks;
 
     // Tempat menyimpan hasil checklist
@@ -14,9 +14,11 @@ class FireInspection extends Component
 
     // Definisi kriteria berdasarkan gambar yang Anda berikan
     public $fields = [
-        'APAR' => ['Nozzle', 'Hose', 'Pressure Indicator', 'Head Cap', 'Pin', 'Hook', 'Usage Guide', 'FE Sign'],
-        'Hydrant' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
-        'Eye Wash' => ['Air', 'Penutup', 'Nozzle', 'Handle', 'Sign', 'Access', 'Kebersihan'],
+        'Fire Extinguisher' => ['Nozzle', 'Hose', 'Pressure Indicator', 'Head Cap', 'Pin', 'Hook', 'Usage Guide', 'FE Sign'],
+        'Eye Wash & Safety Shower' => ['Air', 'Penutup', 'Nozzle', 'Handle', 'Sign', 'Access', 'Kebersihan'],
+        'Fire Hose' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
+        'Fire Hydrant' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
+        'Fire sprinkler system' => ['Line Pipa', 'Main Valve', 'Drain Valve', 'Test valve', 'Alarm', 'Pressure','Access'],
         'Ring Buoy' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
         'Muster Point' => ['Access', 'Visibility', 'Colour', 'Condition of Board', 'Condition of Pole', 'Letter'],
     ];
