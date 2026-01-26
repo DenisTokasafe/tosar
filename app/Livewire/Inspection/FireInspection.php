@@ -134,7 +134,7 @@ class FireInspection extends Component
             'inputs' => ['Hose Reel No'],
             'checks' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
         ],
-         'Fire sprinkler system' => [
+        'Fire sprinkler system' => [
             'inputs' => ['Sprinkler No'],
             'checks' => ['Line Pipa', 'Main Valve', 'Drain Valve', 'Test valve', 'Alarm', 'Pressure', 'Access'],
         ],
@@ -145,25 +145,25 @@ class FireInspection extends Component
     ];
 
     public function updatedType($value)
-{
-    // 1. Reset semua data kondisi sebelumnya
-    $this->conditions = [];
+    {
+        // 1. Reset semua data kondisi sebelumnya
+        $this->conditions = [];
 
-    // 2. Inisialisasi untuk field yang berupa input teks (kosongkan dulu)
-    if (isset($this->fields[$value]['inputs'])) {
-        foreach ($this->fields[$value]['inputs'] as $inputField) {
-            $this->conditions[$inputField] = '';
+        // 2. Inisialisasi untuk field yang berupa input teks (kosongkan dulu)
+        if (isset($this->fields[$value]['inputs'])) {
+            foreach ($this->fields[$value]['inputs'] as $inputField) {
+                $this->conditions[$inputField] = '';
+            }
+        }
+
+        // 3. Inisialisasi untuk field checklist (beri default 'yes' atau 'Good')
+        if (isset($this->fields[$value]['checks'])) {
+            foreach ($this->fields[$value]['checks'] as $checkField) {
+                // Gunakan 'yes' jika mengikuti value di radio button sebelumnya
+                $this->conditions[$checkField] = 'yes';
+            }
         }
     }
-
-    // 3. Inisialisasi untuk field checklist (beri default 'yes' atau 'Good')
-    if (isset($this->fields[$value]['checks'])) {
-        foreach ($this->fields[$value]['checks'] as $checkField) {
-            // Gunakan 'yes' jika mengikuti value di radio button sebelumnya
-            $this->conditions[$checkField] = 'yes';
-        }
-    }
-}
 
     public function save()
     {

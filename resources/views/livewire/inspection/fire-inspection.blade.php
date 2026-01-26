@@ -27,7 +27,7 @@
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @if (isset($fields[$type]['inputs']))
                         @foreach ($fields[$type]['inputs'] as $inputField)
-                            <x-form.input-floating label="{{ $inputField }}" model="conditions.{{ $inputField }}"
+                            <x-form.input-floating  wire:key="condition-{{ $inputField }}" label="{{ $inputField }}" model="conditions.{{ $inputField }}"
                                 placeholder="Masukkan {{ $inputField }}..." size="input-xs" />
                         @endforeach
                     @endif
