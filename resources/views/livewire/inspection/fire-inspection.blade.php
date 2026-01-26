@@ -76,7 +76,29 @@
                 </div>
                 <x-label-error :messages="$errors->get('dokumentasi')" />
             </fieldset>
-
+            <fieldset class="fieldset">
+                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                    modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
+                    :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
+                    manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
+                    addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
+                <div class="flex flex-wrap gap-2 mb-2">
+                    @foreach ($inspected_users as $index => $user)
+                        <div
+                            class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded bg-info/10 text-info border-info/20">
+                            <span>{{ $user['name'] }}</span>
+                            <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                class="hover:text-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            </fieldset>
             <button wire:click="save"
                 class="w-full py-2 mt-4 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
                 Simpan Laporan

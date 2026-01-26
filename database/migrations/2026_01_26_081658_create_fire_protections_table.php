@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('equipment_no')->nullable();
             $table->date('inspection_date');
-            $table->string('inspected_by');
+            $table->json('inspected_by')->nullable();
             // Menggunakan JSON untuk menyimpan checklist kondisi agar fleksibel
             // (Karena tiap alat punya kriteria checklist berbeda seperti 'Nozzle', 'Pressure', dll)
             $table->json('conditions')->nullable();
