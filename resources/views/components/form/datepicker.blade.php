@@ -27,11 +27,12 @@
             });
         }
     }">
-        <input x-ref="tanggalInput" type="text"  {{ $model ? "wire:model.live=$model" : '' }} readonly
-            placeholder="{{ $placeholder ?: $label }}" {{ $attributes->whereDoesntStartWith('class') }}
-            class="input input-bordered {{ $size }} w-full cursor-pointer focus:border-info focus:ring-info focus:outline-hidden
-                border-gray-300 rounded
-                {{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+
+        <input x-ref="tanggalInput" type="text" placeholder="{{ $placeholder ?: $label }}" readonly
+            {{ $model ? "wire:model.live=$model" : '' }} {{ $attributes->whereDoesntStartWith('class') }}
+            class="input input-bordered {{ $size }} w-full focus:border-info focus:ring-info focus:outline-hidden
+            border-gray-300 rounded
+            {{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
 
         @if ($label)
             <span>{{ $label }}</span>
@@ -41,7 +42,7 @@
     {{-- Tampilkan Error --}}
     @if ($model)
         @error($model)
-               <x-label-error :messages="$errors->get($model)" />
+            <x-label-error :messages="$errors->get($model)" />
         @enderror
     @endif
 </fieldset>
