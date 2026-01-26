@@ -6,9 +6,11 @@ use App\Models\User;
 use Livewire\Component;
 use App\Helpers\FileHelper;
 use Livewire\Attributes\Validate;
+use Livewire\WithFileUploads;
 
 class FireInspection extends Component
 {
+    use WithFileUploads;
     public $type = 'Fire Extinguisher'; // Default
     public $location, $inspection_date, $inspected_by, $remarks, $area;
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx')]
