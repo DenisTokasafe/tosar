@@ -3,12 +3,17 @@
     <x-tabs-wpi.layout heading="Buat Laporan Inspeksi Kebakaran" subheading="Inspeksi Kebakaran - Site Tokatindung">
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
-                <label class="font-bold">Pilih Jenis Alat:</label>
-                <select wire:model.live="type" class="select select-xs select-info">
-                    @foreach (array_keys($fields) as $key)
-                        <option value="{{ $key }}">{{ $key }}</option>
-                    @endforeach
-                </select>
+                <fieldset class="fieldset">
+                    <x-form.label label="PIC" required />
+                    <select wire:model.live="type"
+                        class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                        <option value="">-- Pilih --</option>
+                        @foreach (array_keys($fields) as $key)
+                            <option value="{{ $key }}">{{ $key }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('type')" />
+                </fieldset>
             </div>
 
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-2">
@@ -21,12 +26,14 @@
                 <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @foreach ($fields[$type] as $field)
-                    <fieldset class="p-2 border rounded-md fieldset">
-                        <label class="label">
-                             {{ $field }}
-                            <input type="checkbox" wire:key="condition-{{ $field }}" wire:model="conditions.{{ $field }}" class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
-                        </label>
-                    </fieldset>
+                        <fieldset class="p-2 border rounded-md fieldset">
+                            <label class="label">
+                                {{ $field }}
+                                <input type="checkbox" wire:key="condition-{{ $field }}"
+                                    wire:model="conditions.{{ $field }}"
+                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                            </label>
+                        </fieldset>
                     @endforeach
                 </div>
             </div>
