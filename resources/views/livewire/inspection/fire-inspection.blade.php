@@ -78,10 +78,10 @@
             </fieldset>
             <fieldset class="fieldset">
                 <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                    modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
-                    :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
-                    manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
-                    addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
+                    modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
+                    :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                    manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                    addManualAction="addPelaporManual" clickaction="selectPelapor" />
                 <div class="flex flex-wrap gap-2 mb-2">
                     @foreach ($inspected_users as $index => $user)
                         <div
