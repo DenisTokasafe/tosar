@@ -5,6 +5,7 @@ namespace App\Livewire\Inspection;
 use App\Models\User;
 use Livewire\Component;
 use App\Helpers\FileHelper;
+use App\Models\FireProtection;
 use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
 
@@ -171,7 +172,7 @@ class FireInspection extends Component
         if ($this->dokumentasi) {
             $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
         }
-        FireInspection::create([
+        FireProtection::create([
             'type' => $this->type,
             'location' => $this->location,
             'area' => $this->area,
