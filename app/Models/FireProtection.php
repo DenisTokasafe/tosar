@@ -16,4 +16,9 @@ class FireProtection extends Model
         'remarks',
         'documentation_path',
     ];
+    protected $casts = [
+    'conditions' => 'array',
+    'inspected_by' => 'string', // Karena Anda menggunakan pembatas '|'
+    'inspection_date' => 'date',
+];
 }
