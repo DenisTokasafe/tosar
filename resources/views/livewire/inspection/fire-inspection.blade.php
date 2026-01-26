@@ -19,41 +19,7 @@
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
                 <x-form.input-floating label="Area" wire:model="area" required />
                 <x-form.input-floating label="Lokasi" wire:model="location" required />
-                <fieldset class="relative fieldset">
-                            <x-form.label label="Tanggal / Date" required />
-                            <div class="{{ $errors->has('inspection_date') ? 'ring-1 ring-rose-500 rounded' : '' }}">
-                                <div class="relative" wire:ignore x-data="{
-
-                                    reportDate: @entangle('inspection_date'),
-                                    fp: null,
-                                    init() {
-                                        this.fp = flatpickr(this.$refs.tanggalInput, {
-                                            disableMobile: true,
-                                            altInput: true,
-                                            altFormat: 'd F Y',
-                                            dateFormat: 'Y-m-d',
-                                            // Set nilai awal dari Livewire ke Flatpickr
-                                            defaultDate: this.reportDate,
-                                            onChange: (selectedDates, dateStr) => {
-                                                this.reportDate = dateStr;
-                                            }
-                                        });
-
-                                        // Pantau perubahan dari sisi Livewire (misal: saat reset form atau edit data)
-                                        this.$watch('reportDate', (newVal) => {
-                                            this.fp.setDate(newVal, false);
-                                        });
-                                    }
-                                }">
-
-                                    <input  type="text" x-ref="tanggalInput"
-                                        placeholder="Pilih Tanggal..." readonly
-                                        class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info input-xs  {{ $errors->has('inspection_date') ? 'ring-1 ring-rose-500' : '' }}" />
-                                </div>
-                            </div>
-                            <x-label-error :messages="$errors->get('inspection_date')" />
-                        </fieldset>
-                <input type="date" wire:model="inspection_date" class="p-2 border rounded">
+                <x-form.datepicker label="Tanggal / Date" model="inspection_date"  />
             </div>
 
             <div class="p-4 border rounded-lg bg-gray-50">
