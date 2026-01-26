@@ -6,7 +6,7 @@
         <div class="overflow-x-auto">
             <table class="table table-xs">
                 <thead>
-                    <tr class="bg-gray-100">
+                    <tr class="text-center bg-gray-100">
                         <th>No</th>
                         <th>Jenis Alat</th>
                         <th>Lokasi & Area</th>
