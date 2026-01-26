@@ -8,7 +8,7 @@
 
 <fieldset class="fieldset ">
     <div
-        class="{{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+        class="{{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
 
 
         <label {{ $attributes->merge(['class' => 'floating-label w-full']) }} wire:ignore x-data="{
