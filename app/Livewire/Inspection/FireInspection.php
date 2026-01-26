@@ -168,6 +168,7 @@ class FireInspection extends Component
 
     public function save()
     {
+        $this->validate();
         $documentationPath = null;
         if ($this->dokumentasi) {
             $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
