@@ -24,7 +24,7 @@
                     <fieldset class="p-2 border rounded-md fieldset">
                         <label class="label">
                              {{ $field }}
-                            <input type="checkbox" wire:model="conditions.{{ $field }}" class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                            <input type="checkbox" wire:key="condition-{{ $field }}" wire:model="conditions.{{ $field }}" class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
                         </label>
                     </fieldset>
                     @endforeach
