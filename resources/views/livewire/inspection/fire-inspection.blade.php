@@ -27,8 +27,11 @@
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     @if (isset($fields[$type]['inputs']))
                         @foreach ($fields[$type]['inputs'] as $inputField)
-                            <x-form.input-floating  wire:key="condition-{{ $inputField }}" label="{{ $inputField }}" model="conditions.{{ $inputField }}"
-                                placeholder="Masukkan {{ $inputField }}..." size="input-xs" />
+                            <label class="floating-label">
+                                <input type="text" wire:key="condition-{{ $inputField }}" wire:model.live="conditions.{{ $inputField }}" placeholder="{{ $inputField }}" class=" input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                <span>{{ $inputField }}</span>
+                            </label>
+                             <x-label-error :messages="$errors->get('conditions.{{ $inputField }}')" />
                         @endforeach
                     @endif
                     @foreach ($fields[$type]['checks'] as $field)
