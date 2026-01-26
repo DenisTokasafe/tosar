@@ -46,6 +46,7 @@ use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 use App\Livewire\Inspection\FireInspection;
+use App\Livewire\Inspection\FireInspectionList;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -73,6 +74,7 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
     Route::get('manhours', Index::class)->name('manhours');
     Route::get('inspeksi/fire_inspection', FireInspection::class)->name('fire-inspection');
+    Route::get('inspeksi/fire_inspection_list', FireInspectionList::class)->name('fire-inspection-list');
     Route::get('inspeksi/wpi', WpiList::class)->name('wpi.list');
     Route::get('inspeksi/wpi/create', WpiForm::class)->name('wpi.create');
     Route::get('inspeksi/wpi/edit/{id?}', WpiForm::class)->name('wpi.edit');
