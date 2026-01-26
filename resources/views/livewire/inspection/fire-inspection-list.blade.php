@@ -4,7 +4,7 @@
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
         <div class="overflow-x-auto">
-            <table class="table w-full border table-xs">
+            <table class="table table-xs">
                 <thead>
                     <tr class="bg-gray-100">
                         <th>No</th>
