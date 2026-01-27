@@ -20,7 +20,7 @@
             <dialog id="my_modal_2" class="modal">
                 <div class="modal-box">
                     <h3 class="mb-2 text-lg font-bold">Export To PDF!</h3>
-                    <fieldset class="w-full fieldset md:max-w-80">
+                    <fieldset class="w-full fieldset md:max-w-80 h-96">
                         <x-form.label label="Pilih Jenis Alat" required />
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
