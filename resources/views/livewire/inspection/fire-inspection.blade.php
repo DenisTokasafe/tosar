@@ -18,8 +18,9 @@
 
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
                 {{-- <x-form.input-floating label="Area" model="area" required /> --}}
-                  <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id" placeholder="Area..."
-                    :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+                <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
+                    placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                    namedb="name" />
                 <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
@@ -57,8 +58,7 @@
                     @endforeach
                 </div>
             </div>
-
-            <textarea wire:model="remarks" placeholder="Remarks/Catatan..." class="w-full p-2 mt-4 border rounded"></textarea>
+            <x-form.textarea label="Deskripsi Temuan" required model="remarks" placeholder="Remarks/Catatan..." />
             <fieldset class=" fieldset">
                 <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                 <div wire:loading.remove wire:target="dokumentasi">
@@ -119,8 +119,7 @@
                     @endforeach
                 </div>
             </fieldset>
-            <button wire:click="save"
-                class="btn btn-soft btn-success btn-xs hover:btn-success/80">
+            <button wire:click="save" class="btn btn-soft btn-success btn-xs hover:btn-success/80">
                 Simpan Laporan
             </button>
         </div>
