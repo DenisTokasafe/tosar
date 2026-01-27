@@ -9,7 +9,7 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-    <x-tabs-wpi.layout heading="Buat Laporan Inspeksi Kebakaran" subheading="Inspeksi Kebakaran - Site Tokatindung">
+    <x-tabs-wpi.layout >
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
                 <fieldset class="w-full fieldset md:max-w-80">
