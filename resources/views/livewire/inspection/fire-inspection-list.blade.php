@@ -18,12 +18,12 @@
                 </thead>
                 <tbody>
                     @foreach ($inspections as $index => $item)
-                        <tr wire:key="row-{{ $item->id }}" class="text-center odd:bg-white even:bg-gray-300">
+                        <tr wire:key="row-{{ $item->id }}" class=" odd:bg-white even:bg-gray-100">
                             <td>{{ $inspections->firstItem() + $index }}</td>
-                            <td>
+                            <td class="text-center">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <div class="text-[10px] opacity-60">{{ $item->area }}</div>
                                 <div class="font-bold">{{ $item->location }}</div>
                             </td>
@@ -55,8 +55,8 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}</td>
-                            <td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}</td>
+                            <td class="text-center">
                                 <div class="flex gap-2">
                                     @if ($item->documentation_path)
                                         <a href="{{ Storage::url($item->documentation_path) }}" target="_blank"
