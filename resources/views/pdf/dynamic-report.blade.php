@@ -79,7 +79,6 @@
                 <td width="70%" class="center border-b-thick">
                     <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">LAPORAN INSPEKSI {{ strtoupper($type) }}</strong><br>
-                    <span style="font-size: 9pt;">FIRE PROTECTION MAINTENANCE SYSTEM</span>
                 </td>
                 <td width="15%" class="center border-b-thick border-r-none">
                     <img src="{{ public_path('images/logo-archi.png') }}" width="60">
@@ -90,7 +89,7 @@
 
     <main>
         <div style="margin-bottom: 10px;">
-            <strong>Periode:</strong> {{ $month }} | <strong>Kategori:</strong> {{ $type }}
+            <strong>Periode:</strong> {{ $month }} | <strong>Area:</strong> {{ $area }}
         </div>
 
         <table class="main-table">
