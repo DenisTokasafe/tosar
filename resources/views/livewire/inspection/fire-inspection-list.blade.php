@@ -35,9 +35,9 @@
 
                                             {{-- Hapus tanda petik karena di JSON datanya boolean murni --}}
                                             @if ($value === true)
-                                                <span class="text-success text-[10px] font-bold">✔ Good</span>
+                                                <span class="text-success text-[10px] font-bold">✔</span>
                                             @elseif($value === false)
-                                                <span class="font-bold text-error text-[10px]">✘ No Good</span>
+                                                <span class="font-bold text-error text-[10px]">✘</span>
                                             @else
                                                 {{-- Ini untuk data seperti "01" atau "6.8 Kg" --}}
                                                 <span class="text-blue-600 text-[10px]">{{ $value }}</span>
