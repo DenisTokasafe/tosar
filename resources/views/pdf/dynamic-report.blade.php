@@ -5,8 +5,8 @@
     <style>
         @page {
             size: a4 landscape;
-            /* Margin atas dikurangi karena footer dihapus, margin bawah standar */
-            margin: 110px 1cm 1cm 1cm;
+            /* Margin bawah 1.5cm memberi ruang untuk nomor halaman dari Controller */
+            margin: 110px 1cm 1.5cm 1cm;
         }
 
         header {
@@ -22,65 +22,47 @@
             font-size: 8pt;
             margin: 0;
             padding: 0;
-            line-height: 1.2;
         }
 
-        .main-table, .header-table {
+        /* Tabel Utama */
+        .main-table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
         }
 
-        /* Border Header (Warna abu-abu sesuai referensi Anda) */
-        .header-table td {
-            border: 1px solid #dcdcdc;
-            padding: 4px 6px;
-            vertical-align: middle;
-        }
-
-        /* Main table (Border hitam pekat) */
         .main-table td, .main-table th {
             border: 1px solid #000;
             padding: 4px;
             text-align: center;
-            word-wrap: break-word;
         }
 
-        .main-table th { background-color: #ffff00; text-transform: uppercase; }
+        .main-table th {
+            background-color: #ffff00;
+        }
 
-        .bg-gray { background-color: #f1f5f9; }
-        .center { text-align: center; }
+        /* Gaya teks centang/silang */
         .good { font-family: DejaVu Sans, sans-serif; color: green; font-weight: bold; }
         .nogood { font-family: DejaVu Sans, sans-serif; color: red; font-weight: bold; }
-        .no-border { border: none !important; }
 
-        /* Utility thick border */
-        .border-b-thick { border-bottom: 2px solid #999999 !important; }
-        .border-l-none { border-left: none !important; }
-        .border-r-none { border-right: none !important; }
+        .bg-gray { background-color: #f1f5f9; }
+        .no-border { border: none !important; }
     </style>
 </head>
-
 <body>
-    {{-- Penomoran Halaman di Pojok Kanan Bawah --}}
-    <script type="text/php">
-        if (isset($pdf)) {
-            $font = $fontMetrics->get_font("Times-Roman", "bold");
-            $pdf->page_text(730, 565, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, 8, array(0,0,0));
-        }
-    </script>
 
     <header>
-        <table class="header-table">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td width="15%" class="center border-b-thick border-l-none">
+                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;">
                     <img src="{{ public_path('images/logo-msm.png') }}" width="60">
                 </td>
-                <td width="70%" class="center border-b-thick">
+                <td style="border-bottom: 2px solid #999; width: 70%; text-align: center;">
                     <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">LAPORAN INSPEKSI {{ strtoupper($type) }}</strong><br>
+                    <span style="font-size: 9pt;">FIRE PROTECTION MAINTENANCE SYSTEM</span>
                 </td>
-                <td width="15%" class="center border-b-thick border-r-none">
+                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;">
                     <img src="{{ public_path('images/logo-archi.png') }}" width="60">
                 </td>
             </tr>
@@ -89,7 +71,7 @@
 
     <main>
         <div style="margin-bottom: 10px;">
-            <strong>Periode:</strong> {{ $month }} | <strong>Area:</strong> {{ $area }}
+            <strong>Periode:</strong> {{ $month }} | <strong>Area:</strong> {{ $area ?? 'Tokatindung Site' }}
         </div>
 
         <table class="main-table">
@@ -139,23 +121,19 @@
             </tbody>
         </table>
 
-        {{-- Tabel Legenda & Signature (Hanya muncul sekali di akhir data) --}}
+        {{-- Tabel Legenda & Signature --}}
         <div style="margin-top: 25px; page-break-inside: avoid;">
             <table class="no-border" style="width: 100%;">
                 <tr>
-                    {{-- Note --}}
-                    <td class="no-border" style="width: 20%; vertical-align: top; padding: 0;">
+                    <td class="no-border" style="width: 20%; vertical-align: top;">
                         <table style="width: 100%; border: 1px solid black;">
                             <tr><th style="background-color: #eee; border: 1px solid black;">Note :</th></tr>
-                            <tr><td style="border: 1px solid black; font-family: DejaVu Sans, sans-serif;"><span class="good">✔</span> Good</td></tr>
-                            <tr><td style="border: 1px solid black; font-family: DejaVu Sans, sans-serif;"><span class="nogood">✘</span> No Good</td></tr>
+                            <tr><td style="border: 1px solid black; font-family: DejaVu Sans, sans-serif; text-align: left;"><span class="good">✔</span> Good</td></tr>
+                            <tr><td style="border: 1px solid black; font-family: DejaVu Sans, sans-serif; text-align: left;"><span class="nogood">✘</span> No Good</td></tr>
                         </table>
                     </td>
-
                     <td class="no-border" style="width: 5%;"></td>
-
-                    {{-- Signature Box --}}
-                    <td class="no-border" style="width: 45%; vertical-align: top; padding: 0;">
+                    <td class="no-border" style="width: 45%; vertical-align: top;">
                         <table style="width: 100%; border: 1px solid black;">
                             <tr>
                                 <td class="bg-gray" style="text-align: left; font-weight: bold; width: 120px; border: 1px solid black;">Input to Tosar by</td>
@@ -167,15 +145,12 @@
                             </tr>
                             <tr>
                                 <td class="bg-gray" style="text-align: left; font-weight: bold; border: 1px solid black;">Checked By</td>
-                                <td style="text-align: left; border: 1px solid black; height: 30px;">: </td>
+                                <td style="text-align: left; border: 1px solid black; height: 35px;">: </td>
                             </tr>
                         </table>
                     </td>
-
                     <td class="no-border" style="width: 5%;"></td>
-
-                    {{-- Legend Inisial --}}
-                    <td class="no-border" style="width: 25%; vertical-align: top; padding: 0;">
+                    <td class="no-border" style="width: 25%; vertical-align: top;">
                         <table style="width: 100%; border: 1px solid black;">
                             @php
                                 $allNames = [];
@@ -203,5 +178,6 @@
             </table>
         </div>
     </main>
+
 </body>
 </html>

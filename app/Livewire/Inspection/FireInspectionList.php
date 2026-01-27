@@ -48,17 +48,15 @@ class FireInspectionList extends Component
     public function exportPDF($id)
     {
         $this->type = FireProtection::find($id)->type;
-        // 1. Ambil data berdasarkan type yang aktif dan bulan berjalan
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
-        $inspections = FireProtection::where('type', $this->type) // Memfilter berdasarkan property $type yang dipilih
+        $inspections = FireProtection::where('type', $this->type)
             ->whereMonth('inspection_date', $currentMonth)
             ->whereYear('inspection_date', $currentYear)
             ->orderBy('inspection_date', 'asc')
             ->get();
 
-        // 2. Validasi jika data kosong
         if ($inspections->isEmpty()) {
             $this->dispatch('alert', [
                 'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::now()->translatedFormat('F Y'),
@@ -67,21 +65,35 @@ class FireInspectionList extends Component
             return;
         }
 
-        // 3. Ambil struktur header dinamis dari $this->fields
         $structure = $this->fields[$this->type] ?? null;
 
-        // 4. Generate PDF menggunakan template yang sudah ada
+        // 1. Load View
         $pdf = Pdf::loadView('pdf.dynamic-report', [
-            'data' => $inspections, // Mengirim banyak data (Collection)
+            'data' => $inspections,
             'type' => $this->type,
             'area' => $inspections->first()->area,
             'structure' => $structure,
             'month' => Carbon::now()->translatedFormat('F Y'),
         ])->setPaper('a4', 'landscape');
 
-        // 5. Nama file yang dinamis
+        // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas
+        $pdf->render();
+
+        // 3. Ambil Canvas untuk menambahkan penomoran halaman
+        $canvas = $pdf->getCanvas();
+        $font = null; // Ini akan otomatis menggunakan font default PDF (Helvetica/Times-Roman)
+        $size = 9;
+
+        /**
+         * Parameter page_text:
+         * (X, Y, Text, Font, Size, Color)
+         * Untuk Landscape A4: X = 730 (Kanan), Y = 560 (Bawah)
+         */
+        $canvas->page_text(730, 560, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, $size, [0, 0, 0]);
+
         $filename = "Rekap_Inspeksi_" . str_replace(' ', '_', $this->type) . "_" . Carbon::now()->format('m_Y') . ".pdf";
 
+        // 4. Download menggunakan output yang sudah dimodifikasi canvasnya
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
         }, $filename);
