@@ -4,7 +4,7 @@
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
         <div class="overflow-x-auto">
-            <table class="table table-xs">
+            <table class="table table-xs table-zebra">
                 <thead>
                     <tr class="text-center bg-gray-100">
                         <th>No</th>
@@ -46,7 +46,7 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td class="flex items-center justify-center">
+                            <td >
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-wrap gap-1">
