@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-     <div class="flex justify-start " wire:ignore>
+    <div class="flex justify-start " wire:ignore>
         @php
             $currentRoute = Route::currentRouteName();
         @endphp
@@ -68,66 +68,68 @@
                 </div>
             </div>
             <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
-            <fieldset class=" fieldset">
-                <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
-                <div wire:loading.remove wire:target="dokumentasi">
-                    @if ($dokumentasi)
-                        @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                            <img src="{{ $dokumentasi->temporaryUrl() }}"
-                                class="mt-2 {{ $dokumentasi ? 'w-40' : '' }} h-auto rounded border" />
-                        @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                            <div class="flex items-center gap-2 mt-2">
-                                @if ($dokumentasi->getClientOriginalExtension() == 'pdf')
-                                    <x-icon.pdf class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-red-600">{{ $dokumentasi->getClientOriginalName() }}</span>
-                                @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['doc', 'docx']))
-                                    <x-icon.word class="w-8 h-8" />
-                                    <span
-                                        class="text-sm text-blue-600">{{ $dokumentasi->getClientOriginalName() }}</span>
-                                @else
-                                    {{-- Ikon generik untuk file lain --}}
-                                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                    </svg>
-                                    <span class="text-sm text-gray-600">File:
-                                        {{ $dokumentasi->getClientOriginalName() }}</span>
-                                @endif
-                            </div>
-                        @else
-                            <p class="mt-2 text-sm text-gray-600">File:
-                                {{ $dokumentasi->getClientOriginalName() }}
-                            </p>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 ">
+                <fieldset class=" fieldset">
+                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                    <div wire:loading.remove wire:target="dokumentasi">
+                        @if ($dokumentasi)
+                            @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                <img src="{{ $dokumentasi->temporaryUrl() }}"
+                                    class="mt-2 {{ $dokumentasi ? 'w-40' : '' }} h-auto rounded border" />
+                            @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($dokumentasi->getClientOriginalExtension() == 'pdf')
+                                        <x-icon.pdf class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-red-600">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['doc', 'docx']))
+                                        <x-icon.word class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-blue-600">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @else
+                                        {{-- Ikon generik untuk file lain --}}
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File:
+                                            {{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @endif
+                                </div>
+                            @else
+                                <p class="mt-2 text-sm text-gray-600">File:
+                                    {{ $dokumentasi->getClientOriginalName() }}
+                                </p>
+                            @endif
                         @endif
-                    @endif
-                </div>
-                <x-label-error :messages="$errors->get('dokumentasi')" />
-            </fieldset>
-            <fieldset class="fieldset">
-                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                    modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
-                    :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
-                    manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                    addManualAction="addPelaporManual" clickaction="selectPelapor" />
-                <div class="flex flex-wrap gap-2 mb-2">
-                    @foreach ($inspected_users as $index => $user)
-                        <div
-                            class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded bg-info/10 text-info border-info/20">
-                            <span>{{ $user['name'] }}</span>
-                            <button type="button" wire:click="removeInspectedUser({{ $index }})"
-                                class="hover:text-error">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    @endforeach
-                </div>
-            </fieldset>
+                    </div>
+                    <x-label-error :messages="$errors->get('dokumentasi')" />
+                </fieldset>
+                <fieldset class="fieldset">
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
+                        :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                        addManualAction="addPelaporManual" clickaction="selectPelapor" />
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        @foreach ($inspected_users as $index => $user)
+                            <div
+                                class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded bg-info/10 text-info border-info/20">
+                                <span>{{ $user['name'] }}</span>
+                                <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                    class="hover:text-error">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </fieldset>
+            </div>
             <button wire:click="save" class="btn btn-soft btn-success btn-xs hover:btn-success/80">
                 Simpan Laporan
             </button>
