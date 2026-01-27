@@ -87,7 +87,7 @@ class FireInspectionList extends Component
 
         if ($inspections->isEmpty()) {
             $this->dispatch('alert', [
-                'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::now()->translatedFormat('F Y'),
+                'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::parse($this->date)->translatedFormat('F Y'),
                 'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
             ]);
             return;
