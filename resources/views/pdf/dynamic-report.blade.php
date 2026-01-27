@@ -25,6 +25,7 @@
             @endforeach
             <th>TANGGAL</th>
             <th>PEMERIKSA</th>
+            <th>REMARKS</th>
         </tr>
     </thead>
     <tbody>
@@ -51,7 +52,7 @@
                     @endif
                 </td>
             @endforeach
-
+            <td>{{ $item->remarks }}</td>
             <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}</td>
             <td>{{ str_replace('|', ', ', $item->inspected_by) }}</td>
         </tr>
