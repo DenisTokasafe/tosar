@@ -1,7 +1,13 @@
 <section class="w-full">
     <x-toast />
     <!-- Open the modal using ID.showModal() method -->
-
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    @endpush
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
         <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
             <button class="btn btn-square btn-xs btn-soft btn-accent" onclick="my_modal_2.showModal()">
@@ -13,7 +19,7 @@
             </button>
             <dialog id="my_modal_2" class="modal">
                 <div class="modal-box">
-                    <h3 class="text-lg font-bold">Hello!</h3>
+                    <h3 class="mb-2 text-lg font-bold">Export To PDF!</h3>
                     <fieldset class="w-full fieldset md:max-w-80">
                         <x-form.label label="Pilih Jenis Alat" required />
                         <select wire:model.live="type"
@@ -25,6 +31,51 @@
                         </select>
                         <x-label-error :messages="$errors->get('type')" />
                     </fieldset>
+                    {{-- Bulan --}}
+                    <fieldset class="fieldset">
+                        <x-form.label label="Bulan" required />
+
+                        <div wire:ignore wire:key="manhours-month-picker-{{ time() }}" x-data="{
+                            fp: null,
+                            dateValue: @entangle('date').live,
+                            initFlatpickr() {
+                                // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
+                                this.$nextTick(() => {
+                                    if (this.fp) {
+                                        this.fp.destroy();
+                                    }
+
+                                    // Pastikan x-ref input tersedia
+                                    if (!this.$refs.input) return;
+
+                                    this.fp = flatpickr(this.$refs.input, {
+                                        plugins: [
+                                            new monthSelectPlugin({
+                                                disableMobile: false,
+                                                shorthand: true,
+                                                dateFormat: 'M-Y',
+                                                altFormat: 'F Y',
+                                                theme: 'light'
+                                            })
+                                        ],
+                                        defaultDate: this.dateValue,
+                                        onChange: (selectedDates, dateStr) => {
+                                            this.dateValue = dateStr;
+                                        }
+                                    });
+                                });
+                            }
+                        }"
+                            x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
+
+                            <input x-ref="input" type="text" readonly
+                                class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                placeholder="Pilih bulan" />
+                        </div>
+                        <x-label-error :messages="$errors->get('date')" />
+                    </fieldset>
+                    <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id" placeholder="Area..."
+                    :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
                 </div>
                 <form method="dialog" class="modal-backdrop">
                     <button>close</button>

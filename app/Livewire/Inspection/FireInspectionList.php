@@ -4,12 +4,19 @@ namespace App\Livewire\Inspection;
 
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\Location;
 use App\Models\FireProtection;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class FireInspectionList extends Component
 {
     public $type;
+    public $date;
+    public $area;
+    public $location_id;
+    public $show_location = false;
+    public $locations = [];
+    public $searchLocation = '';
     public $fields = [
         'Fire Extinguisher' => [
             'inputs' => ['FE No', 'FE Type', 'Capacity'],
@@ -45,15 +52,39 @@ class FireInspectionList extends Component
             'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
         ],
     ];
+    public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+            $this->show_location = true;
+        } else {
+            $this->locations = [];
+            $this->show_location = false;
+        }
+    }
+    public function selectLocation($id, $name)
+    {
+        $this->location_id = $id;
+        $this->searchLocation = $name;
+        $this->area = $name;
+        $this->show_location = false;
+        $this->validateOnly('location_id');
+    }
     public function exportPDF($id)
     {
         $this->type = FireProtection::find($id)->type;
-        $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
+        $this->area = FireProtection::find($id)->area;
+        // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
+        $date = Carbon::parse($this->date);
+        $currentMonth = $date->month; // Menghasilkan angka 1-12
+        $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
         $inspections = FireProtection::where('type', $this->type)
-            ->whereMonth('inspection_date', $currentMonth)
-            ->whereYear('inspection_date', $currentYear)
+            ->whereMonth('inspection_date', $currentMonth) // Query ini butuh angka 1-12
+            ->whereYear('inspection_date', $currentYear)   // Query ini butuh angka 4 digit
             ->orderBy('inspection_date', 'asc')
             ->get();
 
