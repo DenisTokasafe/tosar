@@ -69,7 +69,7 @@
             </div>
             <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 ">
-                <fieldset class="bg-primary fieldset">
+                <fieldset class="fieldset">
                     <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                     <div wire:loading.remove wire:target="dokumentasi">
                         @if ($dokumentasi)
