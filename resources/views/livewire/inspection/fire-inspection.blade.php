@@ -106,7 +106,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('dokumentasi')" />
                 </fieldset>
-                <fieldset class=" fieldset bg-info">
+                <fieldset class=" bg-info">
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
                         :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
