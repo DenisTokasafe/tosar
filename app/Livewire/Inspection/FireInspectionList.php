@@ -61,6 +61,7 @@ class FireInspectionList extends Component
         $pdf = Pdf::loadView('pdf.dynamic-report', [
             'data' => [$inspection], // Kirim sebagai array berisi 1 data agar loop di blade tidak error
             'type' => $inspection->type,
+            'area' => $inspection->area,
             'structure' => $structure,
             'month' => \Carbon\Carbon::parse($inspection->inspection_date)->format('F Y'),
         ])->setPaper('a4', 'landscape');

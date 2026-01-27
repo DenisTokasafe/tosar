@@ -8,6 +8,7 @@
 
 <h2 style="text-align: center;">{{ strtoupper($type) }} INSPECTION REPORT</h2>
 <p>Month: {{ $month }}</p>
+<p>Area: {{ $area }}</p>
 
 <table>
     <thead>
