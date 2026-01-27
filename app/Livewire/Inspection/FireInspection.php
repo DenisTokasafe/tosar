@@ -4,10 +4,11 @@ namespace App\Livewire\Inspection;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Models\Location;
 use App\Helpers\FileHelper;
+use Livewire\WithFileUploads;
 use App\Models\FireProtection;
 use Livewire\Attributes\Validate;
-use Livewire\WithFileUploads;
 
 class FireInspection extends Component
 {
@@ -23,6 +24,11 @@ class FireInspection extends Component
     public $manualPelaporName = '';
     public $responsible_id;
     public $inspected_users = [];
+    // Untuk fitur pencarian lokasi
+    public $location_id;
+    public $show_location = false;
+    public $locations = [];
+     public $searchLocation = '';
     // Tempat menyimpan hasil checklist
     public $conditions = [];
 
@@ -124,6 +130,27 @@ class FireInspection extends Component
         $this->searchResponsibility = $this->manualPelaporName;
         $this->showPelaporDropdown = false;
         $this->responsible_id = null;
+    }
+
+    public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')
+                ->limit(10)
+                ->get();
+            $this->show_location = true;
+        } else {
+            $this->locations = [];
+            $this->show_location = false;
+        }
+    }
+    public function selectLocation($id, $name)
+    {
+        $this->location_id = $id;
+        $this->searchLocation = $name;
+        $this->show_location = false;
+        $this->validateOnly('location_id');
     }
 
     // Definisi kriteria berdasarkan gambar yang Anda berikan
