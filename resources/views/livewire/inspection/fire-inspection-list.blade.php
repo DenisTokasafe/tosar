@@ -49,6 +49,7 @@
                                     if (!this.$refs.input) return;
 
                                     this.fp = flatpickr(this.$refs.input, {
+                                    static: true,
                                         plugins: [
                                             new monthSelectPlugin({
                                                 disableMobile: false,
