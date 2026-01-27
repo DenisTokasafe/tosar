@@ -71,7 +71,6 @@ class FireInspectionList extends Component
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
-        $this->validateOnly('location_id');
     }
     public function exportPDF()
     {
