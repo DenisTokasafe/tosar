@@ -34,7 +34,7 @@
                                             <span class="font-medium uppercase text-[10px]">{{ $key }}:</span>
 
                                             {{-- Hapus tanda petik karena di JSON datanya boolean murni --}}
-                                            @if ($value === true)
+                                            @if ($value === 'yes' || $value === true)
                                                 <span class="text-success text-[10px] font-bold">✔</span>
                                             @elseif($value === false)
                                                 <span class="font-bold text-error text-[10px]">✘</span>
