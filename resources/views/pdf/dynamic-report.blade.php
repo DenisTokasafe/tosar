@@ -60,7 +60,6 @@
                 <td style="border-bottom: 2px solid #999; width: 70%; text-align: center;">
                     <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">LAPORAN INSPEKSI {{ strtoupper($type) }}</strong><br>
-                    <span style="font-size: 9pt;">FIRE PROTECTION MAINTENANCE SYSTEM</span>
                 </td>
                 <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;">
                     <img src="{{ public_path('images/logo-archi.png') }}" width="60">
@@ -137,7 +136,7 @@
                         <table style="width: 100%; border: 1px solid black;">
                             <tr>
                                 <td class="bg-gray" style="text-align: left; font-weight: bold; width: 120px; border: 1px solid black;">Input to Tosar by</td>
-                                <td style="text-align: left; border: 1px solid black;">: {{ auth()->check() ? auth()->user()->initials() : '-' }}</td>
+                                <td style="text-align: left; border: 1px solid black;">: {{ auth()->check() ? auth()->user()->name : '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="bg-gray" style="text-align: left; font-weight: bold; border: 1px solid black;">Date</td>
