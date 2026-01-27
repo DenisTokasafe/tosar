@@ -3,21 +3,34 @@
     <!-- Open the modal using ID.showModal() method -->
 
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
-        <button class="btn btn-square btn-xs btn-soft btn-accent" onclick="my_modal_2.showModal()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-        </button>
-        <dialog id="my_modal_2" class="modal">
-            <div class="modal-box">
-                <h3 class="text-lg font-bold">Hello!</h3>
-                <p class="py-4">Press ESC key or click outside to close</p>
-            </div>
-            <form method="dialog" class="modal-backdrop">
-                <button>close</button>
-            </form>
-        </dialog>
+        <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+            <button class="btn btn-square btn-xs btn-soft btn-accent" onclick="my_modal_2.showModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </button>
+            <dialog id="my_modal_2" class="modal">
+                <div class="modal-box">
+                    <h3 class="text-lg font-bold">Hello!</h3>
+                    <fieldset class="w-full fieldset md:max-w-80">
+                        <x-form.label label="Pilih Jenis Alat" required />
+                        <select wire:model.live="type"
+                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            <option value="">-- Pilih --</option>
+                            @foreach (array_keys($fields) as $key)
+                                <option value="{{ $key }}">{{ $key }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('type')" />
+                    </fieldset>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
+        </div>
         <div class="overflow-x-auto">
             <table class="table table-xs table-zebra">
                 <thead>
@@ -72,7 +85,8 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}
+                            <td class="text-center">
+                                {{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}
                             </td>
                             <td class="text-center">
                                 <div class="flex gap-2">
