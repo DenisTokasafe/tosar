@@ -69,7 +69,7 @@
             </div>
             <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 ">
-                <fieldset class=" fieldset">
+                <fieldset class="bg-primary fieldset">
                     <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                     <div wire:loading.remove wire:target="dokumentasi">
                         @if ($dokumentasi)
@@ -106,7 +106,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('dokumentasi')" />
                 </fieldset>
-                <fieldset class="fieldset">
+                <fieldset class="fieldset bg-info">
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
                         :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
