@@ -20,7 +20,7 @@
                 {{-- <x-form.input-floating label="Area" model="area" required /> --}}
                   <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id" placeholder="Area..."
                     :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
-                <x-form.input-floating label="Lokasi" model="location" required />
+                <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
