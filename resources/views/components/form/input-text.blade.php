@@ -5,6 +5,7 @@
     'type' => 'text',
     'size' => 'input-xs',
     'required' => false,
+     'disabled' => false,
 ])
 
 <fieldset class="w-full fieldset">
@@ -14,7 +15,7 @@
     @endif
 
     {{-- Input Element --}}
-    <input
+    <input  {{ $disabled ? 'disabled' : '' }}
         type="{{ $type }}"
         {{ $model ? "wire:model.live=$model" : '' }}
         placeholder="{{ $placeholder ?: $label }}"

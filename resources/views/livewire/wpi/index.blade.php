@@ -370,7 +370,7 @@
                             </div>
                         </fieldset>
                         {{-- Menggunakan komponen baru --}}
-                        <x-form.input-text {{ $isDisabled ? 'disabled' : '' }} label="Area Kerja" model="area" placeholder="Area kerja..." required />
+                        <x-form.input-text :disabled="$isDisabled" label="Area Kerja" model="area" placeholder="Area kerja..." required />
                         <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
                             <input {{ $isDisabled ? 'disabled' : '' }} name="location_specific" type="text" wire:model.live="location_specific"
