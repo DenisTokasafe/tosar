@@ -18,7 +18,7 @@
                 </thead>
                 <tbody>
                     @foreach ($inspections as $index => $item)
-                        <tr wire:key="row-{{ $item->id }}" class="text-center">
+                        <tr wire:key="row-{{ $item->id }}" class="text-center odd:bg-white even:bg-gray-300">
                             <td>{{ $inspections->firstItem() + $index }}</td>
                             <td>
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span class="text-[8px]">{{ $item->type }}</span></span>
