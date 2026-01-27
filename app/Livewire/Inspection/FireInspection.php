@@ -28,11 +28,11 @@ class FireInspection extends Component
     public $location_id;
     public $show_location = false;
     public $locations = [];
-     public $searchLocation = '';
+    public $searchLocation = '';
     // Tempat menyimpan hasil checklist
     public $conditions = [];
 
-   public function rules()
+    public function rules()
     {
         $baseRules = [
             'location'        => 'required|string|max:255',
@@ -202,11 +202,11 @@ class FireInspection extends Component
             }
         }
 
-        // 3. Inisialisasi untuk field checklist (beri default 'yes' atau 'Good')
+        // Inisialisasi checklist menjadi TRUE secara default
         if (isset($this->fields[$value]['checks'])) {
             foreach ($this->fields[$value]['checks'] as $checkField) {
-                // Gunakan 'yes' jika mengikuti value di radio button sebelumnya
-                $this->conditions[$checkField] = 'yes';
+                // Gunakan boolean true murni
+                $this->conditions[$checkField] = true;
             }
         }
     }
@@ -215,8 +215,8 @@ class FireInspection extends Component
     {
         $this->validate();
         $inspectedByString = is_array($this->inspected_users)
-        ? implode('|', array_column($this->inspected_users, 'name'))
-        : $this->inspected_users;
+            ? implode('|', array_column($this->inspected_users, 'name'))
+            : $this->inspected_users;
         $documentationPath = null;
         if ($this->dokumentasi) {
             $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
