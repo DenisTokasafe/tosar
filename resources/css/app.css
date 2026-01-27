@@ -54,6 +54,19 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+    /* Solusi agar dropdown/flatpickr tidak terpotong di dalam modal */
+    .modal-box {
+        overflow: visible !important;
+    }
+
+    dialog.modal {
+        overflow: visible !important;
+    }
+
+    /* Memaksa Kalender Flatpickr muncul paling depan */
+    .flatpickr-calendar {
+        z-index: 99999 !important;
+    }
 
     .ck-content ul {
         @apply list-disc pl-6;
