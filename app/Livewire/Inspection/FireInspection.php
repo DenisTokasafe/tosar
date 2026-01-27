@@ -47,6 +47,7 @@ class FireInspection extends Component
             'conditions'      => 'required|array',
             'type'            => 'required|string',
             'area'            => 'required|string|max:255',
+            'searchLocation' => 'required|string',
             'dokumentasi'     => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ];
 
@@ -76,6 +77,7 @@ class FireInspection extends Component
             'conditions.*.required'    => 'Semua poin checklist wajib diisi/pilih.', // Pesan untuk item dinamis
             'type.required'            => 'Jenis alat wajib diisi.',
             'area.required'            => 'Area wajib diisi.',
+            'searchLocation.required'  => 'Area wajib diisi.',
             'dokumentasi.max'          => 'Ukuran file dokumentasi maksimal 2 MB.',
             // ... sisa pesan Anda
         ];
