@@ -151,14 +151,11 @@
             <td class="no-border" style="width: 40%; vertical-align: top; padding: 0;">
                 <table style="width: 100%;">
                     <tr>
-                        <td class="bg-gray" style="text-align: left; font-weight: bold; width: 100px;">Input to INX by
+                        <td class="bg-gray" style="text-align: left; font-weight: bold; width: 100px;">Input to Tosar by
                         </td>
                         <td style="text-align: left;">: {{ explode('|', $data->first()->inspected_by ?? '-')[0] }}</td>
                     </tr>
-                    <tr>
-                        <td class="bg-gray" style="text-align: left; font-weight: bold;">INX Reference</td>
-                        <td style="text-align: left;">: ........</td>
-                    </tr>
+
                     <tr>
                         <td class="bg-gray" style="text-align: left; font-weight: bold;">Date</td>
                         <td style="text-align: left;">: {{ now()->format('d/m/Y') }}</td>
