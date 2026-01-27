@@ -105,9 +105,18 @@
                 <td>
                     @php
                         $names = explode('|', $item->inspected_by);
-                        $initials = array_map(fn($n) => strtoupper(substr(trim($n), 0, 2)), $names);
+                        $formattedInitials = array_map(function ($n) {
+                            $words = preg_split('/[\s,]+/', trim($n));
+                            $initial = '';
+                            foreach ($words as $w) {
+                                if (!empty($w)) {
+                                    $initial .= strtoupper(substr($w, 0, 1));
+                                }
+                            }
+                            return $initial;
+                        }, $names);
                     @endphp
-                    {{ implode(', ', $initials) }}
+                    {{ implode(', ', $formattedInitials) }}
                 </td>
                 <td style="text-align: left;">{{ $item->remarks ?? '-' }}</td>
             </tr>
