@@ -46,7 +46,7 @@ class FireInspection extends Component
             'inspected_users' => 'required|array|min:1', // Menggunakan array user dari jawaban sebelumnya
             'conditions'      => 'required|array',
             'type'            => 'required|string',
-            'searchLocation' => 'required|string',
+            'location_id' => 'required|string',
             'dokumentasi'     => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ];
 
@@ -75,7 +75,7 @@ class FireInspection extends Component
             'conditions.required'      => 'Checklist kondisi alat wajib diisi.',
             'conditions.*.required'    => 'Semua poin checklist wajib diisi/pilih.', // Pesan untuk item dinamis
             'type.required'            => 'Jenis alat wajib diisi.',
-            'searchLocation.required'  => 'Area wajib diisi.',
+            'location_id.required'  => 'Area wajib diisi.',
             'dokumentasi.max'          => 'Ukuran file dokumentasi maksimal 2 MB.',
             // ... sisa pesan Anda
         ];
