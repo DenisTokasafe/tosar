@@ -257,7 +257,7 @@ class FireInspection extends Component
         $this->remarks = null;
         $this->area = null;
         $this->dokumentasi = null;
-        $this->conditions = [];
+        $this->updatedType($this->type); // Reset kondisi berdasarkan tipe saat ini
     }
     public function render()
     {
