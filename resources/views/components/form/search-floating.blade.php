@@ -60,6 +60,6 @@
 
     {{-- Error Message --}}
     @if($modelid)
-        <x-label-error :messages="$errors->get($modelid)" class="mt-1" />
+        <x-label-error :messages="$errors->get($modelid)" />
     @endif
 </fieldset>
