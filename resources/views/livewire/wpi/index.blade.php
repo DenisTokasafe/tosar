@@ -373,8 +373,8 @@
                         <x-form.input-text label="Area Kerja" model="area" placeholder="Area kerja..." required />
                         <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
-                            <input name="location_specific" type="text" wire:model.live="location_specific"
-                                {{ $isDisabled ? 'disabled' : '' }} placeholder="Masukkan detail lokasi spesifik..."
+                            <input {{ $isDisabled ? 'disabled' : '' }} name="location_specific" type="text" wire:model.live="location_specific"
+                                placeholder="Masukkan detail lokasi spesifik..."
                                 value="Tokatindung" disabled
                                 class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                             <x-label-error :messages="$errors->get('location_specific')" />
