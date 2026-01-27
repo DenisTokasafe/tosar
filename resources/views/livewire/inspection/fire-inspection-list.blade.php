@@ -9,7 +9,7 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
-        <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+        <div  class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
             <button class="btn btn-square btn-xs btn-soft btn-accent" onclick="my_modal_2.showModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
