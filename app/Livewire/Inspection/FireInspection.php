@@ -143,7 +143,7 @@ class FireInspection extends Component
         if (strlen($this->searchLocation) > 2) {
             $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
                 ->orderBy('name')
-                ->limit(10)
+                ->limit(50)
                 ->get();
             $this->show_location = true;
         } else {
