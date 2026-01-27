@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Inspection;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\FireProtection;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -43,32 +44,44 @@ class FireInspectionList extends Component
             'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
         ],
     ];
-    public function exportPDF($id)
+    public function exportAllByMonth()
     {
-        // 1. Ambil data spesifik berdasarkan ID
-        $inspection = FireProtection::findOrFail($id);
+        // 1. Ambil data berdasarkan type yang aktif dan bulan berjalan
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 
-        // 2. Ambil struktur field berdasarkan type data tersebut
-        // Pastikan property $this->fields bisa diakses (public atau didefinisikan di sini)
-        $structure = $this->fields[$inspection->type] ?? null;
+        $inspections = FireProtection::where('type', $this->type) // Memfilter berdasarkan property $type yang dipilih
+            ->whereMonth('inspection_date', $currentMonth)
+            ->whereYear('inspection_date', $currentYear)
+            ->orderBy('inspection_date', 'asc')
+            ->get();
 
-        if (!$structure) {
-            $this->dispatch('alert', ['text' => "Struktur kolom untuk tipe ini tidak ditemukan!"]);
+        // 2. Validasi jika data kosong
+        if ($inspections->isEmpty()) {
+            $this->dispatch('alert', [
+                'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::now()->translatedFormat('F Y'),
+                'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
+            ]);
             return;
         }
 
-        // 3. Load view PDF (kita bungkus dalam array agar template dinamis tetap bekerja)
+        // 3. Ambil struktur header dinamis dari $this->fields
+        $structure = $this->fields[$this->type] ?? null;
+
+        // 4. Generate PDF menggunakan template yang sudah ada
         $pdf = Pdf::loadView('pdf.dynamic-report', [
-            'data' => [$inspection], // Kirim sebagai array berisi 1 data agar loop di blade tidak error
-            'type' => $inspection->type,
-            'area' => $inspection->area,
+            'data' => $inspections, // Mengirim banyak data (Collection)
+            'type' => $this->type,
             'structure' => $structure,
-            'month' => \Carbon\Carbon::parse($inspection->inspection_date)->format('F Y'),
+            'month' => Carbon::now()->translatedFormat('F Y'),
         ])->setPaper('a4', 'landscape');
+
+        // 5. Nama file yang dinamis
+        $filename = "Rekap_Inspeksi_" . str_replace(' ', '_', $this->type) . "_" . Carbon::now()->format('m_Y') . ".pdf";
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
-        }, "Inspection_" . str_replace(' ', '_', $inspection->type) . "_" . $inspection->id . ".pdf");
+        }, $filename);
     }
     public function render()
     {
