@@ -95,29 +95,6 @@
         </table>
     </header>
 
-    <footer>
-        <table class="footer-table">
-            <tr>
-                <td class="border-l-none" width="20%">Nama Dokumen / <span class="en">Doc Name</span></td>
-                <td width="40%">Laporan Inspeksi Bulanan {{ $type }}</td>
-                <td width="15%" class="bg-gray">No Dokumen</td>
-                <td class="border-r-none" width="25%">TT-FIRE-{{ str_replace(' ', '-', strtoupper($type)) }}</td>
-            </tr>
-            <tr>
-                <td class="border-l-none">Ditetapkan Oleh / <span class="en">By</span></td>
-                <td>Safety & Fire Dept. Head</td>
-                <td class="bg-gray">Tanggal Terbit</td>
-                <td class="border-r-none">15-03-2023</td>
-            </tr>
-            <tr>
-                <td class="border-l-none">No Revisi</td>
-                <td>01</td>
-                <td colspan="2" class="border-r-none center" style="color: red; font-size: 7pt;">
-                    Valid di SharePoint Archi Indonesia - Dicetak oleh: {{ auth()->user()->name ?? 'System' }}
-                </td>
-            </tr>
-        </table>
-    </footer>
 
     <main>
         <div style="margin-bottom: 10px; font-weight: bold;">
