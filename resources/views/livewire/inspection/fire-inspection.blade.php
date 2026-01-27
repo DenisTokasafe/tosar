@@ -58,7 +58,7 @@
                     @endforeach
                 </div>
             </div>
-            <x-form.textarea label="Deskripsi Temuan" required model="remarks" placeholder="Remarks/Catatan..." />
+            <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
             <fieldset class=" fieldset">
                 <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                 <div wire:loading.remove wire:target="dokumentasi">
