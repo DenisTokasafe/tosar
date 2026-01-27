@@ -10,14 +10,15 @@
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
         <div  class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
-            <button class="btn btn-square btn-xs btn-soft btn-accent" onclick="my_modal_2.showModal()">
+            <label for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent" >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-            </button>
-            <dialog id="my_modal_2" class="modal">
+            </label>
+            <input type="checkbox" id="my_modal_6" class="modal-toggle" />
+            <div class="modal" role="dialog">
                 <div class="modal-box">
                     <h3 class="mb-2 text-lg font-bold">Export To PDF!</h3>
                     <fieldset class="w-full fieldset md:max-w-80 h-96">
@@ -93,10 +94,8 @@
                         <span wire:loading wire:target="exportPDF">Generating PDF...</span>
                     </label>
                 </div>
-                <form method="dialog" class="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
+               <label class="modal-backdrop" for="my_modal_6">Close</label>
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="table table-xs table-zebra">
