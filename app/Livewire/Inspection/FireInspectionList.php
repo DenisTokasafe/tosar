@@ -12,7 +12,7 @@ class FireInspectionList extends Component
     {
         // 1. Ambil data spesifik berdasarkan ID
         $inspection = FireProtection::findOrFail($id);
-        dd($inspection->type);
+
         // 2. Ambil struktur field berdasarkan type data tersebut
         // Pastikan property $this->fields bisa diakses (public atau didefinisikan di sini)
         $structure = $this->fields[$inspection->type] ?? null;
