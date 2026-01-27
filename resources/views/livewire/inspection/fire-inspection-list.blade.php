@@ -74,8 +74,23 @@
                         </div>
                         <x-label-error :messages="$errors->get('date')" />
                     </fieldset>
-                    <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id" placeholder="Area..."
-                    :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+                    <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
+                        modelid="location_id" placeholder="Area..." :options="$locations" :showdropdown="$show_location"
+                        clickaction="selectLocation" namedb="name" />
+
+                    <label wire:click="exportPDF" wire:loading.attr="disabled"
+                        class="flex items-center gap-2 text-white btn btn-error btn-sm">
+
+                        {{-- Icon PDF --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+
+                        <span wire:loading.remove wire:target="exportPDF">Export to PDF</span>
+                        <span wire:loading wire:target="exportPDF">Generating PDF...</span>
+                    </label>
                 </div>
                 <form method="dialog" class="modal-backdrop">
                     <button>close</button>
@@ -148,19 +163,7 @@
                                     <button wire:click="edit({{ $item->id }})"
                                         class="btn btn-ghost btn-xs">Edit</button>
 
-                                    <button wire:click="exportPDF({{ $item->id }})" wire:loading.attr="disabled"
-                                        class="flex items-center gap-2 text-white btn btn-error btn-sm">
 
-                                        {{-- Icon PDF --}}
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-
-                                        <span wire:loading.remove wire:target="exportPDF">Export to PDF</span>
-                                        <span wire:loading wire:target="exportPDF">Generating PDF...</span>
-                                    </button>
                                 </div>
                             </td>
                         </tr>

@@ -73,16 +73,14 @@ class FireInspectionList extends Component
         $this->show_location = false;
         $this->validateOnly('location_id');
     }
-    public function exportPDF($id)
+    public function exportPDF()
     {
-        $this->type = FireProtection::find($id)->type;
-        $this->area = FireProtection::find($id)->area;
         // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
         $date = Carbon::parse($this->date);
         $currentMonth = $date->month; // Menghasilkan angka 1-12
         $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
-        $inspections = FireProtection::where('type', $this->type)
+        $inspections = FireProtection::where('type', $this->type)->where('area', $this->area)
             ->whereMonth('inspection_date', $currentMonth) // Query ini butuh angka 1-12
             ->whereYear('inspection_date', $currentYear)   // Query ini butuh angka 4 digit
             ->orderBy('inspection_date', 'asc')
