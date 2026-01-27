@@ -33,7 +33,7 @@
                         <x-label-error :messages="$errors->get('type')" />
                     </fieldset>
                     {{-- Bulan --}}
-                    <fieldset class="fieldset">
+                    <fieldset class="w-full fieldset">
                         <x-form.label label="Bulan" required />
 
                         <div wire:ignore wire:key="manhours-month-picker-{{ time() }}" x-data="{
