@@ -23,8 +23,8 @@
                 wire:model.live.debounce.300ms="{{ $modelsearch }}"
                 placeholder="{{ $placeholder }}"
                 {{ $attributes->merge([
-                    'class' => 'input input-md w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden ' .
-                    ($errors->has($modelid) ? 'border-error ring-1 ring-error focus:ring-error focus:border-error' : 'input-bordered')
+                    'class' => 'input input-xs w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden ' .
+                    ($errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : 'input-bordered')
                 ]) }}
             />
 
