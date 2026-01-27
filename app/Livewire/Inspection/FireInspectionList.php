@@ -9,6 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class FireInspectionList extends Component
 {
+    public $type;
     public $fields = [
         'Fire Extinguisher' => [
             'inputs' => ['FE No', 'FE Type', 'Capacity'],
@@ -44,8 +45,9 @@ class FireInspectionList extends Component
             'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
         ],
     ];
-    public function exportAllByMonth()
+    public function exportPDF($id)
     {
+        $this->type = FireProtection::find($id)->type;
         // 1. Ambil data berdasarkan type yang aktif dan bulan berjalan
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
