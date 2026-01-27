@@ -36,7 +36,7 @@
                     <fieldset class="w-full fieldset">
                         <x-form.label label="Bulan" required />
 
-                        <div wire:ignore wire:key="manhours-month-picker-{{ time() }}" x-data="{
+                        <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}" x-data="{
                             fp: null,
                             dateValue: @entangle('date').live,
                             initFlatpickr() {
