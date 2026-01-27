@@ -154,9 +154,8 @@ class FireInspection extends Component
     public function selectLocation($id, $name)
     {
         $this->location_id = $id;
-        $this->searchLocation = $name;
+        $this->area = $name;
         $this->show_location = false;
-        $this->validateOnly('location_id');
     }
 
     // Definisi kriteria berdasarkan gambar yang Anda berikan
