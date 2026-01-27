@@ -171,21 +171,80 @@
         {{-- Section Legend & Signature --}}
         <div style="margin-top: 15px;">
             <table style="width: 100%; border: none;">
-                <tr>
-                    <td style="border: none; vertical-align: top; width: 30%;">
-                        <table class="main-table">
-                            <tr><th colspan="2" style="background: #eee;">Note</th></tr>
-                            <tr><td class="good">✔</td><td style="text-align: left;">Good</td></tr>
-                            <tr><td class="nogood">✘</td><td style="text-align: left;">No Good</td></tr>
-                        </table>
-                    </td>
-                    <td style="border: none; width: 40%;">
-                        <table class="main-table">
-                            <tr><td class="bg-gray" style="text-align: left;">Input to INX by:</td><td>{{ auth()->user() ? auth()->user()->initials() : '---' }}</td></tr>
-                            <tr><td class="bg-gray" style="text-align: left;">Checked by:</td><td>................</td></tr>
-                        </table>
-                    </td>
-                </tr>
+                  <tr>
+            <td class="no-border" style="width: 25%; vertical-align: top; text-align: left; padding: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <th colspan="2"
+                            style="background-color: white; border: none; text-align: left; padding-bottom: 5px;">Note :
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="width: 30px; font-family: DejaVu Sans, sans-serif;">✔</td>
+                        <td style="text-align: left;">: Good</td>
+                    </tr>
+                    <tr>
+                        <td style="font-family: DejaVu Sans, sans-serif; color: red;">✘</td>
+                        <td style="text-align: left;">: No Good</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="no-border" style="width: 5%;"></td>
+
+            <td class="no-border" style="width: 40%; vertical-align: top; padding: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="bg-gray" style="text-align: left; font-weight: bold; width: 100px;">Input to Tosar by
+                        </td>
+                        <td style="text-align: left;">: {{ explode('|', $data->first()->inspected_by ?? '-')[0] }}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="bg-gray" style="text-align: left; font-weight: bold;">Date</td>
+                        <td style="text-align: left;">: {{ now()->format('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray" style="text-align: left; font-weight: bold;">Checked By</td>
+                        <td style="text-align: left;">: ................................</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="no-border" style="width: 30%; vertical-align: top; padding: 0 0 0 10px;">
+                <table style="width: 100%;">
+                    @php
+                        $allNames = [];
+                        foreach ($data as $d) {
+                            // Memecah string 'Nama 1|Nama 2' menjadi array
+                            foreach (explode('|', $d->inspected_by) as $n) {
+                                $allNames[] = trim($n);
+                            }
+                        }
+                        $uniqueNames = array_unique($allNames);
+                    @endphp
+
+                    @foreach ($uniqueNames as $name)
+                        <tr>
+                            <td style="width: 50px;" class="bg-gray">
+                                @php
+                                    // Logika Inisial: BANEA, Yoman Denis -> BYD
+                                    $words = preg_split('/[\s,]+/', $name); // Memecah berdasarkan spasi atau koma
+                                    $initials = '';
+                                    foreach ($words as $w) {
+                                        if (!empty($w)) {
+                                            $initials .= strtoupper(substr($w, 0, 1));
+                                        }
+                                    }
+                                    echo $initials;
+                                @endphp
+                            </td>
+                            <td style="text-align: left; padding-left: 5px;">{{ $name }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            </td>
+        </tr>
             </table>
         </div>
     </main>
