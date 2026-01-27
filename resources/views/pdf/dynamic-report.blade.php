@@ -1,14 +1,59 @@
 <style>
-    body { font-family: 'Helvetica', sans-serif; }
-    table { width: 100%; border-collapse: collapse; font-size: 8px; table-layout: fixed; }
-    th { background-color: #ffff00; border: 1px solid black; padding: 4px; text-transform: uppercase; }
-    td { border: 1px solid black; padding: 4px; text-align: center; word-wrap: break-word; }
-    .good { font-family: DejaVu Sans, sans-serif; color: green; font-weight: bold; }
-    .nogood { font-family: DejaVu Sans, sans-serif; color: red; font-weight: bold; }
-    .header-info { margin-bottom: 10px; font-size: 10px; font-weight: bold; }
-    .footer-container { margin-top: 20px; width: 100%; }
-    .no-border { border: none !important; }
-    .bg-gray { background-color: #f3f4f6; }
+    body {
+        font-family: 'Helvetica', sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8px;
+        table-layout: fixed;
+    }
+
+    th {
+        background-color: #ffff00;
+        border: 1px solid black;
+        padding: 4px;
+        text-transform: uppercase;
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 4px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+
+    .good {
+        font-family: DejaVu Sans, sans-serif;
+        color: green;
+        font-weight: bold;
+    }
+
+    .nogood {
+        font-family: DejaVu Sans, sans-serif;
+        color: red;
+        font-weight: bold;
+    }
+
+    .header-info {
+        margin-bottom: 10px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+
+    .footer-container {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .no-border {
+        border: none !important;
+    }
+
+    .bg-gray {
+        background-color: #f3f4f6;
+    }
 </style>
 
 <h2 style="text-align: center; margin-bottom: 5px;">{{ strtoupper($type) }} INSPECTION</h2>
@@ -23,10 +68,10 @@
         <tr>
             <th style="width: 25px;">NO</th>
             <th>LOKASI</th>
-            @foreach($structure['inputs'] as $header)
+            @foreach ($structure['inputs'] as $header)
                 <th>{{ $header }}</th>
             @endforeach
-            @foreach($structure['checks'] as $header)
+            @foreach ($structure['checks'] as $header)
                 <th>{{ $header }}</th>
             @endforeach
             <th>TANGGAL</th>
@@ -35,37 +80,37 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($data as $index => $item)
-        <tr>
-            <td>{{ $index + 1 }}</td>
-            <td style="text-align: left;">{{ $item->location }}</td>
+        @foreach ($data as $index => $item)
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td style="text-align: left;">{{ $item->location }}</td>
 
-            @foreach($structure['inputs'] as $input)
-                <td>{{ $item->conditions[$input] ?? '-' }}</td>
-            @endforeach
+                @foreach ($structure['inputs'] as $input)
+                    <td>{{ $item->conditions[$input] ?? '-' }}</td>
+                @endforeach
 
-            @foreach($structure['checks'] as $check)
+                @foreach ($structure['checks'] as $check)
+                    <td>
+                        @php $val = $item->conditions[$check] ?? null; @endphp
+                        @if ($val === true || $val === 'yes')
+                            <span class="good">✔</span>
+                        @elseif($val === false || $val === 'no')
+                            <span class="nogood">✘</span>
+                        @else
+                            -
+                        @endif
+                    </td>
+                @endforeach
+                <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}</td>
                 <td>
-                    @php $val = $item->conditions[$check] ?? null; @endphp
-                    @if($val === true || $val === 'yes')
-                        <span class="good">✔</span>
-                    @elseif($val === false || $val === 'no')
-                        <span class="nogood">✘</span>
-                    @else
-                        -
-                    @endif
+                    @php
+                        $names = explode('|', $item->inspected_by);
+                        $initials = array_map(fn($n) => strtoupper(substr(trim($n), 0, 2)), $names);
+                    @endphp
+                    {{ implode(', ', $initials) }}
                 </td>
-            @endforeach
-            <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}</td>
-            <td>
-                @php
-                    $names = explode('|', $item->inspected_by);
-                    $initials = array_map(fn($n) => strtoupper(substr(trim($n), 0, 2)), $names);
-                @endphp
-                {{ implode(', ', $initials) }}
-            </td>
-            <td style="text-align: left;">{{ $item->remarks ?? '-' }}</td>
-        </tr>
+                <td style="text-align: left;">{{ $item->remarks ?? '-' }}</td>
+            </tr>
         @endforeach
     </tbody>
 </table>
@@ -76,7 +121,11 @@
         <tr>
             <td class="no-border" style="width: 25%; vertical-align: top; text-align: left; padding: 0;">
                 <table style="width: 100%;">
-                    <tr><th colspan="2" style="background-color: white; border: none; text-align: left; padding-bottom: 5px;">Note :</th></tr>
+                    <tr>
+                        <th colspan="2"
+                            style="background-color: white; border: none; text-align: left; padding-bottom: 5px;">Note :
+                        </th>
+                    </tr>
                     <tr>
                         <td style="width: 30px; font-family: DejaVu Sans, sans-serif;">✔</td>
                         <td style="text-align: left;">: Good</td>
@@ -93,7 +142,8 @@
             <td class="no-border" style="width: 40%; vertical-align: top; padding: 0;">
                 <table style="width: 100%;">
                     <tr>
-                        <td class="bg-gray" style="text-align: left; font-weight: bold; width: 100px;">Input to INX by</td>
+                        <td class="bg-gray" style="text-align: left; font-weight: bold; width: 100px;">Input to INX by
+                        </td>
                         <td style="text-align: left;">: {{ explode('|', $data->first()->inspected_by ?? '-')[0] }}</td>
                     </tr>
                     <tr>
@@ -115,16 +165,32 @@
                 <table style="width: 100%;">
                     @php
                         $allNames = [];
-                        foreach($data as $d) {
-                            foreach(explode('|', $d->inspected_by) as $n) { $allNames[] = trim($n); }
+                        foreach ($data as $d) {
+                            // Memecah string 'Nama 1|Nama 2' menjadi array
+                            foreach (explode('|', $d->inspected_by) as $n) {
+                                $allNames[] = trim($n);
+                            }
                         }
                         $uniqueNames = array_unique($allNames);
                     @endphp
-                    @foreach($uniqueNames as $name)
-                    <tr>
-                        <td style="width: 40px;" class="bg-gray">{{ strtoupper(substr($name, 0, 2)) }}</td>
-                        <td style="text-align: left; padding-left: 5px;">{{ $name }}</td>
-                    </tr>
+
+                    @foreach ($uniqueNames as $name)
+                        <tr>
+                            <td style="width: 50px;" class="bg-gray">
+                                @php
+                                    // Logika Inisial: BANEA, Yoman Denis -> BYD
+                                    $words = preg_split('/[\s,]+/', $name); // Memecah berdasarkan spasi atau koma
+                                    $initials = '';
+                                    foreach ($words as $w) {
+                                        if (!empty($w)) {
+                                            $initials .= strtoupper(substr($w, 0, 1));
+                                        }
+                                    }
+                                    echo $initials;
+                                @endphp
+                            </td>
+                            <td style="text-align: left; padding-left: 5px;">{{ $name }}</td>
+                        </tr>
                     @endforeach
                 </table>
             </td>
