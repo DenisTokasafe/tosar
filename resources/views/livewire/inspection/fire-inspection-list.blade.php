@@ -71,7 +71,7 @@
                             x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
 
                             <input x-ref="input" type="text" readonly
-                                class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
                                 placeholder="Pilih bulan" />
                         </div>
                         <x-label-error :messages="$errors->get('date')" />
