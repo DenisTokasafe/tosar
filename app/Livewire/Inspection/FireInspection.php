@@ -9,6 +9,7 @@ use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
 use App\Models\FireProtection;
 use Livewire\Attributes\Validate;
+use Livewire\Volt\Compilers\Mount;
 
 class FireInspection extends Component
 {
@@ -32,6 +33,11 @@ class FireInspection extends Component
     // Tempat menyimpan hasil checklist
     public $conditions = [];
 
+    public function mount()
+    {
+        // Inisialisasi kondisi berdasarkan tipe default
+        $this->updatedType($this->type);
+    }
     public function rules()
     {
         $baseRules = [
