@@ -46,7 +46,7 @@ class FireInspection extends Component
             'inspected_users' => 'required|array|min:1', // Menggunakan array user dari jawaban sebelumnya
             'conditions'      => 'required|array',
             'type'            => 'required|string',
-            'location_id' => 'required|string',
+            'location_id' => 'required',
             'dokumentasi'     => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ];
 
