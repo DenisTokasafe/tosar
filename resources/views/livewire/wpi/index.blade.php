@@ -326,8 +326,7 @@
                                         initFlatpickr();
                                     });">
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
-                                        wire:model.live='report_time' placeholder="Pilih Tanggal dan Waktu..."
-                                        readonly
+                                        wire:model.live='report_time' placeholder="Pilih Tanggal dan Waktu..." readonly
                                         class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs  {{ $errors->has('report_time') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                                 </div>
                             </div>
@@ -341,13 +340,15 @@
 
                     <div class="space-y-4">
                         <fieldset>
-                            <input id="department" value="department" wire:model="deptCont" {{ $isDisabled ? 'disabled' : '' }}
+                            <input id="department" value="department" wire:model="deptCont"
+                                {{ $isDisabled ? 'disabled' : '' }}
                                 class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont"
                                 checked />
                             <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
                                 label="PT. MSM & PT. TTN" required />
-                            <input id="company" value="company" wire:model="deptCont" {{ $isDisabled ? 'disabled' : '' }}
-                                class="peer/company radio radio-xs radio-primary" type="radio" name="deptCont" />
+                            <input id="company" value="company" wire:model="deptCont"
+                                {{ $isDisabled ? 'disabled' : '' }} class="peer/company radio radio-xs radio-primary"
+                                type="radio" name="deptCont" />
                             <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
                                 required />
 
@@ -370,11 +371,12 @@
                             </div>
                         </fieldset>
                         {{-- Menggunakan komponen baru --}}
-                        <x-form.input-text :disabled="$isDisabled" label="Area Kerja" model="area" placeholder="Area kerja..." required />
+                        <x-form.input-text :disabled="$isDisabled" label="Area Kerja" model="area"
+                            placeholder="Area kerja..." required />
                         <fieldset class="fieldset">
                             <x-form.label label="Nama Site " required />
-                            <input {{ $isDisabled ? 'disabled' : '' }} name="location_specific" type="text" wire:model.live="location_specific"
-                                placeholder="Masukkan detail lokasi spesifik..."
+                            <input {{ $isDisabled ? 'disabled' : '' }} name="location_specific" type="text"
+                                wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
                                 value="Tokatindung" disabled
                                 class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                             <x-label-error :messages="$errors->get('location_specific')" />
@@ -892,7 +894,8 @@
                                 </select>
                             </fieldset>
 
-                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.description']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
+                            <div
+                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.description']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Uraian Temuan & Foto / Descibe Unsafe Act &
                                     Photo</div>
@@ -1013,7 +1016,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.prevention_action']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
+                            <div
+                                class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $errors->hasAny(['findings.' . $index . '.prevention_action']) ? 'ring-1 ring-rose-500 rounded collapse-open' : '' }}">
                                 <input type="radio" name="my-accordion-2" />
                                 <div class="font-semibold collapse-title">Tindakan Pencegahan & Foto / Prevention
                                     Action & Photo</div>
@@ -1243,10 +1247,11 @@
                 </button>
 
                 <div class="flex items-center w-full space-x-3 md:w-auto">
-                    <a href="/wpi-list"
-                        class="flex-1 px-6 py-2 text-sm font-medium text-center text-gray-600 md:flex-none hover:text-gray-800">Batal</a>
+                    <a href="{{ route('wpi.list') }}" class="btn btn-error btn-xs btn-soft">
+                        Batal
+                    </a>
                     <button type="submit"
-                        class = "{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-success ' }} ">
+                        class = "{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-success btn-soft' }} ">
                         <span wire:loading.remove
                             wire:target="save">{{ $reportId ? 'Perbarui Laporan' : 'Simpan Laporan' }}</span>
                         <span class="hidden" wire:loading.remove.class='hidden'
