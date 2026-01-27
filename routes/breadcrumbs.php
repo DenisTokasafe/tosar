@@ -59,3 +59,13 @@ Breadcrumbs::for('wpi.edit', function (Trail $trail, $id) {
     $trail->parent('wpi.list');
     $trail->push('Edit WPI Report', route('wpi.edit', $id));
 });
+
+// WPI List
+Breadcrumbs::for('fire-inspection-list', function (Trail $trail) {
+    $trail->push('Fire protections', route('fire-inspection-list'));
+});
+// WPI Create
+Breadcrumbs::for('fire-inspection', function (Trail $trail) {
+    $trail->parent('fire-inspection-list');
+    $trail->push('Create Fire Protection Report', route('fire-inspection'));
+});

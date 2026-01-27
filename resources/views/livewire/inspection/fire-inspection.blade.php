@@ -1,5 +1,14 @@
 <section class="w-full">
     <x-toast />
+     <div class="flex justify-start " wire:ignore>
+        @php
+            $currentRoute = Route::currentRouteName();
+        @endphp
+
+        @if (Breadcrumbs::exists($currentRoute))
+            {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
+        @endif
+    </div>
     <x-tabs-wpi.layout heading="Buat Laporan Inspeksi Kebakaran" subheading="Inspeksi Kebakaran - Site Tokatindung">
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="mb-4">
