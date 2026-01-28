@@ -44,36 +44,36 @@
             </div>
 
             <div class="p-4 mb-4 border rounded-lg bg-gray-50">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 ">
-                    {{-- Check apakah ada data master untuk lokasi dan tipe yang dipilih --}}
-                    @php
-                        $masterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                            ->where('type', $type)
-                            ->first();
-                    @endphp
 
-                    @if ($masterData && isset($masterData->technical_data))
-                        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
-                            @foreach ($masterData->technical_data as $key => $value)
-                                <fieldset class="fieldset">
-                                    <label class="floating-label">
-                                        <input type="text" wire:key="technical-{{ $key }}"
-                                            wire:model.live="conditions.{{ $key }}"
-                                            placeholder="{{ $key }}" {{-- Data teknis biasanya readonly karena ditarik dari Master --}} readonly
-                                            class="input-xs input input-bordered w-full bg-gray-100 cursor-not-allowed focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $key) ? 'ring-1 ring-rose-500' : '' }}" />
-                                        <span class="font-semibold text-info">{{ $key }}</span>
-                                    </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $key)" />
-                                </fieldset>
-                            @endforeach
-                        </div>
-                    @else
-                        {{-- Opsional: Tampilan jika data master belum ditemukan --}}
-                        <div class="p-2 mb-4 text-xs italic border rounded text-amber-600 bg-amber-50 border-amber-200">
-                            Silahkan pilih area untuk memuat data nomor alat, tipe, dan kapasitas secara otomatis.
-                        </div>
-                    @endif
-                </div>
+                {{-- Check apakah ada data master untuk lokasi dan tipe yang dipilih --}}
+                @php
+                    $masterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
+                        ->where('type', $type)
+                        ->first();
+                @endphp
+
+                @if ($masterData && isset($masterData->technical_data))
+                    <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
+                        @foreach ($masterData->technical_data as $key => $value)
+                            <fieldset class="fieldset">
+                                <label class="floating-label">
+                                    <input type="text" wire:key="technical-{{ $key }}"
+                                        wire:model.live="conditions.{{ $key }}"
+                                        placeholder="{{ $key }}" {{-- Data teknis biasanya readonly karena ditarik dari Master --}} readonly
+                                        class="input-xs input input-bordered w-full bg-gray-100 cursor-not-allowed focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $key) ? 'ring-1 ring-rose-500' : '' }}" />
+                                    <span class="font-semibold text-info">{{ $key }}</span>
+                                </label>
+                                <x-label-error :messages="$errors->get('conditions.' . $key)" />
+                            </fieldset>
+                        @endforeach
+                    </div>
+                @else
+                    {{-- Opsional: Tampilan jika data master belum ditemukan --}}
+                    <div class="p-2 mb-4 text-xs italic border rounded text-amber-600 bg-amber-50 border-amber-200">
+                        Silahkan pilih area untuk memuat data nomor alat, tipe, dan kapasitas secara otomatis.
+                    </div>
+                @endif
+
                 <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
 
