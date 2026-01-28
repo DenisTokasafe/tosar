@@ -116,11 +116,11 @@
                             <td class="text-center">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
-                                        class="text-xs">{{ $item->type }}</span></span>
+                                        class="text-xs">{{ $item->equipmentMaster->type }}</span></span>
                             </td>
                             <td class="text-center">
-                                <div class="text-[10px] opacity-60">{{ $item->area }}</div>
-                                <div class="font-bold">{{ $item->location }}</div>
+                                <div class="text-[10px] opacity-60">{{ $item->equipmentMaster->location->name }}</div>
+                                <div class="font-bold">{{ $item->equipmentMaster->specific_location }}</div>
                             </td>
                             <td>
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
