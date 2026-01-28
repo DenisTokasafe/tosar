@@ -169,9 +169,8 @@ class FireInspection extends Component
             // Contoh: FE No, FE Type, Capacity akan terisi otomatis
             foreach ($master->technical_data as $key => $value) {
                 $this->conditions[$key] = $value;
-
-            }
-            $this->selected_location_specific = $master->specific_location ? [$master->specific_location] : [];
+                }
+                $this->selected_location_specific = EquipmentMaster::where('location_id', $id)->where('type', $this->type)->get();
 
             // Otomatis centang semua checklist (Aman/Normal)
             if (isset($this->fields[$this->type]['checks'])) {
