@@ -53,7 +53,43 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
+                <div class="overflow-x-auto">
+                    <table class="table border-collapse table-xs">
+                        <thead>
+                            <tr class="text-white bg-slate-700">
+                                <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
 
+                                @if (count($techKeys) > 0)
+                                    <th class="text-center border border-slate-600" colspan="{{ count($techKeys) }}">
+                                        Technical Information
+                                    </th>
+                                @endif
+
+                                <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">
+                                    Checklist Item
+                                </th>
+
+                                {{-- TAMBAHKAN INI: Header Remarks --}}
+                                <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
+                            </tr>
+
+                            <tr class="bg-slate-100 text-slate-700">
+                                @foreach ($techKeys as $techKey)
+                                    <th class="text-center border border-slate-300">{{ $techKey }}</th>
+                                @endforeach
+
+                                @foreach ($checks as $checkItem)
+                                    <th
+                                        class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">
+                                        {{ $checkItem }}
+                                    </th>
+                                @endforeach
+                                {{-- Baris kedua tidak perlu TH lagi untuk Remarks karena sudah di-rowspan dari atas --}}
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
             </div>
 
             {{-- REMARKS & UPLOAD SECTIONS --}}
