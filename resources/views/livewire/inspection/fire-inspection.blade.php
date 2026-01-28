@@ -53,7 +53,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <table class="table w-full border-collapse table-xs">
+                <table class="table border-collapse table-xs">
                     <thead>
                         <tr class="text-white bg-slate-700">
                             <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
