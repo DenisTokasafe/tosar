@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Inspection;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Location;
@@ -229,29 +230,42 @@ class FireInspection extends Component
      */
     public function save()
     {
-        $this->validate();
+        // Pastikan validasi mencakup array conditions
+        $this->validate([
+            'inspection_date' => 'required|date',
+            'location_id'     => 'required',
+            'inspected_users' => 'required|array|min:1',
+            'conditions'      => 'required|array|min:1',
+        ]);
 
         try {
+            // Gabungkan nama-nama pemeriksa menjadi satu string
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
 
+            // Handle upload dokumentasi (satu foto untuk satu batch/area)
             $documentationPath = null;
             if ($this->dokumentasi) {
-                $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
+                $documentationPath = \App\Helpers\FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
             }
 
-            FireProtection::create([
-                'equipment_master_id' => $this->equipment_master_id,
-                'documentation_path'  => $documentationPath,
-                'inspection_date'     => $this->inspection_date,
-                'inspected_by'        => $inspectedByString,
-                'conditions'          => $this->conditions,
-                'remarks'             => $this->remarks,
-            ]);
+            // Gunakan Transaction agar jika satu gagal, semua dibatalkan
+            DB::transaction(function () use ($inspectedByString, $documentationPath) {
+                foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
+                    \App\Models\FireProtection::create([
+                        'equipment_master_id' => $equipmentMasterId, // ID diambil dari key array conditions
+                        'documentation_path'  => $documentationPath,
+                        'inspection_date'     => $this->inspection_date,
+                        'inspected_by'        => $inspectedByString,
+                        'conditions'          => $dataKondisi, // Data technical + checklist per baris
+                        'remarks'             => $this->remarks,
+                    ]);
+                }
+            });
 
             $this->resetForm();
 
             $this->dispatch('alert', [
-                'text' => "Laporan inspeksi berhasil disimpan!",
+                'text' => "Berhasil! " . count($this->conditions) . " data inspeksi telah disimpan.",
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
         } catch (\Exception $e) {
