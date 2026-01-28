@@ -23,7 +23,7 @@
                     ($errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : ''),
             ]) }} />
         @if ($showdropdown && count($options) > 0)
-            <ul class="fixed z-[9999] w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+            <ul class="absolute z-[9999] w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                 {{-- Spinner Loading --}}
                 <div wire:loading wire:target="{{ $clickaction }}" class="p-2 text-center">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
