@@ -5,12 +5,14 @@ namespace App\Livewire\Administration\EquipmentMaster;
 use Livewire\Component;
 use App\Models\Location;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use App\Models\EquipmentMaster;
-
+use App\Imports\EquipmentMasterImport;
+use Maatwebsite\Excel\Facades\Excel;
 class Index extends Component
 {
-    use WithPagination;
-
+    use WithPagination,WithFileUploads;
+    public $file_excel;
     public $type, $location_id, $specific_location, $is_active = true;
     public $technical_data = []; // Untuk menyimpan key-value dinamis (FE No, Capacity, dll)
     public $newKey, $newValue; // Input sementara untuk menambah baris JSON
@@ -35,6 +37,24 @@ class Index extends Component
     public function removeTechnicalField($key)
     {
         unset($this->technical_data[$key]);
+    }
+
+    public function importExcel()
+    {
+        $this->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv|max:10240',
+            'type' => 'required',
+            'location_id' => 'required',
+        ]);
+
+        try {
+            Excel::import(new EquipmentMasterImport($this->type, $this->location_id), $this->file_excel->getRealPath());
+
+            $this->dispatch('alert', ['text' => 'Data Excel Berhasil Diimport!']);
+            $this->reset(['file_excel']);
+        } catch (\Exception $e) {
+            $this->dispatch('alert', ['text' => 'Gagal: ' . $e->getMessage(), 'type' => 'error']);
+        }
     }
 
     public function save()
@@ -76,7 +96,7 @@ class Index extends Component
     }
     public function render()
     {
-        return view('livewire.administration.equipment-master.index',[
+        return view('livewire.administration.equipment-master.index', [
             'equipments' => EquipmentMaster::with('location')
                 ->where('type', 'like', "%{$this->search}%")
                 ->paginate(10),
