@@ -48,6 +48,8 @@ use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
+use App\Livewire\Administration\EquipmentMaster\Index as EquipmentMasterIndex;
+
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -113,6 +115,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/userManager/people', User::class)->name('people');
     Route::get('administration/workflows/hazard', WorkflowEventHazard::class)->name('hazard.workflows');
     Route::get('administration/workflows/wpi', WpiWorkflowManager::class)->name('wpi.workflows');
+    Route::get('administration/equipment-master', EquipmentMasterIndex::class)->name('equipment-master');
 });
 // route download storage files
 
