@@ -89,7 +89,7 @@
                 @foreach($data as $index => $item)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td style="text-align: left;">{{ $item->equipmentMaster->location->name }}</td>
+                    <td style="text-align: left;">{{ $item->equipmentMaster->specific_location }}</td>
                     @foreach($structure['inputs'] as $input)
                         <td>{{ $item->conditions[$input] ?? '-' }}</td>
                     @endforeach
