@@ -53,7 +53,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto md:max-w-[calc(100vh-30rem)] lg:max-w-[calc(100vh-30rem)] 2xl:max-w-[calc(100vh-30rem)]">
+                <div class="overflow-x-auto md:max-w-[calc(100vh-5rem)] lg:max-w-[calc(100vh-5rem)] 2xl:max-w-[calc(100vh-5rem)]">
                     <table class="table border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
