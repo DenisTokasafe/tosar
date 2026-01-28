@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('fire_protections', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // Contoh: 'Fire Extinguisher', 'Hydrant', 'Eye Wash'
-            $table->string('location');
-            $table->string('equipment_no')->nullable();
             $table->date('inspection_date');
             $table->json('inspected_by')->nullable();
             // Menggunakan JSON untuk menyimpan checklist kondisi agar fleksibel
