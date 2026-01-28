@@ -21,11 +21,11 @@ class FireInspection extends Component
     public $dokumentasi;
     public $searchResponsibility = '';
     public $pelapors = [];
-    public $selected_location_specific =[];
+    public $selected_location_specific = [];
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
-    public $responsible_id;
+    public $responsible_id, $equipment_master_id;
     public $inspected_users = [];
     // Untuk fitur pencarian lokasi
     public $location_id;
@@ -166,14 +166,14 @@ class FireInspection extends Component
     }
     public function updatedLocation()
     {
-       $master = EquipmentMaster::whereId($this->location)->where('location_id', $this->location_id)->where('type', $this->type)->first();
-
+        $master = EquipmentMaster::whereId($this->location)->where('location_id', $this->location_id)->where('type', $this->type)->first();
+        $this->equipment_master_id = $master ? $master->id : null;
         if ($master) {
             // Ambil data teknis dari JSON technical_data di DB
             // Contoh: FE No, FE Type, Capacity akan terisi otomatis
             foreach ($master->technical_data as $key => $value) {
                 $this->conditions[$key] = $value;
-                }
+            }
 
 
             // Otomatis centang semua checklist (Aman/Normal)
@@ -190,7 +190,6 @@ class FireInspection extends Component
                 'backgroundColor' => "background: #f44336;",
             ]);
         }
-
     }
 
     // Definisi kriteria berdasarkan gambar yang Anda berikan
@@ -257,16 +256,13 @@ class FireInspection extends Component
             $documentationPath = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
         }
         FireProtection::create([
-            'type' => $this->type,
-            'location' => $this->location,
-            'area' => $this->area,
+            'equipment_master_id' => $this->equipment_master_id,
             'documentation_path' => $documentationPath,
             'inspection_date' => $this->inspection_date,
             'inspected_by' => $inspectedByString,
             'conditions' => $this->conditions, // Menyimpan array sebagai JSON
             'remarks' => $this->remarks,
         ]);
-
         $this->resetForm();
         $this->dispatch('alert', [
             'text' => "Data Inspeksi berhasil disimpan!",
