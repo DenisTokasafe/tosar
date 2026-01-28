@@ -9,8 +9,8 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
-        <div  class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
-            <label for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent" >
+        <div class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+            <label for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -36,39 +36,40 @@
                     <fieldset class="w-full fieldset">
                         <x-form.label label="Bulan" required />
 
-                        <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}" x-data="{
-                            fp: null,
-                            dateValue: @entangle('date').live,
-                            initFlatpickr() {
-                                // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
-                                this.$nextTick(() => {
-                                    if (this.fp) {
-                                        this.fp.destroy();
-                                    }
-
-                                    // Pastikan x-ref input tersedia
-                                    if (!this.$refs.input) return;
-
-                                    this.fp = flatpickr(this.$refs.input, {
-                                    static: true,
-                                        plugins: [
-                                            new monthSelectPlugin({
-                                                disableMobile: false,
-                                                shorthand: true,
-                                                dateFormat: 'M-Y',
-                                                altFormat: 'F Y',
-                                                theme: 'light'
-                                            })
-                                        ],
-                                        defaultDate: this.dateValue,
-                                        onChange: (selectedDates, dateStr) => {
-                                            this.dateValue = dateStr;
+                        <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
+                            x-data="{
+                                fp: null,
+                                dateValue: @entangle('date').live,
+                                initFlatpickr() {
+                                    // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
+                                    this.$nextTick(() => {
+                                        if (this.fp) {
+                                            this.fp.destroy();
                                         }
+
+                                        // Pastikan x-ref input tersedia
+                                        if (!this.$refs.input) return;
+
+                                        this.fp = flatpickr(this.$refs.input, {
+                                            static: true,
+                                            plugins: [
+                                                new monthSelectPlugin({
+                                                    disableMobile: false,
+                                                    shorthand: true,
+                                                    dateFormat: 'M-Y',
+                                                    altFormat: 'F Y',
+                                                    theme: 'light'
+                                                })
+                                            ],
+                                            defaultDate: this.dateValue,
+                                            onChange: (selectedDates, dateStr) => {
+                                                this.dateValue = dateStr;
+                                            }
+                                        });
                                     });
-                                });
-                            }
-                        }"
-                            x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
+                                }
+                            }" x-init="initFlatpickr()"
+                            x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
 
                             <input x-ref="input" type="text" readonly
                                 class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
@@ -89,10 +90,11 @@
                         </svg>
 
                         <span wire:loading.add.class='hidden' wire:target="exportPDF">Export to PDF</span>
-                        <span class="hidden" wire:loading.remove.class='hidden' wire:target="exportPDF">Generating PDF...</span>
+                        <span class="hidden" wire:loading.remove.class='hidden' wire:target="exportPDF">Generating
+                            PDF...</span>
                     </label>
                 </div>
-               <label class="modal-backdrop" for="my_modal_6">Close</label>
+                <label class="modal-backdrop" for="my_modal_6">Close</label>
             </div>
         </div>
         <div class="overflow-x-auto">
@@ -158,9 +160,12 @@
                                         <a href="{{ Storage::url($item->documentation_path) }}" target="_blank"
                                             class="btn btn-ghost btn-xs text-info">Doc</a>
                                     @endif
-                                    <button wire:click="edit({{ $item->id }})"
-                                        class="btn btn-ghost btn-xs">Edit</button>
 
+                                    <flux:tooltip content="edit" position="top">
+                                        <flux:button href="{{ route('fire-inspection-edit', $item->id) }}" size="xs"
+                                            icon="pencil-square" variant="subtle">
+                                        </flux:button>
+                                    </flux:tooltip>
 
                                 </div>
                             </td>

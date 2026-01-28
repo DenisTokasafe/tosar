@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HazardController;
 use App\Livewire\Hazard\HazardReportPanel;
 use App\Livewire\Administration\Roles\Role;
+use App\Livewire\Inspection\FireInspection;
 use App\Http\Controllers\ManhoursController;
 use App\Livewire\Administration\People\User;
 use App\Livewire\Administration\Menu\ListMenu;
+use App\Livewire\Inspection\FireInspectionEdit;
+use App\Livewire\Inspection\FireInspectionList;
 use App\Livewire\Administration\DeptGroup\Group;
 use App\Livewire\Administration\RiskMatrix\Grid;
 use App\Livewire\Administration\Menu\ListSubMenu;
@@ -45,8 +48,6 @@ use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
-use App\Livewire\Inspection\FireInspection;
-use App\Livewire\Inspection\FireInspectionList;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('manhours', Index::class)->name('manhours');
     Route::get('inspeksi/fire_inspection', FireInspection::class)->name('fire-inspection');
     Route::get('inspeksi/fire_inspection_list', FireInspectionList::class)->name('fire-inspection-list');
+    Route::get('inspeksi/fire-inspection/edit/{id}', FireInspectionEdit::class)->name('fire-inspection-edit');
     Route::get('inspeksi/wpi', WpiList::class)->name('wpi.list');
     Route::get('inspeksi/wpi/create', WpiForm::class)->name('wpi.create');
     Route::get('inspeksi/wpi/edit/{id?}', WpiForm::class)->name('wpi.edit');
