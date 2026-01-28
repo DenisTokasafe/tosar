@@ -160,8 +160,9 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
         // Cari data di EquipmentMaster
+        $this->selected_location_specific = EquipmentMaster::where('location_id', $id)->where('type', $this->type)->get();
         $master = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)
+            ->where('type', $this->type)->where('location_specific','like',"%{$this->location}%")
             ->first();
 
         if ($master) {
@@ -170,7 +171,7 @@ class FireInspection extends Component
             foreach ($master->technical_data as $key => $value) {
                 $this->conditions[$key] = $value;
                 }
-                $this->selected_location_specific = EquipmentMaster::where('location_id', $id)->where('type', $this->type)->get();
+
 
             // Otomatis centang semua checklist (Aman/Normal)
             if (isset($this->fields[$this->type]['checks'])) {
