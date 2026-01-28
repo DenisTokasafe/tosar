@@ -251,7 +251,7 @@ class FireInspection extends Component
             // Gunakan Transaction agar jika satu gagal, semua dibatalkan
             DB::transaction(function () use ($inspectedByString, $documentationPath) {
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
-                    \App\Models\FireProtection::create([
+                    FireProtection::create([
                         'equipment_master_id' => $equipmentMasterId, // ID diambil dari key array conditions
                         'documentation_path'  => $documentationPath,
                         'inspection_date'     => $this->inspection_date,
