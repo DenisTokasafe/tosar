@@ -103,7 +103,7 @@ class FireInspectionList extends Component
         $pdf = Pdf::loadView('pdf.dynamic-report', [
             'data' => $inspections,
             'type' => $this->type,
-            'area' => $inspections->first()->area,
+            'area' => $inspections->first()->equipmentMaster->location->name ?? 'N/A',
             'structure' => $structure,
             'month' => Carbon::now()->translatedFormat('F Y'),
         ])->setPaper('a4', 'landscape');
