@@ -31,7 +31,6 @@
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
                 <fieldset class="fieldset">
-                        <x-form.label label="PIC" required />
                         <select wire:model.live="location"
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('location') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">-- Pilih --</option>
