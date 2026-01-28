@@ -53,7 +53,6 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-{{ $firstEquipment }}
                 <table class="table w-full border-collapse table-xs">
                     <thead>
                         <tr class="text-white bg-slate-700">
