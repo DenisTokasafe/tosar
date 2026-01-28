@@ -32,24 +32,16 @@
             {{-- HEADER INFO (AREA, LOKASI, TANGGAL) --}}
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
                 {{-- Menggunakan logic dari Trait: searchLocation --}}
-                <x-form.search-floating
-                    label="Area"
-                    required
-                    modelsearch="searchLocation"
-                    modelid="location_id"
-                    placeholder="Cari Area..."
-                    :options="$locations"
-                    :showdropdown="$show_location"
-                    clickaction="selectLocation"
-                    namedb="name"
-                />
+                <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
+                    placeholder="Cari Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                    namedb="name" />
 
                 <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
             {{-- SECTION DYNAMIS INPUTS & CHECKBOXES --}}
-            @if($type && isset($fields[$type]))
+            @if ($type && isset($fields[$type]))
                 <div class="p-4 mb-4 border border-gray-200 rounded-lg bg-gray-50">
                     {{-- Inputs Teks Dinamis (FE No, Box No, dll) --}}
                     <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
@@ -57,8 +49,7 @@
                             @foreach ($fields[$type]['inputs'] as $inputField)
                                 <fieldset class="fieldset">
                                     <label class="floating-label">
-                                        <input type="text"
-                                            wire:key="input-{{ $type }}-{{ $inputField }}"
+                                        <input type="text" wire:key="input-{{ $type }}-{{ $inputField }}"
                                             wire:model.live="conditions.{{ $inputField }}"
                                             placeholder="{{ $inputField }}"
                                             class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
@@ -78,7 +69,8 @@
                             @foreach ($fields[$type]['checks'] as $field)
                                 <fieldset class="p-2 bg-white border border-gray-200 rounded-md">
                                     <label class="flex items-center justify-between text-xs cursor-pointer">
-                                        <span class="font-semibold tracking-wider text-gray-600 uppercase">{{ $field }}</span>
+                                        <span
+                                            class="font-semibold tracking-wider text-gray-600 uppercase">{{ $field }}</span>
                                         <input type="checkbox"
                                             wire:key="check-{{ $type }}-{{ $field }}"
                                             wire:model="conditions.{{ $field }}"
@@ -98,17 +90,62 @@
                 {{-- UPLOAD DOKUMENTASI --}}
                 <fieldset class="fieldset">
                     <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+
                     <div wire:loading.remove wire:target="dokumentasi">
+                        {{-- CASE 1: Tampilkan File Baru yang Sedang Di-upload --}}
                         @if ($dokumentasi)
                             <div class="mt-2">
                                 @php $ext = $dokumentasi->getClientOriginalExtension(); @endphp
                                 @if (in_array($ext, ['jpg', 'jpeg', 'png']))
-                                    <img src="{{ $dokumentasi->temporaryUrl() }}" class="w-40 h-auto border rounded shadow-sm" />
+                                    <img src="{{ $dokumentasi->temporaryUrl() }}"
+                                        class="w-40 h-auto border rounded shadow-sm" />
                                 @else
-                                    <div class="flex items-center gap-2 p-2 border rounded bg-gray-50">
-                                        @if($ext == 'pdf') <x-icon.pdf class="w-8 h-8" />
-                                        @else <x-icon.word class="w-8 h-8" /> @endif
-                                        <span class="text-xs truncate">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                    <div class="flex items-center gap-2 p-2 border rounded bg-gray-50 text-info">
+                                        @if ($ext == 'pdf')
+                                            <x-icon.pdf class="w-8 h-8" />
+                                        @else
+                                            <x-icon.word class="w-8 h-8" />
+                                        @endif
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-bold">File Baru:</span>
+                                            <span
+                                                class="text-xs truncate">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- CASE 2: Tampilkan File Lama dari Database (Jika Tidak Ada Upload Baru) --}}
+                        @elseif (isset($old_documentation) && $old_documentation)
+                            <div class="mt-2">
+                                @php
+                                    $ext = pathinfo($old_documentation, PATHINFO_EXTENSION);
+                                    $fileName = basename($old_documentation);
+                                @endphp
+
+                                @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png']))
+                                    <div class="relative w-40">
+                                        <span
+                                            class="absolute top-0 left-0 bg-black/50 text-white text-[10px] px-1 rounded-br">File
+                                            Saat Ini</span>
+                                        <img src="{{ asset('storage/' . $old_documentation) }}"
+                                            class="w-40 h-auto border rounded shadow-sm" />
+                                    </div>
+                                @else
+                                    <div class="flex items-center gap-2 p-2 border border-blue-200 rounded bg-blue-50">
+                                        @if (strtolower($ext) == 'pdf')
+                                            <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                        @else
+                                            <x-icon.word class="w-8 h-8 text-blue-500" />
+                                        @endif
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-bold text-blue-600 uppercase">Dokumen
+                                                Tersimpan:</span>
+                                            <a href="{{ asset('storage/' . $old_documentation) }}" target="_blank"
+                                                class="text-xs text-blue-700 underline truncate hover:text-blue-900">
+                                                {{ $fileName }}
+                                            </a>
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -116,31 +153,29 @@
                     </div>
                     <x-label-error :messages="$errors->get('dokumentasi')" />
                 </fieldset>
+                <x-label-error :messages="$errors->get('dokumentasi')" />
+                </fieldset>
 
                 {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
-                <div >
-                    <x-form.searchable-select-advanced
-                        label="Dilaporkan Oleh"
-                        placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchResponsibility"
-                        modelid="location_id" {{-- ID dummy untuk select, data asli masuk ke array $inspected_users --}}
-                        :options="$pelapors"
-                        :showdropdown="$showPelaporDropdown"
-                        :manualMode="$manualPelaporMode"
-                        manualModelName="manualPelaporName"
-                        enableManualAction="enableManualPelapor"
-                        addManualAction="enableManualPelapor" {{-- Memanggil fungsi yang sama untuk push manual --}}
-                        clickaction="selectPelapor"
-                    />
+                <div>
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchResponsibility" modelid="location_id" {{-- ID dummy untuk select, data asli masuk ke array $inspected_users --}}
+                        :options="$pelapors" :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                        enableManualAction="enableManualPelapor" addManualAction="enableManualPelapor"
+                        {{-- Memanggil fungsi yang sama untuk push manual --}} clickaction="selectPelapor" />
 
                     {{-- Badge Daftar Pelapor yang Terpilih --}}
                     <div class="flex flex-wrap gap-2 mt-2">
                         @foreach ($inspected_users as $index => $user)
-                            <div class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded shadow-xs bg-info/10 text-info border-info/20">
+                            <div
+                                class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded shadow-xs bg-info/10 text-info border-info/20">
                                 <span>{{ $user['name'] }}</span>
-                                <button type="button" wire:click="removeInspectedUser({{ $index }})" class="transition-colors hover:text-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                    class="transition-colors hover:text-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
@@ -152,7 +187,8 @@
 
             <div class="flex justify-end pt-4 mt-6 border-t">
                 <button wire:click="update" wire:loading.attr="disabled" class="btn btn-soft btn-success btn-sm">
-                    <span wire:loading.remove.class='hidden' class="hidden" wire:target="update" class="loading loading-spinner loading-xs"></span>
+                    <span wire:loading.remove.class='hidden' class="hidden" wire:target="update"
+                        class="loading loading-spinner loading-xs"></span>
                     Simpan Laporan
                 </button>
             </div>
