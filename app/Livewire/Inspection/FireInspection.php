@@ -161,8 +161,13 @@ class FireInspection extends Component
         $this->show_location = false;
         // Cari data di EquipmentMaster
         $this->selected_location_specific = EquipmentMaster::where('location_id', $id)->where('type', $this->type)->get();
-        $master = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)->where('specific_location', $this->location)
+
+        $this->validateOnly('location_id');
+    }
+    public function updatedLocation()
+    {
+       $master = EquipmentMaster::where('location_id', $this->location_id)
+            ->where('type', $this->type)->where('specific_location','like', $this->location)
             ->first();
 
         if ($master) {
@@ -188,7 +193,6 @@ class FireInspection extends Component
             ]);
         }
 
-        $this->validateOnly('location_id');
     }
 
     // Definisi kriteria berdasarkan gambar yang Anda berikan
