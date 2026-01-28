@@ -122,20 +122,27 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
-        // Reset pilihan lokasi spesifik saat area ganti
-        $this->location = null;
-        $this->equipment_master_id = null;
-
-        // Load daftar alat yang ada di area ini berdasarkan tipenya
-        $this->selected_location_specific = EquipmentMaster::where('location_id', $id)
+        // Ambil semua alat
+        $allEquipments = EquipmentMaster::where('location_id', $id)
             ->where('type', $this->type)
             ->get();
 
-        if (empty($this->selected_location_specific)) {
-            $this->dispatch('alert', [
-                'text' => "Tidak ada alat jenis {$this->type} di area {$name}.",
-                'backgroundColor' => "background: #ff9800;",
-            ]);
+        $this->conditions = []; // Reset
+
+        foreach ($allEquipments as $eq) {
+            // Masukkan Technical Data
+            if ($eq->technical_data) {
+                foreach ($eq->technical_data as $key => $val) {
+                    $this->conditions[$eq->id][$key] = $val;
+                }
+            }
+
+            // Masukkan Checklist Default (True)
+            if (isset($this->fields[$this->type]['checks'])) {
+                foreach ($this->fields[$this->type]['checks'] as $checkField) {
+                    $this->conditions[$eq->id][$checkField] = true;
+                }
+            }
         }
     }
 
@@ -247,7 +254,6 @@ class FireInspection extends Component
                 'text' => "Laporan inspeksi berhasil disimpan!",
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-
         } catch (\Exception $e) {
             $this->dispatch('alert', [
                 'text' => "Terjadi kesalahan: " . $e->getMessage(),

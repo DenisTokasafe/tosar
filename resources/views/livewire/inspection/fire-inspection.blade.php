@@ -49,72 +49,80 @@
             {{-- TABLE SPREADSHEET STYLE --}}
             <div class="mb-6 overflow-x-auto border rounded-lg shadow-sm">
                 @php
-                    $masterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
+                    // Ambil semua data alat di area tersebut dengan tipe yang sama
+                    $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
                         ->where('type', $type)
-                        ->first();
+                        ->get();
+
                     $checks = $fields[$type]['checks'] ?? [];
+
+                    // Ambil sample technical data dari data pertama untuk header tabel
+                    $firstEquipment = $allMasterData->first();
+                    $techKeys =
+                        $firstEquipment && $firstEquipment->technical_data
+                            ? array_keys($firstEquipment->technical_data)
+                            : [];
                 @endphp
 
                 <table class="table w-full border-collapse table-xs">
                     <thead>
-                        {{-- Group Header --}}
                         <tr class="text-white bg-slate-700">
-                            <th class="text-center border border-slate-600" rowspan="2">Lokasi Spesifik</th>
-                            @if ($masterData && isset($masterData->technical_data))
-                                <th class="text-center border border-slate-600" colspan="{{ count($masterData->technical_data) }}">Informasi Teknis Alat</th>
+                            <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
+                            @if (count($techKeys) > 0)
+                                <th class="text-center border border-slate-600" colspan="{{ count($techKeys) }}">
+                                    Technical Information</th>
                             @endif
-                            <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">Item Pemeriksaan (Kondisi)</th>
+                            <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">Checklist
+                                Item</th>
                         </tr>
-                        {{-- Sub Header --}}
                         <tr class="bg-slate-100 text-slate-700">
-                            @if ($masterData && isset($masterData->technical_data))
-                                @foreach (array_keys($masterData->technical_data) as $techKey)
-                                    <th class="text-center border border-slate-300">{{ $techKey }}</th>
-                                @endforeach
-                            @endif
+                            @foreach ($techKeys as $techKey)
+                                <th class="text-center border border-slate-300">{{ $techKey }}</th>
+                            @endforeach
                             @foreach ($checks as $checkItem)
-                                <th class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">{{ $checkItem }}</th>
+                                <th
+                                    class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">
+                                    {{ $checkItem }}</th>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        @if($location_id && $type)
-                        <tr class="hover:bg-slate-50">
-                            {{-- Specific Location Column --}}
-                            <td class="font-medium border border-slate-200 bg-slate-50/50">
-                                {{ $area }} <br>
-                                <span class="text-[9px] text-gray-500">{{ $selected_location_specific->where('id', $location)->first()->specific_location ?? '' }}</span>
-                            </td>
+                        @forelse ($allMasterData as $master)
+                            <tr class="hover:bg-slate-50">
+                                {{-- Specific Location --}}
+                                <td class="font-medium border border-slate-200 bg-slate-50/50">
+                                    {{ $master->specific_location }}
+                                </td>
 
-                            {{-- Technical Data Columns (Readonly) --}}
-                            @if ($masterData && isset($masterData->technical_data))
-                                @foreach ($masterData->technical_data as $key => $value)
-                                    <td class="text-center border border-slate-200 bg-blue-50/30">
-                                        <input type="text" wire:model="conditions.{{ $key }}" readonly
+                                {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
+                                @foreach ($techKeys as $key)
+                                    <td class="text-center border border-slate-200 bg-blue-50/10">
+                                        {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
+                                        <input type="text"
+                                            wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
                                             class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                     </td>
                                 @endforeach
-                            @endif
 
-                            {{-- Checklist Columns (Checkboxes) --}}
-                            @foreach ($checks as $field)
-                                <td class="text-center border border-slate-200">
-                                    <div class="flex justify-center">
-                                        <input type="checkbox" wire:key="condition-{{ $field }}"
-                                            wire:model="conditions.{{ $field }}"
-                                            class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
-                                    </div>
-                                    <x-label-error :messages="$errors->get('conditions.' . $field)" />
+                                {{-- Checklist Columns --}}
+                                @foreach ($checks as $field)
+                                    <td class="text-center border border-slate-200">
+                                        <div class="flex justify-center">
+                                            <input type="checkbox"
+                                                wire:key="check-{{ $master->id }}-{{ $field }}"
+                                                wire:model="conditions.{{ $master->id }}.{{ $field }}"
+                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
+                                        </div>
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="30" class="py-10 italic text-center text-slate-400">
+                                    No equipment found. Please select Area and Type correctly.
                                 </td>
-                            @endforeach
-                        </tr>
-                        @else
-                        <tr>
-                            <td colspan="20" class="py-10 italic text-center text-slate-400">
-                                Silahkan pilih Jenis Alat dan Area untuk memuat tabel inspeksi.
-                            </td>
-                        </tr>
-                        @endif
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -122,7 +130,8 @@
             {{-- REMARKS & UPLOAD SECTIONS --}}
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div class="space-y-4">
-                    <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Tuliskan temuan atau catatan di sini..." />
+                    <x-form.textarea label="Remarks/Catatan" required model="remarks"
+                        placeholder="Tuliskan temuan atau catatan di sini..." />
 
                     <fieldset class="fieldset">
                         <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
@@ -130,11 +139,14 @@
                             @if ($dokumentasi)
                                 <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
                                     @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                        <img src="{{ $dokumentasi->temporaryUrl() }}" class="h-auto border rounded w-44" />
+                                        <img src="{{ $dokumentasi->temporaryUrl() }}"
+                                            class="h-auto border rounded w-44" />
                                     @else
                                         <div class="flex items-center gap-2 text-sm text-info">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                             </svg>
                                             {{ $dokumentasi->getClientOriginalName() }}
                                         </div>
@@ -149,18 +161,22 @@
                 <div class="space-y-4">
                     <fieldset class="fieldset">
                         <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                            modelsearch="searchResponsibility" modelid="action_responsible_id"
-                            :options="$pelapors" :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode"
-                            manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                            addManualAction="addPelaporManual" clickaction="selectPelapor" />
+                            modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                            :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                            enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                            clickaction="selectPelapor" />
 
                         <div class="flex flex-wrap gap-2 mt-3">
                             @foreach ($inspected_users as $index => $user)
-                                <div class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
+                                <div
+                                    class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
                                     <span>{{ $user['name'] }}</span>
-                                    <button type="button" wire:click="removeInspectedUser({{ $index }})" class="text-slate-400 hover:text-red-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                        class="text-slate-400 hover:text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
@@ -169,8 +185,7 @@
                     </fieldset>
 
                     <div class="pt-4 border-t">
-                        <button wire:click="save"
-                            wire:loading.attr="disabled"
+                        <button wire:click="save" wire:loading.attr="disabled"
                             class="w-full btn btn-success btn-sm md:w-auto">
                             <span wire:loading.remove wire:target="save">🚀 Simpan Laporan Inspeksi</span>
                             <span wire:loading wire:target="save">Menyimpan...</span>
