@@ -7,7 +7,7 @@
         @endphp
 
         @if (Breadcrumbs::exists($currentRoute))
-            {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
+            {!! Breadcrumbs::render($currentRoute, isset($inspectionId) ? $inspectionId : null) !!}
         @endif
     </div>
 
