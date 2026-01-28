@@ -58,9 +58,9 @@
 
                     <div class="flex flex-col gap-2">
                         <input type="file" wire:model="file_excel"
-                            class="w-full file-input file-input-bordered file-input-xs" />
+                            class="w-full file-input file-input-bordered file-input-info file-input-xs" />
 
-                        <div wire:loading wire:target="file_excel" class="text-[10px] text-blue-600 animate-pulse">
+                        <div wire:loading.remove.class='hidden' wire:target="file_excel" class="text-[10px] text-blue-600 animate-pulse hidden">
                             Sedang mengunggah file...
                         </div>
 
