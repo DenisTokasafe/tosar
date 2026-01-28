@@ -76,7 +76,7 @@ class FireInspection extends Component
     public function rules()
     {
         return [
-            'location'        => 'required',
+
             'inspection_date' => 'required|date',
             'inspected_users' => 'required|array|min:1',
             'type'            => 'required|string',
@@ -89,7 +89,7 @@ class FireInspection extends Component
     protected function messages()
     {
         return [
-            'location.required'        => 'Lokasi spesifik wajib dipilih.',
+
             'inspection_date.required' => 'Tanggal inspeksi wajib diisi.',
             'inspected_users.required' => 'Minimal satu orang pemeriksa wajib dipilih.',
             'type.required'            => 'Jenis alat wajib dipilih.',

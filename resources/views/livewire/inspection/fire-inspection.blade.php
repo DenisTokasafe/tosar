@@ -32,16 +32,6 @@
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
 
-                <fieldset class="fieldset">
-                    <select wire:model.live="location"
-                        class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('location') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">-- Pilih Lokasi Spesifik --</option>
-                        @foreach ($selected_location_specific as $pj)
-                            <option value="{{ $pj->id }}">{{ $pj->specific_location }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('location')" />
-                </fieldset>
 
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
