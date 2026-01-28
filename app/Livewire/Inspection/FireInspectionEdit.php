@@ -95,7 +95,7 @@ class FireInspectionEdit extends Component
         FireProtection::find($this->inspectionId)->update($data);
 
         session()->flash('success', 'Data berhasil diperbarui!');
-        return redirect()->route('inspection.index'); // Sesuaikan route index Anda
+        return $this->redirect(route('fire-inspection-list'), navigate: true);
     }
 
         public function updatedSearchResponsibility()
