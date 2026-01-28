@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
 use App\Models\FireProtection;
+use App\Models\EquipmentMaster;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Compilers\Mount;
 
@@ -157,6 +158,33 @@ class FireInspection extends Component
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
+        // Cari data di EquipmentMaster
+        $master = EquipmentMaster::where('location_id', $id)
+            ->where('type', $this->type)
+            ->first();
+
+        if ($master) {
+            // Ambil data teknis dari JSON technical_data di DB
+            // Contoh: FE No, FE Type, Capacity akan terisi otomatis
+            foreach ($master->technical_data as $key => $value) {
+                $this->conditions[$key] = $value;
+            }
+
+            // Otomatis centang semua checklist (Aman/Normal)
+            if (isset($this->fields[$this->type]['checks'])) {
+                foreach ($this->fields[$this->type]['checks'] as $checkField) {
+                    $this->conditions[$checkField] = true;
+                }
+            }
+        } else {
+            // Jika data master tidak ditemukan, reset conditions agar tidak sisa dari area sebelumnya
+            $this->updatedType($this->type);
+            $this->dispatch('alert', [
+                'text' => "Data alat untuk tipe ini tidak ditemukan di area tersebut.",
+                'backgroundColor' => "background: #f44336;",
+            ]);
+        }
+
         $this->validateOnly('location_id');
     }
 
