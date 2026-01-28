@@ -37,7 +37,7 @@
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
-            <div class="mb-6 overflow-x-auto border rounded-lg shadow-sm">
+            <div class="mb-6 border rounded-lg shadow-sm">
                 @php
                     // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
@@ -53,83 +53,87 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <table class="table border-collapse table-xs">
-                    <thead>
-                        <tr class="text-white bg-slate-700">
-                            <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
+                <div class="overflow-x-auto">
+                    <table class="table border-collapse table-xs">
+                        <thead>
+                            <tr class="text-white bg-slate-700">
+                                <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
 
-                            @if (count($techKeys) > 0)
-                                <th class="text-center border border-slate-600" colspan="{{ count($techKeys) }}">
-                                    Technical Information
+                                @if (count($techKeys) > 0)
+                                    <th class="text-center border border-slate-600" colspan="{{ count($techKeys) }}">
+                                        Technical Information
+                                    </th>
+                                @endif
+
+                                <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">
+                                    Checklist Item
                                 </th>
-                            @endif
 
-                            <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">
-                                Checklist Item
-                            </th>
+                                {{-- TAMBAHKAN INI: Header Remarks --}}
+                                <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
+                            </tr>
 
-                            {{-- TAMBAHKAN INI: Header Remarks --}}
-                            <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
-                        </tr>
-
-                        <tr class="bg-slate-100 text-slate-700">
-                            @foreach ($techKeys as $techKey)
-                                <th class="text-center border border-slate-300">{{ $techKey }}</th>
-                            @endforeach
-
-                            @foreach ($checks as $checkItem)
-                                <th
-                                    class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">
-                                    {{ $checkItem }}
-                                </th>
-                            @endforeach
-                            {{-- Baris kedua tidak perlu TH lagi untuk Remarks karena sudah di-rowspan dari atas --}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($allMasterData as $master)
-                            <tr class="hover:bg-slate-50">
-                                {{-- Specific Location --}}
-                                <td class="font-medium border border-slate-200 bg-slate-50/50">
-                                    {{ $master->specific_location }}
-                                </td>
-
-                                {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
-                                @foreach ($techKeys as $key)
-                                    <td class="text-center border border-slate-200 bg-blue-50/10">
-                                        {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
-                                        <input type="text"
-                                            wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
-                                            class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
-                                    </td>
+                            <tr class="bg-slate-100 text-slate-700">
+                                @foreach ($techKeys as $techKey)
+                                    <th class="text-center border border-slate-300">{{ $techKey }}</th>
                                 @endforeach
 
-
-                                {{-- Checklist Columns --}}
-                                @foreach ($checks as $field)
-                                    <td class="text-center border border-slate-200">
-                                        <div class="flex justify-center">
-                                            <input type="checkbox"
-                                                wire:key="check-{{ $master->id }}-{{ $field }}"
-                                                wire:model="conditions.{{ $master->id }}.{{ $field }}"
-                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
-                                        </div>
-                                    </td>
+                                @foreach ($checks as $checkItem)
+                                    <th
+                                        class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">
+                                        {{ $checkItem }}
+                                    </th>
                                 @endforeach
-                                {{-- Kolom Remarks Per Baris --}}
-                                <td class="p-1 border border-slate-200">
-                                         <x-form.textarea label="Remarks/Catatan" required model="conditions.{{ $master->id }}.remarks" placeholder="Tuliskan temuan atau catatan di sini..." />
-                                </td>
+                                {{-- Baris kedua tidak perlu TH lagi untuk Remarks karena sudah di-rowspan dari atas --}}
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="30" class="py-10 italic text-center text-slate-400">
-                                    No equipment found. Please select Area and Type correctly.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($allMasterData as $master)
+                                <tr class="hover:bg-slate-50">
+                                    {{-- Specific Location --}}
+                                    <td class="font-medium border border-slate-200 bg-slate-50/50">
+                                        {{ $master->specific_location }}
+                                    </td>
+
+                                    {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
+                                    @foreach ($techKeys as $key)
+                                        <td class="text-center border border-slate-200 bg-blue-50/10">
+                                            {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
+                                            <input type="text"
+                                                wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
+                                                class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
+                                        </td>
+                                    @endforeach
+
+
+                                    {{-- Checklist Columns --}}
+                                    @foreach ($checks as $field)
+                                        <td class="text-center border border-slate-200">
+                                            <div class="flex justify-center">
+                                                <input type="checkbox"
+                                                    wire:key="check-{{ $master->id }}-{{ $field }}"
+                                                    wire:model="conditions.{{ $master->id }}.{{ $field }}"
+                                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
+                                            </div>
+                                        </td>
+                                    @endforeach
+                                    {{-- Kolom Remarks Per Baris --}}
+                                    <td class="p-1 border border-slate-200">
+                                        <x-form.textarea label="Remarks/Catatan" required
+                                            model="conditions.{{ $master->id }}.remarks"
+                                            placeholder="Tuliskan temuan atau catatan di sini..." />
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="30" class="py-10 italic text-center text-slate-400">
+                                        No equipment found. Please select Area and Type correctly.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {{-- REMARKS & UPLOAD SECTIONS --}}
