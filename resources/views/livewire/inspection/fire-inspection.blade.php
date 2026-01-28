@@ -9,8 +9,10 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
+
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white rounded-lg shadow">
+            {{-- HEADER SELECTION --}}
             <div class="mb-4">
                 <fieldset class="w-full fieldset md:max-w-80">
                     <x-form.label label="Pilih Jenis Alat" required />
@@ -26,134 +28,156 @@
             </div>
 
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
-                {{-- <x-form.input-floating label="Area" model="area" required /> --}}
                 <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
+
                 <fieldset class="fieldset">
                     <select wire:model.live="location"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('location') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">-- Pilih --</option>
+                        <option value="">-- Pilih Lokasi Spesifik --</option>
                         @foreach ($selected_location_specific as $pj)
                             <option value="{{ $pj->id }}">{{ $pj->specific_location }}</option>
                         @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('location')" />
                 </fieldset>
+
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
-            <div class="p-4 mb-4 border rounded-lg bg-gray-50">
-
-                {{-- Check apakah ada data master untuk lokasi dan tipe yang dipilih --}}
+            {{-- TABLE SPREADSHEET STYLE --}}
+            <div class="mb-6 overflow-x-auto border rounded-lg shadow-sm">
                 @php
                     $masterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
                         ->where('type', $type)
                         ->first();
+                    $checks = $fields[$type]['checks'] ?? [];
                 @endphp
 
-                @if ($masterData && isset($masterData->technical_data))
-                    <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
-                        @foreach ($masterData->technical_data as $key => $value)
-                            <fieldset class="fieldset">
-                                <label class="floating-label">
-                                    <input type="text" wire:key="technical-{{ $key }}"
-                                        wire:model.live="conditions.{{ $key }}"
-                                        placeholder="{{ $key }}" {{-- Data teknis biasanya readonly karena ditarik dari Master --}} readonly
-                                        class="input-xs input input-bordered w-full bg-gray-100 cursor-not-allowed focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $key) ? 'ring-1 ring-rose-500' : '' }}" />
-                                    <span class="font-semibold text-info">{{ $key }}</span>
-                                </label>
-                                <x-label-error :messages="$errors->get('conditions.' . $key)" />
-                            </fieldset>
-                        @endforeach
-                    </div>
-                @else
-                    {{-- Opsional: Tampilan jika data master belum ditemukan --}}
-                    <div class="p-2 mb-4 text-xs italic border rounded text-amber-600 bg-amber-50 border-amber-200">
-                        Silahkan pilih area untuk memuat data nomor alat, tipe, dan kapasitas secara otomatis.
-                    </div>
-                @endif
+                <table class="table w-full border-collapse table-xs">
+                    <thead>
+                        {{-- Group Header --}}
+                        <tr class="text-white bg-slate-700">
+                            <th class="text-center border border-slate-600" rowspan="2">Lokasi Spesifik</th>
+                            @if ($masterData && isset($masterData->technical_data))
+                                <th class="text-center border border-slate-600" colspan="{{ count($masterData->technical_data) }}">Informasi Teknis Alat</th>
+                            @endif
+                            <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">Item Pemeriksaan (Kondisi)</th>
+                        </tr>
+                        {{-- Sub Header --}}
+                        <tr class="bg-slate-100 text-slate-700">
+                            @if ($masterData && isset($masterData->technical_data))
+                                @foreach (array_keys($masterData->technical_data) as $techKey)
+                                    <th class="text-center border border-slate-300">{{ $techKey }}</th>
+                                @endforeach
+                            @endif
+                            @foreach ($checks as $checkItem)
+                                <th class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">{{ $checkItem }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($location_id && $type)
+                        <tr class="hover:bg-slate-50">
+                            {{-- Specific Location Column --}}
+                            <td class="font-medium border border-slate-200 bg-slate-50/50">
+                                {{ $area }} <br>
+                                <span class="text-[9px] text-gray-500">{{ $selected_location_specific->where('id', $location)->first()->specific_location ?? '' }}</span>
+                            </td>
 
-                <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                            {{-- Technical Data Columns (Readonly) --}}
+                            @if ($masterData && isset($masterData->technical_data))
+                                @foreach ($masterData->technical_data as $key => $value)
+                                    <td class="text-center border border-slate-200 bg-blue-50/30">
+                                        <input type="text" wire:model="conditions.{{ $key }}" readonly
+                                            class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
+                                    </td>
+                                @endforeach
+                            @endif
 
-                    @foreach ($fields[$type]['checks'] as $field)
-                        <fieldset class="p-2 border rounded-md fieldset">
-                            <label class="label">
-                                {{ $field }}
-                                <input type="checkbox" wire:key="condition-{{ $field }}" checked
-                                    wire:model="conditions.{{ $field }}"
-                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
-                            </label>
-                        </fieldset>
-                    @endforeach
-                </div>
+                            {{-- Checklist Columns (Checkboxes) --}}
+                            @foreach ($checks as $field)
+                                <td class="text-center border border-slate-200">
+                                    <div class="flex justify-center">
+                                        <input type="checkbox" wire:key="condition-{{ $field }}"
+                                            wire:model="conditions.{{ $field }}"
+                                            class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
+                                    </div>
+                                    <x-label-error :messages="$errors->get('conditions.' . $field)" />
+                                </td>
+                            @endforeach
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="20" class="py-10 italic text-center text-slate-400">
+                                Silahkan pilih Jenis Alat dan Area untuk memuat tabel inspeksi.
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
-            <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 ">
-                <fieldset class="fieldset">
-                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
-                    <div wire:loading.remove wire:target="dokumentasi">
-                        @if ($dokumentasi)
-                            @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                <img src="{{ $dokumentasi->temporaryUrl() }}"
-                                    class="mt-2 {{ $dokumentasi ? 'w-40' : '' }} h-auto rounded border" />
-                            @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                                <div class="flex items-center gap-2 mt-2">
-                                    @if ($dokumentasi->getClientOriginalExtension() == 'pdf')
-                                        <x-icon.pdf class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-red-600">{{ $dokumentasi->getClientOriginalName() }}</span>
-                                    @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['doc', 'docx']))
-                                        <x-icon.word class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-blue-600">{{ $dokumentasi->getClientOriginalName() }}</span>
+
+            {{-- REMARKS & UPLOAD SECTIONS --}}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="space-y-4">
+                    <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Tuliskan temuan atau catatan di sini..." />
+
+                    <fieldset class="fieldset">
+                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                        <div wire:loading.remove wire:target="dokumentasi">
+                            @if ($dokumentasi)
+                                <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
+                                    @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                        <img src="{{ $dokumentasi->temporaryUrl() }}" class="h-auto border rounded w-44" />
                                     @else
-                                        {{-- Ikon generik untuk file lain --}}
-                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                        </svg>
-                                        <span class="text-sm text-gray-600">File:
-                                            {{ $dokumentasi->getClientOriginalName() }}</span>
+                                        <div class="flex items-center gap-2 text-sm text-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                            </svg>
+                                            {{ $dokumentasi->getClientOriginalName() }}
+                                        </div>
                                     @endif
                                 </div>
-                            @else
-                                <p class="mt-2 text-sm text-gray-600">File:
-                                    {{ $dokumentasi->getClientOriginalName() }}
-                                </p>
                             @endif
-                        @endif
+                        </div>
+                        <x-label-error :messages="$errors->get('dokumentasi')" />
+                    </fieldset>
+                </div>
+
+                <div class="space-y-4">
+                    <fieldset class="fieldset">
+                        <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                            modelsearch="searchResponsibility" modelid="action_responsible_id"
+                            :options="$pelapors" :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode"
+                            manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                            addManualAction="addPelaporManual" clickaction="selectPelapor" />
+
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            @foreach ($inspected_users as $index => $user)
+                                <div class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
+                                    <span>{{ $user['name'] }}</span>
+                                    <button type="button" wire:click="removeInspectedUser({{ $index }})" class="text-slate-400 hover:text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </fieldset>
+
+                    <div class="pt-4 border-t">
+                        <button wire:click="save"
+                            wire:loading.attr="disabled"
+                            class="w-full btn btn-success btn-sm md:w-auto">
+                            <span wire:loading.remove wire:target="save">🚀 Simpan Laporan Inspeksi</span>
+                            <span wire:loading wire:target="save">Menyimpan...</span>
+                        </button>
                     </div>
-                    <x-label-error :messages="$errors->get('dokumentasi')" />
-                </fieldset>
-                <fieldset class="">
-                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
-                        :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
-                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                        addManualAction="addPelaporManual" clickaction="selectPelapor" />
-                    <div class="flex flex-wrap gap-2 mb-2">
-                        @foreach ($inspected_users as $index => $user)
-                            <div
-                                class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded bg-info/10 text-info border-info/20">
-                                <span>{{ $user['name'] }}</span>
-                                <button type="button" wire:click="removeInspectedUser({{ $index }})"
-                                    class="hover:text-error">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </fieldset>
+                </div>
             </div>
-            <button wire:click="save" class="btn btn-soft btn-success btn-xs hover:btn-success/80">
-                Simpan Laporan
-            </button>
         </div>
     </x-tabs-wpi.layout>
+</section>
