@@ -230,7 +230,6 @@ class FireInspection extends Component
      */
     public function save()
     {
-        // Pastikan validasi mencakup array conditions
         $this->validate([
             'inspection_date' => 'required|date',
             'location_id'     => 'required',
@@ -239,40 +238,37 @@ class FireInspection extends Component
         ]);
 
         try {
-            // Gabungkan nama-nama pemeriksa menjadi satu string
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
 
-            // Handle upload dokumentasi (satu foto untuk satu batch/area)
             $documentationPath = null;
             if ($this->dokumentasi) {
                 $documentationPath = \App\Helpers\FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
             }
 
-            // Gunakan Transaction agar jika satu gagal, semua dibatalkan
             DB::transaction(function () use ($inspectedByString, $documentationPath) {
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
-                    FireProtection::create([
-                        'equipment_master_id' => $equipmentMasterId, // ID diambil dari key array conditions
+
+                    // Ambil remarks khusus baris ini dari array conditions
+                    $rowRemarks = $dataKondisi['remarks'] ?? null;
+
+                    // Opsional: Hapus key 'remarks' agar tidak ikut tersimpan di kolom JSON 'conditions'
+                    $cleanConditions = collect($dataKondisi)->forget('remarks')->toArray();
+
+                   FireProtection::create([
+                        'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath,
                         'inspection_date'     => $this->inspection_date,
                         'inspected_by'        => $inspectedByString,
-                        'conditions'          => $dataKondisi, // Data technical + checklist per baris
-                        'remarks'             => $this->remarks,
+                        'conditions'          => $cleanConditions, // Data teknis + hasil checklist
+                        'remarks'             => $rowRemarks,      // Catatan spesifik per alat
                     ]);
                 }
             });
 
             $this->resetForm();
-
-            $this->dispatch('alert', [
-                'text' => "Berhasil! " . count($this->conditions) . " data inspeksi telah disimpan.",
-                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-            ]);
+            $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan!", 'backgroundColor' => "background: #00c853;"]);
         } catch (\Exception $e) {
-            $this->dispatch('alert', [
-                'text' => "Terjadi kesalahan: " . $e->getMessage(),
-                'backgroundColor' => "background: #f44336;",
-            ]);
+            $this->dispatch('alert', ['text' => "Kesalahan: " . $e->getMessage(), 'backgroundColor' => "background: #f44336;"]);
         }
     }
 

@@ -105,6 +105,11 @@
                                         </div>
                                     </td>
                                 @endforeach
+                                {{-- Kolom Remarks Per Baris --}}
+                                <td class="p-1 border border-slate-200">
+                                    <textarea wire:model="conditions.{{ $master->id }}.remarks" rows="1" placeholder="Catatan..."
+                                        class="w-full text-[10px] leading-tight bg-transparent border-none focus:ring-0 resize-none min-w-[120px]"></textarea>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -120,9 +125,6 @@
             {{-- REMARKS & UPLOAD SECTIONS --}}
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div class="space-y-4">
-                    <x-form.textarea label="Remarks/Catatan" required model="remarks"
-                        placeholder="Tuliskan temuan atau catatan di sini..." />
-
                     <fieldset class="fieldset">
                         <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                         <div wire:loading.remove wire:target="dokumentasi">

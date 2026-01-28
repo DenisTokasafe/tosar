@@ -79,7 +79,7 @@ class FireInspectionList extends Component
         $currentMonth = $date->month; // Menghasilkan angka 1-12
         $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
-        $inspections = FireProtection::where('type', $this->type)->where('area', $this->area)
+        $inspections = FireProtection::where('type', $this->type)->where('area', $this->location_id)
             ->whereMonth('inspection_date', $currentMonth) // Query ini butuh angka 1-12
             ->whereYear('inspection_date', $currentYear)   // Query ini butuh angka 4 digit
             ->orderBy('inspection_date', 'asc')
