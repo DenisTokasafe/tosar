@@ -30,7 +30,17 @@
                 <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
-                <x-form.input-floating label="Lokasi Spesifik" model="location" required />
+                <fieldset class="fieldset">
+                        <x-form.label label="PIC" required />
+                        <select wire:model.live="location"
+                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('location') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            <option value="">-- Pilih --</option>
+                            @foreach ($selected_location_specific as $pj)
+                                <option value="{{ $pj }}">{{ $pj }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('location')" />
+                    </fieldset>
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 

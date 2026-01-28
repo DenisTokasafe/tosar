@@ -21,6 +21,7 @@ class FireInspection extends Component
     public $dokumentasi;
     public $searchResponsibility = '';
     public $pelapors = [];
+    public $selected_location_specific =[];
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
@@ -168,7 +169,9 @@ class FireInspection extends Component
             // Contoh: FE No, FE Type, Capacity akan terisi otomatis
             foreach ($master->technical_data as $key => $value) {
                 $this->conditions[$key] = $value;
+
             }
+            $this->selected_location_specific = $master->specific_location ? [$master->specific_location] : [];
 
             // Otomatis centang semua checklist (Aman/Normal)
             if (isset($this->fields[$this->type]['checks'])) {
