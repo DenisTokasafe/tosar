@@ -227,25 +227,20 @@ class FireInspection extends Component
 
     public function updatedType($value)
     {
-        // 1. Reset semua data kondisi sebelumnya
         $this->conditions = [];
 
-        // 2. Inisialisasi untuk field yang berupa input teks (kosongkan dulu)
-        if (isset($this->fields[$value]['inputs'])) {
-            foreach ($this->fields[$value]['inputs'] as $inputField) {
-                $this->conditions[$inputField] = '';
-            }
-        }
-
-        // Inisialisasi checklist menjadi TRUE secara default
-        if (isset($this->fields[$value]['checks'])) {
-            foreach ($this->fields[$value]['checks'] as $checkField) {
-                // Gunakan boolean true murni
-                $this->conditions[$checkField] = true;
+        // Jika user sudah pilih lokasi, coba tarik data master secara otomatis
+        if ($this->location_id) {
+            $this->selectLocation($this->location_id, $this->searchLocation);
+        } else {
+            // Jika belum pilih lokasi, cukup inisialisasi default checklist jadi TRUE
+            if (isset($this->fields[$value]['checks'])) {
+                foreach ($this->fields[$value]['checks'] as $checkField) {
+                    $this->conditions[$checkField] = true;
+                }
             }
         }
     }
-
     public function save()
     {
         $this->validate();
