@@ -4,6 +4,7 @@ namespace App\Livewire\Administration\EquipmentMaster;
 
 use Livewire\Component;
 use App\Models\Location;
+use Livewire\WithPagination;
 use App\Models\EquipmentMaster;
 
 class Index extends Component
