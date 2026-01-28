@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('fire_protections', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('equipment_master_id')->constrained('equipment_masters');
             $table->date('inspection_date');
             $table->json('inspected_by')->nullable();
             // Menggunakan JSON untuk menyimpan checklist kondisi agar fleksibel
