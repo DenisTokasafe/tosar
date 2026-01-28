@@ -151,8 +151,8 @@
             </div>
 
             <div class="flex justify-end pt-4 mt-6 border-t">
-                <button wire:click="save" wire:loading.attr="disabled" class="btn btn-soft btn-success btn-sm">
-                    <span wire:loading.remove.class='hidden' class="hidden" wire:target="save" class="loading loading-spinner loading-xs"></span>
+                <button wire:click="update" wire:loading.attr="disabled" class="btn btn-soft btn-success btn-sm">
+                    <span wire:loading.remove.class='hidden' class="hidden" wire:target="update" class="loading loading-spinner loading-xs"></span>
                     Simpan Laporan
                 </button>
             </div>
