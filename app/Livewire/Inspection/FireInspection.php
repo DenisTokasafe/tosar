@@ -162,7 +162,7 @@ class FireInspection extends Component
         // Cari data di EquipmentMaster
         $this->selected_location_specific = EquipmentMaster::where('location_id', $id)->where('type', $this->type)->get();
         $master = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)->where('location_specific','like',"%{$this->location}%")
+            ->where('type', $this->type)->where('specific_location','like',"%{$this->location}%")
             ->first();
 
         if ($master) {
