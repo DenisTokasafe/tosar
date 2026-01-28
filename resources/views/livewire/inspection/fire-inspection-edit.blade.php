@@ -118,7 +118,7 @@
                 </fieldset>
 
                 {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
-                <fieldset class="fieldset">
+                <div >
                     <x-form.searchable-select-advanced
                         label="Dilaporkan Oleh"
                         placeholder="Cari Nama Pelapor..."
@@ -147,7 +147,7 @@
                         @endforeach
                     </div>
                     <x-label-error :messages="$errors->get('inspected_users')" />
-                </fieldset>
+                </div>
             </div>
 
             <div class="flex justify-end pt-4 mt-6 border-t">
