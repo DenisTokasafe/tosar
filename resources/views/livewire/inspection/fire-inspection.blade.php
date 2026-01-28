@@ -35,7 +35,7 @@
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('location') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">-- Pilih --</option>
                             @foreach ($selected_location_specific as $pj)
-                                <option value="{{ $pj->specific_location }}">{{ $pj->specific_location }}</option>
+                                <option value="{{ $pj->id }}">{{ $pj->specific_location }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('location')" />

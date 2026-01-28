@@ -166,9 +166,7 @@ class FireInspection extends Component
     }
     public function updatedLocation()
     {
-       $master = EquipmentMaster::where('location_id', $this->location_id)
-            ->where('type', $this->type)->where('specific_location','like', $this->location)
-            ->first();
+       $master = EquipmentMaster::whereId($this->location)->where('location_id', $this->location_id)->where('type', $this->type)->first();
 
         if ($master) {
             // Ambil data teknis dari JSON technical_data di DB
