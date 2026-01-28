@@ -45,6 +45,12 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping
             // Tambahan untuk jenis alat lain seperti Hydrant (Box No) atau Muster Point (ID No)
             'Box No'   => $row['box_no'] ?? null,
             'ID No'    => $row['id_no'] ?? null,
+            'ID Muster Point'    => $row['id_muster_point'] ?? null,
+            'Hydrant No'    => $row['hydrant_no'] ?? null,
+            'E&S No'    => $row['nomor'] ?? null,
+            'Hose Reel No'    => $row['hose_reel_no'] ?? null,
+            'Sprinkler No'    => $row['sprinkler_no'] ?? null,
+            'Ring Buoy No'    => $row['ring_buoy_no'] ?? null,
         ];
 
         // Filter hanya field yang ada isinya agar JSON bersih
