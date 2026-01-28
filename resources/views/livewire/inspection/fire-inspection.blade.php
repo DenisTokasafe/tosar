@@ -1,6 +1,5 @@
 <section class="w-full">
     <x-toast />
-
     <div class="flex justify-start " wire:ignore>
         @php
             $currentRoute = Route::currentRouteName();
@@ -10,11 +9,8 @@
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-
-    <x-tabs-wpi.layout>
+    <x-tabs-wpi.layout >
         <div class="p-6 bg-white rounded-lg shadow">
-
-            {{-- SELEKSI JENIS ALAT --}}
             <div class="mb-4">
                 <fieldset class="w-full fieldset md:max-w-80">
                     <x-form.label label="Pilih Jenis Alat" required />
@@ -29,133 +25,113 @@
                 </fieldset>
             </div>
 
-            {{-- HEADER INFO (AREA, LOKASI, TANGGAL) --}}
             <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
-                {{-- Menggunakan logic dari Trait: searchLocation --}}
-                <x-form.search-floating
-                    label="Area"
-                    required
-                    modelsearch="searchLocation"
-                    modelid="location_id"
-                    placeholder="Cari Area..."
-                    :options="$locations"
-                    :showdropdown="$show_location"
-                    clickaction="selectLocation"
-                    namedb="name"
-                />
-
+                {{-- <x-form.input-floating label="Area" model="area" required /> --}}
+                <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
+                    placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                    namedb="name" />
                 <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
 
-            {{-- SECTION DYNAMIS INPUTS & CHECKBOXES --}}
-            @if($type && isset($fields[$type]))
-                <div class="p-4 mb-4 border border-gray-200 rounded-lg bg-gray-50">
-                    {{-- Inputs Teks Dinamis (FE No, Box No, dll) --}}
-                    <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
-                        @if (isset($fields[$type]['inputs']))
-                            @foreach ($fields[$type]['inputs'] as $inputField)
-                                <fieldset class="fieldset">
-                                    <label class="floating-label">
-                                        <input type="text"
-                                            wire:key="input-{{ $type }}-{{ $inputField }}"
-                                            wire:model.live="conditions.{{ $inputField }}"
-                                            placeholder="{{ $inputField }}"
-                                            class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                        <span>{{ $inputField }} <span class="font-bold text-red-500">*</span></span>
-                                    </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $inputField)" />
-                                </fieldset>
-                            @endforeach
-                        @endif
-                    </div>
+            <div class="p-4 mb-4 border rounded-lg bg-gray-50">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 ">
+                    @if (isset($fields[$type]['inputs']))
+                        @foreach ($fields[$type]['inputs'] as $inputField)
+                            <fieldset class="fieldset">
 
-                    <h3 class="mb-3 text-sm font-bold text-gray-700">Kondisi Checklist ({{ $type }}):</h3>
-
-                    {{-- Checkbox Dinamis --}}
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                        @if (isset($fields[$type]['checks']))
-                            @foreach ($fields[$type]['checks'] as $field)
-                                <fieldset class="p-2 bg-white border border-gray-200 rounded-md">
-                                    <label class="flex items-center justify-between text-xs cursor-pointer">
-                                        <span class="font-semibold tracking-wider text-gray-600 uppercase">{{ $field }}</span>
-                                        <input type="checkbox"
-                                            wire:key="check-{{ $type }}-{{ $field }}"
-                                            wire:model="conditions.{{ $field }}"
-                                            class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
-                                    </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $field)" />
-                                </fieldset>
-                            @endforeach
-                        @endif
-                    </div>
+                                <label class="floating-label">
+                                    <input type="text" wire:key="condition-{{ $inputField }}"
+                                        wire:model.live="conditions.{{ $inputField }}"
+                                        placeholder="{{ $inputField }}"
+                                        class=" input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                    <span>{{ $inputField }} <span class="font-bold text-red-500">*</span></span>
+                                </label>
+                                <x-label-error :messages="$errors->get('conditions.' . $inputField)" />
+                            </fieldset>
+                        @endforeach
+                    @endif
                 </div>
-            @endif
+                <h3 class="mb-3 font-bold">Kondisi Checklist ({{ $type }}):</h3>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
 
+                    @foreach ($fields[$type]['checks'] as $field)
+                        <fieldset class="p-2 border rounded-md fieldset">
+                            <label class="label">
+                                {{ $field }}
+                                <input type="checkbox" wire:key="condition-{{ $field }}" checked
+                                    wire:model="conditions.{{ $field }}"
+                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                            </label>
+                        </fieldset>
+                    @endforeach
+                </div>
+            </div>
             <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
-
-            <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
-                {{-- UPLOAD DOKUMENTASI --}}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 ">
                 <fieldset class="fieldset">
                     <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
                     <div wire:loading.remove wire:target="dokumentasi">
                         @if ($dokumentasi)
-                            <div class="mt-2">
-                                @php $ext = $dokumentasi->getClientOriginalExtension(); @endphp
-                                @if (in_array($ext, ['jpg', 'jpeg', 'png']))
-                                    <img src="{{ $dokumentasi->temporaryUrl() }}" class="w-40 h-auto border rounded shadow-sm" />
-                                @else
-                                    <div class="flex items-center gap-2 p-2 border rounded bg-gray-50">
-                                        @if($ext == 'pdf') <x-icon.pdf class="w-8 h-8" />
-                                        @else <x-icon.word class="w-8 h-8" /> @endif
-                                        <span class="text-xs truncate">{{ $dokumentasi->getClientOriginalName() }}</span>
-                                    </div>
-                                @endif
-                            </div>
+                            @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                <img src="{{ $dokumentasi->temporaryUrl() }}"
+                                    class="mt-2 {{ $dokumentasi ? 'w-40' : '' }} h-auto rounded border" />
+                            @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                                <div class="flex items-center gap-2 mt-2">
+                                    @if ($dokumentasi->getClientOriginalExtension() == 'pdf')
+                                        <x-icon.pdf class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-red-600">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @elseif (in_array($dokumentasi->getClientOriginalExtension(), ['doc', 'docx']))
+                                        <x-icon.word class="w-8 h-8" />
+                                        <span
+                                            class="text-sm text-blue-600">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @else
+                                        {{-- Ikon generik untuk file lain --}}
+                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                        </svg>
+                                        <span class="text-sm text-gray-600">File:
+                                            {{ $dokumentasi->getClientOriginalName() }}</span>
+                                    @endif
+                                </div>
+                            @else
+                                <p class="mt-2 text-sm text-gray-600">File:
+                                    {{ $dokumentasi->getClientOriginalName() }}
+                                </p>
+                            @endif
                         @endif
                     </div>
                     <x-label-error :messages="$errors->get('dokumentasi')" />
                 </fieldset>
-
-                {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
-                <fieldset class="fieldset">
-                    <x-form.searchable-select-advanced
-                        label="Dilaporkan Oleh"
-                        placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchResponsibility"
-                        modelid="location_id" {{-- ID dummy untuk select, data asli masuk ke array $inspected_users --}}
-                        :options="$pelapors"
-                        :showdropdown="$showPelaporDropdown"
-                        :manualMode="$manualPelaporMode"
-                        manualModelName="manualPelaporName"
-                        enableManualAction="enableManualPelapor"
-                        addManualAction="enableManualPelapor" {{-- Memanggil fungsi yang sama untuk push manual --}}
-                        clickaction="selectPelapor"
-                    />
-
-                    {{-- Badge Daftar Pelapor yang Terpilih --}}
-                    <div class="flex flex-wrap gap-2 mt-2">
+                <fieldset class="">
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
+                        :options="$pelapors" :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                        addManualAction="addPelaporManual" clickaction="selectPelapor" />
+                    <div class="flex flex-wrap gap-2 mb-2">
                         @foreach ($inspected_users as $index => $user)
-                            <div class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded shadow-xs bg-info/10 text-info border-info/20">
+                            <div
+                                class="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded bg-info/10 text-info border-info/20">
                                 <span>{{ $user['name'] }}</span>
-                                <button type="button" wire:click="removeInspectedUser({{ $index }})" class="transition-colors hover:text-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                    class="hover:text-error">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         @endforeach
                     </div>
-                    <x-label-error :messages="$errors->get('inspected_users')" />
                 </fieldset>
             </div>
-
-            <div class="flex justify-end pt-4 mt-6 border-t">
-                <button wire:click="save" wire:loading.attr="disabled" class="btn btn-soft btn-success btn-sm">
-                    <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
-                    Simpan Laporan
-                </button>
-            </div>
+            <button wire:click="save" class="btn btn-soft btn-success btn-xs hover:btn-success/80">
+                Simpan Laporan
+            </button>
         </div>
     </x-tabs-wpi.layout>
-</section>
