@@ -8,13 +8,13 @@
 
         <div class="space-y-3">
             <x-form.label label="Jenis Alat" />
-            <select wire:model="type" class="w-full select select-bordered select-sm">
+            <select wire:model.live="type" class="w-full select select-bordered select-sm">
                 <option value="">-- Pilih --</option>
                 @foreach($available_types as $t) <option value="{{ $t }}">{{ $t }}</option> @endforeach
             </select>
 
             <x-form.label label="Area / Lokasi" />
-            <select wire:model="location_id" class="w-full select select-bordered select-sm">
+            <select wire:model.live="location_id" class="w-full select select-bordered select-sm">
                 <option value="">-- Pilih Lokasi --</option>
                 @foreach($locations as $loc) <option value="{{ $loc->id }}">{{ $loc->name }}</option> @endforeach
             </select>
@@ -24,8 +24,8 @@
             <div class="p-3 mt-4 border rounded bg-gray-50">
                 <p class="mb-2 text-xs font-bold">Spesifikasi (FE No, Capacity, dll)</p>
                 <div class="flex gap-1 mb-2">
-                    <input type="text" wire:model="newKey" placeholder="Label" class="w-1/2 input input-xs input-bordered">
-                    <input type="text" wire:model="newValue" placeholder="Value" class="w-1/2 input input-xs input-bordered">
+                    <input type="text" wire:model.live="newKey" placeholder="Label" class="w-1/2 input input-xs input-bordered">
+                    <input type="text" wire:model.live="newValue" placeholder="Value" class="w-1/2 input input-xs input-bordered">
                     <button wire:click="addTechnicalField" class="btn btn-xs btn-primary">+</button>
                 </div>
 
