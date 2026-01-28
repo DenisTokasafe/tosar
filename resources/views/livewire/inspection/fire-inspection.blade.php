@@ -119,8 +119,7 @@
                                 @endforeach
                                 {{-- Kolom Remarks Per Baris --}}
                                 <td class="p-1 border border-slate-200">
-                                    <textarea wire:model="conditions.{{ $master->id }}.remarks" rows="1" placeholder="Catatan..."
-                                        class="w-full text-[10px] leading-tight bg-transparent border-none focus:ring-0 resize-none min-w-[120px]"></textarea>
+                                         <x-form.textarea label="Remarks/Catatan" required model="conditions.{{ $master->id }}.remarks" placeholder="Tuliskan temuan atau catatan di sini..." />
                                 </td>
                             </tr>
                         @empty
