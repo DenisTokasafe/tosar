@@ -37,7 +37,7 @@
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
-            <div class="mb-6 border rounded-lg shadow-sm">
+            <div class="flex mb-6 border rounded-lg shadow-sm">
                 @php
                     // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
@@ -53,7 +53,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto md:max-w-[calc(100vh-1rem)] lg:max-w-[calc(100vh-1rem)] 2xl:max-w-[calc(100vh-1rem)]">
+                <div class="flex-grow overflow-x-auto">
                     <table class="table border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
@@ -68,7 +68,6 @@
                                 <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">
                                     Checklist Item
                                 </th>
-
                                 {{-- TAMBAHKAN INI: Header Remarks --}}
                                 <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
                             </tr>
