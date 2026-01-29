@@ -53,63 +53,55 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto max-h-[calc(100vh-20rem)]">
-                    <table class="table text-xs border-collapse table-xs table-pin-rows">
+                <div class="overflow-x-auto w-full max-h-[calc(100vh-20rem)] border rounded-lg">
+                    <table class="table w-full text-xs border-collapse table-xs table-pin-rows">
                         <thead>
-                            <tr class="text-center">
-                                <th>Location</th>
+                            <tr class="text-center text-white bg-slate-700">
+                                <th class="whitespace-normal leading-tight min-w-[120px]">Location</th>
+
                                 @foreach ($techKeys as $techKey)
-                                    <th >{{ $techKey }}</th>
+                                    <th class="whitespace-normal leading-tight min-w-[100px] border border-slate-600">
+                                        {{ $techKey }}
+                                    </th>
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
-                                    <th>
+                                    <th class="whitespace-normal leading-tight min-w-[80px] border border-slate-600">
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
-                                {{-- TAMBAHKAN INI: Header Remarks --}}
-                                <th>Remarks</th>
+
+                                <th class="whitespace-normal leading-tight min-w-[150px]">Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($allMasterData as $master)
                                 <tr class="hover:bg-slate-50">
-                                    {{-- Specific Location --}}
-                                    <td>
-                                        {{ $master->specific_location }}
-                                    </td>
-                                    {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
+                                    <td class="whitespace-normal">{{ $master->specific_location }}</td>
+
                                     @foreach ($techKeys as $key)
-                                        <td>
-                                            {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
+                                        <td class="border border-slate-200">
                                             <input type="text"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
                                     @endforeach
-                                    {{-- Checklist Columns --}}
+
                                     @foreach ($checks as $field)
-                                        <td>
-                                            <div class="flex justify-center">
-                                                <input type="checkbox"
-                                                    wire:key="check-{{ $master->id }}-{{ $field }}"
-                                                    wire:model="conditions.{{ $master->id }}.{{ $field }}"
-                                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
-                                            </div>
+                                        <td class="text-center border border-slate-200">
+                                            <input type="checkbox"
+                                                wire:key="check-{{ $master->id }}-{{ $field }}"
+                                                wire:model="conditions.{{ $master->id }}.{{ $field }}"
+                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
                                         </td>
                                     @endforeach
-                                    {{-- Kolom Remarks Per Baris --}}
-                                    <td>
-                                        <x-form.textarea label="Remarks/Catatan" required
-                                            model="conditions.{{ $master->id }}.remarks" placeholder="Remarks..." />
+
+                                    <td class="p-1 border border-slate-200">
+                                        <x-form.textarea model="conditions.{{ $master->id }}.remarks"
+                                            placeholder="Remarks..." />
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="30" class="py-10 italic text-center text-slate-400">
-                                        No equipment found. Please select Area and Type correctly.
-                                    </td>
-                                </tr>
                             @endforelse
                         </tbody>
                     </table>
