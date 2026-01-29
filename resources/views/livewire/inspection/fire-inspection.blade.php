@@ -56,7 +56,7 @@
                 <div class="overflow-x-auto max-h-[calc(100vh-20rem)] ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows table-pin-cols">
                         <thead>
-                            <tr class="text-white bg-slate-700">
+                            <tr class="text-slate-800 bg-slate-300">
                                 <th class="text-center border border-slate-600">Location</th>
                                 @foreach ($techKeys as $techKey)
                                     <th class="text-center border border-slate-300">{{ $techKey }}</th>
