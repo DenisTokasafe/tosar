@@ -75,13 +75,13 @@
                             @forelse ($allMasterData as $master)
                                 <tr class="hover:bg-slate-50">
                                     {{-- Specific Location --}}
-                                    <td class="font-semibold border border-slate-200 bg-slate-50/50">
+                                    <td>
                                         {{ $master->specific_location }}
                                     </td>
 
                                     {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
                                     @foreach ($techKeys as $key)
-                                        <td class="text-center border border-slate-200 bg-blue-50/10">
+                                        <td>
                                             {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
                                             <input type="text"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
@@ -92,7 +92,7 @@
 
                                     {{-- Checklist Columns --}}
                                     @foreach ($checks as $field)
-                                        <td class="text-center border border-slate-200">
+                                        <td>
                                             <div class="flex justify-center">
                                                 <input type="checkbox"
                                                     wire:key="check-{{ $master->id }}-{{ $field }}"
@@ -102,7 +102,7 @@
                                         </td>
                                     @endforeach
                                     {{-- Kolom Remarks Per Baris --}}
-                                    <td class="p-1 border border-slate-200">
+                                    <td>
                                         <x-form.textarea label="Remarks/Catatan" required
                                             model="conditions.{{ $master->id }}.remarks" placeholder="Remarks..." />
                                     </td>
