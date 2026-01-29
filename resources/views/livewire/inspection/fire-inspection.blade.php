@@ -93,17 +93,18 @@
                                     {{-- Checklist Columns --}}
                                     @foreach ($checks as $field)
                                         <td>
-                                            <div class="flex justify-center">
+
                                                 <input type="checkbox"
                                                     wire:key="check-{{ $master->id }}-{{ $field }}"
                                                     wire:model="conditions.{{ $master->id }}.{{ $field }}"
                                                     class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
-                                            </div>
+
                                         </td>
                                     @endforeach
                                     {{-- Kolom Remarks Per Baris --}}
                                     <td>
-
+                                        <x-form.textarea label="Remarks/Catatan" required
+                                            model="conditions.{{ $master->id }}.remarks" placeholder="Remarks..." />
                                     </td>
                                 </tr>
                             @empty
