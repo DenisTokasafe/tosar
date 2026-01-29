@@ -57,7 +57,7 @@
                     <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
-                                <th class="text-center border border-slate-600">Specific Location</th>
+                                <th class="text-center border border-slate-600">Location</th>
                                 @foreach ($techKeys as $techKey)
                                     <th class="text-center border border-slate-300">{{ $techKey }}</th>
                                 @endforeach
@@ -69,7 +69,7 @@
                                     </th>
                                 @endforeach
                                 {{-- TAMBAHKAN INI: Header Remarks --}}
-                                <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
+                                <th class="text-center border border-slate-600">Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
