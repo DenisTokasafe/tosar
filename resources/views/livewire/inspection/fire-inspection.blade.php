@@ -37,7 +37,7 @@
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
-            <div class="bg-white rounded-lg shadow-md max-w-3xs">
+            <div class="w-full bg-white rounded-lg shadow-md">
                 @php
                     // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
@@ -53,26 +53,11 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto ">
+                <div class="overflow-x-auto">
                     <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
-                                <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
-
-                                @if (count($techKeys) > 0)
-                                    <th class="text-center border border-slate-600" colspan="{{ count($techKeys) }}">
-                                        Technical Information
-                                    </th>
-                                @endif
-
-                                <th class="text-center border border-slate-600" colspan="{{ count($checks) }}">
-                                    Checklist Item
-                                </th>
-                                {{-- TAMBAHKAN INI: Header Remarks --}}
-                                <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
-                            </tr>
-
-                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="text-center border border-slate-600">Specific Location</th>
                                 @foreach ($techKeys as $techKey)
                                     <th class="text-center border border-slate-300">{{ $techKey }}</th>
                                 @endforeach
@@ -83,7 +68,8 @@
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
-                                {{-- Baris kedua tidak perlu TH lagi untuk Remarks karena sudah di-rowspan dari atas --}}
+                                {{-- TAMBAHKAN INI: Header Remarks --}}
+                                <th class="text-center border border-slate-600" rowspan="2">Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
