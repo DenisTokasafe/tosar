@@ -103,8 +103,7 @@
                                     @endforeach
                                     {{-- Kolom Remarks Per Baris --}}
                                     <td>
-                                        <x-form.textarea label="Remarks/Catatan" required
-                                            model="conditions.{{ $master->id }}.remarks" placeholder="Remarks..." />
+
                                     </td>
                                 </tr>
                             @empty
