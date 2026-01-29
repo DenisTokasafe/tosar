@@ -60,13 +60,13 @@
                                 <th class="whitespace-normal leading-tight min-w-[120px]">Location</th>
 
                                 @foreach ($techKeys as $techKey)
-                                    <th class="whitespace-normal leading-tight min-w-[100px] border border-slate-600">
+                                    <th class="whitespace-normal leading-tight min-w-[100px] ">
                                         {{ $techKey }}
                                     </th>
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
-                                    <th class="whitespace-normal leading-tight min-w-[80px] border border-slate-600">
+                                    <th class="whitespace-normal leading-tight min-w-[80px] ">
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
