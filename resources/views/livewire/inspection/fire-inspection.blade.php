@@ -76,7 +76,7 @@
                         </thead>
                         <tbody>
                             @forelse ($allMasterData as $master)
-                                <tr class="hover:bg-slate-50">
+                                <tr class="text-xs hover:bg-slate-50">
                                     <td class="">{{ $master->specific_location }}</td>
 
                                     @foreach ($techKeys as $key)
