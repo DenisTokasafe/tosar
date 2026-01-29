@@ -54,7 +54,7 @@
                             : [];
                 @endphp
                <div class="w-full overflow-x-auto">
-    <table class="table w-full text-xs border-collapse table-xs">
+    <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
                                 <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
