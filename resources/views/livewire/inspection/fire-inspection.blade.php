@@ -54,12 +54,12 @@
                             : [];
                 @endphp
                 <div class="overflow-x-auto max-h-[calc(100vh-20rem)] w-dvw">
-                    <table class="table text-xs border-collapse table-xs table-pin-rows table-pin-cols">
+                    <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
-                            <tr class="text-slate-800 bg-slate-300">
+                            <tr class="text-center ">
                                 <th>Location</th>
                                 @foreach ($techKeys as $techKey)
-                                    <th class="text-center border border-slate-300">{{ $techKey }}</th>
+                                    <th >{{ $techKey }}</th>
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
