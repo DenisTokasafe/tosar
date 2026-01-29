@@ -54,7 +54,7 @@
                             : [];
                 @endphp
                 <div class="overflow-x-auto">
-                    <table class="table border-collapse table-xs w-full min-w-[1000px]">
+                    <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
                                 <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
@@ -90,7 +90,7 @@
                             @forelse ($allMasterData as $master)
                                 <tr class="hover:bg-slate-50">
                                     {{-- Specific Location --}}
-                                    <td class="font-medium border border-slate-200 bg-slate-50/50">
+                                    <td class="font-semibold border border-slate-200 bg-slate-50/50">
                                         {{ $master->specific_location }}
                                     </td>
 
@@ -120,7 +120,7 @@
                                     <td class="p-1 border border-slate-200">
                                         <x-form.textarea label="Remarks/Catatan" required
                                             model="conditions.{{ $master->id }}.remarks"
-                                            placeholder="Tuliskan temuan atau catatan di sini..." />
+                                            placeholder="Remarks..." />
                                     </td>
                                 </tr>
                             @empty
