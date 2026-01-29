@@ -53,10 +53,10 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto max-h-[calc(100vh-20rem)] ">
+                <div class="overflow-x-auto max-h-[calc(100vh-20rem)]">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
-                            <tr class="text-center ">
+                            <tr class="text-center">
                                 <th>Location</th>
                                 @foreach ($techKeys as $techKey)
                                     <th >{{ $techKey }}</th>
@@ -78,27 +78,24 @@
                                     <td>
                                         {{ $master->specific_location }}
                                     </td>
-
                                     {{-- Technical Data Columns (Dinamis berdasarkan baris) --}}
                                     @foreach ($techKeys as $key)
                                         <td>
                                             {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
                                             <input type="text"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
-                                                class="text-xs text-center bg-transparent border-none  focus:ring-0">
+                                                class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
                                     @endforeach
-
-
                                     {{-- Checklist Columns --}}
                                     @foreach ($checks as $field)
                                         <td>
-
+                                            <div class="flex justify-center">
                                                 <input type="checkbox"
                                                     wire:key="check-{{ $master->id }}-{{ $field }}"
                                                     wire:model="conditions.{{ $master->id }}.{{ $field }}"
                                                     class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
-
+                                            </div>
                                         </td>
                                     @endforeach
                                     {{-- Kolom Remarks Per Baris --}}
