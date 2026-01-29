@@ -104,4 +104,8 @@ class Index extends Component
             'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Eyewash & Safety Shower', 'Muster Point']
         ]);
     }
+     public function paginationView()
+    {
+       return 'paginate.pagination';
+    }
 }
