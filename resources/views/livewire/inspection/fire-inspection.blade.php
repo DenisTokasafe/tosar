@@ -37,7 +37,7 @@
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
-            <div class="w-full overflow-hidden bg-white rounded-lg shadow-md">
+            <div class="w-full overflow-hidden bg-white rounded-lg shadow-md max-w-2/3">
                 @php
                     // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
@@ -53,7 +53,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="w-full overflow-x-auto max-w-2/3">
+                <div class="w-full overflow-x-auto ">
                     <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
