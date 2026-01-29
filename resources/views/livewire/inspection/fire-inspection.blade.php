@@ -37,7 +37,7 @@
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
-           <div class="w-full overflow-hidden bg-white rounded-lg shadow-md">
+            <div class="w-full overflow-hidden bg-white rounded-lg shadow-md">
                 @php
                     // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
@@ -53,8 +53,8 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-               <div class="w-full overflow-x-auto">
-    <table class="table text-xs border-collapse table-xs">
+                <div class="w-full overflow-x-auto max-w-9/10">
+                    <table class="table text-xs border-collapse table-xs">
                         <thead>
                             <tr class="text-white bg-slate-700">
                                 <th class="text-center border border-slate-600" rowspan="2">Specific Location</th>
@@ -119,8 +119,7 @@
                                     {{-- Kolom Remarks Per Baris --}}
                                     <td class="p-1 border border-slate-200">
                                         <x-form.textarea label="Remarks/Catatan" required
-                                            model="conditions.{{ $master->id }}.remarks"
-                                            placeholder="Remarks..." />
+                                            model="conditions.{{ $master->id }}.remarks" placeholder="Remarks..." />
                                     </td>
                                 </tr>
                             @empty
