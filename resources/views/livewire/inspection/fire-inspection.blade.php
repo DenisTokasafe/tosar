@@ -56,7 +56,7 @@
                 <div class="overflow-x-auto w-full max-h-[calc(100vh-20rem)] border rounded-lg">
                     <table class="table w-full text-xs border-collapse table-xs table-pin-rows">
                         <thead>
-                            <tr class="text-center text-white bg-slate-700">
+                            <tr class="text-center text-black ">
                                 <th class="whitespace-normal leading-tight min-w-[120px]">Location</th>
 
                                 @foreach ($techKeys as $techKey)
