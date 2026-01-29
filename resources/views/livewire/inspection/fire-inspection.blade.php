@@ -85,7 +85,7 @@
                                             {{-- Kita gunakan ID master sebagai key agar tidak bentrok --}}
                                             <input type="text"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
-                                                class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
+                                                class="text-xs text-center bg-transparent border-none  focus:ring-0">
                                         </td>
                                     @endforeach
 
