@@ -57,27 +57,27 @@
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-center text-black ">
-                                <th class="whitespace-normal leading-tight min-w-[120px]">Location</th>
+                                <th class="">Location</th>
 
                                 @foreach ($techKeys as $techKey)
-                                    <th class="whitespace-normal leading-tight min-w-[100px] ">
+                                    <th class="">
                                         {{ $techKey }}
                                     </th>
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
-                                    <th class="whitespace-normal leading-tight min-w-[80px] ">
+                                    <th class="] ">
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
 
-                                <th class="whitespace-normal leading-tight min-w-[150px]">Remarks</th>
+                                <th class="">Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($allMasterData as $master)
                                 <tr class="hover:bg-slate-50">
-                                    <td class="whitespace-normal">{{ $master->specific_location }}</td>
+                                    <td class="">{{ $master->specific_location }}</td>
 
                                     @foreach ($techKeys as $key)
                                         <td class="border border-slate-200">
