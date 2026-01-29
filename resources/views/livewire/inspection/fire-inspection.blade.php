@@ -63,8 +63,7 @@
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
-                                    <th
-                                        class="text-center border border-slate-300 min-w-[80px] text-[10px] uppercase italic">
+                                    <th>
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
