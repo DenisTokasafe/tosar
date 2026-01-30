@@ -100,17 +100,13 @@
 
         /* PERUBAHAN DISINI: Mengatur tinggi gambar agar seragam */
         img.photo {
-            height: 120px;
-            /* Tinggi seragam */
-            width: auto;
-            /* Lebar otomatis mengikuti proporsi */
-            max-width: 180px;
-            /* Batas lebar maksimal agar tidak meluap */
+            height: 120px; /* Tinggi seragam */
+            width: auto; /* Lebar otomatis mengikuti proporsi */
+            max-width: 180px; /* Batas lebar maksimal agar tidak meluap */
             margin: 5px 2px;
             border: 1px solid #000;
             display: inline-block;
-            object-fit: contain;
-            /* Menjaga rasio foto agar tidak gepeng */
+            object-fit: contain; /* Menjaga rasio foto agar tidak gepeng */
         }
 
         .photo-container {
@@ -151,29 +147,13 @@
             font-weight: bold;
         }
 
-        .border-t-thick {
-            border-top: 2px solid #999999 !important;
-        }
-
-        .border-b-thick {
-            border-bottom: 2px solid #999999 !important;
-        }
-
-        .border-l-thick {
-            border-left: 2px solid #999999 !important;
-        }
-
-        .border-r-thick {
-            border-right: 2px solid #999999 !important;
-        }
-
-        .border-l-none {
-            border-left: none !important;
-        }
-
-        .border-r-none {
-            border-right: none !important;
-        }
+        /* Border Utility Classes */
+        .border-t-thick { border-top: 2px solid #999999 !important; }
+        .border-b-thick { border-bottom: 2px solid #999999 !important; }
+        .border-l-thick { border-left: 2px solid #999999 !important; }
+        .border-r-thick { border-right: 2px solid #999999 !important; }
+        .border-l-none { border-left: none !important; }
+        .border-r-none { border-right: none !important; }
     </style>
 </head>
 
@@ -229,11 +209,11 @@
             <tr>
                 <td width="18%" class="bg-label">Tanggal / <span class="en" style="color:black">Date</span></td>
                 <td width="32%">{{ date('d F Y', strtotime($report->report_date)) }}</td>
-                <td width="25%" class="bg-label center">Nama Petugas Inspeksi / <br><span class="en"
-                        style="color:black">Inspector Name</span></td>
+                <td width="25%" class="bg-label center">Nama Petugas Inspeksi / <br><span class="en" style="color:black">Inspector Name</span></td>
                 <td width="10%" class="bg-label center">ID</td>
                 <td width="15%" class="bg-label center">Dept/Cont</td>
             </tr>
+
             @php $maxRows = 6; @endphp
             @for ($i = 0; $i < $maxRows; $i++)
                 <tr>
@@ -253,7 +233,7 @@
                         <td class="bg-label">Company</td>
                         <td>PT. MSM/PT. TTN</td>
                     @elseif ($i == 5)
-                        <td class="bg-label">{{ $deptLabel }}</td>
+                        <td class="bg-label">{{ $deptLabel ?? 'Department' }}</td>
                         <td>{{ $report->department }}</td>
                     @endif
 
@@ -262,6 +242,7 @@
                     <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
                 </tr>
             @endfor
+
             <tr>
                 <td colspan="2" style="vertical-align: top; padding: 5px;">
                     Direview oleh / <br> <i>Reviewing by:</i>
@@ -285,13 +266,9 @@
                 <tr class="bg-label center">
                     <th width="4%">No</th>
                     <th width="6%">OHS Risk</th>
-                    <th width="35%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
-                            style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span>
-                    </th>
-                    <th width="30%">Jenis Tindakan Pencegahan<br><span class="en"
-                            style="color:black; font-weight:normal">Type of Preventive Action</span></th>
-                    <th width="25%">Tindak Lanjut / <span class="en"
-                            style="color:black; font-weight:normal">Follow Up</span></th>
+                    <th width="35%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en" style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span></th>
+                    <th width="30%">Jenis Tindakan Pencegahan<br><span class="en" style="color:black; font-weight:normal">Type of Preventive Action</span></th>
+                    <th width="25%">Tindak Lanjut / <span class="en" style="color:black; font-weight:normal">Follow Up</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -344,41 +321,34 @@
         </table>
 
         <div class="page-break"></div>
-        <h3 class="center" style="text-decoration: underline;">Level Resiko / <span class="en">Risk Level</span>
-        </h3>
+
+        <h3 class="center" style="text-decoration: underline;">Level Resiko / <span class="en">Risk Level</span></h3>
         <table class="main-table risk-table-page">
             <thead>
                 <tr class="bg-label center">
-                    <th width="75%">Deskripsi / <span class="en"
-                            style="color:black; font-weight:normal">Description</span></th>
-                    <th width="25%">Kode OHS Risk / <br><span class="en"
-                            style="color:black; font-weight:normal">Code of OHS Risk</span></th>
+                    <th width="75%">Deskripsi / <span class="en" style="color:black; font-weight:normal">Description</span></th>
+                    <th width="25%">Kode OHS Risk / <br><span class="en" style="color:black; font-weight:normal">Code of OHS Risk</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam
-                        keselamatan jiwa...</td>
+                    <td>Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam keselamatan jiwa...</td>
                     <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
                 </tr>
                 <tr>
-                    <td>Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang
-                        membahayakan...</td>
+                    <td>Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang membahayakan...</td>
                     <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - High</span></td>
                 </tr>
                 <tr>
                     <td>Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3...</td>
-                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span>
-                    </td>
+                    <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span></td>
                 </tr>
                 <tr>
-                    <td>Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran yang tidak signifikan...
-                    </td>
+                    <td>Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran yang tidak signifikan...</td>
                     <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
                 </tr>
             </tbody>
         </table>
     </main>
 </body>
-
 </html>
