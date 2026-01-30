@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Location;
 use App\Models\FireProtection;
-use App\Models\EquipmentMaster;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class FireInspectionList extends Component
@@ -17,7 +16,6 @@ class FireInspectionList extends Component
     public $location_id;
     public $show_location = false;
     public $locations = [];
-    public $selected_location_specific = [];
     public $searchLocation = '';
     public $fields = [
         'Fire Extinguisher' => [
@@ -73,29 +71,11 @@ class FireInspectionList extends Component
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
-        if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+         if ($this->type === 'Fire Hydrant' && str_contains(strtolower($name), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
         } else {
             // Kembalikan ke default jika bukan Maesa Camp
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
-
-        // Ambil semua alat
-        $this->selected_location_specific = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)
-            ->get();
-
-
-        $this->initializeConditions();
-    }
-    private function initializeConditions()
-    {
-        foreach ($this->selected_location_specific as $master) {
-            foreach ($this->fields[$this->type]['checks'] as $check) {
-                if (!isset($this->conditions[$master->id][$check])) {
-                    $this->conditions[$master->id][$check] = true;
-                }
-            }
         }
     }
     public function exportPDF()
