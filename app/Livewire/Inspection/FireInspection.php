@@ -123,7 +123,7 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
-          if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+        if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
         } else {
             // Kembalikan ke default jika bukan Maesa Camp
@@ -131,32 +131,25 @@ class FireInspection extends Component
         }
 
         // Ambil semua alat
-        $allEquipments = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)
-            ->get();
+       $this->selected_location_specific = EquipmentMaster::where('location_id', $id)
+        ->where('type', $this->type)
+        ->get();
 
         $this->conditions = []; // Reset
 
-        foreach ($allEquipments as $eq) {
-            // Masukkan Technical Data
-            if ($eq->technical_data) {
-                foreach ($eq->technical_data as $key => $val) {
-                    $this->conditions[$eq->id][$key] = $val;
+            $this->initializeConditions();
+
+    }
+    private function initializeConditions()
+    {
+        foreach ($this->selected_location_specific as $master) {
+            foreach ($this->fields[$this->type]['checks'] as $check) {
+                if (!isset($this->conditions[$master->id][$check])) {
+                    $this->conditions[$master->id][$check] = true;
                 }
             }
-
-           $this->initializeConditions();
         }
     }
-    private function initializeConditions() {
-    foreach ($this->selected_location_specific as $master) {
-        foreach ($this->fields[$this->type]['checks'] as $check) {
-            if (!isset($this->conditions[$master->id][$check])) {
-                $this->conditions[$master->id][$check] = true;
-            }
-        }
-    }
-}
 
     /**
      * LOGIC PILIH ALAT (SPECIFIC LOCATION)
