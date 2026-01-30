@@ -25,7 +25,7 @@
         @if ($showdropdown && count($options) > 0)
             <ul class="absolute z-[9999] w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                 {{-- Spinner Loading --}}
-                <div wire:loading wire:target="{{ $clickaction }}" class="p-2 text-center">
+                <div wire:loading wire:target="{{ $clickaction }}" class="flex-col items-center justify-center p-4 space-y-2 text-center lex">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
                 </div>
                 @foreach ($options as $opt)
