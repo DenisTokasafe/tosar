@@ -181,7 +181,13 @@ class FireInspection extends Component
     public function updatedType($value)
     {
         $this->reset(['location', 'equipment_master_id', 'conditions', 'selected_location_specific']);
-
+        // Logika Khusus untuk Maesa Camp
+        if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
+        } else {
+            // Kembalikan ke default jika bukan Maesa Camp
+            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
+        }
         // Jika area sudah terpilih, refresh daftar alat di area tersebut
         if ($this->location_id) {
             $this->selectLocation($this->location_id, $this->searchLocation);
@@ -254,7 +260,7 @@ class FireInspection extends Component
                     // Opsional: Hapus key 'remarks' agar tidak ikut tersimpan di kolom JSON 'conditions'
                     $cleanConditions = collect($dataKondisi)->forget('remarks')->toArray();
 
-                   FireProtection::create([
+                    FireProtection::create([
                         'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath,
                         'inspection_date'     => $this->inspection_date,
