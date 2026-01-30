@@ -277,7 +277,8 @@
                         <td class="center">{{ $index + 1 }}</td>
                         <td class="center" style="font-weight: bold;">{{ $find->ohs_risk }}</td>
                         <td>
-                            {{ $find->description }}
+                            <strong> {{ $find->description }}</strong>
+
                             @if (!empty($find->photos))
                                 <div class="photo-container">
                                     @foreach ($find->photos as $p)
