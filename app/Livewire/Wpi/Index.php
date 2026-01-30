@@ -237,7 +237,7 @@ class Index extends Component
             $this->dispatch('alert', ['text' => 'Silakan pilih aksi terlebih dahulu.', 'backgroundColor' => 'orange']);
             return;
         }
-        if ($newStatus ==='Closed') {
+        if ($newStatus === 'Closed') {
             $reviewed = Auth::user();
             $this->review_date = now()->toDateString();
             $this->review_id = $reviewed->employee_id;
@@ -259,7 +259,7 @@ class Index extends Component
             ], ['assignTo1.required' => 'Pilih ERM Utama untuk menindaklanjuti laporan ini.']);
 
             // Simpan data penugasan
-             $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
+            $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
             $report->assignedErms()->sync($assignIds);
 
 
@@ -757,12 +757,11 @@ class Index extends Component
             'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
         ]);
 
-       if ($this->reportId) {
-        $this->loadData($this->reportId);
-       }
-       else {
-        return $this->redirect(route('wpi.edit', $report->id), navigate: true);
-       }
+        if ($this->reportId) {
+            $this->loadData($this->reportId);
+        } else {
+            return $this->redirect(route('wpi.edit', $report->id), navigate: true);
+        }
     }
     #[On('trigger-export-pdf')]
     public function exportPDF($id)
@@ -776,6 +775,16 @@ class Index extends Component
                 'isRemoteEnabled' => true
             ])
             ->setPaper('a4', 'portrait');
+
+        $canvas = $pdf->getCanvas();
+        $font = null; // Ini akan otomatis menggunakan font default PDF (Helvetica/Times-Roman)
+        $size = 9;
+        /**
+         * Parameter page_text:
+         * (X, Y, Text, Font, Size, Color)
+         * Untuk Landscape A4: X = 730 (Kanan), Y = 560 (Bawah)
+         */
+        $canvas->page_text(455, 788, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, $size, [0, 0, 0]);
 
         return response()->streamDownload(function () use ($pdf) {
             // Menggunakan output() memastikan seluruh script penomoran diproses

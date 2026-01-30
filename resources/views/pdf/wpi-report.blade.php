@@ -195,18 +195,6 @@
 </head>
 
 <body>
-
-
-    <script type="text/php">
-    if (isset($pdf)) {
-        $font = $fontMetrics->get_font("Times-Roman", "bold");
-        $size = 8.5;
-        // Gunakan placeholder {PAGE_NUM} dan {PAGE_COUNT}
-        // Koordinat Y: 822 adalah posisi aman di area margin bawah A4
-        $pdf->page_text(455, 788, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, $size, array(0,0,0));
-    }
-</script>
-
     <header>
         <table class="header-table">
             <tr>

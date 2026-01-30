@@ -61,7 +61,15 @@ class WpiList extends Component
                 'isRemoteEnabled' => true
             ])
             ->setPaper('a4', 'portrait');
-
+        $canvas = $pdf->getCanvas();
+        $font = null; // Ini akan otomatis menggunakan font default PDF (Helvetica/Times-Roman)
+        $size = 9;
+        /**
+         * Parameter page_text:
+         * (X, Y, Text, Font, Size, Color)
+         * Untuk Landscape A4: X = 730 (Kanan), Y = 560 (Bawah)
+         */
+        $canvas->page_text(455, 788, "Halaman {PAGE_NUM} dari {PAGE_COUNT}", $font, $size, [0, 0, 0]);
         return response()->streamDownload(function () use ($pdf) {
             // Menggunakan output() memastikan seluruh script penomoran diproses
             echo $pdf->output();
