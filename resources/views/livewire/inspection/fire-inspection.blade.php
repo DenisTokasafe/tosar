@@ -102,6 +102,24 @@
                                     </td>
                                 </tr>
                             @empty
+                                @php
+                                    // Hitung total kolom: Location (1) + TechKeys + Checks + Remarks (1)
+                                    $totalColumns = 1 + count($techKeys) + count($checks) + 1;
+                                @endphp
+                                <td colspan="{{ $totalColumns }}" class="py-12 text-center bg-slate-50">
+                                    <div class="flex flex-col items-center justify-center space-y-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span class="font-medium text-slate-400">Tidak ada data alat ditemukan untuk
+                                            area dan tipe ini.</span>
+                                        <p class="text-xs italic text-slate-400">Silahkan periksa kembali filter atau
+                                            Master Data Anda.</p>
+                                    </div>
+                                </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
