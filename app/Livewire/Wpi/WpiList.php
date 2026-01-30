@@ -61,6 +61,8 @@ class WpiList extends Component
                 'isRemoteEnabled' => true
             ])
             ->setPaper('a4', 'portrait');
+        // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas
+        $pdf->render();
         $canvas = $pdf->getCanvas();
         $font = null; // Ini akan otomatis menggunakan font default PDF (Helvetica/Times-Roman)
         $size = 9;
