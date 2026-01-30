@@ -71,7 +71,7 @@ class FireInspectionList extends Component
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
-         if ($this->type === 'Fire Hydrant' && str_contains(strtolower($name), 'maesa camp')) {
+         if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
         } else {
             // Kembalikan ke default jika bukan Maesa Camp
