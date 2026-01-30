@@ -98,9 +98,7 @@ class Index extends Component
     {
         return view('livewire.administration.equipment-master.index', [
             'equipments' => EquipmentMaster::with('location')
-                ->where('type', 'like', "%{$this->search}%")->orWhereHas('location', function ($query) {
-                    $query->where('name', 'like', "%{$this->search_area}%");
-                })
+                ->search($this->search)->byArea($this->search_area)
                 ->paginate(10),
             'locations' => Location::all(),
             'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Eyewash & Safety Shower', 'Muster Point']

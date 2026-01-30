@@ -17,4 +17,16 @@ class EquipmentMaster extends Model
     {
         return $this->belongsTo(Location::class);
     }
+        public function scopeByArea($query, $name)
+    {
+        return $query->whereHas('location', function ($q) use ($name) {
+            $q->where('name', 'like', "%{$name}%");
+        });
+    }
+    public function scopeSearch($query, $type)
+    {
+        return $query->where('type', 'like', "%{$type}%");
+    }
+
+
 }
