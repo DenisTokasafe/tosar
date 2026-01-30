@@ -10,13 +10,14 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
+use App\Models\WpiWorkflow;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
-use App\Models\WpiWorkflow;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Notifications\WpiSubmittedNotification;
 
 class Index extends Component
 {
@@ -742,15 +743,15 @@ class Index extends Component
         }
 
         // 4. Notifikasi Otomatis ke Moderator
-        // if (!$this->reportId) {
-        //     $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
-        //     foreach ($moderatorIds as $userId) {
-        //         $user = User::find($userId);
-        //         if ($user) {
-        //             $user->notify(new \App\Notifications\WpiSubmittedNotification($report));
-        //         }
-        //     }
-        // }
+        if (!$this->reportId) {
+            $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
+            foreach ($moderatorIds as $userId) {
+                $user = User::find($userId);
+                if ($user) {
+                    $user->notify(new WpiSubmittedNotification($report));
+                }
+            }
+        }
 
         $this->dispatch('alert', [
             'text' => $this->reportId ? 'Data berhasil diperbarui' : 'Data berhasil disimpan',

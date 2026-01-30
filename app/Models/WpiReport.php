@@ -88,11 +88,17 @@ class WpiReport extends Model
 
     /** * RELATIONS
      */
+    // Contoh di file app/Models/FireProtection.php (sesuai gambar 2)
 
+    public function creator()
+    {
+        // Mengaitkan kolom 'created_by' atau 'user_id' di tabel laporan ke id di tabel users
+        return $this->belongsTo(User::class, 'created_by');
+    }
     public function assignedErms(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'wpi_report_user_pivot', 'wpi_report_id', 'user_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function activities(): MorphMany
