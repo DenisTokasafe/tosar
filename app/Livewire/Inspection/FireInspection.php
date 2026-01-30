@@ -145,14 +145,18 @@ class FireInspection extends Component
                 }
             }
 
-            // Masukkan Checklist Default (True)
-            if (isset($this->fields[$this->type]['checks'])) {
-                foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    $this->conditions[$eq->id][$checkField] = true;
-                }
+           $this->initializeConditions();
+        }
+    }
+    private function initializeConditions() {
+    foreach ($this->selected_location_specific as $master) {
+        foreach ($this->fields[$this->type]['checks'] as $check) {
+            if (!isset($this->conditions[$master->id][$check])) {
+                $this->conditions[$master->id][$check] = true;
             }
         }
     }
+}
 
     /**
      * LOGIC PILIH ALAT (SPECIFIC LOCATION)
