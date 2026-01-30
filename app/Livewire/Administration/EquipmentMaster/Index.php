@@ -101,7 +101,7 @@ class Index extends Component
                 ->search($this->search)->byArea($this->search_area)
                 ->paginate(10),
             'locations' => Location::all(),
-            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Eyewash & Safety Shower', 'Muster Point']
+            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel','Fire sprinkler system', 'Eyewash & Safety Shower', 'Muster Point']
         ]);
     }
      public function paginationView()
