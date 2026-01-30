@@ -306,14 +306,14 @@
         <table class="main-table">
             <thead>
                 <tr class="bg-label center">
-                    <th width="6%">No</th>
-                    <th width="8%">OHS Risk</th>
-                    <th width="32%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
+                    <th width="4%">No</th>
+                    <th width="6%">OHS Risk</th>
+                    <th width="35%">Uraian Tindakan / Kondisi Tidak Aman<br><span class="en"
                             style="color:black; font-weight:normal">Unsafe Act / Unsafe Condition Description</span>
                     </th>
-                    <th width="28%">Jenis Tindakan Pencegahan<br><span class="en"
+                    <th width="30%">Jenis Tindakan Pencegahan<br><span class="en"
                             style="color:black; font-weight:normal">Type of Preventive Action</span></th>
-                    <th width="28%">Tindak Lanjut / <span class="en"
+                    <th width="25%">Tindak Lanjut / <span class="en"
                             style="color:black; font-weight:normal">Follow Up</span></th>
                 </tr>
             </thead>
