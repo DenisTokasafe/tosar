@@ -18,7 +18,7 @@ class Index extends Component
     public $newKey, $newValue; // Input sementara untuk menambah baris JSON
     public $selected_id, $search;
     public $isEdit = false;
-
+    public $search_area='';
     protected $rules = [
         'type' => 'required',
         'location_id' => 'required|exists:locations,id',
@@ -98,7 +98,9 @@ class Index extends Component
     {
         return view('livewire.administration.equipment-master.index', [
             'equipments' => EquipmentMaster::with('location')
-                ->where('type', 'like', "%{$this->search}%")
+                ->where('type', 'like', "%{$this->search}%")->orWhereHas('location', function ($query) {
+                    $query->where('name', 'like', "%{$this->search_area}%");
+                })
                 ->paginate(10),
             'locations' => Location::all(),
             'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Eyewash & Safety Shower', 'Muster Point']

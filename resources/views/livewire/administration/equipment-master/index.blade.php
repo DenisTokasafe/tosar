@@ -89,8 +89,20 @@
 
             {{-- KOLOM KANAN: TABEL DATA --}}
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
-                <input type="text" wire:model.live="search" placeholder="Cari tipe alat..."
-                    class="w-full mb-4 input input-sm input-bordered">
+                <div class="flex flex-row gap-4">
+                    <select wire:model.live="search" class="w-full select select-bordered select-sm">
+                    <option value="">-- Cari Tipe Alat --</option>
+                    @foreach ($available_types as $t)
+                        <option value="{{ $t }}">{{ $t }}</option>
+                    @endforeach
+                </select>
+                <select wire:model.live="search_area" class="w-full select select-bordered select-sm">
+                    <option value="">-- Cari Area --</option>
+                    @foreach ($locations as $loc)
+                        <option value="{{ $loc->name }}">{{ $loc->name }}</option>
+                    @endforeach
+                </select>
+                </div>
                 <div class="overflow-x-auto ">
                     <table class="table table-xs">
                         <thead class="bg-gray-100">
