@@ -236,7 +236,6 @@
                 <td colspan="2" class="red-note ">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-
                 <td class="right border-r-none" style="font-weight: bold;">
                     &nbsp;
                 </td>
