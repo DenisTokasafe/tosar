@@ -89,7 +89,7 @@
 
             {{-- KOLOM KANAN: TABEL DATA --}}
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
-                <div class="flex flex-row gap-4">
+                <div class="flex flex-row gap-4 mb-4">
                     <select wire:model.live="search" class="w-full select select-bordered select-sm">
                     <option value="">-- Cari Tipe Alat --</option>
                     @foreach ($available_types as $t)
