@@ -212,11 +212,13 @@
             </tr>
         </table>
     </header>
+
     <footer>
         <table class="footer-table">
             <tr>
                 <td class="border-l-none" width="18%">Nama Dokumen/<span class="en">Document Name</span></td>
                 <td class="border-r-none " width="53%">Formulir Laporan WPI KPLH</td>
+                <td class=" border-r-none border-l-none" width="8%"></td>
                 <td width="29%" class="border-l-none border-r-none "></td>
             </tr>
             <tr>
@@ -231,9 +233,10 @@
             </tr>
             <tr>
                 <td class="border-l-none">No Revisi : 00</td>
-                <td class="red-note">
+                <td colspan="2" class="red-note ">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
+
                 <td class="right border-r-none" style="font-weight: bold;">
                     &nbsp;
                 </td>
