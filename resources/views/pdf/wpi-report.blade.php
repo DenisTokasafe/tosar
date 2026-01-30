@@ -6,7 +6,6 @@
     <style>
         @page {
             size: a4 portrait;
-            /* Margin bottom disetel 130px (Tinggi footer 120px + Jarak 10px) */
             margin: 130px 1.5cm 130px 1.5cm;
         }
 
@@ -20,7 +19,6 @@
 
         footer {
             position: fixed;
-            /* Bottom disetel -115px agar footer berada tepat di bawah area konten utama */
             bottom: -115px;
             left: 0;
             right: 0;
@@ -43,7 +41,6 @@
             table-layout: fixed;
         }
 
-        /* Border khusus untuk Header dan Footer menggunakan warna #dcdcdc */
         .header-table td,
         .footer-table td {
             border: 1px solid #dcdcdc;
@@ -52,12 +49,10 @@
             word-wrap: break-word;
         }
 
-        /* Teks footer tetap 8px */
         .footer-table td {
             font-size: 9px !important;
         }
 
-        /* Main table tetap menggunakan border hitam pekat (#000) */
         .main-table td,
         .main-table th {
             border: 1px solid #000;
@@ -103,11 +98,24 @@
             text-align: right;
         }
 
+        /* PERUBAHAN DISINI: Mengatur tinggi gambar agar seragam */
         img.photo {
-            width: 140px;
-            height: auto;
+            height: 120px;
+            /* Tinggi seragam */
+            width: auto;
+            /* Lebar otomatis mengikuti proporsi */
+            max-width: 180px;
+            /* Batas lebar maksimal agar tidak meluap */
             margin: 5px 2px;
             border: 1px solid #000;
+            display: inline-block;
+            object-fit: contain;
+            /* Menjaga rasio foto agar tidak gepeng */
+        }
+
+        .photo-container {
+            margin-top: 10px;
+            text-align: center;
         }
 
         .page-break {
@@ -143,8 +151,6 @@
             font-weight: bold;
         }
 
-        /* Warna dasar abu-abu #717171 sesuai permintaan */
-        /* Utility untuk Ketebalan 2px (Border Luar) */
         .border-t-thick {
             border-top: 2px solid #999999 !important;
         }
@@ -161,29 +167,6 @@
             border-right: 2px solid #999999 !important;
         }
 
-        /* Utility untuk Ketebalan 1px (Border Dalam) */
-        .border-t-thin {
-            border-top: 1px solid #717171 !important;
-        }
-
-        .border-b-thin {
-            border-bottom: 1px solid #717171 !important;
-        }
-
-        .border-l-thin {
-            border-left: 1px solid #717171 !important;
-        }
-
-        .border-r-thin {
-            border-right: 1px solid #717171 !important;
-        }
-
-        /* Penghilang border */
-        .border-none {
-            border: none !important;
-        }
-
-        /* Jika ingin menghilangkan border pada sisi tertentu */
         .border-l-none {
             border-left: none !important;
         }
@@ -236,9 +219,7 @@
                 <td colspan="2" class="red-note ">
                     Dokumen terkendali dan valid hanya ada di SharePoint Archi Indonesia
                 </td>
-                <td class="right border-r-none" style="font-weight: bold;">
-                    &nbsp;
-                </td>
+                <td class="right border-r-none" style="font-weight: bold;">&nbsp;</td>
             </tr>
         </table>
     </footer>
@@ -276,8 +257,7 @@
                         <td>{{ $report->department }}</td>
                     @endif
 
-                    <td>{{ isset($report->inspectors[$i]) ? $i + 1 . '. ' . $report->inspectors[$i]['name'] : '' }}
-                    </td>
+                    <td>{{ isset($report->inspectors[$i]) ? $i + 1 . '. ' . $report->inspectors[$i]['name'] : '' }}</td>
                     <td class="center">{{ $report->inspectors[$i]['id_number'] ?? '' }}</td>
                     <td class="center">{{ $report->inspectors[$i]['dept_con'] ?? '' }}</td>
                 </tr>
@@ -286,9 +266,6 @@
                 <td colspan="2" style="vertical-align: top; padding: 5px;">
                     Direview oleh / <br> <i>Reviewing by:</i>
                     <div style="margin-top: 5px;">
-                        {{-- @if ($report->reviewed_by)
-                            <img src="{{ $report->reviewer_signature }}" height="40">
-                        @endif --}}
                         <br>
                         <strong>{{ $report->reviewed_by ?? '................' }}</strong>
                     </div>
@@ -323,19 +300,23 @@
                         <td class="center">{{ $index + 1 }}</td>
                         <td class="center" style="font-weight: bold;">{{ $find->ohs_risk }}</td>
                         <td>
-                            {{ $find->description }}<br><br>
+                            {{ $find->description }}
                             @if (!empty($find->photos))
-                                @foreach ($find->photos as $p)
-                                    <img src="{{ public_path('storage/' . $p) }}" class="photo">
-                                @endforeach
+                                <div class="photo-container">
+                                    @foreach ($find->photos as $p)
+                                        <img src="{{ public_path('storage/' . $p) }}" class="photo">
+                                    @endforeach
+                                </div>
                             @endif
                         </td>
                         <td>
-                            {{ $find->prevention_action }}<br><br>
+                            {{ $find->prevention_action }}
                             @if (!empty($find->photos_prevention))
-                                @foreach ($find->photos_prevention as $pp)
-                                    <img src="{{ public_path('storage/' . $pp) }}" class="photo">
-                                @endforeach
+                                <div class="photo-container">
+                                    @foreach ($find->photos_prevention as $pp)
+                                        <img src="{{ public_path('storage/' . $pp) }}" class="photo">
+                                    @endforeach
+                                </div>
                             @endif
                         </td>
                         <td>
@@ -353,7 +334,6 @@
                             <div style="margin-top: 10px; padding-top: 5px; border-top: 1px dashed #000;">
                                 <strong>Due:</strong>
                                 {{ $find->due_date ? date('d-m-Y', strtotime($find->due_date)) : '-' }}<br>
-
                                 <strong>Selesai:</strong>
                                 {{ $find->completion_date ? date('d-m-Y', strtotime($find->completion_date)) : '-' }}
                             </div>
@@ -364,7 +344,6 @@
         </table>
 
         <div class="page-break"></div>
-
         <h3 class="center" style="text-decoration: underline;">Level Resiko / <span class="en">Risk Level</span>
         </h3>
         <table class="main-table risk-table-page">
@@ -378,39 +357,22 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam
-                        keselamatan jiwa atau kesehatan dengan potensi kejadian level 4 atau 5...<br>
-                        <span class="en">"Extreme (E)" Priority actions address risk hazards immediately dangerous
-                            to life or health...</span>
-                    </td>
+                    <td>Prioritas tindakan <strong>"Extrim (E)"</strong>: Menangani resiko bahaya yang mengancam
+                        keselamatan jiwa...</td>
                     <td class="center bg-extrim">E - Ekstrim<br><span class="en bg-extrim">E - Extreme</span></td>
                 </tr>
                 <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang
-                        membahayakan keselamatan manusia...<br>
-                        <span class="en">"High (H)" Priority actions address a condition or practice which could
-                            cause harm to people...</span>
-                    </td>
+                    <td>Prioritas tindakan <strong>"Tinggi (T)"</strong>: Menangani kondisi atau praktik kerja yang
+                        membahayakan...</td>
                     <td class="center bg-tinggi">T - Tinggi<br><span class="en bg-tinggi">T - High</span></td>
                 </tr>
                 <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3 atau
-                        terdapat kekurangan yang membutuhkan tindakan perbaikan...<br>
-                        <span class="en">"Moderate (M)" Priority actions address safety violations or
-                            deficiencies...</span>
-                    </td>
+                    <td>Prioritas tindakan <strong>"Menengah (M)"</strong>: Menangani pelanggaran peraturan K3...</td>
                     <td class="center bg-menengah">M - Menengah<br><span class="en bg-menengah">M - Moderate</span>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran peraturan K3 atau
-                        terdapat kekurangan yang tidak begitu signifikan dampaknya...<br>
-                        <span class="en">"Low (L)" Priority action: Addressing violations of K3
-                            regulations...</span>
+                    <td>Prioritas tindakan <strong>"Rendah (L)"</strong>: Menangani pelanggaran yang tidak signifikan...
                     </td>
                     <td class="center bg-rendah">L - Rendah<br><span class="en bg-rendah">L - Low</span></td>
                 </tr>
