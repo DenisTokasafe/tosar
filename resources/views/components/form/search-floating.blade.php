@@ -41,7 +41,7 @@
             <ul class="absolute z-50 w-full mt-2 overflow-auto border shadow-lg rounded-box bg-base-100 max-h-60 border-base-content/10">
 
                 {{-- Spinner Loading (Targeting search model) --}}
-                <div wire:loading wire:target="{{ $modelsearch }}" class="p-4 text-center">
+                <div wire:loading wire:target="{{ $modelsearch }}" class="flex flex-col items-center justify-center p-4 space-y-2 text-center">
                     <span class="loading loading-spinner loading-sm text-info"></span>
                 </div>
 
