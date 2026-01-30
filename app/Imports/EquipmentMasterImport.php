@@ -43,8 +43,8 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping
             'FE Type'  => $row['fe_type'] ?? null,
             'Capacity' => $row['capacity'] ?? null,
             // Tambahan untuk jenis alat lain seperti Hydrant (Box No) atau Muster Point (ID No)
-            'Box No'   => $row['box_no'] ?? null,
-            'ID No'    => $row['id_no'] ?? null,
+            'Box No'   => $row['box_nomor'] ?? null,
+            'ID No'    => $row['id_nomor'] ?? null,
             'ID Muster Point'    => $row['id_muster_point'] ?? null,
             'Hydrant No'    => $row['hydrant_no'] ?? null,
             'E&S No'    => $row['nomor'] ?? null,
