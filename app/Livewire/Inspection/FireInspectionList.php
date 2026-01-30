@@ -78,6 +78,21 @@ class FireInspectionList extends Component
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
         }
     }
+     public function updatedType($value)
+    {
+        $this->type = $value;
+        // Logika Khusus untuk Maesa Camp
+        if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
+        } else {
+            // Kembalikan ke default jika bukan Maesa Camp
+            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
+        }
+        // Jika area sudah terpilih, refresh daftar alat di area tersebut
+        if ($this->location_id) {
+            $this->selectLocation($this->location_id, $this->searchLocation);
+        }
+    }
     public function exportPDF()
     {
         // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
