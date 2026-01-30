@@ -123,6 +123,13 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
+          if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
+        } else {
+            // Kembalikan ke default jika bukan Maesa Camp
+            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
+        }
+
         // Ambil semua alat
         $allEquipments = EquipmentMaster::where('location_id', $id)
             ->where('type', $this->type)
