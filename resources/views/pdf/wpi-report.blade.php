@@ -216,8 +216,8 @@
     <footer>
         <table class="footer-table">
             <tr>
-                <td class="border-l-none" width="18%">Nama Dokumen/<span class="en">Document Name</span></td>
-                <td class="border-r-none " width="53%">Formulir Laporan WPI KPLH</td>
+                <td class="border-l-none" width="20%">Nama Dokumen/<span class="en">Document Name</span></td>
+                <td class="border-r-none " width="51%">Formulir Laporan WPI KPLH</td>
                 <td class=" border-r-none border-l-none" width="8%"></td>
                 <td width="29%" class="border-l-none border-r-none "></td>
             </tr>
