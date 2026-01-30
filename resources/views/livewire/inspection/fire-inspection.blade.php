@@ -108,16 +108,13 @@
                                 @endphp
                                 <td colspan="{{ $totalColumns }}" class="py-12 text-center bg-slate-50">
                                     <div class="flex flex-col items-center justify-center space-y-2">
-                                        @php
-                                            // Hitung total kolom: Location (1) + TechKeys + Checks + Remarks (1)
-                                            $totalColumns = 1 + count($techKeys) + count($checks) + 1;
-                                        @endphp
-                                <td colspan="{{ $totalColumns }}" class="py-12 text-center bg-slate-50">
-                                    <div class="flex flex-col items-center justify-center space-y-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-circle-x-icon lucide-circle-x">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="m15 9-6 6" />
+                                            <path d="m9 9 6 6" />
                                         </svg>
                                         <span class="font-medium text-slate-400">Tidak ada data alat ditemukan untuk
                                             area dan tipe ini.</span>
@@ -126,81 +123,75 @@
                                     </div>
                                 </td>
                                 </tr>
-                                <span class="font-medium text-slate-400">Tidak ada data alat ditemukan untuk
-                                    area dan tipe ini.</span>
-                                <p class="text-xs italic text-slate-400">Silahkan periksa kembali filter atau
-                                    Master Data Anda.</p>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                </td>
-                </tr>
-                @endforelse
-                </tbody>
-                </table>
             </div>
-        </div>
 
-        {{-- REMARKS & UPLOAD SECTIONS --}}
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div class="space-y-4">
-                <fieldset class="fieldset">
-                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
-                    <div wire:loading.remove wire:target="dokumentasi">
-                        @if ($dokumentasi)
-                            <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
-                                @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                    <img src="{{ $dokumentasi->temporaryUrl() }}" class="h-auto border rounded w-44" />
-                                @else
-                                    <div class="flex items-center gap-2 text-sm text-info">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+            {{-- REMARKS & UPLOAD SECTIONS --}}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="space-y-4">
+                    <fieldset class="fieldset">
+                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                        <div wire:loading.remove wire:target="dokumentasi">
+                            @if ($dokumentasi)
+                                <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
+                                    @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                                        <img src="{{ $dokumentasi->temporaryUrl() }}"
+                                            class="h-auto border rounded w-44" />
+                                    @else
+                                        <div class="flex items-center gap-2 text-sm text-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                            </svg>
+                                            {{ $dokumentasi->getClientOriginalName() }}
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                        <x-label-error :messages="$errors->get('dokumentasi')" />
+                    </fieldset>
+                </div>
+
+                <div class="space-y-4">
+                    <fieldset class="fieldset">
+                        <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                            modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                            :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                            enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                            clickaction="selectPelapor" />
+
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            @foreach ($inspected_users as $index => $user)
+                                <div
+                                    class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
+                                    <span>{{ $user['name'] }}</span>
+                                    <button type="button" wire:click="removeInspectedUser({{ $index }})"
+                                        class="text-slate-400 hover:text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                                d="M6 18L18 6M6 6l12 12" />
                                         </svg>
-                                        {{ $dokumentasi->getClientOriginalName() }}
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </fieldset>
+
+                    <div class="pt-4 border-t">
+                        <button wire:click="save" wire:loading.attr="disabled"
+                            class="w-full btn btn-success btn-sm md:w-auto">
+                            <span wire:loading.remove wire:target="save">🚀 Simpan Laporan Inspeksi</span>
+                            <span wire:loading wire:target="save">Menyimpan...</span>
+                        </button>
                     </div>
-                    <x-label-error :messages="$errors->get('dokumentasi')" />
-                </fieldset>
-            </div>
-
-            <div class="space-y-4">
-                <fieldset class="fieldset">
-                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
-                        :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
-                        enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
-                        clickaction="selectPelapor" />
-
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        @foreach ($inspected_users as $index => $user)
-                            <div
-                                class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
-                                <span>{{ $user['name'] }}</span>
-                                <button type="button" wire:click="removeInspectedUser({{ $index }})"
-                                    class="text-slate-400 hover:text-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </fieldset>
-
-                <div class="pt-4 border-t">
-                    <button wire:click="save" wire:loading.attr="disabled"
-                        class="w-full btn btn-success btn-sm md:w-auto">
-                        <span wire:loading.remove wire:target="save">🚀 Simpan Laporan Inspeksi</span>
-                        <span wire:loading wire:target="save">Menyimpan...</span>
-                    </button>
                 </div>
             </div>
-        </div>
         </div>
     </x-tabs-wpi.layout>
 </section>
