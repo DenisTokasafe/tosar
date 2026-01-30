@@ -212,7 +212,6 @@
             </tr>
         </table>
     </header>
-
     <footer>
         <table class="footer-table">
             <tr>
