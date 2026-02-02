@@ -27,7 +27,7 @@
         </label>
         <button wire:click='checkId' class="btn btn-xs btn-info join-item">Check ID</button>
     </div>
-    @if ($check_no_id_status === 'Nomor ID sudah terdaftar')
+    @if ($check_no_id_status === 'Nomor ID sudah terdaftar.')
         <p class="text-xs text-green-500">
             {{ $check_no_id_status }}
         </p>
