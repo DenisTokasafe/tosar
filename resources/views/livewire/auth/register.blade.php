@@ -11,19 +11,20 @@
     <x-auth-session-status class="text-center" :status="session('status')" />
     <!-- Validation Errors -->
     <div class="w-full join">
-            <label
-                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs validator join-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-id-card-icon lucide-id-card">
-                    <path d="M16 10h2" />
-                    <path d="M16 14h2" />
-                    <path d="M6.17 15a3 3 0 0 1 5.66 0" />
-                    <circle cx="9" cy="11" r="2" />
-                    <rect x="2" y="5" width="20" height="14" rx="2" />
-                </svg>
-                <input wire:model.live="check_id" type="text" placeholder="input nomor id anda" required />
-            </label>
+        <label
+            class="flex items-center w-full gap-2 input input-bordered input-xs join-item focus-within:outline-none focus-within:border-info focus-within:ring-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-gray-400 lucide lucide-id-card">
+                <path d="M16 10h2" />
+                <path d="M16 14h2" />
+                <path d="M6.17 15a3 3 0 0 1 5.66 0" />
+                <circle cx="9" cy="11" r="2" />
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+            </svg>
+            <input wire:model.live="check_id" type="text" class="p-0 border-none grow focus:ring-0"
+                {{-- Hilangkan border internal input --}} placeholder="input nomor id anda" required />
+        </label>
         <button wire:click='checkId' class="btn btn-xs btn-info join-item">Check ID</button>
     </div>
     @if ($check_no_id_status)
