@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="flex justify-start ">
-            <div class="grid grid-cols-1 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                 <fieldset class="w-full fieldset md:max-w-80">
                     <x-form.label label="Pilih Jenis Alat" required />
                     <select wire:model.live="search_type"
