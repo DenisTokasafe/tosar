@@ -77,7 +77,7 @@
                         <tbody>
                             @forelse ($allMasterData as $master)
                                 <tr class="text-xs hover:bg-slate-50">
-                                    <td class="w-32">{{ $master->specific_location }}</td>
+                                    <td class="">{{ $master->specific_location }}</td>
                                     @foreach ($techKeys as $key)
                                         <td class="w-8 border border-slate-200">
                                             <input type="text" wire:key="tech-{{ $master->id }}-{{ $key }}"
