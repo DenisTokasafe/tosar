@@ -27,7 +27,7 @@
             </label>
             <div class="hidden validator-hint">Enter valid email address</div>
         </div>
-        <button wire:click='checkId' class="btn btn-xs btn-neutral join-item">Check ID</button>
+        <button wire:click='checkId' class="btn btn-xs btn-info join-item">Check ID</button>
     </div>
     @if ($check_no_id_status)
         <p class="text-xs {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
