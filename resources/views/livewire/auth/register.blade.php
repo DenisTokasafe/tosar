@@ -1,7 +1,7 @@
-<div class="flex flex-col gap-6 w-full ">
+<div class="flex flex-col w-full gap-6 ">
     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-        <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-            <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+        <span class="flex items-center justify-center mb-1 rounded-md h-9 w-9">
+            <x-app-logo-icon class="text-black fill-current size-9 dark:text-white" />
         </span>
         <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
     </a>
@@ -10,14 +10,24 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
     <div class="flux-input-wrapper">
-        <flux:input.group>
-            <flux:input wire:model.live="check_id"  type="text" required autocomplete="check_id"
-                :placeholder="__('Pastikan Nomor ID belum terdaftar')" />
-            <flux:button wire:click='checkId' icon="check">Check ID</flux:button>
-        </flux:input.group>
 
-        {{-- Feedback Kustom di Bawah Field --}}
-        @if ($check_no_id_status)
+        <div class="join">
+            <div>
+                <label class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs validator join-item">
+                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
+                            stroke="currentColor">
+                            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                        </g>
+                    </svg>
+                    <input wire:model.live="check_id" type="text" placeholder="input nomor id anda" required />
+                </label>
+                <div class="hidden validator-hint">Enter valid email address</div>
+            </div>
+            <button wire:click='checkId' class="btn btn-xs btn-neutral join-item">Check ID</button>
+        </div>
+         @if ($check_no_id_status)
             <p
                 class="text-xs mt-1 {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
                 {{ $check_no_id_status }}
@@ -26,7 +36,7 @@
     </div>
     <form wire:submit="register">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <!-- Name -->
             <flux:input wire:model.live="first_name" :label="__('Nama')" type="text" required autofocus
                 autocomplete="Nama Lengkap" :placeholder="__('Nama ')" />
@@ -57,13 +67,13 @@
                 <input id="department" value="department" wire:model.live="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
                 <label for="department" class="peer-checked/department:text-accent">Departemen @if ($status === 'department')
-                        <span class="text-red-500 font-bold text-xs">*</span>
+                        <span class="text-xs font-bold text-red-500">*</span>
                     @endif
                 </label>
                 <input id="company" value="company" wire:model.live="status"
                     class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
                 <label for="company" class="peer-checked/company:text-primary">Kontraktor @if ($status === 'company')
-                        <span class="text-red-500 font-bold text-xs">*</span>
+                        <span class="text-xs font-bold text-red-500">*</span>
                     @endif
                 </label>
 
@@ -76,7 +86,7 @@
                         <!-- Dropdown hasil search -->
                         @if ($showDepartemenDropdown && count($departments) > 0)
                             <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                 <!-- Spinner ketika klik salah satu -->
                                 <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
                                     <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -103,7 +113,7 @@
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
-                                class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                 <!-- Spinner ketika klik -->
                                 <div wire:loading wire:target="selectContractor" class="p-2 text-center">
                                     <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -138,7 +148,7 @@
         </div>
     </form>
 
-    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+    <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
         {{ __('Already have an account?') }}
         <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
     </div>
