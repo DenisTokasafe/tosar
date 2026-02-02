@@ -41,7 +41,7 @@
             </div>
             @php
                 // Ambil semua data alat di area tersebut dengan tipe yang sama
-                $allMasterData = \App\Models\EquipmentMaster::whereID($equipment_master_id)->first();
+                $allMasterData = \App\Models\EquipmentMaster::whereId($equipment_master_id)->first();
 
                 $checks = $fields[$type]['checks'] ?? [];
 
