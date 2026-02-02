@@ -97,6 +97,66 @@
                 <label class="modal-backdrop" for="my_modal_6">Close</label>
             </div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3">
+            <fieldset class="w-full fieldset md:max-w-80">
+                <x-form.label label="Pilih Jenis Alat" required />
+                <select wire:model.live="search_type"
+                    class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                    <option value="">-- Pilih --</option>
+                    @foreach (array_keys($fields) as $key)
+                        <option value="{{ $key }}">{{ $key }}</option>
+                    @endforeach
+                </select>
+                <x-label-error :messages="$errors->get('type')" />
+            </fieldset>
+            <fieldset class="w-full fieldset">
+                        <x-form.label label="Bulan" required />
+
+                        <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
+                            x-data="{
+                                fp: null,
+                                dateValue: @entangle('date').live,
+                                initFlatpickr() {
+                                    // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
+                                    this.$nextTick(() => {
+                                        if (this.fp) {
+                                            this.fp.destroy();
+                                        }
+
+                                        // Pastikan x-ref input tersedia
+                                        if (!this.$refs.input) return;
+
+                                        this.fp = flatpickr(this.$refs.input, {
+                                            static: true,
+                                            plugins: [
+                                                new monthSelectPlugin({
+                                                    disableMobile: false,
+                                                    shorthand: true,
+                                                    dateFormat: 'M-Y',
+                                                    altFormat: 'F Y',
+                                                    theme: 'light'
+                                                })
+                                            ],
+                                            defaultDate: this.dateValue,
+                                            onChange: (selectedDates, dateStr) => {
+                                                this.dateValue = dateStr;
+                                            }
+                                        });
+                                    });
+                                }
+                            }" x-init="initFlatpickr()"
+                            x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
+
+                            <input x-ref="input" type="text" readonly
+                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                placeholder="Pilih bulan" />
+                        </div>
+                        <x-label-error :messages="$errors->get('date')" />
+                    </fieldset>
+                    <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
+                        modelid="location_id" placeholder="Area..." :options="$locations" :showdropdown="$show_location"
+                        clickaction="selectLocation" namedb="name" />
+        </div>
         <div class="overflow-x-auto">
             <table class="table table-xs table-zebra">
                 <thead>
@@ -162,8 +222,8 @@
                                     @endif
 
                                     <flux:tooltip content="edit" position="top">
-                                        <flux:button href="{{ route('fire-inspection-edit', $item->id) }}" size="xs"
-                                            icon="pencil-square" variant="subtle">
+                                        <flux:button href="{{ route('fire-inspection-edit', $item->id) }}"
+                                            size="xs" icon="pencil-square" variant="subtle">
                                         </flux:button>
                                     </flux:tooltip>
 
