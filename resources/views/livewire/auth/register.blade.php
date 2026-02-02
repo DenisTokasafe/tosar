@@ -32,10 +32,10 @@
             {{ $check_no_id_status }}
         </p>
 
-        <div class="flex justify-center">
+        <div class="flex flex-col justify-center gap-4">
             <x-form.input-text label="Masukan email kantor anda untuk request pembuatan user login" type='email' model="email_req" placeholder="Masukkan email" required />
             <div class="flex items-center justify-end mt-4">
-                <flux:button  variant="primary" class="w-full" wire:click="requestUserLogin">
+                <flux:button size="sm" variant="primary" class="w-full" wire:click="requestUserLogin">
                     {{ __('Request User Login') }}
                 </flux:button>
             </div>
