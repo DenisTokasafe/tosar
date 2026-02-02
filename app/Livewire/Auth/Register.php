@@ -50,7 +50,7 @@ class Register extends Component
         if ($exists) {
             $this->check_no_id_status = 'Nomor ID sudah terdaftar.';
         } else {
-            $this->check_no_id_status = 'Nomor ID tersedia.';
+            $this->check_no_id_status = 'Nomor ID belum terdaftar.';
 
         }
     }
