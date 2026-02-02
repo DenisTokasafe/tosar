@@ -40,4 +40,13 @@ class FireProtection extends Model
         }
         return $query;
     }
+    public function scopeSearchByType($query, $type)
+    {
+        if ($type) {
+            return $query->whereHas('equipmentMaster', function ($q) use ($type) {
+                $q->where('type', $type);
+            });
+        }
+        return $query;
+    }
 }
