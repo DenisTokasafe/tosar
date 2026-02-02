@@ -160,7 +160,7 @@
                         clickaction="selectLocation" namedb="name" />
                 </div>
             </div>
-            <div class="overflow-x-auto ">
+            <div class="mb-8 overflow-x-auto">
                 <table class="table table-xs table-zebra">
                     <thead>
                         <tr class="text-center bg-gray-100">
