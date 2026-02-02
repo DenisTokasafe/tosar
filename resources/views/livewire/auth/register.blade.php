@@ -37,28 +37,30 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <!-- Name -->
-            <flux:input size="sm" wire:model.live="first_name" :label="__('Nama')" type="text" required autofocus
-                autocomplete="Nama Lengkap" :placeholder="__('Nama ')" />
+            {{-- <flux:input size="sm" wire:model.live="first_name" :label="__('Nama')" type="text" required
+                autofocus autocomplete="Nama Lengkap" :placeholder="__('Nama ')" /> --}}
+
+            <x-input label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap" required />
             <!-- Name -->
-            <flux:input size="sm" wire:model.live="last_name" :label="__('Marga')" type="text" required autofocus
-                autocomplete="last_name" :placeholder="__('Marga')" />
+            <flux:input size="sm" wire:model.live="last_name" :label="__('Marga')" type="text" required
+                autofocus autocomplete="last_name" :placeholder="__('Marga')" />
             <!-- Name -->
-            <flux:input size="sm" wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text" disabled required
-                autofocus autocomplete="name" :placeholder="__('Nama yang di tampilkan')" />
+            <flux:input size="sm" wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text"
+                disabled required autofocus autocomplete="name" :placeholder="__('Nama yang di tampilkan')" />
 
             <!-- Username -->
-            <flux:input size="sm" wire:model="username" :label="__('Username')" type="text" required autocomplete="username"
-                :placeholder="__('Username')" />
+            <flux:input size="sm" wire:model="username" :label="__('Username')" type="text" required
+                autocomplete="username" :placeholder="__('Username')" />
 
             <!-- Email Address -->
-            <flux:input size="sm" wire:model="email" :label="__('Alamat Email')" type="email" required autocomplete="email"
-                placeholder="email@example.com" />
+            <flux:input size="sm" wire:model="email" :label="__('Alamat Email')" type="email" required
+                autocomplete="email" placeholder="email@example.com" />
             <!-- Nomor ID -->
-            <flux:input size="sm" wire:model="no_id" :label="__('Nomor ID')" type="text" required autocomplete="no_id"
-                :placeholder="__('Nomor ID')" />
+            <flux:input size="sm" wire:model="no_id" :label="__('Nomor ID')" type="text" required
+                autocomplete="no_id" :placeholder="__('Nomor ID')" />
             <!-- Jenis kelamin -->
-            <flux:select size="sm" wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin" :label="__('Jenis Kelamin')"
-                required>
+            <flux:select size="sm" wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin"
+                :label="__('Jenis Kelamin')" required>
                 <flux:select.option>Laki-Laki</flux:select.option>
                 <flux:select.option>Perempuan</flux:select.option>
             </flux:select>
@@ -107,8 +109,8 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input size="sm" wire:model.live.debounce.300ms="searchContractor" type="text" autofocus
-                            :placeholder="__('Kontraktor')" />
+                        <flux:input size="sm" wire:model.live.debounce.300ms="searchContractor" type="text"
+                            autofocus :placeholder="__('Kontraktor')" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
@@ -137,8 +139,9 @@
                 autocomplete="new-password" :placeholder="__('Password')" viewable />
 
             <!-- Confirm Password -->
-            <flux:input size="sm" wire:model="password_confirmation" :label="__('Confirm password')" type="password" required
-                autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
+            <flux:input size="sm" wire:model="password_confirmation" :label="__('Confirm password')"
+                type="password" required autocomplete="new-password" :placeholder="__('Confirm password')"
+                viewable />
         </div>
         <div class="flex items-center justify-end mt-4">
             <flux:button type="submit" variant="primary" class="w-full">
