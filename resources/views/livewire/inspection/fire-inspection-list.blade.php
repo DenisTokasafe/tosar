@@ -173,7 +173,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($inspections as $index => $item)
+                    @forelse ($inspections as $index => $item)
                         <tr wire:key="row-{{ $item->id }}" class=" odd:bg-white even:bg-gray-100">
                             <td class="text-center">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center">
@@ -233,7 +233,11 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No inspections found.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="mt-4">
