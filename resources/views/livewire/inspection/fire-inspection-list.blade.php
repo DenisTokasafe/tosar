@@ -211,7 +211,7 @@
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-col gap-1">
                                     @foreach ($pemeriksa as $nama)
-                                        <span class="badge badge-ghost badge-xs">{{ $nama }}</span>
+                                        <p class="text-xs"><span class="badge badge-ghost badge-xs">{{ $nama }}</span></p>
                                     @endforeach
                                 </div>
                             </td>
