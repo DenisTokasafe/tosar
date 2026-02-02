@@ -80,7 +80,7 @@
                                     <td class="">{{ $master->specific_location }}</td>
                                     @foreach ($techKeys as $key)
                                         <td class="border border-slate-200">
-                                            <input type="text" value="{{ $key }}"
+                                            <input type="text" wire:key="tech-{{ $master->id }}-{{ $key }}"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
