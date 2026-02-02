@@ -163,25 +163,25 @@
             <table class="table table-xs table-zebra">
                 <thead>
                     <tr class="text-center bg-gray-100">
-                        <th>No</th>
-                        <th>Jenis Alat</th>
-                        <th>Area & Lokasi spesifik</th>
-                        <th>Data Teknis & Kondisi</th>
-                        <th>Pemeriksa</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
+                        <th class="border">#</th>
+                        <th class="border">Jenis Alat</th>
+                        <th class="border">Area & Lokasi spesifik</th>
+                        <th class="border">Data Teknis & Kondisi</th>
+                        <th class="border">Pemeriksa</th>
+                        <th class="border">Tanggal</th>
+                        <th class="border">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($inspections as $index => $item)
                         <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden'
                             wire:target='location_id,search_type,date' class=" odd:bg-white even:bg-gray-100">
-                            <td class="text-center">{{ $inspections->firstItem() + $index }}</td>
-                            <td class="text-center">
+                            <td class="text-center border">{{ $inspections->firstItem() + $index }}</td>
+                            <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
                                         class="text-xs">{{ $item->equipmentMaster->type }}</span></span>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center border">
                                 <div class="text-[10px] opacity-60">{{ $item->equipmentMaster->location->name }}</div>
                                 <div class="font-bold">{{ $item->equipmentMaster->specific_location }}</div>
                             </td>
@@ -206,7 +206,7 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td>
+                            <td class="border">
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-col gap-1">
@@ -215,10 +215,10 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center border">
                                 {{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center border">
                                 <div class="flex gap-2">
                                     @if ($item->documentation_path)
                                         <a href="{{ Storage::url($item->documentation_path) }}" target="_blank"
