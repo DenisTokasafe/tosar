@@ -97,7 +97,7 @@
                 <label class="modal-backdrop" for="my_modal_6">Close</label>
             </div>
         </div>
-        <div class="flex justify-start ">
+        <div class="flex md:justify-start ">
             <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                 <fieldset class="w-full fieldset md:max-w-80">
                     <x-form.label label="Pilih Jenis Alat" required />
@@ -111,7 +111,7 @@
                     <x-label-error :messages="$errors->get('type')" />
                 </fieldset>
                 <fieldset class="w-full fieldset">
-                    <x-form.label label="Bulan" required />
+                    <x-form.label label="Pilih Bulan" required />
 
                     <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
                         x-data="{
@@ -154,7 +154,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('date')" />
                 </fieldset>
-                <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id"
+                <x-form.searchable-dropdown label="Pilih Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
             </div>
