@@ -157,7 +157,12 @@ class FireInspectionList extends Component
     public function render()
     {
         return view('livewire.inspection.fire-inspection-list', [
-            'inspections' => FireProtection::searchByLocation($this->location_id)->searchByType($this->search_type)->searchInstectionsByDate($this->date)->latest()->paginate(10)
+            'inspections' => FireProtection::with('equipmentMaster.location')
+                ->searchByType($this->type)
+                ->searchByLocation($this->location_id)
+                ->searchInstectionsByDate($this->date)
+                ->orderBy('inspection_date', 'desc')
+                ->paginate(10),
         ]);
     }
     public function paginationView()
