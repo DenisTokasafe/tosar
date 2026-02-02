@@ -195,7 +195,7 @@ class Register extends Component
         ]);
         try {
             // Kirim email ke Admin (atau ke user itu sendiri jika maksudnya konfirmasi)
-            Mail::to('admin@example.com')->send(new RequestUserLoginMail($this->email_req));
+            Mail::to('yoman.banea@archimining.com')->send(new RequestUserLoginMail($this->email_req));
 
             $this->reset('email_req');
 
