@@ -54,7 +54,7 @@
                             : [];
                 @endphp
                 <div class="overflow-x-auto  2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
-                    <table class="table text-xs border-collapse table-xs table-pin-rows table-pin-cols">
+                    <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-xs text-center text-black ">
                                 <th class="">Location</th>
