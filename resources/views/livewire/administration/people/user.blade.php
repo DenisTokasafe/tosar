@@ -10,7 +10,7 @@
                     </flux:tooltip>
                     <div class="mx-2 w-60">
                         <input type="text" wire:model.live.debounce.300ms="searchTerm"
-                            autocomplete="disabled-{{ rand() }}" placeholder="Cari Pelapor..."
+                           autocomplete="off" placeholder="Cari Pelapor..." readonly onfocus="this.removeAttribute('readonly');"
                             class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                     </div>
                 </div>
