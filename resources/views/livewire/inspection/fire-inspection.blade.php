@@ -81,7 +81,7 @@
                                     @foreach ($techKeys as $key)
                                         <td class="border border-slate-200">
                                             <input type="text" wire:key="tech-{{ $master->id }}-{{ $key }}"
-                                                wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
+                                                wire:model.live="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
                                     @endforeach
@@ -90,7 +90,7 @@
                                         <td class="text-center border border-slate-200">
                                             <input type="checkbox"
                                                 wire:key="check-{{ $master->id }}-{{ $field }}"
-                                                wire:model="conditions.{{ $master->id }}.{{ $field }}"
+                                                wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
                                                 class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
                                         </td>
                                     @endforeach
