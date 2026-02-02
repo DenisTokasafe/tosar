@@ -7,9 +7,11 @@ use Livewire\Component;
 use App\Models\Location;
 use App\Models\FireProtection;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\WithPagination;
 
 class FireInspectionList extends Component
 {
+    use WithPagination;
     public $type;
     public $date;
     public $area;
@@ -159,6 +161,6 @@ class FireInspectionList extends Component
     }
     public function paginationView()
     {
-       return 'paginate.pagination';
+        return 'paginate.pagination';
     }
 }
