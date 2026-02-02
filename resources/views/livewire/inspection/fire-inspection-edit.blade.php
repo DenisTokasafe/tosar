@@ -39,39 +39,26 @@
                 <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
-            @php
-                // Ambil semua data alat di area tersebut dengan tipe yang sama
-                $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                    ->where('type', $type)
-                    ->get();
 
-                $checks = $fields[$type]['checks'] ?? [];
-
-                // Ambil sample technical data dari data pertama untuk header tabel
-                $firstEquipment = $allMasterData->first();
-                $techKeys =
-                    $firstEquipment && $firstEquipment->technical_data
-                        ? array_keys($firstEquipment->technical_data)
-                        : [];
-            @endphp
             {{-- SECTION DYNAMIS INPUTS & CHECKBOXES --}}
             @if ($type && isset($fields[$type]))
                 <div class="p-4 mb-4 border border-gray-200 rounded-lg bg-gray-50">
                     {{-- Inputs Teks Dinamis (FE No, Box No, dll) --}}
                     <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
-                         @foreach ($techKeys as $key)
+                        @if (isset($fields[$type]['inputs']))
+                            @foreach ($fields[$type]['inputs'] as $inputField)
                                 <fieldset class="fieldset">
                                     <label class="floating-label">
-                                        <input type="text" wire:key="input-{{ $type }}-{{ $key }}"
-                                            wire:model.live="conditions.{{ $key }}"
-                                            placeholder="{{ $key }}"
-                                            class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $key) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                        <span>{{ $key }} <span class="font-bold text-red-500">*</span></span>
+                                        <input type="text" wire:key="input-{{ $type }}-{{ $inputField }}"
+                                            wire:model.live="conditions.{{ $inputField }}"
+                                            placeholder="{{ $inputField }}"
+                                            class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                        <span>{{ $inputField }} <span class="font-bold text-red-500">*</span></span>
                                     </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $key)" />
+                                    <x-label-error :messages="$errors->get('conditions.' . $inputField)" />
                                 </fieldset>
                             @endforeach
-
+                        @endif
                     </div>
 
                     <h3 class="mb-3 text-sm font-bold text-gray-700">Kondisi Checklist ({{ $type }}):</h3>
