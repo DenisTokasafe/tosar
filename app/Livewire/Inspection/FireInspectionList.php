@@ -158,7 +158,7 @@ class FireInspectionList extends Component
     {
         return view('livewire.inspection.fire-inspection-list', [
             'inspections' => FireProtection::with('equipmentMaster.location')
-                ->searchByType($this->type)
+                ->searchByType($this->search_type)
                 ->searchByLocation($this->location_id)
                 ->searchInstectionsByDate($this->date)
                 ->orderBy('inspection_date', 'desc')
