@@ -252,7 +252,7 @@
                 </table>
             </div>
 
-        <div class="absolute inset-x-0 bottom-0 h-16 mt-4">
+        <div class="absolute inset-x-0 bottom-0 mt-4 bg-base-100">
             {{ $inspections->links() }}
         </div>
     </x-tabs-wpi.layout>
