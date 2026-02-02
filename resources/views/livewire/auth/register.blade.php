@@ -11,7 +11,6 @@
     <x-auth-session-status class="text-center" :status="session('status')" />
     <!-- Validation Errors -->
     <div class="w-full join">
-        <div>
             <label
                 class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs validator join-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -25,8 +24,6 @@
                 </svg>
                 <input wire:model.live="check_id" type="text" placeholder="input nomor id anda" required />
             </label>
-            <div class="hidden validator-hint">Enter valid email address</div>
-        </div>
         <button wire:click='checkId' class="btn btn-xs btn-info join-item">Check ID</button>
     </div>
     @if ($check_no_id_status)
