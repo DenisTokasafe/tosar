@@ -9,9 +9,9 @@
                             wire:click="$set('showBulkUpdateModal', true)"></flux:button>
                     </flux:tooltip>
                     <div class="mx-2 w-60">
-                        <input  type="text" wire:model.live="searchPeople"
+                        <input type="text" wire:model.live.debounce.300ms="searchPeople"
                             placeholder="Cari Pelapor..."
-                            class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                            class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                     </div>
                 </div>
                 <div>
