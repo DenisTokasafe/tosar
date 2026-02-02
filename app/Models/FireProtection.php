@@ -23,12 +23,13 @@ class FireProtection extends Model
     {
         return $this->belongsTo(EquipmentMaster::class);
     }
-    public function scopeSearchInstectionsByDate($date)
+   public function scopeSearchInstectionsByDate($query, $date)
     {
         if ($date) {
-            return $this->whereMonth('inspection_date', $date);
+            // Gunakan $query, bukan $this
+            return $query->whereMonth('inspection_date', $date);
         }
-        return $this;
+        return $query;
     }
     public function scopeSearchByLocation($query, $locationId)
     {
