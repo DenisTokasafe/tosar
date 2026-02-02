@@ -78,8 +78,7 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input wire:model.live.debounce.300ms="searchDepartemen" type="text" autofocus
-                            :placeholder="__('Department')" />
+                            <input type="text" wire:model.live.debounce.300ms="searchDepartemen" placeholder="Department" class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                         <!-- Dropdown hasil search -->
                         @if ($showDepartemenDropdown && count($departments) > 0)
                             <ul
@@ -105,8 +104,7 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                        <flux:input size="sm" wire:model.live.debounce.300ms="searchContractor" type="text"
-                            autofocus :placeholder="__('Kontraktor')" />
+                            <input type="text" wire:model.live.debounce.300ms="searchContractor" placeholder="Kontraktor" class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
