@@ -9,7 +9,7 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
-        <div class="relative">
+
             <div class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
                 <label for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -251,9 +251,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="absolute inset-x-0 bottom-0 h-16 mt-4">
-                {{ $inspections->links() }}
-            </div>
+
+        <div class="absolute inset-x-0 bottom-0 h-16 mt-4">
+            {{ $inspections->links() }}
         </div>
     </x-tabs-wpi.layout>
 </section>
