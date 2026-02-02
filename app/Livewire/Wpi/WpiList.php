@@ -23,7 +23,7 @@ class WpiList extends Component
     {
       $map = [
         'Cancelled'   => 'badge-error',   // Tulis lengkap
-        'closed'      => 'badge-success',
+        'Closed'      => 'badge-success',
         'Review Event' => 'badge-warning',
         'Final Review'     => 'badge-accent',
         'Assigned'   => 'badge-info',
