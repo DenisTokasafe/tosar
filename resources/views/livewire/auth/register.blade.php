@@ -50,11 +50,16 @@
             <!-- Nomor ID -->
             <x-form.input-text label="Nomor ID" model="no_id" placeholder="Masukkan nomor ID" required />
             <!-- Jenis kelamin -->
-            <select class="select select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"  wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin">
-                <option disabled selected>Jenis Kelamin</option>
-                <option value="Laki-Laki">Laki-Laki</option>
-                <option value="Perempuan">Perempuan</option>
-            </select>
+            <fieldset class="w-full fieldset">
+
+                <x-form.label label="Jenis Kelamin" :required="true" />
+                <select class="select select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
+                    wire:model="jenis_kelamin" required>
+                    <option value="" selected>Jenis Kelamin</option>
+                    <option value="Laki-Laki">Laki-Laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </fieldset>
             <fieldset>
                 <input id="department" value="department" wire:model.live="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
