@@ -39,57 +39,47 @@
                 <x-form.input-floating label="Lokasi Spesifik" model="location" required />
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
-            @php
-                // Ambil semua data alat di area tersebut dengan tipe yang sama
-                $allMasterData = \App\Models\EquipmentMaster::whereId($equipment_master_id)->first();
 
-                $checks = $fields[$type]['checks'] ?? [];
-
-                // Ambil sample technical data dari data pertama untuk header tabel
-                $firstEquipment = $allMasterData;
-                $techKeys =
-                    $firstEquipment && $firstEquipment->technical_data
-                        ? array_keys($firstEquipment->technical_data)
-                        : [];
-            @endphp
             {{-- SECTION DYNAMIS INPUTS & CHECKBOXES --}}
-            @if ($allMasterData)
+            @if ($type && isset($fields[$type]))
                 <div class="p-4 mb-4 border border-gray-200 rounded-lg bg-gray-50">
                     {{-- Inputs Teks Dinamis (FE No, Box No, dll) --}}
                     <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
-                        @foreach ($techKeys as $key)
-                            <fieldset class="fieldset">
-                                <label class="floating-label">
-                                    <input type="text" wire:key="input-{{ $type }}-{{ $key }}"
-                                        wire:model.live="conditions.{{ $allMasterData->id }}.{{ $key }}"
-                                        placeholder="{{ $key }}"
-                                        class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $key) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                    <span>{{ $key }} <span class="font-bold text-red-500">*</span></span>
-                                </label>
-                                <x-label-error :messages="$errors->get('conditions.{{ $allMasterData->id }}.{{ $key }}')" />
-                            </fieldset>
-                        @endforeach
-
+                        @if (isset($fields[$type]['inputs']))
+                            @foreach ($fields[$type]['inputs'] as $inputField)
+                                <fieldset class="fieldset">
+                                    <label class="floating-label">
+                                        <input type="text" wire:key="input-{{ $type }}-{{ $inputField }}"
+                                            wire:model.live="conditions.{{ $inputField }}"
+                                            placeholder="{{ $inputField }}"
+                                            class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                                        <span>{{ $inputField }} <span class="font-bold text-red-500">*</span></span>
+                                    </label>
+                                    <x-label-error :messages="$errors->get('conditions.' . $inputField)" />
+                                </fieldset>
+                            @endforeach
+                        @endif
                     </div>
 
                     <h3 class="mb-3 text-sm font-bold text-gray-700">Kondisi Checklist ({{ $type }}):</h3>
 
                     {{-- Checkbox Dinamis --}}
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                       @foreach ($checks as $field)
+                        @if (isset($fields[$type]['checks']))
+                            @foreach ($fields[$type]['checks'] as $field)
                                 <fieldset class="p-2 bg-white border border-gray-200 rounded-md">
                                     <label class="flex items-center justify-between text-xs cursor-pointer">
                                         <span
                                             class="font-semibold tracking-wider text-gray-600 uppercase">{{ $field }}</span>
                                         <input type="checkbox"
-                                            wire:key="check-{{ $allMasterData->id }}-{{ $field }}"
-                                            wire:model.live="conditions.{{ $allMasterData->id }}.{{ $field }}"
+                                            wire:key="check-{{ $type }}-{{ $field }}"
+                                            wire:model="conditions.{{ $field }}"
                                             class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
                                     </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $allMasterData->id . '.' . $field)" />
+                                    <x-label-error :messages="$errors->get('conditions.' . $field)" />
                                 </fieldset>
                             @endforeach
-
+                        @endif
                     </div>
                 </div>
             @endif
