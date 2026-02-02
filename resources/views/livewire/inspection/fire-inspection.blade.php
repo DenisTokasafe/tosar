@@ -79,7 +79,7 @@
                                 <tr class="text-xs hover:bg-slate-50">
                                     <td class="">{{ $master->specific_location }}</td>
                                     @foreach ($techKeys as $key)
-                                        <td class="border border-slate-200">
+                                        <td class="w-8 border border-slate-200">
                                             <input type="text" wire:key="tech-{{ $master->id }}-{{ $key }}"
                                                 wire:model.live="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
