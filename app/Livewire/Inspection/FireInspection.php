@@ -131,24 +131,35 @@ class FireInspection extends Component
         }
 
         // Ambil semua alat
-        $master = EquipmentMaster::where('location_id', $id)
+        // 1. Ambil semua data master berdasarkan lokasi dan tipe
+        $allMaster = EquipmentMaster::where('location_id', $id)
             ->where('type', $this->type)
             ->get();
 
         $this->conditions = []; // Reset
 
-        // 2. Isi technical data dari database ke conditions (Readonly di UI)
-        if ($master) {
-            foreach ($master->technical_data as $key => $val) {
-                $this->conditions[$key] = $val;
-            }
-        }
+        // 2. Looping setiap alat yang ditemukan
+        foreach ($allMaster as $master) {
+            // Inisialisasi array untuk ID master ini
+            $this->conditions[$master->id] = [];
 
-        // 3. Inisialisasi Checklist (Default: TRUE / Aman)
-        if (isset($this->fields[$this->type]['checks'])) {
-            foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                $this->conditions[$checkField] = true;
+            // Isi technical data (misal: FE No, Capacity) ke dalam conditions
+            if ($master->technical_data) {
+                foreach ($master->technical_data as $key => $val) {
+                    $this->conditions[$master->id][$key] = $val;
+                }
             }
+
+            // 3. Inisialisasi Checklist (Default: TRUE / Aman)
+            if (isset($this->fields[$this->type]['checks'])) {
+                foreach ($this->fields[$this->type]['checks'] as $checkField) {
+                    // Data checklist disimpan berdasarkan ID Master dan Nama Check-nya
+                    $this->conditions[$master->id][$checkField] = true;
+                }
+            }
+
+            // Inisialisasi Remarks kosong untuk tiap alat
+            $this->remarks[$master->id] = '';
         }
     }
 
