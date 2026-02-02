@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+<div class="grid grid-cols-1 gap-2 mb-5 lg:grid-cols-2">
     <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     {{-- Gunakan grafik-manhours untuk Line Chart Gabungan --}}
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
