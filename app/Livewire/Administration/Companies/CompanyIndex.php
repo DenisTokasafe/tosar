@@ -9,12 +9,11 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
-use Livewire\WithoutUrlPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyIndex extends Component
 {
-    use WithPagination, WithoutUrlPagination,WithFileUploads;
+    use WithPagination,WithFileUploads;
     public $legend;
     #[Validate('required', message: 'kolom nama perusahaan tidak boleh kosong!!!')]
     public $company_name;
