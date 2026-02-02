@@ -174,7 +174,8 @@
                 </thead>
                 <tbody>
                     @forelse ($inspections as $index => $item)
-                        <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden' wire:target='location_id,search_type,date' class=" odd:bg-white even:bg-gray-100">
+                        <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden'
+                            wire:target='location_id,search_type,date' class=" odd:bg-white even:bg-gray-100">
                             <td class="text-center">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
@@ -233,14 +234,17 @@
                                 </div>
                             </td>
                         </tr>
-                         <tr>
-                            <td colspan="7" wire:loading.remove.class='hidden' wire:target='location_id,search_type,date' class="hidden text-center"><span class="loading loading-bars loading-xl"></span></td>
-                        </tr>
+
                     @empty
                         <tr>
                             <td colspan="7" class="text-center">No inspections found.</td>
                         </tr>
                     @endforelse
+                    <tr>
+                        <td colspan="7" wire:loading.remove.class='hidden'
+                            wire:target='location_id,search_type,date' class="hidden text-center"><span
+                                class="loading loading-bars loading-xl"></span></td>
+                    </tr>
                 </tbody>
             </table>
             <div class="mt-4">
