@@ -173,12 +173,7 @@ class FireInspection extends Component
                 }
             }
 
-            // 3. Inisialisasi Checklist (Default: TRUE / Aman)
-            if (isset($this->fields[$this->type]['checks'])) {
-                foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    $this->conditions[$checkField] = true;
-                }
-            }
+           $this->initializeConditions();
         }
     }
 
