@@ -78,7 +78,7 @@ $inputLoadingClasses = Flux::classes()
     ;
 
 $classes = Flux::classes()
-    ->add('input input-bordered w-full max-w-sm   block disabled:shadow-none dark:shadow-none ring-0 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden')
+    ->add('input input-bordered w-full max-w-sm   block disabled:shadow-none dark:shadow-none ring-0 focus-within:outline-none focus-within:border-info focus-within:ring-0')
     ->add('appearance-none') // Without this, input[type="date"] on mobile doesn't respect w-full...
     ->add(match ($size) {
         default => 'text-black sm:text-sm py-2 h-10 leading-[1.375rem]', // This makes the height of the input 40px (same as buttons and such...)
@@ -100,8 +100,8 @@ $classes = Flux::classes()
         6 => 'pe-44',
     })
     ->add(match ($variant) { // Background...
-        'outline' => 'bg-white dark:bg-transparant dark:disabled:bg-white/[7%] ring-0 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden',
-        'filled'  => 'bg-zinc-800/5 dark:bg-white/10 dark:disabled:bg-white/[7%] ring-0 focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden',
+        'outline' => 'bg-white dark:bg-transparant dark:disabled:bg-white/[7%] ring-0 focus-within:outline-none focus-within:border-info focus-within:ring-0',
+        'filled'  => 'bg-zinc-800/5 dark:bg-white/10 dark:disabled:bg-white/[7%] ring-0 focus-within:outline-none focus-within:border-info focus-within:ring-0',
     })
     ->add(match ($variant) { // Text color
         'outline' => 'text-black disabled:text-zinc-500 placeholder-zinc-400 disabled:placeholder-zinc-400/70 dark:text-black dark:disabled:text-zinc-400 dark:placeholder-zinc-400 dark:disabled:placeholder-zinc-500',
@@ -123,7 +123,7 @@ $classes = Flux::classes()
     <flux:with-field :$attributes :$name>
         <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
             <?php if (is_string($iconLeading)): ?>
-                <div class="pointer-events-none absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0">
+                <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs pointer-events-none text-zinc-400/75 ps-3 start-0">
                     <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
                 </div>
             <?php elseif ($iconLeading): ?>
@@ -197,11 +197,11 @@ $classes = Flux::classes()
         <?php endif; ?>
 
         <?php if ($attributes->has('placeholder')): ?>
-            <div class="block self-center text-start flex-1 font-medium text-zinc-400 dark:text-white/40">
+            <div class="self-center flex-1 block font-medium text-start text-zinc-400 dark:text-white/40">
                 {{ $attributes->get('placeholder') }}
             </div>
         <?php else: ?>
-            <div class="text-start self-center flex-1 font-medium text-zinc-800 dark:text-white">
+            <div class="self-center flex-1 font-medium text-start text-zinc-800 dark:text-white">
                 {{ $slot }}
             </div>
         <?php endif; ?>

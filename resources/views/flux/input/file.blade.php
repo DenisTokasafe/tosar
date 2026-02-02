@@ -14,7 +14,7 @@ extract(Flux::forwardedAttributes($attributes, [
 
 @php
 $classes = Flux::classes()
-    ->add('w-full max-w-sm flex items-center gap-2 focus:outline-none focus:border-accent border border-slate-300/50
+    ->add('w-full max-w-sm flex items-center gap-2 focus-within:outline-none focus-within:border-accent focus-within:ring-0 border border-slate-300/50
 shadow-sm focus:ring-accent/20 block w-full sm:text-sm font-semibold focus:ring-1  rounded-lg cursor-pointer')
     // NOTE: We need to add relative positioning here to prevent odd overflow behaviors because of
     // "sr-only": https://github.com/tailwindlabs/tailwindcss/discussions/12429
@@ -64,7 +64,7 @@ shadow-sm focus:ring-accent/20 block w-full sm:text-sm font-semibold focus:ring-
         <?php endif; ?>
     </flux:button>
 
-    <div x-ref="name" class="cursor-default select-none truncate whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400 font-medium" aria-hidden="true">
+    <div x-ref="name" class="text-sm font-medium truncate cursor-default select-none whitespace-nowrap text-zinc-500 dark:text-zinc-400" aria-hidden="true">
         {!! __('No file chosen') !!}
     </div>
 </div>
