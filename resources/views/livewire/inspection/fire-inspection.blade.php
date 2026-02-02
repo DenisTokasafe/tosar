@@ -78,10 +78,9 @@
                             @forelse ($allMasterData as $master)
                                 <tr class="text-xs hover:bg-slate-50">
                                     <td class="">{{ $master->specific_location }}</td>
-
                                     @foreach ($techKeys as $key)
                                         <td class="border border-slate-200">
-                                            <input type="text" value="{{ $master->technical_data[$key] ?? '' }}"
+                                            <input type="text" value="{{ $key }}"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
