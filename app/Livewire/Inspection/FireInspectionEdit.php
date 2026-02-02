@@ -15,7 +15,7 @@ class FireInspectionEdit extends Component
 {
     use WithFileUploads, HasFireInspectionFields;
     public $inspectionId;
-    public $type, $location, $inspection_date, $remarks, $area, $location_id;
+    public $type, $location, $inspection_date, $remarks, $area, $location_id,$equipment_master_id;
     public $conditions = [];
     public $inspected_users = [];
     public $dokumentasi; // File baru yang diupload
@@ -38,7 +38,7 @@ class FireInspectionEdit extends Component
     {
         $inspection = FireProtection::findOrFail($id);
         $this->inspectionId = $id;
-
+        $this->equipment_master_id = $inspection->equipment_master_id;
         $this->type = $inspection->equipmentMaster->type;
         $this->location = $inspection->equipmentMaster->specific_location;
         $this->area = $inspection->equipmentMaster->location->name;
