@@ -1,4 +1,5 @@
 <div class="flex flex-col w-full gap-6 ">
+    <x-toast />
     <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
         <span class="flex items-center justify-center mb-1 rounded-md h-9 w-9">
             <x-app-logo-icon class="text-black fill-current size-9 dark:text-white" />
