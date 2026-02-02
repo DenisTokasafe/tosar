@@ -157,4 +157,8 @@ class FireInspectionList extends Component
             'inspections' => FireProtection::latest()->paginate(10)
         ]);
     }
+    public function paginationView()
+    {
+       return 'paginate.pagination';
+    }
 }
