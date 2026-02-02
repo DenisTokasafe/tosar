@@ -62,7 +62,11 @@ protected $report;
     public function toArray(object $notifiable): array
     {
         return [
-            //
+           'report_id' => $this->report->id,
+        'title' => 'Laporan WPI Baru',
+        'message' => 'Laporan dari ' . ($this->report->creator->name ?? 'System') . ' di area ' . ($this->report->area ?? 'N/A') . ' menunggu review.',
+        'url' => url('/inspeksi/wpi/edit/' . $this->report->id),
+        'type' => 'WPI_SUBMITTED'
         ];
     }
 }

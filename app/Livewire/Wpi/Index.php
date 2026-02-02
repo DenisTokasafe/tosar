@@ -10,6 +10,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\WpiFinding;
 use App\Helpers\FileHelper;
+use App\Helpers\MailHelper;
 use App\Models\WpiWorkflow;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -688,7 +689,15 @@ class Index extends Component
             $workflowData['status'] = 'Submitted';
             $workflowData['created_by'] = auth()->id();
         }
+        // Mengambil laporan terakhir untuk mendapatkan ID selanjutnya
+        $lastReport = WpiReport::latest('id')->first();
+        // Catatan: Ganti 'FireProtection' dengan nama Model yang Anda gunakan untuk tabel di Gambar 1
 
+        $nextId = $lastReport ? $lastReport->id + 1 : 1;
+
+        // Membuat nomor referensi dengan format WPI-00001
+        $referenceNumber = 'WPI-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
+        $workflowData['no_referensi'] = $referenceNumber;
         $report = WpiReport::updateOrCreate(
             ['id' => $this->reportId],
             $workflowData
@@ -746,10 +755,20 @@ class Index extends Component
         if (!$this->reportId) {
             $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
             foreach ($moderatorIds as $userId) {
-                $user = User::find($userId);
-                if ($user) {
-                    $user->notify(new WpiSubmittedNotification($report));
-                }
+                $reporterName = $report->creator->name ?? 'System';
+                $area = $report->area ?? 'General Area';
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Notifikasi Laporan WPI Baru',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Laporan WPI Baru',
+                        'title'         => 'Notifikasi Laporan WPI Baru',
+                        'messageText'   => "Telah dibuat laporan WPI baru.\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus: $report->status",
+                        'actionUrl'     => route('wpi-detail', $report->id)
+                    ]
+                );
             }
         }
 
@@ -760,6 +779,28 @@ class Index extends Component
 
         if ($this->reportId) {
             $this->loadData($this->reportId);
+            if($this->proceedTo ==='Assigned' || $this->proceedTo ==='Review Event'){
+                $this->processStatusChange($this->proceedTo);
+
+            }
+            $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
+            foreach ($moderatorIds as $userId) {
+                $reporterName = $report->creator->name ?? 'System';
+                $area = $report->area ?? 'General Area';
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Notifikasi Laporan WPI Update',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Laporan WPI Diupdate',
+                        'title'         => 'Notifikasi Laporan WPI Diupdate',
+                        'messageText'   => "Telah diupdate laporan WPI baru.\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus: $report->status",
+                        'actionUrl'     => route('wpi-detail', $report->id)
+                    ]
+                );
+            }
+
         } else {
             return $this->redirect(route('wpi.edit', $report->id), navigate: true);
         }
@@ -776,7 +817,7 @@ class Index extends Component
                 'isRemoteEnabled' => true
             ])
             ->setPaper('a4', 'portrait');
- // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas
+        // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas
         $pdf->render();
         $canvas = $pdf->getCanvas();
         $font = null; // Ini akan otomatis menggunakan font default PDF (Helvetica/Times-Roman)
