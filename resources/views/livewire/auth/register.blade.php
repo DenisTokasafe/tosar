@@ -9,8 +9,7 @@
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
-    <div class="flux-input-wrapper">
-
+    <!-- Validation Errors -->
         <div class="join">
             <div>
                 <label class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs validator join-item">
@@ -33,7 +32,7 @@
                 {{ $check_no_id_status }}
             </p>
         @endif
-    </div>
+
     <form wire:submit="register">
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
