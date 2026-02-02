@@ -66,7 +66,7 @@
                                 @endforeach
 
                                 @foreach ($checks as $checkItem)
-                                    <th class="] ">
+                                    <th class="">
                                         {{ $checkItem }}
                                     </th>
                                 @endforeach
@@ -81,7 +81,7 @@
 
                                     @foreach ($techKeys as $key)
                                         <td class="border border-slate-200">
-                                            <input type="text"
+                                            <input type="text" value="{{ $master->technical_data[$key] ?? '' }}"
                                                 wire:model="conditions.{{ $master->id }}.{{ $key }}" readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
