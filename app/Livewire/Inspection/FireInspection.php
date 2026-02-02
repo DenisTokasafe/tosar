@@ -138,7 +138,7 @@ class FireInspection extends Component
         $this->conditions = []; // Reset
 
         // 2. Isi technical data dari database ke conditions (Readonly di UI)
-        if ($master->technical_data) {
+        if ($master) {
             foreach ($master->technical_data as $key => $val) {
                 $this->conditions[$key] = $val;
             }
