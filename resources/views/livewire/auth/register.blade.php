@@ -31,8 +31,7 @@
         <p class="text-xs {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
             {{ $check_no_id_status }}
         </p>
-    @endif
-
+    @else
     <form wire:submit="register">
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -78,7 +77,8 @@
                     {{-- Department --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                            <input type="text" wire:model.live.debounce.300ms="searchDepartemen" placeholder="Department" class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
+                        <input type="text" wire:model.live.debounce.300ms="searchDepartemen" placeholder="Department"
+                            class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                         <!-- Dropdown hasil search -->
                         @if ($showDepartemenDropdown && count($departments) > 0)
                             <ul
@@ -104,7 +104,8 @@
                     {{-- Contractor --}}
                     <div class="relative mb-1">
                         <!-- Input Search -->
-                            <input type="text" wire:model.live.debounce.300ms="searchContractor" placeholder="Kontraktor" class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
+                        <input type="text" wire:model.live.debounce.300ms="searchContractor" placeholder="Kontraktor"
+                            class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                         <!-- Dropdown hasil search -->
                         @if ($showContractorDropdown && count($contractors) > 0)
                             <ul
@@ -142,6 +143,8 @@
             </flux:button>
         </div>
     </form>
+    @endif
+
 
     <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
         {{ __('Already have an account?') }}
