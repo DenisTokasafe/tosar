@@ -209,7 +209,7 @@
                             <td>
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 @php $pemeriksa = explode('|', $item->inspected_by); @endphp
-                                <div class="flex flex-wrap gap-1">
+                                <div class="flex flex-col gap-1">
                                     @foreach ($pemeriksa as $nama)
                                         <span class="badge badge-ghost badge-xs">{{ $nama }}</span>
                                     @endforeach
