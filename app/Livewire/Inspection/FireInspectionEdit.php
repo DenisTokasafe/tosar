@@ -59,7 +59,25 @@ class FireInspectionEdit extends Component
                 $this->inspected_users[] = ['id' => null, 'name' => $name];
             }
         }
+        $this->adjustFieldsByLocation();
     }
+
+    public function adjustFieldsByLocation()
+    {
+        if (
+            isset($this->fields['Fire Hydrant']) &&
+            str_contains(strtolower($this->searchLocation), 'maesa camp')
+        ) {
+            $this->fields['Fire Hydrant']['checks'] = [
+                'Box',
+                'Hose',
+                'Rack',
+                'Valve',
+                'Nozel',
+            ];
+        }
+    }
+
 
     public function rules()
     {
