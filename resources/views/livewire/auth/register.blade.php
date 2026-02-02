@@ -37,33 +37,24 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <!-- Name -->
-            {{-- <flux:input size="sm" wire:model.live="first_name" :label="__('Nama')" type="text" required
-                autofocus autocomplete="Nama Lengkap" :placeholder="__('Nama ')" /> --}}
-
-            <x-form.input-text label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap" required autofocus/>
-            <!-- Name -->
-            <flux:input size="sm" wire:model.live="last_name" :label="__('Marga')" type="text" required
-                autofocus autocomplete="last_name" :placeholder="__('Marga')" />
-            <!-- Name -->
-            <flux:input size="sm" wire:model.live="name" :label="__('Nama yang di tampilkan')" type="text"
-                disabled required autofocus autocomplete="name" :placeholder="__('Nama yang di tampilkan')" />
-
+            <x-form.input-text label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap" required />
+            <!-- Marga -->
+            <x-form.input-text label="Marga" model="last_name" placeholder="Masukkan marga" required />
+            <!-- Name yang di tampilkan -->
+            <x-form.input-text label="Nama yang di tampilkan" model="name"
+                placeholder="Masukkan nama yang di tampilkan" required disabled />
             <!-- Username -->
-            <flux:input size="sm" wire:model="username" :label="__('Username')" type="text" required
-                autocomplete="username" :placeholder="__('Username')" />
-
+            <x-form.input-text label="Username" model="username" placeholder="Masukkan username" required />
             <!-- Email Address -->
-            <flux:input size="sm" wire:model="email" :label="__('Alamat Email')" type="email" required
-                autocomplete="email" placeholder="email@example.com" />
+            <x-form.input-text label="Alamat Email" model="email" placeholder="email@example.com" required />
             <!-- Nomor ID -->
-            <flux:input size="sm" wire:model="no_id" :label="__('Nomor ID')" type="text" required
-                autocomplete="no_id" :placeholder="__('Nomor ID')" />
+            <x-form.input-text label="Nomor ID" model="no_id" placeholder="Masukkan nomor ID" required />
             <!-- Jenis kelamin -->
-            <flux:select size="sm" wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin"
-                :label="__('Jenis Kelamin')" required>
-                <flux:select.option>Laki-Laki</flux:select.option>
-                <flux:select.option>Perempuan</flux:select.option>
-            </flux:select>
+            <select class="select select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"  wire:model="jenis_kelamin" placeholder="Pilih Jenis Kelamin">
+                <option disabled selected>Jenis Kelamin</option>
+                <option value="Laki-Laki">Laki-Laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
             <fieldset>
                 <input id="department" value="department" wire:model.live="status"
                     class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
@@ -140,8 +131,7 @@
 
             <!-- Confirm Password -->
             <flux:input size="sm" wire:model="password_confirmation" :label="__('Confirm password')"
-                type="password" required autocomplete="new-password" :placeholder="__('Confirm password')"
-                viewable />
+                type="password" required autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
         </div>
         <div class="flex items-center justify-end mt-4">
             <flux:button type="submit" variant="primary" class="w-full">
