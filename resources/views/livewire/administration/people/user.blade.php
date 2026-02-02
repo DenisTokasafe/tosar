@@ -8,9 +8,9 @@
                         <flux:button size="xs" variant="primary" icon='refresh-cw'
                             wire:click="$set('showBulkUpdateModal', true)"></flux:button>
                     </flux:tooltip>
-                    <div class="mx-2 w-60">
+                    <div wire:ignore class="mx-2 w-60">
                         <input type="text" wire:model.live.debounce.300ms="searchTerm"
-                           autocomplete="off" placeholder="Cari Pelapor..."  onfocus="this.removeAttribute('readonly');"
+                           autocomplete="off" placeholder="Cari Pelapor..." readonly onfocus="this.removeAttribute('readonly');"
                             class="input input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0" />
                     </div>
                 </div>
