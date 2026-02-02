@@ -28,12 +28,12 @@
         <button wire:click='checkId' class="btn btn-xs btn-info join-item">Check ID</button>
     </div>
     @if ($check_no_id_status === 'Nomor ID sudah terdaftar')
-        <p class="text-xs {{ str_contains($check_no_id_status, 'Nomor ID sudah terdaftar') ? 'text-green-500' : 'text-red-500' }}">
+        <p class="text-xs text-green-500">
             {{ $check_no_id_status }}
         </p>
     @endif
     @if ($check_no_id_status === 'Nomor ID belum terdaftar.')
-        <p class="text-xs {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
+        <p class="text-xs text-red-500">
             {{ $check_no_id_status }}
         </p>
         <form wire:submit="register">
