@@ -5,7 +5,7 @@ Halo Admin,
 
 Seseorang dengan alamat email **{{ $email }}** telah mengajukan permintaan untuk pembuatan akun user login baru di sistem.
 
-<x-mail::button :url="config('app.url') . '/admin/users/create?email=' . $email">
+<x-mail::button :url="route('people')">
 Proses Sekarang
 </x-mail::button>
 

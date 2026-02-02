@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,12 +13,17 @@ use Illuminate\Queue\SerializesModels;
 class RequestUserLoginMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $id_user;
     /**
      * Create a new message instance.
      */
     public function __construct(public string $email)
-    {}
+    {
+        $id_user = User::where('email', $email)->first();
+        if ($id_user) {
+            $this->id_user = $id_user->id;
+        }
+    }
 
     /**
      * Get the message envelope.
