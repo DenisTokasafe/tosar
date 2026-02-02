@@ -28,7 +28,7 @@
         </div>
          @if ($check_no_id_status)
             <p
-                class="text-xs mt-1 {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
+                class="text-xs {{ str_contains($check_no_id_status, 'tersedia') ? 'text-green-500' : 'text-red-500' }}">
                 {{ $check_no_id_status }}
             </p>
         @endif
