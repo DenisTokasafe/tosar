@@ -67,6 +67,10 @@ class FireInspectionList extends Component
     {
         $this->resetPage();
     }
+    public function clear_filter()
+    {
+        $this->reset('search_type','location_id','date','area','searchLocation');
+    }
     public function updatedSearchLocation()
     {
         if (strlen($this->searchLocation) > 2) {
