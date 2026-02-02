@@ -10,7 +10,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
     <!-- Validation Errors -->
-        <div class="join">
+        <div class="w-full join">
             <div>
                 <label class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs validator join-item">
                     <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
