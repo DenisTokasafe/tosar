@@ -29,8 +29,8 @@
                                 </span>
                             </td>
                             <td>{{ $report->location }}</td>
-                            <td class="font-bold uppercase text-info">{{ $report->department }}</td>
-                            <td class="text-center">
+                            <td class="font-bold uppercase border text-info">{{ $report->department }}</td>
+                            <td class="text-center border">
                                 <span class="font-normal badge badge-ghost badge-sm">{{ count($report->inspectors) }}
                                     Orang</span>
                             </td>
