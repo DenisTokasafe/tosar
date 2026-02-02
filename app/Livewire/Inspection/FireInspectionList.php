@@ -55,6 +55,18 @@ class FireInspectionList extends Component
             'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
         ],
     ];
+    public function updatingSearchType()
+    {
+        $this->resetPage();
+    }
+    public function updatingLocationId()
+    {
+        $this->resetPage();
+    }
+    public function updatingDate()
+    {
+        $this->resetPage();
+    }
     public function updatedSearchLocation()
     {
         if (strlen($this->searchLocation) > 2) {

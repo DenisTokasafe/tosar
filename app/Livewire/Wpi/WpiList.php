@@ -19,7 +19,17 @@ class WpiList extends Component
     {
         $this->resetPage();
     }
-
+     public function getRandomBadgeColor($status)
+    {
+      $map = [
+        'cancelled'   => 'badge-error',   // Tulis lengkap
+        'closed'      => 'badge-success',
+        'in_progress' => 'badge-warning',
+        'pending'     => 'badge-accent',
+        'submitted'   => 'badge-info',
+    ];
+      return $map[$status] ?? 'badge-neutral';
+    }
     public function deleteReport($id)
     {
         $report = WpiReport::with('findings')->find($id);
