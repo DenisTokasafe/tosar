@@ -10,7 +10,7 @@
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
-        <div class="absolute inset-x-0 top-0 z-50 flex flex-col items-center justify-between gap-4 px-4 md:flex-row ">
+        <div class="absolute inset-x-0 top-0 z-50 flex flex-col items-center justify-between gap-4 px-4 shadow-md md:flex-row bg-base-100 inset-shadow-sm">
             <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
