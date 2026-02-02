@@ -40,7 +40,7 @@
             {{-- <flux:input size="sm" wire:model.live="first_name" :label="__('Nama')" type="text" required
                 autofocus autocomplete="Nama Lengkap" :placeholder="__('Nama ')" /> --}}
 
-            <x-input label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap" required />
+            <x-form.input-text label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap" required />
             <!-- Name -->
             <flux:input size="sm" wire:model.live="last_name" :label="__('Marga')" type="text" required
                 autofocus autocomplete="last_name" :placeholder="__('Marga')" />
