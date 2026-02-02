@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class FireProtection extends Model
@@ -15,19 +16,22 @@ class FireProtection extends Model
         'documentation_path',
     ];
     protected $casts = [
-    'conditions' => 'array',
-    'inspected_by' => 'array', // Karena Anda menggunakan pembatas '|'
-    'inspection_date' => 'date',
-];
+        'conditions' => 'array',
+        'inspected_by' => 'array', // Karena Anda menggunakan pembatas '|'
+        'inspection_date' => 'date',
+    ];
     public function equipmentMaster()
     {
         return $this->belongsTo(EquipmentMaster::class);
     }
-   public function scopeSearchInstectionsByDate($query, $date)
+    public function scopeSearchInstectionsByDate($query, $date)
     {
         if ($date) {
+            $date = Carbon::parse($date);
+            $currentMonth = $date->month; //
             // Gunakan $query, bukan $this
-            return $query->whereMonth('inspection_date', $date);
+            return $query->whereMonth('inspection_date', $currentMonth)
+                ->whereYear('inspection_date', $date->year);
         }
         return $query;
     }
