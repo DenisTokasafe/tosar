@@ -96,7 +96,7 @@
                                     @endforeach
 
                                     <td class="p-1 border border-slate-200">
-                                        <x-form.textarea row='2' model="conditions.{{ $master->id }}.remarks"
+                                        <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
                                             placeholder="Remarks..." />
                                     </td>
                                 </tr>
