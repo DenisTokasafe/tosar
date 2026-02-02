@@ -22,11 +22,12 @@ class WpiList extends Component
      public function getRandomBadgeColor($status)
     {
       $map = [
-        'cancelled'   => 'badge-error',   // Tulis lengkap
+        'Cancelled'   => 'badge-error',   // Tulis lengkap
         'closed'      => 'badge-success',
-        'in_progress' => 'badge-warning',
-        'pending'     => 'badge-accent',
-        'submitted'   => 'badge-info',
+        'Review Event' => 'badge-warning',
+        'Final Review'     => 'badge-accent',
+        'Assigned'   => 'badge-info',
+        'Submitted'   => 'badge-info',
     ];
       return $map[$status] ?? 'badge-neutral';
     }
