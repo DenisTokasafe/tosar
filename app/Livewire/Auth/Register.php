@@ -12,6 +12,8 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use App\Mail\RequestUserLoginMail;
+use Illuminate\Support\Facades\Mail;
 
 #[Layout('components.layouts.auth')]
 class Register extends Component
@@ -19,6 +21,7 @@ class Register extends Component
     public string $first_name = '';
     public string $last_name = '';
     public string $name = '';
+    public string $email_req = '';
     public string $username = '';
     public string $email = '';
     public string $password = '';
@@ -51,7 +54,6 @@ class Register extends Component
             $this->check_no_id_status = 'Nomor ID sudah terdaftar.';
         } else {
             $this->check_no_id_status = 'Nomor ID belum terdaftar.';
-
         }
     }
     public function updated($propertyName): void
@@ -182,5 +184,45 @@ class Register extends Component
         Auth::login($user);
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
+    }
+    public function requestUserLogin()
+    {
+        $this->validate([
+            'email_req' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+        ], [
+            'email_req.required' => 'Email wajib diisi untuk request pembuatan user login.',
+            'email_req.email' => 'Format email tidak valid.',
+        ]);
+        try {
+            // Kirim email ke Admin (atau ke user itu sendiri jika maksudnya konfirmasi)
+            Mail::to('admin@example.com')->send(new RequestUserLoginMail($this->email_req));
+
+            $this->reset('email_req');
+
+            // Menggunakan Flux notification jika Anda sudah menginstalnya,
+            // atau tetap menggunakan session flash.
+            $this->dispatch('alert', [
+                'text' => "Request telah dikirim ke Admin.",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+            ]);
+        } catch (\Exception $e) {
+            $this->dispatch(
+                'alert',
+                [
+                    'text' => "Gagal mengirim email request user login.",
+                    'duration' => 5000,
+                    'destination' => '/contact',
+                    'newWindow' => true,
+                    'close' => true,
+                    'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                ]
+            );
+        }
+        $this->reset('email_req');
+        session()->flash('message', 'Request pembuatan user login telah dikirim. Silakan cek email Anda.');
     }
 }
