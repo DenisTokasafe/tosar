@@ -49,13 +49,15 @@
                             @foreach ($fields[$type]['inputs'] as $inputField)
                                 <fieldset class="fieldset">
                                     <label class="floating-label">
-                                        <input type="text" wire:key="input-{{ $type }}-{{ $inputField }}"
-                                            wire:model.live="conditions.{{ $inputField }}"
-                                            placeholder="{{ $inputField }}"
-                                            class="input-xs input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('conditions.' . $inputField) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                                        <span>{{ $inputField }} <span class="font-bold text-red-500">*</span></span>
+                                        <input type="text" wire:key="tech-{{ $type }}-{{ $inputField }}"
+                                            wire:model.live="technical_data.{{ $inputField }}" readonly
+                                            class="w-full text-gray-700 bg-gray-100 cursor-not-allowed input-xs input input-bordered" />
+
+                                        <span>
+                                            {{ $inputField }}
+                                            <span class="text-xs italic text-gray-400">(Auto)</span>
+                                        </span>
                                     </label>
-                                    <x-label-error :messages="$errors->get('conditions.' . $inputField)" />
                                 </fieldset>
                             @endforeach
                         @endif
@@ -71,8 +73,7 @@
                                     <label class="flex items-center justify-between text-xs cursor-pointer">
                                         <span
                                             class="font-semibold tracking-wider text-gray-600 uppercase">{{ $field }}</span>
-                                        <input type="checkbox"
-                                            wire:key="check-{{ $type }}-{{ $field }}"
+                                        <input type="checkbox" wire:key="check-{{ $type }}-{{ $field }}"
                                             wire:model="conditions.{{ $field }}"
                                             class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
                                     </label>

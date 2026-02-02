@@ -15,7 +15,7 @@ class FireInspectionEdit extends Component
 {
     use WithFileUploads, HasFireInspectionFields;
     public $inspectionId;
-    public $type, $location, $inspection_date, $remarks, $area, $location_id,$equipment_master_id;
+    public $type, $location, $inspection_date, $remarks, $area, $location_id, $equipment_master_id;
     public $conditions = [];
     public $inspected_users = [];
     public $dokumentasi; // File baru yang diupload
@@ -33,7 +33,7 @@ class FireInspectionEdit extends Component
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
     public $responsible_id;
-
+    public $technical_data = [];
     public function mount($id)
     {
         $inspection = FireProtection::findOrFail($id);
@@ -45,7 +45,11 @@ class FireInspectionEdit extends Component
         $this->searchLocation = $this->area;
         $this->inspection_date = $inspection->inspection_date;
         $this->remarks = $inspection->remarks;
-        $this->conditions = $inspection->conditions;
+        // 🔥 INI KUNCINYA
+        $this->technical_data = $inspection->equipmentMaster->technical_data ?? [];
+
+        // Checklist hasil inspeksi
+        $this->conditions = $inspection->conditions ?? [];
         $this->old_dokumentasi = $inspection->documentation_path;
 
         // Load Inspected Users
@@ -98,7 +102,7 @@ class FireInspectionEdit extends Component
         return $this->redirect(route('fire-inspection-list'), navigate: true);
     }
 
-        public function updatedSearchResponsibility()
+    public function updatedSearchResponsibility()
     {
         $this->reset('manualPelaporName');
         $this->manualPelaporMode = false;
