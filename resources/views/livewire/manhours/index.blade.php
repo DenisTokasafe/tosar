@@ -140,7 +140,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-4">{{ $data_manhours->links() }}</div>
+                <div class="absolute inset-x-0 bottom-0 mt-4 shadow-md bg-base-100 inset-shadow-sm">
+                    {{ $data_manhours->links() }}
+                </div>
                 <div class="modal {{ $modalOpen }}">
                     <div class="modal-box max-w-4xl w-11/12 max-h-[90vh] md:max-h-[85vh] lg:max-h-[85vh] overflow-y-auto">
                         <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
