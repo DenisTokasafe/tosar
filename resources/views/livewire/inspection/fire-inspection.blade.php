@@ -201,7 +201,7 @@
 
             {{-- REMARKS & UPLOAD SECTIONS --}}
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div class="space-y-4">
+                <div class="">
                     <fieldset class="fieldset">
                         <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                             modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
@@ -227,7 +227,7 @@
                         </div>
                     </fieldset>
 
-                    <div class="border-t ">
+                    <div class="">
                         <button wire:click="save" wire:loading.attr="disabled"
                             class="w-full btn btn-success btn-sm md:w-auto">
                             <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
