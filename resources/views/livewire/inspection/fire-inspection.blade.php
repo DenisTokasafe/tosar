@@ -142,7 +142,7 @@
 
         <div class="flex flex-col items-end justify-between gap-4 border-t pt-2mt-2 md:flex-row">
             <div class="w-full md:max-w-md">
-                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                <x-form.searchable-select-advanced label="Pemeriksa" placeholder="Cari Nama Pemeriksa..."
                     modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
                     :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
                     enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
