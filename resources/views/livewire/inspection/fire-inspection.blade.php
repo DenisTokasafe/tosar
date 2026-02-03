@@ -28,6 +28,28 @@
                     <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
                 </div>
             </div>
+            <div class="w-full md:max-w-md">
+                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                    modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                    :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                    enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                    clickaction="selectPelapor" />
+
+                <div class="flex flex-wrap gap-2 mt-2">
+                    @foreach ($inspected_users as $index => $user)
+                        <div class="gap-2 p-3 badge badge-outline text-slate-600">
+                            {{ $user['name'] }}
+                            <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
@@ -138,29 +160,8 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
-            <div class="w-full md:max-w-md">
-                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                    modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
-                    :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
-                    enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
-                    clickaction="selectPelapor" />
+        <div class="flex md:justify-end ">
 
-                <div class="flex flex-wrap gap-2 mt-2">
-                    @foreach ($inspected_users as $index => $user)
-                        <div class="gap-2 p-3 badge badge-outline text-slate-600">
-                            {{ $user['name'] }}
-                            <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
 
             <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
 
