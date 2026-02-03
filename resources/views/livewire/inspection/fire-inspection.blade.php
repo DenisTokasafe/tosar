@@ -13,14 +13,14 @@
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
 
-                    <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
-                        <option value="">-- Pilih Jenis Alat --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('type')" />
+                        <select wire:model.live="type"
+                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                            <option value="">-- Pilih Jenis Alat --</option>
+                            @foreach (array_keys($fields) as $key)
+                                <option value="{{ $key }}">{{ $key }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('type')" />
 
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
@@ -50,15 +50,15 @@
                             <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
 
                             @foreach ($techKeys as $techKey)
-                                <th
-                                    class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 text-wrap">
+                                <th class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
+                                    >
                                     {{ $techKey }}
                                 </th>
                             @endforeach
 
                             @foreach ($checks as $checkItem)
-                                <th
-                                    class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1">
+                                <th class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1"
+                                    style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
                                     {{ $checkItem }}
                                 </th>
                             @endforeach
