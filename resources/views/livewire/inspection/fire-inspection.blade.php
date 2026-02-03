@@ -48,7 +48,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto max-h-[calc(100vh-15rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+                <div class="overflow-x-auto max-h-[calc(100vh-50rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-xs text-center text-black ">
