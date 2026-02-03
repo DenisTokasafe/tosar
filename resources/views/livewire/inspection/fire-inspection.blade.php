@@ -9,7 +9,7 @@
     </div>
 
     <x-tabs-wpi.layout>
-          <div class="p-6 bg-white rounded-lg shadow">
+        <div class="p-6 bg-white rounded-lg shadow">
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
                     <fieldset class="w-full">
@@ -43,22 +43,28 @@
                         : [];
             @endphp
 
-             <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+            <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                 <table class="table border-separate table-xs table-pin-rows border-spacing-0">
                     <thead>
-                        <tr class="capitalize bg-slate-100 text-slate-700 text-wrap "style="width: 10rem;">
-                            <th class="border-b border-r bg-slate-100">Location</th>
+                        <tr class="capitalize bg-slate-100 text-slate-700">
+                            <th class="px-2 py-3 border-b border-r bg-slate-100" style="min-width: 120px;">Location</th>
+
                             @foreach ($techKeys as $techKey)
-                                <th class="text-center text-blue-700 capitalize border-b border-r bg-blue-50/50 text-wrap "style="width: 10rem;">
-                                    {{ $techKey }}</th>
+                                <th class="px-1 text-center text-blue-700 capitalize border-b border-r bg-blue-50/50"
+                                    style="width: 80px; min-width: 80px; white-space: normal;">
+                                    {{ $techKey }}
+                                </th>
                             @endforeach
+
                             @foreach ($checks as $checkItem)
-                                <th
-                                    class="text-center border-b border-r bg-amber-50 text-amber-700  text-[10px] text-wrap  capitalize" style="width: 10rem;">
-                                    {{ $checkItem }}</th>
+                                <th class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1"
+                                    style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
+                                    {{ $checkItem }}
+                                </th>
                             @endforeach
-                            <th class="text-center capitalize border-b border-r">Remarks</th>
-                            <th class="text-center capitalize border-b">Foto</th>
+
+                            <th class="px-4 text-center capitalize border-b border-r">Remarks</th>
+                            <th class="px-4 text-center capitalize border-b">Foto</th>
                         </tr>
                     </thead>
                     <tbody>
