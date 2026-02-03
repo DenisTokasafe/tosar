@@ -9,7 +9,7 @@
     </div>
 
     <x-tabs-wpi.layout>
-        <div class="p-6 bg-white border shadow-sm rounded-xl border-slate-200">
+          <div class="p-6 bg-white rounded-lg shadow">
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
                     <fieldset class="w-full">
