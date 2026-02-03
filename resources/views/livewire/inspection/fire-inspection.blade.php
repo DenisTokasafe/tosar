@@ -13,14 +13,14 @@
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
 
-                        <select wire:model.live="type"
-                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
-                            <option value="">-- Pilih Jenis Alat --</option>
-                            @foreach (array_keys($fields) as $key)
-                                <option value="{{ $key }}">{{ $key }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('type')" />
+                    <select wire:model.live="type"
+                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                        <option value="">-- Pilih Jenis Alat --</option>
+                        @foreach (array_keys($fields) as $key)
+                            <option value="{{ $key }}">{{ $key }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('type')" />
 
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
@@ -50,8 +50,8 @@
                             <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
 
                             @foreach ($techKeys as $techKey)
-                                <th class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
-                                    >
+                                <th
+                                    class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50">
                                     {{ $techKey }}
                                 </th>
                             @endforeach
@@ -162,10 +162,12 @@
                 </div>
             </div>
 
-            <button wire:click="save" wire:loading.attr="disabled"
-                class="px-8 shadow-lg btn btn-success shadow-success/20">
-                <span wire:loading.remove wire:target="save">Simpan Laporan</span>
-                <span wire:loading wire:target="save" class="loading loading-spinner"></span>
+            <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
+
+                <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
+
+                <span wire:loading.remove.class="hidden" class="hidden" wire:target="save">Menyimpan...</span>
+
             </button>
         </div>
         </div>
