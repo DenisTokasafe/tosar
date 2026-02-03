@@ -140,7 +140,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
+        <div class="flex flex-col items-end justify-between gap-4 border-t pt-2mt-2 md:flex-row">
             <div class="w-full md:max-w-md">
                 <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                     modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
