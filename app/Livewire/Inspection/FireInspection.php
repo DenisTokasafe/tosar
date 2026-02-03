@@ -16,7 +16,7 @@ class FireInspection extends Component
 {
     use WithFileUploads;
 
-    public $type ; // Default
+    public $type = 'Fire Extinguisher'; // Default
     public $location, $inspection_date, $inspected_by, $remarks, $area;
 
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
