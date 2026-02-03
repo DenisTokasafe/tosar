@@ -268,7 +268,7 @@ class HazardForm extends Component
         if (strlen($this->search) > 1) {
             $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
                 ->orderBy('department_name')
-                ->limit(50)
+                ->limit(80)
                 ->get();
             $this->showDropdown = true;
         } else {
@@ -298,7 +298,7 @@ class HazardForm extends Component
             $this->contractors = Contractor::query()
                 ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
                 ->orderBy('contractor_name')
-                ->limit(50)
+                ->limit(80)
                 ->get();
             $this->showContractorDropdown = true;
         } else {
