@@ -44,7 +44,7 @@
             @endphp
 
             <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)]  border rounded-lg ">
-                <table class="table border-separate table-xs table-pin-rows border-spacing-0">
+                <table class="table border-separate table-fixed table-xs table-pin-rows border-spacing-0">
                     <thead>
                         <tr class="capitalize bg-slate-100 text-slate-700">
                             <th class="border-b border-r bg-slate-100" style="min-width: 120px;">Location</th>
