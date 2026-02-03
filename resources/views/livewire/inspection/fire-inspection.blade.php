@@ -53,7 +53,7 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="overflow-x-auto  2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+                <div class="overflow-x-auto max-h-[calc(100vh-37rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-xs text-center text-black ">
@@ -171,7 +171,7 @@
                             @empty
                                 @php
                                     // Hitung total kolom: Location (1) + TechKeys + Checks + Remarks (1)
-                                    $totalColumns = 1 + count($techKeys) + count($checks) + 1;
+                                    $totalColumns = 1 + count($techKeys) + count($checks) + 1 + 1;
                                 @endphp
                                 <td colspan="{{ $totalColumns }}" class="py-12 text-center bg-slate-50">
                                     <div class="flex flex-col items-center justify-center space-y-2">
