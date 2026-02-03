@@ -79,10 +79,7 @@
                                     @endforeach
 
                                     <td class="p-1 border-r border-b bg-white min-w-[150px]">
-                                        <textarea wire:model.lazy="conditions.{{ $master->id }}.remarks"
-                                            rows="1"
-                                            class="w-full h-8 min-h-0 p-1 text-xs textarea textarea-ghost focus:bg-slate-50"
-                                            placeholder="Catatan..."></textarea>
+                                        <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks" placeholder="Remarks" />
                                     </td>
 
                                     <td class="p-2 text-center bg-white border-b">
