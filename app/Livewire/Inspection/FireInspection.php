@@ -20,7 +20,7 @@ class FireInspection extends Component
     public $location, $inspection_date, $inspected_by, $remarks, $area;
 
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
-    public $dokumentasi= [];
+    public $dokumentasi = [];
 
     public $searchResponsibility = '';
     public $pelapors = [];
@@ -257,37 +257,44 @@ class FireInspection extends Component
             'location_id'     => 'required',
             'inspected_users' => 'required|array|min:1',
             'conditions'      => 'required|array|min:1',
+            // Tambahkan validasi untuk array dokumentasi (opsional)
+            'dokumentasi.*'   => 'nullable|image|max:2048',
         ]);
 
         try {
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
 
-            $documentationPath = null;
-            if ($this->dokumentasi) {
-                $documentationPath = \App\Helpers\FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
-            }
-
-            DB::transaction(function () use ($inspectedByString, $documentationPath) {
+            DB::transaction(function () use ($inspectedByString) {
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
 
-                    // Ambil remarks khusus baris ini dari array conditions
+                    // 1. PROSES FOTO KHUSUS UNTUK BARIS INI
+                    $documentationPath = null;
+                    if (isset($this->dokumentasi[$equipmentMasterId])) {
+                        $documentationPath = FileHelper::compressAndStore(
+                            $this->dokumentasi[$equipmentMasterId],
+                            'inspections/documents'
+                        );
+                    }
+
+                    // 2. Ambil remarks khusus baris ini
                     $rowRemarks = $dataKondisi['remarks'] ?? null;
 
-                    // Opsional: Hapus key 'remarks' agar tidak ikut tersimpan di kolom JSON 'conditions'
+                    // 3. Bersihkan data teknis dari key 'remarks'
                     $cleanConditions = collect($dataKondisi)->forget('remarks')->toArray();
 
+                    // 4. Simpan ke Database
                     FireProtection::create([
                         'equipment_master_id' => $equipmentMasterId,
-                        'documentation_path'  => $documentationPath,
+                        'documentation_path'  => $documentationPath, // Path unik per alat
                         'inspection_date'     => $this->inspection_date,
                         'inspected_by'        => $inspectedByString,
-                        'conditions'          => $cleanConditions, // Data teknis + hasil checklist
-                        'remarks'             => $rowRemarks,      // Catatan spesifik per alat
+                        'conditions'          => $cleanConditions,
+                        'remarks'             => $rowRemarks,
                     ]);
                 }
             });
 
-            $this->resetForm();
+            $this->reset(['dokumentasi', 'conditions']); // Sesuaikan dengan properti yang ingin direset
             $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan!", 'backgroundColor' => "background: #00c853;"]);
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => "Kesalahan: " . $e->getMessage(), 'backgroundColor' => "background: #f44336;"]);
