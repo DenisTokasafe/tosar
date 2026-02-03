@@ -140,7 +140,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-end justify-between gap-4 border-t pt-2mt-2 md:flex-row">
+        <div class="flex flex-col items-end justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
             <div class="w-full md:max-w-md">
                 <x-form.searchable-select-advanced label="Pemeriksa" placeholder="Cari Nama Pemeriksa..."
                     modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
@@ -167,7 +167,7 @@
 
         </div>
 
-        <div class="justify-self-end-safe">
+        <div class="mt-4 modal-action">
             <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
 
                 <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
