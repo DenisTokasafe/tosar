@@ -39,7 +39,7 @@
             <ul x-show="open"
                 class="absolute z-[9999] w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
-                <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}" class="flex-col items-center justify-center p-4 space-y-2 text-center lex">
+                <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}" class="flex flex-col items-center justify-center px-4 text-center">
                     <span class="loading loading-spinner loading-sm text-secondary"></span>
                 </div>
 
@@ -47,7 +47,7 @@
                     @foreach ($options as $opt)
                         <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
                             wire:key="opt-{{ $opt->id }}" x-on:click="open = false"
-                            class="px-3 py-2 text-sm cursor-pointer hover:bg-base-200">
+                            class="px-3 text-sm cursor-pointer hover:bg-base-200">
                             {{ $opt->{$columnName} }}
                         </li>
                     @endforeach
