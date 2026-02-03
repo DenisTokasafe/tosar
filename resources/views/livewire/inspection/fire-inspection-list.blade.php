@@ -10,14 +10,20 @@
     @endpush
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
-        <div class="flex flex-col items-center justify-between gap-4 shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 inset-shadow-sm">
-            <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-            </label>
+        <div
+            class="flex flex-col items-center justify-between gap-4 shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 inset-shadow-sm">
+            <div class="tooltip md:tooltip-right">
+                <div class="z-40 tooltip-content">
+                    <div class="text-sm font-black text-orange-400 animate-bounce">export PDF</div>
+                </div>
+                <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </label>
+            </div>
             <div class="flex md:justify-start ">
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                     <fieldset class="w-full fieldset md:max-w-80">
