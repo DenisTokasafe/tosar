@@ -87,7 +87,7 @@
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
                 <div class="flex flex-row gap-4 mb-4">
                     <fieldset class="fieldset">
-                        <x-form.label :label="Cari Tipe Alat"  />
+                        <x-form.label label="Cari Tipe Alat"  />
                         <select wire:model.live="search" class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Cari Tipe Alat --</option>
                             @foreach ($available_types as $t)
