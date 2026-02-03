@@ -66,7 +66,7 @@
                             @endforeach
 
                             <th class=" text-center capitalize border-b border-r text-[10px]">Remarks</th>
-                            <th class=" text-center capitalize border-b text-[10px]">Foto</th>
+                            <th class=" text-center capitalize border-b text-[10px] md:w-36">Foto</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,6 +103,7 @@
                                             <div class="relative inline-block group">
                                                 <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}"
                                                     class="object-cover w-10 h-10 border rounded-md shadow-sm">
+
                                                 <label for="file-{{ $master->id }}"
                                                     class="absolute inset-0 flex items-center justify-center transition-opacity rounded-md opacity-0 cursor-pointer bg-black/40 group-hover:opacity-100">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white"
@@ -111,6 +112,15 @@
                                                         <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                                                     </svg>
                                                 </label>
+
+                                                <button type="button" wire:click="removeImage({{ $master->id }})"
+                                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow-lg hover:bg-red-600 transition-colors">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="3">
+                                                        <path d="M18 6 6 18M6 6l12 12" />
+                                                    </svg>
+                                                </button>
                                             </div>
                                         @else
                                             <label for="file-{{ $master->id }}"
