@@ -51,7 +51,7 @@
 
                             @foreach ($techKeys as $techKey)
                                 <th class="px-1 text-center text-blue-700 capitalize border-b border-r bg-blue-50/50"
-                                    style="width: 80px; min-width: 80px; white-space: normal;">
+                                    style="width: 60px; min-width: 60px; white-space: normal;">
                                     {{ $techKey }}
                                 </th>
                             @endforeach
