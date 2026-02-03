@@ -102,16 +102,37 @@
                                         <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
                                             placeholder="Remarks..." />
                                     </td>
-                                    <td class="p-2 border border-slate-200 w-60">
-                                        <div class="flex flex-col gap-1">
-                                            {{-- Gunakan ID master sebagai key array dokumentasi --}}
-                                            <x-form.upload label="Foto" model="dokumentasi.{{ $master->id }}"
-                                                :file="$dokumentasi[$master->id] ?? null" />
+                                    <td class="w-40 p-2 border border-slate-200">
+                                        <div class="flex flex-col items-center gap-2">
 
-                                            {{-- Preview Logic --}}
+                                            {{-- 1. Input yang di-hide --}}
+                                            <div class="hidden">
+                                                <x-form.upload id="file-upload-{{ $master->id }}"
+                                                    {{-- ID Unik per baris --}} model="dokumentasi.{{ $master->id }}"
+                                                    :file="$dokumentasi[$master->id] ?? null" />
+                                            </div>
+
+                                            {{-- 2. Tombol Pemicu (Menggunakan Label agar bisa klik input di atas) --}}
+                                            @if (!isset($dokumentasi[$master->id]))
+                                                <label for="file-upload-{{ $master->id }}"
+                                                    class="gap-1 btn btn-xs btn-outline btn-info">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                                        height="14" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="17 8 12 3 7 8" />
+                                                        <line x1="12" x2="12" y1="3"
+                                                            y2="15" />
+                                                    </svg>
+                                                    Upload Foto
+                                                </label>
+                                            @endif
+
+                                            {{-- 3. Preview (Tetap muncul setelah upload berhasil) --}}
                                             <div wire:loading.remove wire:target="dokumentasi.{{ $master->id }}">
                                                 @if (isset($dokumentasi[$master->id]))
-                                                    <div class="p-1 mt-1 border border-dashed rounded bg-slate-50">
+                                                    <div class="relative mt-1 group">
                                                         @php
                                                             $file = $dokumentasi[$master->id];
                                                             $extension = $file->getClientOriginalExtension();
@@ -119,24 +140,32 @@
 
                                                         @if (in_array($extension, ['jpg', 'jpeg', 'png']))
                                                             <img src="{{ $file->temporaryUrl() }}"
-                                                                class="w-auto h-20 mx-auto border rounded" />
+                                                                class="object-cover w-16 h-16 border rounded-lg shadow-sm" />
                                                         @else
-                                                            <div class="flex items-center gap-1 text-[10px] text-info">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
-                                                                    fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                                                </svg>
-                                                                {{ Str::limit($file->getClientOriginalName(), 15) }}
+                                                            <div
+                                                                class="flex items-center gap-1 text-[10px] bg-blue-50 p-1 rounded border border-blue-200">
+                                                                <span
+                                                                    class="font-bold uppercase">{{ $extension }}</span>
                                                             </div>
                                                         @endif
+
+                                                        {{-- Tombol ganti foto (opsional) --}}
+                                                        <label for="file-upload-{{ $master->id }}"
+                                                            class="absolute p-1 bg-white border rounded-full shadow cursor-pointer -top-2 -right-2 hover:bg-slate-100">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10"
+                                                                height="10" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="lucide lucide-pencil">
+                                                                <path
+                                                                    d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                                                <path d="m15 5 4 4" />
+                                                            </svg>
+                                                        </label>
                                                     </div>
                                                 @endif
                                             </div>
 
-                                            {{-- Error Handling khusus untuk index ini --}}
                                             <x-label-error :messages="$errors->get('dokumentasi.' . $master->id)" />
                                         </div>
                                     </td>
@@ -173,7 +202,8 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div class="space-y-4">
                     <fieldset class="fieldset">
-                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi"
+                            :file="$dokumentasi" />
                         <div wire:loading.remove wire:target="dokumentasi">
                             @if ($dokumentasi)
                                 <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
