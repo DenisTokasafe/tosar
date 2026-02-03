@@ -202,33 +202,6 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div class="space-y-4">
                     <fieldset class="fieldset">
-                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi"
-                            :file="$dokumentasi" />
-                        <div wire:loading.remove wire:target="dokumentasi">
-                            @if ($dokumentasi)
-                                <div class="p-2 mt-2 border border-dashed rounded-lg bg-slate-50">
-                                    @if (in_array($dokumentasi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                        <img src="{{ $dokumentasi->temporaryUrl() }}"
-                                            class="h-auto border rounded w-44" />
-                                    @else
-                                        <div class="flex items-center gap-2 text-sm text-info">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                            </svg>
-                                            {{ $dokumentasi->getClientOriginalName() }}
-                                        </div>
-                                    @endif
-                                </div>
-                            @endif
-                        </div>
-                        <x-label-error :messages="$errors->get('dokumentasi')" />
-                    </fieldset>
-                </div>
-
-                <div class="space-y-4">
-                    <fieldset class="fieldset">
                         <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                             modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
                             :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
