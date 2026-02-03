@@ -14,7 +14,7 @@
                 <fieldset class="w-full">
                     <label class="font-semibold label label-text text-slate-600">Jenis Alat</label>
                     <select wire:model.live="type"
-                        class="select select-sm select-bordered w-full focus:ring-2 focus:ring-info/50 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                         <option value="">-- Pilih Jenis Alat --</option>
                         @foreach (array_keys($fields) as $key)
                             <option value="{{ $key }}">{{ $key }}</option>
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="w-full">
-                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" size="sm" />
+                    <x-form.datepicker label="Tanggal / Date" model="inspection_date"  />
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
                                     <th class="text-center border-b border-r bg-amber-50 text-amber-700 uppercase text-[10px]">{{ $checkItem }}</th>
                                 @endforeach
                                 <th class="text-center border-b border-r">Remarks</th>
-                                <th class="text-center border-b">Dokumentasi</th>
+                                <th class="text-center border-b">Foto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,7 +74,7 @@
                                             <input type="checkbox"
                                                 wire:key="check-{{ $master->id }}-{{ $field }}"
                                                 wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
-                                                class="checkbox checkbox-sm checkbox-primary" />
+                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
                                         </td>
                                     @endforeach
 
