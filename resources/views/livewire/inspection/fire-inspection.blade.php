@@ -10,134 +10,159 @@
 
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white border shadow-sm rounded-xl border-slate-200">
-            <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
-                <fieldset class="w-full">
-                    <label class="font-semibold label label-text text-slate-600">Jenis Alat</label>
-                    <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
-                        <option value="">-- Pilih Jenis Alat --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('type')" />
-                </fieldset>
-
-                <div class="w-full">
+            <div class="flex md:justify-start ">
+                <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
+                    <fieldset class="w-full">
+                        <label class="font-semibold label label-text text-slate-600">Jenis Alat</label>
+                        <select wire:model.live="type"
+                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                            <option value="">-- Pilih Jenis Alat --</option>
+                            @foreach (array_keys($fields) as $key)
+                                <option value="{{ $key }}">{{ $key }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('type')" />
+                    </fieldset>
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
-                </div>
-
-                <div class="w-full">
-                    <x-form.datepicker label="Tanggal / Date" model="inspection_date"  />
+                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
                 </div>
             </div>
+        </div>
 
-            <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
-                @php
-                    $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                        ->where('type', $type)->get();
-                    $checks = $fields[$type]['checks'] ?? [];
-                    $firstEquipment = $allMasterData->first();
-                    $techKeys = $firstEquipment && $firstEquipment->technical_data ? array_keys($firstEquipment->technical_data) : [];
-                @endphp
+        <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
+            @php
+                $allMasterData = EquipmentMaster::where('location_id', $location_id)
+                    ->where('type', $type)
+                    ->get();
+                $checks = $fields[$type]['checks'] ?? [];
+                $firstEquipment = $allMasterData->first();
+                $techKeys =
+                    $firstEquipment && $firstEquipment->technical_data
+                        ? array_keys($firstEquipment->technical_data)
+                        : [];
+            @endphp
 
-                <div class="overflow-x-auto max-h-[500px] 2xl:max-h-[600px]">
-                    <table class="table border-separate table-xs table-pin-rows table-pin-cols border-spacing-0">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-700">
-                                <th class="z-20 border-b border-r bg-slate-100">Location</th>
-                                @foreach ($techKeys as $techKey)
-                                    <th class="text-center text-blue-700 border-b border-r bg-blue-50/50">{{ $techKey }}</th>
-                                @endforeach
-                                @foreach ($checks as $checkItem)
-                                    <th class="text-center border-b border-r bg-amber-50 text-amber-700 uppercase text-[10px]">{{ $checkItem }}</th>
-                                @endforeach
-                                <th class="text-center border-b border-r">Remarks</th>
-                                <th class="text-center border-b">Foto</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($allMasterData as $master)
-                                <tr class="transition-colors hover:bg-blue-50/30">
-                                    <td class="sticky left-0 z-10 font-medium bg-white border-b border-r">{{ $master->specific_location }}</td>
+             <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+                <table class="table border-separate table-xs table-pin-rows border-spacing-0">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700">
+                            <th class="z-20 border-b border-r bg-slate-100">Location</th>
+                            @foreach ($techKeys as $techKey)
+                                <th class="text-center text-blue-700 border-b border-r bg-blue-50/50">
+                                    {{ $techKey }}</th>
+                            @endforeach
+                            @foreach ($checks as $checkItem)
+                                <th
+                                    class="text-center border-b border-r bg-amber-50 text-amber-700 uppercase text-[10px]">
+                                    {{ $checkItem }}</th>
+                            @endforeach
+                            <th class="text-center border-b border-r">Remarks</th>
+                            <th class="text-center border-b">Foto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($allMasterData as $master)
+                            <tr class="transition-colors hover:bg-blue-50/30">
+                                <td class="sticky left-0 z-10 font-medium bg-white border-b border-r">
+                                    {{ $master->specific_location }}</td>
 
-                                    @foreach ($techKeys as $key)
-                                        <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
-                                            {{ $conditions[$master->id][$key] ?? '-' }}
-                                        </td>
-                                    @endforeach
-
-                                    @foreach ($checks as $field)
-                                        <td class="text-center bg-white border-b border-r">
-                                            <input type="checkbox"
-                                                wire:key="check-{{ $master->id }}-{{ $field }}"
-                                                wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
-                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
-                                        </td>
-                                    @endforeach
-
-                                    <td class="p-1 border-r border-b bg-white min-w-[150px]">
-                                        <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks" placeholder="Remarks" />
+                                @foreach ($techKeys as $key)
+                                    <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
+                                        {{ $conditions[$master->id][$key] ?? '-' }}
                                     </td>
+                                @endforeach
 
-                                    <td class="p-2 text-center bg-white border-b">
-                                        <div class="flex flex-col items-center justify-center">
-                                            <input type="file" id="file-{{ $master->id }}" class="hidden" wire:model="dokumentasi.{{ $master->id }}">
+                                @foreach ($checks as $field)
+                                    <td class="text-center bg-white border-b border-r">
+                                        <input type="checkbox" wire:key="check-{{ $master->id }}-{{ $field }}"
+                                            wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
+                                            class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                                    </td>
+                                @endforeach
 
-                                            @if (isset($dokumentasi[$master->id]))
-                                                <div class="relative inline-block group">
-                                                    <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}" class="object-cover w-10 h-10 border rounded-md shadow-sm">
-                                                    <label for="file-{{ $master->id }}" class="absolute inset-0 flex items-center justify-center transition-opacity rounded-md opacity-0 cursor-pointer bg-black/40 group-hover:opacity-100">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                                                    </label>
-                                                </div>
-                                            @else
-                                                <label for="file-{{ $master->id }}" class="btn btn-ghost btn-xs text-info hover:bg-info/10">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                <td class="p-1 border-r border-b bg-white min-w-[150px]">
+                                    <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
+                                        placeholder="Remarks" />
+                                </td>
+
+                                <td class="p-2 text-center bg-white border-b">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <input type="file" id="file-{{ $master->id }}" class="hidden"
+                                            wire:model="dokumentasi.{{ $master->id }}">
+
+                                        @if (isset($dokumentasi[$master->id]))
+                                            <div class="relative inline-block group">
+                                                <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}"
+                                                    class="object-cover w-10 h-10 border rounded-md shadow-sm">
+                                                <label for="file-{{ $master->id }}"
+                                                    class="absolute inset-0 flex items-center justify-center transition-opacity rounded-md opacity-0 cursor-pointer bg-black/40 group-hover:opacity-100">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2">
+                                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                                    </svg>
                                                 </label>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="100" class="py-10 text-center bg-slate-50 text-slate-400">
-                                        <p class="italic">Tidak ada data alat ditemukan.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                            </div>
+                                        @else
+                                            <label for="file-{{ $master->id }}"
+                                                class="btn btn-ghost btn-xs text-info hover:bg-info/10">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <rect width="18" height="18" x="3" y="3" rx="2"
+                                                        ry="2" />
+                                                    <circle cx="9" cy="9" r="2" />
+                                                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                                                </svg>
+                                            </label>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="100" class="py-10 text-center bg-slate-50 text-slate-400">
+                                    <p class="italic">Tidak ada data alat ditemukan.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
+            <div class="w-full md:max-w-md">
+                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                    modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                    :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                    enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                    clickaction="selectPelapor" />
+
+                <div class="flex flex-wrap gap-2 mt-2">
+                    @foreach ($inspected_users as $index => $user)
+                        <div class="gap-2 p-3 badge badge-outline text-slate-600">
+                            {{ $user['name'] }}
+                            <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-            <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
-                <div class="w-full md:max-w-md">
-                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
-                        :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
-                        enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
-                        clickaction="selectPelapor" />
-
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        @foreach ($inspected_users as $index => $user)
-                            <div class="gap-2 p-3 badge badge-outline text-slate-600">
-                                {{ $user['name'] }}
-                                <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <button wire:click="save" wire:loading.attr="disabled" class="px-8 shadow-lg btn btn-success shadow-success/20">
-                    <span wire:loading.remove wire:target="save">Simpan Laporan</span>
-                    <span wire:loading wire:target="save" class="loading loading-spinner"></span>
-                </button>
-            </div>
+            <button wire:click="save" wire:loading.attr="disabled"
+                class="px-8 shadow-lg btn btn-success shadow-success/20">
+                <span wire:loading.remove wire:target="save">Simpan Laporan</span>
+                <span wire:loading wire:target="save" class="loading loading-spinner"></span>
+            </button>
+        </div>
         </div>
     </x-tabs-wpi.layout>
 </section>
