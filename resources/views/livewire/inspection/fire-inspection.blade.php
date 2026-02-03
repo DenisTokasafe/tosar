@@ -48,6 +48,13 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
+                <div class="grid grid-cols-3 gap-4 p-4 bg-white rounded-t-lg ">
+                    {{-- Spacer untuk mengatur tinggi header tabel agar tetap terlihat saat scroll --}}
+                    <div class="h-full max-h-[calc(100vh-10rem)] bg-amber-200">1</div>
+                    <div class="h-full max-h-[calc(100vh-37rem)] bg-rose-500">2</div>
+                    <div class="h-full max-h-[calc(100vh-40rem)] bg-info">2</div>
+                </div>
+
                 <div class="overflow-x-auto max-h-[calc(100vh-10rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
@@ -223,7 +230,8 @@
                         <button wire:click="save" wire:loading.attr="disabled"
                             class="w-full btn btn-success btn-sm md:w-auto">
                             <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
-                            <span wire:loading.remove.class="hidden" class="hidden" wire:target="save">Menyimpan...</span>
+                            <span wire:loading.remove.class="hidden" class="hidden"
+                                wire:target="save">Menyimpan...</span>
                         </button>
                     </div>
                 </div>
