@@ -47,7 +47,7 @@
                 <table class="table border-separate table-fixed table-xs table-pin-rows border-spacing-0">
                     <thead>
                         <tr class="capitalize bg-slate-100 text-slate-700">
-                            <th class="border-b border-r bg-slate-100" style="min-width: 120px;">Location</th>
+                            <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
 
                             @foreach ($techKeys as $techKey)
                                 <th class="ext-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
