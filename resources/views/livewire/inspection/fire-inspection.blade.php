@@ -164,6 +164,10 @@
                 </div>
             </div>
 
+
+        </div>
+
+        <div class="justify-self-end-safe">
             <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
 
                 <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
@@ -172,6 +176,6 @@
 
             </button>
         </div>
-        </div>
+
     </x-tabs-wpi.layout>
 </section>
