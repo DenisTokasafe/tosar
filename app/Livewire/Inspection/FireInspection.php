@@ -114,6 +114,7 @@ class FireInspection extends Component
             $this->locations = [];
             $this->show_location = false;
         }
+         $this->reset(['location_id']);
     }
 
     public function selectLocation($id, $name)
