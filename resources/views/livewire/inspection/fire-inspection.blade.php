@@ -12,23 +12,24 @@
 
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white rounded-lg shadow">
+            <div class="flex md:justify-start ">
+                <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
+                    <fieldset class="w-full fieldset md:max-w-80">
 
-            <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
-                <fieldset class="w-full fieldset md:max-w-80">
-
-                    <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">-- Pilih Jenis Alat --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('type')" />
-                </fieldset>
-                <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
-                    placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
-                    namedb="name" />
-                <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
+                        <select wire:model.live="type"
+                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            <option value="">-- Pilih Jenis Alat --</option>
+                            @foreach (array_keys($fields) as $key)
+                                <option value="{{ $key }}">{{ $key }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('type')" />
+                    </fieldset>
+                    <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
+                        placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                        namedb="name" />
+                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
+                </div>
             </div>
 
             {{-- TABLE SPREADSHEET STYLE --}}
@@ -48,13 +49,6 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                {{-- <div class="grid grid-cols-4 gap-4 p-4 bg-white rounded-t-lg ">
-
-                    <div class="h-full max-h-[calc(100vh-10rem)] bg-amber-200">1</div>
-                    <div class="h-full max-h-[calc(100vh-15rem)] bg-rose-500">2</div>
-                    <div class="h-full max-h-[calc(100vh-20rem)] bg-info">2</div>
-                    <div class="h-full max-h-[calc(100vh-25rem)] bg-primary">2</div>
-                </div> --}}
 
                 <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
