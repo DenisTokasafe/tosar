@@ -12,14 +12,16 @@
         <div class="px-6 mb-2 bg-white ">
             <div class="flex md:justify-start ">
                 <div class="grid content-center max-w-lg grid-cols-3">
+                    <div class="mt-1">
 
-                    <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
-                        <option value="">-- Pilih Jenis Alat --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
-                        @endforeach
-                    </select>
+                        <select wire:model.live="type"
+                            class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                            <option value="">-- Pilih Jenis Alat --</option>
+                            @foreach (array_keys($fields) as $key)
+                                <option value="{{ $key }}">{{ $key }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <x-label-error :messages="$errors->get('type')" />
 
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
