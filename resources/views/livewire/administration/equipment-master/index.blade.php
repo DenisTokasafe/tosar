@@ -11,7 +11,7 @@
 
                     <div class="space-y-3">
                         <x-form.label label="Jenis Alat" />
-                        <select wire:model.live="type" class="w-full select select-bordered select-sm">
+                        <select wire:model.live="type" class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Pilih --</option>
                             @foreach ($available_types as $t)
                                 <option value="{{ $t }}">{{ $t }}</option>
