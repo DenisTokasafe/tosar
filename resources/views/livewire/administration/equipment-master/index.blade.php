@@ -19,7 +19,7 @@
                         </select>
 
                          <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
-                            :disabled="$isDisabled" modelid="location_id" :options="$locations" :showdropdown="$show_location"
+                            modelid="location_id" :options="$locations" :showdropdown="$show_location"
                             clickaction="selectLocation" namedb="name" />
 
                         <x-form.input-floating label="Lokasi Spesifik" model="specific_location" />
