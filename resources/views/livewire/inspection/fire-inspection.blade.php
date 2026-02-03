@@ -12,7 +12,7 @@
         <div class="p-6 bg-white ">
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
-                    <fieldset class="fildset ">
+
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                             <option value="">-- Pilih Jenis Alat --</option>
@@ -21,7 +21,7 @@
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('type')" />
-                    </fieldset>
+
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
