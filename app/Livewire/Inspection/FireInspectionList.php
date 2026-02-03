@@ -145,7 +145,7 @@ class FireInspectionList extends Component
             'type' => $this->type,
             'area' => $inspections->first()->equipmentMaster->location->name ?? 'N/A',
             'structure' => $structure,
-            'month' => Carbon::now()->translatedFormat('F Y'),
+            'month' => Carbon::parse($this->date)->translatedFormat('F Y'),
         ])->setPaper('a4', 'landscape');
 
         // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas
