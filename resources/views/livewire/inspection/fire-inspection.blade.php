@@ -9,7 +9,7 @@
     </div>
 
     <x-tabs-wpi.layout>
-        <div class="px-6 mb-2 bg-white ">
+        <div class="mb-2 bg-white ">
             <div class="flex md:justify-start ">
                 <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-3">
                     <div class="mt-0.5">
