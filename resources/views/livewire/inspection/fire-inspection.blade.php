@@ -9,10 +9,10 @@
     </div>
 
     <x-tabs-wpi.layout>
-        <div class="p-6 bg-white rounded-lg shadow">
+        <div class="p-6 bg-white ">
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
-                    <fieldset class="w-full">
+                    <fieldset class="fildset ">
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                             <option value="">-- Pilih Jenis Alat --</option>
@@ -47,10 +47,10 @@
                 <table class="table border-separate table-xs table-pin-rows border-spacing-0">
                     <thead>
                         <tr class="capitalize bg-slate-100 text-slate-700">
-                            <th class="px-2 py-3 border-b border-r bg-slate-100" style="min-width: 120px;">Location</th>
+                            <th class="border-b border-r bg-slate-100" style="min-width: 120px;">Location</th>
 
                             @foreach ($techKeys as $techKey)
-                                <th class="px-1 text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
+                                <th class="ext-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
                                     style="width: 60px; min-width: 60px; white-space: normal;">
                                     {{ $techKey }}
                                 </th>
@@ -63,8 +63,8 @@
                                 </th>
                             @endforeach
 
-                            <th class="px-4 text-center capitalize border-b border-r text-[10px]">Remarks</th>
-                            <th class="px-4 text-center capitalize border-b text-[10px]">Foto</th>
+                            <th class=" text-center capitalize border-b border-r text-[10px]">Remarks</th>
+                            <th class=" text-center capitalize border-b text-[10px]">Foto</th>
                         </tr>
                     </thead>
                     <tbody>
