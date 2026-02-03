@@ -70,7 +70,7 @@
                     <tbody>
                         @forelse ($allMasterData as $master)
                             <tr class="transition-colors hover:bg-blue-50/30">
-                                <td class="sticky left-0 z-10 font-medium bg-white border-b border-r">
+                                <td class="font-medium bg-white border-b border-r ">
                                     {{ $master->specific_location }}</td>
 
                                 @foreach ($techKeys as $key)
