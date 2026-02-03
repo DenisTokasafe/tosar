@@ -11,7 +11,7 @@
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white ">
             <div class="flex md:justify-start ">
-                <div class="grid max-w-lg grid-flow-col gap-4 justify-items-center">
+                <div class="grid content-center max-w-lg grid-cols-3">
 
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
