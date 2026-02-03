@@ -12,22 +12,19 @@
 
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white rounded-lg shadow">
-            {{-- HEADER SELECTION --}}
-            <div class="mb-4">
+
+            <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
                 <fieldset class="w-full fieldset md:max-w-80">
-                    <x-form.label label="Pilih Jenis Alat" required />
+
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">-- Pilih --</option>
+                        <option value="">-- Pilih Jenis Alat --</option>
                         @foreach (array_keys($fields) as $key)
                             <option value="{{ $key }}">{{ $key }}</option>
                         @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('type')" />
                 </fieldset>
-            </div>
-
-            <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
                 <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
