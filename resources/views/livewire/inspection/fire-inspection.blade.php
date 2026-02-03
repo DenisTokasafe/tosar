@@ -48,15 +48,15 @@
                             ? array_keys($firstEquipment->technical_data)
                             : [];
                 @endphp
-                <div class="grid grid-cols-4 gap-4 p-4 bg-white rounded-t-lg ">
-                    {{-- Spacer untuk mengatur tinggi header tabel agar tetap terlihat saat scroll --}}
+                {{-- <div class="grid grid-cols-4 gap-4 p-4 bg-white rounded-t-lg ">
+
                     <div class="h-full max-h-[calc(100vh-10rem)] bg-amber-200">1</div>
                     <div class="h-full max-h-[calc(100vh-15rem)] bg-rose-500">2</div>
                     <div class="h-full max-h-[calc(100vh-20rem)] bg-info">2</div>
                     <div class="h-full max-h-[calc(100vh-25rem)] bg-primary">2</div>
-                </div>
+                </div> --}}
 
-                <div class="overflow-x-auto max-h-[calc(100vh-15rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+                <div class="overflow-x-auto max-h-[calc(100vh-20rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-xs text-center text-black ">
