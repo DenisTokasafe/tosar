@@ -31,17 +31,24 @@
         }
 
         .main-table td,
-        .main-table th {
+        .main-table td {
             border: 1px solid #000;
             padding: 4px;
             text-align: center;
             vertical-align: middle;
-            /* Agar konten di tengah secara vertikal */
             word-wrap: break-word;
         }
 
         .main-table th {
+            border: 1px solid #000;
             background-color: #ffff00;
+            padding: 2px 1px;         /* Padding lebih rapat */
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+            font-size: 7pt;           /* Ukuran teks header lebih kecil */
+            line-height: 1.1;         /* Jarak baris teks yang melipat lebih rapat */
+            text-transform: uppercase; /* Membuat teks jadi kapital agar lebih tegas */
         }
 
         /* Style untuk Foto di Tabel */
