@@ -1,6 +1,6 @@
     <div class="z-30 flex max-md:flex-col ">
         <div class="self-stretch flex-1 max-md:pt-6">
-            <div wire:ignore class="flex flex-col items-center justify-between gap-4 mb-6 md:flex-row">
+            <div wire:ignore class="flex flex-col items-center justify-between gap-4 md:mb-6 md:flex-row">
                 <div>
                     <flux:heading>{{ $heading ?? '' }}</flux:heading>
                     <flux:subheading size='sm'>{{ $subheading ?? '' }}</flux:subheading>
