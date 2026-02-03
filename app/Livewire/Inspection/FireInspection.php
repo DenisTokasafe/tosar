@@ -20,7 +20,7 @@ class FireInspection extends Component
     public $location, $inspection_date, $inspected_by, $remarks, $area;
 
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
-    public $dokumentasi;
+    public $dokumentasi= [];
 
     public $searchResponsibility = '';
     public $pelapors = [];

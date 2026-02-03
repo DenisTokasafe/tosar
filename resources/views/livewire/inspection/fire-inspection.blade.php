@@ -72,16 +72,19 @@
                                 @endforeach
 
                                 <th class="">Remarks</th>
+                                <th class="">Dokumentasi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($allMasterData as $master)
                                 <tr class="text-xs hover:bg-slate-50">
-                                    <td class="">{{ $master->specific_location }}</td>
+                                    <td class="w-40">{{ $master->specific_location }}</td>
                                     @foreach ($techKeys as $key)
-                                        <td class="w-8 border border-slate-200">
-                                            <input type="text" wire:key="tech-{{ $master->id }}-{{ $key }}"
-                                                wire:model.live="conditions.{{ $master->id }}.{{ $key }}" readonly
+                                        <td class="w-10 border border-slate-200">
+                                            <input type="text"
+                                                wire:key="tech-{{ $master->id }}-{{ $key }}"
+                                                wire:model.live="conditions.{{ $master->id }}.{{ $key }}"
+                                                readonly
                                                 class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
                                         </td>
                                     @endforeach
@@ -98,6 +101,44 @@
                                     <td class="p-1 border border-slate-200">
                                         <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
                                             placeholder="Remarks..." />
+                                    </td>
+                                    <td class="p-2 border border-slate-200 w-60">
+                                        <div class="flex flex-col gap-1">
+                                            {{-- Gunakan ID master sebagai key array dokumentasi --}}
+                                            <x-form.upload label="Foto" model="dokumentasi.{{ $master->id }}"
+                                                :file="$dokumentasi[$master->id] ?? null" />
+
+                                            {{-- Preview Logic --}}
+                                            <div wire:loading.remove wire:target="dokumentasi.{{ $master->id }}">
+                                                @if (isset($dokumentasi[$master->id]))
+                                                    <div class="p-1 mt-1 border border-dashed rounded bg-slate-50">
+                                                        @php
+                                                            $file = $dokumentasi[$master->id];
+                                                            $extension = $file->getClientOriginalExtension();
+                                                        @endphp
+
+                                                        @if (in_array($extension, ['jpg', 'jpeg', 'png']))
+                                                            <img src="{{ $file->temporaryUrl() }}"
+                                                                class="w-auto h-20 mx-auto border rounded" />
+                                                        @else
+                                                            <div class="flex items-center gap-1 text-[10px] text-info">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
+                                                                    fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                                                </svg>
+                                                                {{ Str::limit($file->getClientOriginalName(), 15) }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            {{-- Error Handling khusus untuk index ini --}}
+                                            <x-label-error :messages="$errors->get('dokumentasi.' . $master->id)" />
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
