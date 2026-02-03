@@ -85,7 +85,7 @@
 
             {{-- KOLOM KANAN: TABEL DATA --}}
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
-                <div class="flex flex-row gap-4 mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <fieldset class="fieldset">
                         <x-form.label label="Cari Tipe Alat"  />
                         <select wire:model.live="search" class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -95,7 +95,7 @@
                             @endforeach
                         </select>
                     </fieldset>
-                    <x-form.searchable-dropdown label="Cari Area"  modelsearch="cari_searchLocation"
+                    <x-form.searchable-dropdown label="Cari Area" modelsearch="cari_searchLocation"
                         modelid="cari_location_id" :options="$cari_locations" :showdropdown="$cari_show_location" clickaction="selectCariLocation"
                         namedb="name" />
                 </div>
