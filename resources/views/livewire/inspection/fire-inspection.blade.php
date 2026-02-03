@@ -1,191 +1,114 @@
 <section class="w-full">
     <x-toast />
-    <div class="flex justify-start " wire:ignore>
-        @php
-            $currentRoute = Route::currentRouteName();
-        @endphp
 
+    <div class="flex justify-start mb-2" wire:ignore>
+        @php $currentRoute = Route::currentRouteName(); @endphp
         @if (Breadcrumbs::exists($currentRoute))
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
 
     <x-tabs-wpi.layout>
-        <div class="p-6 bg-white rounded-lg shadow">
-            <div class="flex md:justify-start ">
-                <div class="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3">
-                    <fieldset class="w-full fieldset md:max-w-80">
+        <div class="p-6 bg-white border shadow-sm rounded-xl border-slate-200">
+            <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
+                <fieldset class="w-full">
+                    <label class="font-semibold label label-text text-slate-600">Jenis Alat</label>
+                    <select wire:model.live="type"
+                        class="select select-sm select-bordered w-full focus:ring-2 focus:ring-info/50 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                        <option value="">-- Pilih Jenis Alat --</option>
+                        @foreach (array_keys($fields) as $key)
+                            <option value="{{ $key }}">{{ $key }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('type')" />
+                </fieldset>
 
-                        <select wire:model.live="type"
-                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih Jenis Alat --</option>
-                            @foreach (array_keys($fields) as $key)
-                                <option value="{{ $key }}">{{ $key }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('type')" />
-                    </fieldset>
+                <div class="w-full">
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
-                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
+                </div>
+
+                <div class="w-full">
+                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" size="sm" />
                 </div>
             </div>
 
-            {{-- TABLE SPREADSHEET STYLE --}}
-            <div class="rounded-lg shadow-md ">
+            <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
                 @php
-                    // Ambil semua data alat di area tersebut dengan tipe yang sama
                     $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                        ->where('type', $type)
-                        ->get();
-
+                        ->where('type', $type)->get();
                     $checks = $fields[$type]['checks'] ?? [];
-
-                    // Ambil sample technical data dari data pertama untuk header tabel
                     $firstEquipment = $allMasterData->first();
-                    $techKeys =
-                        $firstEquipment && $firstEquipment->technical_data
-                            ? array_keys($firstEquipment->technical_data)
-                            : [];
+                    $techKeys = $firstEquipment && $firstEquipment->technical_data ? array_keys($firstEquipment->technical_data) : [];
                 @endphp
 
-                <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
-                    <table class="table text-xs border-collapse table-xs table-pin-rows">
+                <div class="overflow-x-auto max-h-[500px] 2xl:max-h-[600px]">
+                    <table class="table border-separate table-xs table-pin-rows table-pin-cols border-spacing-0">
                         <thead>
-                            <tr class="text-xs text-center text-black ">
-                                <th class="">Location</th>
-
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="z-20 border-b border-r bg-slate-100">Location</th>
                                 @foreach ($techKeys as $techKey)
-                                    <th class="">
-                                        {{ $techKey }}
-                                    </th>
+                                    <th class="text-center text-blue-700 border-b border-r bg-blue-50/50">{{ $techKey }}</th>
                                 @endforeach
-
                                 @foreach ($checks as $checkItem)
-                                    <th class="">
-                                        {{ $checkItem }}
-                                    </th>
+                                    <th class="text-center border-b border-r bg-amber-50 text-amber-700 uppercase text-[10px]">{{ $checkItem }}</th>
                                 @endforeach
-
-                                <th class="">Remarks</th>
-                                <th class="">Dokumentasi</th>
+                                <th class="text-center border-b border-r">Remarks</th>
+                                <th class="text-center border-b">Dokumentasi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($allMasterData as $master)
-                                <tr class="text-xs hover:bg-slate-50">
-                                    <td class="w-40">{{ $master->specific_location }}</td>
+                                <tr class="transition-colors hover:bg-blue-50/30">
+                                    <td class="sticky left-0 z-10 font-medium bg-white border-b border-r">{{ $master->specific_location }}</td>
+
                                     @foreach ($techKeys as $key)
-                                        <td class="w-10 border border-slate-200 bg-slate-50/50"> {{-- Tambah sedikit background agar terlihat beda dengan input --}}
-                                            <div class="w-full text-[10px] font-medium text-center text-slate-600">
-                                                {{ $conditions[$master->id][$key] ?? '-' }}
-                                            </div>
+                                        <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
+                                            {{ $conditions[$master->id][$key] ?? '-' }}
                                         </td>
                                     @endforeach
 
                                     @foreach ($checks as $field)
-                                        <td class="text-center border border-slate-200">
+                                        <td class="text-center bg-white border-b border-r">
                                             <input type="checkbox"
                                                 wire:key="check-{{ $master->id }}-{{ $field }}"
                                                 wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
-                                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400" />
+                                                class="checkbox checkbox-sm checkbox-primary" />
                                         </td>
                                     @endforeach
 
-                                    <td class="p-1 border border-slate-200">
-                                        <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
-                                            placeholder="Remarks..." />
+                                    <td class="p-1 border-r border-b bg-white min-w-[150px]">
+                                        <textarea wire:model.lazy="conditions.{{ $master->id }}.remarks"
+                                            rows="1"
+                                            class="w-full h-8 min-h-0 p-1 text-xs textarea textarea-ghost focus:bg-slate-50"
+                                            placeholder="Catatan..."></textarea>
                                     </td>
-                                    <td class="w-40 p-2 border border-slate-200">
-                                        <div class="flex flex-col items-center gap-2">
 
-                                            {{-- 1. Input yang di-hide --}}
-                                            <div class="hidden">
-                                                <x-form.upload id="file-upload-{{ $master->id }}"
-                                                    {{-- ID Unik per baris --}} model="dokumentasi.{{ $master->id }}"
-                                                    :file="$dokumentasi[$master->id] ?? null" />
-                                            </div>
+                                    <td class="p-2 text-center bg-white border-b">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <input type="file" id="file-{{ $master->id }}" class="hidden" wire:model="dokumentasi.{{ $master->id }}">
 
-                                            {{-- 2. Tombol Pemicu (Menggunakan Label agar bisa klik input di atas) --}}
-                                            @if (!isset($dokumentasi[$master->id]))
-                                                <label for="file-upload-{{ $master->id }}"
-                                                    class="gap-1 btn btn-xs btn-outline btn-info">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14"
-                                                        height="14" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                                        <polyline points="17 8 12 3 7 8" />
-                                                        <line x1="12" x2="12" y1="3"
-                                                            y2="15" />
-                                                    </svg>
-                                                    Upload Foto
+                                            @if (isset($dokumentasi[$master->id]))
+                                                <div class="relative inline-block group">
+                                                    <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}" class="object-cover w-10 h-10 border rounded-md shadow-sm">
+                                                    <label for="file-{{ $master->id }}" class="absolute inset-0 flex items-center justify-center transition-opacity rounded-md opacity-0 cursor-pointer bg-black/40 group-hover:opacity-100">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                                                    </label>
+                                                </div>
+                                            @else
+                                                <label for="file-{{ $master->id }}" class="btn btn-ghost btn-xs text-info hover:bg-info/10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                                                 </label>
                                             @endif
-
-                                            {{-- 3. Preview (Tetap muncul setelah upload berhasil) --}}
-                                            <div wire:loading.remove wire:target="dokumentasi.{{ $master->id }}">
-                                                @if (isset($dokumentasi[$master->id]))
-                                                    <div class="relative mt-1 group">
-                                                        @php
-                                                            $file = $dokumentasi[$master->id];
-                                                            $extension = $file->getClientOriginalExtension();
-                                                        @endphp
-
-                                                        @if (in_array($extension, ['jpg', 'jpeg', 'png']))
-                                                            <img src="{{ $file->temporaryUrl() }}"
-                                                                class="object-cover w-16 h-16 border rounded-lg shadow-sm" />
-                                                        @else
-                                                            <div
-                                                                class="flex items-center gap-1 text-[10px] bg-blue-50 p-1 rounded border border-blue-200">
-                                                                <span
-                                                                    class="font-bold uppercase">{{ $extension }}</span>
-                                                            </div>
-                                                        @endif
-
-                                                        {{-- Tombol ganti foto (opsional) --}}
-                                                        <label for="file-upload-{{ $master->id }}"
-                                                            class="absolute p-1 bg-white border rounded-full shadow cursor-pointer -top-2 -right-2 hover:bg-slate-100">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10"
-                                                                height="10" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="lucide lucide-pencil">
-                                                                <path
-                                                                    d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                                                                <path d="m15 5 4 4" />
-                                                            </svg>
-                                                        </label>
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <x-label-error :messages="$errors->get('dokumentasi.' . $master->id)" />
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                @php
-                                    // Hitung total kolom: Location (1) + TechKeys + Checks + Remarks (1)
-                                    $totalColumns = 1 + count($techKeys) + count($checks) + 1 + 1;
-                                @endphp
-                                <td colspan="{{ $totalColumns }}" class="py-12 text-center bg-slate-50">
-                                    <div class="flex flex-col items-center justify-center space-y-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-circle-x-icon lucide-circle-x">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="m15 9-6 6" />
-                                            <path d="m9 9 6 6" />
-                                        </svg>
-                                        <span class="font-medium text-slate-400">Tidak ada data alat ditemukan untuk
-                                            area dan tipe ini.</span>
-                                        <p class="text-xs italic text-slate-400">Silahkan periksa kembali filter atau
-                                            Master Data Anda.</p>
-                                    </div>
-                                </td>
+                                <tr>
+                                    <td colspan="100" class="py-10 text-center bg-slate-50 text-slate-400">
+                                        <p class="italic">Tidak ada data alat ditemukan.</p>
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -193,43 +116,30 @@
                 </div>
             </div>
 
-            {{-- REMARKS & UPLOAD SECTIONS --}}
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div class="">
-                    <fieldset class="fieldset">
-                        <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                            modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
-                            :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
-                            enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
-                            clickaction="selectPelapor" />
+            <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
+                <div class="w-full md:max-w-md">
+                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                        modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                        :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                        enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                        clickaction="selectPelapor" />
 
-                        <div class="flex flex-wrap gap-2 mt-3">
-                            @foreach ($inspected_users as $index => $user)
-                                <div
-                                    class="flex items-center gap-1 px-3 py-1 text-xs font-semibold transition-all border rounded-full bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
-                                    <span>{{ $user['name'] }}</span>
-                                    <button type="button" wire:click="removeInspectedUser({{ $index }})"
-                                        class="text-slate-400 hover:text-red-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endforeach
-                        </div>
-                    </fieldset>
-
-                    <div class="">
-                        <button wire:click="save" wire:loading.attr="disabled"
-                            class="btn btn-success btn-xs md:w-auto">
-                            <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
-                            <span wire:loading.remove.class="hidden" class="hidden"
-                                wire:target="save">Menyimpan...</span>
-                        </button>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        @foreach ($inspected_users as $index => $user)
+                            <div class="gap-2 p-3 badge badge-outline text-slate-600">
+                                {{ $user['name'] }}
+                                <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+
+                <button wire:click="save" wire:loading.attr="disabled" class="px-8 shadow-lg btn btn-success shadow-success/20">
+                    <span wire:loading.remove wire:target="save">Simpan Laporan</span>
+                    <span wire:loading wire:target="save" class="loading loading-spinner"></span>
+                </button>
             </div>
         </div>
     </x-tabs-wpi.layout>
