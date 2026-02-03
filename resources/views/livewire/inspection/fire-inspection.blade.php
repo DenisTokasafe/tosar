@@ -46,15 +46,15 @@
              <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                 <table class="table border-separate table-xs table-pin-rows border-spacing-0">
                     <thead>
-                        <tr class="capitalize bg-slate-100 text-slate-700 text-balance">
-                            <th class="z-20 border-b border-r bg-slate-100">Location</th>
+                        <tr class="capitalize bg-slate-100 text-slate-700 text-wrap "style="width: 10rem;">
+                            <th class="border-b border-r bg-slate-100">Location</th>
                             @foreach ($techKeys as $techKey)
-                                <th class="text-center text-blue-700 capitalize border-b border-r bg-blue-50/50 text-balance">
+                                <th class="text-center text-blue-700 capitalize border-b border-r bg-blue-50/50 text-wrap "style="width: 10rem;">
                                     {{ $techKey }}</th>
                             @endforeach
                             @foreach ($checks as $checkItem)
                                 <th
-                                    class="text-center border-b border-r bg-amber-50 text-amber-700 uppercase text-[10px] text-balance capitalize">
+                                    class="text-center border-b border-r bg-amber-50 text-amber-700  text-[10px] text-wrap  capitalize" style="width: 10rem;">
                                     {{ $checkItem }}</th>
                             @endforeach
                             <th class="text-center capitalize border-b border-r">Remarks</th>
