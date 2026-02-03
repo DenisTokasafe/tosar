@@ -19,10 +19,15 @@ class Index extends Component
     public $selected_id, $search;
     public $isEdit = false;
     public $search_area='';
+    // Properti Pencarian Umum
+    public $locations = [];
+    public $show_location = false;
+    public $searchLocation = '';
+
     protected $rules = [
         'type' => 'required',
         'location_id' => 'required|exists:locations,id',
-        'technical_data' => 'required|array|min:1',
+        'technical_data' => 'nullable|array|min:1',
     ];
 
     // Menambah baris spesifikasi baru (misal: "FE No" -> "PH001")
@@ -37,6 +42,25 @@ class Index extends Component
     public function removeTechnicalField($key)
     {
         unset($this->technical_data[$key]);
+    }
+
+        public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')->limit(10)->get();
+            $this->show_location = true;
+        } else {
+            $this->show_location = false;
+        }
+        $this->reset('location');
+    }
+
+    public function selectLocation($id, $name)
+    {
+        $this->location_id = $id;
+        $this->searchLocation = $name;
+        $this->show_location = false;
     }
 
     public function importExcel()

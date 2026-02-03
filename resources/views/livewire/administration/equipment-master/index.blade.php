@@ -18,13 +18,9 @@
                             @endforeach
                         </select>
 
-                        <x-form.label label="Area / Lokasi" />
-                        <select wire:model.live="location_id" class="w-full select select-bordered select-sm">
-                            <option value="">-- Pilih Lokasi --</option>
-                            @foreach ($locations as $loc)
-                                <option value="{{ $loc->id }}">{{ $loc->name }}</option>
-                            @endforeach
-                        </select>
+                         <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
+                            :disabled="$isDisabled" modelid="location_id" :options="$locations" :showdropdown="$show_location"
+                            clickaction="selectLocation" namedb="name" />
 
                         <x-form.input-floating label="Lokasi Spesifik" model="specific_location" />
 

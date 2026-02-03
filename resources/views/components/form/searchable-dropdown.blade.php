@@ -19,7 +19,7 @@
             placeholder="{{ $placeholder }}"
             {{ $attributes->merge([
                 'class' =>
-                    'input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs ' .
+                    'input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs ' .
                     ($errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : ''),
             ]) }} />
         @if ($showdropdown && count($options) > 0)
