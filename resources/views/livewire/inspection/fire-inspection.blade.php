@@ -52,15 +52,15 @@
                             <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
 
                             @foreach ($techKeys as $techKey)
-                                <th class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
-                                    style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
+                                <th
+                                    class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 whitespace-nowrap md:whitespace-normal md:w-[70px] md:min-w-[70px] md:leading-tight">
                                     {{ $techKey }}
                                 </th>
                             @endforeach
 
                             @foreach ($checks as $checkItem)
-                                <th class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1"
-                                    style="width: 60px; min-width: 60px; white-space: normal; line-height: 1.2;">
+                                <th
+                                    class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1 whitespace-nowrap md:whitespace-normal md:w-[60px] md:min-w-[60px] md:leading-tight">
                                     {{ $checkItem }}
                                 </th>
                             @endforeach
