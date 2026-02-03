@@ -32,7 +32,7 @@
 
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
             @php
-                $allMasterData = EquipmentMaster::where('location_id', $location_id)
+                $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
                     ->where('type', $type)
                     ->get();
                 $checks = $fields[$type]['checks'] ?? [];
