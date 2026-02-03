@@ -58,7 +58,7 @@
 
                             @foreach ($checks as $checkItem)
                                 <th class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1"
-                                    style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
+                                    style="width: 60px; min-width: 60px; white-space: normal; line-height: 1.2;">
                                     {{ $checkItem }}
                                 </th>
                             @endforeach
