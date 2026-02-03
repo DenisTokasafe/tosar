@@ -14,7 +14,7 @@
                 <div class="flex items-center w-full max-w-lg gap-4">
 
                     <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                        class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                         <option value="">-- Pilih Jenis Alat --</option>
                         @foreach (array_keys($fields) as $key)
                             <option value="{{ $key }}">{{ $key }}</option>
