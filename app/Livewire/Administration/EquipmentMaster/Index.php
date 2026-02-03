@@ -9,20 +9,27 @@ use Livewire\WithFileUploads;
 use App\Models\EquipmentMaster;
 use App\Imports\EquipmentMasterImport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class Index extends Component
 {
-    use WithPagination,WithFileUploads;
+    use WithPagination, WithFileUploads;
     public $file_excel;
-    public $type, $location_id, $specific_location, $is_active = true;
+    public $type, $specific_location, $is_active = true;
     public $technical_data = []; // Untuk menyimpan key-value dinamis (FE No, Capacity, dll)
     public $newKey, $newValue; // Input sementara untuk menambah baris JSON
     public $selected_id, $search;
     public $isEdit = false;
-    public $search_area='';
-    // Properti Pencarian Umum
+    public $search_area = '';
+    // Pilih lokasi
     public $locations = [];
     public $show_location = false;
     public $searchLocation = '';
+    public $location_id;
+    // cari lokasi
+    public $cari_locations = [];
+    public $cari_show_location = false;
+    public $cari_searchLocation = '';
+    public $cari_location_id;
 
     protected $rules = [
         'type' => 'required',
@@ -44,7 +51,7 @@ class Index extends Component
         unset($this->technical_data[$key]);
     }
 
-        public function updatedSearchLocation()
+    public function updatedSearchLocation()
     {
         if (strlen($this->searchLocation) > 2) {
             $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
@@ -61,6 +68,26 @@ class Index extends Component
         $this->location_id = $id;
         $this->searchLocation = $name;
         $this->show_location = false;
+    }
+    public function updatedCariSearchLocation()
+    {
+        if (strlen($this->cari_searchLocation) > 2) {
+            $this->cari_locations = Location::where('name', 'like', '%' . $this->cari_searchLocation . '%')
+                ->orderBy('name')->limit(10)->get();
+            $this->cari_show_location = true;
+        } else {
+            $this->cari_show_location = false;
+        }
+        ;
+        $this->reset(['cari_location_id', 'search_area']);
+    }
+
+    public function selectCariLocation($id, $name)
+    {
+        $this->search_area = $name;
+        $this->cari_location_id = $id;
+        $this->cari_searchLocation = $name;
+        $this->cari_show_location = false;
     }
 
     public function importExcel()
@@ -125,11 +152,11 @@ class Index extends Component
                 ->search($this->search)->byArea($this->search_area)
                 ->paginate(10),
             'locations' => Location::all(),
-            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel','Fire sprinkler system','Ring Buoy', 'Eyewash & Safety Shower', 'Muster Point']
+            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Fire sprinkler system', 'Ring Buoy', 'Eyewash & Safety Shower', 'Muster Point']
         ]);
     }
-     public function paginationView()
+    public function paginationView()
     {
-       return 'paginate.pagination';
+        return 'paginate.pagination';
     }
 }

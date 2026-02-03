@@ -18,9 +18,9 @@
                             @endforeach
                         </select>
 
-                         <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
-                            modelid="location_id" :options="$locations" :showdropdown="$show_location"
-                            clickaction="selectLocation" namedb="name" />
+                        <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
+                            modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                            namedb="name" />
 
                         <x-form.input-floating label="Lokasi Spesifik" model="specific_location" />
 
@@ -86,18 +86,18 @@
             {{-- KOLOM KANAN: TABEL DATA --}}
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
                 <div class="flex flex-row gap-4 mb-4">
-                    <select wire:model.live="search" class="w-full select select-bordered select-sm">
-                    <option value="">-- Cari Tipe Alat --</option>
-                    @foreach ($available_types as $t)
-                        <option value="{{ $t }}">{{ $t }}</option>
-                    @endforeach
-                </select>
-                <select wire:model.live="search_area" class="w-full select select-bordered select-sm">
-                    <option value="">-- Cari Area --</option>
-                    @foreach ($locations as $loc)
-                        <option value="{{ $loc->name }}">{{ $loc->name }}</option>
-                    @endforeach
-                </select>
+                    <fieldset class="fieldset">
+                        <x-form.label :label="Cari Tipe Alat" :required="$required" />
+                        <select wire:model.live="search" class="w-full select select-bordered select-sm">
+                            <option value="">-- Cari Tipe Alat --</option>
+                            @foreach ($available_types as $t)
+                                <option value="{{ $t }}">{{ $t }}</option>
+                            @endforeach
+                        </select>
+                    </fieldset>
+                    <x-form.searchable-dropdown label="Area" required modelsearch="cari_searchLocation"
+                        modelid="cari_location_id" :options="$cari_locations" :showdropdown="$cari_show_location" clickaction="selectCariLocation"
+                        namedb="name" />
                 </div>
                 <div class="overflow-x-auto ">
                     <table class="table table-xs">
