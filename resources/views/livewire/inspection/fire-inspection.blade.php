@@ -80,12 +80,10 @@
                                 <tr class="text-xs hover:bg-slate-50">
                                     <td class="w-40">{{ $master->specific_location }}</td>
                                     @foreach ($techKeys as $key)
-                                        <td class="w-10 border border-slate-200">
-                                            <input type="text"
-                                                wire:key="tech-{{ $master->id }}-{{ $key }}"
-                                                wire:model.live="conditions.{{ $master->id }}.{{ $key }}"
-                                                readonly
-                                                class="w-full text-xs text-center bg-transparent border-none focus:ring-0">
+                                        <td class="w-10 border border-slate-200 bg-slate-50/50"> {{-- Tambah sedikit background agar terlihat beda dengan input --}}
+                                            <div class="w-full text-[10px] font-medium text-center text-slate-600">
+                                                {{ $conditions[$master->id][$key] ?? '-' }}
+                                            </div>
                                         </td>
                                     @endforeach
 
