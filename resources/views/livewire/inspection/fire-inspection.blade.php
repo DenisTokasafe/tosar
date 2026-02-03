@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
 
-    <div class="flex justify-start mb-2" wire:ignore>
+    <div class="flex justify-start " wire:ignore>
         @php $currentRoute = Route::currentRouteName(); @endphp
         @if (Breadcrumbs::exists($currentRoute))
             {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
