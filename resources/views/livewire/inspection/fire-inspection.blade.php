@@ -13,7 +13,6 @@
             <div class="flex md:justify-start ">
                 <div class="grid content-center max-w-lg grid-cols-3 gap-2">
                     <div class="mt-0.5">
-
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                             <option value="">-- Pilih Jenis Alat --</option>
@@ -53,8 +52,8 @@
                             <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
 
                             @foreach ($techKeys as $techKey)
-                                <th
-                                    class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"  style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
+                                <th class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50"
+                                    style="width: 70px; min-width: 70px; white-space: normal; line-height: 1.2;">
                                     {{ $techKey }}
                                 </th>
                             @endforeach
@@ -141,8 +140,29 @@
             </div>
         </div>
 
-        <div class="flex md:justify-end ">
+        <div class="flex flex-col items-end justify-between gap-4 pt-6 mt-8 border-t md:flex-row">
+            <div class="w-full md:max-w-md">
+                <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+                    modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                    :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
+                    enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
+                    clickaction="selectPelapor" />
 
+                <div class="flex flex-wrap gap-2 mt-2">
+                    @foreach ($inspected_users as $index => $user)
+                        <div class="gap-2 p-3 badge badge-outline text-slate-600">
+                            {{ $user['name'] }}
+                            <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
             <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
 
