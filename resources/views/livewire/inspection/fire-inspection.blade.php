@@ -11,7 +11,7 @@
     <x-tabs-wpi.layout>
         <div class="p-6 bg-white rounded-lg shadow">
             <div class="flex md:justify-start ">
-                <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
+                <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
                     <fieldset class="w-full">
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
