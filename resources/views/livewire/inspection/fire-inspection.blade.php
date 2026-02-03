@@ -66,7 +66,7 @@
                             @endforeach
 
                             <th class=" text-center capitalize border-b border-r text-[10px]">Remarks</th>
-                            <th class=" text-center capitalize border-b text-[10px] md:w-36">Foto</th>
+                            <th class=" text-center capitalize border-b text-[10px] md:w-12 2xl:w-36">Foto</th>
                         </tr>
                     </thead>
                     <tbody>
