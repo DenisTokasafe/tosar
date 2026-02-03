@@ -56,7 +56,7 @@
                     <div class="h-full max-h-[calc(100vh-25rem)] bg-primary">2</div>
                 </div> --}}
 
-                <div class="overflow-x-auto max-h-[calc(100vh-20rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
+                <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)] border rounded-lg ">
                     <table class="table text-xs border-collapse table-xs table-pin-rows">
                         <thead>
                             <tr class="text-xs text-center text-black ">
@@ -229,7 +229,7 @@
 
                     <div class="">
                         <button wire:click="save" wire:loading.attr="disabled"
-                            class="w-full btn btn-success btn-sm md:w-auto">
+                            class="btn btn-success btn-xs md:w-auto">
                             <span wire:loading.add.class='hidden' wire:target="save">🚀 Simpan Laporan Inspeksi</span>
                             <span wire:loading.remove.class="hidden" class="hidden"
                                 wire:target="save">Menyimpan...</span>
