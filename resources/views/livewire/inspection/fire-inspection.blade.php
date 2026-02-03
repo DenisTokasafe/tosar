@@ -176,7 +176,7 @@
 
                 <div class="flex flex-wrap gap-2 mt-2">
                     @foreach ($inspected_users as $index => $user)
-                        <div class="gap-2 badge-soft badge-info badge badge-outline text-slate-600 text-[10px] badge-xs">
+                        <div class="gap-2 badge-soft badge-info badge  text-slate-600 text-[10px] badge-xs">
                             {{ $user['name'] }}
                             <button wire:click="removeInspectedUser({{ $index }})" class="hover:text-error">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
