@@ -13,7 +13,6 @@
             <div class="flex md:justify-start ">
                 <div class="grid items-end grid-cols-1 gap-4 mb-6 md:grid-cols-3">
                     <fieldset class="w-full">
-                        <label class="font-semibold label label-text text-slate-600">Jenis Alat</label>
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                             <option value="">-- Pilih Jenis Alat --</option>
