@@ -251,15 +251,15 @@ class FireInspection extends Component
      * SIMPAN DATA
      */
     public function removeImage($id)
-{
-    // Cara 1: Jika menggunakan array
-    if (isset($this->dokumentasi[$id])) {
-        unset($this->dokumentasi[$id]);
-    }
+    {
+        // Cara 1: Jika menggunakan array
+        if (isset($this->dokumentasi[$id])) {
+            unset($this->dokumentasi[$id]);
+        }
 
-    // Cara 2: Jika ingin memastikan tampilan terupdate dengan menyetel null
-    // $this->dokumentasi[$id] = null;
-}
+        // Cara 2: Jika ingin memastikan tampilan terupdate dengan menyetel null
+        // $this->dokumentasi[$id] = null;
+    }
     public function save()
     {
         $this->validate([
