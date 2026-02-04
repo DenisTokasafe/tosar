@@ -328,7 +328,7 @@ class FireInspection extends Component
         return view('livewire.inspection.fire-inspection',[
             'equipmentMasters' => EquipmentMaster::search($this->type)
                 ->byArea($this->searchLocation)
-                ->spesificLocation($this->searchLocationSpesifik)
+                ->spesificLocation($this->selected_location)
                 ->orderBy('specific_location')
                 ->limit(10)
                 ->get()
