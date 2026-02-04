@@ -26,10 +26,15 @@
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
-
-                    <x-form.search-floating label="Lokasi Spesifik" required modelsearch="searchLocationSpesifik" modelid="selected_location"
-                        placeholder="Cari Lokasi Spesifik..." :options="$selected_equipment_master" :showdropdown="$show_location_specific" clickaction="selectLocationSpecific"
-                        namedb="name" />
+                    @if ($location_id)
+                    <select wire:model.live="selected_location"
+                        class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <option value="">-- Pilih Lokasi Spesifik --</option>
+                        @foreach ($equipmentMasters as $t)
+                            <option value="{{ $t->specific_location }}">{{ $t->specific_location }}</option>
+                        @endforeach
+                    </select>
+                    @endif
                     <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
                 </div>
             </div>
@@ -160,7 +165,8 @@
                         </tbody>
                     </table>
                 @else
-                    <div class="flex items-center justify-center h-40 border border-dashed rounded-lg bg-slate-100 border-slate-300">
+                    <div
+                        class="flex items-center justify-center h-40 border border-dashed rounded-lg bg-slate-100 border-slate-300">
                         <p class="text-sm italic text-slate-400">Pilih Area untuk menampilkan data inspeksi.</p>
                     </div>
                 @endif

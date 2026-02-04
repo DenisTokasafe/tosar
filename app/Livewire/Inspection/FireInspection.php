@@ -39,9 +39,6 @@ class FireInspection extends Component
     public $searchLocation = '';
     // End fitur pencarian lokasi spesifik
     public $selected_location;
-    public $searchLocationSpesifik = '';
-    public $selected_equipment_master = [];
-    public $show_location_specific = false;
 
 
 
@@ -172,28 +169,7 @@ class FireInspection extends Component
         }
     }
 
-    public function updateSearchLocationSpesifik()
-    {
-        if (strlen($this->searchLocationSpesifik) > 2) {
-            $this->selected_equipment_master = EquipmentMaster::search($this->type)
-                ->byArea($this->searchLocation)
-                ->spesificLocation($this->searchLocationSpesifik)
-                ->orderBy('specific_location')
-                ->limit(10)
-                ->get();
-            $this->show_location_specific = true;
-        } else {
-            $this->selected_equipment_master = [];
-            $this->show_location_specific = false;
-        }
-         $this->reset(['selected_location']);
-    }
-    public function selectLocationSpecific($id, $specific_location)
-    {
-        $this->selected_location = $specific_location;
-        $this->searchLocationSpesifik = $specific_location;
-        $this->show_location_specific = false;
-    }
+
 
     /**
      * LOGIC PILIH ALAT (SPECIFIC LOCATION)
@@ -349,6 +325,13 @@ class FireInspection extends Component
 
     public function render()
     {
-        return view('livewire.inspection.fire-inspection');
+        return view('livewire.inspection.fire-inspection',[
+            'equipmentMasters' => EquipmentMaster::search($this->type)
+                ->byArea($this->searchLocation)
+                ->spesificLocation($this->searchLocationSpesifik)
+                ->orderBy('specific_location')
+                ->limit(10)
+                ->get()
+        ]);
     }
 }
