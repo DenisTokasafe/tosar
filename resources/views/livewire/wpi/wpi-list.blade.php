@@ -8,6 +8,7 @@
                 <thead class="bg-gray-800 text-white italic uppercase text-[10px]">
                     <tr>
                         <th class="p-3 text-center border border-gray-700">Tanggal</th>
+                        <th class="p-3 text-center border border-gray-700">No Referensi</th>
                         <th class="p-3 text-center border border-gray-700">Status</th>
                         <th class="text-center border border-gray-700">Lokasi</th>
                         <th class="text-center border border-gray-700">Departemen / Kontraktor</th>
@@ -22,6 +23,7 @@
                                 {{ date('d-m-Y', strtotime($report->report_date)) }}
                                 <span class="block text-[10px] text-gray-400">{{ $report->report_time }}</span>
                             </td>
+                            <td class="font-bold border">{{ $report->no_referensi }}</td>
                             <td class="border">
                                 <span
                                     class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
