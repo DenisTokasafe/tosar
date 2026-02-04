@@ -10,7 +10,7 @@
 
     <x-tabs-wpi.layout>
         <div class="mb-2 bg-white ">
-            <div class="flex md:justify-start ">
+            <div class="">
                 <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
                     <div class="mt-0.5">
                         <select wire:model.live="type"
