@@ -10,7 +10,7 @@
 
     <x-tabs-wpi.layout>
         <div class="mb-2 bg-white ">
-            <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
+            <div class="grid content-center w-full max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
                 <div class="mt-0.5">
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
