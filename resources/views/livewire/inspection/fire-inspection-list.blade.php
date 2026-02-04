@@ -75,7 +75,7 @@
                         clickaction="selectLocation" namedb="name" />
                 </div>
             </div>
-            <div class="tooltip md:tooltip-right">
+            <div class="tooltip md:tooltip-left">
                 <div class="z-40 tooltip-content">
                     <div class="text-sm font-black text-orange-400 animate-bounce">export PDF</div>
                 </div>
