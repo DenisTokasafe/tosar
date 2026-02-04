@@ -11,7 +11,7 @@
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
         <div
-            class="flex flex-col items-center justify-between gap-4 shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 md:inset-shadow-sm">
+            class="flex flex-col items-center justify-between gap-4 md:shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 md:inset-shadow-sm">
 
             <div class="w-full md:flex md:justify-start ">
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
