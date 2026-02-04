@@ -49,7 +49,7 @@
                 $checks = $fields[$type]['checks'] ?? [];
                 $firstEquipment = $allMasterData->first();
                 $techKeys =
-                    $firstEquipment && $firstEquipment->technical_datas
+                    $firstEquipment && $firstEquipment->technical_data
                         ? array_keys($firstEquipment->technical_data)
                         : [];
             @endphp
