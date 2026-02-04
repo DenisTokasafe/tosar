@@ -24,7 +24,7 @@
                     </svg>
                 </label>
             </div>
-            <div class="flex md:justify-start ">
+            <div class="w-full md:flex md:justify-start ">
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                     <fieldset class="w-full fieldset md:max-w-80">
                         <x-form.label label="Pilih Jenis Alat" required />
