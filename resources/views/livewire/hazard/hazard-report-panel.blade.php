@@ -75,7 +75,7 @@
     </div>
       <x-manhours.layout>
     <div class="mt-4 overflow-x-auto">
-        <table class="table px-2 text-xs border table-xs">
+        <table class="table px-2 text-xs border table-fixed table-xs">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="border">#</th>
