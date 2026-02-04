@@ -134,7 +134,7 @@
                         <table class="legend-table">
                             <tr><th class="bg-gray">Note:</th></tr>
                             <tr><td><span class="good">✔</span> Good</td></tr>
-                            <tr><td><span class="good">✘</span> No Good</td></tr>
+                            <tr><td><span class="nogood">✘</span> No Good</td></tr>
                         </table>
                     </td>
 
