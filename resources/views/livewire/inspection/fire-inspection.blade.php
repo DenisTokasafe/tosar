@@ -10,37 +10,34 @@
 
     <x-tabs-wpi.layout>
         <div class="mb-2 bg-white ">
-            <div class="">
-                <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
+            <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
+                <div class="mt-0.5">
+                    <select wire:model.live="type"
+                        class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
+                        <option value="">-- Pilih Jenis Alat --</option>
+                        @foreach (array_keys($fields) as $key)
+                            <option value="{{ $key }}">{{ $key }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <x-label-error :messages="$errors->get('type')" />
+
+                <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
+                    placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                    namedb="name" />
+                @if ($location_id)
                     <div class="mt-0.5">
-                        <select wire:model.live="type"
-                            class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
-                            <option value="">-- Pilih Jenis Alat --</option>
-                            @foreach (array_keys($fields) as $key)
-                                <option value="{{ $key }}">{{ $key }}</option>
+                        <select wire:model.live="selected_location"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">-- Pilih Lokasi Spesifik --</option>
+                            @foreach ($equipmentMasters as $t)
+                                <option value="{{ $t->specific_location }}">{{ $t->specific_location }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <x-label-error :messages="$errors->get('type')" />
-
-                    <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
-                        placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
-                        namedb="name" />
-                    @if ($location_id)
-                        <div class="mt-0.5">
-                            <select wire:model.live="selected_location"
-                                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                <option value="">-- Pilih Lokasi Spesifik --</option>
-                                @foreach ($equipmentMasters as $t)
-                                    <option value="{{ $t->specific_location }}">{{ $t->specific_location }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
-                    <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
-                </div>
+                @endif
+                <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
-
         </div>
 
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
