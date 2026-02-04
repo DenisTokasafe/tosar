@@ -27,6 +27,7 @@
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
                     @if ($location_id)
+
                     <select wire:model.live="selected_location"
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Pilih Lokasi Spesifik --</option>

@@ -139,7 +139,7 @@ class FireInspection extends Component
         // Ambil semua alat
         // 1. Ambil semua data master berdasarkan lokasi dan tipe
         $allMaster = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)->spesificLocation($this->selected_location)
+            ->where('type', $this->type)->spesificLocation($this->searchLocationSpesifik)
             ->get();
 
         $this->conditions = []; // Reset
@@ -325,6 +325,12 @@ class FireInspection extends Component
 
     public function render()
     {
-        return view('livewire.inspection.fire-inspection');
+        return view('livewire.inspection.fire-inspection',[
+            'equipmentMasters' => EquipmentMaster::search($this->type)
+                ->byArea($this->searchLocation)
+                ->orderBy('specific_location')
+                ->limit(10)
+                ->get()
+        ]);
     }
 }
