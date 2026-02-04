@@ -11,7 +11,7 @@
     <x-tabs-wpi.layout heading="Daftar Laporan Fire Protection" subheading="Site Tokatindung">
 
         <div
-            class="flex flex-col items-center justify-between gap-4 shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 inset-shadow-sm">
+            class="flex flex-col items-center justify-between gap-4 shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 md:inset-shadow-sm">
             <div class="tooltip md:tooltip-right">
                 <div class="z-40 tooltip-content">
                     <div class="text-sm font-black text-orange-400 animate-bounce">export PDF</div>
