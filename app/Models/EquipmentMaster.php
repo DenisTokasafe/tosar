@@ -27,6 +27,10 @@ class EquipmentMaster extends Model
     {
         return $query->where('type', 'like', "%{$type}%");
     }
+    public function scopeSpesificLocation($query, $specific_location)
+    {
+        return $query->where('specific_location', 'like', "%{$specific_location}%");
+    }
 
 
 }

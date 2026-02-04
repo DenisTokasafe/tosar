@@ -175,9 +175,10 @@ class FireInspection extends Component
     public function updateSearchLocationSpesifik()
     {
         if (strlen($this->searchLocationSpesifik) > 2) {
-            $this->selected_equipment_master = EquipmentMaster::where('specific_location', 'like', '%' . $this->searchLocationSpesifik . '%')
-                ->where('type', $this->type)->byArea($this->searchLocation)
-                ->orderBy('name')
+            $this->selected_equipment_master = EquipmentMaster::search($this->type)
+                ->byArea($this->searchLocation)
+                ->spesificLocation($this->searchLocationSpesifik)
+                ->orderBy('specific_location')
                 ->limit(10)
                 ->get();
             $this->show_location_specific = true;
