@@ -74,8 +74,8 @@
         </div>
     </div>
       {{-- <x-manhours.layout> --}}
-    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
-        <table class="table text-xs border table-xs">
+    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] relative">
+        <table class="table mb-8 text-xs border table-xs">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="border">#</th>
@@ -346,7 +346,9 @@
                 @endforelse
             </tbody>
         </table>
+        <div class="absolute inset-x-0 bottom-0 mt-4 shadow-md bg-base-100 inset-shadow-sm">
+            {{ $reports->links() }}
+        </div>
     </div>
-    {{ $reports->links() }}
       {{-- </x-manhours.layout> --}}
 </section>
