@@ -12,6 +12,10 @@ use Livewire\WithPagination;
 class FireInspectionList extends Component
 {
     use WithPagination;
+
+    public $selectedItems = [];
+    public $selectAll = false;
+
     public $type;
     public $date;
     public $area;
@@ -112,6 +116,43 @@ class FireInspectionList extends Component
             $this->selectLocation($this->location_id, $this->searchLocation);
         }
     }
+
+    // Fungsi Logika Select All
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            // Ambil semua ID dari hasil query inspeksi saat ini
+            $this->selectedItems = $this->getInspectionsProperty()->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        } else {
+            $this->selectedItems = [];
+        }
+    }
+
+    // Fungsi Hapus Masal
+    public function deleteSelected()
+    {
+        if (empty($this->selectedItems)) return;
+
+        // Proses hapus
+       FireProtection::whereIn('id', $this->selectedItems)->delete();
+
+        // Reset state
+        $this->selectedItems = [];
+        $this->selectAll = false;
+
+        $this->dispatch(
+            'alert',
+            [
+                'text' => "Data berhasil di hapus!!!",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+            ]
+        );
+    }
+
     public function exportPDF()
     {
         // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
