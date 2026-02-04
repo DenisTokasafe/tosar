@@ -422,7 +422,7 @@ class Index extends Component
         } else {
             $this->show_location = false;
         }
-        $this->reset('location_id');
+        $this->reset('location');
     }
 
     public function selectLocation($id, $name)
