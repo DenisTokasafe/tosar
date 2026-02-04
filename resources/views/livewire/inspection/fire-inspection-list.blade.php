@@ -211,7 +211,7 @@
                 <tbody>
                     @forelse ($inspections as $index => $item)
                         <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden'
-                            wire:target='location_id,search_type,date' class=" odd:bg-white even:bg-gray-100">
+                            wire:target='location_id,search_type,date' class="{{ in_array($item->id, $selectedItems) ? 'bg-error/10' : 'odd:bg-white even:bg-gray-100' }}">
                             <td class="text-center border">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center border">
                                 <input type="checkbox" wire:model.live="selectedItems" value="{{ $item->id }}"

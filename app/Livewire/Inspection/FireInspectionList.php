@@ -19,7 +19,7 @@ class FireInspectionList extends Component
     public $type;
     public $date;
     public $area;
-    public $search_type='';
+    public $search_type = '';
     public $location_id;
     public $show_location = false;
     public $locations = [];
@@ -73,7 +73,7 @@ class FireInspectionList extends Component
     }
     public function clear_filter()
     {
-        $this->reset('search_type','location_id','date','area','searchLocation');
+        $this->reset('search_type', 'location_id', 'date', 'area', 'searchLocation');
     }
     public function updatedSearchLocation()
     {
@@ -94,14 +94,14 @@ class FireInspectionList extends Component
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
-         if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
+        if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
         } else {
             // Kembalikan ke default jika bukan Maesa Camp
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
         }
     }
-     public function updatedType($value)
+    public function updatedType($value)
     {
         $this->type = $value;
         // Logika Khusus untuk Maesa Camp
@@ -116,7 +116,15 @@ class FireInspectionList extends Component
             $this->selectLocation($this->location_id, $this->searchLocation);
         }
     }
-
+    // Tambahkan ini di dalam class FireInspectionList
+    public function getInspectionsProperty()
+    {
+        return FireProtection::query()
+            ->searchByType($this->search_type)
+            ->searchByLocation($this->location_id)
+            ->searchInstectionsByDate($this->date)
+            ->get(); // Gunakan get() bukan paginate() untuk ambil semua ID yang terfilter
+    }
     // Fungsi Logika Select All
     public function updatedSelectAll($value)
     {
@@ -134,7 +142,7 @@ class FireInspectionList extends Component
         if (empty($this->selectedItems)) return;
 
         // Proses hapus
-       FireProtection::whereIn('id', $this->selectedItems)->delete();
+        FireProtection::whereIn('id', $this->selectedItems)->delete();
 
         // Reset state
         $this->selectedItems = [];
