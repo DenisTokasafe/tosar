@@ -73,9 +73,9 @@
             </fieldset>
         </div>
     </div>
-      <x-manhours.layout>
-    <div class="mt-4 overflow-x-auto">
-        <table class="table px-2 text-xs border table-xs">
+      {{-- <x-manhours.layout> --}}
+    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)]">
+        <table class="table text-xs border table-xs">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="border">#</th>
@@ -348,5 +348,5 @@
         </table>
     </div>
     {{ $reports->links() }}
-      </x-manhours.layout>
+      {{-- </x-manhours.layout> --}}
 </section>
