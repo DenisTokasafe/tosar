@@ -73,6 +73,7 @@
             </fieldset>
         </div>
     </div>
+      <x-manhours.layout>
     <div class="mt-4 overflow-x-auto">
         <table class="table px-2 text-xs border table-xs">
             <thead>
@@ -347,4 +348,5 @@
         </table>
     </div>
     {{ $reports->links() }}
+      </x-manhours.layout>
 </section>
