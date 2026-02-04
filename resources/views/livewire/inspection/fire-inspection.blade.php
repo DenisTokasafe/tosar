@@ -55,7 +55,7 @@
             @endphp
 
             <div class="overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)]  border rounded-lg ">
-                @if ($location_id)
+                @if ($allMasterData)
                     <table class="table border-separate md:table-fixed table-xs table-pin-rows border-spacing-0">
                         <thead>
                             <tr class="capitalize bg-slate-100 text-slate-700">
