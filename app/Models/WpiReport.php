@@ -17,6 +17,7 @@ class WpiReport extends Model
 
     protected $fillable = [
         'report_date',
+        'no_referensi',
         'report_time',
         'location',
         'department',
