@@ -83,7 +83,7 @@
                         </div>
                         <label
                             onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
-                            wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-accent">
+                            wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-error">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2">
@@ -198,7 +198,7 @@
                         <th class="border">#</th>
                         <th class="border">
                             <input type="checkbox" wire:model.live="selectAll"
-                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                                class="checkbox checkbox-xs border-emerald-600 bg-emerald-500 checked:border-rose-500 checked:bg-rose-400 checked:text-rose-800" />
                         </th>
                         <th class="border">Jenis Alat</th>
                         <th class="border">Area & Lokasi spesifik</th>
@@ -215,7 +215,7 @@
                             <td class="text-center border">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center border">
                                 <input type="checkbox" wire:model.live="selectedItems" value="{{ $item->id }}"
-                                    class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                                    class="checkbox checkbox-xs border-emerald-600 bg-emerald-500 checked:border-rose-500 checked:bg-rose-400 checked:text-rose-800" />
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
