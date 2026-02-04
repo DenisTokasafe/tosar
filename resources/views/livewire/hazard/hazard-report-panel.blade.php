@@ -73,282 +73,293 @@
             </fieldset>
         </div>
     </div>
-      {{-- <x-manhours.layout> --}}
-    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] relative">
-        <table class="table mb-8 text-xs border table-xs">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border">#</th>
-                    <th class="border">reference</th>
-                    <th class="border">Tipe Bahaya
-                        {{-- Button Trigger Popover --}}
-                        <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
-                            <span class="text-xs text-blue-600">
-                                @if (empty($filterEventType))
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-list-filter">
-                                        <path d="M2 5h20" />
-                                        <path d="M6 12h12" />
-                                        <path d="M9 19h6" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-arrow-down-wide-narrow">
-                                        <path d="m3 16 4 4 4-4" />
-                                        <path d="M7 20V4" />
-                                        <path d="M11 4h10" />
-                                        <path d="M11 8h7" />
-                                        <path d="M11 12h4" />
-                                    </svg>
-                                @endif
-                            </span>
-                        </button>
-
-                        {{-- Popover Content --}}
-                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
-                            popover id="eventType" style="position-anchor:--eventType; inset-area: bottom span-right;">
-
-                            @foreach ($filterOptions['EventType'] as $event_type)
-                                <li>
-                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
-                                        <input type="checkbox" wire:model.live="filterEventType"
-                                            value="{{ $event_type->id }}" class="text-blue-600 rounded form-checkbox">
-                                        <span class="ml-2 text-xs capitalize">
-                                            {{ $event_type->event_type_name }}
-                                        </span>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </th>
-                    <th class="border">Jenis Bahaya
-                        <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
-                            style="anchor-name:--eventSubType">
-                            <span class="text-xs text-blue-600">
-                                @if (empty($filterEventSubType))
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-list-filter-icon lucide-list-filter">
-                                        <path d="M2 5h20" />
-                                        <path d="M6 12h12" />
-                                        <path d="M9 19h6" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
-                                        <path d="m3 16 4 4 4-4" />
-                                        <path d="M7 20V4" />
-                                        <path d="M11 4h10" />
-                                        <path d="M11 8h7" />
-                                        <path d="M11 12h4" />
-                                    </svg>
-                                @endif
-                            </span>
-                        </button>
-                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
-                            popover id="eventSubType"
-                            style="position-anchor:--eventSubType; inset-area: bottom span-right;">
-                            {{-- Loop Department --}}
-                            @foreach ($filterOptions['EventSubType'] as $event_sub_type)
-                                <li>
-                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
-                                        <input type="checkbox" wire:model.live="filterEventSubType"
-                                            value="{{ $event_sub_type->id }}"
-                                            class="text-blue-600 rounded form-checkbox">
-                                        <span
-                                            class="ml-2 text-xs capitalize">{{ $event_sub_type->event_sub_type_name }}</span>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </th>
-                    <th class="border">Divisi Penanggung Jawab
-                        <button class="btn btn-ghost btn-xs" popovertarget="divisi_dept"
-                            style="anchor-name:--divisi_dept">
-                            {{-- Ikon Filter: Tampilkan jika filterDepartment tidak kosong --}}
-                            <span class="text-xs text-blue-600">
-                                @if (empty($filterDepartment) && empty($filterContractor))
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-list-filter-icon lucide-list-filter">
-                                        <path d="M2 5h20" />
-                                        <path d="M6 12h12" />
-                                        <path d="M9 19h6" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
-                                        <path d="m3 16 4 4 4-4" />
-                                        <path d="M7 20V4" />
-                                        <path d="M11 4h10" />
-                                        <path d="M11 8h7" />
-                                        <path d="M11 12h4" />
-                                    </svg>
-                                @endif
-                            </span>
-                        </button>
-                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
-                            popover id="divisi_dept"
-                            style="position-anchor:--divisi_dept; inset-area: bottom span-right;">
-                            {{-- Loop Department --}}
-                            @foreach ($filterOptions['Department'] as $dept)
-                                <li>
-                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
-                                        <input type="checkbox" wire:model.live="filterDepartment"
-                                            value="{{ $dept->id }}" class="text-blue-600 rounded form-checkbox">
-                                        <span class="ml-2 text-xs capitalize">{{ $dept->department_name }}</span>
-                                    </label>
-                                </li>
-                            @endforeach
-                            {{-- Loop Contractor --}}
-                            @foreach ($filterOptions['Contractors'] as $cont)
-                                <li>
-                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
-                                        <input type="checkbox" wire:model.live="filterContractor"
-                                            value="{{ $cont->id }}" class="text-blue-600 rounded form-checkbox">
-
-                                        <span class="ml-2 text-xs capitalize">{{ $cont->contractor_name }}</span>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </th>
-                    <th class="relative border">
-                        Status
-                        <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
-                            style="anchor-name:--anchor-1">
-
-                            <span class="text-xs text-blue-600">
-                                @if (empty($filterStatus))
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-list-filter-icon lucide-list-filter">
-                                        <path d="M2 5h20" />
-                                        <path d="M6 12h12" />
-                                        <path d="M9 19h6" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
-                                        <path d="m3 16 4 4 4-4" />
-                                        <path d="M7 20V4" />
-                                        <path d="M11 4h10" />
-                                        <path d="M11 8h7" />
-                                        <path d="M11 12h4" />
-                                    </svg>
-                                @endif
-                            </span>
-                        </button>
-                        {{-- Dropdown Menu --}}
-                        <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100" popover id="popover-1"
-                            style="position-anchor:--anchor-1">
-
-                            {{-- Loop Isi Dropdown --}}
-                            @foreach ($availableStatuses as $status)
-                                <li>
-                                    <label class="flex items-center p-1 mb-1 rounded cursor-pointer hover:bg-gray-100">
-                                        <input type="checkbox" wire:model.live="filterStatus"
-                                            value="{{ $status }}" class="text-blue-600 rounded form-checkbox">
-                                        <span
-                                            class="ml-2 text-xs capitalize">{{ str_replace('_', ' ', $status) }}</span>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </th>
-                    <th class="border">Deskripsi</th>
-                    <th class="border">Pelapor</th>
-                    <th class="border">Tanggal</th>
-                    <th class="flex-col text-center border">
-                        <p>Action</p>
-                        <p>Total/Open</p>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($reports as $no => $report)
-                    <tr class="hover:bg-gray-50">
-                        <td class="border">{{ $reports->firstItem() + $no }}</td>
-                        <td class="border">
-                            @can('view', $report)
-                                <a href="{{ route('hazard-detail', $report) }}"
-                                    class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
-                            @else
-                                <span
-                                    class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
-                            @endcan
-                        </td>
-                        <td class="border">{{ $report->eventType->event_type_name ?? '-' }}</td>
-                        <td class="border">{{ $report->eventSubType->event_sub_type_name ?? '-' }}</td>
-                        <td class="border">
-                            {{ $report->department->department_name ?? $report->contractor->contractor_name }}</td>
-                        <td class="border">
-                            <span
-                                class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
-                                {{ str_replace('_', ' ', $report->status) }}
-                            </span>
-                        </td>
-                        <td class="border">
-                            {{-- Bersihkan Tag HTML dari Deskripsi --}}
-                            @php
-                                $cleanDescription = strip_tags($report->description);
-                                $truncatedDescription = Str::limit($cleanDescription, 50, '...');
-                            @endphp
-
-                            {{-- Container Alpine.js untuk Tooltip --}}
-                            <div x-data="{ showTooltip: false }" class="relative inline-block">
-
-                                {{-- Teks yang disingkat (sudah bersih dari HTML) --}}
-                                <span @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
-                                    class="text-blue-600 cursor-pointer hover:text-blue-800">
-                                    {{ $truncatedDescription }}
+    {{-- <x-manhours.layout> --}}
+    <div
+        class="max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] relative">
+        <div class="mt-4 overflow-x-auto ">
+            <table class="table mb-8 text-xs border table-xs">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border">#</th>
+                        <th class="border">reference</th>
+                        <th class="border">Tipe Bahaya
+                            {{-- Button Trigger Popover --}}
+                            <button class="btn btn-ghost btn-xs" popovertarget="eventType"
+                                style="anchor-name:--eventType">
+                                <span class="text-xs text-blue-600">
+                                    @if (empty($filterEventType))
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-list-filter">
+                                            <path d="M2 5h20" />
+                                            <path d="M6 12h12" />
+                                            <path d="M9 19h6" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-arrow-down-wide-narrow">
+                                            <path d="m3 16 4 4 4-4" />
+                                            <path d="M7 20V4" />
+                                            <path d="M11 4h10" />
+                                            <path d="M11 8h7" />
+                                            <path d="M11 12h4" />
+                                        </svg>
+                                    @endif
                                 </span>
+                            </button>
 
-                                {{-- Tooltip Modal/Kotak Lengkap --}}
-                                <div x-cloak x-show="showTooltip"
-                                    x-transition:enter="transition ease-out duration-100"
-                                    x-transition:enter-start="opacity-0 scale-90"
-                                    x-transition:enter-end="opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-100"
-                                    x-transition:leave-start="opacity-100 scale-100"
-                                    x-transition:leave-end="opacity-0 scale-90"
-                                    class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
+                            {{-- Popover Content --}}
+                            <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
+                                popover id="eventType"
+                                style="position-anchor:--eventType; inset-area: bottom span-right;">
 
-                                    <strong>Deskripsi Lengkap:</strong>
-                                    {{-- Teks lengkap (sudah bersih dari HTML) --}}
-                                    <p class="mt-1">{{ $cleanDescription }}</p>
+                                @foreach ($filterOptions['EventType'] as $event_type)
+                                    <li>
+                                        <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                            <input type="checkbox" wire:model.live="filterEventType"
+                                                value="{{ $event_type->id }}"
+                                                class="text-blue-600 rounded form-checkbox">
+                                            <span class="ml-2 text-xs capitalize">
+                                                {{ $event_type->event_type_name }}
+                                            </span>
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </th>
+                        <th class="border">Jenis Bahaya
+                            <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
+                                style="anchor-name:--eventSubType">
+                                <span class="text-xs text-blue-600">
+                                    @if (empty($filterEventSubType))
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-list-filter-icon lucide-list-filter">
+                                            <path d="M2 5h20" />
+                                            <path d="M6 12h12" />
+                                            <path d="M9 19h6" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
+                                            <path d="m3 16 4 4 4-4" />
+                                            <path d="M7 20V4" />
+                                            <path d="M11 4h10" />
+                                            <path d="M11 8h7" />
+                                            <path d="M11 12h4" />
+                                        </svg>
+                                    @endif
+                                </span>
+                            </button>
+                            <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
+                                popover id="eventSubType"
+                                style="position-anchor:--eventSubType; inset-area: bottom span-right;">
+                                {{-- Loop Department --}}
+                                @foreach ($filterOptions['EventSubType'] as $event_sub_type)
+                                    <li>
+                                        <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                            <input type="checkbox" wire:model.live="filterEventSubType"
+                                                value="{{ $event_sub_type->id }}"
+                                                class="text-blue-600 rounded form-checkbox">
+                                            <span
+                                                class="ml-2 text-xs capitalize">{{ $event_sub_type->event_sub_type_name }}</span>
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </th>
+                        <th class="border">Divisi Penanggung Jawab
+                            <button class="btn btn-ghost btn-xs" popovertarget="divisi_dept"
+                                style="anchor-name:--divisi_dept">
+                                {{-- Ikon Filter: Tampilkan jika filterDepartment tidak kosong --}}
+                                <span class="text-xs text-blue-600">
+                                    @if (empty($filterDepartment) && empty($filterContractor))
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-list-filter-icon lucide-list-filter">
+                                            <path d="M2 5h20" />
+                                            <path d="M6 12h12" />
+                                            <path d="M9 19h6" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
+                                            <path d="m3 16 4 4 4-4" />
+                                            <path d="M7 20V4" />
+                                            <path d="M11 4h10" />
+                                            <path d="M11 8h7" />
+                                            <path d="M11 12h4" />
+                                        </svg>
+                                    @endif
+                                </span>
+                            </button>
+                            <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
+                                popover id="divisi_dept"
+                                style="position-anchor:--divisi_dept; inset-area: bottom span-right;">
+                                {{-- Loop Department --}}
+                                @foreach ($filterOptions['Department'] as $dept)
+                                    <li>
+                                        <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                            <input type="checkbox" wire:model.live="filterDepartment"
+                                                value="{{ $dept->id }}"
+                                                class="text-blue-600 rounded form-checkbox">
+                                            <span class="ml-2 text-xs capitalize">{{ $dept->department_name }}</span>
+                                        </label>
+                                    </li>
+                                @endforeach
+                                {{-- Loop Contractor --}}
+                                @foreach ($filterOptions['Contractors'] as $cont)
+                                    <li>
+                                        <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                            <input type="checkbox" wire:model.live="filterContractor"
+                                                value="{{ $cont->id }}"
+                                                class="text-blue-600 rounded form-checkbox">
+
+                                            <span class="ml-2 text-xs capitalize">{{ $cont->contractor_name }}</span>
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </th>
+                        <th class="relative border">
+                            Status
+                            <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
+                                style="anchor-name:--anchor-1">
+
+                                <span class="text-xs text-blue-600">
+                                    @if (empty($filterStatus))
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-list-filter-icon lucide-list-filter">
+                                            <path d="M2 5h20" />
+                                            <path d="M6 12h12" />
+                                            <path d="M9 19h6" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-arrow-down-wide-narrow-icon lucide-arrow-down-wide-narrow">
+                                            <path d="m3 16 4 4 4-4" />
+                                            <path d="M7 20V4" />
+                                            <path d="M11 4h10" />
+                                            <path d="M11 8h7" />
+                                            <path d="M11 12h4" />
+                                        </svg>
+                                    @endif
+                                </span>
+                            </button>
+                            {{-- Dropdown Menu --}}
+                            <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100" popover id="popover-1"
+                                style="position-anchor:--anchor-1">
+
+                                {{-- Loop Isi Dropdown --}}
+                                @foreach ($availableStatuses as $status)
+                                    <li>
+                                        <label
+                                            class="flex items-center p-1 mb-1 rounded cursor-pointer hover:bg-gray-100">
+                                            <input type="checkbox" wire:model.live="filterStatus"
+                                                value="{{ $status }}"
+                                                class="text-blue-600 rounded form-checkbox">
+                                            <span
+                                                class="ml-2 text-xs capitalize">{{ str_replace('_', ' ', $status) }}</span>
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </th>
+                        <th class="border">Deskripsi</th>
+                        <th class="border">Pelapor</th>
+                        <th class="border">Tanggal</th>
+                        <th class="flex-col text-center border">
+                            <p>Action</p>
+                            <p>Total/Open</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($reports as $no => $report)
+                        <tr class="hover:bg-gray-50">
+                            <td class="border">{{ $reports->firstItem() + $no }}</td>
+                            <td class="border">
+                                @can('view', $report)
+                                    <a href="{{ route('hazard-detail', $report) }}"
+                                        class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
+                                @else
+                                    <span
+                                        class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
+                                @endcan
+                            </td>
+                            <td class="border">{{ $report->eventType->event_type_name ?? '-' }}</td>
+                            <td class="border">{{ $report->eventSubType->event_sub_type_name ?? '-' }}</td>
+                            <td class="border">
+                                {{ $report->department->department_name ?? $report->contractor->contractor_name }}</td>
+                            <td class="border">
+                                <span
+                                    class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
+                                    {{ str_replace('_', ' ', $report->status) }}
+                                </span>
+                            </td>
+                            <td class="border">
+                                {{-- Bersihkan Tag HTML dari Deskripsi --}}
+                                @php
+                                    $cleanDescription = strip_tags($report->description);
+                                    $truncatedDescription = Str::limit($cleanDescription, 50, '...');
+                                @endphp
+
+                                {{-- Container Alpine.js untuk Tooltip --}}
+                                <div x-data="{ showTooltip: false }" class="relative inline-block">
+
+                                    {{-- Teks yang disingkat (sudah bersih dari HTML) --}}
+                                    <span @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+                                        class="text-blue-600 cursor-pointer hover:text-blue-800">
+                                        {{ $truncatedDescription }}
+                                    </span>
+
+                                    {{-- Tooltip Modal/Kotak Lengkap --}}
+                                    <div x-cloak x-show="showTooltip"
+                                        x-transition:enter="transition ease-out duration-100"
+                                        x-transition:enter-start="opacity-0 scale-90"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-100"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-90"
+                                        class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
+
+                                        <strong>Deskripsi Lengkap:</strong>
+                                        {{-- Teks lengkap (sudah bersih dari HTML) --}}
+                                        <p class="mt-1">{{ $cleanDescription }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
-                        <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
-                        <td class="text-center border">
-                            {{ $report->total_due_dates }} / {{ $report->pending_actual_closes }}
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="py-4 text-center text-gray-500">Tidak ada laporan ditemukan.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                            </td>
+                            <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
+                            <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
+                            <td class="text-center border">
+                                {{ $report->total_due_dates }} / {{ $report->pending_actual_closes }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="py-4 text-center text-gray-500">Tidak ada laporan ditemukan.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
         <div class="absolute inset-x-0 bottom-0 mt-4 shadow-md bg-base-100 inset-shadow-sm">
             {{ $reports->links() }}
         </div>
     </div>
-      {{-- </x-manhours.layout> --}}
+    {{-- </x-manhours.layout> --}}
 </section>
