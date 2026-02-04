@@ -780,9 +780,8 @@ class Index extends Component
 
         if ($this->reportId) {
             $this->loadData($this->reportId);
-            if($this->proceedTo ==='Assigned' || $this->proceedTo ==='Review Event'){
+            if ($this->proceedTo === 'Assigned' || $this->proceedTo === 'Review Event') {
                 $this->processStatusChange($this->proceedTo);
-
             }
             $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
             foreach ($moderatorIds as $userId) {
@@ -801,7 +800,6 @@ class Index extends Component
                     ]
                 );
             }
-
         } else {
             return $this->redirect(route('wpi.edit', $report->id), navigate: true);
         }
@@ -810,9 +808,10 @@ class Index extends Component
     public function exportPDF($id)
     {
         $report = WpiReport::with(['findings'])->findOrFail($id);
+        $no_referensi = $report->no_referensi;
         $isContractor = Contractor::where('contractor_name', $report->department)->exists();
         $deptLabel = $isContractor ? 'Contractor' : 'Department';
-        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
+        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel', 'no_referensi'))
             ->setOption([
                 'isPhpEnabled' => true,
                 'isRemoteEnabled' => true
