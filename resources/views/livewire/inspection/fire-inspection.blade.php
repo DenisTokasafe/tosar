@@ -11,7 +11,7 @@
     <x-tabs-wpi.layout>
         <div class="mb-2 bg-white ">
             <div class="flex md:justify-start ">
-                <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-3">
+                <div class="grid content-center max-w-lg grid-cols-1 gap-2 md:grid-cols-4">
                     <div class="mt-0.5">
                         <select wire:model.live="type"
                             class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
@@ -25,6 +25,10 @@
 
                     <x-form.search-floating label="Area" required modelsearch="searchLocation" modelid="location_id"
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                        namedb="name" />
+
+                    <x-form.search-floating label="Lokasi Spesifik" required modelsearch="searchLocationSpesifik" modelid="selected_location"
+                        placeholder="Cari Lokasi Spesifik..." :options="$selected_equipment_master" :showdropdown="$show_location_specific" clickaction="selectLocationSpecific"
                         namedb="name" />
                     <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
                 </div>

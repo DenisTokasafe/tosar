@@ -31,11 +31,19 @@ class FireInspection extends Component
     public $responsible_id, $equipment_master_id;
     public $inspected_users = [];
 
+
     // Untuk fitur pencarian lokasi
     public $location_id;
     public $show_location = false;
     public $locations = [];
     public $searchLocation = '';
+    // End fitur pencarian lokasi spesifik
+    public $selected_location;
+    public $searchLocationSpesifik = '';
+    public $selected_equipment_master = [];
+    public $show_location_specific = false;
+
+
 
     // Tempat menyimpan hasil checklist dan technical data
     public $conditions = [];
@@ -164,13 +172,34 @@ class FireInspection extends Component
         }
     }
 
+    public function updateSearchLocationSpesifik()
+    {
+        if (strlen($this->searchLocationSpesifik) > 2) {
+            $this->selected_equipment_master = EquipmentMaster::where('specific_location', 'like', '%' . $this->searchLocationSpesifik . '%')
+                ->where('type', $this->type)->byArea($this->searchLocation)
+                ->orderBy('name')
+                ->limit(10)
+                ->get();
+            $this->show_location_specific = true;
+        } else {
+            $this->selected_equipment_master = [];
+            $this->show_location_specific = false;
+        }
+         $this->reset(['selected_location']);
+    }
+    public function selectLocationSpecific($id, $specific_location)
+    {
+        $this->selected_location = $specific_location;
+        $this->searchLocationSpesifik = $specific_location;
+        $this->show_location_specific = false;
+    }
+
     /**
      * LOGIC PILIH ALAT (SPECIFIC LOCATION)
      */
     public function updatedLocation($value)
     {
         if (!$value) return;
-
         $master = EquipmentMaster::find($value);
 
         if ($master) {
@@ -185,7 +214,6 @@ class FireInspection extends Component
                     $this->conditions[$key] = $val;
                 }
             }
-
             // 3. Inisialisasi Checklist (Default: TRUE / Aman)
             if (isset($this->fields[$this->type]['checks'])) {
                 foreach ($this->fields[$this->type]['checks'] as $checkField) {
@@ -194,7 +222,6 @@ class FireInspection extends Component
             }
         }
     }
-
     public function updatedType($value)
     {
         $this->reset(['location', 'equipment_master_id', 'conditions', 'selected_location_specific']);
