@@ -111,7 +111,7 @@
                                             @if (isset($dokumentasi[$master->id]))
                                                 <div class="relative inline-block group">
                                                     <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}"
-                                                        class="object-cover w-10 h-10 border rounded-md shadow-sm">
+                                                        class="object-cover w-20 h-20 border rounded-md shadow-sm">
 
                                                     <label for="file-{{ $master->id }}"
                                                         class="absolute inset-0 flex items-center justify-center transition-opacity rounded-md opacity-0 cursor-pointer bg-black/40 group-hover:opacity-100">
