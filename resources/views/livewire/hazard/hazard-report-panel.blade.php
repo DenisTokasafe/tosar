@@ -74,7 +74,7 @@
         </div>
     </div>
       {{-- <x-manhours.layout> --}}
-    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-25rem)] 2xl:max-h-[calc(100vh-37rem)]">
+    <div class="mt-4 overflow-x-auto max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
         <table class="table text-xs border table-xs">
             <thead>
                 <tr class="bg-gray-100">
