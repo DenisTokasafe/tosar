@@ -64,9 +64,10 @@ class WpiList extends Component
     public function exportPDF($id)
     {
         $report = WpiReport::with(['findings'])->findOrFail($id);
+        $no_referensi = $report->no_referensi;
         $isContractor = Contractor::where('contractor_name', $report->department)->exists();
         $deptLabel = $isContractor ? 'Contractor' : 'Department';
-        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel'))
+        $pdf = Pdf::loadView('pdf.wpi-report', compact('report', 'deptLabel', 'no_referensi'))
             ->setOption([
                 'isPhpEnabled' => true,
                 'isRemoteEnabled' => true

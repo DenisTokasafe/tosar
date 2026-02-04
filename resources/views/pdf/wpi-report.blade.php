@@ -231,6 +231,9 @@
     </footer>
 
     <main>
+         <div style="margin-bottom: 10px;">
+            <strong>Reference :</strong> {{ $no_referensi }}
+        </div>
         <table class="main-table" style="margin-bottom: 15px;">
             <tr>
                 <td width="18%" class="bg-label">Tanggal / <span class="en" style="color:black">Date</span></td>
