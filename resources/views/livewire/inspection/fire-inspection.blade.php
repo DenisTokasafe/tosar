@@ -27,14 +27,15 @@
                         placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                         namedb="name" />
                     @if ($location_id)
-
-                    <select wire:model.live="selected_location"
-                        class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                        <option value="">-- Pilih Lokasi Spesifik --</option>
-                        @foreach ($equipmentMasters as $t)
-                            <option value="{{ $t->specific_location }}">{{ $t->specific_location }}</option>
-                        @endforeach
-                    </select>
+                        <div class="mt-0.5">
+                            <select wire:model.live="selected_location"
+                                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Pilih Lokasi Spesifik --</option>
+                                @foreach ($equipmentMasters as $t)
+                                    <option value="{{ $t->specific_location }}">{{ $t->specific_location }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     @endif
                     <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
                 </div>
@@ -45,7 +46,8 @@
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
             @php
                 $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                    ->where('type', $type)->spesificLocation($selected_location)
+                    ->where('type', $type)
+                    ->spesificLocation($selected_location)
                     ->get();
                 $checks = $fields[$type]['checks'] ?? [];
                 $firstEquipment = $allMasterData->first();
