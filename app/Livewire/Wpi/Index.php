@@ -767,7 +767,7 @@ class Index extends Component
                         'title'         => 'Notifikasi Laporan WPI Baru',
                         'messageText'   => "Telah dibuat laporan WPI baru.\nSilakan lakukan  pemeriksaan.",
                         'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus: $report->status",
-                        'actionUrl'     => route('wpi-detail', $report->id)
+                        'actionUrl'     => route('wpi.detail', $report->id)
                     ]
                 );
             }
