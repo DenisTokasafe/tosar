@@ -75,7 +75,7 @@
                         clickaction="selectLocation" namedb="name" />
                 </div>
             </div>
-            <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
+            <div class="flex flex-row items-center justify-center gap-2">
                 @if (count($selectedItems) > 0)
                     <div class="tooltip md:tooltip-left">
                         <div class="z-40 tooltip-content">
