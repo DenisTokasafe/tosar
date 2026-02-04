@@ -139,7 +139,7 @@ class FireInspection extends Component
         // Ambil semua alat
         // 1. Ambil semua data master berdasarkan lokasi dan tipe
         $allMaster = EquipmentMaster::where('location_id', $id)
-            ->where('type', $this->type)->spesificLocation($this->searchLocationSpesifik)
+            ->where('type', $this->type)->spesificLocation($this->selected_location)
             ->get();
 
         $this->conditions = []; // Reset
