@@ -76,6 +76,26 @@
                 </div>
             </div>
             <div class="flex flex-col items-center justify-center gap-2 md:flex-row">
+                @if (count($selectedItems) > 0)
+                    <div class="tooltip md:tooltip-left">
+                        <div class="z-40 tooltip-content">
+                            <div class="text-sm font-black text-orange-400 animate-bounce">hapus data pilihan</div>
+                        </div>
+                        <label
+                            onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
+                            wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2">
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                <path d="M3 6h18" />
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            </svg>
+                        </label>
+                    </div>
+                @endif
                 <div class="tooltip md:tooltip-left">
                     <div class="z-40 tooltip-content">
                         <div class="text-sm font-black text-orange-400 animate-bounce">export PDF</div>
@@ -88,24 +108,7 @@
                         </svg>
                     </label>
                 </div>
-                <div class="tooltip md:tooltip-left">
-                    <div class="z-40 tooltip-content">
-                        <div class="text-sm font-black text-orange-400 animate-bounce">hapus data pilihan</div>
-                    </div>
-                    <label
-                        onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
-                        wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-accent">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2">
-                            <path d="M10 11v6" />
-                            <path d="M14 11v6" />
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                            <path d="M3 6h18" />
-                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        </svg>
-                    </label>
-                </div>
+
             </div>
         </div>
         <input type="checkbox" id="my_modal_6" class="modal-toggle" />
@@ -194,7 +197,8 @@
                     <tr class="text-center bg-gray-100">
                         <th class="border">#</th>
                         <th class="border">
-                            <input type="checkbox" wire:model.live="selectAll" class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                            <input type="checkbox" wire:model.live="selectAll"
+                                class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
                         </th>
                         <th class="border">Jenis Alat</th>
                         <th class="border">Area & Lokasi spesifik</th>
