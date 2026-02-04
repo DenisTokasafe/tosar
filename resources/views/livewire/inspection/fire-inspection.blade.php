@@ -45,12 +45,12 @@
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
             @php
                 $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                    ->where('type', $type)
+                    ->where('type', $type)->spesificLocation($selected_location)
                     ->get();
                 $checks = $fields[$type]['checks'] ?? [];
                 $firstEquipment = $allMasterData->first();
                 $techKeys =
-                    $firstEquipment && $firstEquipment->technical_data
+                    $firstEquipment && $firstEquipment->technical_datas
                         ? array_keys($firstEquipment->technical_data)
                         : [];
             @endphp
