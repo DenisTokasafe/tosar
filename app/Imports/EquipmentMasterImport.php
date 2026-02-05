@@ -22,13 +22,32 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
      * Menentukan sheet mana yang akan diproses berdasarkan nama sheet
      */
     public function sheets(): array
-    {
-       $sheetName = trim($this->type);
-
-    return [
-        $sheetName => $this,
+{
+    $available_types = [
+        'Fire Extinguisher',
+        'Fire Hydrant',
+        'Fire Hose Reel',
+        'Fire sprinkler system',
+        'Ring Buoy',
+        'Eyewash & Safety Shower',
+        'Muster Point'
     ];
+
+    // Mencari posisi index dari type yang dipilih (misal: Fire Extinguisher ada di index 0)
+    $sheetIndex = array_search($this->type, $available_types);
+
+    // Jika ditemukan, gunakan index angka tersebut sebagai kunci
+    if ($sheetIndex !== false) {
+        return [
+            $sheetIndex => $this,
+        ];
     }
+
+    // Default jika tidak ketemu (ambil sheet pertama)
+    return [
+        0 => $this,
+    ];
+}
 
     /**
      * Memastikan data dipetakan dengan benar terlepas dari spasi/case di header excel

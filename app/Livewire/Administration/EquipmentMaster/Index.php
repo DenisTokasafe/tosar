@@ -107,11 +107,6 @@ class Index extends Component
                 new EquipmentMasterImport($this->type, $this->location_id),
                 $this->file_excel
             );
-            $reader = Excel::toCollection(new HeadingRowImport, $this->file_excel);
-            $allSheetNames = $reader->keys()->toArray();
-
-    // Tampilkan di log atau dd untuk melihat perbedaan namanya
-    dd($allSheetNames, $this->type);
 
             // Cari sheet yang namanya cocok (case insensitive)
             // Jika tidak ketemu, Laravel Excel biasanya mengembalikan index 0
