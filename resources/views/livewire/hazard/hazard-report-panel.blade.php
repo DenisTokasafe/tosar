@@ -77,13 +77,13 @@
     <div class="mt-4 overflow-x-auto max-h-[calc(100vh-18rem)] 2xl:max-h-[calc(100vh-20rem)] ">
         <table class="table text-xs border table-xs">
             <thead>
-                <tr class="bg-gray-100">
+                <tr class="text-center bg-gray-100">
                     <th class="border">#</th>
                     <th class="border">reference</th>
                     <th class="border">Tipe Bahaya
                         {{-- Button Trigger Popover --}}
                         <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
-                            <span class="text-xs text-blue-600">
+                             <span class="text-xs {{ !empty($filterEventType) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterEventType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -128,7 +128,7 @@
                     <th class="border">Jenis Bahaya
                         <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
                             style="anchor-name:--eventSubType">
-                            <span class="text-xs text-blue-600">
+                           <span class="text-xs {{ !empty($filterEventSubType) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterEventSubType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -173,7 +173,7 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="divisi_dept"
                             style="anchor-name:--divisi_dept">
                             {{-- Ikon Filter: Tampilkan jika filterDepartment tidak kosong --}}
-                            <span class="text-xs text-blue-600">
+                            <span class="text-xs {{ (!empty($filterDepartment) || !empty($filterContractor)) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterDepartment) && empty($filterContractor))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -279,7 +279,7 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
                             style="anchor-name:--anchor-1">
 
-                            <span class="text-xs text-blue-600">
+                             <span class="text-xs {{ !empty($filterStatus) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterStatus))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
