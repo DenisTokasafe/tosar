@@ -174,7 +174,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col items-end justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
+        <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
             <div class="w-full md:max-w-md">
                 <x-form.searchable-select-advanced label="Pemeriksa" placeholder="Cari Nama Pemeriksa..."
                     modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
@@ -224,6 +224,5 @@
 
             </button>
         </div>
-
     </x-tabs-wpi.layout>
 </section>
