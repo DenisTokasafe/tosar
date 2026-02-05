@@ -74,8 +74,7 @@ class HazardReportPanel extends Component
             'Contractors' => Contractor::all(['id', 'contractor_name']),
             'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
-            'ReporterDepartments' => User::whereNotNull('department_name')
-                ->distinct()
+            'ReporterDepartments' => User::distinct()
                 ->orderBy('department_name')
                 ->pluck('department_name')->prepend('Tidak Ada Departemen'),
         ];
