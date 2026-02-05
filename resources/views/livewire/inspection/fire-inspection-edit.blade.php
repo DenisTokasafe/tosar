@@ -87,8 +87,9 @@
 
             <x-form.textarea label="Remarks/Catatan" required model="remarks" placeholder="Remarks/Catatan..." />
 
-            <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
+            <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
                 {{-- UPLOAD DOKUMENTASI --}}
+                 <div class="w-full md:max-w-md">
                 <fieldset class="fieldset">
                     <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
 
@@ -176,10 +177,43 @@
                     </div>
                     <x-label-error :messages="$errors->get('dokumentasi')" />
                 </fieldset>
+                 </div>
+                <div class="w-full md:max-w-md">
+                    <x-form.upload label="Foto Area (Dokumentasi Lokasi)" model="foto_area" :file="$foto_area" />
+                    <div wire:loading.remove.class='hidden' wire:target="foto_area"
+                        class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
 
+                    @error('foto_area')
+                        <div class="invalid-feedback text-danger">{{ $message }}</div>
+                    @enderror
+
+                    @if ($foto_area)
+                        <div class="mt-2 position-relative d-inline-block">
+                            <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;"
+                                class="img-thumbnail border-primary">
+                            <span class="top-0 badge bg-primary position-absolute start-0">Baru</span>
+                            <button type="button" wire:click="clearNewFotoArea"
+                                class="top-0 btn btn-danger btn-sm position-absolute end-0">
+                                &times;
+                            </button>
+                        </div>
+                    @elseif ($area_photo_path)
+                        <div class="mt-2 position-relative d-inline-block">
+                            <img src="{{ asset('storage/' . $area_photo_path) }}" style="height: 150px;"
+                                class="img-thumbnail border-secondary">
+                            <span class="top-0 badge bg-secondary position-absolute start-0">Lama</span>
+                            <button type="button"
+                                onclick="confirm('Hapus foto area ini secara permanen?') || event.stopImmediatePropagation()"
+                                wire:click="removeAreaPhoto"
+                                class="top-0 btn btn-danger btn-sm position-absolute end-0">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    @endif
+                </div>
 
                 {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
-                <div>
+                 <div class="w-full md:max-w-md">
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchResponsibility" modelid="location_id" {{-- ID dummy untuk select, data asli masuk ke array $inspected_users --}}
                         :options="$pelapors" :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
@@ -207,7 +241,7 @@
                 </div>
             </div>
 
-            <div class="flex justify-end pt-4 mt-6 border-t">
+            <div class="mt-4 modal-action">
                 <button wire:click="update" wire:loading.attr="disabled" class="btn btn-soft btn-success btn-sm">
                     <span wire:loading.remove.class='hidden' class="hidden" wire:target="update"
                         class="loading loading-spinner loading-xs"></span>

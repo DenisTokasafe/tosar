@@ -20,7 +20,7 @@ class FireInspectionEdit extends Component
     public $inspected_users = [];
     public $dokumentasi; // File baru yang diupload
     public $old_documentation; // Path file lama dari DB
-
+    public $area_photo_path;
 
     // Property untuk Searchable Dropdowns
     public $searchLocation = '';
@@ -34,6 +34,7 @@ class FireInspectionEdit extends Component
     public $manualPelaporName = '';
     public $responsible_id;
     public $technical_data = [];
+    public $foto_area;
     public function mount($id)
     {
         $inspection = FireProtection::findOrFail($id);
@@ -52,6 +53,7 @@ class FireInspectionEdit extends Component
         $this->conditions = $inspection->conditions ?? [];
         $this->old_documentation = $inspection->documentation_path;
 
+        $this->area_photo_path = $inspection->area_photo_path;
         // Load Inspected Users
         if ($inspection->inspected_by) {
             $names = explode('|', $inspection->inspected_by);
@@ -91,7 +93,30 @@ class FireInspectionEdit extends Component
             'dokumentasi'     => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ];
     }
+    public function clearNewFotoArea()
+    {
+        $this->foto_area = null;
+    }
+    // 🔥 FUNGSI HAPUS FOTO AREA
+    public function removeAreaPhoto()
+    {
+        if ($this->area_photo_path) {
+            // 1. Hapus file fisik dari storage
+            if (Storage::disk('public')->exists($this->area_photo_path)) {
+                Storage::disk('public')->delete($this->area_photo_path);
+            }
 
+            // 2. Update SEMUA record yang memiliki foto area yang sama (denormalized)
+            // agar semua baris di area tersebut fotonya ikut terhapus
+            FireProtection::where('area_photo_path', $this->area_photo_path)
+                ->update(['area_photo_path' => null]);
+
+            // 3. Reset state di UI
+            $this->area_photo_path = null;
+
+            $this->dispatch('notify', ['type' => 'success', 'message' => 'Foto area berhasil dihapus']);
+        }
+    }
     public function clearNewUpload()
     {
         $this->dokumentasi = null;
@@ -99,24 +124,24 @@ class FireInspectionEdit extends Component
 
     // 2. Menghapus file lama yang sudah ada di server/database
     public function deleteOldFile()
-{
-    if ($this->old_documentation) {
-        // 1. Hapus file fisik dari storage
-        if (Storage::disk('public')->exists($this->old_documentation)) {
-            Storage::disk('public')->delete($this->old_documentation);
+    {
+        if ($this->old_documentation) {
+            // 1. Hapus file fisik dari storage
+            if (Storage::disk('public')->exists($this->old_documentation)) {
+                Storage::disk('public')->delete($this->old_documentation);
+            }
+
+            // 2. UPDATE DATABASE (Ini yang kurang)
+            FireProtection::find($this->inspectionId)->update([
+                'documentation_path' => null
+            ]);
+
+            // 3. Kosongkan variabel state agar tampilan di UI langsung hilang
+            $this->old_documentation = null;
+
+            $this->dispatch('notify', ['type' => 'success', 'message' => 'File berhasil dihapus dari database']);
         }
-
-        // 2. UPDATE DATABASE (Ini yang kurang)
-        FireProtection::find($this->inspectionId)->update([
-            'documentation_path' => null
-        ]);
-
-        // 3. Kosongkan variabel state agar tampilan di UI langsung hilang
-        $this->old_documentation = null;
-
-        $this->dispatch('notify', ['type' => 'success', 'message' => 'File berhasil dihapus dari database']);
     }
-}
 
     public function update()
     {
@@ -139,7 +164,20 @@ class FireInspectionEdit extends Component
             }
             $data['documentation_path'] = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
         }
+        // Jika ada upload foto area baru
+        if ($this->foto_area) {
+            // Hapus foto lama jika ada
+            if ($this->area_photo_path && Storage::disk('public')->exists($this->area_photo_path)) {
+                Storage::disk('public')->delete($this->area_photo_path);
+            }
 
+            // Simpan foto area baru
+            $path = FileHelper::compressAndStore($this->foto_area, 'inspections/area-photos');
+
+            // Update path untuk semua record yang satu lokasi/area (jika diperlukan sinkronisasi)
+            // atau cukup untuk record ini saja:
+            $data['area_photo_path'] = $path;
+        }
         FireProtection::find($this->inspectionId)->update($data);
 
         session()->flash('success', 'Data berhasil diperbarui!');
