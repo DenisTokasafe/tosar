@@ -19,7 +19,7 @@ class FireInspectionEdit extends Component
     public $conditions = [];
     public $inspected_users = [];
     public $dokumentasi; // File baru yang diupload
-    public $old_dokumentasi; // Path file lama dari DB
+    public $old_documentation; // Path file lama dari DB
 
 
     // Property untuk Searchable Dropdowns
@@ -50,7 +50,7 @@ class FireInspectionEdit extends Component
 
         // Checklist hasil inspeksi
         $this->conditions = $inspection->conditions ?? [];
-        $this->old_dokumentasi = $inspection->documentation_path;
+        $this->old_documentation = $inspection->documentation_path;
 
         // Load Inspected Users
         if ($inspection->inspected_by) {
@@ -108,8 +108,8 @@ class FireInspectionEdit extends Component
 
         if ($this->dokumentasi) {
             // Hapus file lama jika ada
-            if ($this->old_dokumentasi) {
-                Storage::disk('public')->delete($this->old_dokumentasi);
+            if ($this->old_documentation) {
+                Storage::disk('public')->delete($this->old_documentation);
             }
             $data['documentation_path'] = FileHelper::compressAndStore($this->dokumentasi, 'inspections/documents');
         }
