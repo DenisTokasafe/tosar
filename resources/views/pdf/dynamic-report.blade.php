@@ -205,7 +205,7 @@
 
                 @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
                     @php $hasPhoto = true; @endphp
-                    <div class="photo-card" style="width: 45%; border: 2px solid #000;"> <img
+                    <div class="photo-card" style="width: 35%; border: 2px solid #000;"> <img
                             src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}" class="photo-img"
                             style="height: 250px;">
                         <div class="photo-caption"
