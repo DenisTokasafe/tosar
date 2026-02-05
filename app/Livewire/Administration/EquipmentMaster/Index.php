@@ -102,23 +102,43 @@ class Index extends Component
         ]);
 
         try {
-            // Ambil data hanya dari sheet yang namanya sesuai dengan $this->type
+            // 1. Definisikan urutan yang sama persis dengan Tab di Excel Anda
+            $available_types = [
+                'Fire Extinguisher',
+                'Fire Hydrant',
+                'Fire Hose Reel',
+                'Fire sprinkler system',
+                'Ring Buoy',
+                'Eyewash & Safety Shower',
+                'Muster Point'
+            ];
+
+            // 2. Cari tahu $this->type itu ada di urutan ke berapa (index)
+            // Kita gunakan htmlspecialchars_decode untuk menangani karakter '&' dari browser
+            $targetType = htmlspecialchars_decode($this->type);
+            $index = array_search($targetType, $available_types);
+
+            if ($index === false) {
+                throw new \Exception("Tipe alat '{$targetType}' tidak terdaftar dalam sistem.");
+            }
+
+            // 3. Panggil Import. Laravel Excel akan mengembalikan array dengan index angka
             $importArray = Excel::toArray(
-                new EquipmentMasterImport($this->type, $this->location_id),
+                new EquipmentMasterImport($targetType, $this->location_id),
                 $this->file_excel
             );
 
-            // Cari sheet yang namanya cocok (case insensitive)
-            // Jika tidak ketemu, Laravel Excel biasanya mengembalikan index 0
-            $this->previewData = $importArray[0] ?? [];
+            // 4. Ambil data berdasarkan index yang ditemukan
+            // Jika di sistem index ke-5, maka ambil $importArray[5]
+            $this->previewData = $importArray[$index] ?? [];
 
             if (empty($this->previewData)) {
-                throw new \Exception("Sheet dengan nama '{$this->type}' tidak ditemukan atau kosong.");
+                throw new \Exception("Sheet urutan ke-{$index} (Kategori: {$targetType}) tidak ditemukan atau kosong.");
             }
 
             $this->showPreview = true;
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['text' => 'Gagal: ' . $e->getMessage(), 'type' => 'error']);
+            $this->dispatch('alert', ['text' => $e->getMessage(), 'type' => 'error']);
         }
     }
 

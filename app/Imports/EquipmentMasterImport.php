@@ -22,32 +22,37 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
      * Menentukan sheet mana yang akan diproses berdasarkan nama sheet
      */
     public function sheets(): array
-{
-    $available_types = [
-        'Fire Extinguisher',
-        'Fire Hydrant',
-        'Fire Hose Reel',
-        'Fire sprinkler system',
-        'Ring Buoy',
-        'Eyewash & Safety Shower',
-        'Muster Point'
-    ];
+    {
+        $available_types = [
+            'Fire Extinguisher',
+            'Fire Hydrant',
+            'Fire Hose Reel',
+            'Fire sprinkler system',
+            'Ring Buoy',
+            'Eyewash & Safety Shower',
+            'Muster Point'
+        ];
 
-    // Mencari posisi index dari type yang dipilih (misal: Fire Extinguisher ada di index 0)
-    $sheetIndex = array_search($this->type, $available_types);
+        // 1. Decode entitas HTML (mengubah &amp; kembali menjadi &)
+        // 2. Trim untuk menghapus spasi liar yang mungkin ada di variabel
+        $normalizedType = trim(htmlspecialchars_decode($this->type));
 
-    // Jika ditemukan, gunakan index angka tersebut sebagai kunci
-    if ($sheetIndex !== false) {
+        // Mencari posisi index berdasarkan nama yang sudah dinormalisasi
+        $sheetIndex = array_search($normalizedType, $available_types);
+
+        // Jika ditemukan, gunakan index angka tersebut sebagai kunci
+        if ($sheetIndex !== false) {
+            return [
+                $sheetIndex => $this,
+            ];
+        }
+
+        // Default jika tidak ketemu (ambil sheet pertama index 0)
+        // Atau bisa juga lempar Exception jika Anda ingin memastikan user memilih sheet yang benar
         return [
-            $sheetIndex => $this,
+            0 => $this,
         ];
     }
-
-    // Default jika tidak ketemu (ambil sheet pertama)
-    return [
-        0 => $this,
-    ];
-}
 
     /**
      * Memastikan data dipetakan dengan benar terlepas dari spasi/case di header excel
