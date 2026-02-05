@@ -50,53 +50,54 @@ class User extends Component
     public $contractor_id;
     protected function rules()
     {
-        // Gunakan 0 sebagai fallback jika $this->userId belum diatur (untuk operasi 'create')
         $userId = $this->userId ?? 0;
+        // Tentukan status required berdasarkan keberadaan userId
+        $isRequired = $userId ? 'nullable' : 'required';
 
         return [
             'name' => 'required|string|max:255',
             'gender' => 'nullable|in:L,P',
             'date_birth' => 'nullable|date',
             'role_id' => 'nullable',
+            'dep_cont' => 'nullable|string|max:255',
+            'date_commenced' => 'nullable|date',
 
-            // PERBAIKAN 1: Username
+            // Username: nullable jika edit, required jika baru
             'username' => [
-                'required',
+                $isRequired,
                 'string',
                 'max:255',
                 Rule::unique('users', 'username')->ignore($userId),
             ],
-            'dep_cont' => 'nullable|string|max:255',
 
-            // PERBAIKAN 2: Employee ID
+            // Employee ID: nullable jika edit, required jika baru
             'employee_id' => [
-                'required',
+                $isRequired,
                 'string',
                 'max:255',
                 Rule::unique('users', 'employee_id')->ignore($userId),
             ],
-            'date_commenced' => 'nullable|date',
 
-            // PERBAIKAN 3: Email
+            // Email: nullable jika edit, required jika baru
             'email' => [
-                'required',
+                $isRequired,
                 'email',
                 'max:255',
                 Rule::unique('users', 'email')->ignore($userId),
             ],
-            // Rules untuk Password
+
             'password' => [
-                $this->userId ? 'nullable' : 'required', // Wajib diisi saat buat baru, opsional saat edit
+                $isRequired,
                 'string',
                 'min:6',
-                'confirmed', // Harus sama dengan password_confirmation
+                'confirmed',
             ],
-            // Rules untuk Konfirmasi Password (akan divalidasi oleh 'confirmed')
-        'password_confirmation' => [
-            $this->userId ? 'nullable' : 'required',
-            'string',
-            'min:6', // Sesuaikan jika Anda ingin validasi ini berbeda dari password
-        ],
+
+            'password_confirmation' => [
+                $isRequired,
+                'string',
+                'min:6',
+            ],
         ];
     }
     protected function messages()
@@ -335,28 +336,28 @@ class User extends Component
         $this->validate();
 
         $userData = [
-        'name' => $this->name,
-        'gender' => $this->gender,
-        'date_birth' => $this->date_birth,
-        'username' => $this->username,
-        'role_id' => $this->role_id,
-        'department_name' => $this->dep_cont, // atau nama kolom yang sesuai
-        'pilih_divisi' => $this->deptCont,
-        'employee_id' => $this->employee_id,
-        'date_commenced' => $this->date_commenced,
-        'email' => $this->email,
-    ];
+            'name' => $this->name,
+            'gender' => $this->gender,
+            'date_birth' => $this->date_birth,
+            'username' => $this->username,
+            'role_id' => $this->role_id,
+            'department_name' => $this->dep_cont, // atau nama kolom yang sesuai
+            'pilih_divisi' => $this->deptCont,
+            'employee_id' => $this->employee_id,
+            'date_commenced' => $this->date_commenced,
+            'email' => $this->email,
+        ];
 
-    // Logika untuk Password: HANYA perbarui jika field password diisi.
-    if (!empty($this->password)) {
-        $userData['password'] = Hash::make($this->password);
-    }
+        // Logika untuk Password: HANYA perbarui jika field password diisi.
+        if (!empty($this->password)) {
+            $userData['password'] = Hash::make($this->password);
+        }
 
-    // Asumsi: UserProfile adalah model yang tepat (misalnya App\Models\User atau UserProfile)
-    UserProfile::updateOrCreate(
-        ['id' => $this->userId],
-        $userData
-    );
+        // Asumsi: UserProfile adalah model yang tepat (misalnya App\Models\User atau UserProfile)
+        UserProfile::updateOrCreate(
+            ['id' => $this->userId],
+            $userData
+        );
 
         $this->resetInput();
         $this->showModal = false;
@@ -422,7 +423,7 @@ class User extends Component
 
     private function resetInput()
     {
-        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email', 'dep_cont', 'deptCont','password', 'password_confirmation',]);
+        $this->reset(['userId', 'name', 'gender', 'date_birth', 'username', 'role_id', 'employee_id', 'date_commenced', 'email', 'dep_cont', 'deptCont', 'password', 'password_confirmation',]);
         $this->dispatch('dateLoaded');
     }
 }
