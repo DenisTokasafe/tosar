@@ -129,7 +129,7 @@ class Index extends Component
             // Karena data sudah divalidasi di preview, langsung jalankan import utama
             // Gunakan ->onlySheets($this->type) agar class import hanya memproses sheet tersebut
             Excel::import(
-                new EquipmentMasterImport($this->type, $this->location_id),
+                new EquipmentMasterImport(htmlspecialchars_decode($this->type), $this->location_id),
                 $this->file_excel->getRealPath()
             );
 
@@ -184,7 +184,7 @@ class Index extends Component
                 ->search($this->search)->byArea($this->search_area)
                 ->paginate(10),
             'locations' => Location::all(),
-            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Fire sprinkler system', 'Ring Buoy', 'Eyewash Safety Shower', 'Muster Point']
+            'available_types' => ['Fire Extinguisher', 'Fire Hydrant', 'Fire Hose Reel', 'Fire sprinkler system', 'Ring Buoy', 'Eyewash & Safety Shower', 'Muster Point']
         ]);
     }
     public function paginationView()

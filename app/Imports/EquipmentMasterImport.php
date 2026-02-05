@@ -29,7 +29,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
         'Fire Hose Reel',
         'Fire sprinkler system',
         'Ring Buoy',
-        'Eyewash Safety Shower',
+        'Eyewash & Safety Shower',
         'Muster Point'
     ];
 
