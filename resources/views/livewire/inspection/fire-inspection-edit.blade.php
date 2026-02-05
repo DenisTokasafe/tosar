@@ -89,95 +89,96 @@
 
             <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
                 {{-- UPLOAD DOKUMENTASI --}}
-                 <div class="w-full md:max-w-md">
-                <fieldset class="fieldset">
-                    <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                <div class="w-full md:max-w-md">
+                    <fieldset class="fieldset">
+                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
 
-                    <div wire:loading.remove wire:target="dokumentasi">
-                        {{-- CASE 1: Tampilkan File Baru yang Sedang Di-upload --}}
-                        @if ($dokumentasi)
-                            <div class="relative inline-block mt-2 group">
-                                {{-- Tombol Hapus File Baru --}}
-                                <button type="button" wire:click="clearNewUpload"
-                                    class="absolute z-10 p-1 text-white bg-red-600 rounded-full shadow-lg -top-2 -right-2 hover:bg-red-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
+                        <div wire:loading.remove wire:target="dokumentasi">
+                            {{-- CASE 1: Tampilkan File Baru yang Sedang Di-upload --}}
+                            @if ($dokumentasi)
+                                <div class="relative inline-block mt-2 group">
+                                    {{-- Tombol Hapus File Baru --}}
+                                    <button type="button" wire:click="clearNewUpload"
+                                        class="absolute z-10 p-1 text-white bg-red-600 rounded-full shadow-lg -top-2 -right-2 hover:bg-red-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
 
-                                @php $ext = $dokumentasi->getClientOriginalExtension(); @endphp
-                                @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png']))
-                                    <img src="{{ $dokumentasi->temporaryUrl() }}"
-                                        class="w-40 h-auto border rounded shadow-sm" />
-                                @else
-                                    <div class="flex items-center gap-2 p-2 border rounded bg-gray-50 text-info">
-                                        @if ($ext == 'pdf')
-                                            <x-icon.pdf class="w-8 h-8" />
-                                        @else
-                                            <x-icon.word class="w-8 h-8" />
-                                        @endif
-                                        <div class="flex flex-col">
-                                            <span class="text-xs font-bold">File Baru:</span>
-                                            <span
-                                                class="text-xs truncate max-w-[100px]">{{ $dokumentasi->getClientOriginalName() }}</span>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-
-                            {{-- CASE 2: Tampilkan File Lama dari Database --}}
-                        @elseif (isset($old_documentation) && $old_documentation)
-                            <div class="relative inline-block mt-2 group">
-                                {{-- Tombol Hapus File di Database --}}
-                                <button type="button"
-                                    onclick="confirm('Hapus file ini secara permanen?') || event.stopImmediatePropagation()"
-                                    wire:click="deleteOldFile"
-                                    class="absolute z-10 p-1 text-white rounded-full shadow-lg bg-rose-600 -top-2 -right-2 hover:bg-rose-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-
-                                @php
-                                    $ext = pathinfo($old_documentation, PATHINFO_EXTENSION);
-                                    $fileName = basename($old_documentation);
-                                @endphp
-
-                                @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png']))
-                                    <div class="w-40">
-                                        <span
-                                            class="absolute top-0 left-0 bg-black/50 text-white text-[10px] px-1 rounded-br">File
-                                            Saat Ini</span>
-                                        <img src="{{ asset('storage/' . $old_documentation) }}"
+                                    @php $ext = $dokumentasi->getClientOriginalExtension(); @endphp
+                                    @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png']))
+                                        <img src="{{ $dokumentasi->temporaryUrl() }}"
                                             class="w-40 h-auto border rounded shadow-sm" />
-                                    </div>
-                                @else
-                                    <div class="flex items-center gap-2 p-2 border border-blue-200 rounded bg-blue-50">
-                                        @if (strtolower($ext) == 'pdf')
-                                            <x-icon.pdf class="w-8 h-8 text-red-500" />
-                                        @else
-                                            <x-icon.word class="w-8 h-8 text-blue-500" />
-                                        @endif
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] font-bold text-blue-600 uppercase">Dokumen
-                                                Tersimpan:</span>
-                                            <a href="{{ asset('storage/' . $old_documentation) }}" target="_blank"
-                                                class="text-xs text-blue-700 underline truncate max-w-[100px] hover:text-blue-900">
-                                                {{ $fileName }}
-                                            </a>
+                                    @else
+                                        <div class="flex items-center gap-2 p-2 border rounded bg-gray-50 text-info">
+                                            @if ($ext == 'pdf')
+                                                <x-icon.pdf class="w-8 h-8" />
+                                            @else
+                                                <x-icon.word class="w-8 h-8" />
+                                            @endif
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-bold">File Baru:</span>
+                                                <span
+                                                    class="text-xs truncate max-w-[100px]">{{ $dokumentasi->getClientOriginalName() }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                    <x-label-error :messages="$errors->get('dokumentasi')" />
-                </fieldset>
-                 </div>
+                                    @endif
+                                </div>
+
+                                {{-- CASE 2: Tampilkan File Lama dari Database --}}
+                            @elseif (isset($old_documentation) && $old_documentation)
+                                <div class="relative inline-block mt-2 group">
+                                    {{-- Tombol Hapus File di Database --}}
+                                    <button type="button"
+                                        onclick="confirm('Hapus file ini secara permanen?') || event.stopImmediatePropagation()"
+                                        wire:click="deleteOldFile"
+                                        class="absolute z-10 p-1 text-white rounded-full shadow-lg bg-rose-600 -top-2 -right-2 hover:bg-rose-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+
+                                    @php
+                                        $ext = pathinfo($old_documentation, PATHINFO_EXTENSION);
+                                        $fileName = basename($old_documentation);
+                                    @endphp
+
+                                    @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png']))
+                                        <div class="w-40">
+                                            <span
+                                                class="absolute top-0 left-0 bg-black/50 text-white text-[10px] px-1 rounded-br">File
+                                                Saat Ini</span>
+                                            <img src="{{ asset('storage/' . $old_documentation) }}"
+                                                class="w-40 h-auto border rounded shadow-sm" />
+                                        </div>
+                                    @else
+                                        <div
+                                            class="flex items-center gap-2 p-2 border border-blue-200 rounded bg-blue-50">
+                                            @if (strtolower($ext) == 'pdf')
+                                                <x-icon.pdf class="w-8 h-8 text-red-500" />
+                                            @else
+                                                <x-icon.word class="w-8 h-8 text-blue-500" />
+                                            @endif
+                                            <div class="flex flex-col">
+                                                <span class="text-[10px] font-bold text-blue-600 uppercase">Dokumen
+                                                    Tersimpan:</span>
+                                                <a href="{{ asset('storage/' . $old_documentation) }}" target="_blank"
+                                                    class="text-xs text-blue-700 underline truncate max-w-[100px] hover:text-blue-900">
+                                                    {{ $fileName }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                        <x-label-error :messages="$errors->get('dokumentasi')" />
+                    </fieldset>
+                </div>
                 <div class="w-full md:max-w-md">
                     <x-form.upload label="Foto Area (Dokumentasi Lokasi)" model="foto_area" :file="$foto_area" />
                     <div wire:loading.remove.class='hidden' wire:target="foto_area"
@@ -193,8 +194,17 @@
                                 class="img-thumbnail border-primary">
                             <span class="top-0 badge bg-primary position-absolute start-0">Baru</span>
                             <button type="button" wire:click="clearNewFotoArea"
-                                class="top-0 btn btn-danger btn-sm position-absolute end-0">
-                                &times;
+                                class="top-0 btn btn-danger btn-xs btn-square position-absolute end-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-trash2-icon lucide-trash-2">
+                                    <path d="M10 11v6" />
+                                    <path d="M14 11v6" />
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
                             </button>
                         </div>
                     @elseif ($area_photo_path)
@@ -213,7 +223,7 @@
                 </div>
 
                 {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
-                 <div class="w-full md:max-w-md">
+                <div class="w-full md:max-w-md">
                     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                         modelsearch="searchResponsibility" modelid="location_id" {{-- ID dummy untuk select, data asli masuk ke array $inspected_users --}}
                         :options="$pelapors" :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
