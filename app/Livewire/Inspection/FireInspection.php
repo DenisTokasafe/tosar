@@ -205,7 +205,11 @@ class FireInspection extends Component
         // Logika Khusus untuk Maesa Camp
         if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        } else {
+        }
+        elseif ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar','Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
+        }
+        else {
             // Kembalikan ke default jika bukan Maesa Camp
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
         }
