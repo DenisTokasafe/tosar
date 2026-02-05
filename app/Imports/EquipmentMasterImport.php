@@ -23,10 +23,11 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
      */
     public function sheets(): array
     {
-        return [
-            // Nama sheet harus sama dengan value dari $this->type
-            $this->type => $this,
-        ];
+       $sheetName = trim($this->type);
+
+    return [
+        $sheetName => $this,
+    ];
     }
 
     /**
