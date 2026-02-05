@@ -372,7 +372,7 @@
                         </td>
                         <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
                         <td class="border">
-                            {{ $report->pelapor->department_name ?? 'N/A' }}
+                            {{ $report->pelapor->department_name ?? '#N/A' }}
                         </td>
                         <td class="border">
                             <span
