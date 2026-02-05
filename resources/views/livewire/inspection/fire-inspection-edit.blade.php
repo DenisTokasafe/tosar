@@ -133,7 +133,7 @@
                                 <button type="button"
                                     onclick="confirm('Hapus file ini secara permanen?') || event.stopImmediatePropagation()"
                                     wire:click="deleteOldFile"
-                                    class="absolute z-10 p-1 text-white bg-red-600 rounded-full shadow-lg -top-2 -right-2 hover:bg-red-700">
+                                    class="absolute z-10 p-1 text-white rounded-full shadow-lg bg-rose-600 -top-2 -right-2 hover:bg-rose-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
