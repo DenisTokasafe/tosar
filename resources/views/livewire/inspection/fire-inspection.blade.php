@@ -175,6 +175,23 @@
         </div>
 
         <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
+             <div class="w-full md:max-w-md">
+                <x-form.upload label="Foto Inspeksi" model="foto_area" :file="$foto_area" />
+                <div wire:loading.remove.class='hidden' wire:target="foto_area" class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
+                @error('foto_area')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+
+                @if ($foto_area)
+                    <div class="mt-2 position-relative d-inline-block">
+                        <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;" class="img-thumbnail">
+                        <button type="button" wire:click="removeFotoArea"
+                            class="top-0 btn btn-danger btn-sm position-absolute end-0">
+                            &times;
+                        </button>
+                    </div>
+                @endif
+            </div>
             <div class="w-full md:max-w-md">
                 <x-form.searchable-select-advanced label="Pemeriksa" placeholder="Cari Nama Pemeriksa..."
                     modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
@@ -197,23 +214,7 @@
                     @endforeach
                 </div>
             </div>
-            <div class="w-full md:max-w-md">
-                <x-form.upload label="Foto Area (Opsional)" model="foto_area" :file="$foto_area" />
-                <div wire:loading wire:target="foto_area" class="mt-1 text-primary">Mengunggah gambar...</div>
-                @error('foto_area')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
 
-                @if ($foto_area)
-                    <div class="mt-2 position-relative d-inline-block">
-                        <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;" class="img-thumbnail">
-                        <button type="button" wire:click="removeFotoArea"
-                            class="top-0 btn btn-danger btn-sm position-absolute end-0">
-                            &times;
-                        </button>
-                    </div>
-                @endif
-            </div>
         </div>
         <div class="mt-4 modal-action">
             <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
