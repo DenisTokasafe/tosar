@@ -77,7 +77,7 @@ class HazardReportPanel extends Component
             'ReporterDepartments' => User::whereNotNull('department_name')
                 ->distinct()
                 ->orderBy('department_name')
-                ->pluck('department_name'),
+                ->pluck('department_name')->prepend('Tidak Ada Departemen'),
         ];
     }
     public function updatingSearch()
