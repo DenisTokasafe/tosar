@@ -128,7 +128,7 @@
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <x-form.label label="Username" {{ $userId ?'':'required' }}  />
+                    <x-form.label label="Username" :required="!$userId"  />
                     <input type="text" wire:model.live="username"
                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                     <x-label-error :messages="$errors->get('username')" />
@@ -231,7 +231,7 @@
                 </fieldset>
 
                 <fieldset class="fieldset">
-                    <x-form.label label="Email" {{ $userId ?'':'required' }} />
+                    <x-form.label label="Email" :required="!$userId" />
                     <input type="email" wire:model.live="email"
                         class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('email') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                     <x-label-error :messages="$errors->get('email')" />
