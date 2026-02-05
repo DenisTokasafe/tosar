@@ -119,7 +119,7 @@ class FireInspection extends Component
             $this->locations = [];
             $this->show_location = false;
         }
-         $this->reset(['location_id']);
+        $this->reset(['location_id']);
     }
 
     public function selectLocation($id, $name)
@@ -131,6 +131,8 @@ class FireInspection extends Component
 
         if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
+        } elseif ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar', 'Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
         } else {
             // Kembalikan ke default jika bukan Maesa Camp
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
@@ -205,11 +207,9 @@ class FireInspection extends Component
         // Logika Khusus untuk Maesa Camp
         if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
             $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        }
-        elseif ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar','Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
-        else {
+        } elseif ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
+            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar', 'Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
+        } else {
             // Kembalikan ke default jika bukan Maesa Camp
             $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
         }
@@ -329,7 +329,7 @@ class FireInspection extends Component
 
     public function render()
     {
-        return view('livewire.inspection.fire-inspection',[
+        return view('livewire.inspection.fire-inspection', [
             'equipmentMasters' => EquipmentMaster::search($this->type)
                 ->byArea($this->searchLocation)
                 ->orderBy('specific_location')
