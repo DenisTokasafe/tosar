@@ -207,10 +207,10 @@
                     @php $hasPhoto = true; @endphp
                     <div class="photo-card" style="width: 64.5%; border: 2px solid #000;"> <img
                             src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}" class="photo-img"
-                            style="height: 250px;">
+                            style="width: 50%; height: 250px; object-fit: contain; background-color: #f8f9fa; border-bottom: 1px solid #000;">>
                         <div class="photo-caption"
                             style="background-color: #ffff00; font-weight: bold; text-align: center;">
-                            FOTO AREA: {{ $area ?? 'Tokatindung Site' }}
+                            FOTO INSPEKSI AREA: {{ $area ?? 'Tokatindung Site' }}
                         </div>
                     </div>
                 @endif
