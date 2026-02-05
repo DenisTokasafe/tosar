@@ -92,6 +92,28 @@ class FireInspectionEdit extends Component
         ];
     }
 
+    public function clearNewUpload()
+    {
+        $this->dokumentasi = null;
+    }
+
+    // 2. Menghapus file lama yang sudah ada di server/database
+    public function deleteOldFile()
+    {
+        if ($this->old_documentation) {
+            // Hapus file fisik dari storage
+            Storage::disk('public')->delete($this->old_documentation);
+
+            // Update database jika diperlukan di sini (opsional, tergantung logic simpan Anda)
+            // Contoh: $this->inspection->update(['documentation_path' => null]);
+
+            // Kosongkan variabel state
+            $this->old_documentation = null;
+
+            $this->dispatch('notify', ['type' => 'success', 'message' => 'File berhasil dihapus']);
+        }
+    }
+
     public function update()
     {
         $this->validate();
