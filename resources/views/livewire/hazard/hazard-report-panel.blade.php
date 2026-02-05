@@ -24,10 +24,12 @@
                     ($start_date && $end_date))
                 <div class="tooltip tooltip-right  mb-0.5" data-tip="Export Excel">
                     <a href="#" wire:click="export" class="btn btn-square btn-success btn-xs">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                            <path fill-rule="evenodd"
-                                d="M19.5 6.75a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-1.5a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v1.5ZM9 3a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H9A.75.75 0 0 1 9 4.5V3ZM3 .386A24288888888888888888888888999999999999999999999992424242424242424242424242424242424242424333333333333333333333666666666666666666666Z"
-                                clip-rule="evenodd" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-download-icon lucide-download">
+                            <path d="M12 15V3" />
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <path d="m7 10 5 5 5-5" />
                         </svg>
                     </a>
                 </div>
