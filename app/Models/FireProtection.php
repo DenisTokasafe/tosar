@@ -14,6 +14,7 @@ class FireProtection extends Model
         'conditions',
         'remarks',
         'documentation_path',
+        'area_photo_path',
     ];
     protected $casts = [
         'conditions' => 'array',

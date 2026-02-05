@@ -44,7 +44,9 @@ class FireInspection extends Component
 
     // Tempat menyimpan hasil checklist dan technical data
     public $conditions = [];
-
+    // --- PROPERTI FOTO AREA ---
+    #[Validate('required|image|max:3072')] // Maksimal 3MB
+    public $foto_area;
     // Definisi kriteria (Master Fields)
     public $fields = [
         'Fire Extinguisher' => [
@@ -78,7 +80,11 @@ class FireInspection extends Component
         $this->inspection_date = now()->format('Y-m-d');
         $this->updatedType($this->type);
     }
-
+    // --- LOGIKA HAPUS FOTO AREA (SEBELUM SAVE) ---
+    public function removeFotoArea()
+    {
+        $this->foto_area = null;
+    }
     public function rules()
     {
         return [
@@ -101,6 +107,7 @@ class FireInspection extends Component
             'type.required'            => 'Jenis alat wajib dipilih.',
             'location_id.required'     => 'Area wajib diisi.',
             'remarks.required'         => 'Catatan/Remarks wajib diisi.',
+            'foto_area.required'      => 'Foto area inspeksi wajib diunggah.',
         ];
     }
 
@@ -284,9 +291,19 @@ class FireInspection extends Component
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
 
             DB::transaction(function () use ($inspectedByString) {
+
+                // 1. PROSES FOTO AREA (Hanya 1 kali per transaksi)
+                $areaPhotoPath = null;
+                if ($this->foto_area) {
+                    $areaPhotoPath = FileHelper::compressAndStore(
+                        $this->foto_area,
+                        'inspections/area-photos'
+                    );
+                }
+
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
 
-                    // 1. PROSES FOTO KHUSUS UNTUK BARIS INI
+                    // 2. PROSES FOTO DOKUMENTASI PER ALAT
                     $documentationPath = null;
                     if (isset($this->dokumentasi[$equipmentMasterId])) {
                         $documentationPath = FileHelper::compressAndStore(
@@ -295,16 +312,14 @@ class FireInspection extends Component
                         );
                     }
 
-                    // 2. Ambil remarks khusus baris ini
                     $rowRemarks = $dataKondisi['remarks'] ?? null;
-
-                    // 3. Bersihkan data teknis dari key 'remarks'
                     $cleanConditions = collect($dataKondisi)->forget('remarks')->toArray();
 
-                    // 4. Simpan ke Database
+                    // 3. SIMPAN KE DATABASE
                     FireProtection::create([
                         'equipment_master_id' => $equipmentMasterId,
-                        'documentation_path'  => $documentationPath, // Path unik per alat
+                        'documentation_path'  => $documentationPath, // Foto spesifik alat
+                        'area_photo_path'     => $areaPhotoPath,      // Path foto area yang sama
                         'inspection_date'     => $this->inspection_date,
                         'inspected_by'        => $inspectedByString,
                         'conditions'          => $cleanConditions,
@@ -313,7 +328,8 @@ class FireInspection extends Component
                 }
             });
 
-            $this->reset(['dokumentasi', 'conditions']); // Sesuaikan dengan properti yang ingin direset
+            // Reset field setelah sukses
+            $this->reset(['dokumentasi', 'conditions', 'foto_area']);
             $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan!", 'backgroundColor' => "background: #00c853;"]);
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => "Kesalahan: " . $e->getMessage(), 'backgroundColor' => "background: #f44336;"]);
@@ -322,7 +338,7 @@ class FireInspection extends Component
 
     public function resetForm()
     {
-        $this->reset(['location', 'remarks', 'dokumentasi', 'inspected_users', 'equipment_master_id', 'conditions']);
+        $this->reset(['location', 'remarks', 'dokumentasi', 'inspected_users', 'equipment_master_id', 'conditions', 'foto_area']);
         $this->inspection_date = now()->format('Y-m-d');
         $this->updatedType($this->type);
     }
