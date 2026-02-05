@@ -223,6 +223,7 @@
                             @endforeach
                         </ul>
                     </th>
+                    <th class="border">Pelapor</th>
                     <th class="border">Divisi Pelapor
                         <button class="btn btn-ghost btn-xs" popovertarget="popover_reporter_dept"
                             style="anchor-name:--anchor_reporter_dept">
@@ -320,7 +321,7 @@
                         </ul>
                     </th>
                     <th class="border">Deskripsi</th>
-                    <th class="border">Pelapor</th>
+
                     <th class="border">Tanggal</th>
                     <th class="flex-col text-center border">
                         <p>Action</p>
@@ -346,6 +347,7 @@
                         <td class="border">
                             {{ $report->department->department_name ?? $report->contractor->contractor_name }}
                         </td>
+                        <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
                         <td class="border">
                             {{ $report->pelapor->department_name ?? 'N/A' }}
                         </td>
@@ -387,7 +389,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="border">{{ $report->pelapor->name ?? $report->manualPelaporName }}</td>
+
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
                         <td class="text-center border">
                             {{ $report->total_due_dates }} / {{ $report->pending_actual_closes }}
