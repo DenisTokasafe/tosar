@@ -202,10 +202,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Foto Area (Opsional)</label>
-            <input type="file" wire:model="foto_area"
-                class="form-control @error('foto_area') is-invalid @enderror">
 
+             <x-form.upload label="Foto Area (Opsional)" model="foto_area"
+                        :file="$foto_area" />
             <div wire:loading wire:target="foto_area" class="mt-1 text-primary">Mengunggah gambar...</div>
 
             @error('foto_area')
