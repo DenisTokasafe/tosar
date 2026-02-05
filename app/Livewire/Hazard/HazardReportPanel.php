@@ -46,19 +46,20 @@ class HazardReportPanel extends Component
     public array $filterContractor = [];
     public array $filterEventType = [];
     public array $filterEventSubType = [];
+    public array $filterReporterDept = []; // Properti baru
     // Data filter
     public $filterOptions = [];
     public function getRandomBadgeColor($status)
     {
-      $map = [
-        'cancelled'   => 'badge-error',   // Tulis lengkap
-        'closed'      => 'badge-success',
-        'in_progress' => 'badge-warning',
-        'pending'     => 'badge-accent',
-        'submitted'   => 'badge-info',
-    ];
+        $map = [
+            'cancelled'   => 'badge-error',   // Tulis lengkap
+            'closed'      => 'badge-success',
+            'in_progress' => 'badge-warning',
+            'pending'     => 'badge-accent',
+            'submitted'   => 'badge-info',
+        ];
 
-    return $map[$status] ?? 'badge-neutral';
+        return $map[$status] ?? 'badge-neutral';
     }
     public function mount()
     {
@@ -72,6 +73,10 @@ class HazardReportPanel extends Component
             'Contractors' => Contractor::all(['id', 'contractor_name']),
             'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
+            'ReporterDepartments' => User::whereNotNull('department_name')
+                ->distinct()
+                ->orderBy('department_name')
+                ->pluck('department_name'),
         ];
     }
     public function updatingSearch()
@@ -117,6 +122,10 @@ class HazardReportPanel extends Component
     public function toggleDropdownstatus()
     {
         $this->isDropdownOpen = !$this->isDropdownOpen;
+    }
+    public function updatingFilterReporterDept()
+    {
+        $this->resetPage();
     }
     public function updatedFilterStatus()
     {
@@ -320,6 +329,11 @@ class HazardReportPanel extends Component
         $query->when($this->searchPelapor, function ($q) {
             $q->byPelapor($this->searchPelapor); // Meneruskan array langsung
         });
+        $query->when(!empty($this->filterReporterDept), function ($q) {
+        $q->whereHas('pelapor', function($userQuery) {
+            $userQuery->whereIn('department_name', $this->filterReporterDept);
+        });
+    });
         // Terapkan filter Department
         $query->byDepartments($this->filterDepartment);
         // Terapkan filter Contractor

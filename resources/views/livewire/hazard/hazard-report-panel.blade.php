@@ -73,7 +73,7 @@
             </fieldset>
         </div>
     </div>
-      {{-- <x-manhours.layout> --}}
+    {{-- <x-manhours.layout> --}}
     <div class="mt-4 overflow-x-auto max-h-[calc(100vh-18rem)] 2xl:max-h-[calc(100vh-20rem)] ">
         <table class="table text-xs border table-xs">
             <thead>
@@ -223,6 +223,62 @@
                             @endforeach
                         </ul>
                     </th>
+                    <th class="border">Divisi Pelapor
+                        {{-- Tombol Trigger Popover --}}
+                        <button class="btn btn-ghost btn-xs" popovertarget="divisi_pelapor"
+                            style="anchor-name:--divisi_pelapor">
+                            <span class="text-xs text-blue-600">
+                                @if (empty($filterReporterDept))
+                                    {{-- Ikon Filter Standar --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-list-filter">
+                                        <path d="M2 5h20" />
+                                        <path d="M6 12h12" />
+                                        <path d="M9 19h6" />
+                                    </svg>
+                                @else
+                                    {{-- Ikon Filter Aktif --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-arrow-down-wide-narrow">
+                                        <path d="m3 16 4 4 4-4" />
+                                        <path d="M7 20V4" />
+                                        <path d="M11 4h10" />
+                                        <path d="M11 8h7" />
+                                        <path d="M11 12h4" />
+                                    </svg>
+                                @endif
+                            </span>
+                        </button>
+
+                        {{-- Isi Popover --}}
+                        <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
+                            popover id="divisi_pelapor"
+                            style="position-anchor:--divisi_pelapor; inset-area: bottom span-right;">
+
+                            @foreach ($filterOptions['ReporterDepartments'] as $dept)
+                                <li>
+                                    <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
+                                        {{-- Gunakan wire:model.live agar filter langsung terasa --}}
+                                        <input type="checkbox" wire:model.live="filterReporterDept"
+                                            value="{{ $dept->department_name }}"
+                                            class="text-blue-600 rounded form-checkbox">
+                                        <span class="ml-2 text-xs capitalize">{{ $dept->department_name }}</span>
+                                    </label>
+                                </li>
+                            @endforeach
+
+                            @if (count($filterReporterDept) > 0)
+                                <li class="mt-2 border-t">
+                                    <button wire:click="$set('filterReporterDept', [])"
+                                        class="text-red-500 btn btn-ghost btn-xs">Reset</button>
+                                </li>
+                            @endif
+                        </ul>
+                    </th>
                     <th class="relative border">
                         Status
                         <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
@@ -294,7 +350,11 @@
                         <td class="border">{{ $report->eventType->event_type_name ?? '-' }}</td>
                         <td class="border">{{ $report->eventSubType->event_sub_type_name ?? '-' }}</td>
                         <td class="border">
-                            {{ $report->department->department_name ?? $report->contractor->contractor_name }}</td>
+                            {{ $report->department->department_name ?? $report->contractor->contractor_name }}
+                        </td>
+                        <td class="border">
+                            {{ $report->pelapor->department_name ?? 'N/A' }}
+                        </td>
                         <td class="border">
                             <span
                                 class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
@@ -348,5 +408,5 @@
         </table>
     </div>
     {{ $reports->links() }}
-      {{-- </x-manhours.layout> --}}
+    {{-- </x-manhours.layout> --}}
 </section>
