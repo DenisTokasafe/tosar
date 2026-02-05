@@ -224,12 +224,10 @@
                         </ul>
                     </th>
                     <th class="border">Divisi Pelapor
-                        {{-- Tombol Trigger Popover --}}
-                        <button class="btn btn-ghost btn-xs" popovertarget="divisi_pelapor"
-                            style="anchor-name:--divisi_pelapor">
-                            <span class="text-xs text-blue-600">
+                        <button class="btn btn-ghost btn-xs" popovertarget="popover_reporter_dept"
+                            style="anchor-name:--anchor_reporter_dept">
+                            <span class="text-xs {{ !empty($filterReporterDept) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterReporterDept))
-                                    {{-- Ikon Filter Standar --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
@@ -239,7 +237,6 @@
                                         <path d="M9 19h6" />
                                     </svg>
                                 @else
-                                    {{-- Ikon Filter Aktif --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
@@ -254,27 +251,24 @@
                             </span>
                         </button>
 
-                        {{-- Isi Popover --}}
                         <ul class="p-2 overflow-y-auto shadow-lg dropdown menu w-52 rounded-box bg-base-100 max-h-60"
-                            popover id="divisi_pelapor"
-                            style="position-anchor:--divisi_pelapor; inset-area: bottom span-right;">
+                            popover id="popover_reporter_dept"
+                            style="position-anchor:--anchor_reporter_dept; inset-area: bottom span-right;">
 
-                            @foreach ($filterOptions['ReporterDepartments'] as $dept)
+                            @foreach ($filterOptions['ReporterDepartments'] as $deptName)
                                 <li>
                                     <label class="flex items-center p-1 rounded cursor-pointer hover:bg-gray-100">
-                                        {{-- Gunakan wire:model.live agar filter langsung terasa --}}
                                         <input type="checkbox" wire:model.live="filterReporterDept"
-                                            value="{{ $dept->department_name }}"
-                                            class="text-blue-600 rounded form-checkbox">
-                                        <span class="ml-2 text-xs capitalize">{{ $dept->department_name }}</span>
+                                            value="{{ $deptName }}" class="text-blue-600 rounded form-checkbox">
+                                        <span class="ml-2 text-xs capitalize">{{ $deptName }}</span>
                                     </label>
                                 </li>
                             @endforeach
 
-                            @if (count($filterReporterDept) > 0)
+                            @if (!empty($filterReporterDept))
                                 <li class="mt-2 border-t">
                                     <button wire:click="$set('filterReporterDept', [])"
-                                        class="text-red-500 btn btn-ghost btn-xs">Reset</button>
+                                        class="w-full text-red-500 btn btn-ghost btn-xs">Reset Filter</button>
                                 </li>
                             @endif
                         </ul>
