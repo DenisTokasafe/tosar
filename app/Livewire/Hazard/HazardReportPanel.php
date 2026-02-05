@@ -13,7 +13,8 @@ use App\Enums\HazardStatus;
 use App\Models\EventSubType;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\HazardExport;
 class HazardReportPanel extends Component
 {
     use WithPagination;
@@ -359,6 +360,54 @@ class HazardReportPanel extends Component
             'reports' => $reports
         ]);
     }
+    public function export()
+{
+    $query = Hazard::with(['pelapor', 'eventType', 'eventSubType', 'department', 'contractor'])
+        ->withHazardCounts()
+        ->latest();
+
+    $user = Auth::user();
+
+    // Replikasi semua filter yang ada di render()
+    $query->when($this->filterByAuth, function ($q) use ($user) {
+        $q->where('pelapor_id', $user->id);
+    });
+
+    $query->when($this->filterStatus !== 'all' && !empty($this->filterStatus), function ($q) {
+        $q->status($this->filterStatus);
+    });
+
+    $query->when($this->filterEventType, function ($q) {
+        $q->byEventType($this->filterEventType);
+    });
+
+    $query->when($this->filterEventSubType, function ($q) {
+        $q->byEventSubType($this->filterEventSubType);
+    });
+
+    $query->when($this->searchPelapor, function ($q) {
+        $q->byPelapor($this->searchPelapor);
+    });
+
+    $query->when(!empty($this->filterReporterDept), function ($q) {
+        $q->whereHas('pelapor', function($userQuery) {
+            $userQuery->whereIn('department_name', $this->filterReporterDept);
+        });
+    });
+
+    $query->byDepartments($this->filterDepartment);
+    $query->byContractors($this->filterContractor);
+
+    $query->when($this->start_date && $this->end_date, function ($q) {
+        $q->dateRange($this->start_date, $this->end_date);
+    });
+
+    if (Auth::user()->role === 'moderator') {
+        $this->filterModeratorReports($query);
+    }
+
+    return Excel::download(new HazardExport($query), 'hazard-report-' . now()->format('Y-m-d') . '.xlsx');
+}
     public function paginationView()
     {
         return 'paginate.pagination';

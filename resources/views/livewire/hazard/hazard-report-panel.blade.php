@@ -12,6 +12,26 @@
                     </svg>
                 </a>
             </div>
+            @if (
+                $filterByAuth ||
+                    ($filterStatus && $filterStatus !== 'all') ||
+                    !empty($filterDepartment) ||
+                    !empty($filterContractor) ||
+                    !empty($filterEventType) ||
+                    !empty($filterEventSubType) ||
+                    !empty($filterReporterDept) ||
+                    $searchPelapor ||
+                    ($start_date && $end_date))
+                <div class="tooltip tooltip-right  mb-0.5" data-tip="Export Excel">
+                    <a href="#" wire:click="export" class="btn btn-square btn-success btn-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd"
+                                d="M19.5 6.75a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-1.5a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v1.5ZM9 3a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H9A.75.75 0 0 1 9 4.5V3ZM3 .386A24288888888888888888888888999999999999999999999992424242424242424242424242424242424242424333333333333333333333666666666666666666666Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            @endif
             {{-- @livewire('hazard.import-hazard-reports-modal') --}}
             {{-- Tambahkan wire:model.live untuk memfilter secara real-time --}}
             <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
@@ -83,7 +103,7 @@
                     <th class="border">Tipe Bahaya
                         {{-- Button Trigger Popover --}}
                         <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
-                             <span class="text-xs {{ !empty($filterEventType) ? 'text-blue-600' : '' }}">
+                            <span class="text-xs {{ !empty($filterEventType) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterEventType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -128,7 +148,7 @@
                     <th class="border">Jenis Bahaya
                         <button class="btn btn-ghost btn-xs" popovertarget="eventSubType"
                             style="anchor-name:--eventSubType">
-                           <span class="text-xs {{ !empty($filterEventSubType) ? 'text-blue-600' : '' }}">
+                            <span class="text-xs {{ !empty($filterEventSubType) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterEventSubType))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -173,7 +193,8 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="divisi_dept"
                             style="anchor-name:--divisi_dept">
                             {{-- Ikon Filter: Tampilkan jika filterDepartment tidak kosong --}}
-                            <span class="text-xs {{ (!empty($filterDepartment) || !empty($filterContractor)) ? 'text-blue-600' : '' }}">
+                            <span
+                                class="text-xs {{ !empty($filterDepartment) || !empty($filterContractor) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterDepartment) && empty($filterContractor))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -279,7 +300,7 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="popover-1"
                             style="anchor-name:--anchor-1">
 
-                             <span class="text-xs {{ !empty($filterStatus) ? 'text-blue-600' : '' }}">
+                            <span class="text-xs {{ !empty($filterStatus) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterStatus))
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
