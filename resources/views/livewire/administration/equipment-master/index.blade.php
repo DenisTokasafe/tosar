@@ -85,46 +85,79 @@
                     </div>
 
                     {{-- MODAL / SECTION PREVIEW --}}
-                    @if ($showPreview && count($previewData) > 0)
-                        <div class="pt-4 mt-4 border-t">
-                            <h5 class="mb-2 text-xs font-bold">Konfirmasi Data ({{ count($previewData) }} Baris)</h5>
-                            <div class="mb-2 overflow-y-auto border rounded max-h-40">
-                                <table class="table w-full table-zebra table-xs">
-                                    <thead class="sticky top-0 bg-gray-200">
-                                        <tr>
-                                            {{-- Sesuaikan header ini dengan kolom excel Anda --}}
-                                            @foreach (array_keys($previewData[0]) as $header)
-                                                <th>{{ strtoupper(str_replace('_', ' ', $header)) }}</th>
-                                            @endforeach
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (array_slice($previewData, 0, 10) as $row)
-                                            {{-- Tampilkan 10 baris saja untuk hemat ram --}}
-                                            <tr>
-                                                @foreach ($row as $value)
-                                                    <td>{{ $value }}</td>
-                                                @endforeach
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                    {{-- Hidden Checkbox untuk Trigger Modal (Opsional jika ingin kontrol via label) --}}
+                    <input type="checkbox" id="import_preview_modal" class="modal-toggle"
+                        {{ $showPreview ? 'checked' : '' }} />
 
-                            @if (count($previewData) > 10)
-                                <p class="text-[9px] text-gray-400 mb-2 italic">* Menampilkan 10 baris pertama...</p>
+                    <div class="modal {{ $showPreview ? 'modal-open' : '' }}" role="dialog">
+                        <div class="w-11/12 max-w-5xl modal-box"> {{-- Ukuran modal diperlebar (max-w-5xl) agar tabel data teknis tidak sesak --}}
+                            <h3 class="flex items-center gap-2 text-lg font-bold">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-info" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="Path d=" M9
+                                        12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414
+                                        5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Konfirmasi Import Data
+                            </h3>
+
+                            <p class="py-2 text-sm text-gray-500">
+                                Ditemukan <strong>{{ count($previewData) }}</strong> baris pada kategori
+                                <strong>{{ $type }}</strong>. Silakan periksa kembali sebelum menyimpan.
+                            </p>
+
+                            @if (count($previewData) > 0)
+                                <div class="mt-4 overflow-hidden border rounded-lg">
+                                    <div class="overflow-x-auto overflow-y-auto max-h-80"> {{-- Scroll horizontal & vertical --}}
+                                        <table class="table w-full table-zebra table-xs">
+                                            <thead class="sticky top-0 shadow-sm bg-base-200">
+                                                <tr>
+                                                    @foreach (array_keys($previewData[0]) as $header)
+                                                        <th class="whitespace-nowrap">
+                                                            {{ strtoupper(str_replace('_', ' ', $header)) }}</th>
+                                                    @endforeach
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (array_slice($previewData, 0, 10) as $row)
+                                                    <tr>
+                                                        @foreach ($row as $value)
+                                                            <td class="whitespace-nowrap">{{ $value ?? '-' }}</td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                @if (count($previewData) > 10)
+                                    <div class="badge badge-ghost mt-2 text-[10px] italic opacity-70">
+                                        * Menampilkan 10 baris pertama dari total {{ count($previewData) }} baris
+                                    </div>
+                                @endif
+                            @else
+                                <div class="mt-4 alert alert-warning">
+                                    <span>Data tidak ditemukan atau sheet kosong.</span>
+                                </div>
                             @endif
 
-                            <div class="flex gap-2">
-                                <button wire:click="importExcel" class="flex-1 btn btn-xs btn-success">
+                            <div class="modal-action">
+                                <button wire:click="importExcel" wire:loading.attr="disabled"
+                                    class="text-white btn btn-success">
+                                    <span wire:loading wire:target="importExcel" class="loading loading-spinner"></span>
                                     ✅ Simpan Ke Database
                                 </button>
-                                <button wire:click="$set('showPreview', false)" class="btn btn-xs btn-ghost text-error">
+
+                                <button wire:click="$set('showPreview', false)" class="btn btn-ghost">
                                     Batal
                                 </button>
                             </div>
                         </div>
-                    @endif
+
+                        {{-- Klik di luar modal untuk menutup --}}
+                        <label class="modal-backdrop" wire:click="$set('showPreview', false)">Close</label>
+                    </div>
                 </div>
             </div>
 
@@ -180,7 +213,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="py-4 text-center text-gray-400">Data tidak ditemukan</td>
+                                    <td colspan="4" class="py-4 text-center text-gray-400">Data tidak ditemukan
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
