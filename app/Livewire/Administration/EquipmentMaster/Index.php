@@ -154,7 +154,7 @@ class Index extends Component
             );
 
             $this->dispatch('alert', ['text' => 'Data Excel Berhasil Diimport!']);
-            $this->reset(['file_excel', 'previewData', 'showPreview']);
+            $this->reset([ 'previewData', 'showPreview']);
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => 'Gagal Simpan: ' . $e->getMessage(), 'type' => 'error']);
         }
