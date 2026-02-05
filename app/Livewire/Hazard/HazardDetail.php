@@ -118,7 +118,6 @@ class HazardDetail extends Component
     public $hazard_id;
 
     // Data Action Hazard
-    #[Validate('required|string', message: 'Deskripsi tindakan wajib diisi.')]
     public $action_description;
 
     #[Validate('nullable')]
