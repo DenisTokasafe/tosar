@@ -193,7 +193,7 @@
                             <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;"
                                 class="img-thumbnail border-primary">
                             <span class="top-0 badge bg-primary position-absolute start-0">Baru</span>
-                            <button type="button" wire:click="clearNewFotoArea"
+                            <label wire:click="clearNewFotoArea"
                                 class="top-0 btn btn-danger btn-xs btn-square position-absolute end-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -205,19 +205,28 @@
                                     <path d="M3 6h18" />
                                     <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                                 </svg>
-                            </button>
+                            </label>
                         </div>
                     @elseif ($area_photo_path)
                         <div class="mt-2 position-relative d-inline-block">
                             <img src="{{ asset('storage/' . $area_photo_path) }}" style="height: 150px;"
                                 class="img-thumbnail border-secondary">
                             <span class="top-0 badge bg-secondary position-absolute start-0">Lama</span>
-                            <button type="button"
+                            <label
                                 onclick="confirm('Hapus foto area ini secara permanen?') || event.stopImmediatePropagation()"
                                 wire:click="removeAreaPhoto"
-                                class="top-0 btn btn-danger btn-sm position-absolute end-0">
-                                <i class="fa fa-trash"></i>
-                            </button>
+                                class="top-0 btn btn-danger btn-xs btn-square position-absolute end-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-trash2-icon lucide-trash-2">
+                                    <path d="M10 11v6" />
+                                    <path d="M14 11v6" />
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
+                            </label>
                         </div>
                     @endif
                 </div>
