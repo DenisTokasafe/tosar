@@ -11,7 +11,8 @@
 
                     <div class="space-y-3">
                         <x-form.label label="Jenis Alat" />
-                        <select wire:model.live="type" class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <select wire:model.live="type"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Pilih --</option>
                             @foreach ($available_types as $t)
                                 <option value="{{ $t }}">{{ $t }}</option>
@@ -58,7 +59,8 @@
                 <div class="p-4 border-2 border-gray-300 border-dashed rounded-lg shadow-sm bg-gray-50">
                     <h4 class="mb-2 text-sm font-bold">Import dari Excel</h4>
                     <p class="text-[10px] text-gray-500 mb-3 uppercase tracking-wider leading-tight">
-                        Pilih <b>Jenis Alat</b> & <b>Lokasi</b> di atas sebelum memproses file Excel.
+                        Pilih <b>Jenis Alat</b> & <b>Lokasi</b> di atas. Data akan diambil dari sheet:
+                        <b>{{ $type ?: '...' }}</b>
                     </p>
 
                     <div class="flex flex-col gap-2">
@@ -70,9 +72,10 @@
                             Sedang mengunggah file...
                         </div>
 
-                        <button wire:click="importExcel" wire:loading.attr="disabled" {{-- Tombol mati jika file belum dipilih atau Jenis Alat/Lokasi masih kosong --}}
-                            @disabled(!$file_excel || !$type || !$location_id) class="w-full btn btn-xs btn-outline btn-info">
-                            🚀 Proses Import Data
+                        {{-- Ganti fungsi ke previewExcel --}}
+                        <button wire:click="previewExcel" wire:loading.attr="disabled" @disabled(!$file_excel || !$type || !$location_id)
+                            class="w-full btn btn-xs btn-outline btn-info">
+                            🔍 Preview Data (Sheet: {{ $type }})
                         </button>
 
                         @if (!$type || !$location_id)
@@ -80,15 +83,58 @@
                                 diisi</span>
                         @endif
                     </div>
+
+                    {{-- MODAL / SECTION PREVIEW --}}
+                    @if ($showPreview && count($previewData) > 0)
+                        <div class="pt-4 mt-4 border-t">
+                            <h5 class="mb-2 text-xs font-bold">Konfirmasi Data ({{ count($previewData) }} Baris)</h5>
+                            <div class="mb-2 overflow-y-auto border rounded max-h-40">
+                                <table class="table w-full table-zebra table-xs">
+                                    <thead class="sticky top-0 bg-gray-200">
+                                        <tr>
+                                            {{-- Sesuaikan header ini dengan kolom excel Anda --}}
+                                            @foreach (array_keys($previewData[0]) as $header)
+                                                <th>{{ strtoupper(str_replace('_', ' ', $header)) }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (array_slice($previewData, 0, 10) as $row)
+                                            {{-- Tampilkan 10 baris saja untuk hemat ram --}}
+                                            <tr>
+                                                @foreach ($row as $value)
+                                                    <td>{{ $value }}</td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @if (count($previewData) > 10)
+                                <p class="text-[9px] text-gray-400 mb-2 italic">* Menampilkan 10 baris pertama...</p>
+                            @endif
+
+                            <div class="flex gap-2">
+                                <button wire:click="importExcel" class="flex-1 btn btn-xs btn-success">
+                                    ✅ Simpan Ke Database
+                                </button>
+                                <button wire:click="$set('showPreview', false)" class="btn btn-xs btn-ghost text-error">
+                                    Batal
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
             {{-- KOLOM KANAN: TABEL DATA --}}
             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow md:col-span-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
                     <fieldset class="fieldset">
-                        <x-form.label label="Cari Tipe Alat"  />
-                        <select wire:model.live="search" class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <x-form.label label="Cari Tipe Alat" />
+                        <select wire:model.live="search"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Cari Tipe Alat --</option>
                             @foreach ($available_types as $t)
                                 <option value="{{ $t }}">{{ $t }}</option>

@@ -31,6 +31,9 @@ class Index extends Component
     public $cari_searchLocation = '';
     public $cari_location_id;
 
+    public $previewData = []; // Untuk menampung data sementara
+    public $showPreview = false;
+
     protected $rules = [
         'type' => 'required',
         'location_id' => 'required|exists:locations,id',
@@ -77,8 +80,7 @@ class Index extends Component
             $this->cari_show_location = true;
         } else {
             $this->cari_show_location = false;
-        }
-        ;
+        };
         $this->reset(['cari_location_id', 'search_area']);
     }
 
@@ -90,7 +92,7 @@ class Index extends Component
         $this->cari_show_location = false;
     }
 
-    public function importExcel()
+    public function previewExcel()
     {
         $this->validate([
             'file_excel' => 'required|mimes:xlsx,xls,csv|max:10240',
@@ -99,12 +101,41 @@ class Index extends Component
         ]);
 
         try {
-            Excel::import(new EquipmentMasterImport($this->type, $this->location_id), $this->file_excel->getRealPath());
+            // Ambil data hanya dari sheet yang namanya sesuai dengan $this->type
+            $importArray = Excel::toArray(
+                new EquipmentMasterImport($this->type, $this->location_id),
+                $this->file_excel
+            );
 
-            $this->dispatch('alert', ['text' => 'Data Excel Berhasil Diimport!']);
-            $this->reset(['file_excel']);
+            // Cari sheet yang namanya cocok (case insensitive)
+            // Jika tidak ketemu, Laravel Excel biasanya mengembalikan index 0
+            $this->previewData = $importArray[0] ?? [];
+
+            if (empty($this->previewData)) {
+                throw new \Exception("Sheet dengan nama '{$this->type}' tidak ditemukan atau kosong.");
+            }
+
+            $this->showPreview = true;
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => 'Gagal: ' . $e->getMessage(), 'type' => 'error']);
+        }
+    }
+
+    public function importExcel()
+    {
+        // Method ini sekarang dipanggil setelah user melihat preview
+        try {
+            // Karena data sudah divalidasi di preview, langsung jalankan import utama
+            // Gunakan ->onlySheets($this->type) agar class import hanya memproses sheet tersebut
+            Excel::import(
+                new EquipmentMasterImport($this->type, $this->location_id),
+                $this->file_excel->getRealPath()
+            );
+
+            $this->dispatch('alert', ['text' => 'Data Excel Berhasil Diimport!']);
+            $this->reset(['file_excel', 'previewData', 'showPreview']);
+        } catch (\Exception $e) {
+            $this->dispatch('alert', ['text' => 'Gagal Simpan: ' . $e->getMessage(), 'type' => 'error']);
         }
     }
 
