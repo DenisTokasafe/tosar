@@ -60,7 +60,7 @@ class FireInspection extends Component
             'checks' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
         ],
         'Eyewash & Safety Shower' => [
-            'checks' => ['Access', 'Signage', 'Water Flow', 'Hose Condition', 'Nozzle Condition', 'Drainage'],
+            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light','Cleanliness'],
         ],
         'Fire Hose Reel' => [
             'checks' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
