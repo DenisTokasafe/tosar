@@ -321,6 +321,7 @@ class FireInspection extends Component
                         'documentation_path'  => $documentationPath, // Foto spesifik alat
                         'area_photo_path'     => $areaPhotoPath,      // Path foto area yang sama
                         'inspection_date'     => $this->inspection_date,
+                        'submitted_by'        => auth()->user()->name ?? 'System',
                         'inspected_by'        => $inspectedByString,
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,
