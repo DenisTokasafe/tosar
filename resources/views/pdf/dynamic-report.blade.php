@@ -263,7 +263,7 @@
                         <table class="legend-table">
                             <tr>
                                 <td class="bg-gray" style="width: 100px; font-weight: bold;">Input to Tosar by</td>
-                                <td>: {{ auth()->check() ? auth()->user()->name : '-' }}</td>
+                                <td>: {{ $submitted_by ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <td class="bg-gray" style="font-weight: bold;">Date</td>
