@@ -266,12 +266,12 @@
                                 <td>: {{ $submitted_by ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <td class="bg-gray" style="font-weight: bold;">Date</td>
-                                <td>: {{ now()->format('d/m/Y') }}</td>
+                                <td class="bg-gray" style="font-weight: bold; height: 30px;">Nomor Inspeksi</td>
+                                <td>: {{ $inspection_number ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <td class="bg-gray" style="font-weight: bold; height: 30px;">Checked By</td>
-                                <td>: </td>
+                                <td class="bg-gray" style="font-weight: bold;">Date</td>
+                                <td>: {{ now()->format('d/m/Y') }}</td>
                             </tr>
                         </table>
                     </td>

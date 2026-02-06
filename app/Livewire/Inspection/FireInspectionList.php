@@ -196,6 +196,7 @@ class FireInspectionList extends Component
             'structure' => $structure,
             'month' => Carbon::parse($this->date)->translatedFormat('F Y'),
             'submitted_by' => $inspections->first()->submitted_by ?? 'N/A',
+            'inspection_number' => $inspections->first()->inspection_number ?? 'N/A',
         ])->setPaper('a4', 'landscape');
 
         // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas

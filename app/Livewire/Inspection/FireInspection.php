@@ -62,7 +62,7 @@ class FireInspection extends Component
             'checks' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
         ],
         'Eyewash & Safety Shower' => [
-            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light','Cleanliness'],
+            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
         ],
         'Fire Hose Reel' => [
             'checks' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
@@ -276,6 +276,26 @@ class FireInspection extends Component
         // Cara 2: Jika ingin memastikan tampilan terupdate dengan menyetel null
         // $this->dokumentasi[$id] = null;
     }
+    public function getInspectionNumberProperty()
+    {
+        // 1. Singkatan Area (Contoh: Tokatindung Site -> TS)
+        $acronym = collect(explode(' ', $this->area))
+            ->map(fn($w) => mb_substr($w, 0, 1))
+            ->implode('');
+
+        // 2. Kode Alat (Ambil 3-4 huruf pertama saja, misal: Hydrant -> HYD)
+        $equipment = strtoupper(substr($this->type, 0, 3));
+
+        // 3. Format Tanggal Ringkas (Contoh: Fri/060226)
+        // D = Nama hari 3 huruf (Mon, Tue, Wed...)
+        // d = Tanggal (06)
+        // m = Bulan (02)
+        // y = Tahun 2 digit (26)
+        $dateParsed = \Carbon\Carbon::parse($this->inspection_date);
+        $formattedDate = $dateParsed->format('D/dmy');
+
+        return "{$acronym}/{$equipment}/{$formattedDate}";
+    }
     public function save()
     {
         $this->validate([
@@ -289,8 +309,9 @@ class FireInspection extends Component
 
         try {
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
-
-            DB::transaction(function () use ($inspectedByString) {
+            // Ambil nomor inspeksi sekali saja di luar loop untuk efisiensi
+            $generatedNumber = $this->inspection_number;
+            DB::transaction(function () use ($inspectedByString, $generatedNumber) {
 
                 // 1. PROSES FOTO AREA (Hanya 1 kali per transaksi)
                 $areaPhotoPath = null;
@@ -317,6 +338,7 @@ class FireInspection extends Component
 
                     // 3. SIMPAN KE DATABASE
                     FireProtection::create([
+                        'inspection_number'   => $generatedNumber, // 🔥 Simpan nomor di sini
                         'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath, // Foto spesifik alat
                         'area_photo_path'     => $areaPhotoPath,      // Path foto area yang sama
