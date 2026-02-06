@@ -180,7 +180,7 @@ class FireInspectionList extends Component
 
         if ($inspections->isEmpty()) {
             $this->dispatch('alert', [
-                'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::parse($this->date)->translatedFormat('F Y'),
+                'text' => "Tidak ada data {$this->type} untuk periode " . Carbon::parse($this->date)->locale('id')->translatedFormat('F Y'),
                 'backgroundColor' => "background: linear-gradient(135deg, #f44336, #d32f2f);",
             ]);
             return;
@@ -194,7 +194,8 @@ class FireInspectionList extends Component
             'type' => $this->type,
             'area' => $inspections->first()->equipmentMaster->location->name ?? 'N/A',
             'structure' => $structure,
-            'month' => Carbon::parse($this->date)->translatedFormat('F Y'),
+            'month' => Carbon::parse($this->date)->locale('id')->translatedFormat('F Y'),
+            'tgl' => Carbon::parse($this->date)->locale('id')->translatedFormat('l F Y'),
             'submitted_by' => $inspections->first()->submitted_by ?? 'N/A',
             'inspection_number' => $inspections->first()->inspection_number ?? 'N/A',
         ])->setPaper('a4', 'landscape');

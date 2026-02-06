@@ -292,7 +292,7 @@ class FireInspection extends Component
         // m = Bulan (02)
         // y = Tahun 2 digit (26)
         $dateParsed = \Carbon\Carbon::parse($this->inspection_date);
-        $formattedDate = $dateParsed->format('D/dmy');
+        $formattedDate = $dateParsed->format('d/m/y');
 
         return "{$acronym}/{$equipment}/{$formattedDate}";
     }

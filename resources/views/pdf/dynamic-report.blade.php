@@ -266,12 +266,12 @@
                                 <td>: {{ $submitted_by ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <td class="bg-gray" style="font-weight: bold; height: 30px;">Nomor Inspeksi</td>
+                                <td class="bg-gray" style="font-weight: bold; ">Nomor Inspeksi</td>
                                 <td>: {{ $inspection_number ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <td class="bg-gray" style="font-weight: bold;">Date</td>
-                                <td>: {{ now()->format('d/m/Y') }}</td>
+                                <td>: {{ $tgl }}</td>
                             </tr>
                         </table>
                     </td>
