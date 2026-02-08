@@ -227,7 +227,7 @@
                                 @endif
                             </td>
 
-                            <td style="width: 65%; vertical-align: top;">
+                            <td style="width: 100%; vertical-align: top;">
                                 @foreach ($documentationPhotos as $index => $item)
                                     <div class="photo-card"
                                         style="width: 46%; margin: 1%; border: 1px solid #000; display: inline-block; vertical-align: top;">
