@@ -232,7 +232,7 @@
                                     <div class="photo-card"
                                         style="width: 46%; margin: 1%; border: 1px solid #000; display: inline-block; vertical-align: top;">
                                         <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
-                                            style="width: 100%; height: 100px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
+                                            style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
                                         <div class="photo-caption" style="font-size: 6pt; padding: 4px;">
                                             <strong>No:</strong> {{ $loop->iteration }}<br>
                                             <strong>Lokasi:</strong>
