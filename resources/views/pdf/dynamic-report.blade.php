@@ -146,7 +146,7 @@
                         <th>{{ $header }}</th>
                     @endforeach
                     <th width="60px">TANGGAL</th>
-                    <th width="60px">CHECK BY</th>
+                    <th width="60px">DIPERIKSA OLEH</th>
                     <th width="120px">REMARKS</th>
                 </tr>
             </thead>
@@ -199,37 +199,52 @@
             <div class="photo-grid">
                 @php
                     $hasPhoto = false;
-                    // Ambil foto area dari record pertama yang memiliki area_photo_path
                     $areaPhoto = $data->whereNotNull('area_photo_path')->first();
+                    // Ambil koleksi foto dokumentasi/temuan
+                    $documentationPhotos = $data->filter(
+                        fn($item) => $item->documentation_path &&
+                            file_exists(storage_path('app/public/' . $item->documentation_path)),
+                    );
                 @endphp
 
-                @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
+                @if (
+                    ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path))) ||
+                        $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
-                    <div class="photo-card" style="width: 35%; border: 2px solid #000;"> <img
-                            src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}" class="photo-img"
-                            style="height: 250px;">
-                        <div class="photo-caption"
-                            style="background-color: #ffff00; font-weight: bold; text-align: center;">
-                            FOTO INSPEKSI AREA: {{ $area ?? 'Tokatindung Site' }}
-                        </div>
-                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+                        <tr>
+                            <td style="width: 35%; vertical-align: top; padding-right: 10px;">
+                                @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
+                                    <div style="border: 2px solid #000; background-color: #fff;">
+                                        <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
+                                            style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                                        <div
+                                            style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000;">
+                                            FOTO INSPEKSI AREA:<br>{{ $area ?? 'Tokatindung Site' }}
+                                        </div>
+                                    </div>
+                                @endif
+                            </td>
+
+                            <td style="width: 65%; vertical-align: top;">
+                                @foreach ($documentationPhotos as $index => $item)
+                                    <div class="photo-card"
+                                        style="width: 46%; margin: 1%; border: 1px solid #000; display: inline-block; vertical-align: top;">
+                                        <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
+                                            style="width: 100%; height: 100px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
+                                        <div class="photo-caption" style="font-size: 6pt; padding: 4px;">
+                                            <strong>No:</strong> {{ $loop->iteration }}<br>
+                                            <strong>Lokasi:</strong>
+                                            {{ $item->equipmentMaster->specific_location }}<br>
+                                            <strong>Ket:</strong> {{ $item->remarks ?? '-' }}
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </td>
+                        </tr>
+                    </table>
                 @endif
-
-                <div style="clear: both; margin-bottom: 10px;"></div>
-
-                @foreach ($data as $index => $item)
-                    @if ($item->documentation_path && file_exists(storage_path('app/public/' . $item->documentation_path)))
-                        @php $hasPhoto = true; @endphp
-                        <div class="photo-card">
-                            <img src="{{ storage_path('app/public/' . $item->documentation_path) }}" class="photo-img">
-                            <div class="photo-caption">
-                                <strong>No:</strong> {{ $index + 1 }}<br>
-                                <strong>Lokasi:</strong> {{ $item->equipmentMaster->specific_location }}<br>
-                                <strong>Remarks:</strong> {{ $item->remarks ?? '-' }}
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
 
                 @if (!$hasPhoto)
                     <div style="text-align: center; color: #999; padding: 20px;">Tidak ada lampiran foto.</div>
@@ -245,13 +260,13 @@
                     <td class="no-border" style="width: 15%; vertical-align: top;">
                         <table class="legend-table">
                             <tr>
-                                <th class="bg-gray">Note:</th>
+                                <th class="bg-gray">Keerangan</th>
                             </tr>
                             <tr>
-                                <td><span class="good">✔</span> Good</td>
+                                <td><span class="good">✔</span> Baik</td>
                             </tr>
                             <tr>
-                                <td><span class="nogood">✘</span> No Good</td>
+                                <td><span class="nogood">✘</span> Rusak / Tidak Baik</td>
                             </tr>
                         </table>
                     </td>
@@ -262,7 +277,7 @@
                     <td class="no-border" style="width: 45%; vertical-align: top;">
                         <table class="legend-table">
                             <tr>
-                                <td class="bg-gray" style="width: 100px; font-weight: bold;">Input to Tosar by</td>
+                                <td class="bg-gray" style="width: 100px; font-weight: bold;">Di Input Oleh</td>
                                 <td>: {{ $submitted_by ?? 'N/A' }}</td>
                             </tr>
                             <tr>
@@ -289,6 +304,9 @@
                                     ->unique()
                                     ->filter();
                             @endphp
+                            <tr>
+                                <th colspan="2">Inisial Pemeriksa</th>
+                            </tr>
                             @foreach ($uniqueNames as $name)
                                 <tr>
                                     <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
