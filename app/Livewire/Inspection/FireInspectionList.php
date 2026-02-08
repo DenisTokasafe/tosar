@@ -195,7 +195,7 @@ class FireInspectionList extends Component
             'area' => $inspections->first()->equipmentMaster->location->name ?? 'N/A',
             'structure' => $structure,
             'month' => Carbon::parse($this->date)->locale('id')->translatedFormat('F Y'),
-            'tgl' => Carbon::parse($this->date)->locale('id')->translatedFormat('l F Y'),
+            'tgl' => Carbon::parse($this->date)->locale('id')->translatedFormat('d, F Y'),
             'submitted_by' => $inspections->first()->submitted_by ?? 'N/A',
             'inspection_number' => $inspections->first()->inspection_number ?? 'N/A',
         ])->setPaper('a4', 'landscape');
