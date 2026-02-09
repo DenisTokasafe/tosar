@@ -222,7 +222,7 @@
                 @if ($areaPhotoExists || $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
 
-                    <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
+                    <div style="width: 33%; overflow: hidden; box-sizing: border-box;">
 
                         @if ($areaPhotoExists)
                             <div
