@@ -34,3 +34,4 @@ public function down(): void
               ->on('inspection_sessions');
     });
 }
+};
