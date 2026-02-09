@@ -116,9 +116,4 @@
         </dialog>
     </x-tabs-equipment.layout>
 </section>
-<script>
-    // Listener untuk menutup modal setelah save berhasil
-    window.addEventListener('close-modal', event => {
-        document.getElementById('checklist_modal').close();
-    });
-</script>
+
