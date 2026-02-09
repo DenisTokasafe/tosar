@@ -1,4 +1,4 @@
-@props(['activeTab', 'heading', 'subheading'])
+@props(['heading', 'subheading'])
 <div class="flex flex-col ">
     <div class="w-full md:w-60">
         <div class="hidden md:block w-60">

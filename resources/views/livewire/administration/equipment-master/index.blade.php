@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
 
-    <x-tabs-equipment.layout :activeTab="'equipment-master'" heading="Equipment Master"
+    <x-tabs-equipment.layout heading="Equipment Master"
         subheading="Manage equipment records including types, locations, and technical specifications.">
         <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
             {{-- KOLOM KIRI: FORM INPUT & IMPORT --}}
