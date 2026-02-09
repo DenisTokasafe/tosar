@@ -172,6 +172,8 @@ class FireInspectionList extends Component
     {
         // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
         $date = Carbon::parse($this->date);
+        $currentMonth = $date->month; // Menghasilkan angka 1-12
+        $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
         $inspections = FireProtection::whereHas('equipmentMaster', function ($query) {
             $query->where('type', $this->type)
