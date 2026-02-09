@@ -180,8 +180,18 @@ class FireInspectionList extends Component
                 ->where('location_id', $this->location_id);
         })
             ->searchInstectionsByDate($this->date)
-             ->orderBy('inspectionSession.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
+            ->orderBy('inspectionSession.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->with(['equipmentMaster.location', 'inspectionSession']) // Eager load untuk performa saat looping di PDF
+            ->get();
+
+        $inspections =  FireProtection::query()
+            ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
+            ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')
+            ->with('equipmentMaster.location', 'inspectionSession')
+            ->searchByType($this->search_type)
+            ->searchByLocation($this->location_id)
+            ->searchInstectionsByDate($this->date)
+            ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->get();
 
         if ($inspections->isEmpty()) {
