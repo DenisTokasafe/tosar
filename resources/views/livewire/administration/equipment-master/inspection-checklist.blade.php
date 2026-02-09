@@ -105,7 +105,7 @@
                         Save Changes
                     </button>
                     <form method="dialog">
-                        <button class="btn btn-ghost btn-xs" wire:click="resetForm">Cancel</button>
+                        <button class="btn btn-ghost btn-xs btn-soft" wire:click="resetForm">Cancel</button>
                     </form>
                 </div>
             </div>
