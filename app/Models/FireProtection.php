@@ -24,14 +24,16 @@ class FireProtection extends Model
         return $this->belongsTo(InspectionSession::class, 'inspection_session_id');
     }
     public function getAreaPhotoAttribute()
-{
-    // Mengambil area_photo_path dari tabel inspection_sessions
-    return $this->inspectionSession ? $this->inspectionSession->area_photo_path : null;
-}
+    {
+        // Mengambil area_photo_path dari tabel inspection_sessions
+        return $this->inspectionSession ? $this->inspectionSession->area_photo_path : null;
+    }
     public function equipmentMaster()
     {
         return $this->belongsTo(EquipmentMaster::class);
     }
+
+
     public function scopeSearchInstectionsByDate($query, $date)
     {
         if ($date) {
@@ -40,7 +42,7 @@ class FireProtection extends Model
             // Gunakan $query, bukan $this
             return $query->whereHas('inspectionSession', function ($q) use ($currentMonth, $date) {
                 $q->whereMonth('inspection_date', $currentMonth)
-                  ->whereYear('inspection_date', $date->year);
+                    ->whereYear('inspection_date', $date->year);
             });
         }
         return $query;
