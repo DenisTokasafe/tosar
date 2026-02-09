@@ -26,7 +26,7 @@
                         <strong>Checks:</strong> {{ implode(', ', $item->checks) }}
                     </td>
                     <td class="p-2 border">
-                        <button wire:click="edit({{ $item->id }})" class="text-blue-500">Edit</button> |
+                        <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})" class="text-white btn btn-sm btn-info">Edit</button> |
                         <button wire:confirm="Yakin hapus?" wire:click="delete({{ $item->id }})"
                             class="text-red-500">Hapus</button>
                     </td>
