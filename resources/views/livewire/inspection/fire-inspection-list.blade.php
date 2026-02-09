@@ -220,8 +220,7 @@
                                     class="checkbox checkbox-xs border-emerald-600 bg-emerald-500 checked:border-rose-500 checked:bg-rose-400 checked:text-rose-800" />
                             </td>
                             <td class="text-center border">
-                                <span class="w-32 font-semibold badge badge-soft badge-info"><span
-                                        class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span></span>
+                                <span class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span>
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
@@ -273,7 +272,7 @@
                                             class="btn btn-ghost btn-xs text-info">Doc</a>
                                     @endif
 
-                                    <flux:tooltip content="edit" position="top">
+                                    <flux:tooltip content="detail" position="top">
                                         <flux:button href="{{ route('fire-inspection-edit', $item->id) }}"
                                             size="xs" icon="pencil-square" variant="subtle">
                                         </flux:button>
