@@ -200,6 +200,7 @@
                             <input type="checkbox" wire:model.live="selectAll"
                                 class="checkbox checkbox-xs border-emerald-600 bg-emerald-500 checked:border-rose-500 checked:bg-rose-400 checked:text-rose-800" />
                         </th>
+                        <th class="border">Reference</th>
                         <th class="border">Jenis Alat</th>
                         <th class="border">Area & Lokasi spesifik</th>
                         <th class="border">Data Teknis & Kondisi</th>
@@ -211,7 +212,8 @@
                 <tbody>
                     @forelse ($inspections as $index => $item)
                         <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden'
-                            wire:target='location_id,search_type,date' class="{{ in_array($item->id, $selectedItems) ? 'bg-error/10' : 'odd:bg-white even:bg-gray-100' }}">
+                            wire:target='location_id,search_type,date'
+                            class="{{ in_array($item->id, $selectedItems) ? 'bg-error/10' : 'odd:bg-white even:bg-gray-100' }}">
                             <td class="text-center border">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center border">
                                 <input type="checkbox" wire:model.live="selectedItems" value="{{ $item->id }}"
@@ -219,11 +221,11 @@
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
-                                        class="text-xs">{{ $item->equipmentMaster->type }}</span></span>
+                                        class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span></span>
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
-                                        class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span></span>
+                                        class="text-xs">{{ $item->equipmentMaster->type }}</span></span>
                             </td>
                             <td class="text-center border">
                                 <div class="text-[10px] opacity-60">{{ $item->equipmentMaster->location->name }}
