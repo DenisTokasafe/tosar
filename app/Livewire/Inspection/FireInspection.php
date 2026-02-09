@@ -359,7 +359,6 @@ class FireInspection extends Component
                         'submitted_by'        => auth()->user()->name ?? 'System',
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,
-                        // 'area_photo_path'  => $areaPhotoPath, // Opsional: Hapus jika ingin database benar-benar bersih
                     ]);
                 }
             });
