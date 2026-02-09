@@ -80,6 +80,23 @@ class FireInspection extends Component
         $this->inspection_date = now()->format('Y-m-d');
         $this->updatedType($this->type);
     }
+
+    public function getChecklistFromDB()
+    {
+        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
+        $master = DB::table('inspection_checklist_masters')
+            ->where('equipment_type', $this->type)
+            ->where(function ($q) {
+                $q->where('location_keyword', 'Default')
+                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
+            })
+            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
+            ->first();
+
+        if ($master) {
+            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
+        }
+    }
     // --- LOGIKA HAPUS FOTO AREA (SEBELUM SAVE) ---
     public function removeFotoArea()
     {
@@ -136,14 +153,8 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
-        if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        } elseif ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar', 'Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        } else {
-            // Kembalikan ke default jika bukan Maesa Camp
-            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
+        // Ambil checklist dinamis dari DB (Menggantikan if-else manual)
+        $this->getChecklistFromDB();
 
         // Ambil semua alat
         // 1. Ambil semua data master berdasarkan lokasi dan tipe
@@ -303,17 +314,17 @@ class FireInspection extends Component
             'location_id'     => 'required',
             'inspected_users' => 'required|array|min:1',
             'conditions'      => 'required|array|min:1',
-            // Tambahkan validasi untuk array dokumentasi (opsional)
+            'foto_area'       => 'required|image|max:3072', // Foto Area jadi wajib di header
             'dokumentasi.*'   => 'nullable|image|max:2048',
         ]);
 
         try {
             $inspectedByString = implode('|', array_column($this->inspected_users, 'name'));
-            // Ambil nomor inspeksi sekali saja di luar loop untuk efisiensi
             $generatedNumber = $this->inspection_number;
+
             DB::transaction(function () use ($inspectedByString, $generatedNumber) {
 
-                // 1. PROSES FOTO AREA (Hanya 1 kali per transaksi)
+                // 1. SIMPAN KE HEADER (inspection_sessions)
                 $areaPhotoPath = null;
                 if ($this->foto_area) {
                     $areaPhotoPath = FileHelper::compressAndStore(
@@ -322,9 +333,19 @@ class FireInspection extends Component
                     );
                 }
 
+                // Buat record session sebagai induk
+                $sessionId = DB::table('inspection_sessions')->insertGetId([
+                    'inspection_date' => $this->inspection_date,
+                    'inspected_by'    => $inspectedByString,
+                    'area_name'       => $this->area, // Diambil dari selectLocation
+                    'area_photo_path' => $areaPhotoPath,
+                    'created_at'      => now(),
+                    'updated_at'      => now(),
+                ]);
+
+                // 2. SIMPAN KE DETAIL (fire_protections)
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
 
-                    // 2. PROSES FOTO DOKUMENTASI PER ALAT
                     $documentationPath = null;
                     if (isset($this->dokumentasi[$equipmentMasterId])) {
                         $documentationPath = FileHelper::compressAndStore(
@@ -334,26 +355,26 @@ class FireInspection extends Component
                     }
 
                     $rowRemarks = $dataKondisi['remarks'] ?? null;
-                    $cleanConditions = collect($dataKondisi)->forget('remarks')->toArray();
+                    // Hilangkan key yang bukan checklist sebelum simpan ke JSON
+                    $cleanConditions = collect($dataKondisi)->forget(['remarks'])->toArray();
 
-                    // 3. SIMPAN KE DATABASE
                     FireProtection::create([
-                        'inspection_number'   => $generatedNumber, // 🔥 Simpan nomor di sini
+                        'inspection_session_id' => $sessionId, // <--- RELASI BARU
+                        'inspection_number'   => $generatedNumber,
                         'equipment_master_id' => $equipmentMasterId,
-                        'documentation_path'  => $documentationPath, // Foto spesifik alat
-                        'area_photo_path'     => $areaPhotoPath,      // Path foto area yang sama
+                        'documentation_path'  => $documentationPath,
                         'inspection_date'     => $this->inspection_date,
                         'submitted_by'        => auth()->user()->name ?? 'System',
                         'inspected_by'        => $inspectedByString,
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,
+                        // 'area_photo_path'  => $areaPhotoPath, // Opsional: Hapus jika ingin database benar-benar bersih
                     ]);
                 }
             });
 
-            // Reset field setelah sukses
             $this->reset(['dokumentasi', 'conditions', 'foto_area']);
-            $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan!", 'backgroundColor' => "background: #00c853;"]);
+            $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan per sesi!", 'backgroundColor' => "background: #00c853;"]);
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => "Kesalahan: " . $e->getMessage(), 'backgroundColor' => "background: #f44336;"]);
         }
