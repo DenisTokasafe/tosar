@@ -37,7 +37,7 @@ class InspectionChecklist extends Component
             'checks.*' => 'required',
         ]);
 
-        InspectionChecklist::updateOrCreate(
+        InspectionChecklistModel::updateOrCreate(
             ['id' => $this->checklist_id],
             [
                 'equipment_type' => $this->equipment_type,
@@ -53,7 +53,7 @@ class InspectionChecklist extends Component
 
     public function edit($id)
     {
-        $checklist = InspectionChecklist::find($id);
+        $checklist = InspectionChecklistModel::find($id);
         $this->checklist_id = $id;
         $this->equipment_type = $checklist->equipment_type;
         $this->location_keyword = $checklist->location_keyword;
@@ -63,7 +63,7 @@ class InspectionChecklist extends Component
 
     public function delete($id)
     {
-        InspectionChecklist::find($id)->delete();
+            InspectionChecklistModel::find($id)->delete();
     }
 
     public function resetForm()
