@@ -27,23 +27,46 @@
                         <x-form.input-floating label="Lokasi Spesifik" model="specific_location" />
 
                         <div class="p-3 mt-4 border rounded bg-gray-50">
-                            <p class="mb-2 text-xs font-bold">Spesifikasi (FE No, Capacity, dll)</p>
-                            <div class="flex gap-1 mb-2">
-                                <input type="text" wire:model.live="newKey" placeholder="Label"
-                                    class="w-1/2 input input-xs input-bordered">
-                                <input type="text" wire:model.live="newValue" placeholder="Value"
-                                    class="w-1/2 input input-xs input-bordered">
-                                <button wire:click="addTechnicalField" class="btn btn-xs btn-primary">+</button>
+                            <p class="mb-2 text-xs font-bold text-info">Spesifikasi (Otomatis dari Master)</p>
+
+                            {{-- List Spesifikasi --}}
+                            <div class="mb-3 space-y-2">
+                                @forelse ($technical_data as $key => $val)
+                                    <div class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
+                                        <div class="flex items-center justify-between">
+                                            <span
+                                                class="text-[10px] font-bold uppercase text-gray-500">{{ $key }}</span>
+                                            <button type="button"
+                                                wire:click="removeTechnicalField('{{ $key }}')"
+                                                class="text-red-500 hover:text-red-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        {{-- Input untuk mengisi value dari label tersebut --}}
+                                        <input type="text" wire:model="technical_data.{{ $key }}"
+                                            placeholder="Isi {{ $key }}..."
+                                            class="w-full input input-xs input-bordered focus:input-info">
+                                    </div>
+                                @empty
+                                    <p class="text-[10px] text-center text-gray-400 py-2 italic">Pilih jenis alat untuk
+                                        memuat spesifikasi</p>
+                                @endforelse
                             </div>
 
-                            <div class="space-y-1">
-                                @foreach ($technical_data as $key => $val)
-                                    <div class="flex items-center justify-between p-1 text-xs bg-white border rounded">
-                                        <span><strong>{{ $key }}:</strong> {{ $val }}</span>
-                                        <button wire:click="removeTechnicalField('{{ $key }}')"
-                                            class="font-bold text-red-500">×</button>
-                                    </div>
-                                @endforeach
+                            <hr class="my-2 border-gray-200">
+
+                            {{-- Tambah Manual Jika Diperlukan --}}
+                            <p class="mb-1 text-[9px] font-bold text-gray-400 uppercase">Tambah Field Manual</p>
+                            <div class="flex gap-1">
+                                <input type="text" wire:model="newKey" placeholder="Label"
+                                    class="w-1/2 input input-xs input-bordered">
+                                <input type="text" wire:model="newValue" placeholder="Value"
+                                    class="w-1/2 input input-xs input-bordered">
+                                <button wire:click="addTechnicalField" class="btn btn-xs btn-primary">+</button>
                             </div>
                         </div>
 
@@ -146,7 +169,8 @@
                             <div class="modal-action">
                                 <button wire:click="importExcel" wire:loading.attr="disabled"
                                     class="text-white btn btn-success">
-                                    <span wire:loading wire:target="importExcel" class="loading loading-spinner"></span>
+                                    <span wire:loading wire:target="importExcel"
+                                        class="loading loading-spinner"></span>
                                     ✅ Simpan Ke Database
                                 </button>
 
@@ -176,8 +200,8 @@
                         </select>
                     </fieldset>
                     <x-form.searchable-dropdown label="Cari Area" modelsearch="cari_searchLocation"
-                        modelid="cari_location_id" :options="$cari_locations" :showdropdown="$cari_show_location" clickaction="selectCariLocation"
-                        namedb="name" />
+                        modelid="cari_location_id" :options="$cari_locations" :showdropdown="$cari_show_location"
+                        clickaction="selectCariLocation" namedb="name" />
                 </div>
                 <div class="overflow-x-auto ">
                     <table class="table table-xs">

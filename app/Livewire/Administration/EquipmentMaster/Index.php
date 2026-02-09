@@ -7,9 +7,9 @@ use App\Models\Location;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\EquipmentMaster;
+use App\Models\InspectionChecklist;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EquipmentMasterImport;
-use Maatwebsite\Excel\HeadingRowImport;
 
 class Index extends Component
 {
@@ -40,7 +40,19 @@ class Index extends Component
         'location_id' => 'required|exists:locations,id',
         'technical_data' => 'nullable|array|min:1',
     ];
+    public function updatedType($value)
+    {
+        // Cari checklist berdasarkan type
+        $checklist = InspectionChecklist::where('equipment_type', $value)->first();
 
+        if ($checklist && is_array($checklist->inputs)) {
+            // Reset data teknis lama dan masukkan label dari DB sebagai Key
+            $this->technical_data = [];
+            foreach ($checklist->inputs as $label) {
+                $this->technical_data[$label] = ''; // Value default kosong
+            }
+        }
+    }
     // Menambah baris spesifikasi baru (misal: "FE No" -> "PH001")
     public function addTechnicalField()
     {
@@ -154,7 +166,7 @@ class Index extends Component
             );
 
             $this->dispatch('alert', ['text' => 'Data Excel Berhasil Diimport!']);
-            $this->reset([ 'previewData', 'showPreview']);
+            $this->reset(['previewData', 'showPreview']);
         } catch (\Exception $e) {
             $this->dispatch('alert', ['text' => 'Gagal Simpan: ' . $e->getMessage(), 'type' => 'error']);
         }
