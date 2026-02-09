@@ -10,8 +10,6 @@ class FireProtection extends Model
     protected $fillable = [
         'inspection_session_id', // Tambahkan ini
         'equipment_master_id',
-        'inspection_date',
-        'inspected_by',
         'conditions',
         'remarks',
         'documentation_path',
