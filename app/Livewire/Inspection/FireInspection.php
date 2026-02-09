@@ -107,8 +107,14 @@ class FireInspection extends Component
     }
     public function getChecklistFromDB()
     {
-        $master = EquipmentMaster::where('type', $this->type)
-            ->where('location_id', $this->location_id)
+        $master = DB::table('inspection_checklists')
+            ->where('equipment_type', $this->type)
+            ->where(function ($q) {
+                $q->where('location_keyword', 'Default')
+                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
+            })
+            // Mengambil yang lokasi spesifik (seperti Maesa Camp) dulu, baru Default
+            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
             ->first();
 
         if ($master) {
