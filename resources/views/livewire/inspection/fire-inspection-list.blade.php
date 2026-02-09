@@ -263,7 +263,7 @@
                                 </div>
                             </td>
                             <td class="text-center border">
-                                {{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/Y') }}
+                                {{ \Carbon\Carbon::parse($item->equipmentMaster->inspection_date)->format('d/m/Y') }}
                             </td>
                             <td class="text-center border">
                                 <div class="flex gap-2">
