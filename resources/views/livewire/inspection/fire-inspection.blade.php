@@ -42,14 +42,13 @@
 
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
             @php
-                $allMasterData = \App\Models\EquipmentMaster::where('location_id', $location_id)
-                    ->where('type', $type)
-                    ->spesificLocation($selected_location)
-                    ->get();
+                // Ambil checks dari database (config fields)
                 $checks = $fields[$type]['checks'] ?? [];
+
+                // Ambil technical keys dari kolom JSON 'technical_data' milik alat pertama yang muncul
                 $firstEquipment = $allMasterData->first();
                 $techKeys =
-                    $firstEquipment && $firstEquipment->technical_data
+                    $firstEquipment && is_array($firstEquipment->technical_data)
                         ? array_keys($firstEquipment->technical_data)
                         : [];
             @endphp
@@ -85,7 +84,8 @@
 
                                     @foreach ($techKeys as $key)
                                         <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
-                                            {{ $conditions[$master->id][$key] ?? '-' }}
+                                            {{-- Ambil langsung dari kolom JSON master data --}}
+                                            {{ $master->technical_data[$key] ?? '-' }}
                                         </td>
                                     @endforeach
 
