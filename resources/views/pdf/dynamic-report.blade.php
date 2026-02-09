@@ -212,34 +212,33 @@
                         $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
 
-                    <div style="width: 100%; clear: both; overflow: hidden;">
+                    <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
 
-                        <div style="width: 33%; float: left; margin-right: 2%;">
+                        <div style="width: 33%; float: left; margin-right: 2%; box-sizing: border-box;">
                             @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
-                                <div style="border: 1px solid #000; background-color: #fff; height: 260px;">
+                                <div
+                                    style="border: 2px solid #000; background-color: #fff; height: 260px; box-sizing: border-box;">
                                     <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
                                         style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
                                     <div
-                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; height: 60px; padding: 5px; border-top: 1px solid #000; box-sizing: border-box; overflow: hidden;">
+                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; height: 56px; box-sizing: border-box; overflow: hidden;">
                                         FOTO INSPEKSI AREA:<br>
-                                        <span
-                                            style="text-transform: uppercase;">{{ $area ?? 'Tokatindung Site' }}</span>
+                                        {{ $area ?? 'Tokatindung Site' }}
                                     </div>
                                 </div>
                             @endif
                         </div>
 
-                        <div style="width: 65%; float: left;">
+                        <div style="width: 65%; float: left; box-sizing: border-box;">
                             @foreach ($documentationPhotos as $index => $item)
                                 <div
-                                    style="width: 48%; float: left; margin-right: 2%; margin-bottom: 10px; border: 1px solid #000; height: 260px; background-color: #fff; box-sizing: border-box;">
-
+                                    style="width: 48%; float: left; margin-right: 2%; margin-bottom: 10px; border: 1px solid #000; height: 260px; background-color: #fff; box-sizing: border-box; vertical-align: top;">
                                     <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
                                         style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
 
                                     <div
-                                        style="font-size: 6pt; padding: 4px; height: 60px; box-sizing: border-box; overflow: hidden;">
+                                        style="font-size: 6pt; padding: 4px; height: 58px; box-sizing: border-box; overflow: hidden;">
                                         <strong>No:</strong> {{ $loop->iteration }}<br>
                                         <strong>Lokasi:</strong>
                                         {{ Str::limit($item->equipmentMaster->specific_location, 35) }}<br>
