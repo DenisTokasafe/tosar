@@ -1,4 +1,4 @@
-<section class="w-full">
+<div class="w-full">
     <x-toast />
     <x-tabs-equipment.layout heading="Inspection Checklist"
         subheading="Manage equipment inspection checklists including input fields and checkpoints." />
@@ -115,4 +115,4 @@
             document.getElementById('checklist_modal').close();
         });
     </script>
-</section>
+</div>
