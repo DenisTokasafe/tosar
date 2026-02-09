@@ -3,12 +3,17 @@
 namespace App\Livewire\Administration\EquipmentMaster;
 
 use Livewire\Component;
+use App\Models\Location;
 use App\Models\InspectionChecklist as InspectionChecklistModel;
 
 class InspectionChecklist extends Component
 {
     public $checklists;
+    public $location_id;
     public $checklist_id, $equipment_type, $location_keyword;
+    public $searchLocation = '';
+    public $locations = [];
+    public $show_location = false;
 
     // Array dinamis untuk form
     public $inputs = [''];
@@ -21,13 +26,46 @@ class InspectionChecklist extends Component
     }
 
     // Menambah baris input kosong
-    public function addInput() { $this->inputs[] = ''; }
-    public function removeInput($index) { unset($this->inputs[$index]); $this->inputs = array_values($this->inputs); }
+    public function addInput()
+    {
+        $this->inputs[] = '';
+    }
+    public function removeInput($index)
+    {
+        unset($this->inputs[$index]);
+        $this->inputs = array_values($this->inputs);
+    }
 
     // Menambah baris check kosong
-    public function addCheck() { $this->checks[] = ''; }
-    public function removeCheck($index) { unset($this->checks[$index]); $this->checks = array_values($this->checks); }
-
+    public function addCheck()
+    {
+        $this->checks[] = '';
+    }
+    public function removeCheck($index)
+    {
+        unset($this->checks[$index]);
+        $this->checks = array_values($this->checks);
+    }
+    public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+            $this->show_location = true;
+        } else {
+            $this->locations = [];
+            $this->show_location = false;
+        }
+    }
+    public function selectLocation($id, $name)
+    {
+        $this->location_id = $id;
+        $this->searchLocation = $name;
+        $this->location_keyword = $name;
+        $this->show_location = false;
+    }
     public function save()
     {
         $this->validate([
@@ -63,12 +101,13 @@ class InspectionChecklist extends Component
 
     public function delete($id)
     {
-            InspectionChecklistModel::find($id)->delete();
+        InspectionChecklistModel::find($id)->delete();
     }
 
     public function resetForm()
     {
         $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks']);
-        $this->inputs = ['']; $this->checks = [''];
+        $this->inputs = [''];
+        $this->checks = [''];
     }
 }
