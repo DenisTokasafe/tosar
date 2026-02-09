@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InspectionSession extends Model
 {
+    protected $table = 'inspection_sessions';
     protected $fillable = [
         'inspection_date', // Tambahkan ini
         'inspection_number',
