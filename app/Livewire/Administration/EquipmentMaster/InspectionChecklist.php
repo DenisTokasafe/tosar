@@ -95,6 +95,7 @@ class InspectionChecklist extends Component
         $this->checklist_id = $id;
         $this->equipment_type = $checklist->equipment_type;
         $this->location_keyword = $checklist->location_keyword;
+        $this->searchLocation = $checklist->location_keyword;
         $this->inputs = $checklist->inputs;
         $this->checks = $checklist->checks;
     }
