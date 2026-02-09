@@ -65,7 +65,7 @@
                         <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Inputs Field</label>
                         @foreach ($inputs as $index => $value)
                             <div class="flex items-center gap-2 group">
-                                     <x-form.input-text label="Input Field {{ $index + 1 }}" type='text' model="inputs.{{ $index }}" placeholder="Input Field {{ $index + 1 }}"  />
+                                     <x-form.input-floating label="Input Field {{ $index + 1 }}" type='text' model="inputs.{{ $index }}" placeholder="Input Field {{ $index + 1 }}"  />
                                 <button wire:click="removeInput({{ $index }})"
                                     class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
                             </div>
