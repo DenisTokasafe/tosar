@@ -199,12 +199,24 @@
             <div class="photo-grid">
                 @php
                     $hasPhoto = false;
-                    $areaPhoto = $data->whereNotNull('area_photo_path')->first();
-                    // Ambil koleksi foto dokumentasi/temuan
+                    // Ambil baris pertama dari koleksi data
+                    $firstItem = $data->first();
+
+                    // Ambil path foto area dari relasi inspectionSession
+                    // Kita pastikan relasinya ada, lalu ambil kolom area_photo_path
+                    $areaPhotoPath =
+                        $firstItem && $firstItem->inspectionSession
+                            ? $firstItem->inspectionSession->area_photo_path
+                            : null;
+
+                    // Ambil koleksi foto dokumentasi/temuan (tetap dari tabel fire_protections)
                     $documentationPhotos = $data->filter(
                         fn($item) => $item->documentation_path &&
                             file_exists(storage_path('app/public/' . $item->documentation_path)),
                     );
+
+                    // Cek apakah file area_photo ada di storage
+                    $areaPhotoExists = $areaPhotoPath && file_exists(storage_path('app/public/' . $areaPhotoPath));
                 @endphp
 
                 @if (
@@ -214,48 +226,49 @@
 
                     <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
 
-                        <div style="width: 33%; float: left; margin-right: 2%; box-sizing: border-box;">
-                            @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
+                        @if ($areaPhotoExists)
+                            <div
+                                style="border: 2px solid #000; background-color: #fff; height: 260px; box-sizing: border-box;">
+                                {{-- Gunakan $areaPhotoPath di sini --}}
+                                <img src="{{ storage_path('app/public/' . $areaPhotoPath) }}"
+                                    style="width: 100%; height: 200px; object-fit: cover; display: block;">
+
                                 <div
-                                    style="border: 2px solid #000; background-color: #fff; height: 260px; box-sizing: border-box;">
-                                    <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
-                                        style="width: 100%; height: 200px; object-fit: cover; display: block;">
-
-                                    <div
-                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; border-bottom: 1px solid #000; height: 50px; box-sizing: border-box; overflow: hidden;">
-                                        FOTO INSPEKSI AREA:<br>
-                                        {{ $area ?? 'Tokatindung Site' }}
-                                    </div>
+                                    style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; border-bottom: 1px solid #000; height: 50px; box-sizing: border-box; overflow: hidden;">
+                                    FOTO INSPEKSI AREA:<br>
+                                    {{-- Ambil nama area dari session jika ada --}}
+                                    {{ $firstItem->inspectionSession->area_name ?? 'Tokatindung Site' }}
                                 </div>
-                            @endif
-                        </div>
-
-                        <div style="width: 65%; float: left; box-sizing: border-box;">
-                            @foreach ($documentationPhotos as $index => $item)
-                                <div
-                                    style="width: 48%; float: left; margin-right: 2%; margin-bottom: 10px; border: 1px solid #000; height: 260px; background-color: #fff; box-sizing: border-box; vertical-align: top;">
-                                    <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
-                                        style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
-
-                                    <div
-                                        style="font-size: 6pt; padding: 4px; height: 58px; box-sizing: border-box; overflow: hidden;">
-                                        <strong>No:</strong> {{ $loop->iteration }}<br>
-                                        <strong>Lokasi:</strong>
-                                        {{ Str::limit($item->equipmentMaster->specific_location, 35) }}<br>
-                                        <strong>Ket:</strong> {{ Str::limit($item->remarks ?? '-', 35) }}
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div style="clear: both;"></div>
+                            </div>
+                        @endif
                     </div>
-                @endif
 
-                @if (!$hasPhoto)
-                    <div style="text-align: center; color: #999; padding: 20px;">Tidak ada lampiran foto.</div>
-                @endif
+                    <div style="width: 65%; float: left; box-sizing: border-box;">
+                        @foreach ($documentationPhotos as $index => $item)
+                            <div
+                                style="width: 48%; float: left; margin-right: 2%; margin-bottom: 10px; border: 1px solid #000; height: 260px; background-color: #fff; box-sizing: border-box; vertical-align: top;">
+                                <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
+                                    style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
+
+                                <div
+                                    style="font-size: 6pt; padding: 4px; height: 58px; box-sizing: border-box; overflow: hidden;">
+                                    <strong>No:</strong> {{ $loop->iteration }}<br>
+                                    <strong>Lokasi:</strong>
+                                    {{ Str::limit($item->equipmentMaster->specific_location, 35) }}<br>
+                                    <strong>Ket:</strong> {{ Str::limit($item->remarks ?? '-', 35) }}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div style="clear: both;"></div>
             </div>
+            @endif
+
+            @if (!$hasPhoto)
+                <div style="text-align: center; color: #999; padding: 20px;">Tidak ada lampiran foto.</div>
+            @endif
+        </div>
         </div>
 
         {{-- Footer Section --}}

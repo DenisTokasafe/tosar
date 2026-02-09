@@ -5,9 +5,10 @@ namespace App\Livewire\Inspection;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Location;
+use Livewire\WithPagination;
 use App\Models\FireProtection;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class FireInspectionList extends Component
 {
@@ -88,29 +89,35 @@ class FireInspectionList extends Component
             $this->show_location = false;
         }
     }
+    public function getChecklistFromDB()
+    {
+        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
+        $master = DB::table('inspection_checklist_masters')
+            ->where('equipment_type', $this->type)
+            ->where(function ($q) {
+                $q->where('location_keyword', 'Default')
+                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
+            })
+            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
+            ->first();
+
+        if ($master) {
+            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
+        }
+    }
     public function selectLocation($id, $name)
     {
         $this->location_id = $id;
         $this->searchLocation = $name;
         $this->area = $name;
         $this->show_location = false;
-        if ($this->type === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        } else {
-            // Kembalikan ke default jika bukan Maesa Camp
-            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
+        $this->getChecklistFromDB();
     }
     public function updatedType($value)
     {
         $this->type = $value;
         // Logika Khusus untuk Maesa Camp
-        if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        } else {
-            // Kembalikan ke default jika bukan Maesa Camp
-            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
+        $this->getChecklistFromDB();
         // Jika area sudah terpilih, refresh daftar alat di area tersebut
         if ($this->location_id) {
             $this->selectLocation($this->location_id, $this->searchLocation);
@@ -194,10 +201,10 @@ class FireInspectionList extends Component
             'type' => $this->type,
             'area' => $inspections->first()->equipmentMaster->location->name ?? 'N/A',
             'structure' => $structure,
-            'month' => Carbon::parse($inspections->first()->inspection_date)->locale('id')->translatedFormat('F Y'),
-            'tgl' => Carbon::parse($inspections->first()->inspection_date)->locale('id')->translatedFormat('d, F Y'),
-            'submitted_by' => $inspections->first()->submitted_by ?? 'N/A',
-            'inspection_number' => $inspections->first()->inspection_number ?? 'N/A',
+            'month' => Carbon::parse($inspections->first()->inspectionSession->inspection_date)->locale('id')->translatedFormat('F Y'),
+            'tgl' => Carbon::parse($inspections->first()->inspectionSession->inspection_date)->locale('id')->translatedFormat('d, F Y'),
+            'submitted_by' => $inspections->first()->inspectionSession->submitted_by ?? 'N/A',
+            'inspection_number' => $inspections->first()->inspectionSession->inspection_number ?? 'N/A',
         ])->setPaper('a4', 'landscape');
 
         // 2. Render PDF terlebih dahulu agar bisa mengakses Canvas

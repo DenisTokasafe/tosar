@@ -81,22 +81,7 @@ class FireInspection extends Component
         $this->updatedType($this->type);
     }
 
-    public function getChecklistFromDB()
-    {
-        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
-        $master = DB::table('inspection_checklist_masters')
-            ->where('equipment_type', $this->type)
-            ->where(function ($q) {
-                $q->where('location_keyword', 'Default')
-                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
-            })
-            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
-            ->first();
 
-        if ($master) {
-            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
-        }
-    }
     // --- LOGIKA HAPUS FOTO AREA (SEBELUM SAVE) ---
     public function removeFotoArea()
     {
@@ -145,7 +130,22 @@ class FireInspection extends Component
         }
         $this->reset(['location_id']);
     }
+    public function getChecklistFromDB()
+    {
+        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
+        $master = DB::table('inspection_checklist_masters')
+            ->where('equipment_type', $this->type)
+            ->where(function ($q) {
+                $q->where('location_keyword', 'Default')
+                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
+            })
+            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
+            ->first();
 
+        if ($master) {
+            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
+        }
+    }
     public function selectLocation($id, $name)
     {
         $this->location_id = $id;
@@ -223,14 +223,7 @@ class FireInspection extends Component
     {
         $this->reset(['location', 'equipment_master_id', 'conditions', 'selected_location_specific']);
         // Logika Khusus untuk Maesa Camp
-        if ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'maesa camp')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Box', 'Hose', 'Rack', 'Valve', 'Nozel'];
-        } elseif ($value === 'Fire Hydrant' && str_contains(strtolower($this->searchLocation), 'megazine area')) {
-            $this->fields['Fire Hydrant']['checks'] = ['Hydrant Pilar', 'Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        } else {
-            // Kembalikan ke default jika bukan Maesa Camp
-            $this->fields['Fire Hydrant']['checks'] = ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'];
-        }
+        $this->getChecklistFromDB();
         // Jika area sudah terpilih, refresh daftar alat di area tersebut
         if ($this->location_id) {
             $this->selectLocation($this->location_id, $this->searchLocation);
@@ -336,6 +329,7 @@ class FireInspection extends Component
                 // Buat record session sebagai induk
                 $sessionId = DB::table('inspection_sessions')->insertGetId([
                     'inspection_date' => $this->inspection_date,
+                    'inspection_number'   => $generatedNumber,
                     'inspected_by'    => $inspectedByString,
                     'area_name'       => $this->area, // Diambil dari selectLocation
                     'area_photo_path' => $areaPhotoPath,
@@ -360,12 +354,9 @@ class FireInspection extends Component
 
                     FireProtection::create([
                         'inspection_session_id' => $sessionId, // <--- RELASI BARU
-                        'inspection_number'   => $generatedNumber,
                         'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath,
-                        'inspection_date'     => $this->inspection_date,
                         'submitted_by'        => auth()->user()->name ?? 'System',
-                        'inspected_by'        => $inspectedByString,
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,
                         // 'area_photo_path'  => $areaPhotoPath, // Opsional: Hapus jika ingin database benar-benar bersih
