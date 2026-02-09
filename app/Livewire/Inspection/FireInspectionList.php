@@ -180,7 +180,7 @@ class FireInspectionList extends Component
                 ->where('location_id', $this->location_id);
         })
             ->searchInstectionsByDate($this->date)
-            ->orderBy('inspection_date', 'asc')
+             ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->with('equipmentMaster') // Eager load untuk performa saat looping di PDF
             ->get();
 
