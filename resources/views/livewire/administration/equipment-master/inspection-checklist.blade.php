@@ -1,10 +1,12 @@
-<div class="w-full">
-    <x-toast />
-    <x-tabs-equipment.layout heading="Inspection Checklist"
-        subheading="Manage equipment inspection checklists including input fields and checkpoints." />
+<section class="w-full">
+    @if (session()->has('message'))
+        <div class="p-2 mb-4 bg-green-200">{{ session('message') }}</div>
+    @endif
     <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()" wire:click="resetForm">
         + Tambah Checklist
     </button>
+
+
     <table class="w-full bg-white shadow">
         <thead>
             <tr class="bg-gray-100">
@@ -24,8 +26,7 @@
                         <strong>Checks:</strong> {{ implode(', ', $item->checks) }}
                     </td>
                     <td class="p-2 border">
-                        <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})"
-                            class="text-white btn btn-sm btn-info">Edit</button> |
+                        <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})" class="text-white btn btn-sm btn-info">Edit</button> |
                         <button wire:confirm="Yakin hapus?" wire:click="delete({{ $item->id }})"
                             class="text-red-500">Hapus</button>
                     </td>
@@ -33,6 +34,7 @@
             @endforeach
         </tbody>
     </table>
+
     <dialog id="checklist_modal" class="modal" wire:ignore.self>
         <div class="flex flex-col w-11/12 max-w-3xl p-0 modal-box">
             {{-- p-0 digunakan agar scrollbar rapat ke pinggir --}}
@@ -108,11 +110,10 @@
         </form>
     </dialog>
 
-    </x-tabs-equipment.layout>
-    <script>
-        // Listener untuk menutup modal setelah save berhasil
-        window.addEventListener('close-modal', event => {
-            document.getElementById('checklist_modal').close();
-        });
-    </script>
-</div>
+</section>
+<script>
+    // Listener untuk menutup modal setelah save berhasil
+    window.addEventListener('close-modal', event => {
+        document.getElementById('checklist_modal').close();
+    });
+</script>
