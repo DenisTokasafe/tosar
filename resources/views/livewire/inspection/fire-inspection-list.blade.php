@@ -254,7 +254,7 @@
                             </td>
                             <td class="border">
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
-                                @php $pemeriksa = explode('|', $item->equipmentMaster->inspected_by); @endphp
+                                @php $pemeriksa = explode('|', $item->inspected_by); @endphp
                                 <div class="flex flex-col gap-1">
                                     @foreach ($pemeriksa as $nama)
                                         <p class="text-xs"><span

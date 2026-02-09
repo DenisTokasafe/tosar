@@ -330,7 +330,6 @@ class FireInspection extends Component
                 $sessionId = DB::table('inspection_sessions')->insertGetId([
                     'inspection_date' => $this->inspection_date,
                     'inspection_number'   => $generatedNumber,
-                    'inspected_by'    => $inspectedByString,
                     'area_name'       => $this->area, // Diambil dari selectLocation
                     'area_photo_path' => $areaPhotoPath,
                     'created_at'      => now(),
@@ -356,6 +355,7 @@ class FireInspection extends Component
                         'inspection_session_id' => $sessionId, // <--- RELASI BARU
                         'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath,
+                        'inspected_by'    => $inspectedByString,
                         'submitted_by'        => auth()->user()->name ?? 'System',
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,

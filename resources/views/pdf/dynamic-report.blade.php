@@ -173,7 +173,7 @@
                         <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/y') }}</td>
                         <td>
                             @php
-                                $names = explode('|', $item->equipmentMaster->inspected_by);
+                                $names = explode('|', $item->inspected_by);
                                 $initials = collect($names)
                                     ->map(function ($n) {
                                         return collect(preg_split('/[\s,]+/', trim($n)))
