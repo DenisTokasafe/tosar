@@ -215,7 +215,7 @@
                         style="width: 40%; float: left; margin-right: 20px; border: 1px solid #000; box-sizing: border-box;">
                         <div style="padding: 5px;">
                             <img src="{{ storage_path('app/public/' . $areaPhotoPath) }}"
-                                style="width: 100%; height: 250px; object-fit: cover; display: block;">
+                                style="width: 100%; height: 200px; object-fit: cover; display: block;">
                         </div>
                         <div
                             style="background-color: #fcd5b4; border-top: 1px solid #000; padding: 10px; min-height: 60px;">
@@ -240,7 +240,7 @@
                             <strong>No;</strong> {{ $loop->iteration }}<br>
                             <strong>Lokasi :</strong>
                             {{ $item->equipmentMaster->specific_location ?? 'Environment' }}<br>
-                            <strong>Ket :</strong> {{ $item->remarks ?? '-' }}
+                            <strong>Ket :</strong> {{ Str::limit($item->remarks ?? '-', 35) }}
                         </div>
                     </div>
                 @endforeach
