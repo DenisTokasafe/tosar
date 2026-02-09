@@ -51,8 +51,6 @@
                             placeholder="Equipment Type" />
                     </div>
                     <div class="w-full form-control">
-                        <label class="label"><span class="font-semibold label-text">Location Keyword</span></label>
-
                         <x-form.search-floating label="Location Keyword" required modelsearch="searchLocation"
                             modelid="location_id" placeholder="Location Keyword..." :options="$locations" :showdropdown="$show_location"
                             clickaction="selectLocation" namedb="name" />
