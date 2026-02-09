@@ -15,8 +15,8 @@
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'border-rose-500' : '' }}">
                         <option value="">-- Pilih Jenis Alat --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
+                        @foreach ($availableTypes as $typeName)
+                            <option value="{{ $typeName }}">{{ $typeName }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -175,9 +175,10 @@
         </div>
 
         <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
-             <div class="w-full md:max-w-md">
+            <div class="w-full md:max-w-md">
                 <x-form.upload label="Foto Inspeksi" model="foto_area" :file="$foto_area" />
-                <div wire:loading.remove.class='hidden' wire:target="foto_area" class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
+                <div wire:loading.remove.class='hidden' wire:target="foto_area"
+                    class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
                 @error('foto_area')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

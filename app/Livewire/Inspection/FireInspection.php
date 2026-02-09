@@ -362,7 +362,11 @@ class FireInspection extends Component
                 ->byArea($this->searchLocation)
                 ->orderBy('specific_location')
                 ->limit(10)
-                ->get()
+                ->get(),
+            'availableTypes' => DB::table('inspection_checklists')
+                ->select('equipment_type')
+                ->distinct()
+                ->pluck('equipment_type')
         ]);
     }
 }
