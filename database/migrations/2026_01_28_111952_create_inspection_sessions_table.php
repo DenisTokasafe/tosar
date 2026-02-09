@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('inspection_sessions', function (Blueprint $table) {
             $table->id();
             $table->date('inspection_date');
-            $table->string('inspected_by');
             $table->string('area_name');
             $table->string('area_photo_path')->nullable();
             $table->timestamps();
