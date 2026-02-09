@@ -45,7 +45,7 @@ class FireInspectionList extends Component
 
         'Eyewash & Safety Shower' => [
             'inputs' => ['E&S No'],
-             'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
+            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
         ],
         'Fire Hose Reel' => [
             'inputs' => ['Hose Reel No'],
@@ -232,10 +232,14 @@ class FireInspectionList extends Component
     public function render()
     {
         return view('livewire.inspection.fire-inspection-list', [
-            'inspections' => FireProtection::with('equipmentMaster.location')
+            'inspections' => FireProtection::query()
+                ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
+                ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')
+                ->with('equipmentMaster.location', 'inspectionSession')
                 ->searchByType($this->search_type)
                 ->searchByLocation($this->location_id)
                 ->searchInstectionsByDate($this->date)
+                ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
                 ->paginate(10),
         ]);
     }
