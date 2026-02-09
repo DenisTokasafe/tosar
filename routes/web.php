@@ -44,6 +44,7 @@ use App\Livewire\Administration\RiskLikelihood\RiskLikelihood;
 use App\Livewire\Administration\RiskConsequence\RiskConsequence;
 use App\Livewire\Administration\WorkflowEvent\WpiWorkflowManager;
 use App\Livewire\Administration\EventGeneral\ErmAssignmentManager;
+use App\Livewire\Administration\EquipmentMaster\InspectionChecklist;
 use App\Livewire\Administration\RelasiContUser\ContractorUserManager;
 use App\Livewire\Administration\RelasiDeptUser\DepartmentUserManager;
 use App\Livewire\Administration\EventGeneral\ModeratorAssignmentManager;
@@ -116,6 +117,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/workflows/hazard', WorkflowEventHazard::class)->name('hazard.workflows');
     Route::get('administration/workflows/wpi', WpiWorkflowManager::class)->name('wpi.workflows');
     Route::get('administration/equipment-master', EquipmentMasterIndex::class)->name('equipment-master');
+    Route::get('administration/equipment-master/inspection-checklist', InspectionChecklist::class)->name('inspection-checklist');
 });
 // route download storage files
 
