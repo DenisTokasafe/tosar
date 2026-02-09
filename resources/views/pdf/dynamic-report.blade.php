@@ -219,9 +219,7 @@
                     $areaPhotoExists = $areaPhotoPath && file_exists(storage_path('app/public/' . $areaPhotoPath));
                 @endphp
 
-                @if (
-                    ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path))) ||
-                        $documentationPhotos->count() > 0)
+                @if ($areaPhotoExists || $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
 
                     <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
