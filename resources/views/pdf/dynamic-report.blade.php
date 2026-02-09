@@ -212,7 +212,7 @@
                 {{-- 1. FOTO INSPEKSI AREA (KIRI) --}}
                 @if ($areaPhotoExists)
                     <div
-                        style="width: 45%; float: left; margin-right: 20px; border: 1px solid #000; box-sizing: border-box;">
+                        style="width: 30%; float: left; margin-right: 20px; border: 1px solid #000; box-sizing: border-box;">
                         <div style="padding: 5px;">
                             <img src="{{ storage_path('app/public/' . $areaPhotoPath) }}"
                                 style="width: 100%; height: 200px; object-fit: cover; display: block;">
