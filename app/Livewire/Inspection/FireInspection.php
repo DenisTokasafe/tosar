@@ -363,7 +363,7 @@ class FireInspection extends Component
                 ->orderBy('specific_location')
                 ->limit(10)
                 ->get(),
-            'availableTypes' => DB::table('inspection_checklists')
+            'availableTypes' => DB::table('inspection_checklist_masters')
                 ->select('equipment_type')
                 ->distinct()
                 ->pluck('equipment_type')
