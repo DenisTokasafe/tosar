@@ -3,6 +3,7 @@
 namespace App\Livewire\Administration\EquipmentMaster;
 
 use Livewire\Component;
+use App\Models\InspectionChecklist as InspectionChecklistModel;
 
 class InspectionChecklist extends Component
 {
@@ -15,7 +16,7 @@ class InspectionChecklist extends Component
 
     public function render()
     {
-        $this->checklists = InspectionChecklist::all();
+        $this->checklists = InspectionChecklistModel::all();
         return view('livewire.administration.equipment-master.inspection-checklist');
     }
 
