@@ -216,12 +216,13 @@
                         <tr>
                             <td style="width: 35%; vertical-align: top; padding-right: 10px;">
                                 @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
-                                    <div style="border: 2px solid #000; background-color: #fff;">
+                                    <div
+                                        style="border: 1px solid #000; background-color: #fff; height: 250px; position: relative;">
                                         <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
                                             style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
                                         <div
-                                            style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; height: 35px; padding: 5px; border-top: 1px solid #000; overflow: hidden;">
+                                            style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; height: 50px; box-sizing: border-box;">
                                             FOTO INSPEKSI AREA:<br>{{ $area ?? 'Tokatindung Site' }}
                                         </div>
                                     </div>
@@ -231,13 +232,12 @@
                             <td style="width: 65%; vertical-align: top;">
                                 @foreach ($documentationPhotos as $index => $item)
                                     <div class="photo-card"
-                                        style="width: 47%; margin-bottom: 10px; margin-right: 1%; border: 1px solid #000; display: inline-block; vertical-align: top;">
-
+                                        style="width: 47%; margin: 1%; border: 1px solid #000; display: inline-block; vertical-align: top; height: 250px; background-color: #fff;">
                                         <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
                                             style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
 
                                         <div class="photo-caption"
-                                            style="font-size: 6pt; padding: 4px; height: 45px; overflow: hidden; background-color: #fff;">
+                                            style="font-size: 6pt; padding: 4px; height: 50px; box-sizing: border-box; overflow: hidden;">
                                             <strong>No:</strong> {{ $loop->iteration }}<br>
                                             <strong>Lokasi:</strong>
                                             {{ Str::limit($item->equipmentMaster->specific_location, 30) }}<br>
