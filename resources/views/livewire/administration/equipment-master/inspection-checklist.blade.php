@@ -1,8 +1,5 @@
 <section class="w-full">
-    @if (session()->has('message'))
-        <div class="p-2 mb-4 bg-green-200">{{ session('message') }}</div>
-    @endif
-
+    <x-toast />
     <x-tabs-equipment.layout heading="Inspection Checklist"
         subheading="Manage equipment inspection checklists including input fields and checkpoints." />
     <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()" wire:click="resetForm">
