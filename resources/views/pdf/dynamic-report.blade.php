@@ -180,7 +180,7 @@
                                             ->map(fn($w) => strtoupper(substr($w, 0, 1)))
                                             ->implode(''),
                                     )
-                                    ->implode(', ');
+                                    ->implode(',');
                             @endphp
                             {{ $initials }}
                         </td>
