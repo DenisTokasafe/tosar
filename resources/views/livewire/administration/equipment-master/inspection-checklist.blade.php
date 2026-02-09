@@ -2,7 +2,7 @@
     @if (session()->has('message'))
         <div class="p-2 mb-4 bg-green-200">{{ session('message') }}</div>
     @endif
-    <button class="mb-4 btn btn-primary" onclick="checklist_modal.showModal()" wire:click="resetForm">
+    <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()" wire:click="resetForm">
         + Tambah Checklist
     </button>
 
