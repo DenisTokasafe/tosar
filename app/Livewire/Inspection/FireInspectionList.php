@@ -25,41 +25,7 @@ class FireInspectionList extends Component
     public $show_location = false;
     public $locations = [];
     public $searchLocation = '';
-    public $fields = [
-        'Fire Extinguisher' => [
-            'inputs' => ['FE No', 'FE Type', 'Capacity'],
-            'checks' => ['Nozzle', 'Hose', 'Pressure Indicator', 'Head Cap', 'Pin', 'Hook', 'Usage Guide', 'FE Sign']
-        ],
-        'Fire Hose Cabinet' => [
-            'inputs' => ['Box No', 'Box'],
-            'checks' => ['Hose', 'Rack', 'Nozzle', 'Valve']
-        ],
-        'Muster Point' => [
-            'inputs' => ['ID Muster Point'],
-            'checks' => ['Access', 'Visibility', 'Colour', 'Condition of Board', 'Condition of Pole', 'Letter'],
-        ],
-        'Fire Hydrant' => [
-            'inputs' => ['Hydrant No'],
-            'checks' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
-        ],
 
-        'Eyewash & Safety Shower' => [
-            'inputs' => ['E&S No'],
-            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
-        ],
-        'Fire Hose Reel' => [
-            'inputs' => ['Hose Reel No'],
-            'checks' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
-        ],
-        'Fire sprinkler system' => [
-            'inputs' => ['Sprinkler No'],
-            'checks' => ['Line Pipa', 'Main Valve', 'Drain Valve', 'Test valve', 'Alarm', 'Pressure', 'Access'],
-        ],
-        'Ring Buoy' => [
-            'inputs' => ['Ring Buoy No'],
-            'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
-        ],
-    ];
     public function updatingSearchType()
     {
         $this->resetPage();
@@ -91,18 +57,21 @@ class FireInspectionList extends Component
     }
     public function getChecklistFromDB()
     {
-        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
-        $master = DB::table('inspection_checklist_masters')
+        $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
             ->where(function ($q) {
                 $q->where('location_keyword', 'Default')
                     ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
             })
+            // Mengambil yang lokasi spesifik (seperti Maesa Camp) dulu, baru Default
             ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
             ->first();
 
         if ($master) {
-            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
+            $this->fields[$this->type] = [
+                'inputs' => json_decode($master->inputs, true),
+                'checks' => json_decode($master->checks, true),
+            ];
         }
     }
     public function selectLocation($id, $name)

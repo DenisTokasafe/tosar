@@ -48,32 +48,7 @@ class FireInspection extends Component
     #[Validate('required|image|max:3072')] // Maksimal 3MB
     public $foto_area;
     // Definisi kriteria (Master Fields)
-    public $fields = [
-        'Fire Extinguisher' => [
-            'checks' => ['Nozzle', 'Hose', 'Pressure Indicator', 'Head Cap', 'Pin', 'Hook', 'Usage Guide', 'FE Sign']
-        ],
-        'Fire Hose Cabinet' => [
-            'checks' => ['Hose', 'Rack', 'Nozzle', 'Valve']
-        ],
-        'Muster Point' => [
-            'checks' => ['Access', 'Visibility', 'Colour', 'Condition of Board', 'Condition of Pole', 'Letter'],
-        ],
-        'Fire Hydrant' => [
-            'checks' => ['Air', 'Kaca', 'Nozzle', 'Box', 'Hose', 'Kunci Hydrant'],
-        ],
-        'Eyewash & Safety Shower' => [
-            'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
-        ],
-        'Fire Hose Reel' => [
-            'checks' => ['Hose', 'Reel', 'Nozzle', 'Valve', 'Air', 'Cover'],
-        ],
-        'Fire sprinkler system' => [
-            'checks' => ['Line Pipa', 'Main Valve', 'Drain Valve', 'Test valve', 'Alarm', 'Pressure', 'Access'],
-        ],
-        'Ring Buoy' => [
-            'checks' => ['Ring Buoy', 'Access', 'Tempat Ring Buoy', 'Tali'],
-        ],
-    ];
+
 
     public function mount()
     {
