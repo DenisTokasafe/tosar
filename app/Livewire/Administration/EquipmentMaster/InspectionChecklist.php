@@ -15,6 +15,7 @@ class InspectionChecklist extends Component
 
     public function render()
     {
+        $this->checklists = InspectionChecklist::all();
         return view('livewire.administration.equipment-master.inspection-checklist');
     }
 
