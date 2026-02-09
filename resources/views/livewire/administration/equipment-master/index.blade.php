@@ -1,7 +1,8 @@
 <section class="w-full">
     <x-toast />
 
-    <x-tabs-wpi.layout>
+    <x-tabs-equipment.layout :activeTab="'equipment-master'" heading="Equipment Master"
+        subheading="Manage equipment records including types, locations, and technical specifications.">
         <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
             {{-- KOLOM KIRI: FORM INPUT & IMPORT --}}
             <div class="space-y-6">
@@ -223,5 +224,5 @@
                 <div class="mt-4">{{ $equipments->links() }}</div>
             </div>
         </div>
-    </x-tabs-wpi.layout>
+    </x-tabs-equipment.layout>
 </section>
