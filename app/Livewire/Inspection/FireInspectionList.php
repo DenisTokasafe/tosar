@@ -175,15 +175,13 @@ class FireInspectionList extends Component
         $currentMonth = $date->month; // Menghasilkan angka 1-12
         $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
-
-
         $inspections =  FireProtection::query()
             ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
             ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')
             ->with('equipmentMaster.location', 'inspectionSession')
             ->searchByType($this->type)
             ->searchByLocation($this->location_id)
-            ->searchInstectionsByDate($this->date)
+            ->searchInstectionsByMonth($this->date)
             ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->get();
 

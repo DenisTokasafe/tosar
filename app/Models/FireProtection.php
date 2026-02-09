@@ -45,6 +45,18 @@ class FireProtection extends Model
         }
         return $query;
     }
+    public function scopeSearchInstectionsByMonth($query, $date)
+    {
+        if ($date) {
+            $date = Carbon::parse($date);
+            $currentMonth = $date->month; //
+            // Gunakan $query, bukan $this
+            return $query->whereHas('inspectionSession', function ($q) use ($currentMonth, $date) {
+                $q->whereMonth('inspection_date', $currentMonth);
+            });
+        }
+        return $query;
+    }
     public function scopeSearchByLocation($query, $locationId)
     {
         if ($locationId) {
