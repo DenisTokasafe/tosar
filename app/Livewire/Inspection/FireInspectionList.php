@@ -236,7 +236,6 @@ class FireInspectionList extends Component
                 ->searchByType($this->search_type)
                 ->searchByLocation($this->location_id)
                 ->searchInstectionsByDate($this->date)
-                ->orderBy('inspection_date', 'desc')
                 ->paginate(10),
         ]);
     }
