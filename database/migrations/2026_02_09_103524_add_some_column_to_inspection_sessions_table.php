@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('inspection_sessions', function (Blueprint $table) {
-            $table->date('inspection_date');
              $table->string('inspection_number')->nullable()->after('inspection_date');
         });
     }
