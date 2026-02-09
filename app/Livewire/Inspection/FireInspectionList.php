@@ -44,7 +44,7 @@ class FireInspectionList extends Component
 
         'Eyewash & Safety Shower' => [
             'inputs' => ['E&S No'],
-            'checks' => ['Access', 'Signage', 'Water Flow', 'Hose Condition', 'Nozzle Condition', 'Drainage'],
+             'checks' => ['Water', 'Caps', 'Nozzle', 'Handle', 'Access', 'Safety Light', 'Cleanliness'],
         ],
         'Fire Hose Reel' => [
             'inputs' => ['Hose Reel No'],
