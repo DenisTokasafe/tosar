@@ -214,7 +214,7 @@
 
                     <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
 
-                        <div style="width: 33%; float: left; box-sizing: border-box;">
+                        <div style="width: 33%; float: left; margin-right: 2%; box-sizing: border-box;">
                             @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
                                 <div
                                     style="border: 2px solid #000; background-color: #fff; height: 260px; box-sizing: border-box;">
