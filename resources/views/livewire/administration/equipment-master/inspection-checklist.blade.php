@@ -47,9 +47,7 @@
             <div class="p-6 pt-2 overflow-y-auto max-h-[70vh]">
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="w-full form-control">
-                        <label class="label"><span class="font-semibold label-text">Equipment Type</span></label>
-                        <input type="text" wire:model="equipment_type"
-                            class="w-full input input-bordered focus:input-primary">
+                            <x-form.input-floating label="Equipment Type" type='text' model="equipment_type" placeholder="Equipment Type" />
                     </div>
                     <div class="w-full form-control">
                         <label class="label"><span class="font-semibold label-text">Location Keyword</span></label>
@@ -65,7 +63,8 @@
                         <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Inputs Field</label>
                         @foreach ($inputs as $index => $value)
                             <div class="flex items-center gap-2 group">
-                                     <x-form.input-floating label="Input Field {{ $index + 1 }}" type='text' model="inputs.{{ $index }}" placeholder="Input Field {{ $index + 1 }}"  />
+                                <x-form.input-floating label="Input Field {{ $index + 1 }}" type='text'
+                                    model="inputs.{{ $index }}" placeholder="Input Field {{ $index + 1 }}" />
                                 <button wire:click="removeInput({{ $index }})"
                                     class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
                             </div>
@@ -79,8 +78,8 @@
                         <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Checkpoints</label>
                         @foreach ($checks as $index => $value)
                             <div class="flex items-center gap-2 group">
-                                <input type="text" wire:model="checks.{{ $index }}"
-                                    class="w-full input input-bordered input-sm">
+                                     <x-form.input-floating label="Checkpoints {{ $index + 1 }}" type='text'
+                                    model="checks.{{ $index }}" placeholder="Checkpoints {{ $index + 1 }}" />
                                 <button wire:click="removeCheck({{ $index }})"
                                     class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
                             </div>
@@ -93,18 +92,18 @@
             </div>
 
             <div class="p-4 modal-action bg-gray-50 rounded-b-2xl">
-                <button wire:click="save" class="px-8 btn btn-primary" wire:loading.attr="disabled">
-                    <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
+                <button wire:click="save" class="px-8 btn btn-primary btn-soft btn-xs" wire:loading.attr="disabled">
+                    <span wire:loading.remove.class='hidden' wire:target="save" class="hidden loading loading-spinner loading-xs"></span>
                     Save Changes
                 </button>
                 <form method="dialog">
-                    <button class="btn btn-ghost" wire:click="resetForm">Cancel</button>
+                    <button class="btn btn-ghost btn-xs" wire:click="resetForm">Cancel</button>
                 </form>
             </div>
         </div>
 
         <form method="dialog" class="modal-backdrop bg-black/40">
-            <button wire:click="resetForm">close</button>
+            <button wire:click="resetForm" class="btn btn-soft btn-xs btn-error">close</button>
         </form>
     </dialog>
 
