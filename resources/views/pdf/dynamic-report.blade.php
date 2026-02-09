@@ -314,7 +314,14 @@
                             @foreach ($uniqueNames as $name)
                                 <tr>
                                     <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
-                                        {{ collect(preg_split('/[\s,]+/', $name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('') }}
+                                        @php
+                                            // Regex /[\s,]+/ akan memecah berdasarkan spasi ATAU koma
+                                            $initials = collect(preg_split('/[\s,]+/', $name))
+                                                ->filter() // Menghapus elemen kosong akibat double delimiter
+                                                ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                                ->implode('');
+                                        @endphp
+                                        {{ $initials }}
                                     </td>
                                     <td style="text-align: left;">{{ $name }}</td>
                                 </tr>
