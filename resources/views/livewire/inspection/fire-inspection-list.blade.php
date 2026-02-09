@@ -20,9 +20,9 @@
                         <select wire:model.live="search_type"
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">-- Pilih --</option>
-                               @foreach ($availableTypes as $typeName)
-                            <option value="{{ $typeName }}">{{ $typeName }}</option>
-                        @endforeach
+                            @foreach ($availableTypes as $typeName)
+                                <option value="{{ $typeName }}">{{ $typeName }}</option>
+                            @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('type')" />
                     </fieldset>
@@ -220,7 +220,8 @@
                                     class="checkbox checkbox-xs border-emerald-600 bg-emerald-500 checked:border-rose-500 checked:bg-rose-400 checked:text-rose-800" />
                             </td>
                             <td class="text-center border">
-                                <span class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span>
+                                <span
+                                    class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span>
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
