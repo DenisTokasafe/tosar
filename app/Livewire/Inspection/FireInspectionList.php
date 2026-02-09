@@ -181,7 +181,7 @@ class FireInspectionList extends Component
         })
             ->searchInstectionsByDate($this->date)
              ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
-            ->with('equipmentMaster') // Eager load untuk performa saat looping di PDF
+            ->with(['equipmentMaster.location', 'inspectionSession']) // Eager load untuk performa saat looping di PDF
             ->get();
 
         if ($inspections->isEmpty()) {
