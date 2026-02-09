@@ -30,7 +30,7 @@ class FireInspection extends Component
     public $manualPelaporName = '';
     public $responsible_id, $equipment_master_id;
     public $inspected_users = [];
-
+    public $fields = [];
 
     // Untuk fitur pencarian lokasi
     public $location_id;
