@@ -36,53 +36,67 @@
     </table>
 
     <dialog id="checklist_modal" class="modal" wire:ignore.self>
-        <div class="w-11/12 max-w-3xl modal-box">
-            <h3 class="mb-4 text-lg font-bold">{{ $checklist_id ? 'Edit' : 'Tambah' }} Checklist</h3>
+        <div class="flex flex-col w-11/12 max-w-3xl p-0 modal-box">
+            {{-- p-0 digunakan agar scrollbar rapat ke pinggir --}}
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="w-full form-control">
-                    <label class="label"><span class="label-text">Equipment Type</span></label>
-                    <input type="text" wire:model="equipment_type" placeholder="Ex: Fire Extinguisher"
-                        class="w-full input input-bordered">
+            <div class="p-6 pb-2">
+                <h3 class="text-lg font-bold">{{ $checklist_id ? 'Edit' : 'Tambah' }} Checklist</h3>
+                <p class="text-sm text-gray-500">Kelola input dan poin pemeriksaan peralatan.</p>
+            </div>
+
+            <div class="p-6 pt-2 overflow-y-auto max-h-[70vh]">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="w-full form-control">
+                        <label class="label"><span class="font-semibold label-text">Equipment Type</span></label>
+                        <input type="text" wire:model="equipment_type"
+                            class="w-full input input-bordered focus:input-primary">
+                    </div>
+                    <div class="w-full form-control">
+                        <label class="label"><span class="font-semibold label-text">Location Keyword</span></label>
+                        <input type="text" wire:model="location_keyword"
+                            class="w-full input input-bordered focus:input-primary">
+                    </div>
                 </div>
-                <div class="w-full form-control">
-                    <label class="label"><span class="label-text">Location Keyword</span></label>
-                    <input type="text" wire:model="location_keyword" placeholder="Ex: Default"
-                        class="w-full input input-bordered">
+
+                <hr class="my-4 border-gray-100">
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Inputs Field</label>
+                        @foreach ($inputs as $index => $value)
+                            <div class="flex items-center gap-2 group">
+                                <input type="text" wire:model="inputs.{{ $index }}"
+                                    class="w-full input input-bordered input-sm">
+                                <button wire:click="removeInput({{ $index }})"
+                                    class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
+                            </div>
+                        @endforeach
+                        <button wire:click="addInput"
+                            class="no-underline btn btn-ghost btn-xs text-primary hover:bg-primary/10">+ Add New
+                            Input</button>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Checkpoints</label>
+                        @foreach ($checks as $index => $value)
+                            <div class="flex items-center gap-2 group">
+                                <input type="text" wire:model="checks.{{ $index }}"
+                                    class="w-full input input-bordered input-sm">
+                                <button wire:click="removeCheck({{ $index }})"
+                                    class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
+                            </div>
+                        @endforeach
+                        <button wire:click="addCheck"
+                            class="no-underline btn btn-ghost btn-xs text-primary hover:bg-primary/10">+ Add New
+                            Check</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block mb-2 font-bold">Inputs (JSON)</label>
-                    @foreach ($inputs as $index => $value)
-                        <div class="flex gap-2 mb-2">
-                            <input type="text" wire:model="inputs.{{ $index }}"
-                                class="w-full input input-bordered input-sm">
-                            <button wire:click="removeInput({{ $index }})"
-                                class="text-white btn btn-square btn-sm btn-error">×</button>
-                        </div>
-                    @endforeach
-                    <button wire:click="addInput" class="text-blue-500 btn btn-ghost btn-xs">+ Add Input Field</button>
-                </div>
-
-                <div>
-                    <label class="block mb-2 font-bold">Checks (JSON)</label>
-                    @foreach ($checks as $index => $value)
-                        <div class="flex gap-2 mb-2">
-                            <input type="text" wire:model="checks.{{ $index }}"
-                                class="w-full input input-bordered input-sm">
-                            <button wire:click="removeCheck({{ $index }})"
-                                class="text-white btn btn-square btn-sm btn-error">×</button>
-                        </div>
-                    @endforeach
-                    <button wire:click="addCheck" class="text-blue-500 btn btn-ghost btn-xs">+ Add Check Field</button>
-                </div>
-            </div>
-
-            <div class="mt-8 modal-action">
-                <button wire:click="save" class="text-white btn btn-primary">
-                    <span wire:loading class="loading loading-spinner"></span> Save Data
+            <div class="p-4 modal-action bg-gray-50 rounded-b-2xl">
+                <button wire:click="save" class="px-8 btn btn-primary" wire:loading.attr="disabled">
+                    <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
+                    Save Changes
                 </button>
                 <form method="dialog">
                     <button class="btn btn-ghost" wire:click="resetForm">Cancel</button>
@@ -90,7 +104,7 @@
             </div>
         </div>
 
-        <form method="dialog" class="modal-backdrop">
+        <form method="dialog" class="modal-backdrop bg-black/40">
             <button wire:click="resetForm">close</button>
         </form>
     </dialog>
