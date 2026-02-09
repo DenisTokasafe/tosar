@@ -12,10 +12,14 @@ return new class extends Migration
 public function up(): void
 {
     Schema::table('fire_protections', function (Blueprint $table) {
-        // 1. Hapus foreign key yang lama (sesuaikan nama kolomnya)
-        $table->dropForeign(['inspection_session_id']);
+        // Kita gunakan try-catch atau pengecekan manual agar tidak error jika key tidak ada
+        try {
+            $table->dropForeign(['inspection_session_id']);
+        } catch (\Exception $e) {
+            // Abaikan jika tidak ada foreign key untuk dihapus
+        }
 
-        // 2. Tambahkan kembali dengan cascade delete
+        // Tambahkan/Update foreign key dengan cascade
         $table->foreign('inspection_session_id')
               ->references('id')
               ->on('inspection_sessions')
