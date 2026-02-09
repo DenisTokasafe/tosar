@@ -175,14 +175,7 @@ class FireInspectionList extends Component
         $currentMonth = $date->month; // Menghasilkan angka 1-12
         $currentYear  = $date->year;  // Menghasilkan angka 4 digit (misal: 2024)
 
-        $inspections = FireProtection::whereHas('equipmentMaster', function ($query) {
-            $query->where('type', $this->type)
-                ->where('location_id', $this->location_id);
-        })
-            ->searchInstectionsByDate($this->date)
-            ->orderBy('inspectionSession.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
-            ->with(['equipmentMaster.location', 'inspectionSession']) // Eager load untuk performa saat looping di PDF
-            ->get();
+
 
         $inspections =  FireProtection::query()
             ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
