@@ -132,18 +132,21 @@ class FireInspection extends Component
     }
     public function getChecklistFromDB()
     {
-        // Cari checklist di DB berdasarkan Type dan Keyword Lokasi (Maesa Camp / Default)
-        $master = DB::table('inspection_checklist_masters')
+        $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
             ->where(function ($q) {
                 $q->where('location_keyword', 'Default')
                     ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
             })
+            // Mengambil yang lokasi spesifik (seperti Maesa Camp) dulu, baru Default
             ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
             ->first();
 
         if ($master) {
-            $this->fields[$this->type]['checks'] = json_decode($master->checks, true);
+            $this->fields[$this->type] = [
+                'inputs' => json_decode($master->inputs, true),
+                'checks' => json_decode($master->checks, true),
+            ];
         }
     }
     public function selectLocation($id, $name)
