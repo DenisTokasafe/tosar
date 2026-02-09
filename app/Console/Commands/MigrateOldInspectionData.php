@@ -26,44 +26,45 @@ class MigrateOldInspectionData extends Command
      */
     public function handle()
     {
-        $this->info('Memulai pemetaan data berdasarkan relasi Equipment Master...');
+        $this->info('Memulai pemetaan data berdasarkan location_id...');
 
-        // 1. Ambil kombinasi unik untuk mendefinisikan sesi
-        // Kita join ke equipment_masters untuk mendapatkan nama area yang akurat
+        // 1. Ambil kombinasi unik dari data lama
+        // Kita join ke equipment_masters untuk mendapatkan location_id yang menjadi 'Induk Area'
         $oldSessions = DB::table('fire_protections')
             ->join('equipment_masters', 'fire_protections.equipment_master_id', '=', 'equipment_masters.id')
             ->select(
                 'fire_protections.inspection_date',
                 'fire_protections.inspected_by',
                 'fire_protections.area_photo_path',
-                'equipment_masters.area as area_name' // Ambil area dari master
+                'equipment_masters.location_id' // Ini yang menjadi acuan area sekarang
             )
             ->distinct()
             ->get();
 
         foreach ($oldSessions as $session) {
             // 2. Buat header di tabel inspection_sessions
+            // Kita simpan location_id agar nanti mudah relasi ke tabel locations (jika ada)
             $sessionId = DB::table('inspection_sessions')->insertGetId([
                 'inspection_date' => $session->inspection_date,
                 'inspected_by'    => $session->inspected_by,
-                'area_name'       => $session->area_name, // Area dari master id
+                'area_name'       => "Location ID: " . $session->location_id, // Sementara simpan ID-nya
                 'area_photo_path' => $session->area_photo_path,
                 'created_at'      => now(),
                 'updated_at'      => now(),
             ]);
 
-            // 3. Update fire_protections yang sesuai dengan kriteria session ini
-            // Kita hubungkan kembali berdasarkan tanggal, inspektur, dan area master-nya
+            // 3. Update fire_protections agar terhubung ke sesi ini
+            // Kita filter detail alat yang punya location_id yang sama dalam tanggal yang sama
             DB::table('fire_protections')
                 ->join('equipment_masters', 'fire_protections.equipment_master_id', '=', 'equipment_masters.id')
                 ->where('fire_protections.inspection_date', $session->inspection_date)
                 ->where('fire_protections.inspected_by', $session->inspected_by)
-                ->where('equipment_masters.area', $session->area_name)
+                ->where('equipment_masters.location_id', $session->location_id)
                 ->update(['fire_protections.inspection_session_id' => $sessionId]);
 
-            $this->info("Berhasil memetakan Sesi Area: {$session->area_name}");
+            $this->info("Berhasil memetakan Sesi untuk Location ID: {$session->location_id}");
         }
 
-        $this->info('Migrasi data selesai!');
+        $this->info('Migrasi data selesai! Semua data lama kini terorganisir per Sesi.');
     }
 }
