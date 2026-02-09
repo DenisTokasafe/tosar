@@ -222,9 +222,9 @@
                 @if ($areaPhotoExists || $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
 
-                    <div style="width: 100%; overflow: hidden; box-sizing: border-box;">
+                    <div style="width: 100%; overflow: hidden; box-sizing: border-box; height: 260px;">
                         @if ($areaPhotoExists)
-                             <div style="border: 2px solid #000; background-color: #fff; height: 260px; box-sizing: border-box;">
+                           <div style="width: 33%; float: left; margin-right: 2%; box-sizing: border-box;">
                                 {{-- Gunakan $areaPhotoPath di sini --}}
                                 <img src="{{ storage_path('app/public/' . $areaPhotoPath) }}"
                                     style="width: 100%; height: 200px; object-fit: cover; display: block;">
