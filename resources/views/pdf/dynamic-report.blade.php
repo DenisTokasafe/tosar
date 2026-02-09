@@ -237,10 +237,10 @@
                         </div>
                         <div
                             style="background-color: #fcd5b4; border-top: 1px solid #000; padding: 8px; font-size: 9pt; min-height: 80px;">
-                            <strong>No;</strong> {{ $loop->iteration }}<br>
+                            <strong>No:</strong> {{ $loop->iteration }}<br>
                             <strong>Lokasi :</strong>
                             {{ $item->equipmentMaster->specific_location ?? 'Environment' }}<br>
-                            <strong>Ket :</strong> {{ Str::limit($item->remarks ?? '-', 35) }}
+                            <strong>Ket :</strong> {{ Str::limit($item->remarks ?? '-', 30) }}
                         </div>
                     </div>
                 @endforeach
