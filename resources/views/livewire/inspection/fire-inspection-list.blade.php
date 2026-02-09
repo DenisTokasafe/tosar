@@ -222,6 +222,10 @@
                                         class="text-xs">{{ $item->equipmentMaster->type }}</span></span>
                             </td>
                             <td class="text-center border">
+                                <span class="w-32 font-semibold badge badge-soft badge-info"><span
+                                        class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span></span>
+                            </td>
+                            <td class="text-center border">
                                 <div class="text-[10px] opacity-60">{{ $item->equipmentMaster->location->name }}
                                 </div>
                                 <div class="font-bold">{{ $item->equipmentMaster->specific_location }}</div>
