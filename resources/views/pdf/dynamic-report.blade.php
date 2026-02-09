@@ -222,7 +222,7 @@
                                         style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
                                     <div
-                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; height: 56px; box-sizing: border-box; overflow: hidden;">
+                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; height: 50px; box-sizing: border-box; overflow: hidden;">
                                         FOTO INSPEKSI AREA:<br>
                                         {{ $area ?? 'Tokatindung Site' }}
                                     </div>
@@ -238,7 +238,7 @@
                                         style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
 
                                     <div
-                                        style="font-size: 6pt; padding: 4px; height: 56px; box-sizing: border-box; overflow: hidden;">
+                                        style="font-size: 6pt; padding: 4px; height: 58px; box-sizing: border-box; overflow: hidden;">
                                         <strong>No:</strong> {{ $loop->iteration }}<br>
                                         <strong>Lokasi:</strong>
                                         {{ Str::limit($item->equipmentMaster->specific_location, 35) }}<br>
