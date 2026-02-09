@@ -212,42 +212,45 @@
                         $documentationPhotos->count() > 0)
                     @php $hasPhoto = true; @endphp
 
-                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
-                        <tr>
-                            <td style="width: 35%; vertical-align: top; padding-right: 10px;">
-                                @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
+                    <div style="width: 100%; clear: both; overflow: hidden;">
+
+                        <div style="width: 33%; float: left; margin-right: 2%;">
+                            @if ($areaPhoto && file_exists(storage_path('app/public/' . $areaPhoto->area_photo_path)))
+                                <div style="border: 1px solid #000; background-color: #fff; height: 260px;">
+                                    <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
+                                        style="width: 100%; height: 200px; object-fit: cover; display: block;">
+
                                     <div
-                                        style="border: 1px solid #000; background-color: #fff; height: 250px; position: relative;">
-                                        <img src="{{ storage_path('app/public/' . $areaPhoto->area_photo_path) }}"
-                                            style="width: 100%; height: 200px; object-fit: cover; display: block;">
-
-                                        <div
-                                            style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; padding: 5px; border-top: 1px solid #000; height: 50px; box-sizing: border-box;">
-                                            FOTO INSPEKSI AREA:<br>{{ $area ?? 'Tokatindung Site' }}
-                                        </div>
+                                        style="background-color: #ffff00; font-weight: bold; text-align: center; font-size: 7pt; height: 60px; padding: 5px; border-top: 1px solid #000; box-sizing: border-box; overflow: hidden;">
+                                        FOTO INSPEKSI AREA:<br>
+                                        <span
+                                            style="text-transform: uppercase;">{{ $area ?? 'Tokatindung Site' }}</span>
                                     </div>
-                                @endif
-                            </td>
+                                </div>
+                            @endif
+                        </div>
 
-                            <td style="width: 65%; vertical-align: top;">
-                                @foreach ($documentationPhotos as $index => $item)
-                                    <div class="photo-card"
-                                        style="width: 47%; margin: 1%; border: 1px solid #000; display: inline-block; vertical-align: top; height: 250px; background-color: #fff;">
-                                        <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
-                                            style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
+                        <div style="width: 65%; float: left;">
+                            @foreach ($documentationPhotos as $index => $item)
+                                <div
+                                    style="width: 48%; float: left; margin-right: 2%; margin-bottom: 10px; border: 1px solid #000; height: 260px; background-color: #fff; box-sizing: border-box;">
 
-                                        <div class="photo-caption"
-                                            style="font-size: 6pt; padding: 4px; height: 50px; box-sizing: border-box; overflow: hidden;">
-                                            <strong>No:</strong> {{ $loop->iteration }}<br>
-                                            <strong>Lokasi:</strong>
-                                            {{ Str::limit($item->equipmentMaster->specific_location, 30) }}<br>
-                                            <strong>Ket:</strong> {{ Str::limit($item->remarks ?? '-', 30) }}
-                                        </div>
+                                    <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
+                                        style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid #000;">
+
+                                    <div
+                                        style="font-size: 6pt; padding: 4px; height: 60px; box-sizing: border-box; overflow: hidden;">
+                                        <strong>No:</strong> {{ $loop->iteration }}<br>
+                                        <strong>Lokasi:</strong>
+                                        {{ Str::limit($item->equipmentMaster->specific_location, 35) }}<br>
+                                        <strong>Ket:</strong> {{ Str::limit($item->remarks ?? '-', 35) }}
                                     </div>
-                                @endforeach
-                            </td>
-                        </tr>
-                    </table>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div style="clear: both;"></div>
+                    </div>
                 @endif
 
                 @if (!$hasPhoto)
