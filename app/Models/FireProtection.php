@@ -38,8 +38,10 @@ class FireProtection extends Model
             $date = Carbon::parse($date);
             $currentMonth = $date->month; //
             // Gunakan $query, bukan $this
-            return $query->whereMonth('inspection_date', $currentMonth)
-                ->whereYear('inspection_date', $date->year);
+            return $query->whereHas('inspectionSession', function ($q) use ($currentMonth, $date) {
+                $q->whereMonth('inspection_date', $currentMonth)
+                  ->whereYear('inspection_date', $date->year);
+            });
         }
         return $query;
     }
