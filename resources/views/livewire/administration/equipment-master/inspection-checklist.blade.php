@@ -10,7 +10,7 @@
         </button>
 
 
-        <table class="w-full bg-white shadow">
+        <table class="table table-zebra table-xs">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="p-2 border">Type</th>
