@@ -49,7 +49,6 @@ class MigrateOldInspectionData extends Command
                 $sessionId = DB::table('inspection_sessions')->insertGetId([
                     'inspection_date' => $session->inspection_date,
                     'inspected_by'    => $session->inspected_by,
-                    'location_id'     => $session->location_id,
                     'area_name'       => $session->location_name, // Menggunakan nama lokasi asli (misal: "Alaskar Pit")
                     'area_photo_path' => $session->area_photo_path,
                     'created_at'      => now(),
