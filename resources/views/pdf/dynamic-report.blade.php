@@ -175,11 +175,11 @@
                             @php
                                 $names = explode('|', $item->inspected_by);
                                 $initials = collect($names)
-                                    ->map(function ($n) {
-                                        return collect(preg_split('/[\s,]+/', trim($n)))
+                                    ->map(
+                                        fn($n) => collect(preg_split('/[\s,]+/', trim($n)))
                                             ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                                            ->implode('');
-                                    })
+                                            ->implode(''),
+                                    )
                                     ->implode(', ');
                             @endphp
                             {{ $initials }}
