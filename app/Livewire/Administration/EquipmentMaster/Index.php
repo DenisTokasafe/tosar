@@ -19,6 +19,7 @@ class Index extends Component
     public $technical_data = []; // Untuk menyimpan key-value dinamis (FE No, Capacity, dll)
     public $newKey, $newValue; // Input sementara untuk menambah baris JSON
     public $selected_id, $search;
+    public $area;
     public $isEdit = false;
     public $search_area = '';
     // Pilih lokasi
@@ -42,16 +43,7 @@ class Index extends Component
     ];
     public function updatedType($value)
     {
-        // Cari checklist berdasarkan type
-        $checklist = InspectionChecklist::where('equipment_type', $value)->first();
-
-        if ($checklist && is_array($checklist->inputs)) {
-            // Reset data teknis lama dan masukkan label dari DB sebagai Key
-            $this->technical_data = [];
-            foreach ($checklist->inputs as $label) {
-                $this->technical_data[$label] = ''; // Value default kosong
-            }
-        }
+        $this->generateTechnicalFields();
     }
     // Menambah baris spesifikasi baru (misal: "FE No" -> "PH001")
     public function addTechnicalField()
@@ -83,7 +75,32 @@ class Index extends Component
     {
         $this->location_id = $id;
         $this->searchLocation = $name;
+        $this->area = $name;
         $this->show_location = false;
+        $this->generateTechnicalFields();
+    }
+    public function generateTechnicalFields()
+    {
+        if (!$this->type) return;
+
+        // 1. Cari yang spesifik lokasi (berdasarkan nama lokasi / searchLocation)
+        $checklist = InspectionChecklist::where('equipment_type', $this->type)
+            ->where('location_keyword', $this->area)
+            ->first();
+
+        // 2. Jika tidak ada yang spesifik, ambil yang Default
+        if (!$checklist) {
+            $checklist = InspectionChecklist::where('equipment_type', $this->type)
+                ->where('location_keyword', 'Default')
+                ->first();
+        }
+
+        if ($checklist && is_array($checklist->inputs)) {
+            $this->technical_data = [];
+            foreach ($checklist->inputs as $label) {
+                $this->technical_data[$label] = '';
+            }
+        }
     }
     public function updatedCariSearchLocation()
     {
@@ -96,6 +113,7 @@ class Index extends Component
         };
         $this->reset(['cari_location_id', 'search_area']);
     }
+
 
     public function selectCariLocation($id, $name)
     {
