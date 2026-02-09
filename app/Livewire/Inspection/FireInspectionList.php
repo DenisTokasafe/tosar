@@ -16,7 +16,7 @@ class FireInspectionList extends Component
 
     public $selectedItems = [];
     public $selectAll = false;
-
+    public $fields = [];
     public $type;
     public $date;
     public $area;
@@ -55,7 +55,7 @@ class FireInspectionList extends Component
             $this->show_location = false;
         }
     }
-    public function getChecklistFromDB()
+   public function getChecklistFromDB()
     {
         $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
