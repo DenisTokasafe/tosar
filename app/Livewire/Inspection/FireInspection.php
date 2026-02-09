@@ -358,9 +358,9 @@ class FireInspection extends Component
     public function render()
     {
         $allMasterData = EquipmentMaster::where('location_id', $this->location_id)
-        ->where('type', $this->type)
-        ->spesificLocation($this->selected_location)
-        ->get();
+            ->where('type', $this->type)
+            ->spesificLocation($this->selected_location)
+            ->get();
         return view('livewire.inspection.fire-inspection', [
             'allMasterData' => $allMasterData,
             'equipmentMasters' => EquipmentMaster::search($this->type)
