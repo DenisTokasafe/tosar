@@ -172,7 +172,7 @@
                         @endforeach
                         <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/y') }}</td>
                         <td>
-a                            @php
+                    @php
                                 $daftarNama = explode('|', $item->inspected_by ?? '');
                             @endphp
                             @foreach ($daftarNama as $namaOrang)
