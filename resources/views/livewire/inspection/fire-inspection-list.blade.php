@@ -254,39 +254,35 @@
                                 </div>
                             </td>
                             <td class="p-2 border">
-                                {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 <div class="flex flex-col gap-2">
                                     @php
-                                        // 1. Pecah string berdasarkan pipa '|' untuk mendapatkan daftar orang
-                                        // Gunakan null coalescing ?? untuk menghindari error jika data kosong
                                         $daftarNama = explode('|', $item->inspected_by ?? '');
                                     @endphp
 
                                     @foreach ($daftarNama as $namaOrang)
                                         @php
-                                            // Filter untuk memastikan nama tidak kosong (menghindari error split)
                                             if (empty(trim($namaOrang))) {
                                                 continue;
                                             }
 
-                                            // 2. Ubah koma menjadi SPASI agar "ROSANG, Ega" jadi "ROSANG  Ega"
-                                            // Dengan spasi, fungsi split akan mengenali "ROSANG" dan "Ega" sebagai kata terpisah
-                                            $cleanName = str_replace(',', ' ', $namaOrang);
+                                            // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
+$search = ['"', ','];
+$replace = ['', ' '];
+$cleanName = str_replace($search, $replace, $namaOrang);
 
-                                            // 3. Ambil inisial: Pecah berdasarkan spasi, ambil huruf pertama, gabungkan
-                                            $initials = collect(preg_split('/\s+/', trim($cleanName)))
-                                                ->filter() // Menghapus elemen kosong akibat double space
-                                                ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-                                                ->implode('');
+// 2. Ambil inisial dari tiap kata yang sudah bersih
+$initials = collect(preg_split('/\s+/', trim($cleanName)))
+    ->filter()
+    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+    ->implode('');
                                         @endphp
 
                                         <div class="flex flex-col pb-1 border-b border-gray-100 last:border-0">
-                                            {{-- Inisial tebal untuk kemudahan baca cepat --}}
                                             <span class="text-xs font-bold text-primary">{{ $initials }}</span>
 
-                                            {{-- Nama lengkap kecil sebagai referensi --}}
+                                            {{-- Nama lengkap juga dibersihkan dari tanda kutip saat ditampilkan --}}
                                             <p class="text-[10px] text-gray-500 italic leading-tight">
-                                                {{ trim($namaOrang) }}
+                                                {{ trim(str_replace('"', '', $namaOrang)) }}
                                             </p>
                                         </div>
                                     @endforeach
