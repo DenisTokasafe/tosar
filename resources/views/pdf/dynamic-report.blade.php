@@ -315,13 +315,13 @@
                                 <tr>
                                     <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
                                         @php
-                                            if (empty(trim($namaOrang))) {
+                                            if (empty(trim($name))) {
                                                 continue;
                                             }
                                             // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
 $search = ['"', ','];
 $replace = ['', ' '];
-$cleanName = str_replace($search, $replace, $namaOrang);
+$cleanName = str_replace($search, $replace, $name);
 
 // 2. Ambil inisial dari tiap kata yang sudah bersih
 $initials = collect(preg_split('/\s+/', trim($cleanName)))
@@ -331,7 +331,7 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                                         @endphp
                                         {{ $initials }}
                                     </td>
-                                    <td style="text-align: left;"> {{ trim(str_replace('"', '', $namaOrang)) }}</td>
+                                    <td style="text-align: left;"> {{ trim(str_replace('"', '', $name)) }}</td>
                                 </tr>
                             @endforeach
                         </table>
