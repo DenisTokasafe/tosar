@@ -79,30 +79,30 @@ class Index extends Component
         $this->show_location = false;
         $this->generateTechnicalFields();
     }
-   public function generateTechnicalFields()
-{
-    if (!$this->type) return;
+    public function generateTechnicalFields()
+    {
+        if (!$this->type) return;
 
-    if ($this->isEdit && !empty($this->technical_data)) return;
+        if ($this->isEdit && !empty($this->technical_data)) return;
 
-    $checklist = InspectionChecklist::where('equipment_type', $this->type)
-        ->where('location_keyword', $this->area)
-        ->first() ?:
-        InspectionChecklist::where('equipment_type', $this->type)
-        ->where('location_keyword', 'Default')
-        ->first();
+        $checklist = InspectionChecklist::where('equipment_type', $this->type)
+            ->where('location_keyword', $this->area)
+            ->first() ?:
+            InspectionChecklist::where('equipment_type', $this->type)
+            ->where('location_keyword', 'Default')
+            ->first();
 
-    if ($checklist && is_array($checklist->inputs)) {
-        $fields = [];
-        foreach ($checklist->inputs as $label) {
-            // GANTI SPASI DENGAN UNDERSCORE agar tidak pecah saat diketik
-            // Contoh: "No Referensi" -> "No_Referensi"
-            $safeKey = str_replace(' ', '_', trim($label));
-            $fields[$safeKey] = '';
+        if ($checklist && is_array($checklist->inputs)) {
+            $fields = [];
+            foreach ($checklist->inputs as $label) {
+                // GANTI SPASI DENGAN UNDERSCORE agar tidak pecah saat diketik
+                // Contoh: "No Referensi" -> "No_Referensi"
+                $safeKey = str_replace(' ', '_', trim($label));
+                $fields[$safeKey] = '';
+            }
+            $this->technical_data = $fields;
         }
-        $this->technical_data = $fields;
     }
-}
     public function updatedCariSearchLocation()
     {
         if (strlen($this->cari_searchLocation) > 2) {
@@ -195,11 +195,21 @@ class Index extends Component
     {
         $this->validate();
 
+        // 1. Siapkan array baru untuk menampung data yang sudah dibersihkan
+        $cleanTechnicalData = [];
+
+        // 2. Loop data teknis dan ubah kembali underscore menjadi spasi pada KEY-nya
+        foreach ($this->technical_data as $key => $value) {
+            $originalKey = str_replace('_', ' ', $key);
+            $cleanTechnicalData[$originalKey] = $value;
+        }
+
+        // 3. Simpan ke database menggunakan array yang sudah bersih
         EquipmentMaster::updateOrCreate(['id' => $this->selected_id], [
             'type' => $this->type,
             'location_id' => $this->location_id,
             'specific_location' => $this->specific_location,
-            'technical_data' => $this->technical_data,
+            'technical_data' => $cleanTechnicalData, // Gunakan hasil pembersihan
             'is_active' => $this->is_active,
         ]);
 
@@ -214,8 +224,17 @@ class Index extends Component
         $this->type = $data->type;
         $this->location_id = $data->location_id;
         $this->specific_location = $data->specific_location;
-        $this->technical_data = $data->technical_data;
         $this->isEdit = true;
+
+        // Pastikan technical_data adalah array
+        $raw_data = is_array($data->technical_data) ? $data->technical_data : [];
+
+        // Ubah KEY dari spasi ke underscore agar Form bisa mengenali datanya
+        $this->technical_data = [];
+        foreach ($raw_data as $key => $value) {
+            $safeKey = str_replace(' ', '_', $key);
+            $this->technical_data[$safeKey] = $value;
+        }
     }
 
     public function delete($id)
