@@ -12,23 +12,23 @@
 
         <table class="table table-zebra table-xs">
             <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-2 border">Type</th>
-                    <th class="p-2 border">Location</th>
-                    <th class="p-2 border">Inputs/Checks</th>
-                    <th class="p-2 border">Action</th>
+                <tr class="">
+                    <th class="">Type</th>
+                    <th class="">Location</th>
+                    <th class="">Inputs/Checks</th>
+                    <th class="">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($checklists as $item)
                     <tr>
-                        <td class="p-2 border">{{ $item->equipment_type }}</td>
-                        <td class="p-2 border">{{ $item->location_keyword }}</td>
-                        <td class="p-2 text-xs border">
+                        <td class="">{{ $item->equipment_type }}</td>
+                        <td class="">{{ $item->location_keyword }}</td>
+                        <td class="text-xs ">
                             <strong>Inputs:</strong> {{ implode(', ', $item->inputs) }} <br>
                             <strong>Checks:</strong> {{ implode(', ', $item->checks) }}
                         </td>
-                        <td class="p-2 border">
+                        <td class="">
                             <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})"
                                 class="text-white btn btn-sm btn-info">Edit</button> |
                             <button wire:confirm="Yakin hapus?" wire:click="delete({{ $item->id }})"
