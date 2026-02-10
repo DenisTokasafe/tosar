@@ -115,7 +115,7 @@ class Index extends Component
             ->get();
 
         // Format label sumbu X (contoh: Jan 25)
-        $months = $monthsRaw->map(fn($m) => \Carbon\Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
+        $months = $monthsRaw->map(fn($m) =>Carbon::create($m->year, $m->month, 1)->format('M y'))->toArray();
 
         // --- Fungsi pembantu baru yang lebih stabil ---
         $getMonthlyData = function (string $columnName, string $companyFilter = null, string $categoryFilter = null) use ($baseQuery) {
@@ -131,7 +131,7 @@ class Index extends Component
             // 2. Gunakan Collection Laravel untuk grouping (Proses di Memory PHP, bukan SQL)
             return $data->groupBy(function ($item) {
                 // Buat key format "YYYY-n" (contoh: 2025-1)
-                return \Carbon\Carbon::parse($item->date)->format('Y-n');
+                return Carbon::parse($item->date)->format('Y-n');
             })->map(function ($group) use ($columnName) {
                 // Jumlahkan nilai dalam grup tersebut
                 return $group->sum($columnName);
@@ -240,21 +240,6 @@ class Index extends Component
 
     public function render()
     {
-       $lastDateRaw = Manhour::max('date');
-        if ($lastDateRaw) {
-            $lastDate = Carbon::parse($lastDateRaw);
-            // 2. End date adalah tanggal terbaru yang ditemukan
-            $this->end_date = $lastDate->format('Y-m-d');
-            // 3. Start date ditarik mundur 11 bulan dari tanggal terbaru
-            // Menggunakan startOfMonth agar mencakup data dari awal bulan tersebut
-            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('Y-m-d');
-        } else {
-            // Fallback jika database masih kosong (menggunakan tanggal saat ini)
-            $this->end_date = now()->format('Y-m-d');
-            $this->start_date = now()->subMonths(11)->startOfMonth()->format('Y-m-d');
-        }
-        // Mengatur properti years agar tetap sinkron dengan tahun dari data terbaru
-        $this->years = Carbon::parse($this->end_date)->year;
         $this->loadData();
         $this->loadDataManpower();
         return view('livewire.manhours.grafik.index');
