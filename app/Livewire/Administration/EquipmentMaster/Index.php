@@ -83,7 +83,10 @@ class Index extends Component
     {
         if (!$this->type) return;
 
-        // 1. Cari yang spesifik lokasi (berdasarkan nama lokasi / searchLocation)
+        // Tambahan: Jika sedang edit, jangan timpa data yang sudah ada dari database
+        if ($this->isEdit && !empty($this->technical_data)) return;
+
+        // 1. Cari yang spesifik lokasi
         $checklist = InspectionChecklist::where('equipment_type', $this->type)
             ->where('location_keyword', $this->area)
             ->first();
@@ -95,11 +98,16 @@ class Index extends Component
                 ->first();
         }
 
-        if ($checklist) {
-            $this->technical_data = [];
+        if ($checklist && is_array($checklist->inputs)) {
+            $fields = [];
             foreach ($checklist->inputs as $label) {
-                $this->technical_data[$label] = '';
+                // MENGHAPUS SPASI: 'Nomor Tabung' menjadi 'NomorTabung'
+                // Ini membuat key array menjadi bersih dan aman untuk Livewire
+                $cleanKey = str_replace(' ', '', $label);
+
+                $fields[$cleanKey] = '';
             }
+            $this->technical_data = $fields;
         }
     }
     public function updatedCariSearchLocation()
