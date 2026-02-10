@@ -172,17 +172,27 @@
                         @endforeach
                         <td>{{ \Carbon\Carbon::parse($item->inspection_date)->format('d/m/y') }}</td>
                         <td>
-                            @php
-                                $names = explode('|', $item->inspected_by);
-                                $initials = collect($names)
-                                    ->map(
-                                        fn($n) => collect(preg_split('/[\s,]+/', trim($n)))
-                                            ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                                            ->implode(''),
-                                    )
-                                    ->implode(',');
+a                            @php
+                                $daftarNama = explode('|', $item->inspected_by ?? '');
                             @endphp
-                            {{ $initials }}
+                            @foreach ($daftarNama as $namaOrang)
+                                @php
+                                    if (empty(trim($namaOrang))) {
+                                        continue;
+                                    }
+                                    // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
+$search = ['"', ','];
+$replace = ['', ' '];
+$cleanName = str_replace($search, $replace, $namaOrang);
+
+// 2. Ambil inisial dari tiap kata yang sudah bersih
+$initials = collect(preg_split('/\s+/', trim($cleanName)))
+    ->filter()
+    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+    ->implode('');
+                                @endphp
+                                {{ $initials }}
+                            @endforeach
                         </td>
                         <td style="text-align: left;">{{ $item->remarks }}</td>
                     </tr>
