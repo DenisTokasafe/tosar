@@ -258,23 +258,21 @@
                                     @php
                                         $daftarNama = explode('|', $item->inspected_by ?? '');
                                     @endphp
-
                                     @foreach ($daftarNama as $namaOrang)
                                         @php
                                             if (empty(trim($namaOrang))) {
                                                 continue;
                                             }
-
                                             // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
-$search = ['"', ','];
-$replace = ['', ' '];
-$cleanName = str_replace($search, $replace, $namaOrang);
+                                            $search = ['"', ','];
+                                            $replace = ['', ' '];
+                                            $cleanName = str_replace($search, $replace, $namaOrang);
 
-// 2. Ambil inisial dari tiap kata yang sudah bersih
-$initials = collect(preg_split('/\s+/', trim($cleanName)))
-    ->filter()
-    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-    ->implode('');
+                                            // 2. Ambil inisial dari tiap kata yang sudah bersih
+                                            $initials = collect(preg_split('/\s+/', trim($cleanName)))
+                                                ->filter()
+                                                ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                                ->implode('');
                                         @endphp
 
                                         <div class="flex flex-col pb-1 border-b border-gray-100 last:border-0">

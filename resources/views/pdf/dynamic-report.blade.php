@@ -301,7 +301,7 @@
                     <td class="no-border" style="width: 30%; vertical-align: top;">
                         <table class="legend-table">
                             @php
-                                $uniqueNames = collect($data)
+                                $daftarNama = collect($data)
                                     ->pluck('inspected_by')
                                     ->flatMap(fn($item) => explode('|', $item))
                                     ->map(fn($name) => trim($name))
@@ -311,19 +311,27 @@
                             <tr>
                                 <th colspan="2">Inisial Pemeriksa</th>
                             </tr>
-                            @foreach ($uniqueNames as $name)
+                            @foreach ($daftarNama as $name)
                                 <tr>
                                     <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
                                         @php
-                                            // Regex /[\s,]+/ akan memecah berdasarkan spasi ATAU koma
-                                            $initials = collect(preg_split('/[\s,]+/', $name))
-                                                ->filter() // Menghapus elemen kosong akibat double delimiter
-                                                ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-                                                ->implode('');
+                                            if (empty(trim($namaOrang))) {
+                                                continue;
+                                            }
+                                            // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
+$search = ['"', ','];
+$replace = ['', ' '];
+$cleanName = str_replace($search, $replace, $namaOrang);
+
+// 2. Ambil inisial dari tiap kata yang sudah bersih
+$initials = collect(preg_split('/\s+/', trim($cleanName)))
+    ->filter()
+    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+    ->implode('');
                                         @endphp
                                         {{ $initials }}
                                     </td>
-                                    <td style="text-align: left;">{{ $name }}</td>
+                                    <td style="text-align: left;"> {{ trim(str_replace('"', '', $namaOrang)) }}</td>
                                 </tr>
                             @endforeach
                         </table>
