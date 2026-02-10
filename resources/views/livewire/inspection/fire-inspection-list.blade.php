@@ -221,7 +221,7 @@
                             </td>
                             <td class="text-center border">
                                 <span
-                                    class="text-xs">{{ $item->inspection_number ? $item->inspection_number : '-' }}</span>
+                                    class="text-xs">{{ $item->inspection_number ? $item->inspection_number :  $item->equipmentMaster->inspection_number }}</span>
                             </td>
                             <td class="text-center border">
                                 <span class="w-32 font-semibold badge badge-soft badge-info"><span
