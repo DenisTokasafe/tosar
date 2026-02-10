@@ -34,8 +34,8 @@
                                 @forelse ($technical_data as $key => $val)
                                     <div class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
                                         <div class="flex items-center justify-between">
-                                            <span
-                                                class="text-[10px] font-bold uppercase text-gray-500">{{ $key }}</span>
+                                            <x-form.input-floating label="{{ $key }}"
+                                                model="technical_data.{{ $key }}" />
                                             <button type="button"
                                                 wire:click="removeTechnicalField('{{ $key }}')"
                                                 class="text-red-500 hover:text-red-700">
@@ -46,10 +46,6 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                        {{-- Input untuk mengisi value dari label tersebut --}}
-                                        <input type="text" wire:model="technical_data.{{ $key }}"
-                                            placeholder="Isi {{ $key }}..."
-                                            class="w-full input input-xs input-bordered focus:input-info">
                                     </div>
                                 @empty
                                     <p class="text-[10px] text-center text-gray-400 py-2 italic">Pilih jenis alat untuk
