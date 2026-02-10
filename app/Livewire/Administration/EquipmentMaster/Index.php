@@ -95,7 +95,7 @@ class Index extends Component
                 ->first();
         }
 
-        if ($checklist && is_array($checklist->inputs)) {
+        if ($checklist) {
             $this->technical_data = [];
             foreach ($checklist->inputs as $label) {
                 $this->technical_data[$label] = '';
