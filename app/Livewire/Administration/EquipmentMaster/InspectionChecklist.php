@@ -87,6 +87,7 @@ class InspectionChecklist extends Component
 
         session()->flash('message', $this->checklist_id ? 'Updated!' : 'Created!');
         $this->resetForm();
+        $this->dispatch('close-checklist-modal');
     }
 
     public function edit($id)

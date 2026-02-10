@@ -115,5 +115,9 @@
             </form>
         </dialog>
     </x-tabs-equipment.layout>
+    <script>
+        window.addEventListener('close-checklist-modal', event => {
+            checklist_modal.close();
+        });
+    </script>
 </section>
-
