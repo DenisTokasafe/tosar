@@ -15,6 +15,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\HazardExport;
+
 class HazardReportPanel extends Component
 {
     use WithPagination;
@@ -74,10 +75,10 @@ class HazardReportPanel extends Component
             'Contractors' => Contractor::all(['id', 'contractor_name']),
             'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
-            'ReporterDepartments' => User::whereNotNull('department_name')
-                ->distinct()
-                ->orderBy('department_name')
-                ->pluck('department_name')->prepend('Tidak Ada Departemen'),
+            'ReporterDepartments' => User::selectRaw("DISTINCT IFNULL(NULLIF(department_name, ''), 'Tidak Ada Departemen') as dept")
+                ->orderByRaw("CASE WHEN department_name IS NULL OR department_name = '' THEN 0 ELSE 1 END")
+                ->orderBy('dept')
+                ->pluck('dept'),
         ];
     }
     public function updatingSearch()
@@ -331,10 +332,10 @@ class HazardReportPanel extends Component
             $q->byPelapor($this->searchPelapor); // Meneruskan array langsung
         });
         $query->when(!empty($this->filterReporterDept), function ($q) {
-        $q->whereHas('pelapor', function($userQuery) {
-            $userQuery->whereIn('department_name', $this->filterReporterDept);
+            $q->whereHas('pelapor', function ($userQuery) {
+                $userQuery->whereIn('department_name', $this->filterReporterDept);
+            });
         });
-    });
         // Terapkan filter Department
         $query->byDepartments($this->filterDepartment);
         // Terapkan filter Contractor
@@ -361,53 +362,53 @@ class HazardReportPanel extends Component
         ]);
     }
     public function export()
-{
-    $query = Hazard::with(['pelapor', 'eventType', 'eventSubType', 'department', 'contractor'])
-        ->withHazardCounts()
-        ->latest();
+    {
+        $query = Hazard::with(['pelapor', 'eventType', 'eventSubType', 'department', 'contractor'])
+            ->withHazardCounts()
+            ->latest();
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    // Replikasi semua filter yang ada di render()
-    $query->when($this->filterByAuth, function ($q) use ($user) {
-        $q->where('pelapor_id', $user->id);
-    });
-
-    $query->when($this->filterStatus !== 'all' && !empty($this->filterStatus), function ($q) {
-        $q->status($this->filterStatus);
-    });
-
-    $query->when($this->filterEventType, function ($q) {
-        $q->byEventType($this->filterEventType);
-    });
-
-    $query->when($this->filterEventSubType, function ($q) {
-        $q->byEventSubType($this->filterEventSubType);
-    });
-
-    $query->when($this->searchPelapor, function ($q) {
-        $q->byPelapor($this->searchPelapor);
-    });
-
-    $query->when(!empty($this->filterReporterDept), function ($q) {
-        $q->whereHas('pelapor', function($userQuery) {
-            $userQuery->whereIn('department_name', $this->filterReporterDept);
+        // Replikasi semua filter yang ada di render()
+        $query->when($this->filterByAuth, function ($q) use ($user) {
+            $q->where('pelapor_id', $user->id);
         });
-    });
 
-    $query->byDepartments($this->filterDepartment);
-    $query->byContractors($this->filterContractor);
+        $query->when($this->filterStatus !== 'all' && !empty($this->filterStatus), function ($q) {
+            $q->status($this->filterStatus);
+        });
 
-    $query->when($this->start_date && $this->end_date, function ($q) {
-        $q->dateRange($this->start_date, $this->end_date);
-    });
+        $query->when($this->filterEventType, function ($q) {
+            $q->byEventType($this->filterEventType);
+        });
 
-    if (Auth::user()->role === 'moderator') {
-        $this->filterModeratorReports($query);
+        $query->when($this->filterEventSubType, function ($q) {
+            $q->byEventSubType($this->filterEventSubType);
+        });
+
+        $query->when($this->searchPelapor, function ($q) {
+            $q->byPelapor($this->searchPelapor);
+        });
+
+        $query->when(!empty($this->filterReporterDept), function ($q) {
+            $q->whereHas('pelapor', function ($userQuery) {
+                $userQuery->whereIn('department_name', $this->filterReporterDept);
+            });
+        });
+
+        $query->byDepartments($this->filterDepartment);
+        $query->byContractors($this->filterContractor);
+
+        $query->when($this->start_date && $this->end_date, function ($q) {
+            $q->dateRange($this->start_date, $this->end_date);
+        });
+
+        if (Auth::user()->role === 'moderator') {
+            $this->filterModeratorReports($query);
+        }
+
+        return Excel::download(new HazardExport($query), 'hazard-report-' . now()->format('Y-m-d') . '.xlsx');
     }
-
-    return Excel::download(new HazardExport($query), 'hazard-report-' . now()->format('Y-m-d') . '.xlsx');
-}
     public function paginationView()
     {
         return 'paginate.pagination';
