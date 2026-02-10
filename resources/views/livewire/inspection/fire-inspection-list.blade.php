@@ -258,7 +258,7 @@
                                 <div class="flex flex-col gap-1">
                                     @php
                                         // 1. Pecah dulu string utama berdasarkan '|' (jika ada lebih dari 1 orang)
-                                        $daftarNama = explode('|', $item->submitted_by ?? $item->inspected_by);
+                                        $daftarNama = explode('|',$item->inspected_by);
                                     @endphp
 
                                     @foreach ($daftarNama as $namaOrang)
