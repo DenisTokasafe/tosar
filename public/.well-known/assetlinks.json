@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.archimining.tosar",
+      "sha256_cert_fingerprints": [
+        "26:32:34:10:3E:67:CA:AB:2E:42:18:F8:56:98:6C:EF:64:ED:EB:32:E7:7B:78:4F:D1:A1:F1:99:90:F2:17:A9"
+      ]
+    }
+  }
+]
