@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Inspection;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Location;
@@ -11,6 +10,8 @@ use Livewire\WithFileUploads;
 use App\Models\FireProtection;
 use App\Models\EquipmentMaster;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
+use App\Models\InspectionChecklist;
 
 class FireInspection extends Component
 {
@@ -368,10 +369,7 @@ class FireInspection extends Component
                 ->orderBy('specific_location')
                 ->limit(10)
                 ->get(),
-            'availableTypes' => DB::table('inspection_checklist_masters')
-                ->select('equipment_type')
-                ->distinct()
-                ->pluck('equipment_type')
+            'availableTypes' => InspectionChecklist::distinct()->pluck('equipment_type'),
         ]);
     }
 }
