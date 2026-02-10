@@ -146,7 +146,7 @@ class FireInspectionList extends Component
             ->with('equipmentMaster.location', 'inspectionSession')
             ->searchByType($this->type)
             ->searchByLocation($this->location_id)
-            ->searchInstectionsByMonth($this->date)
+            ->searchInstectionsByMonth($this->date)->groupBy('fire_protections.id')
             ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->get();
 
