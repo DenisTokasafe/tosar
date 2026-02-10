@@ -98,7 +98,6 @@ class Index extends Component
         if ($checklist) {
             $this->technical_data = [];
             foreach ($checklist->inputs as $label) {
-                dd(($checklist->inputs) );
                 $this->technical_data[$label] = '';
             }
         }
