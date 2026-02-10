@@ -32,10 +32,10 @@
                             {{-- List Spesifikasi --}}
                             <div class="mb-3 space-y-2">
                                 @forelse ($technical_data as $key => $val)
-                                    <div class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
+                                    <div wire:key="technical-field-{{ $key }}" class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
                                         <div class="flex items-center justify-between">
-                                            <x-form.input-floating label="{{ $key }}"
-                                                model="technical_data.{{ $key }}" />
+                                            <x-form.input-floating  label="{{ $key }}"
+                                                model="technical_data.{{ $key }}"  />
                                             <button type="button"
                                                 wire:click="removeTechnicalField('{{ $key }}')"
                                                 class="text-red-500 hover:text-red-700">
