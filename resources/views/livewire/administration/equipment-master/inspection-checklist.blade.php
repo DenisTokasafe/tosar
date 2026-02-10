@@ -30,7 +30,7 @@
                         </td>
                         <td class="">
                             <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})"
-                                class="text-white btn btn-xs btn-soft btn-info">Edit</button> |
+                                class="text-white btn btn-xs btn-soft btn-warning">Edit</button> |
                             <button wire:confirm="Yakin hapus?" wire:click="delete({{ $item->id }})"
                                 class="btn btn-xs btn-soft btn-error">Hapus</button>
                         </td>
