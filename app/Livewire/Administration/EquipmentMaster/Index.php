@@ -101,7 +101,8 @@ class Index extends Component
         if ($checklist && is_array($checklist->inputs)) {
             $fields = [];
             foreach ($checklist->inputs as $label) {
-                $fields[$label] = '';
+                $cleanLabel = trim($label);
+                $fields[$cleanLabel] = '';
             }
             $this->technical_data = $fields;
         }
