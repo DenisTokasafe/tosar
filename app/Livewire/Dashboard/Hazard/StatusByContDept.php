@@ -39,7 +39,7 @@ class StatusByContDept extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-   public function updateDateRange($data)
+   public function updatedDateRange($data)
     {
        if (!empty($data['start']) && !empty($data['end'])) {
             // Jika user memilih tanggal manual

@@ -20,7 +20,7 @@ class HazardDistribusiStatus extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-    public function updateDateRange($data)
+    public function updatedDateRange($data)
     {
         // Cek apakah data start dan end tersedia dan tidak kosong
         if (!empty($data['start']) && !empty($data['end'])) {
