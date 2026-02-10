@@ -240,7 +240,21 @@ class Index extends Component
 
     public function render()
     {
-        $this->updateDateRange( ['start' => $this->start_date,'end'   => $this->end_date]);
+       $lastDateRaw = Manhour::max('date');
+        if ($lastDateRaw) {
+            $lastDate = Carbon::parse($lastDateRaw);
+            // 2. End date adalah tanggal terbaru yang ditemukan
+            $this->end_date = $lastDate->format('Y-m-d');
+            // 3. Start date ditarik mundur 11 bulan dari tanggal terbaru
+            // Menggunakan startOfMonth agar mencakup data dari awal bulan tersebut
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('Y-m-d');
+        } else {
+            // Fallback jika database masih kosong (menggunakan tanggal saat ini)
+            $this->end_date = now()->format('Y-m-d');
+            $this->start_date = now()->subMonths(11)->startOfMonth()->format('Y-m-d');
+        }
+        // Mengatur properti years agar tetap sinkron dengan tahun dari data terbaru
+        $this->years = Carbon::parse($this->end_date)->year;
         $this->loadData();
         $this->loadDataManpower();
         return view('livewire.manhours.grafik.index');
