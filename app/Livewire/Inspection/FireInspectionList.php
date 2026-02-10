@@ -55,7 +55,7 @@ class FireInspectionList extends Component
             $this->show_location = false;
         }
     }
-    public function getChecklistFromDB()
+   public function getChecklistFromDB()
     {
         $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
@@ -140,15 +140,14 @@ class FireInspectionList extends Component
     public function exportPDF()
     {
         // Gunakan Carbon untuk mengambil angka Bulan dan Tahun saja
-        $inspections = FireProtection::query()
-            ->select('fire_protections.*')
-            ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')
-            ->with(['equipmentMaster.location', 'inspectionSession'])
+        $inspections =  FireProtection::query()
+            ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
+            ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')->distinct()
+            ->with('equipmentMaster.location', 'inspectionSession')
             ->searchByType($this->type)
             ->searchByLocation($this->location_id)
             ->searchInstectionsByMonth($this->date)
-            ->groupBy('fire_protections.id') // Kelompokkan berdasarkan ID agar tidak double
-            ->orderBy('inspection_sessions.inspection_date', 'desc')
+            ->orderBy('inspection_sessions.inspection_date', 'desc') // Urutkan berdasarkan tgl sesi
             ->get();
 
         if ($inspections->isEmpty()) {
@@ -198,7 +197,7 @@ class FireInspectionList extends Component
     public function render()
     {
         return view('livewire.inspection.fire-inspection-list', [
-            'availableTypes' => DB::table('inspection_checklist_masters')
+             'availableTypes' => DB::table('inspection_checklist_masters')
                 ->select('equipment_type')
                 ->distinct()
                 ->pluck('equipment_type'),
