@@ -240,6 +240,8 @@ class Index extends Component
 
     public function render()
     {
+        $this->loadData();
+        $this->loadDataManpower();
         return view('livewire.manhours.grafik.index');
     }
 }
