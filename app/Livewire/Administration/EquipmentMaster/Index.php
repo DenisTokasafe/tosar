@@ -83,28 +83,24 @@ class Index extends Component
     {
         if (!$this->type) return;
 
-        // JANGAN GENERATE jika sedang edit (karena data sudah ada di database)
-        if ($this->isEdit) return;
-
-        // JANGAN RESET jika user sudah mulai mengisi data (array tidak kosong)
-        if (!empty($this->technical_data) && count(array_filter($this->technical_data)) > 0) {
-            return;
-        }
-
+        // 1. Cari yang spesifik lokasi (berdasarkan nama lokasi / searchLocation)
         $checklist = InspectionChecklist::where('equipment_type', $this->type)
             ->where('location_keyword', $this->area)
-            ->first() ?:
-            InspectionChecklist::where('equipment_type', $this->type)
-            ->where('location_keyword', 'Default')
             ->first();
 
-        if ($checklist && is_array($checklist->inputs)) {
-            $fields = [];
+        // 2. Jika tidak ada yang spesifik, ambil yang Default
+        if (!$checklist) {
+            $checklist = InspectionChecklist::where('equipment_type', $this->type)
+                ->where('location_keyword', 'Default')
+                ->first();
+        }
+
+        if ($checklist) {
+            $this->technical_data = [];
             foreach ($checklist->inputs as $label) {
-                $cleanLabel = trim($label);
-                $fields[$cleanLabel] = '';
+                dd(($checklist->inputs) );
+                $this->technical_data[$label] = '';
             }
-            $this->technical_data = $fields;
         }
     }
     public function updatedCariSearchLocation()
