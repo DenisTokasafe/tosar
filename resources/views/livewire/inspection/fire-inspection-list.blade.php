@@ -257,25 +257,26 @@
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
                                 <div class="flex flex-col gap-1">
                                     @php
-                                    $pemeriksa = explode('|', $item->inspected_by);
-                                    @foreach ($pemeriksa as $nama)
-                                        $initials = collect(explode('|', $nama)) // Pisahkan berdasarkan pipa (|)
-                                        ->map(function($fullName) {
-                                        // Bersihkan koma agar tidak dianggap sebagai kata tersendiri
-                                        $cleanName = str_replace(',', '', $fullName);
+                                        // 1. Pecah dulu string utama berdasarkan '|' (jika ada lebih dari 1 orang)
+                                        $daftarNama = explode('|', $item->submitted_by ?? $item->inspected_by);
+                                    @endphp
 
-                                        // Ambil inisial dari setiap kata yang tersisa
-                                        return collect(preg_split('/[\s]+/', trim($cleanName)))
-                                        ->filter()
-                                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-                                        ->implode('');
-                                        })
-                                        ->implode(' | '); // Gabungkan kembali dengan pipa
+                                    @foreach ($daftarNama as $namaOrang)
+                                        @php
+                                            // 2. Bersihkan koma agar tidak mengganggu pembuatan inisial
+                                            $cleanName = str_replace(',', '', $namaOrang);
+
+                                            // 3. Ambil inisial dari tiap kata
+                                            $initials = collect(preg_split('/[\s]+/', trim($cleanName)))
+                                                ->filter()
+                                                ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                                ->implode('');
                                         @endphp
 
-                                        {{ $initials }}
-                                        <p class="text-xs"><span
-                                                class="badge badge-ghost badge-xs">{{ $nama }}</span></p>
+                                        <div class="flex flex-col pb-1 border-b border-gray-100 last:border-0">
+                                            <span class="text-xs font-bold">{{ $initials }}</span>
+                                            <p class="text-[10px] text-gray-500 italic">{{ trim($namaOrang) }}</p>
+                                        </div>
                                     @endforeach
                                 </div>
                             </td>
