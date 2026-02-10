@@ -17,6 +17,22 @@ class HazardDistribusiStatus extends Component
 
     public function mount()
     {
+        $lastDateRaw = Hazard::max('tanggal');
+
+        if ($lastDateRaw) {
+            $lastDate = Carbon::parse($lastDateRaw);
+
+            // 2. Set end_date ke tanggal terbaru
+            $this->end_date = $lastDate->format('d-m-Y');
+
+            // 3. Set start_date ke 12 bulan sebelumnya dari tanggal terbaru
+            // Gunakan startOfMonth agar mencakup bulan penuh jika diinginkan
+            $this->start_date = $lastDate->copy()->subMonths(11)->startOfMonth()->format('d-m-Y');
+        } else {
+            // Fallback jika database kosong
+            $this->start_date = now()->subMonths(11)->startOfMonth()->format('d-m-Y');
+            $this->end_date = now()->format('d-m-Y');
+        }
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
