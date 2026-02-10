@@ -120,9 +120,9 @@
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                         <option value="">-- Pilih --</option>
-                      @foreach ($availableTypes as $typeName)
-                                <option value="{{ $typeName }}">{{ $typeName }}</option>
-                            @endforeach
+                        @foreach ($availableTypes as $typeName)
+                            <option value="{{ $typeName }}">{{ $typeName }}</option>
+                        @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('type')" />
                 </fieldset>
@@ -255,12 +255,27 @@
                             </td>
                             <td class="border">
                                 {{-- Menampilkan pemeriksa yang digabung dengan '|' --}}
-                                @php $pemeriksa = explode('|', $item->inspected_by); @endphp
+
                                 <div class="flex flex-col gap-1">
-                                    @foreach ($pemeriksa as $nama)
-                                        <p class="text-xs"><span
-                                                class="badge badge-ghost badge-xs">{{ $nama }}</span></p>
-                                    @endforeach
+                                        @foreach ($pemeriksa as $nama)
+                                            @php
+                                                $initials = collect(explode('|', $nama)) // Pisahkan berdasarkan pipa (|)
+                                                    ->map(function ($fullName) {
+                                                        // Bersihkan koma agar tidak dianggap sebagai kata tersendiri
+                                                        $cleanName = str_replace(',', '', $fullName);
+
+                                                        // Ambil inisial dari setiap kata yang tersisa
+                                                        return collect(preg_split('/[\s]+/', trim($cleanName)))
+                                                            ->filter()
+                                                            ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                                            ->implode('');
+                                                    })
+                                                    ->implode(' | '); // Gabungkan kembali dengan pipa
+                                            @endphp
+
+                                            <p class="text-xs"><span
+                                                    class="badge badge-ghost badge-xs"> {{ $initials }}</span></p>
+                                        @endforeach
                                 </div>
                             </td>
                             <td class="text-center border">
