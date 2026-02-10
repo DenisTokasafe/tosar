@@ -48,7 +48,7 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <p class="italic text-center">Pilih jenis alat...</p>
+                                    <p class="text-xs italic font-semibold text-center text-gray-400">Pilih jenis alat...</p>
                                 @endforelse
                             </div>
 
