@@ -76,8 +76,7 @@ class HazardReportPanel extends Component
             'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
             'ReporterDepartments' => User::selectRaw("DISTINCT IFNULL(NULLIF(department_name, ''), 'Tidak Ada Departemen') as dept")
-                ->orderByRaw("CASE WHEN department_name IS NULL OR department_name = '' THEN 0 ELSE 1 END")
-                ->orderBy('dept')
+                ->orderBy('dept', 'asc')
                 ->pluck('dept'),
         ];
     }
