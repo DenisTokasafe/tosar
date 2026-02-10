@@ -34,7 +34,7 @@
                                 @forelse ($technical_data as $key => $val)
                                     <div class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
                                         <div  wire:key="tech-field-{{ md5($key) }}" class="flex items-center justify-between">
-                                            <x-form.input-floating  wire:key="technical-field-{{ $key }}" label="{{ $key }}"
+                                            <x-form.input-floating  label="{{ $key }}"
                                                 model="technical_data.{{ $key }}"  />
                                             <button type="button"
                                                 wire:click="removeTechnicalField('{{ $key }}')"
