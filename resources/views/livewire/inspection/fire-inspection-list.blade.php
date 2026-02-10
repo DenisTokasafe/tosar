@@ -264,7 +264,7 @@
                                     @foreach ($daftarNama as $namaOrang)
                                         @php
                                             // 2. Bersihkan koma agar tidak mengganggu pembuatan inisial
-                                            $cleanName = str_replace(',', '', $namaOrang);
+                                            $cleanName = str_replace(',', ' ', $namaOrang);
 
                                             // 3. Ambil inisial dari tiap kata
                                             $initials = collect(preg_split('/[\s]+/', trim($cleanName)))
