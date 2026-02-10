@@ -32,24 +32,23 @@
                             {{-- List Spesifikasi --}}
                             <div class="mb-3 space-y-2">
                                 @forelse ($technical_data as $key => $val)
-                                    <div class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
-                                        <div  wire:key="tech-field-{{ md5($key) }}" class="flex items-center justify-between">
-                                            <x-form.input-floating  label="{{ $key }}"
-                                                model="technical_data.{{ $key }}"  />
+                                    {{-- Gunakan md5 dari key agar ID elemen benar-benar unik dan stabil --}}
+                                    <div wire:key="field-{{ md5($key) }}"
+                                        class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
+                                        <div class="flex items-center justify-between">
+
+                                            <x-form.input-floating {{-- KEMBALIKAN LABEL KE SEMULA (Ganti underscore jadi spasi lagi) --}}
+                                                label="{{ str_replace('_', ' ', $key) }}" {{-- Gunakan .blur agar sinkronisasi hanya terjadi saat pindah input --}}
+                                                wire:model.blur="technical_data.{{ $key }}" />
+
                                             <button type="button"
                                                 wire:click="removeTechnicalField('{{ $key }}')"
-                                                class="text-red-500 hover:text-red-700">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
+                                                class="text-red-500">
                                             </button>
                                         </div>
                                     </div>
                                 @empty
-                                    <p class="text-[10px] text-center text-gray-400 py-2 italic">Pilih jenis alat untuk
-                                        memuat spesifikasi</p>
+                                    <p class="italic text-center">Pilih jenis alat...</p>
                                 @endforelse
                             </div>
 
@@ -165,8 +164,7 @@
                             <div class="modal-action">
                                 <button wire:click="importExcel" wire:loading.attr="disabled"
                                     class="text-white btn btn-success">
-                                    <span wire:loading wire:target="importExcel"
-                                        class="loading loading-spinner"></span>
+                                    <span wire:loading wire:target="importExcel" class="loading loading-spinner"></span>
                                     ✅ Simpan Ke Database
                                 </button>
 

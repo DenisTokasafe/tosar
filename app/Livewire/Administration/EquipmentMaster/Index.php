@@ -79,37 +79,30 @@ class Index extends Component
         $this->show_location = false;
         $this->generateTechnicalFields();
     }
-    public function generateTechnicalFields()
-    {
-        if (!$this->type) return;
+   public function generateTechnicalFields()
+{
+    if (!$this->type) return;
 
-        // Tambahan: Jika sedang edit, jangan timpa data yang sudah ada dari database
-        if ($this->isEdit && !empty($this->technical_data)) return;
+    if ($this->isEdit && !empty($this->technical_data)) return;
 
-        // 1. Cari yang spesifik lokasi
-        $checklist = InspectionChecklist::where('equipment_type', $this->type)
-            ->where('location_keyword', $this->area)
-            ->first();
+    $checklist = InspectionChecklist::where('equipment_type', $this->type)
+        ->where('location_keyword', $this->area)
+        ->first() ?:
+        InspectionChecklist::where('equipment_type', $this->type)
+        ->where('location_keyword', 'Default')
+        ->first();
 
-        // 2. Jika tidak ada yang spesifik, ambil yang Default
-        if (!$checklist) {
-            $checklist = InspectionChecklist::where('equipment_type', $this->type)
-                ->where('location_keyword', 'Default')
-                ->first();
+    if ($checklist && is_array($checklist->inputs)) {
+        $fields = [];
+        foreach ($checklist->inputs as $label) {
+            // GANTI SPASI DENGAN UNDERSCORE agar tidak pecah saat diketik
+            // Contoh: "No Referensi" -> "No_Referensi"
+            $safeKey = str_replace(' ', '_', trim($label));
+            $fields[$safeKey] = '';
         }
-
-        if ($checklist && is_array($checklist->inputs)) {
-            $fields = [];
-            foreach ($checklist->inputs as $label) {
-                // MENGHAPUS SPASI: 'Nomor Tabung' menjadi 'NomorTabung'
-                // Ini membuat key array menjadi bersih dan aman untuk Livewire
-                $cleanKey = str_replace(' ', '', $label);
-
-                $fields[$cleanKey] = '';
-            }
-            $this->technical_data = $fields;
-        }
+        $this->technical_data = $fields;
     }
+}
     public function updatedCariSearchLocation()
     {
         if (strlen($this->cari_searchLocation) > 2) {
