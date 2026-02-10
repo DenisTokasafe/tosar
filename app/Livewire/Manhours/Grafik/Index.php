@@ -240,6 +240,7 @@ class Index extends Component
 
     public function render()
     {
+        $this->updateDateRange( ['start' => $this->start_date,'end'   => $this->end_date]);
         $this->loadData();
         $this->loadDataManpower();
         return view('livewire.manhours.grafik.index');
