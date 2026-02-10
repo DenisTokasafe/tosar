@@ -95,12 +95,12 @@ class Index extends Component
                 ->first();
         }
 
-        if ($checklist) {
-            $this->technical_data = [];
-            foreach ($checklist->inputs as $label) {
-                $this->technical_data[$label] = '';
-            }
-        }
+        // if ($checklist) {
+        //     $this->technical_data = [];
+        //     foreach ($checklist->inputs as $label) {
+        //         $this->technical_data[$label] = '';
+        //     }
+        // }
     }
     public function updatedCariSearchLocation()
     {
