@@ -302,7 +302,7 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                                 </div>
                             </td>
                             <td class="text-center border">
-                                {{$item->equipmentMaster->inspection_date }}
+                                {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }}
                             </td>
                             <td class="text-center border">
                                 <div class="flex gap-2">
