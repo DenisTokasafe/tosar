@@ -6,7 +6,7 @@
             <div class="p-2 mb-4 bg-green-200">{{ session('message') }}</div>
         @endif
         <div
-            class="md:shadow-md md:px-4 md:mb-10 md:absolute md:inset-x-0 md:top-0 md:z-20 md:flex-row bg-base-100 md:inset-shadow-sm">
+            class="md:shadow-md md:px-4 md:mb-10 md:absolute md:inset-x-0 md:top-0 md:z-40 md:flex-row bg-base-100 md:inset-shadow-sm">
             <button class=" btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()"
                 wire:click="resetForm">
                 + Tambah Checklist
