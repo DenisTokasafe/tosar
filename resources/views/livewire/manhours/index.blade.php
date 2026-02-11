@@ -358,15 +358,15 @@
                 <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
                 <div class="modal-action">
-                    <button onclick="delete_modal.close()"
+                    <label onclick="delete_modal.close()"
                         class="btn btn-xs btn-soft btn-warning" >
                         Batal
-                    </button>
+                    </label>
 
-                    <button  class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
+                    <label  class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
                         wire:target="delete">
                         Hapus
-                    </button>
+                    </label>
                 </div>
             </div>
         </dialog>
