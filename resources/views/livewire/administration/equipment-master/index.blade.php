@@ -67,9 +67,9 @@
                         </div>
 
                         <div class="flex gap-2 mt-4">
-                            <button wire:click="save" class="flex-1 btn btn-success btn-sm">Simpan</button>
+                            <button wire:click="save" class="flex-1 btn btn-success btn-soft btn-xs">Simpan</button>
                             @if ($isEdit)
-                                <button wire:click="resetForm" class="btn btn-ghost btn-sm">Batal</button>
+                                <button wire:click="resetForm" class="btn btn-error btn-soft btn-sm">Batal</button>
                             @endif
                         </div>
                     </div>
