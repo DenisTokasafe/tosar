@@ -417,7 +417,7 @@ class Index extends Component
     {
         if (strlen($this->searchLocation) > 2) {
             $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
-                ->orderBy('name')->limit(10)->get();
+                ->orderBy('name')->limit(100)->get();
             $this->show_location = true;
         } else {
             $this->show_location = false;
