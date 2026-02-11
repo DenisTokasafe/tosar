@@ -327,7 +327,7 @@
 
                         {{-- Tombol Aksi --}}
                         <div class="flex justify-end gap-2 mt-2">
-                            <flux:button size="xs" variant="danger" wire:click="close_modal">Batal</flux:button>
+                            <flux:button size="xs" variant="danger" onclick="manhours_modal.close()">Batal</flux:button>
                             @if ($selectedId)
                                 <flux:button size="xs" variant="primary" type="submit">Update</flux:button>
                             @else
