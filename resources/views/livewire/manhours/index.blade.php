@@ -132,7 +132,7 @@
                                 <th class='flex flex-row justify-center gap-2'>
 
                                     <div class="tooltip">
-                                        <div class="z-40 tooltip-content tooltip-warning">
+                                        <div class="z-50 tooltip-content tooltip-warning">
                                             <div class="text-sm font-black animate-bounce">Edit</div>
                                         </div>
                                         <label onclick="manhours_modal.showModal()"
@@ -142,7 +142,7 @@
                                         </label>
                                     </div>
                                     <div class="tooltip ">
-                                        <div class="z-40 tooltip-content tooltip-error">
+                                        <div class="z-50 tooltip-content tooltip-error">
                                             <div class="text-sm font-black animate-bounce">hapus data </div>
                                         </div>
                                         <label wire:click="showDelete({{ $manhour->id }})"
