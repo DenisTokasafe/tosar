@@ -352,7 +352,7 @@
             </div>
         </dialog>
         {{-- Modal konfirmasi --}}
-        <dialog id='delete_modal' class="modal">
+        <dialog id='delete_modal' class="modal" wire:ignore.self>
             <div class="modal-box">
                 <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
                 <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
