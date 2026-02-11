@@ -7,7 +7,7 @@
         @endif
         <div
             class="md:shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 md:inset-shadow-sm">
-            <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()"
+            <button class=" btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()"
                 wire:click="resetForm">
                 + Tambah Checklist
             </button>
