@@ -145,8 +145,9 @@
                                         <div class="z-40 tooltip-content tooltip-error">
                                             <div class="text-sm font-black animate-bounce">hapus data </div>
                                         </div>
-                                        <label
-                                           wire:click="showDelete({{ $manhour->id }})"  class="btn btn-square btn-xs btn-soft btn-error">
+                                        <label wire:click="showDelete({{ $manhour->id }})"
+                                            onclick="delete_modal.showModal()"
+                                            class="btn btn-square btn-xs btn-soft btn-error">
                                             <x-icon.delete />
                                         </label>
                                     </div>
@@ -351,14 +352,14 @@
             </div>
         </dialog>
         {{-- Modal konfirmasi --}}
-        <div class="modal {{ $confirmingDelete ? 'modal-open' : '' }}">
+        <dialog id='delete_modal' class="modal">
             <div class="modal-box">
                 <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
                 <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
                 <div class="modal-action">
-                    <button type="button" @click="showModal = false" class="btn btn-warning"
-                        wire:click="$set('confirmingDelete', false)">
+                    <button onclick="delete_modal.close()" type="button" @click="showModal = false"
+                        class="btn btn-warning" >
                         Batal
                     </button>
 
@@ -368,12 +369,14 @@
                     </button>
                 </div>
             </div>
-
-            <label class="modal-backdrop" @click="showModal = false"
-                wire:click="$set('confirmingDelete', false)"></label>
-        </div>
+        </dialog>
 
         @livewire('manhours.grafik.index')
 
     </x-manhours.layout>
 </section>
+<script>
+    window.addEventListener('close-delete-modal', event => {
+        delete_modal.close();
+    });
+</script>

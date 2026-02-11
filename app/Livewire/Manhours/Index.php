@@ -370,7 +370,7 @@ class Index extends Component
 
             // reset
             $this->selectedId = null;
-            $this->confirmingDelete = false;
+           $this->dispatch('close-delete-modal');
 
             // opsional: emit event untuk notifikasi / refresh tabel
             $this->dispatch(
