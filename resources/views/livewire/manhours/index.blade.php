@@ -20,8 +20,7 @@
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Tambah Data</div>
                     </div>
-                    <label  onclick="manhours_modal.showModal()"
-                        class="btn btn-square btn-xs btn-soft btn-primary">
+                    <label onclick="manhours_modal.showModal()" class="btn btn-square btn-xs btn-soft btn-primary">
                         <x-icon.add />
                     </label>
                 </div>
@@ -131,14 +130,28 @@
                             <td>{{ $manhour->manpower }}</td>
                             @can('create', \App\Models\Manhour::class)
                                 <th class='flex flex-row justify-center gap-2'>
-                                    <flux:tooltip content="edit" position="top">
-                                        <flux:button wire:click="open_modal({{ $manhour->id }})" size="xs"
-                                            icon="pencil-square" variant="subtle"></flux:button>
-                                    </flux:tooltip>
-                                    <flux:tooltip content="hapus" position="top">
-                                        <flux:button wire:click="showDelete({{ $manhour->id }})" size="xs"
-                                            icon="trash" variant="danger"></flux:button>
-                                    </flux:tooltip>
+
+                                    <div class="tooltip">
+                                        <div class="z-40 tooltip-content tooltip-warning">
+                                            <div class="text-sm font-black animate-bounce">Edit</div>
+                                        </div>
+                                        <label onclick="manhours_modal.showModal()"
+                                            wire:click="open_modal({{ $manhour->id }})"
+                                            class="btn btn-square btn-xs btn-soft btn-warning">
+                                            <x-icon.edit />
+                                        </label>
+                                    </div>
+                                    <div class="tooltip md:tooltip-left">
+                                        <div class="z-40 tooltip-content tooltip-error">
+                                            <div class="text-sm font-black animate-bounce">hapus data </div>
+                                        </div>
+                                        <label
+                                            onclick="confirm('Yakin ingin menghapus data?') || event.stopImmediatePropagation()"
+                                           wire:click="showDelete({{ $manhour->id }})"  class="btn btn-square btn-xs btn-soft btn-error">
+                                            <x-icon.delete />
+                                        </label>
+                                    </div>
+
                                 </th>
                             @endcan
                         </tr>
@@ -327,11 +340,12 @@
 
                         {{-- Tombol Aksi --}}
                         <div class="flex justify-end gap-2 mt-2">
-                            <flux:button size="xs" variant="danger" onclick="manhours_modal.close()">Batal</flux:button>
+                            <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
+                                onclick="manhours_modal.close()">Batal</button>
                             @if ($selectedId)
-                                <flux:button size="xs" variant="primary" type="submit">Update</flux:button>
+                                <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
                             @else
-                                <flux:button size="xs" variant="primary" type="submit">Simpan</flux:button>
+                                <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
                             @endif
                         </div>
                 </form>

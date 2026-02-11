@@ -23,7 +23,7 @@ class Index extends Component
 {
     use WithPagination;
 
-    public $modalOpen;
+
     public $custodian = [];
     public $deptGroup = [];
     public $companies = [];
@@ -136,7 +136,7 @@ class Index extends Component
     public function open_modal($id = null)
     {
         Gate::authorize('create', Manhour::class);
-        $this->modalOpen = 'modal-open';
+
         $this->form = empty($id) ? 'Input' : 'Update';
         if ($id) {
             $this->selectedId = $id;
@@ -176,7 +176,7 @@ class Index extends Component
     public function close_modal()
     {
         // Tutup modal
-        $this->reset('modalOpen', 'selectedId');
+        $this->reset('selectedId');
         $this->hide = [
             'supervisor'    => false,
             'operational'   => false,
