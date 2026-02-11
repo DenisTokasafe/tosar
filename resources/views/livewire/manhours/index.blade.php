@@ -164,7 +164,7 @@
             {{ $data_manhours->links() }}
         </div>
         <dialog id='manhours_modal' class="modal" wire:ignore.self>
-            <div class="modal-box max-w-4xl w-11/12 max-h-[90vh] md:max-h-[85vh] lg:max-h-[85vh] overflow-y-auto">
+            <div class="overflow-y-auto modal-box">
                 <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
                     <fieldset wire.ignore.self
                         class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
