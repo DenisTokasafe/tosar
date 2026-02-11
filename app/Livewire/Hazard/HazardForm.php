@@ -104,6 +104,8 @@ class HazardForm extends Component
     public $action_responsible_id;
     public $action_due_date;
     public $actual_close_date;
+    public $doc_deskripsi_path;
+    public $doc_corrective_path;
     public function rules()
     {
         $baseRules = [
@@ -204,6 +206,33 @@ class HazardForm extends Component
             ]);
         }
     }
+
+    // Hook untuk doc_deskripsi
+    public function updatedDocDeskripsi()
+    {
+        $this->validate(['doc_deskripsi' => 'image|max:10240']); // Validasi awal 10MB max
+
+        // Hapus file lama jika user mengganti gambar sebelum submit
+        if ($this->doc_deskripsi_path) {
+            FileHelper::deleteFile($this->doc_deskripsi_path);
+        }
+
+        // Langsung kompres dan simpan path-nya
+        $this->doc_deskripsi_path = FileHelper::compressAndStore($this->doc_deskripsi, 'sebelum_perbaikan');
+    }
+
+    // Hook untuk doc_corrective
+    public function updatedDocCorrective()
+    {
+        $this->validate(['doc_corrective' => 'image|max:10240']);
+
+        if ($this->doc_corrective_path) {
+            FileHelper::deleteFile($this->doc_corrective_path);
+        }
+
+        $this->doc_corrective_path = FileHelper::compressAndStore($this->doc_corrective, 'sesudah_perbaikan');
+    }
+
     // Menangkap data dari CKEditor 'action_description'
     #[On('updateActionDescription')]
     public function updateActionDescription($actionData)
@@ -533,12 +562,8 @@ class HazardForm extends Component
             $tanggal = Carbon::createFromFormat('d-m-Y H:i', $this->tanggal)->format('Y-m-d');
 
 
-            if ($this->doc_deskripsi) {
-                $docDeskripsiPath = FileHelper::compressAndStore($this->doc_deskripsi, 'sebelum_perbaikan');
-            }
-            if ($this->doc_corrective) {
-                $docCorrectivePath = FileHelper::compressAndStore($this->doc_corrective, 'sesudah_perbaikan');
-            }
+            $docDeskripsiPath = $this->doc_deskripsi_path;
+            $docCorrectivePath = $this->doc_corrective_path;
 
             $riskLevel = null;
             if ($this->consequence_id && $this->likelihood_id) {
