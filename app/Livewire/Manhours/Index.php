@@ -22,8 +22,6 @@ use Illuminate\Support\Facades\Mail;
 class Index extends Component
 {
     use WithPagination;
-
-
     public $custodian = [];
     public $deptGroup = [];
     public $companies = [];

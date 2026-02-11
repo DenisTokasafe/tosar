@@ -20,7 +20,7 @@
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Tambah Data</div>
                     </div>
-                    <label onclick="manhours_modal.showModal()" class="btn btn-square btn-xs btn-soft btn-primary">
+                    <label onclick="manhours_modal.showModal()" wire:click='close_modal' class="btn btn-square btn-xs btn-soft btn-primary">
                         <x-icon.add />
                     </label>
                 </div>
@@ -340,11 +340,14 @@
 
                         {{-- Tombol Aksi --}}
                         <div class="flex justify-end gap-2 mt-2">
-                            <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
-                                onclick="manhours_modal.close()">Batal</button>
+
                             @if ($selectedId)
+                                <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
+                                    onclick="manhours_modal.close()">Batal</button>
                                 <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
                             @else
+                                <button class="btn btn-xs btn-soft btn-error"
+                                    onclick="manhours_modal.close()">Batal</button>
                                 <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
                             @endif
                         </div>
@@ -358,12 +361,11 @@
                 <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
                 <div class="modal-action">
-                    <label onclick="delete_modal.close()"
-                        class="btn btn-xs btn-soft btn-warning" >
+                    <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
                         Batal
                     </label>
 
-                    <label  class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
+                    <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
                         wire:target="delete">
                         Hapus
                     </label>
