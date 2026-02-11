@@ -75,9 +75,9 @@ class HazardForm extends Component
     public $contractor_id;
     #[Validate('required|string')]
     public $penanggungJawab;
-    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx')]
     public $doc_deskripsi;
-    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx')]
     public $doc_corrective;
     #[Validate('required|string')]
     public $tipe_bahaya;

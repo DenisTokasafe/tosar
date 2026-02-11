@@ -22,6 +22,7 @@ class FireInspection extends Component
 
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048')]
     public $dokumentasi = [];
+    public $dokumentasi_paths = [];
 
     public $searchResponsibility = '';
     public $pelapors = [];
@@ -47,7 +48,7 @@ class FireInspection extends Component
     public $conditions = [];
     // --- PROPERTI FOTO AREA ---
     #[Validate('required|image|max:3072')] // Maksimal 3MB
-    public $foto_area;
+    public $foto_area, $foto_area_path;
     // Definisi kriteria (Master Fields)
 
 
@@ -279,6 +280,40 @@ class FireInspection extends Component
 
         return "{$acronym}/{$equipment}/{$formattedDate}";
     }
+    // Hook untuk Foto Area
+    public function updatedFotoArea()
+    {
+        $this->validate(['foto_area' => 'image|max:10240']);
+
+        if ($this->foto_area_path) {
+            FileHelper::deleteFile($this->foto_area_path);
+        }
+
+        $result = FileHelper::compressAndStore($this->foto_area, 'inspections/area-photos');
+        $this->foto_area_path = $result['path'];
+    }
+    public function updatedDokumentasi($value, $key)
+    {
+        // $key di sini adalah $equipmentMasterId (contoh: dokumentasi.5)
+        // $value adalah objek file yang baru diupload
+
+        // 1. Validasi file
+        $this->validate([
+            'dokumentasi.' . $key => 'image|max:10240', // Max 10MB
+        ]);
+
+        // 2. Hapus file lama jika user mengganti gambar untuk ID yang sama
+        if (isset($this->dokumentasi_paths[$key])) {
+            FileHelper::deleteFile($this->dokumentasi_paths[$key]);
+        }
+
+        // 3. Jalankan Kompresi
+        // Karena $value adalah objek file, kita langsung kirim ke helper
+        $result = FileHelper::compressAndStore($value, 'inspections/documents');
+
+        // 4. Simpan path hasil kompresi ke array paths
+        $this->dokumentasi_paths[$key] = $result['path'];
+    }
     public function save()
     {
         $this->validate([
@@ -299,10 +334,7 @@ class FireInspection extends Component
                 // 1. SIMPAN KE HEADER (inspection_sessions)
                 $areaPhotoPath = null;
                 if ($this->foto_area) {
-                    $areaPhotoPath = FileHelper::compressAndStore(
-                        $this->foto_area,
-                        'inspections/area-photos'
-                    );
+                    $areaPhotoPath = $this->foto_area_path;
                 }
 
                 // Buat record session sebagai induk
@@ -318,13 +350,7 @@ class FireInspection extends Component
                 // 2. SIMPAN KE DETAIL (fire_protections)
                 foreach ($this->conditions as $equipmentMasterId => $dataKondisi) {
 
-                    $documentationPath = null;
-                    if (isset($this->dokumentasi[$equipmentMasterId])) {
-                        $documentationPath = FileHelper::compressAndStore(
-                            $this->dokumentasi[$equipmentMasterId],
-                            'inspections/documents'
-                        );
-                    }
+                    $documentationPath = $this->dokumentasi_paths[$equipmentMasterId] ?? null;
 
                     $rowRemarks = $dataKondisi['remarks'] ?? null;
                     // Hilangkan key yang bukan checklist sebelum simpan ke JSON
