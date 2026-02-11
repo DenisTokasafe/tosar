@@ -225,7 +225,7 @@
                                     </td>
                                     <td class="flex gap-1">
                                         <button wire:click="edit({{ $item->id }})"
-                                            class="btn btn-xs btn-soft btn-info"> <x-icon.edit /> </button>
+                                            class="btn btn-xs btn-soft btn-warning"> <x-icon.edit /> </button>
                                         <button onclick="confirm('Hapus?') || event.stopImmediatePropagation()"
                                             wire:click="delete({{ $item->id }})"
                                             class="btn btn-xs btn-soft btn-error"><x-icon.delete /></button>
