@@ -99,7 +99,7 @@
                 @endif
                 <div class="tooltip md:tooltip-left">
                     <div class="z-40 tooltip-content tooltip-primary">
-                        <div class="text-sm font-black text-primary animate-bounce">Laporan Baru</div>
+                        <div class="text-sm font-black animate-bounce">Laporan Baru</div>
                     </div>
                     <a href="{{ route('fire-inspection') }}" class="text-xs uppercase btn btn-primary btn-xs btn-soft">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -112,7 +112,7 @@
                 </div>
                 <div class="tooltip md:tooltip-left">
                     <div class="z-40 tooltip-content tooltip-accent">
-                        <div class="text-sm font-black text-accent animate-bounce">export PDF</div>
+                        <div class="text-sm font-black animate-bounce">export PDF</div>
                     </div>
                     <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
