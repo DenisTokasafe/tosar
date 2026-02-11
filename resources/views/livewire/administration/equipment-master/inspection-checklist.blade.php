@@ -5,9 +5,13 @@
         @if (session()->has('message'))
             <div class="p-2 mb-4 bg-green-200">{{ session('message') }}</div>
         @endif
-        <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()" wire:click="resetForm">
-            + Tambah Checklist
-        </button>
+        <div
+            class="flex flex-col items-center justify-between gap-4 md:shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-50 md:flex-row bg-base-100 md:inset-shadow-sm">
+            <button class="mb-4 btn btn-primary btn-soft btn-xs" onclick="checklist_modal.showModal()"
+                wire:click="resetForm">
+                + Tambah Checklist
+            </button>
+        </div>
 
 
         <table class="table table-zebra table-xs">
