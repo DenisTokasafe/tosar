@@ -141,12 +141,11 @@
                                             <x-icon.edit />
                                         </label>
                                     </div>
-                                    <div class="tooltip md:tooltip-left">
+                                    <div class="tooltip ">
                                         <div class="z-40 tooltip-content tooltip-error">
                                             <div class="text-sm font-black animate-bounce">hapus data </div>
                                         </div>
                                         <label
-                                            onclick="confirm('Yakin ingin menghapus data?') || event.stopImmediatePropagation()"
                                            wire:click="showDelete({{ $manhour->id }})"  class="btn btn-square btn-xs btn-soft btn-error">
                                             <x-icon.delete />
                                         </label>
