@@ -15,10 +15,15 @@
         <div class="flex flex-row gap-2">
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
-                <flux:tooltip content="tambah data" position="top">
-                    <flux:button size="xs" wire:click='open_modal' icon="add-icon" variant="primary"></flux:button>
-                </flux:tooltip>
 
+                 <div class="tooltip md:tooltip-left">
+                    <div class="z-40 tooltip-content tooltip-primary">
+                        <div class="text-sm font-black animate-bounce">Tambah Data</div>
+                    </div>
+                    <label wire:click='open_modal' class="btn btn-square btn-xs btn-soft btn-primary">
+                       <x-icon.add />
+                    </label>
+                </div>
                 {{-- Komponen Import --}}
             @endcan
             @can('viewAdmin', \App\Models\Manhour::class)

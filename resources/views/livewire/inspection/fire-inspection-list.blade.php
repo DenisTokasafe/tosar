@@ -79,8 +79,8 @@
 
                 @if (count($selectedItems) > 0)
                     <div class="tooltip md:tooltip-left">
-                        <div class="z-40 tooltip-content">
-                            <div class="text-sm font-black text-orange-400 animate-bounce">hapus data pilihan</div>
+                        <div class="z-40 tooltip-content tooltip-error">
+                            <div class="text-sm font-black animate-bounce">hapus data pilihan</div>
                         </div>
                         <label
                             onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
