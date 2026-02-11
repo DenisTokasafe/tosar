@@ -43,7 +43,8 @@
 
                                             <button type="button"
                                                 wire:click="removeTechnicalField('{{ $key }}')"
-                                                class="text-red-500">
+                                                class="btn btn-xs btn-error btn-soft">
+                                                <x-icon-delete/>
                                             </button>
                                         </div>
                                     </div>
