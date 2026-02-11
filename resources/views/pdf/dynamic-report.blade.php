@@ -170,7 +170,7 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td>{{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/y') }}</td>
+                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }}</td>
                         <td>
                     @php
                                 $daftarNama = explode('|', $item->inspected_by ?? '');
