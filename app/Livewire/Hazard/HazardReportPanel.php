@@ -69,13 +69,24 @@ class HazardReportPanel extends Component
             ->get()
             ->pluck('event_type_id')
             ->toArray();
+
+        // 1. Ambil semua nama departemen dan kontraktor sebagai referensi filter
+        $departmentNames = Department::pluck('department_name');
+        $contractorNames = Contractor::pluck('contractor_name');
+
+        // 2. Gabungkan keduanya menjadi satu koleksi nama yang diizinkan
+        $allowedNames = $departmentNames->concat($contractorNames)->unique()->filter();
+
         // Muat data untuk filter
         $this->filterOptions = [
             'Department' => Department::all(['id', 'department_name']),
             'Contractors' => Contractor::all(['id', 'contractor_name']),
             'EventType' => EventType::where('event_type_name', 'like', '%' . 'hazard' . '%')->get(['id', 'event_type_name']),
             'EventSubType' => EventSubType::whereIn('event_type_id', $eventTypes)->get(['id', 'event_sub_type_name']),
-            'ReporterDepartments' => User::selectRaw("DISTINCT IFNULL(NULLIF(department_name, ''), 'Tidak Ada Departemen') as dept")
+
+            // 3. Filter ReporterDepartments hanya yang ada di list allowedNames
+            'ReporterDepartments' => User::whereIn('department_name', $allowedNames)
+                ->selectRaw("DISTINCT department_name as dept")
                 ->orderBy('dept', 'asc')
                 ->pluck('dept'),
         ];
