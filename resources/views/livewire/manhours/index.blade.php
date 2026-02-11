@@ -20,7 +20,7 @@
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Tambah Data</div>
                     </div>
-                    <label wire:click='open_modal' onclick="manhours_modal.showModal()"
+                    <label  onclick="manhours_modal.showModal()"
                         class="btn btn-square btn-xs btn-soft btn-primary">
                         <x-icon.add />
                     </label>
