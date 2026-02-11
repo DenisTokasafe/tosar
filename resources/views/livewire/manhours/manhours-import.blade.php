@@ -1,9 +1,7 @@
 <div>
     {{-- 1. Tombol untuk membuka Modal --}}
-    <flux:tooltip content="import manhours" position="top">
-        <flux:button size="xs" wire:click='openModal' icon="import" variant="accent"></flux:button>
-    </flux:tooltip>
-    <div class="tooltip md:tooltip-left">
+
+    <div class="tooltip ">
         <div class="z-40 tooltip-content tooltip-accent">
             <div class="text-sm font-black animate-bounce">Import Data</div>
         </div>

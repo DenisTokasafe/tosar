@@ -16,7 +16,7 @@
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
 
-                 <div class="tooltip md:tooltip-left">
+                 <div class="tooltip">
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Tambah Data</div>
                     </div>
