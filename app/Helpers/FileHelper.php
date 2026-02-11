@@ -10,7 +10,7 @@ class FileHelper
 {
     public static function compressAndStore($file, $folder, $width = 800, $quality = 75)
     {
-        $originalSize = $file->getSize();
+
         // Gunakan timestamp agar nama file unik dan hindari spasi
         $filename  = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
         $extension = strtolower($file->getClientOriginalExtension());
@@ -37,19 +37,7 @@ class FileHelper
                 $quality -= 10;
                 $encoded = $image->toJpeg($quality);
             }
-            // --- BAGIAN DEBUG DD ---
-            $finalSize = strlen((string) $encoded);
-            dd([
-                'status' => 'Debugging Image Compression',
-                'file_name' => $filename,
-                'original_size' => round($originalSize / 1024, 2) . ' KB',
-                'compressed_size' => round($finalSize / 1024, 2) . ' KB',
-                'final_size_mb' => round($finalSize / (1024 * 1024), 2) . ' MB',
-                'final_quality' => $quality,
-                'final_width' => $width,
-                'is_under_1mb' => $finalSize < (1024 * 1024) ? 'Yes' : 'No'
-            ]);
-            // -----------------------
+
 
             Storage::disk('public')->put($path, (string) $encoded);
         } else {
