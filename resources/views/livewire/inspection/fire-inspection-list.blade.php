@@ -98,7 +98,7 @@
                     </div>
                 @endif
                 <div class="tooltip md:tooltip-left">
-                    <div class="z-40 tooltip-content">
+                    <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black text-primary animate-bounce">Laporan Baru</div>
                     </div>
                     <a href="{{ route('fire-inspection') }}" class="text-xs uppercase btn btn-primary btn-xs btn-soft">
@@ -111,7 +111,7 @@
                     </a>
                 </div>
                 <div class="tooltip md:tooltip-left">
-                    <div class="z-40 tooltip-content">
+                    <div class="z-40 tooltip-content tooltip-accent">
                         <div class="text-sm font-black text-accent animate-bounce">export PDF</div>
                     </div>
                     <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
