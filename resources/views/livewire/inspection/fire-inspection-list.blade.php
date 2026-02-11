@@ -85,15 +85,7 @@
                         <label
                             onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
                             wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-error">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2">
-                                <path d="M10 11v6" />
-                                <path d="M14 11v6" />
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                <path d="M3 6h18" />
-                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                            </svg>
+                            <x-icon.delete />
                         </label>
                     </div>
                 @endif
@@ -101,13 +93,8 @@
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Laporan Baru</div>
                     </div>
-                    <a href="{{ route('fire-inspection') }}" class="text-xs uppercase btn btn-primary btn-xs btn-soft">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
-                            <path d="M5 12h14" />
-                            <path d="M12 5v14" />
-                        </svg>
+                    <a href="{{ route('fire-inspection') }}" class="text-xs uppercase btn btn-square btn-primary btn-xs btn-soft">
+                       <x-icon.add />
                     </a>
                 </div>
                 <div class="tooltip md:tooltip-left">
@@ -115,11 +102,7 @@
                         <div class="text-sm font-black animate-bounce">export PDF</div>
                     </div>
                     <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
+                       <x-icon.file-download />
                     </label>
                 </div>
 
