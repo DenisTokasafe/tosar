@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Helpers\FileHelper;
 use Livewire\WithFileUploads;
 use App\Models\FireProtection;
+use App\Models\InspectionSession;
 use App\Traits\HasFireInspectionFields;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,7 +45,7 @@ class FireInspectionEdit extends Component
         $this->location = $inspection->equipmentMaster->specific_location;
         $this->area = $inspection->equipmentMaster->location->name;
         $this->searchLocation = $this->area;
-        $this->inspection_date = $inspection->inspection_date;
+        $this->inspection_date = $inspection->inspectionSession->inspection_date;
         $this->remarks = $inspection->remarks;
         // 🔥 INI KUNCINYA
         $this->technical_data = $inspection->equipmentMaster->technical_data ?? [];
@@ -53,7 +54,7 @@ class FireInspectionEdit extends Component
         $this->conditions = $inspection->conditions ?? [];
         $this->old_documentation = $inspection->documentation_path;
 
-        $this->area_photo_path = $inspection->area_photo_path;
+        $this->area_photo_path = $inspection->inspectionSession->area_photo_path;
         // Load Inspected Users
         if ($inspection->inspected_by) {
             $names = explode('|', $inspection->inspected_by);
@@ -148,10 +149,7 @@ class FireInspectionEdit extends Component
         $this->validate();
 
         $data = [
-            'type' => $this->type,
-            'location' => $this->location,
-            'area' => $this->area,
-            'inspection_date' => $this->inspection_date,
+
             'inspected_by' => implode('|', array_column($this->inspected_users, 'name')),
             'conditions' => $this->conditions,
             'remarks' => $this->remarks,
@@ -177,8 +175,14 @@ class FireInspectionEdit extends Component
             // Update path untuk semua record yang satu lokasi/area (jika diperlukan sinkronisasi)
             // atau cukup untuk record ini saja:
             $data['area_photo_path'] = $path;
+            $newAreaPhotoPath = $path;
         }
         FireProtection::find($this->inspectionId)->update($data);
+        InspectionSession::where('id', FireProtection::find($this->inspectionId)->inspection_session_id)
+            ->update([
+                'inspection_date' => $this->inspection_date,
+                'area_photo_path' =>  $newAreaPhotoPath
+            ]);
 
         session()->flash('success', 'Data berhasil diperbarui!');
         return $this->redirect(route('fire-inspection-list'), navigate: true);
