@@ -14,7 +14,7 @@
         </div>
 
 
-        <table class="table table-zebra table-xs">
+        <table class="table mt-4 table-zebra table-xs">
             <thead>
                 <tr class="">
                     <th class="">Type</th>
