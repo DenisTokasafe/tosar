@@ -11,13 +11,13 @@
     <dialog id="import_modal" class="modal"   wire:ignore.self>
         <div class="modal-box">
             <h3 class="text-lg font-bold">Import Data Manhours</h3>
-            <p class="py-4">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi data manhours.</p>
+            <p class="text-[9px] font-bold text-gray-400 uppercase">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi data manhours.</p>
             <form wire:submit="import" enctype="multipart/form-data">
 
                 {{-- Input File --}}
                 <div class="w-full my-4 form-control">
                     <label class="label">
-                        <span class="label-text">Pilih File Import</span>
+                        <span class="label-text text-[9px]">Pilih File Import</span>
                     </label>
                     <input type="file" wire:model.live="file" class="w-full file-input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0 file-input file-input-bordered" />
                     {{-- Menampilkan error validasi Livewire --}}
@@ -33,15 +33,15 @@
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
                   <button class="btn btn-xs btn-soft btn-error" wire:click='closeModal' onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
-                    <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled"
-                        icon="import" variant="primary"><span wire:loading.class='hidden'
+                    <button class="btn btn-xs btn-soft btn-primary" wire:click='openModal' wire:loading.attr="disabled"
+                       > <x-icon.file-import><span wire:loading.class='hidden'
                             wire:target="import,file">Import
                             Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import,file">
                             <span class="loading loading-spinner"></span>
                             Memproses...
                         </span>
-                    </flux:button>
+                    </button>
 
                 </div>
             </form>
