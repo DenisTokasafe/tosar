@@ -415,12 +415,12 @@
 
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
                         <td class="p-2 border">
-                            <div class="flex flex-col items-center justify-center leading-tight">
+                            <div class="flex flex-col items-center justify-center leading-tight divide-y">
                                 {{-- Baris Total --}}
-                                <div class="flex items-baseline gap-1">
+                                <div class="flex items-baseline gap-1 ">
                                     <span
                                         class="text-sm font-bold text-slate-700">{{ $report->total_due_dates }}</span>
-                                    <span class="text-[10px] italic font-semibold text-gray-400">total /</span>
+                                    <span class="text-[10px] italic font-semibold text-gray-400">total </span>
                                 </div>
 
                                 {{-- Baris Open --}}
