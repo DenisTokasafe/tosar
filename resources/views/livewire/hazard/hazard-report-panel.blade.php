@@ -38,7 +38,7 @@
             {{-- @livewire('hazard.import-hazard-reports-modal') --}}
             {{-- Tambahkan wire:model.live untuk memfilter secara real-time --}}
             <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
-                class="checkbox checkbox-info" />
+                class="checkbox checkbox-info checkbox-xs" />
             <label for="myReportsCheckbox" class="text-sm font-medium text-gray-700 cursor-pointer">
                 Hanya Laporan Saya
             </label>
