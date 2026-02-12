@@ -9,12 +9,13 @@
             <x-icon.file-import />
         </label>
     </div>
+     <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import"  tooltip="Import Data" />
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
 
 
     {{-- 2. Modal Daisy UI --}}
     {{-- Gunakan atribut :checked="$showModal" untuk mengontrol status buka/tutup --}}
-    <div class="modal {{ $showModal }}" role="dialog">
+    <dialog id="import_modal" class="modal" role="dialog">
         <div class="modal-box">
             <h3 class="text-lg font-bold">Import Data Manhours</h3>
             <p class="py-4">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi data manhours.</p>
@@ -54,6 +55,6 @@
         </div>
 
         {{-- Tombol Close di luar modal, klik di area gelap --}}
-        <label class="modal-backdrop" wire:click="closeModal" for="manhours_import_modal"></label>
-    </div>
+        <label class="modal-backdrop" wire:click="closeModal"  onclick="import_modal.close()" for="manhours_import_modal"></label>
+    </dialog>
 </div>
