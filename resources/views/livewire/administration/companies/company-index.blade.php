@@ -16,7 +16,7 @@
                 placeholder="Search company" />
         </div>
         <div>
-            <button popovertarget="my-popover">Check for updates</button>
+            <button class="btn btn-primary" popovertarget="my-popover">Check for updates</button>
             <div popover id="my-popover" class="opacity-0 starting:open:opacity-0 ...">
                cma tes saja
             </div>
