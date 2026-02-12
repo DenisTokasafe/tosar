@@ -46,8 +46,7 @@
                 </div>
             </form>
         </div>
-
         {{-- Tombol Close di luar modal, klik di area gelap --}}
-        <label class="btn btn-soft btn-error btn-xs" wire:click="closeModal"  onclick="import_modal.close()" for="manhours_import_modal"></label>
+         <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal' onclick="import_modal.close()">Batal</button>
     </dialog>
 </div>
