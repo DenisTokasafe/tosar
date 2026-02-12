@@ -15,16 +15,6 @@
         <div class="flex flex-row gap-2">
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
-
-                {{-- <div class="tooltip">
-                    <div class="z-40 tooltip-content tooltip-primary">
-                        <div class="text-sm font-black animate-bounce">Tambah Data</div>
-                    </div>
-                    <label onclick="manhours_modal.showModal()" wire:click='close_modal' class="btn btn-square btn-xs btn-soft btn-primary">
-                        <x-icon.add />
-                    </label>
-                </div> --}}
-                {{-- Tombol Hapus (Warna Merah) --}}
                 <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal' tooltip="Tambah Data" />
                 {{-- Komponen Import --}}
             @endcan
