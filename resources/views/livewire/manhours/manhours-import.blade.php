@@ -8,7 +8,7 @@
 
     {{-- 2. Modal Daisy UI --}}
     {{-- Gunakan atribut :checked="$showModal" untuk mengontrol status buka/tutup --}}
-    <dialog id="import_modal" class="modal" role="dialog"  wire:ignore.self>
+    <dialog id="import_modal" class="modal"   wire:ignore.self>
         <div class="modal-box">
             <h3 class="text-lg font-bold">Import Data Manhours</h3>
             <p class="py-4">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi data manhours.</p>
@@ -48,6 +48,6 @@
         </div>
 
         {{-- Tombol Close di luar modal, klik di area gelap --}}
-        <label class="modal-backdrop" wire:click="closeModal"  onclick="import_modal.close()" for="manhours_import_modal"></label>
+        <label class="btn btn-soft btn-error btn-xs" wire:click="closeModal"  onclick="import_modal.close()" for="manhours_import_modal"></label>
     </dialog>
 </div>
