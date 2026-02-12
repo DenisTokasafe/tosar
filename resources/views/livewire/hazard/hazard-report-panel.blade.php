@@ -12,7 +12,7 @@
                     </svg>
                 </a>
             </div> --}}
-            <x-button.btn-tooltip  color="primary" icon="add" href="{{ route('hazard-form') }}" tooltip="Tambah Data" />
+            <x-button.btn-tooltip color="primary" icon="add" href="{{ route('hazard-form') }}" tooltip="Tambah Data" />
             @if (
                 $filterByAuth ||
                     ($filterStatus && $filterStatus !== 'all') ||
@@ -414,8 +414,22 @@
                         </td>
 
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
-                        <td class="text-center border">
-                            {{ $report->total_due_dates }} <span class="text-xs italic font-semibold text-center text-gray-400">total</span> / {{ $report->pending_actual_closes }} <span class="text-xs italic font-semibold text-center text-gray-400">Open</span>
+                        <td class="p-2 border">
+                            <div class="flex flex-col items-center justify-center leading-tight">
+                                {{-- Baris Total --}}
+                                <div class="flex items-baseline gap-1">
+                                    <span
+                                        class="text-sm font-bold text-slate-700">{{ $report->total_due_dates }}</span>
+                                    <span class="text-[10px] italic font-semibold text-gray-400">total /</span>
+                                </div>
+
+                                {{-- Baris Open --}}
+                                <div class="flex items-baseline gap-1">
+                                    <span
+                                        class="text-sm font-bold text-slate-700">{{ $report->pending_actual_closes }}</span>
+                                    <span class="text-[10px] italic font-semibold text-gray-400">Open</span>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @empty
