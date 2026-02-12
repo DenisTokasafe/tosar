@@ -108,7 +108,7 @@
                         <button class="btn btn-ghost btn-xs" popovertarget="eventType" style="anchor-name:--eventType">
                             <span class="text-xs {{ !empty($filterEventType) ? 'text-blue-600' : '' }}">
                                 @if (empty($filterEventType))
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="lucide lucide-list-filter">
@@ -117,7 +117,7 @@
                                         <path d="M9 19h6" />
                                     </svg>
                                 @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="lucide lucide-arrow-down-wide-narrow">
