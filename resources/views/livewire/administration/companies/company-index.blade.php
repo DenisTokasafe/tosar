@@ -15,12 +15,6 @@
             <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_company'
                 placeholder="Search company" />
         </div>
-        <div>
-            <button  style="anchor-name:--eventSubType" class="btn btn-primary"  popovertarget="my-popover" >Check for updates</button>
-            <div popover id="my-popover" class=""   style="position-anchor:--my-popover; inset-area: bottom span-right;">
-               cma tes saja
-            </div>
-        </div>
     </div>
     <x-manhours.layout>
         <div class="overflow-x-auto ">
