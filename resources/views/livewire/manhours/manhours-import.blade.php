@@ -19,7 +19,7 @@
                     <label class="label">
                         <span class="label-text">Pilih File Import</span>
                     </label>
-                    <input type="file" wire:model.live="file" class="w-full file-input file-input-bordered" />
+                    <input type="file" wire:model.live="file" class="w-full file-input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0 file-input file-input-bordered" />
                     {{-- Menampilkan error validasi Livewire --}}
                     @error('file')
                         <label class="label">
