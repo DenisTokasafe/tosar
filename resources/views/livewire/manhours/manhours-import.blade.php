@@ -37,7 +37,10 @@
                         onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
                     <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled">
-                        <x-icon.file-import />
+                        <span wire:loading.add.class='hidden' wire:target='import'><x-icon.file-import /></span>
+                        <span wire:loading.remove.class='hidden' wire:target='import' class="hidden loading loading-bars loading-xs"></span>
+                        <spanwire:loading.add.class='hidden' wire:target='import'>Upload</spanwire:loading.add.class=>
+                        <span wire:loading.remove.class='hidden' wire:target='import' class="hidden">Proses Upload</span>
                     </button>
                 </div>
             </form>
