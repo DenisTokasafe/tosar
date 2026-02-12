@@ -17,7 +17,7 @@
         </div>
         <div>
             <button class="btn btn-primary" popovertarget="my-popover">Check for updates</button>
-            <div popover id="my-popover" class="">
+            <div popover id="my-popover" class=""  style="position-anchor:--my-popover; inset-area: bottom span-right;">
                cma tes saja
             </div>
         </div>
