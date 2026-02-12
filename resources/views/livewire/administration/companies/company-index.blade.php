@@ -11,13 +11,12 @@
                 <flux:button size="xs" wire:click='open_modal_opload' icon="upload" variant="subtle"></flux:button>
             </flux:tooltip> --}}
         </div>
-        <div>
+        <div >
             <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_company'
                 placeholder="Search company" />
         </div>
         <div>
-            <div popover id="my-popover" class=""  style="anchor-name:--eventSubType"  style="position-anchor:--my-popover; inset-area: bottom span-right;">
-            <button class="btn btn-primary"  popovertarget="my-popover" >Check for updates</button>
+            <button  style="anchor-name:--eventSubType" class="btn btn-primary"  popovertarget="my-popover" >Check for updates</button>
             <div popover id="my-popover" class=""   style="position-anchor:--my-popover; inset-area: bottom span-right;">
                cma tes saja
             </div>
