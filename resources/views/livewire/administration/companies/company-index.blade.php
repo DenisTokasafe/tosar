@@ -12,7 +12,14 @@
             </flux:tooltip> --}}
         </div>
         <div>
-            <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_company' placeholder="Search company" />
+            <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_company'
+                placeholder="Search company" />
+        </div>
+        <div>
+            <button popovertarget="my-popover">Check for updates</button>
+            <div popover id="my-popover" class="opacity-0 starting:open:opacity-0 ...">
+               cma tes saja
+            </div>
         </div>
     </div>
     <x-manhours.layout>
@@ -28,21 +35,23 @@
                 </thead>
                 <tbody class="text-center">
                     @foreach ($Companies as $no => $company)
-                    <tr>
-                        <th>{{ $Companies->firstItem() + $no }}</th>
-                        <th>{{ $company->company_name }}</th>
-                        <th>{{ $company->status }}</th>
-                        <th class='flex justify-center flex-row gap-2'>
-                            <flux:tooltip content="edit" position="top">
-                                <flux:button wire:click="open_modal({{ $company->id }})" size="xs" icon="pencil-square" variant="subtle"></flux:button>
-                            </flux:tooltip>
-                            <flux:modal.trigger name="delete-company">
-                                <flux:tooltip content="hapus" position="top">
-                                    <flux:button wire:click="showDelete({{ $company->id }})" size="xs" icon="trash" variant="danger"></flux:button>
+                        <tr>
+                            <th>{{ $Companies->firstItem() + $no }}</th>
+                            <th>{{ $company->company_name }}</th>
+                            <th>{{ $company->status }}</th>
+                            <th class='flex flex-row justify-center gap-2'>
+                                <flux:tooltip content="edit" position="top">
+                                    <flux:button wire:click="open_modal({{ $company->id }})" size="xs"
+                                        icon="pencil-square" variant="subtle"></flux:button>
                                 </flux:tooltip>
-                            </flux:modal.trigger>
-                        </th>
-                    </tr>
+                                <flux:modal.trigger name="delete-company">
+                                    <flux:tooltip content="hapus" position="top">
+                                        <flux:button wire:click="showDelete({{ $company->id }})" size="xs"
+                                            icon="trash" variant="danger"></flux:button>
+                                    </flux:tooltip>
+                                </flux:modal.trigger>
+                            </th>
+                        </tr>
                     @endforeach
 
                 </tbody>
@@ -61,11 +70,13 @@
     <flux:modal name="company">
         <form wire:submit='store' class='grid justify-items-stretch'>
             @csrf
-            <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+            <fieldset
+                class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                 <legend class="fieldset-legend">{{ $legend }}</legend>
                 {{-- Nama Perusahaan --}}
                 <x-label-req>{{ __('Nama Perusahaan') }} </x-label-req>
-                <x-text-input wire:model.live='company_name' :error="$errors->get('company_name')" type="text" placeholder="Nama Perusahaan" />
+                <x-text-input wire:model.live='company_name' :error="$errors->get('company_name')" type="text"
+                    placeholder="Nama Perusahaan" />
                 <x-label-error :messages="$errors->get('company_name')" />
                 {{-- Status --}}
                 <x-label-req>{{ __('Status') }} </x-label-req>
@@ -78,21 +89,26 @@
 
             <div class="modal-action">
                 <flux:button size="xs" type="submit" icon="save-icon" variant="primary">Save</flux:button>
-                <flux:button size="xs" wire:click='close_modal' icon="close-icon" variant="danger">Close</flux:button>
+                <flux:button size="xs" wire:click='close_modal' icon="close-icon" variant="danger">Close
+                </flux:button>
             </div>
         </form>
     </flux:modal>
     <flux:modal name="upload" class="min-w-[22rem]">
         <form wire:submit='import' wire:target="import,upload_data" wire:loading.class="skeleton">
             @csrf
-            <fieldset wire:target="import,upload_data" wire:loading.class="skeleton" class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+            <fieldset wire:target="import,upload_data" wire:loading.class="skeleton"
+                class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                 <legend class="fieldset-legend">Upload Data</legend>
-                    <flux:input size="xs" variant='outline' type="file" wire:model.live="upload_data"  label="Upload Nama Perusahaan"  />
+                <flux:input size="xs" variant='outline' type="file" wire:model.live="upload_data"
+                    label="Upload Nama Perusahaan" />
             </fieldset>
 
             <div class="modal-action">
-                <flux:button size="xs" type="submit" wire:target="upload_data" wire:loading.class="btn btn-disabled" icon="save-icon" variant="primary">Save</flux:button>
-                <flux:button size="xs" wire:click='close_modal_upload' wire:target="upload_data" wire:loading.class="btn btn-disabled" icon="close-icon" variant="danger">Close</flux:button>
+                <flux:button size="xs" type="submit" wire:target="upload_data"
+                    wire:loading.class="btn btn-disabled" icon="save-icon" variant="primary">Save</flux:button>
+                <flux:button size="xs" wire:click='close_modal_upload' wire:target="upload_data"
+                    wire:loading.class="btn btn-disabled" icon="close-icon" variant="danger">Close</flux:button>
             </div>
         </form>
     </flux:modal>
