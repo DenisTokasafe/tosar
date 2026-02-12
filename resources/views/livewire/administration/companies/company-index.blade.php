@@ -17,7 +17,7 @@
         </div>
         <div>
             <button class="btn btn-primary" popovertarget="my-popover">Check for updates</button>
-            <div popover id="my-popover" class="opacity-0 starting:open:opacity-0 ...">
+            <div popover id="my-popover" class="">
                cma tes saja
             </div>
         </div>
