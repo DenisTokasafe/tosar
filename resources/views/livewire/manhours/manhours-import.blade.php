@@ -33,7 +33,7 @@
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
                   <button class="btn btn-xs btn-soft btn-error" wire:click='closeModal' onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
-                    <button class="btn btn-xs btn-soft btn-primary" wire:click='openModal' wire:loading.attr="disabled"
+                    <button class="btn btn-xs btn-soft btn-primary" wire:loading.attr="disabled"
                        > <x-icon.file-import><span wire:loading.class='hidden'
                             wire:target="import,file">Import
                             Sekarang</span>
