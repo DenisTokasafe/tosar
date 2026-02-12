@@ -348,8 +348,7 @@
 
                     <th class="border">Tanggal</th>
                     <th class="flex-col text-center border">
-                        <p>Action</p>
-                        <p>Total/Open</p>
+                        Action
                     </th>
                 </tr>
             </thead>
@@ -416,7 +415,7 @@
 
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
                         <td class="text-center border">
-                            {{ $report->total_due_dates }} / {{ $report->pending_actual_closes }}
+                            {{ $report->total_due_dates }} <span class="text-xs italic font-semibold text-center text-gray-400">total</span> / {{ $report->pending_actual_closes }} <span class="text-xs italic font-semibold text-center text-gray-400">Open</span>
                         </td>
                     </tr>
                 @empty
