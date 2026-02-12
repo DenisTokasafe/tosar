@@ -16,14 +16,16 @@
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
 
-                <div class="tooltip">
+                {{-- <div class="tooltip">
                     <div class="z-40 tooltip-content tooltip-primary">
                         <div class="text-sm font-black animate-bounce">Tambah Data</div>
                     </div>
                     <label onclick="manhours_modal.showModal()" wire:click='close_modal' class="btn btn-square btn-xs btn-soft btn-primary">
                         <x-icon.add />
                     </label>
-                </div>
+                </div> --}}
+                {{-- Tombol Hapus (Warna Merah) --}}
+                <x-button.btn-tooltip modalId="manhours_modal" color="error" icon="add" wireClick='close_modal' tooltip="Tambah Data" />
                 {{-- Komponen Import --}}
             @endcan
             @can('viewAdmin', \App\Models\Manhour::class)
@@ -163,7 +165,8 @@
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
             {{ $data_manhours->links() }}
         </div>
-        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:loading.add.class='skeleton' wire:target='update,store,close_modal,'>
+        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:loading.add.class='skeleton'
+            wire:target='update,store,close_modal,'>
             <div class="overflow-y-auto modal-box">
                 <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
                     <fieldset wire.ignore.self
