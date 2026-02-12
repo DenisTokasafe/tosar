@@ -31,7 +31,7 @@
                 <div class="modal-action">
                     {{-- Tombol Tutup --}}
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
-                    <flux:button size="xs" wire:click='closeModal' variant="danger">Batal</flux:button>
+                  <button class="btn btn-xs btn-soft btn-error" wire:click='closeModal' onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
                     <flux:button type="submit" size="xs" wire:click='openModal' wire:loading.attr="disabled"
                         icon="import" variant="primary"><span wire:loading.class='hidden'
@@ -47,6 +47,6 @@
             </form>
         </div>
         {{-- Tombol Close di luar modal, klik di area gelap --}}
-         <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal' onclick="import_modal.close()">Batal</button>
+
     </dialog>
 </div>
