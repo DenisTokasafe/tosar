@@ -1412,9 +1412,9 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInHtml($string, $escape = true)
     {
-        $string = $escape ? EncodedHtmlString::convert($string, withQuote: isset($this->markdown)) : $string;
+        $string = $escape ? EncodedHtmlString::convert($string, withQuote: true) : $string;
 
-        [$html, $text] = $this->renderForAssertions();
+        [$html] = $this->renderForAssertions();
 
         PHPUnit::assertStringContainsString(
             $string,
@@ -1434,9 +1434,9 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertDontSeeInHtml($string, $escape = true)
     {
-        $string = $escape ? EncodedHtmlString::convert($string, withQuote: isset($this->markdown)) : $string;
+        $string = $escape ? EncodedHtmlString::convert($string, withQuote: true) : $string;
 
-        [$html, $text] = $this->renderForAssertions();
+        [$html] = $this->renderForAssertions();
 
         PHPUnit::assertStringNotContainsString(
             $string,
@@ -1457,10 +1457,10 @@ class Mailable implements MailableContract, Renderable
     public function assertSeeInOrderInHtml($strings, $escape = true)
     {
         $strings = $escape ? array_map(function ($string) {
-            return EncodedHtmlString::convert($string, withQuote: isset($this->markdown));
+            return EncodedHtmlString::convert($string, withQuote: true);
         }, $strings) : $strings;
 
-        [$html, $text] = $this->renderForAssertions();
+        [$html] = $this->renderForAssertions();
 
         PHPUnit::assertThat($strings, new SeeInOrder($html));
 
@@ -1475,7 +1475,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInText($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        [, $text] = $this->renderForAssertions();
 
         PHPUnit::assertStringContainsString(
             $string,
@@ -1494,7 +1494,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertDontSeeInText($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        [, $text] = $this->renderForAssertions();
 
         PHPUnit::assertStringNotContainsString(
             $string,
@@ -1513,7 +1513,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInOrderInText($strings)
     {
-        [$html, $text] = $this->renderForAssertions();
+        [, $text] = $this->renderForAssertions();
 
         PHPUnit::assertThat($strings, new SeeInOrder($text));
 

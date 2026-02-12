@@ -14,6 +14,9 @@ use function array_unique, ini_get, levenshtein, max, min, ob_end_clean, ob_get_
 use const PHP_OS_FAMILY;
 
 
+/**
+ * Miscellaneous utilities.
+ */
 class Helpers
 {
 	public const IsWindows = PHP_OS_FAMILY === 'Windows';
@@ -21,6 +24,7 @@ class Helpers
 
 	/**
 	 * Executes a callback and returns the captured output as a string.
+	 * @param  callable(): void  $func
 	 */
 	public static function capture(callable $func): string
 	{
@@ -105,5 +109,17 @@ class Helpers
 			'!==' => $left !== $right,
 			default => throw new Nette\InvalidArgumentException("Unknown operator '$operator'"),
 		};
+	}
+
+
+	/**
+	 * Splits a class name into namespace and short class name.
+	 * @return array{string, string}
+	 */
+	public static function splitClassName(string $name): array
+	{
+		return ($pos = strrpos($name, '\\')) === false
+			? ['', $name]
+			: [substr($name, 0, $pos), substr($name, $pos + 1)];
 	}
 }
