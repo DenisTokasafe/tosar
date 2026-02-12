@@ -1,13 +1,5 @@
 <div>
-    {{-- 1. Tombol untuk membuka Modal --}}
-
-
     <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
-    {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
-
-
-    {{-- 2. Modal Daisy UI --}}
-    {{-- Gunakan atribut :checked="$showModal" untuk mengontrol status buka/tutup --}}
     <dialog id="import_modal" class="modal" wire:ignore.self>
         <div class="modal-box">
             <h3 class="text-lg font-bold">Import Data Manhours</h3>

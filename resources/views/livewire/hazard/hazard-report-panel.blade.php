@@ -3,7 +3,7 @@
     @include('partials.header-hazard')
     <div class="flex flex-col items-start md:flex-row md:justify-between md:items-center">
         <div class="flex items-center gap-2 mb-4 md:mb-0">
-            <div class="tooltip tooltip-right  mb-0.5" data-tip="Tambah Hazard">
+            {{-- <div class="tooltip tooltip-right  mb-0.5" data-tip="Tambah Hazard">
                 <a href="{{ route('hazard-form') }}" class="btn btn-square btn-primary btn-xs">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path fill-rule="evenodd"
@@ -11,7 +11,8 @@
                             clip-rule="evenodd" />
                     </svg>
                 </a>
-            </div>
+            </div> --}}
+            <x-button.btn-tooltip  color="primary" icon="add" href="{{ route('hazard-form') }}" tooltip="Tambah Data" />
             @if (
                 $filterByAuth ||
                     ($filterStatus && $filterStatus !== 'all') ||

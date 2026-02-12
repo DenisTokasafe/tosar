@@ -1,13 +1,13 @@
 @props([
-    'modalId',
+    'modalId' => null,
     'wireClick' => null,
     'tooltip' => 'Tambah Data',
     'color' => 'primary',
-    'icon' => 'add' // Nama file di folder components/icon/
+    'icon' => 'add',
+    'href' => null // Tambahkan prop href
 ])
 
 @php
-    // Mapping class DaisyUI untuk btn-soft
     $colorClass = match($color) {
         'secondary' => 'btn-secondary',
         'accent'    => 'btn-accent',
@@ -19,26 +19,30 @@
         default     => 'btn-primary',
     };
 
-    // Mapping class untuk tooltip agar warnanya senada
-    $tooltipColor = match($color) {
-        'default' => '',
-        default   => 'tooltip-' . $color,
-    };
+    $tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
+
+    // Logika menentukan tag yang digunakan
+    $tag = $href ? 'a' : 'button';
 @endphp
 
-<div {{ $attributes->merge(['class' => 'tooltip']) }}>
+<div {{ $attributes->merge(['class' => 'tooltip']) }} data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
     <div class="z-40 tooltip-content {{ $tooltipColor }}">
         <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
     </div>
 
-    <button
-        type="button"
-        onclick="{{ $modalId }}.showModal()"
+    <{{ $tag }}
+        @if($href)
+            href="{{ $href }}"
+        @else
+            type="button"
+            onclick="{{ $modalId }}.showModal()"
+        @endif
+
         @if($wireClick) wire:click="{{ $wireClick }}" @endif
+
         {{ $attributes->class(['btn btn-square btn-xs btn-soft', $colorClass]) }}
     >
-        {{-- Memanggil icon secara dinamis dari folder components/icon/ --}}
         <x-dynamic-component :component="'icon.' . $icon" class="w-4 h-4" />
-    </button>
+    </{{ $tag }}>
 </div>
