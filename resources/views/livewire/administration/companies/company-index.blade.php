@@ -12,8 +12,7 @@
             </flux:tooltip> --}}
         </div>
         <div >
-            <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_company'
-                placeholder="Search company" />
+                <x-form.input-floating label="Lokasi Spesifik" model="search_company" />
         </div>
     </div>
     <x-manhours.layout>
