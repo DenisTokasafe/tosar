@@ -4,8 +4,6 @@
 
      <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import"  tooltip="Import Data" />
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
-
-
     {{-- 2. Modal Daisy UI --}}
     {{-- Gunakan atribut :checked="$showModal" untuk mengontrol status buka/tutup --}}
     <dialog id="import_modal" class="modal"   wire:ignore.self>
@@ -33,8 +31,7 @@
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
                   <button class="btn btn-xs btn-soft btn-error" wire:click='closeModal' onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
-                    <button class="btn btn-xs btn-soft btn-primary"  wire:loading.attr="disabled"
-                       > <x-icon.file-import><span wire:loading.class='hidden'
+                    <button class="btn btn-xs btn-soft btn-primary"  wire:loading.attr="disabled"> <x-icon.file-import><span wire:loading.class='hidden'
                             wire:target="import,file">Import
                             Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import,file">
@@ -46,7 +43,6 @@
                 </div>
             </form>
         </div>
-        {{-- Tombol Close di luar modal, klik di area gelap --}}
 
     </dialog>
 </div>
