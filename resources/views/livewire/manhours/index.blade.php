@@ -25,7 +25,7 @@
                     </label>
                 </div> --}}
                 {{-- Tombol Hapus (Warna Merah) --}}
-                <x-button.btn-tooltip modalId="manhours_modal" color="error" icon="add" wireClick='close_modal' tooltip="Tambah Data" />
+                <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal' tooltip="Tambah Data" />
                 {{-- Komponen Import --}}
             @endcan
             @can('viewAdmin', \App\Models\Manhour::class)
