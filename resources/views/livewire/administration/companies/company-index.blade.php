@@ -12,7 +12,7 @@
             </flux:tooltip> --}}
         </div>
         <div >
-                <x-form.input-floating label="Lokasi Spesifik" model="search_company" />
+                <x-form.input-floating label="Cari Perusahaan" model="search_company" />
         </div>
     </div>
     <x-manhours.layout>

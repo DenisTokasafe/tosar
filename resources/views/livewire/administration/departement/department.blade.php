@@ -11,25 +11,12 @@
                 <flux:button size="xs" wire:click='open_modal_opload' icon="upload" variant="subtle"></flux:button>
             </flux:tooltip>
         </div>
-        <div class='md:flex-row flex-col flex gap-2'>
-            <flux:input size='xs' icon="magnifying-glass" wire:model.live='search_department' placeholder="Search department" />
-            <flux:dropdown class='  btn btn-xs btn-outline btn-info' position="bottom" align="start">
-                <flux:navlist.search icon:trailing="chevrons-up-down" wire:navigate>{{ $company_name}}</flux:navlist.search>
-                <flux:menu class="w-96">
-                    <flux:input size="xs" icon="magnifying-glass" wire:model.live='search_company' placeholder="Cari Perusahaan" />
-                    <flux:menu.separator />
-                    <flux:menu.radio.group>
-                        <flux:menu.radio wire:click='id_company_null' wire:navigate>Semua Perusahaan</flux:menu.radio>
-                        @foreach ($Companies as $company)
-                        <flux:menu.radio wire:click='id_company({{ $company->id }})' wire:navigate>{{$company->company_name}}</flux:menu.radio>
-                        @endforeach
-                    </flux:menu.radio.group>
-                </flux:menu>
-            </flux:dropdown>
+        <div class='flex flex-col gap-2 md:flex-row'>
+             <x-form.input-floating label="Cari Departemen" model="search_department" />
         </div>
     </div>
     <x-manhours.layout>
-        
+
         <div class="overflow-x-auto ">
             <table class="table table-xs">
                 <thead class="text-center">
@@ -48,7 +35,7 @@
                         <th>{{ $Departments->firstItem() + $no }}</th>
                         <th>{{ $dept->department_name }}</th>
                         <th>{{ $dept->status }}</th>
-                        <th class='flex justify-center flex-row gap-2'>
+                        <th class='flex flex-row justify-center gap-2'>
                             <flux:tooltip content="edit" position="top">
                                 <flux:button wire:click="open_modal({{ $dept->id }})" size="xs" icon="pencil-square" variant="subtle"></flux:button>
                             </flux:tooltip>
@@ -59,7 +46,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <th colspan="5" class="text-rose-500 font-semibold">not found !!!</th>
+                        <th colspan="5" class="font-semibold text-rose-500">not found !!!</th>
                     </tr>
                     @endforelse
 
@@ -79,7 +66,7 @@
     <flux:modal name="dept">
         <form wire:submit='store' class='grid justify-items-stretch'>
             @csrf
-            <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+            <fieldset class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                 <legend class="fieldset-legend">{{ $legend }}</legend>
                 {{-- Nama Departemen --}}
                 <x-label-req>{{ __('Nama Departemen') }} </x-label-req>
@@ -104,7 +91,7 @@
     <flux:modal name="upload" class="min-w-[22rem]">
         <form wire:submit='import' wire:target="import,upload_data" wire:loading.class="skeleton">
             @csrf
-            <fieldset wire:target="import,upload_data" wire:loading.class="skeleton" class="fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm border p-4 sm:justify-self-center">
+            <fieldset wire:target="import,upload_data" wire:loading.class="skeleton" class="p-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs sm:w-sm sm:justify-self-center">
                 <legend class="fieldset-legend">Upload Data</legend>
                     <flux:input size="xs" variant='outline' type="file" wire:model.live="upload_data"  label="Upload Nama Perusahaan"  />
             </fieldset>
