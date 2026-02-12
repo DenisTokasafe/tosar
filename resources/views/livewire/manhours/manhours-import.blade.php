@@ -37,7 +37,7 @@
                         onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
                     <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled">
-                        <x-icon.file-import>
+                        <x-icon.file-import />
                     </button>
                 </div>
             </form>
