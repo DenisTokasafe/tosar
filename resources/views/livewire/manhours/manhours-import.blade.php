@@ -34,7 +34,9 @@
                   <button class="btn btn-xs btn-soft btn-error" wire:click='closeModal' onclick="import_modal.close()">Batal</button>
                     {{-- Tombol Submit --}}
                     <button class="btn btn-xs btn-soft btn-primary" wire:loading.attr="disabled"
-                       > <x-icon.file-import><span wire:loading.class='hidden'wire:target="import,file">Import Sekarang</span>
+                       > <x-icon.file-import><span wire:loading.class='hidden'
+                            wire:target="import,file">Import
+                            Sekarang</span>
                         <span wire:loading class="hidden" wire:loading.class.remove="hidden" wire:target="import,file">
                             <span class="loading loading-spinner"></span>
                             Memproses...
