@@ -42,11 +42,8 @@
                             Memproses...
                         </span>
                     </button>
-
                 </div>
             </form>
         </div>
-        {{-- Tombol Close di luar modal, klik di area gelap --}}
-
     </dialog>
 </div>

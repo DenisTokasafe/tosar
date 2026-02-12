@@ -15,6 +15,7 @@
         <div class="flex flex-row gap-2">
             @can('create', \App\Models\Manhour::class)
                 {{-- Tombol 'tambah data' --}}
+
                 <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal' tooltip="Tambah Data" />
                 {{-- Komponen Import --}}
             @endcan
