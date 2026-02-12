@@ -1,7 +1,6 @@
 <div>
     {{-- 1. Tombol untuk membuka Modal --}}
 
-    <div class="tooltip ">
 
      <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import"  tooltip="Import Data" />
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
