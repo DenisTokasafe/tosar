@@ -2,13 +2,7 @@
     {{-- 1. Tombol untuk membuka Modal --}}
 
     <div class="tooltip ">
-        <div class="z-40 tooltip-content tooltip-accent">
-            <div class="text-sm font-black animate-bounce">Import Data</div>
-        </div>
-        <label wire:click='openModal' class="btn btn-square btn-xs btn-soft btn-accent">
-            <x-icon.file-import />
-        </label>
-    </div>
+
      <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import"  tooltip="Import Data" />
     {{-- Notifikasi Sukses/Gagal (di luar modal agar terlihat setelah modal tertutup) --}}
 
