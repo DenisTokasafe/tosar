@@ -344,6 +344,7 @@ class FireInspection extends Component
                     'inspection_number'   => $generatedNumber,
                     'area_name'       => $this->area, // Diambil dari selectLocation
                     'area_photo_path' => $areaPhotoPath,
+                    'submitted_by'        => auth()->user()->name ?? 'System',
                     'created_at'      => now(),
                     'updated_at'      => now(),
                 ]);
@@ -362,7 +363,6 @@ class FireInspection extends Component
                         'equipment_master_id' => $equipmentMasterId,
                         'documentation_path'  => $documentationPath,
                         'inspected_by'    => $inspectedByString,
-                        'submitted_by'        => auth()->user()->name ?? 'System',
                         'conditions'          => $cleanConditions,
                         'remarks'             => $rowRemarks,
                     ]);

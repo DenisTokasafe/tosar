@@ -11,6 +11,7 @@ class InspectionSession extends Model
         'inspection_date', // Tambahkan ini
         'inspection_number',
         'area_photo_path',
+        'submitted_by',
         'documentation_path',
         'area_name',
     ];
