@@ -290,6 +290,7 @@ class FireInspection extends Component
         }
 
         $result = FileHelper::compressAndStore($this->foto_area, 'inspections/area-photos');
+        dd($result);
         $this->foto_area_path = $result['path'];
     }
     public function updatedDokumentasi($value, $key)
