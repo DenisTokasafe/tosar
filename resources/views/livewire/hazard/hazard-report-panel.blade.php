@@ -412,7 +412,6 @@
                                 </div>
                             </div>
                         </td>
-
                         <td class="border">{{ \Carbon\Carbon::parse($report->tanggal)->format('d M Y') }}</td>
                         <td class="p-2 border">
                             <div class="flex flex-col items-center justify-center leading-tight divide-y">

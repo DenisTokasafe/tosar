@@ -110,8 +110,12 @@ $classes = Flux::classes()
         'filled'  => 'text-zinc-700 placeholder-zinc-500 disabled:placeholder-zinc-400 dark:text-zinc-200 dark:placeholder-white/60 dark:disabled:placeholder-white/40',
     })
     ->add(match ($variant) { // Border...
-        'outline' => $invalid ? 'border-red-500' : 'shadow-xs border-zinc-200 border-b-zinc-300/80 disabled:border-b-zinc-200 dark:border-white/10 dark:disabled:border-white/5',
-        'filled'  => $invalid ? 'border-red-500' : 'border-0',
+        'outline' => 'shadow-xs border-zinc-200 border-b-zinc-300/80 disabled:border-b-zinc-200 dark:border-white/10 dark:disabled:border-white/5',
+        'filled'  => 'border-0',
+    })
+    ->add(match ($variant) { // Invalid...
+        'outline' => 'data-invalid:shadow-none data-invalid:border-red-500 dark:data-invalid:border-red-500 disabled:data-invalid:border-red-500 dark:disabled:data-invalid:border-red-500',
+        'filled' => 'data-invalid:border-red-500'
     })
     ->add($attributes->pluck('class:input'))
     ;
@@ -125,11 +129,11 @@ $classes = Flux::classes()
     <flux:with-field :$attributes :$name>
         <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
             <?php if (is_string($iconLeading)): ?>
-                <div class="pointer-events-none absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0">
+                <div class="pointer-events-none absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-xs text-zinc-400/75 dark:text-white/60 ps-3 start-0">
                     <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
                 </div>
             <?php elseif ($iconLeading): ?>
-                <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0') }}>
+                <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-xs text-zinc-400/75 dark:text-white/60 ps-3 start-0') }}>
                     {{ $iconLeading }}
                 </div>
             <?php endif; ?>
@@ -148,42 +152,44 @@ $classes = Flux::classes()
                 @if ($loading && $wireTarget) wire:target="{{ $wireTarget }}" @endif
             >
 
-            <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-3 end-0 text-xs text-zinc-400">
-                {{-- Icon should be text-zinc-400/75 --}}
-                <?php if ($loading): ?>
-                    <flux:icon name="loading" :variant="$iconVariant" :class="$iconClasses" wire:loading :wire:target="$wireTarget" />
-                <?php endif; ?>
+            <?php if ($loading || $countOfTrailingIcons > 0): ?>
+                <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-2 border-e border-transparent end-0 text-xs text-zinc-400">
+                    {{-- Icon should be text-zinc-400/75 --}}
+                    <?php if ($loading): ?>
+                        <flux:icon name="loading" :variant="$iconVariant" :class="$iconClasses" wire:loading :wire:target="$wireTarget" />
+                    <?php endif; ?>
 
-                <?php if ($clearable): ?>
-                    <flux:input.clearable inset="left right" :$size />
-                <?php endif; ?>
+                    <?php if ($clearable): ?>
+                        <flux:input.clearable inset="left right" :$size />
+                    <?php endif; ?>
 
-                <?php if ($kbd): ?>
-                    <span class="pointer-events-none">{{ $kbd }}</span>
-                <?php endif; ?>
+                    <?php if ($kbd): ?>
+                        <span class="pointer-events-none">{{ $kbd }}</span>
+                    <?php endif; ?>
 
-                <?php if ($expandable): ?>
-                    <flux:input.expandable inset="left right" :$size />
-                <?php endif; ?>
+                    <?php if ($expandable): ?>
+                        <flux:input.expandable inset="left right" :$size />
+                    <?php endif; ?>
 
-                <?php if ($copyable): ?>
-                    <flux:input.copyable inset="left right" :$size />
-                <?php endif; ?>
+                    <?php if ($copyable): ?>
+                        <flux:input.copyable inset="left right" :$size />
+                    <?php endif; ?>
 
-                <?php if ($viewable): ?>
-                    <flux:input.viewable inset="left right" :$size />
-                <?php endif; ?>
+                    <?php if ($viewable): ?>
+                        <flux:input.viewable inset="left right" :$size />
+                    <?php endif; ?>
 
-                <?php if (is_string($iconTrailing)): ?>
-                    <?php
-                        $trailingIconClasses = clone $iconClasses;
-                        $trailingIconClasses->add('pointer-events-none text-zinc-400/75');
-                    ?>
-                    <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$trailingIconClasses" />
-                <?php elseif ($iconTrailing): ?>
-                    {{ $iconTrailing }}
-                <?php endif; ?>
-            </div>
+                    <?php if (is_string($iconTrailing)): ?>
+                        <?php
+                            $trailingIconClasses = clone $iconClasses;
+                            $trailingIconClasses->add('text-zinc-400/75 dark:text-white/60 pointer-events-none');
+                        ?>
+                        <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$trailingIconClasses" />
+                    <?php elseif ($iconTrailing): ?>
+                        {{ $iconTrailing }}
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </flux:with-field>
 <?php else: ?>
