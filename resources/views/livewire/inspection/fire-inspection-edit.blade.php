@@ -90,6 +90,57 @@
             <div class="flex flex-col items-start justify-between gap-4 pt-2 mt-2 border-t md:flex-row">
                 {{-- UPLOAD DOKUMENTASI --}}
                 <div class="w-full md:max-w-md">
+                    <x-form.upload label="Foto Area (Dokumentasi Lokasi)" model="foto_area" :file="$foto_area" />
+                    <div wire:loading.remove.class='hidden' wire:target="foto_area"
+                        class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
+
+                    @error('foto_area')
+                        <div class="invalid-feedback text-danger">{{ $message }}</div>
+                    @enderror
+
+                    @if ($foto_area)
+                        <div class="mt-2 position-relative d-inline-block">
+                            <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;"
+                                class="img-thumbnail border-primary">
+                            <span class="top-0 badge bg-primary position-absolute start-0">Baru</span>
+                            <label wire:click="clearNewFotoArea"
+                                class="top-0 btn btn-error btn-xs btn-square position-absolute end-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-trash2-icon lucide-trash-2">
+                                    <path d="M10 11v6" />
+                                    <path d="M14 11v6" />
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
+                            </label>
+                        </div>
+                    @elseif ($area_photo_path)
+                        <div class="mt-2 position-relative d-inline-block">
+                            <img src="{{ asset('storage/' . $area_photo_path) }}" style="height: 150px;"
+                                class="img-thumbnail border-secondary">
+                            <span class="top-0 badge bg-secondary position-absolute start-0">Lama</span>
+                            <label
+                                onclick="confirm('Hapus foto area ini secara permanen?') || event.stopImmediatePropagation()"
+                                wire:click="removeAreaPhoto"
+                                class="top-0 btn btn-error btn-xs btn-square position-absolute end-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-trash2-icon lucide-trash-2">
+                                    <path d="M10 11v6" />
+                                    <path d="M14 11v6" />
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                    <path d="M3 6h18" />
+                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
+                            </label>
+                        </div>
+                    @endif
+                </div>
+                <div class="w-full md:max-w-md">
                     <fieldset class="fieldset">
                         <x-form.upload label="Foto Temuan" model="dokumentasi" :file="$dokumentasi" />
 
@@ -179,57 +230,7 @@
                         <x-label-error :messages="$errors->get('dokumentasi')" />
                     </fieldset>
                 </div>
-                <div class="w-full md:max-w-md">
-                    <x-form.upload label="Foto Area (Dokumentasi Lokasi)" model="foto_area" :file="$foto_area" />
-                    <div wire:loading.remove.class='hidden' wire:target="foto_area"
-                        class="hidden mt-1 text-xs text-primary">Mengunggah gambar...</div>
 
-                    @error('foto_area')
-                        <div class="invalid-feedback text-danger">{{ $message }}</div>
-                    @enderror
-
-                    @if ($foto_area)
-                        <div class="mt-2 position-relative d-inline-block">
-                            <img src="{{ $foto_area->temporaryUrl() }}" style="height: 150px;"
-                                class="img-thumbnail border-primary">
-                            <span class="top-0 badge bg-primary position-absolute start-0">Baru</span>
-                            <label wire:click="clearNewFotoArea"
-                                class="top-0 btn btn-error btn-xs btn-square position-absolute end-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="lucide lucide-trash2-icon lucide-trash-2">
-                                    <path d="M10 11v6" />
-                                    <path d="M14 11v6" />
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                    <path d="M3 6h18" />
-                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                </svg>
-                            </label>
-                        </div>
-                    @elseif ($area_photo_path)
-                        <div class="mt-2 position-relative d-inline-block">
-                            <img src="{{ asset('storage/' . $area_photo_path) }}" style="height: 150px;"
-                                class="img-thumbnail border-secondary">
-                            <span class="top-0 badge bg-secondary position-absolute start-0">Lama</span>
-                            <label
-                                onclick="confirm('Hapus foto area ini secara permanen?') || event.stopImmediatePropagation()"
-                                wire:click="removeAreaPhoto"
-                                class="top-0 btn btn-error btn-xs btn-square position-absolute end-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="lucide lucide-trash2-icon lucide-trash-2">
-                                    <path d="M10 11v6" />
-                                    <path d="M14 11v6" />
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                    <path d="M3 6h18" />
-                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                </svg>
-                            </label>
-                        </div>
-                    @endif
-                </div>
 
                 {{-- MULTIPLE PELAPOR (Gunakan Logic Trait) --}}
                 <div class="w-full md:max-w-md">
