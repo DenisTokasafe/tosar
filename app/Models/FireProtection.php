@@ -19,6 +19,7 @@ class FireProtection extends Model
     ];
     protected $casts = [
         'conditions' => 'array',
+        'inspected_by' => 'array',
     ];
     public function inspectionSession()
     {
