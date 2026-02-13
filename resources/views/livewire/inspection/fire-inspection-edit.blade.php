@@ -91,7 +91,7 @@
                 {{-- UPLOAD DOKUMENTASI --}}
                 <div class="w-full md:max-w-md">
                     <fieldset class="fieldset">
-                        <x-form.upload label="Lampirkan foto atau dokumentasi" model="dokumentasi" :file="$dokumentasi" />
+                        <x-form.upload label="Foto Temuan" model="dokumentasi" :file="$dokumentasi" />
 
                         <div wire:loading.remove wire:target="dokumentasi">
                             {{-- CASE 1: Tampilkan File Baru yang Sedang Di-upload --}}
