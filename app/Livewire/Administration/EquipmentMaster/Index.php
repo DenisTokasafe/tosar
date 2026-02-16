@@ -141,7 +141,8 @@ class Index extends Component
                 'Fire sprinkler system',
                 'Ring Buoy',
                 'Eyewash & Safety Shower',
-                'Muster Point'
+                'Muster Point',
+                'Alarm'
             ];
 
             // 2. Cari tahu $this->type itu ada di urutan ke berapa (index)
