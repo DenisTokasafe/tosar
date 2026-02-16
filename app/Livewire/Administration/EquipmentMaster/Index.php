@@ -246,7 +246,7 @@ class Index extends Component
 
     public function resetForm()
     {
-        $this->reset(['type', 'location_id', 'specific_location', 'technical_data', 'selected_id', 'isEdit']);
+        $this->reset(['type', 'technical_data', 'selected_id', 'isEdit']);
     }
     public function render()
     {
