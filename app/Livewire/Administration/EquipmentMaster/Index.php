@@ -225,7 +225,7 @@ class Index extends Component
         $this->type = $data->type;
         $this->location_id = $data->location_id;
         $this->specific_location = $data->specific_location;
-        $this->searchLocation = $data->specific_location;
+        $this->searchLocation = $data->location->name;
         $this->isEdit = true;
 
         // Pastikan technical_data adalah array
