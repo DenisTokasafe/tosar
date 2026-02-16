@@ -31,7 +31,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Ring Buoy',
             'Eyewash & Safety Shower',
             'Muster Point',
-            'Alarm'
+            'Alarm',
         ];
 
         // 1. Decode entitas HTML (mengubah &amp; kembali menjadi &)
