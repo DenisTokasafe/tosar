@@ -70,7 +70,7 @@ class InspectionChecklist extends Component
     {
         $this->validate([
             'equipment_type' => 'required',
-            'location_keyword' => 'required',
+            'location_keyword' => 'nullable',
             'inputs.*' => 'required',
             'checks.*' => 'required',
         ]);
