@@ -30,7 +30,8 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Fire sprinkler system',
             'Ring Buoy',
             'Eyewash & Safety Shower',
-            'Muster Point'
+            'Muster Point',
+            'Alarm'
         ];
 
         // 1. Decode entitas HTML (mengubah &amp; kembali menjadi &)
@@ -91,6 +92,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Hose Reel No'    => $row['hose_reel_no'] ?? null,
             'Sprinkler No'    => $row['sprinkler_no'] ?? null,
             'Ring Buoy No'    => $row['ring_buoy_no'] ?? null,
+            'Alarm No'    => $row['alarm_no'] ?? null,
         ];
 
         // Bersihkan field null
