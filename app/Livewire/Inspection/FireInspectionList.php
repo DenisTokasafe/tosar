@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Inspection;
 
-use Carbon\Carbon;
-use Livewire\Component;
-use App\Models\Location;
-use Livewire\WithPagination;
 use App\Models\FireProtection;
+use App\Models\InspectionChecklist;
+use App\Models\Location;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class FireInspectionList extends Component
 {
@@ -198,10 +199,7 @@ class FireInspectionList extends Component
     public function render()
     {
         return view('livewire.inspection.fire-inspection-list', [
-            'availableTypes' => DB::table('inspection_checklist_masters')
-                ->select('equipment_type')
-                ->distinct()
-                ->pluck('equipment_type'),
+            'availableTypes' => InspectionChecklist::distinct()->pluck('equipment_type'),
             'inspections' => FireProtection::query()
                 ->select('fire_protections.*') // Pastikan ambil kolom milik fire_protections
                 ->join('inspection_sessions', 'fire_protections.inspection_session_id', '=', 'inspection_sessions.id')
