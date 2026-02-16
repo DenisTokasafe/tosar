@@ -79,7 +79,7 @@ class InspectionChecklist extends Component
             ['id' => $this->checklist_id],
             [
                 'equipment_type' => $this->equipment_type,
-                'location_keyword' => $this->location_keyword,
+                'location_keyword' => $this->location_keyword ?? 'Default',
                 'inputs' => $this->inputs,
                 'checks' => $this->checks,
             ]
