@@ -14,7 +14,6 @@ class FireProtection extends Model
         'remarks',
         'documentation_path',
         'area_photo_path',
-        'submitted_by',
         'inspected_by',
     ];
     protected $casts = [
