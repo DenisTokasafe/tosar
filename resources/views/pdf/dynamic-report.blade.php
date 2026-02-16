@@ -170,28 +170,34 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }}</td>
+                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }}
+                        </td>
                         <td>
-                    @php
-                                $daftarNama = explode('|', $item->inspected_by ?? '');
+                            @php
+                                // Hapus filter kosong agar hitungan $loop->last akurat
+                                $daftarNama = array_filter(
+                                    explode('|', $item->inspected_by ?? ''),
+                                    fn($n) => !empty(trim($n)),
+                                );
                             @endphp
+
                             @foreach ($daftarNama as $namaOrang)
                                 @php
-                                    if (empty(trim($namaOrang))) {
-                                        continue;
-                                    }
                                     // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
 $search = ['"', ','];
 $replace = ['', ' '];
 $cleanName = str_replace($search, $replace, $namaOrang);
 
-// 2. Ambil inisial dari tiap kata yang sudah bersih
+// 2. Ambil inisial
 $initials = collect(preg_split('/\s+/', trim($cleanName)))
     ->filter()
     ->map(fn($word) => strtoupper(substr($word, 0, 1)))
     ->implode('');
                                 @endphp
-                                {{ $initials }}
+
+                                {{ $initials }}@if (!$loop->last)
+                                    ,
+                                @endif
                             @endforeach
                         </td>
                         <td style="text-align: left;">{{ $item->remarks }}</td>
