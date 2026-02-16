@@ -220,7 +220,7 @@ class Index extends Component
 
     public function edit($id)
     {
-        $data = EquipmentMaster::findOrFail($id);
+        $data = EquipmentMaster::whereId($id)->first();
         $this->selected_id = $id;
         $this->type = $data->type;
         $this->location_id = $data->location_id;
