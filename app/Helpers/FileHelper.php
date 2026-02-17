@@ -10,6 +10,8 @@ class FileHelper
 {
     public static function compressAndStore($file, $folder, $width = 800, $quality = 75)
     {
+        // 1. Tambahkan ini di awal untuk menaikkan limit memori khusus saat proses ini jalan
+        ini_set('memory_limit', '512M');
 
         // Gunakan timestamp agar nama file unik dan hindari spasi
         $filename  = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
@@ -18,26 +20,25 @@ class FileHelper
         $manager = new ImageManager(new Driver());
 
         if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
-            // 1. Baca gambar
+            // 2. Gunakan getRealPath() dengan pengecekan
             $image = $manager->read($file->getRealPath());
 
-            // 2. Resize (scale) agar tidak terlalu besar dimensinya
+            // 3. Resize (scale) agar tidak terlalu besar dimensinya
             $image->scale(width: $width);
 
-            // 3. Konversi ke JPG agar kompresi lebih maksimal (PNG sangat berat)
-            // Kita ganti extension ke jpg untuk outputnya
+            // Ganti extension ke jpg untuk outputnya
             $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
             $path     = $folder . '/' . $filename;
 
-            // 4. Logika Kompresi Agresif (Target < 1MB)
+            // 4. Logika Kompresi
             $encoded = $image->toJpeg($quality);
 
             // Jika ukuran masih > 1MB, turunkan kualitas secara bertahap
+            // Tambahkan (string) untuk memastikan casting data biner
             while (strlen((string) $encoded) > 1024 * 1024 && $quality > 10) {
                 $quality -= 10;
                 $encoded = $image->toJpeg($quality);
             }
-
 
             Storage::disk('public')->put($path, (string) $encoded);
         } else {
