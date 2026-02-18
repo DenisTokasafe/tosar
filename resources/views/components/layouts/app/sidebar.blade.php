@@ -165,6 +165,37 @@
 
     @fluxScripts
     @livewireScripts
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('ckeditorHelper', (modelName) => ({
+                editor: null,
+                init() {
+                    ClassicEditor
+                        .create(this.$refs.editorElement, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            this.editor = editor;
+
+                            // Ambil data awal dari Livewire
+                            editor.setData(this.$wire.get(modelName) || '');
+
+                            // Update Livewire saat isi editor berubah
+                            editor.model.document.on('change:data', () => {
+                                this.$wire.set(modelName, editor.getData());
+                            });
+                        })
+                        .catch(error => console.error(error));
+
+                    // Listener untuk Reset
+                    this.$wire.on('reset-ckeditor', () => {
+                        if (this.editor) this.editor.setData('');
+                    });
+                }
+            }))
+        })
+    </script>
     @stack('scripts')
 </body>
 </html>
