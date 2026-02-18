@@ -599,52 +599,57 @@
         {{-- action_description --}}
         <script>
             let ckAction_description = null;
-            document.addEventListener('livewire:navigated', () => {
-                ClassicEditor
-                    .create(document.querySelector('#ckeditor-action_description'), {
-                        toolbar: [
-                            'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
-                        ],
-                        removePlugins: ['ImageUpload', 'EasyImage']
-                    })
-                    .then(editor => {
-                        ckAction_description = editor;
-                        // Sinkronisasi ke Livewire menggunakan Livewire.dispatch
-                        editor.model.document.on('change:data', () => {
-                            const data = editor.getData();
-                            document.querySelector('#ckeditor-action_description').value = data;
 
-                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
-                            // Kita akan mengirimkan event khusus ke Livewire
-                            Livewire.dispatch('updateActionDescription', {
-                                actionData: data
+            const initActionDescriptionEditor = () => {
+                const el = document.querySelector('#ckeditor-action_description');
+
+                // Cek 1: Pastikan elemen ada di halaman (mencegah error 'null to object')
+                // Cek 2: Pastikan belum di-init (mencegah error duplikasi)
+                if (el && !el.classList.contains('ck-initialized')) {
+                    ClassicEditor
+                        .create(el, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            ckAction_description = editor;
+                            el.classList.add('ck-initialized');
+
+                            editor.model.document.on('change:data', () => {
+                                const data = editor.getData();
+                                el.value = data;
+
+                                Livewire.dispatch('updateActionDescription', {
+                                    actionData: data
+                                });
+
+                                if (data.trim() !== '') {
+                                    editor.ui.view.editable.element.classList.remove('error');
+                                }
                             });
+                        })
+                        .catch(error => console.warn('CKEditor Init Warning:', error));
+                }
+            };
 
-                            if (data.trim() !== '') {
-                                editor.ui.view.editable.element.classList.remove('error');
-                            }
-                        });
-                    })
-                    .catch(error => console.error(error));
-            });
-            // Validasi untuk AddAction
+            // Jalankan setiap kali navigasi Livewire v3 selesai
+            document.addEventListener('livewire:navigated', initActionDescriptionEditor);
+
+            // Validasi
             Livewire.on('validateCkEditorAddAction', () => {
-                if (ckAction_description) {
+                if (ckAction_description?.ui?.view?.editable?.element) {
                     const data = ckAction_description.getData().trim();
                     if (data === '') {
                         ckAction_description.ui.view.editable.element.classList.add('error');
-                        return false;
                     }
                 }
-                return true;
             });
-            // RESET CKEDITOR
+
+            // Reset
             Livewire.on('reset-ckeditor', () => {
                 if (ckAction_description) {
-                    ckAction_description.setData(''); // kosongkan editor
-                }
-                if (ckAction_description?.ui?.view?.editable?.element) {
-                    ckAction_description.ui.view.editable.element.classList.remove('error');
+                    ckAction_description.setData('');
+                    ckAction_description.ui.view.editable.element?.classList.remove('error');
                 }
             });
         </script>
@@ -653,53 +658,59 @@
         <script>
             let ckImmediate_corrective_action = null;
 
-            document.addEventListener('livewire:navigated', () => {
-                ClassicEditor
-                    .create(document.querySelector('#ckeditor-immediate_corrective_action'), {
-                        toolbar: [
-                            'bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'
-                        ],
-                        removePlugins: ['ImageUpload', 'EasyImage']
-                    })
-                    .then(editor => {
-                        ckImmediate_corrective_action = editor;
+            const initImmediateEditor = () => {
+                const selector = '#ckeditor-immediate_corrective_action';
+                const element = document.querySelector(selector);
 
-                        editor.model.document.on('change:data', () => {
-                            const data = editor.getData();
-                            document.querySelector('#ckeditor-immediate_corrective_action').value = data;
+                // Cek apakah elemen ada dan belum pernah di-init
+                if (element && !element.classList.contains('ck-initialized')) {
+                    ClassicEditor
+                        .create(element, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            ckImmediate_corrective_action = editor;
+                            element.classList.add('ck-initialized');
 
-                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
-                            Livewire.dispatch('updateImmediateCorrectiveAction', {
-                                actionData: data
+                            editor.model.document.on('change:data', () => {
+                                const data = editor.getData();
+
+                                // Update textarea asli
+                                element.value = data;
+
+                                Livewire.dispatch('updateImmediateCorrectiveAction', {
+                                    actionData: data
+                                });
+
+                                if (data.trim() !== '') {
+                                    editor.ui.view.editable.element.classList.remove('error');
+                                }
                             });
-
-                            if (data.trim() !== '') {
-                                editor.ui.view.editable.element.classList.remove('error');
-                            }
+                        })
+                        .catch(error => {
+                            // Mencegah crash jika elemen mendadak hilang saat proses init
+                            console.warn('CKEditor Immediate Action: ', error.message);
                         });
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            });
+                }
+            };
+
+            // Jalankan saat navigasi Livewire v3
+            document.addEventListener('livewire:navigated', initImmediateEditor);
 
             Livewire.on('validateCkEditorImmediateCorrectiveAction', () => {
-                if (ckImmediate_corrective_action) {
+                if (ckImmediate_corrective_action?.ui?.view?.editable?.element) {
                     const data = ckImmediate_corrective_action.getData().trim();
                     if (data === '') {
                         ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
-                        return false;
                     }
                 }
-                return true;
             });
 
             Livewire.on('reset-ckeditor-immediate-corrective-action', () => {
                 if (ckImmediate_corrective_action) {
                     ckImmediate_corrective_action.setData('');
-                }
-                if (ckImmediate_corrective_action?.ui?.view?.editable?.element) {
-                    ckImmediate_corrective_action.ui.view.editable.element.classList.remove('error');
+                    ckImmediate_corrective_action.ui.view.editable.element?.classList.remove('error');
                 }
             });
         </script>
