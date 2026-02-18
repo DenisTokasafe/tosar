@@ -455,9 +455,7 @@ class HazardForm extends Component
     public function addAction()
     {
 
-        if ($this->action_description == '') {
-            $this->dispatch('validate-all-editors');
-        }
+       $this->dispatch('validate-action_description');
         $this->validate(
             [
                 'action_description'       => 'required|string',
@@ -527,9 +525,8 @@ class HazardForm extends Component
     }
     public function submit()
     {
-        // $this->dispatch('validateCkEditor');
-        // $this->dispatch('validateCkEditorImmediateCorrectiveAction');
-        // $this->dispatch('validateCkEditorDescription');
+        $this->dispatch('validate-description');
+        $this->dispatch('validate-immediate_corrective_action');
 
         if ($this->description == '') {
             $this->dispatch('validate-all-editors');

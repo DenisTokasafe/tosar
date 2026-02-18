@@ -186,7 +186,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
-                // Kita simpan instance di variabel lokal fungsi, bukan di objek reaktif Alpine
+                // Variabel lokal agar tidak terkena Proxy Alpine
                 let editorInstance = null;
 
                 return {
@@ -199,13 +199,9 @@
                                 removePlugins: ['ImageUpload', 'EasyImage']
                             })
                             .then(editor => {
-                                // Simpan ke variabel lokal agar tidak di-Proxy oleh Alpine
                                 editorInstance = editor;
-
-                                // Set data awal
                                 editorInstance.setData(this.$wire.get(modelName) || '');
 
-                                // Sync data ke Livewire
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
                                     this.$wire.set(modelName, data, true);
@@ -218,7 +214,18 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // Listener Validasi
+                        // 1. LISTENER SPESIFIK (Contoh: validate-action_description)
+                        // Nama event akan menjadi dinamis sesuai modelName
+                        Livewire.on(`validate-${modelName}`, () => {
+                            if (editorInstance) {
+                                const data = editorInstance.getData().trim();
+                                if (data === '') {
+                                    editorInstance.ui.view.editable.element.classList.add('error');
+                                }
+                            }
+                        });
+
+                        // 2. LISTENER UNIVERSAL (Tetap ada jika ingin validasi semua sekaligus)
                         Livewire.on('validate-all-editors', () => {
                             if (editorInstance) {
                                 const data = editorInstance.getData().trim();
@@ -228,7 +235,7 @@
                             }
                         });
 
-                        // Listener Reset
+                        // 3. RESET UNIVERSAL
                         Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
