@@ -196,7 +196,7 @@
                             removePlugins: ['ImageUpload', 'EasyImage']
                         })
                         .then(editor => {
-                            this.editor = editor; // Simpan instance ke property lokal
+                            validator_editor = editor; // Simpan instance ke property lokal
 
                             // Isi data awal dari Livewire
                             editor.setData(this.$wire.get(modelName) || '');
@@ -218,19 +218,19 @@
                     // VALIDASI UNIVERSAL
                     // Menggunakan Livewire.on untuk mendengarkan event dari backend
                     Livewire.on('validate-all-editors', () => {
-                        if (this.editor) {
-                            const data = this.editor.getData().trim();
+                        if (validator_editor) {
+                            const data = validator_editor.getData().trim();
                             if (data === '') {
-                                this.editor.ui.view.editable.element.classList.add('error');
+                                validator_editor.ui.view.editable.element.classList.add('error');
                             }
                         }
                     });
 
                     // RESET UNIVERSAL
                     Livewire.on('reset-all-editors', () => {
-                        if (this.editor) {
-                            this.editor.setData('');
-                            this.editor.ui.view.editable.element.classList.remove('error');
+                        if (validator_editor) {
+                            validator_editor.setData('');
+                            validator_editor.ui.view.editable.element.classList.remove('error');
                         }
                     });
                 }
