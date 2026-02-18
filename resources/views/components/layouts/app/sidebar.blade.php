@@ -215,7 +215,7 @@
                 Livewire.on('validate-all-editors', () => {
                     if (validateEditor) {
                         const data = validateEditor.getData().trim();
-                        if (data === '') {
+                        if (data == '') {
                             validateEditor.ui.view.editable.element.classList.add('error');
                         }
                     }
