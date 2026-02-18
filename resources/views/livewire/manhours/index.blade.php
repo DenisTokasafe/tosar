@@ -58,6 +58,7 @@
                             onChange: (dates, str) => {
                                 // Update value ke variabel lokal (tersinkron ke Livewire via entangle)
                                 this.range_date = str;
+                                $wire.set('range_date', null);
                             },
                             locale: { rangeSeparator: ' Ke ' },
                         });
