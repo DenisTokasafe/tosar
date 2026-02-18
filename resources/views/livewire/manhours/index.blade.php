@@ -174,12 +174,11 @@
                                     initFlatpickr() {
                                         this.$nextTick(() => {
                                             if (this.fp) this.fp.destroy();
-                                            if (!this.$refs.input) return;
 
+                                            // Gunakan window.monthSelectPlugin secara eksplisit
                                             this.fp = flatpickr(this.$refs.input, {
                                                 disableMobile: true,
                                                 plugins: [
-                                                    // Tambahkan window. di depan nama plugin
                                                     new window.monthSelectPlugin({
                                                         shorthand: true,
                                                         dateFormat: 'Y-m',
@@ -188,6 +187,8 @@
                                                     })
                                                 ],
                                                 defaultDate: this.dateValue,
+                                                // Tambahkan static: true jika kalender tidak muncul/terpotong
+                                                static: true,
                                                 onChange: (selectedDates, dateStr) => {
                                                     this.dateValue = dateStr;
                                                 }
