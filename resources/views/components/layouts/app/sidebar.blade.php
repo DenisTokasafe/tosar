@@ -196,7 +196,7 @@
                             removePlugins: ['ImageUpload', 'EasyImage']
                         })
                         .then(editor => {
-                            validateEditor = editor;
+                            this.editor = editor;
                             editor.setData(this.$wire.get(modelName) || '');
 
                             editor.model.document.on('change:data', () => {
@@ -216,19 +216,19 @@
                     // Cukup panggil 'validate-all-editors' dari Livewire,
                     // maka semua CKEditor akan mengecek dirinya masing-masing.
                      Livewire.on('validate-all-editors', () => {
-                        if (validateEditor) {
-                            const data = validateEditor.getData().trim();
+                        if (this.editor) {
+                            const data = this.editor.getData().trim();
                             if (data === '') {
-                                validateEditor.ui.view.editable.element.classList.add('error');
+                                this.editor.ui.view.editable.element.classList.add('error');
                             }
                         }
                     });
 
                     // RESET UNIVERSAL
                      Livewire.on('reset-all-editors', () => {
-                        if (validateEditor) {
-                            validateEditor.setData('');
-                            validateEditor.ui.view.editable.element.classList.remove('error');
+                        if (this.editor) {
+                            this.editor.setData('');
+                            this.editor.ui.view.editable.element.classList.remove('error');
                         }
                     });
                 }
