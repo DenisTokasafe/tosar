@@ -65,7 +65,8 @@ class HazardForm extends Component
     public $location_id;
     #[Validate]
     public $pelapor_id;
-
+    #[Validate('required|string')]
+    public $description;
     #[Validate('required|string')]
     public $immediate_corrective_action;
     #[Validate('required_without:contractor_id')]
@@ -108,12 +109,14 @@ class HazardForm extends Component
     public function rules()
     {
         $baseRules = [
-            'description'=>'required|string',
+
             'pelapor_id' => $this->manualPelaporMode ? 'nullable' : 'required',
             'manualPelaporName' => $this->manualPelaporMode ? 'required|string|max:255' : 'nullable',
         ];
         if (!empty($this->action_description)) {
             $baseRules['action_description'] = 'required'; // Ubah format jika berbeda
+            $baseRules['action_due_date'] = 'required|date_format:d-m-Y';
+            $baseRules['action_responsible_id'] = 'required|exists:users,id';
             // Tambahkan rule lain yang harus required
         } else {
             // Jika action_description kosong, field ini boleh null/kosong
