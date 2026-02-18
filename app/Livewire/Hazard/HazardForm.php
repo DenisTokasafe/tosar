@@ -497,6 +497,9 @@ class HazardForm extends Component
             ]
 
         );
+        if ($this->action_description == '') {
+            $this->dispatch('validate-all-editors');
+        }
         $this->actions[] = [
             'description' => $this->action_description,
             'due_date' => $this->action_due_date,
@@ -513,7 +516,8 @@ class HazardForm extends Component
         ]);
         // reset input sementara
         $this->reset(['action_description', 'action_due_date', 'action_responsible_id', 'actual_close_date', 'searchActResponsibility']);
-        $this->dispatch('reset-ckeditor');
+        $this->dispatch('reset-all-editors');
+        // $this->dispatch('reset-ckeditor');
     }
     public function removeAction($index)
     {
@@ -798,5 +802,6 @@ class HazardForm extends Component
             'likelihood_id',
             'actions',  // <--- penting
         ]);
+        $this->dispatch('reset-all-editors');
     }
 }
