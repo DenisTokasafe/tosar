@@ -186,7 +186,9 @@
    <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('ckeditorHelper', (modelName) => ({
+            // Definisikan properti lokal untuk setiap komponen
             editor: null,
+
             init() {
                 ClassicEditor
                     .create(this.$refs.editorElement, {
@@ -194,38 +196,39 @@
                         removePlugins: ['ImageUpload', 'EasyImage']
                     })
                     .then(editor => {
-                        validateEditor = editor;
+                        // SIMPAN KE PROPERTI LOKAL (this.editor)
+                        this.editor = editor;
+
                         editor.setData(this.$wire.get(modelName) || '');
 
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-                            this.$wire.set(modelName, data,true);
+                            this.$wire.set(modelName, data, true);
 
-                            // Hapus error saat user mengetik
                             if (data.trim() !== '') {
-                                editor.ui.view.editable.element.classList.remove('error');
+                                // Gunakan this.editor
+                                this.editor.ui.view.editable.element.classList.remove('error');
                             }
                         });
                     })
                     .catch(error => console.error(error));
 
                 // VALIDASI UNIVERSAL
-                // Cukup panggil 'validate-all-editors' dari Livewire,
-                // maka semua CKEditor akan mengecek dirinya masing-masing.
                 Livewire.on('validate-all-editors', () => {
-                    if (validateEditor) {
-                        const data = validateEditor.getData().trim();
-                        if (data == '') {
-                            validateEditor.ui.view.editable.element.classList.add('error');
+                    // Setiap komponen Alpine akan mengecek 'this.editor'-nya masing-masing
+                    if (this.editor) {
+                        const data = this.editor.getData().trim();
+                        if (data === '') {
+                            this.editor.ui.view.editable.element.classList.add('error');
                         }
                     }
                 });
 
                 // RESET UNIVERSAL
                 Livewire.on('reset-all-editors', () => {
-                    if (validateEditor) {
-                        validateEditor.setData('');
-                        validateEditor.ui.view.editable.element.classList.remove('error');
+                    if (this.editor) {
+                        this.editor.setData('');
+                        this.editor.ui.view.editable.element.classList.remove('error');
                     }
                 });
             }

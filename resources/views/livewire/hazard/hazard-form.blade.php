@@ -67,10 +67,10 @@
                     @endif
                 </fieldset>
             </div>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" wire:key="field-description">
                 <fieldset  class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Deskripsi" required />
-                    <div x-data="ckeditorHelper('description')" wire:ignore wire:key="field-description">
+                    <div x-data="ckeditorHelper('description')" wire:ignore >
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
@@ -217,7 +217,7 @@
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                <fieldset class="mb-4 fieldset md:col-span-2">
+                <fieldset class="mb-4 fieldset md:col-span-2"wire:key="field-immediate">
                     <label class="block"></label>
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
@@ -313,7 +313,7 @@
             <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title "> Tindakan Lanjutan</legend>
                 <!-- Deskripsi Tindakan -->
-                <fieldset class="fieldset md:col-span-1">
+                <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                     <x-form.label label="Deskripsi Tindakan" required />
                      <div x-data="ckeditorHelper('action_description')" wire:ignore>
                         <div x-ref="editorElement"></div>
