@@ -40,10 +40,10 @@
             <div class="w-full">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
-                    initFlatpickr() {
-                        // Pastikan elemen ada sebelum inisialisasi
-                        if (!this.$refs.tanggalInput2) return;
+                    // Gunakan entangle agar data Alpine dan Livewire tersinkron otomatis
+                    range_date: @entangle('range_date'),
 
+                    initFlatpickr() {
                         if (this.fp) this.fp.destroy();
 
                         this.fp = flatpickr(this.$refs.tanggalInput2, {
@@ -53,29 +53,28 @@
                             altFormat: 'd-M-Y',
                             dateFormat: 'd-m-Y',
                             mode: 'range',
+                            // Set tanggal awal dari data yang sudah ada di Livewire
+                            defaultDate: this.range_date,
                             onChange: (dates, str) => {
-                                $wire.set('range_date', str);
+                                // Update value ke variabel lokal (tersinkron ke Livewire via entangle)
+                                this.range_date = str;
                             },
                             locale: { rangeSeparator: ' Ke ' },
                         });
                     },
                     clearDate() {
                         if (this.fp) this.fp.clear();
-                        $wire.set('range_date', null);
+                        this.range_date = null;
+                        this.$wire.call('clearFilter');
                     }
-                }" x-init="$nextTick(() => { initFlatpickr(); });
-                /* Gunakan hook Livewire yang lebih modern jika menggunakan v3 */
-                Livewire.hook('morph.updated', (el) => {
-                    if (el.component) initFlatpickr();
-                });">
+                }" x-init="initFlatpickr()">
 
-                    <input name="range_date" type="text" x-ref="tanggalInput2" wire:model.live="range_date"
-                        placeholder="Pilih Rentang Tanggal"
+                    <input type="text" x-ref="tanggalInput2" placeholder="Pilih Rentang Tanggal"
                         class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
-                    <button type="button" @click="clearDate(); $wire.call('clearFilter')"
-                        class="btn btn-xs btn-neutral join-item" title="Bersihkan Filter">
+                    <button type="button" @click="clearDate()" class="btn btn-xs btn-neutral join-item"
+                        title="Bersihkan Filter">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-refresh-cw">
