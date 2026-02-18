@@ -223,7 +223,6 @@
                             }
                         }
                     });
-
                     // RESET UNIVERSAL
                      Livewire.on('reset-all-editors', () => {
                         if (validateEditor) {
