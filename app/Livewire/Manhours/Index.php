@@ -299,7 +299,7 @@ class Index extends Component
             ? 'Contractor'
             : 'PT. Archi Indonesia';
 
-        $bulan = Carbon::createFromFormat('M-Y', $this->date)->startOfMonth();
+        $bulan = Carbon::parse($this->date)->startOfMonth();
 
         foreach ($this->jobclasses as $key => $label) {
 
