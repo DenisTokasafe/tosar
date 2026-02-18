@@ -186,7 +186,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => ({
-                editor: null, // Menggunakan properti lokal komponen
+                editor: null,
                 init() {
                     ClassicEditor
                         .create(this.$refs.editorElement, {
@@ -196,41 +196,39 @@
                             removePlugins: ['ImageUpload', 'EasyImage']
                         })
                         .then(editor => {
-                            this.editor = editor; // Simpan instance ke property lokal
-
-                            // Isi data awal dari Livewire
+                            validateEditor = editor;
                             editor.setData(this.$wire.get(modelName) || '');
 
-                            // Sync ke Livewire saat konten berubah
                             editor.model.document.on('change:data', () => {
                                 const data = editor.getData();
                                 this.$wire.set(modelName, data);
 
-                                // Hapus class error saat user mulai mengetik
+                                // Hapus error saat user mengetik
                                 if (data.trim() !== '') {
                                     editor.ui.view.editable.element.classList.remove(
                                         'error');
                                 }
                             });
                         })
-                        .catch(error => console.error('CKEditor Error:', error));
+                        .catch(error => console.error(error));
 
                     // VALIDASI UNIVERSAL
-                    // Menggunakan Livewire.on untuk mendengarkan event dari backend
-                    Livewire.on('validate-all-editors', () => {
-                        if (this.editor) {
-                            const data = this.editor.getData().trim();
+                    // Cukup panggil 'validate-all-editors' dari Livewire,
+                    // maka semua CKEditor akan mengecek dirinya masing-masing.
+                     Livewire.on('validate-all-editors', () => {
+                        if (validateEditor) {
+                            const data = validateEditor.getData().trim();
                             if (data === '') {
-                                this.editor.ui.view.editable.element.classList.add('error');
+                                validateEditor.ui.view.editable.element.classList.add('error');
                             }
                         }
                     });
 
                     // RESET UNIVERSAL
-                    Livewire.on('reset-all-editors', () => {
-                        if (this.editor) {
-                            this.editor.setData('');
-                            this.editor.ui.view.editable.element.classList.remove('error');
+                     Livewire.on('reset-all-editors', () => {
+                        if (validateEditor) {
+                            validateEditor.setData('');
+                            validateEditor.ui.view.editable.element.classList.remove('error');
                         }
                     });
                 }
