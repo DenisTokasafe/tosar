@@ -714,68 +714,6 @@
         </script>
 
         {{-- DESCRIPTION --}}
-        <script>
-            // Gunakan pengecekan null yang lebih aman
-            let ckDescription = null;
 
-            const initEditor = () => {
-                const element = document.querySelector('#ckeditor-description');
-
-                // 1. CEK: Pastikan elemen ada dan BELUM diinisialisasi (cegah duplikasi)
-                if (element && !element.classList.contains('ck-initialized')) {
-                    ClassicEditor
-                        .create(element, {
-                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                            removePlugins: ['ImageUpload', 'EasyImage']
-                        })
-                        .then(editor => {
-                            ckDescription = editor;
-                            element.classList.add('ck-initialized'); // Tandai agar tidak double init
-
-                            editor.model.document.on('change:data', () => {
-                                const data = editor.getData();
-
-                                // Gunakan dispatch untuk sinkronisasi ke Livewire
-                                Livewire.dispatch('updateDescriptionData', {
-                                    descriptionData: data
-                                });
-
-                                if (data.trim() !== '') {
-                                    editor.ui.view.editable.element.classList.remove('error');
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            if (error.message.includes('cannot-convert-undefined-or-null')) {
-                                console.warn('CKEditor: Elemen target hilang saat inisialisasi.');
-                            } else {
-                                console.error(error);
-                            }
-                        });
-                }
-            };
-
-            // 2. Gunakan dua listener untuk memastikan editor tetap ada saat navigasi atau update
-            document.addEventListener('livewire:navigated', initEditor);
-
-            // Berguna jika editor berada di dalam elemen yang sering di-update Livewire
-            document.addEventListener('livewire:load', initEditor);
-
-            Livewire.on('validateCkEditorDescription', () => {
-                if (ckDescription?.ui?.view?.editable?.element) {
-                    const data = ckDescription.getData().trim();
-                    if (data === '') {
-                        ckDescription.ui.view.editable.element.classList.add('error');
-                    }
-                }
-            });
-
-            Livewire.on('reset-ckeditor-description', () => {
-                if (ckDescription) {
-                    ckDescription.setData('');
-                    ckDescription.ui.view.editable.element?.classList.remove('error');
-                }
-            });
-        </script>
     @endpush
 </section>
