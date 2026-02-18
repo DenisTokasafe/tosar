@@ -68,9 +68,9 @@
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <fieldset wire:key="field-description" class="mb-4 fieldset lg:col-span-2">
+                <fieldset  class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Deskripsi" required />
-                    <div x-data="ckeditorHelper('description')" wire:ignore>
+                    <div x-data="ckeditorHelper('description')" wire:ignore wire:key="field-description">
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
