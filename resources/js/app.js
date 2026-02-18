@@ -6,6 +6,8 @@ import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index";
 import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/plugins/monthSelect/style.css";
 import * as echarts from 'echarts';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+window.ClassicEditor = ClassicEditor;
 window.echarts = echarts
 window.flatpickr = flatpickr;
 window.monthSelectPlugin = monthSelectPlugin.default || monthSelectPlugin;

@@ -183,18 +183,19 @@
 
     @fluxScripts
     @livewireScripts
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js" crossorigin="anonymous"
-        referrerpolicy="no-referrer" defer></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
-                // Variabel lokal tetap di luar return object agar aman dari Proxy
+                // Variabel lokal tetap di luar return agar aman dari Proxy
                 let editorInstance = null;
 
                 return {
                     init() {
-                        // Inisialisasi CKEditor
-                        ClassicEditor
+                        // 1. Tambahkan pengecekan agar tidak inisialisasi dua kali pada elemen yang sama
+                        if (this.$refs.editorElement.querySelector('.ck-editor')) return;
+
+                        // 2. Gunakan window.ClassicEditor secara eksplisit (sesuai app.js Anda)
+                        window.ClassicEditor
                             .create(this.$refs.editorElement, {
                                 toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo',
                                     'redo'
@@ -204,17 +205,16 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // DATA AWAL: Ambil dari properti Livewire
+                                // Set data awal
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // EVENT: Sinkronisasi ke Backend
+                                // Sinkronisasi ke Backend
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    // Gunakan defer (true) agar tidak terlalu sering mengirim request jika tidak perlu
+                                    // Gunakan set dengan defer (true)
                                     this.$wire.set(modelName, data, true);
 
-                                    // Hapus class error jika ada isinya
                                     if (data.trim() !== '') {
                                         editorInstance.ui.view.editable.element.classList
                                             .remove('error');
@@ -223,26 +223,25 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        /** * PENYESUAIAN LIVEWIRE V3:
-                         * Data dikirim sebagai objek pertama dalam array params
-                         */
+                        // --- Event Listeners ---
 
-                        // 1. UPDATE DATA (Edit Mode)
-                        Livewire.on('update-editor-data', (event) => {
+                        // Handler untuk update data dari Livewire v3
+                        const updateHandler = (event) => {
                             const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
                                 editorInstance.setData(data.value || '');
                             }
-                        });
+                        };
 
-                        // 2. VALIDASI SPESIFIK
+                        Livewire.on('update-editor-data', updateHandler);
+
+                        // Validasi & Reset
                         Livewire.on(`validate-${modelName}`, () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
                             }
                         });
 
-                        // 3. VALIDASI & RESET UNIVERSAL
                         Livewire.on('validate-all-editors', () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
@@ -257,14 +256,11 @@
                         });
                     },
 
-                    /**
-                     * MEMBERSIHKAN INSTANCE (Penting agar tidak memory leak/duplikasi)
-                     */
                     destroy() {
                         if (editorInstance) {
                             editorInstance.destroy()
                                 .then(() => editorInstance = null)
-                                .catch(err => console.error(err));
+                                .catch(err => console.error('Destroy Error:', err));
                         }
                     }
                 }
