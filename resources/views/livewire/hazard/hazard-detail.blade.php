@@ -397,8 +397,8 @@
                             id="immediate_corrective_action">
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
-                    <x-form.file-upload label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)" model="new_doc_corrective"
-                        :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
+                    <x-form.file-upload label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)"
+                        model="new_doc_corrective" :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
 
                 </div>
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
@@ -782,15 +782,14 @@
             <h3 class="mb-4 text-lg font-bold">Edit Tindakan Lanjutan </h3>
 
             {{-- === Form Update === --}}
-            <fieldset class="fieldset md:col-span-1">
+
+            <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                 <x-form.label label="Deskripsi Tindakan" required />
-                <div wire:ignore>
-                    <textarea id="ckeditor-edit-action" class="w-full h-20 textarea textarea-bordered">{{ $edit_action_description }}</textarea>
+                <div x-data="ckeditorHelper('edit_action_description')" wire:ignore>
+                    <div x-ref="editorElement"></div>
                 </div>
-                <input type="hidden" wire:model.live="edit_action_description" id="edit_action_description">
                 <x-label-error :messages="$errors->get('edit_action_description')" />
             </fieldset>
-
             <div class="grid items-end grid-cols-1 gap-4 mt-4 md:grid-cols-3">
                 {{-- Batas Waktu --}}
                 <fieldset class="fieldset">
