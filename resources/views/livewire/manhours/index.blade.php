@@ -40,7 +40,7 @@
             <div class="w-full">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
-                    range_date: @entangle('range_date'),
+                    range_date: @entangle('range_date').live, // Tambahkan .live agar hook updated langsung terpanggil
 
                     initFlatpickr() {
                         if (this.fp) this.fp.destroy();
@@ -54,12 +54,10 @@
                             mode: 'range',
                             defaultDate: this.range_date,
                             onChange: (dates, str) => {
-                                // 1. Update variabel lokal (sinkron ke Livewire property via entangle)
-                                this.range_date = str;
-
-                                // 2. Jika ingin langsung eksekusi filter tanpa tekan tombol:
+                                // Hanya update saat 2 tanggal sudah terpilih (start & end)
+                                // Ini akan otomatis memicu public function updatedRangeDate($value)
                                 if (dates.length === 2) {
-                                   this.range_date = str;
+                                    this.range_date = str;
                                 }
                             },
                             locale: { rangeSeparator: ' Ke ' },
@@ -67,9 +65,7 @@
                     },
                     clearDate() {
                         if (this.fp) this.fp.clear();
-                        this.range_date = null;
-                        // Memanggil method di Livewire tanpa parameter
-                        this.$wire.clearFilter();
+                        this.range_date = null; // Memicu updatedRangeDate dengan nilai null (else condition)
                     }
                 }" x-init="initFlatpickr()">
 
@@ -77,8 +73,7 @@
                         class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
                         readonly />
 
-                    <button type="button" @click="clearDate()" class="btn btn-xs btn-neutral join-item"
-                        title="Bersihkan Filter">
+                    <button type="button" @click="clearDate()" class="btn btn-xs btn-neutral join-item">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-refresh-cw">
