@@ -447,6 +447,9 @@ class HazardForm extends Component
     }
     public function addAction()
     {
+          if ($this->description == '') {
+            $this->dispatch('validate-all-editors');
+        }
         if ($this->action_description == '') {
             $this->dispatch('validate-all-editors');
         }
