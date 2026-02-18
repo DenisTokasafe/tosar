@@ -40,7 +40,6 @@
             <div class="w-full">
                 <div class="join" wire:ignore x-data="{
                     fp: null,
-                    // Gunakan entangle agar data Alpine dan Livewire tersinkron otomatis
                     range_date: @entangle('range_date'),
 
                     initFlatpickr() {
@@ -53,12 +52,15 @@
                             altFormat: 'd-M-Y',
                             dateFormat: 'd-m-Y',
                             mode: 'range',
-                            // Set tanggal awal dari data yang sudah ada di Livewire
                             defaultDate: this.range_date,
                             onChange: (dates, str) => {
-                                // Update value ke variabel lokal (tersinkron ke Livewire via entangle)
+                                // 1. Update variabel lokal (sinkron ke Livewire property via entangle)
                                 this.range_date = str;
-                                $wire.set('range_date', null);
+
+                                // 2. Jika ingin langsung eksekusi filter tanpa tekan tombol:
+                                if (dates.length === 2) {
+                                    this.$wire.applyFilter(str);
+                                }
                             },
                             locale: { rangeSeparator: ' Ke ' },
                         });
@@ -66,7 +68,8 @@
                     clearDate() {
                         if (this.fp) this.fp.clear();
                         this.range_date = null;
-                        this.$wire.call('clearFilter');
+                        // Memanggil method di Livewire tanpa parameter
+                        this.$wire.clearFilter();
                     }
                 }" x-init="initFlatpickr()">
 
