@@ -528,9 +528,7 @@ class HazardForm extends Component
         $this->dispatch('validate-description');
         $this->dispatch('validate-immediate_corrective_action');
 
-        if ($this->description == '') {
-            $this->dispatch('validate-all-editors');
-        }
+
         $this->validate();
         $hasPartialAction = !empty($this->action_description);
 
