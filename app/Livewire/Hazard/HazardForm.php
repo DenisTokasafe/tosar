@@ -65,8 +65,7 @@ class HazardForm extends Component
     public $location_id;
     #[Validate]
     public $pelapor_id;
-    #[Validate('required|string')]
-    public $description;
+
     #[Validate('required|string')]
     public $immediate_corrective_action;
     #[Validate('required_without:contractor_id')]
@@ -109,6 +108,7 @@ class HazardForm extends Component
     public function rules()
     {
         $baseRules = [
+            'description'=>'required|string',
             'pelapor_id' => $this->manualPelaporMode ? 'nullable' : 'required',
             'manualPelaporName' => $this->manualPelaporMode ? 'required|string|max:255' : 'nullable',
         ];
@@ -447,9 +447,7 @@ class HazardForm extends Component
     }
     public function addAction()
     {
-          if ($this->description == '') {
-            $this->dispatch('validate-all-editors');
-        }
+
         if ($this->action_description == '') {
             $this->dispatch('validate-all-editors');
         }
