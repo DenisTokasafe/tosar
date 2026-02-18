@@ -164,6 +164,7 @@ class HazardForm extends Component
         'doc_corrective.mimes' => 'File tindakan perbaikan hanya boleh dalam format JPG, JPEG, PNG, DOC, DOCX atau PDF.',
         'doc_corrective.max'   => 'Ukuran file tindakan perbaikan maksimal 2 MB.',
     ];
+
     public function getHasWhatErrorProperty()
     {
         return $this->getErrorBag()->has('tipe_bahaya') || $this->getErrorBag()->has('sub_tipe_bahaya') || ($this->keyWord === 'kta' && $this->getErrorBag()->has('kondisi_tidak_aman')) || ($this->keyWord === 'tta' && $this->getErrorBag()->has('tindakan_tidak_aman'));
@@ -249,7 +250,10 @@ class HazardForm extends Component
             'contractor_id',
             'penanggungJawab',
             'tanggal',
+            'description',
+            'action_description'
         ];
+
         if (in_array($propertyName, $fieldsToValidate)) {
             $this->validateOnly($propertyName);
         }
