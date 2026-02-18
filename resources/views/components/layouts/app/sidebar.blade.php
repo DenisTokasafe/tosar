@@ -197,16 +197,16 @@
                     })
                     .then(editor => {
                         // PERBAIKAN: Bungkus dengan Alpine.raw agar tidak error Proxy
-                        validateEditor = Alpine.raw(editor);
+                        this.editor = Alpine.raw(editor);
 
-                        validateEditor.setData(this.$wire.get(modelName) || '');
+                        this.editor.setData(this.$wire.get(modelName) || '');
 
-                        validateEditor.model.document.on('change:data', () => {
-                            const data = validateEditor.getData();
+                        this.editor.model.document.on('change:data', () => {
+                            const data = this.editor.getData();
                             this.$wire.set(modelName, data, true);
 
                             if (data.trim() !== '') {
-                                validateEditor.ui.view.editable.element.classList.remove('error');
+                                this.editor.ui.view.editable.element.classList.remove('error');
                             }
                         });
                     })
@@ -215,7 +215,7 @@
                 // VALIDASI UNIVERSAL
                 Livewire.on('validate-all-editors', () => {
                     // Gunakan Alpine.raw lagi saat mengakses instance
-                    const rawEditor = Alpine.raw(validateEditor);
+                    const rawEditor = Alpine.raw(this.editor);
                     if (rawEditor) {
                         const data = rawEditor.getData().trim();
                         if (data === '') {
@@ -226,7 +226,7 @@
 
                 // RESET UNIVERSAL
                 Livewire.on('reset-all-editors', () => {
-                    const rawEditor = Alpine.raw(validateEditor);
+                    const rawEditor = Alpine.raw(this.editor);
                     if (rawEditor) {
                         rawEditor.setData('');
                         rawEditor.ui.view.editable.element.classList.remove('error');
