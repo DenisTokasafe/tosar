@@ -27,7 +27,7 @@
 
 <div {{ $attributes->merge(['class' => 'tooltip']) }} data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
-    <div class="z-40 tooltip-content {{ $tooltipColor }}">
+    <div class="z-[9999] tooltip-content {{ $tooltipColor }}">
         <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
     </div>
 
