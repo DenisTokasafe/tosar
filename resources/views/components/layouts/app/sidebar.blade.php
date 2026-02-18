@@ -183,7 +183,8 @@
 
     @fluxScripts
     @livewireScripts
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer" defer></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
