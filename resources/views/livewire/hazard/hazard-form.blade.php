@@ -222,9 +222,7 @@
                     <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
-                    <!-- Hidden input untuk binding Livewire -->
-                    <input name="immediate_corrective_action" type="hidden"
-                        wire:model.live="immediate_corrective_action" id="immediate_corrective_action">
+
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                 </fieldset>
                 <fieldset class=" fieldset">
