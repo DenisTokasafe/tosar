@@ -543,7 +543,7 @@ class HazardForm extends Component
         // $this->dispatch('validateCkEditorDescription');
 
         $this->validate();
-        if ($this->description == '') {
+        if (empty($this->description)) {
             $this->dispatch('validate-all-editors');
         }
         $hasPartialAction = !empty($this->action_description);
