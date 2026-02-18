@@ -234,25 +234,7 @@ class HazardForm extends Component
     }
 
     // Menangkap data dari CKEditor 'action_description'
-    #[On('updateActionDescription')]
-    public function updateActionDescription($actionData)
-    {
-        $this->action_description = $actionData;
-    }
 
-    // Menangkap data dari CKEditor 'immediate_corrective_action'
-    #[On('updateImmediateCorrectiveAction')]
-    public function updateImmediateCorrectiveAction($actionData)
-    {
-        $this->immediate_corrective_action = $actionData;
-    }
-
-    // Menangkap data dari CKEditor 'description'
-    #[On('updateDescriptionData')]
-    public function updateDescriptionData($descriptionData)
-    {
-        $this->description = $descriptionData;
-    }
     public function updated($propertyName)
     {
         $fieldsToValidate = [
