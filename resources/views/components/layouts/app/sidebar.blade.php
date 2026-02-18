@@ -183,57 +183,55 @@
 
     @fluxScripts
     @livewireScripts
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('ckeditorHelper', (modelName) => ({
-                editor: null,
-                init() {
-                    ClassicEditor
-                        .create(this.$refs.editorElement, {
-                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo',
-                                'redo'
-                            ],
-                            removePlugins: ['ImageUpload', 'EasyImage']
-                        })
-                        .then(editor => {
-                            validateEditor = editor;
-                            editor.setData(this.$wire.get(modelName) || '');
+   <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('ckeditorHelper', (modelName) => ({
+            editor: null,
+            init() {
+                ClassicEditor
+                    .create(this.$refs.editorElement, {
+                        toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                        removePlugins: ['ImageUpload', 'EasyImage']
+                    })
+                    .then(editor => {
+                        validateEditor = editor;
+                        editor.setData(this.$wire.get(modelName) || '');
 
-                            editor.model.document.on('change:data', () => {
-                                const data = editor.getData();
-                                this.$wire.set(modelName, data);
+                        editor.model.document.on('change:data', () => {
+                            const data = editor.getData();
+                            this.$wire.set(modelName, data);
 
-                                // Hapus error saat user mengetik
-                                if (data.trim() !== '') {
-                                    editor.ui.view.editable.element.classList.remove(
-                                        'error');
-                                }
-                            });
-                        })
-                        .catch(error => console.error(error));
-
-                    // VALIDASI UNIVERSAL
-                    // Cukup panggil 'validate-all-editors' dari Livewire,
-                    // maka semua CKEditor akan mengecek dirinya masing-masing.
-                     Livewire.on('validate-all-editors', () => {
-                        if (validateEditor) {
-                            const data = validateEditor.getData().trim();
-                            if (data === '') {
-                                validateEditor.ui.view.editable.element.classList.add('error');
+                            // Hapus error saat user mengetik
+                            if (data.trim() !== '') {
+                                editor.ui.view.editable.element.classList.remove('error');
                             }
+                        });
+                    })
+                    .catch(error => console.error(error));
+
+                // VALIDASI UNIVERSAL
+                // Cukup panggil 'validate-all-editors' dari Livewire,
+                // maka semua CKEditor akan mengecek dirinya masing-masing.
+                this.$wire.on('validate-all-editors', () => {
+                    if (validateEditor) {
+                        const data = validateEditor.getData().trim();
+                        if (data === '') {
+                            validateEditor.ui.view.editable.element.classList.add('error');
                         }
-                    });
-                    // RESET UNIVERSAL
-                     Livewire.on('reset-all-editors', () => {
-                        if (validateEditor) {
-                            validateEditor.setData('');
-                            validateEditor.ui.view.editable.element.classList.remove('error');
-                        }
-                    });
-                }
-            }))
-        })
-    </script>
+                    }
+                });
+
+                // RESET UNIVERSAL
+                this.$wire.on('reset-all-editors', () => {
+                    if (validateEditor) {
+                        validateEditor.setData('');
+                        validateEditor.ui.view.editable.element.classList.remove('error');
+                    }
+                });
+            }
+        }))
+    })
+</script>
     @stack('scripts')
 </body>
 

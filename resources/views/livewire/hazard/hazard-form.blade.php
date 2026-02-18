@@ -75,6 +75,7 @@
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
+
                 <fieldset class=" fieldset">
                     <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="doc_deskripsi"
                         :file="$doc_deskripsi" />
