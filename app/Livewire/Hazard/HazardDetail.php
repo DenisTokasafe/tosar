@@ -237,8 +237,10 @@ class HazardDetail extends Component
         $this->location_id = $this->hazard->location_id;
         $this->location_specific = $this->hazard->location_specific;
         $this->description = $this->hazard->description;
+        $this->dispatch('update-editor-data', name: 'description', value: $this->description);
         $this->doc_deskripsi = $this->hazard->doc_deskripsi;
         $this->immediate_corrective_action = $this->hazard->immediate_corrective_action;
+        $this->dispatch('update-editor-data', name: 'immediate_corrective_action', value: $this->immediate_corrective_action);
         $this->doc_corrective = $this->hazard->doc_corrective;
         $this->keyWord = $this->hazard->key_word;
         $this->kondisi_tidak_aman = $this->hazard->kondisi_tidak_aman_id;

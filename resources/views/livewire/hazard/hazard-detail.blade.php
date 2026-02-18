@@ -319,11 +319,9 @@
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <fieldset class="mb-4 fieldset lg:col-span-2">
                         <x-form.label label="Deskripsi" required />
-                        <div wire:ignore>
-                            <textarea id="ckeditor-description">{{ $description }}</textarea>
+                        <div x-data="ckeditorHelper('description')" wire:ignore>
+                            <div x-ref="editorElement"></div>
                         </div>
-                        <!-- Hidden input untuk binding Livewire -->
-                        <input type="hidden" wire:model.live="description" id="description">
                         <x-label-error :messages="$errors->get('description')" />
                     </fieldset>
                     <x-form.file-upload label="Lampirkan foto atau dokumentasi" model="new_doc_deskripsi"
@@ -387,14 +385,13 @@
                         addManualAction="addPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled" />
                 </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                    <fieldset class="mb-4 fieldset md:col-span-2">
-                        <x-form.label label="Tindakan perbaikan langsung" required />
-                        <div wire:ignore>
-                            <textarea id="ckeditor-immediate_corrective_action">{{ $immediate_corrective_action }}</textarea>
+                    <fieldset class="mb-4 fieldset md:col-span-2"wire:key="field-immediate">
+
+                        <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
+                        <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
+                            <div x-ref="editorElement"></div>
                         </div>
-                        <!-- Hidden input untuk binding Livewire -->
-                        <input type="hidden" wire:model.live="immediate_corrective_action"
-                            id="immediate_corrective_action">
+
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
                     <x-form.file-upload label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)"
@@ -493,13 +490,11 @@
                     <legend class="text-sm font-semibold card-title ">Tindakan Lanjutan</legend>
 
                     <!-- Deskripsi Tindakan -->
-                    <fieldset class="fieldset md:col-span-1">
+                    <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                         <x-form.label label="Deskripsi Tindakan" required />
-                        <div wire:ignore>
-                            <textarea id="ckeditor-action_description" class="w-full h-20 textarea textarea-bordered">{{ $action_description }}</textarea>
+                        <div x-data="ckeditorHelper('action_description')" wire:ignore>
+                            <div x-ref="editorElement"></div>
                         </div>
-                        <input name="action_description" type="hidden" wire:model.live="action_description"
-                            id="action_description">
                         <x-label-error :messages="$errors->get('action_description')" />
                     </fieldset>
                     <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
@@ -783,7 +778,7 @@
 
             {{-- === Form Update === --}}
 
-            <fieldset class="fieldset md:col-span-1" wire:key="field-action">
+            <fieldset class="fieldset md:col-span-1" wire:key="field-edit_action">
                 <x-form.label label="Deskripsi Tindakan" required />
                 <div x-data="ckeditorHelper('edit_action_description')" wire:ignore>
                     <div x-ref="editorElement"></div>
