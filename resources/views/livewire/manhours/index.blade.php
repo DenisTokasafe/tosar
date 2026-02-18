@@ -173,13 +173,11 @@
                                     initFlatpickr() {
                                         this.$nextTick(() => {
                                             if (this.fp) this.fp.destroy();
-
-                                            // Gunakan window.monthSelectPlugin secara eksplisit
                                             this.fp = flatpickr(this.$refs.input, {
                                                 disableMobile: true,
                                                 plugins: [
                                                     new window.monthSelectPlugin({
-                                                        shorthand: true,
+
                                                         dateFormat: 'Y-m',
                                                         altFormat: 'F Y',
                                                         theme: 'light'
