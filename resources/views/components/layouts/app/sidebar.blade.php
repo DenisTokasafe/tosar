@@ -195,11 +195,11 @@
                     })
                     .then(editor => {
                         validateEditor = editor;
-                        editor.setData(this.$wire.get(modelName) || '');
+                        editor.setData(Livewire.get(modelName) || '');
 
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-                            this.$wire.set(modelName, data);
+                            Livewire.set(modelName, data);
 
                             // Hapus error saat user mengetik
                             if (data.trim() !== '') {
@@ -212,7 +212,7 @@
                 // VALIDASI UNIVERSAL
                 // Cukup panggil 'validate-all-editors' dari Livewire,
                 // maka semua CKEditor akan mengecek dirinya masing-masing.
-                this.$wire.on('validate-all-editors', () => {
+                Livewire.on('validate-all-editors', () => {
                     if (validateEditor) {
                         const data = validateEditor.getData().trim();
                         if (data === '') {
@@ -222,7 +222,7 @@
                 });
 
                 // RESET UNIVERSAL
-                this.$wire.on('reset-all-editors', () => {
+                Livewire.on('reset-all-editors', () => {
                     if (validateEditor) {
                         validateEditor.setData('');
                         validateEditor.ui.view.editable.element.classList.remove('error');
