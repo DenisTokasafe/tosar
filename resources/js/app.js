@@ -8,7 +8,7 @@ import "flatpickr/dist/plugins/monthSelect/style.css";
 import * as echarts from 'echarts';
 window.echarts = echarts
 window.flatpickr = flatpickr;
-window.monthSelectPlugin = monthSelectPlugin;
+window.monthSelectPlugin = monthSelectPlugin.default || monthSelectPlugin;
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (registration) {
     }).catch(function (registrationError) {

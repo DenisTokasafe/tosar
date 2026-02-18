@@ -157,8 +157,7 @@
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
             {{ $data_manhours->links() }}
         </div>
-        <dialog id='manhours_modal' class="modal" wire:ignore.self
-            wire:target='update,store,close_modal,'>
+        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='update,store,close_modal,'>
             <div class="overflow-y-auto modal-box">
                 <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
                     <fieldset wire.ignore.self
@@ -174,19 +173,17 @@
                                     dateValue: @entangle('date').live,
                                     initFlatpickr() {
                                         this.$nextTick(() => {
-                                            // Hancurkan instance lama jika ada
                                             if (this.fp) this.fp.destroy();
-
                                             if (!this.$refs.input) return;
 
-                                            // Inisialisasi Flatpickr
                                             this.fp = flatpickr(this.$refs.input, {
-                                                disableMobile: true, // Month select plugin bekerja lebih baik dengan ini
+                                                disableMobile: true,
                                                 plugins: [
-                                                    new monthSelectPlugin({
+                                                    // Tambahkan window. di depan nama plugin
+                                                    new window.monthSelectPlugin({
                                                         shorthand: true,
-                                                        dateFormat: 'Y-m', // Format database (biasanya lebih aman)
-                                                        altFormat: 'F Y', // Tampilan ke user
+                                                        dateFormat: 'Y-m',
+                                                        altFormat: 'F Y',
                                                         theme: 'light'
                                                     })
                                                 ],
