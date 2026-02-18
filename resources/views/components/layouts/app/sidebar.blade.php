@@ -195,11 +195,11 @@
                     })
                     .then(editor => {
                         validateEditor = editor;
-                        editor.setData(Livewire.get(modelName) || '');
+                        editor.setData(this.$wire.get(modelName) || '');
 
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-                            Livewire.set(modelName, data);
+                            this.$wire.set(modelName, data);
 
                             // Hapus error saat user mengetik
                             if (data.trim() !== '') {
