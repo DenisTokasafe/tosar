@@ -167,7 +167,6 @@
                             {{-- Bulan --}}
                             <fieldset class="fieldset">
                                 <x-form.label label="Bulan" required />
-
                                 <div wire:ignore wire:key="manhours-month-picker" x-data="{
                                     fp: null,
                                     dateValue: @entangle('date').live,
