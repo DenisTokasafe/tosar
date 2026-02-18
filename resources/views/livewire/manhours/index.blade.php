@@ -57,10 +57,7 @@
                                 // 1. Update variabel lokal (sinkron ke Livewire property via entangle)
                                 this.range_date = str;
 
-                                // 2. Jika ingin langsung eksekusi filter tanpa tekan tombol:
-                                if (dates.length === 2) {
-                                    this.$wire.applyFilter(str);
-                                }
+
                             },
                             locale: { rangeSeparator: ' Ke ' },
                         });
