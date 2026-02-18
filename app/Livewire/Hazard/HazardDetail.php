@@ -946,6 +946,7 @@ class HazardDetail extends Component
 
     public function addActionHazard()
     {
+         $this->dispatch('validate-action_description');
         $this->validate(
             [
                 'action_description'       => 'required|string',
