@@ -52,7 +52,7 @@ class Index extends Component
     {
         $this->resetPage(); // Reset pagination ketika filter tanggal berubah
     }
-    public function updatedRangeDate($value)
+    public function applyFilter($value)
     {
         // Cek apakah nilai tidak kosong
         if (!empty($value)) {
