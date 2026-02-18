@@ -199,7 +199,7 @@
 
                         editor.model.document.on('change:data', () => {
                             const data = editor.getData();
-                            this.$wire.set(modelName, data);
+                            this.$wire.set(modelName, data,true);
 
                             // Hapus error saat user mengetik
                             if (data.trim() !== '') {
