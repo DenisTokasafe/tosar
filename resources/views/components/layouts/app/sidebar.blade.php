@@ -215,7 +215,7 @@
                     // VALIDASI UNIVERSAL
                     // Cukup panggil 'validate-all-editors' dari Livewire,
                     // maka semua CKEditor akan mengecek dirinya masing-masing.
-                    this.$wire.on('validate-all-editors', () => {
+                     Livewire.on('validate-all-editors', () => {
                         if (this.editor) {
                             const data = this.editor.getData().trim();
                             if (data === '') {
@@ -225,7 +225,7 @@
                     });
 
                     // RESET UNIVERSAL
-                    this.$wire.on('reset-all-editors', () => {
+                     Livewire.on('reset-all-editors', () => {
                         if (this.editor) {
                             this.editor.setData('');
                             this.editor.ui.view.editable.element.classList.remove('error');

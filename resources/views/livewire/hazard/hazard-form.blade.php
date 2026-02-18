@@ -593,6 +593,123 @@
     @push('scripts')
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         {{-- action_description --}}
+        <script>
+            let ckAction_description = null;
+
+            const initActionDescriptionEditor = () => {
+                const el = document.querySelector('#ckeditor-action_description');
+
+                // Cek 1: Pastikan elemen ada di halaman (mencegah error 'null to object')
+                // Cek 2: Pastikan belum di-init (mencegah error duplikasi)
+                if (el && !el.classList.contains('ck-initialized')) {
+                    ClassicEditor
+                        .create(el, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            ckAction_description = editor;
+                            el.classList.add('ck-initialized');
+
+                            editor.model.document.on('change:data', () => {
+                                const data = editor.getData();
+                                el.value = data;
+
+                                Livewire.dispatch('updateActionDescription', {
+                                    actionData: data
+                                });
+
+                                if (data.trim() !== '') {
+                                    editor.ui.view.editable.element.classList.remove('error');
+                                }
+                            });
+                        })
+                        .catch(error => console.warn('CKEditor Init Warning:', error));
+                }
+            };
+
+            // Jalankan setiap kali navigasi Livewire v3 selesai
+            document.addEventListener('livewire:navigated', initActionDescriptionEditor);
+
+            // Validasi
+            Livewire.on('validateCkEditorAddAction', () => {
+                if (ckAction_description?.ui?.view?.editable?.element) {
+                    const data = ckAction_description.getData().trim();
+                    if (data === '') {
+                        ckAction_description.ui.view.editable.element.classList.add('error');
+                    }
+                }
+            });
+
+            // Reset
+            Livewire.on('reset-ckeditor', () => {
+                if (ckAction_description) {
+                    ckAction_description.setData('');
+                    ckAction_description.ui.view.editable.element?.classList.remove('error');
+                }
+            });
+        </script>
+
+        {{-- immediate_corrective_action --}}
+        <script>
+            let ckImmediate_corrective_action = null;
+
+            const initImmediateEditor = () => {
+                const selector = '#ckeditor-immediate_corrective_action';
+                const element = document.querySelector(selector);
+
+                // Cek apakah elemen ada dan belum pernah di-init
+                if (element && !element.classList.contains('ck-initialized')) {
+                    ClassicEditor
+                        .create(element, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            ckImmediate_corrective_action = editor;
+                            element.classList.add('ck-initialized');
+
+                            editor.model.document.on('change:data', () => {
+                                const data = editor.getData();
+
+                                // Update textarea asli
+                                element.value = data;
+
+                                Livewire.dispatch('updateImmediateCorrectiveAction', {
+                                    actionData: data
+                                });
+
+                                if (data.trim() !== '') {
+                                    editor.ui.view.editable.element.classList.remove('error');
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            // Mencegah crash jika elemen mendadak hilang saat proses init
+                            console.warn('CKEditor Immediate Action: ', error.message);
+                        });
+                }
+            };
+
+            // Jalankan saat navigasi Livewire v3
+            document.addEventListener('livewire:navigated', initImmediateEditor);
+
+            Livewire.on('validateCkEditorImmediateCorrectiveAction', () => {
+                if (ckImmediate_corrective_action?.ui?.view?.editable?.element) {
+                    const data = ckImmediate_corrective_action.getData().trim();
+                    if (data === '') {
+                        ckImmediate_corrective_action.ui.view.editable.element.classList.add('error');
+                    }
+                }
+            });
+
+            Livewire.on('reset-ckeditor-immediate-corrective-action', () => {
+                if (ckImmediate_corrective_action) {
+                    ckImmediate_corrective_action.setData('');
+                    ckImmediate_corrective_action.ui.view.editable.element?.classList.remove('error');
+                }
+            });
+        </script>
 
         {{-- DESCRIPTION --}}
     @endpush
