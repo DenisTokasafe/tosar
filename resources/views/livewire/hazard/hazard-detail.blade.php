@@ -786,7 +786,7 @@
             <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                 <x-form.label label="Deskripsi Tindakan" required />
                 <div x-data="ckeditorHelper('edit_action_description')" wire:ignore>
-                    <div x-ref="editorElement">{{ $edit_action_description }}</div>
+                    <div x-ref="editorElement"></div>
                 </div>
                 <x-label-error :messages="$errors->get('edit_action_description')" />
             </fieldset>

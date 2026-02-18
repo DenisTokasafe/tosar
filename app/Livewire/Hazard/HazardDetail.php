@@ -1046,6 +1046,7 @@ class HazardDetail extends Component
         $this->edit_action_actual_close_date = optional($action->actual_close_date)->format('d-m-Y');
         $this->edit_action_responsible_id   = $action->responsible_id;
         $this->searchActResponsibilityEdit   = optional(User::find($action->responsible_id))->name;
+        $this->dispatch('update-editor-data', name: 'edit_action_description', value: $this->edit_action_description);
         // kirim event ke Alpine supaya modal dibuka setelah data siap
         $this->dispatch('open-edit-action');
     }
