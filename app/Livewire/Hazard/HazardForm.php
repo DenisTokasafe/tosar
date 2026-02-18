@@ -537,7 +537,7 @@ class HazardForm extends Component
     }
     public function submit()
     {
-
+        $this->dispatch('validate-all-editors');
         $this->dispatch('validateCkEditor');
         $this->dispatch('validateCkEditorImmediateCorrectiveAction');
         $this->dispatch('validateCkEditorDescription');
