@@ -187,11 +187,12 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
-                // Variabel lokal agar tidak terkena Proxy Alpine (Mencegah error '_events')
+                // Variabel lokal tetap di luar return object agar aman dari Proxy
                 let editorInstance = null;
 
                 return {
                     init() {
+                        // Inisialisasi CKEditor
                         ClassicEditor
                             .create(this.$refs.editorElement, {
                                 toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo',
@@ -202,15 +203,17 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // MENGAMBIL DATA AWAL: Otomatis memuat data dari property Livewire (Database)
+                                // DATA AWAL: Ambil dari properti Livewire
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
+                                // EVENT: Sinkronisasi ke Backend
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    // Sinkronisasi ke Backend (wire:model.live effect)
+                                    // Gunakan defer (true) agar tidak terlalu sering mengirim request jika tidak perlu
                                     this.$wire.set(modelName, data, true);
 
+                                    // Hapus class error jika ada isinya
                                     if (data.trim() !== '') {
                                         editorInstance.ui.view.editable.element.classList
                                             .remove('error');
@@ -219,45 +222,53 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // LISTENER UNTUK UPDATE DATA (Penting untuk Fitur Edit/Database)
-                        // Panggil ini dari Livewire: $this->dispatch('update-editor-data', name: 'description', value: 'isi baru');
-                        Livewire.on('update-editor-data', (data) => {
+                        /** * PENYESUAIAN LIVEWIRE V3:
+                         * Data dikirim sebagai objek pertama dalam array params
+                         */
+
+                        // 1. UPDATE DATA (Edit Mode)
+                        Livewire.on('update-editor-data', (event) => {
+                            const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
                                 editorInstance.setData(data.value || '');
                             }
                         });
 
-                        // 1. LISTENER SPESIFIK
+                        // 2. VALIDASI SPESIFIK
                         Livewire.on(`validate-${modelName}`, () => {
-                            if (editorInstance) {
-                                const data = editorInstance.getData().trim();
-                                if (data === '') {
-                                    editorInstance.ui.view.editable.element.classList.add('error');
-                                }
+                            if (editorInstance && editorInstance.getData().trim() === '') {
+                                editorInstance.ui.view.editable.element.classList.add('error');
                             }
                         });
 
-                        // 2. LISTENER UNIVERSAL
+                        // 3. VALIDASI & RESET UNIVERSAL
                         Livewire.on('validate-all-editors', () => {
-                            if (editorInstance) {
-                                const data = editorInstance.getData().trim();
-                                if (data === '') {
-                                    editorInstance.ui.view.editable.element.classList.add('error');
-                                }
+                            if (editorInstance && editorInstance.getData().trim() === '') {
+                                editorInstance.ui.view.editable.element.classList.add('error');
                             }
                         });
 
-                        // 3. RESET UNIVERSAL
                         Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
                                 editorInstance.ui.view.editable.element.classList.remove('error');
                             }
                         });
+                    },
+
+                    /**
+                     * MEMBERSIHKAN INSTANCE (Penting agar tidak memory leak/duplikasi)
+                     */
+                    destroy() {
+                        if (editorInstance) {
+                            editorInstance.destroy()
+                                .then(() => editorInstance = null)
+                                .catch(err => console.error(err));
+                        }
                     }
                 }
             })
-        })
+        });
     </script>
     @stack('scripts')
 </body>
