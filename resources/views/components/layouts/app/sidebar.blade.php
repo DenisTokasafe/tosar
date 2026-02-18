@@ -187,7 +187,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
-                // Variabel lokal agar tidak terkena Proxy Alpine
+                // Variabel lokal agar tidak terkena Proxy Alpine (Mencegah error '_events')
                 let editorInstance = null;
 
                 return {
@@ -201,10 +201,14 @@
                             })
                             .then(editor => {
                                 editorInstance = editor;
-                                editorInstance.setData(this.$wire.get(modelName) || '');
+
+                                // MENGAMBIL DATA AWAL: Otomatis memuat data dari property Livewire (Database)
+                                const initialData = this.$wire.get(modelName) || '';
+                                editorInstance.setData(initialData);
 
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
+                                    // Sinkronisasi ke Backend (wire:model.live effect)
                                     this.$wire.set(modelName, data, true);
 
                                     if (data.trim() !== '') {
@@ -215,8 +219,15 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // 1. LISTENER SPESIFIK (Contoh: validate-action_description)
-                        // Nama event akan menjadi dinamis sesuai modelName
+                        // LISTENER UNTUK UPDATE DATA (Penting untuk Fitur Edit/Database)
+                        // Panggil ini dari Livewire: $this->dispatch('update-editor-data', name: 'description', value: 'isi baru');
+                        Livewire.on('update-editor-data', (data) => {
+                            if (editorInstance && data.name === modelName) {
+                                editorInstance.setData(data.value || '');
+                            }
+                        });
+
+                        // 1. LISTENER SPESIFIK
                         Livewire.on(`validate-${modelName}`, () => {
                             if (editorInstance) {
                                 const data = editorInstance.getData().trim();
@@ -226,7 +237,7 @@
                             }
                         });
 
-                        // 2. LISTENER UNIVERSAL (Tetap ada jika ingin validasi semua sekaligus)
+                        // 2. LISTENER UNIVERSAL
                         Livewire.on('validate-all-editors', () => {
                             if (editorInstance) {
                                 const data = editorInstance.getData().trim();
