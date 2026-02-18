@@ -131,7 +131,7 @@ select:focus[data-flux-control] {
     padding: 1rem;
 }
 .ck-editor__editable.error {
-    border: 1px solid red !important;
+    border: 2px solid red !important;
 }
 .ck.ck-toolbar {
     border-radius: 0.5rem 0.5rem 0 0;
