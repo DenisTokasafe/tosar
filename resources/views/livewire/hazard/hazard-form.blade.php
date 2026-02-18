@@ -285,17 +285,17 @@
                         <div class="hidden mt-2 peer-checked/department:block">
                             {{-- Department --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id" placeholder="Cari Departemen..."
-                                    :options="$departments" :showdropdown="$showDropdown" clickaction="selectDepartment"
-                                    namedb="department_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
+                                    placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
+                                    clickaction="selectDepartment" namedb="department_name" />
                             </div>
                         </div>
                         <div class="hidden mt-2 peer-checked/company:block">
                             {{-- Contractor --}}
                             <div class="relative mb-1">
-                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor" placeholder="Cari Kontraktor..."
-                                    modelid="contractor_id" :options="$contractors" :showdropdown="$showContractorDropdown"
-                                    clickaction="selectContractor" namedb="contractor_name" />
+                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                    placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                                    :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
                             </div>
                         </div>
                     </fieldset>
@@ -706,51 +706,65 @@
 
         {{-- DESCRIPTION --}}
         <script>
+            // Gunakan pengecekan null yang lebih aman
             let ckDescription = null;
 
-            document.addEventListener('livewire:navigated', () => {
-                ClassicEditor
-                    .create(document.querySelector('#ckeditor-description'), {
-                        toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                        removePlugins: ['ImageUpload', 'EasyImage']
-                    })
-                    .then(editor => {
-                        ckDescription = editor;
+            const initEditor = () => {
+                const element = document.querySelector('#ckeditor-description');
 
-                        editor.model.document.on('change:data', () => {
-                            const data = editor.getData();
-                            document.querySelector('#ckeditor-description').value = data;
+                // 1. CEK: Pastikan elemen ada dan BELUM diinisialisasi (cegah duplikasi)
+                if (element && !element.classList.contains('ck-initialized')) {
+                    ClassicEditor
+                        .create(element, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            ckDescription = editor;
+                            element.classList.add('ck-initialized'); // Tandai agar tidak double init
 
-                            // 🛑 PERBAIKAN: Mengganti Livewire.find statis dengan dispatch
-                            Livewire.dispatch('updateDescriptionData', {
-                                descriptionData: data
+                            editor.model.document.on('change:data', () => {
+                                const data = editor.getData();
+
+                                // Gunakan dispatch untuk sinkronisasi ke Livewire
+                                Livewire.dispatch('updateDescriptionData', {
+                                    descriptionData: data
+                                });
+
+                                if (data.trim() !== '') {
+                                    editor.ui.view.editable.element.classList.remove('error');
+                                }
                             });
-
-                            if (data.trim() !== '') {
-                                editor.ui.view.editable.element.classList.remove('error');
+                        })
+                        .catch(error => {
+                            if (error.message.includes('cannot-convert-undefined-or-null')) {
+                                console.warn('CKEditor: Elemen target hilang saat inisialisasi.');
+                            } else {
+                                console.error(error);
                             }
                         });
-                    })
-                    .catch(error => console.error(error));
-            });
+                }
+            };
+
+            // 2. Gunakan dua listener untuk memastikan editor tetap ada saat navigasi atau update
+            document.addEventListener('livewire:navigated', initEditor);
+
+            // Berguna jika editor berada di dalam elemen yang sering di-update Livewire
+            document.addEventListener('livewire:load', initEditor);
 
             Livewire.on('validateCkEditorDescription', () => {
-                if (ckDescription) {
+                if (ckDescription?.ui?.view?.editable?.element) {
                     const data = ckDescription.getData().trim();
                     if (data === '') {
                         ckDescription.ui.view.editable.element.classList.add('error');
-                        return false;
                     }
                 }
-                return true;
             });
 
             Livewire.on('reset-ckeditor-description', () => {
                 if (ckDescription) {
                     ckDescription.setData('');
-                }
-                if (ckDescription?.ui?.view?.editable?.element) {
-                    ckDescription.ui.view.editable.element.classList.remove('error');
+                    ckDescription.ui.view.editable.element?.classList.remove('error');
                 }
             });
         </script>
