@@ -183,10 +183,10 @@
 
     @fluxScripts
     @livewireScripts
-   <script>
+  <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('ckeditorHelper', (modelName) => ({
-            // Definisikan properti lokal untuk setiap komponen
+            // Inisialisasi awal tetap null
             editor: null,
 
             init() {
@@ -196,39 +196,40 @@
                         removePlugins: ['ImageUpload', 'EasyImage']
                     })
                     .then(editor => {
-                        // SIMPAN KE PROPERTI LOKAL (this.editor)
-                        this.editor = editor;
+                        // PERBAIKAN: Bungkus dengan Alpine.raw agar tidak error Proxy
+                        this.editor = Alpine.raw(editor);
 
-                        editor.setData(this.$wire.get(modelName) || '');
+                        this.editor.setData(this.$wire.get(modelName) || '');
 
-                        editor.model.document.on('change:data', () => {
-                            const data = editor.getData();
+                        this.editor.model.document.on('change:data', () => {
+                            const data = this.editor.getData();
                             this.$wire.set(modelName, data, true);
 
                             if (data.trim() !== '') {
-                                // Gunakan this.editor
                                 this.editor.ui.view.editable.element.classList.remove('error');
                             }
                         });
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => console.error('CKEditor Error:', error));
 
                 // VALIDASI UNIVERSAL
                 Livewire.on('validate-all-editors', () => {
-                    // Setiap komponen Alpine akan mengecek 'this.editor'-nya masing-masing
-                    if (this.editor) {
-                        const data = this.editor.getData().trim();
+                    // Gunakan Alpine.raw lagi saat mengakses instance
+                    const rawEditor = Alpine.raw(this.editor);
+                    if (rawEditor) {
+                        const data = rawEditor.getData().trim();
                         if (data === '') {
-                            this.editor.ui.view.editable.element.classList.add('error');
+                            rawEditor.ui.view.editable.element.classList.add('error');
                         }
                     }
                 });
 
                 // RESET UNIVERSAL
                 Livewire.on('reset-all-editors', () => {
-                    if (this.editor) {
-                        this.editor.setData('');
-                        this.editor.ui.view.editable.element.classList.remove('error');
+                    const rawEditor = Alpine.raw(this.editor);
+                    if (rawEditor) {
+                        rawEditor.setData('');
+                        rawEditor.ui.view.editable.element.classList.remove('error');
                     }
                 });
             }
