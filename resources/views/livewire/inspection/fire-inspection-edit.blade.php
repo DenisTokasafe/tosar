@@ -21,8 +21,8 @@
                     <select wire:model.live="type"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                         <option value="">-- Pilih --</option>
-                        @foreach (array_keys($fields) as $key)
-                            <option value="{{ $key }}">{{ $key }}</option>
+                       @foreach ($availableTypes as $typeName)
+                            <option value="{{ $typeName }}">{{ $typeName }}</option>
                         @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('type')" />

@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Inspection;
 
-use Livewire\Component;
-use App\Models\User;
-use App\Models\Location;
 use App\Helpers\FileHelper;
-use Livewire\WithFileUploads;
 use App\Models\FireProtection;
+use App\Models\InspectionChecklist;
 use App\Models\InspectionSession;
+use App\Models\Location;
+use App\Models\User;
 use App\Traits\HasFireInspectionFields;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class FireInspectionEdit extends Component
 {
@@ -270,6 +271,8 @@ class FireInspectionEdit extends Component
 
     public function render()
     {
-        return view('livewire.inspection.fire-inspection-edit');
+        return view('livewire.inspection.fire-inspection-edit',[
+             'availableTypes' => InspectionChecklist::distinct()->pluck('equipment_type'),
+        ]);
     }
 }
