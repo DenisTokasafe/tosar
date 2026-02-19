@@ -125,7 +125,7 @@
                                     <x-button.btn-tooltip color="warning" icon="edit"
                                         wireClick="open_modal({{ $manhour->id }})" modalId="manhours_modal"
                                         tooltip="Detail" />
-                                    <x-button.btn-tooltip color="errpr" icon="delete"
+                                    <x-button.btn-tooltip color="error" icon="delete"
                                         wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
                                         tooltip="hapus data" />
                                 </th>
