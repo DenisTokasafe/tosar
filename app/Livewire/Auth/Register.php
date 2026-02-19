@@ -198,9 +198,9 @@ class Register extends Component
         ]);
         try {
             // Kirim email ke Admin (atau ke user itu sendiri jika maksudnya konfirmasi)
-            Mail::to('yoman.banea@archimining.com')->send(new RequestUserLoginMail($this->email_req,$this->name_req,$this->check_id));
+            Mail::to('yoman.banea@archimining.com')->send(new RequestUserLoginMail($this->email_req, $this->name_req, $this->check_id));
 
-            $this->reset('email_req','name_req');
+            $this->reset('email_req', 'name_req');
 
             // Menggunakan Flux notification jika Anda sudah menginstalnya,
             // atau tetap menggunakan session flash.
