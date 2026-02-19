@@ -8,7 +8,6 @@ use App\Models\Contractor;
 use App\Models\Department;
 use Livewire\Attributes\Layout;
 use Illuminate\Validation\Rules;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
