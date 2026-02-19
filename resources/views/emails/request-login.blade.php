@@ -8,7 +8,7 @@ Terdapat permintaan login baru dengan detail sebagai berikut:
 - **Nama:** {{ $name }}
 - **Email:** {{ $email }}
 
-<x-mail::button :url="route('people',$id_user)">
+<x-mail::button :url="route('people.details',$id_user)">
 Lihat Detail User
 </x-mail::button>
 
