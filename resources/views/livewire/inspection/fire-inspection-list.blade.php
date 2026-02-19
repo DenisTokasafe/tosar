@@ -78,16 +78,7 @@
             <div class="flex flex-row items-center justify-start gap-2 md:justify-center">
 
                 @if (count($selectedItems) > 0)
-                    <div class="tooltip md:tooltip-left">
-                        <div class="z-40 tooltip-content tooltip-error">
-                            <div class="text-sm font-black animate-bounce">hapus data pilihan</div>
-                        </div>
-                        <label
-                            onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()"
-                            wire:click="deleteSelected" class="btn btn-square btn-xs btn-soft btn-error">
-                            <x-icon.delete />
-                        </label>
-                    </div>
+                 <x-button.btn-tooltip color="error" icon="delete" wireClick="deleteSelected"  tooltip="hapus data pilihan"  onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()" />
                 @endif
                 <div class="tooltip md:tooltip-left">
                     <div class="z-40 tooltip-content tooltip-primary">
