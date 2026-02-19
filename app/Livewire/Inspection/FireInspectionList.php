@@ -4,6 +4,7 @@ namespace App\Livewire\Inspection;
 
 use App\Models\FireProtection;
 use App\Models\InspectionChecklist;
+use App\Models\InspectionSession;
 use App\Models\Location;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -119,36 +120,53 @@ class FireInspectionList extends Component
     {
         if (empty($this->selectedItems)) return;
 
-        // 1. Ambil semua path dokumentasi dari item yang akan dihapus
-        $inspections = FireProtection::whereIn('id', $this->selectedItems)
-            ->select('documentation_path')
+        // 1. Ambil data inspection beserta relasi session-nya
+        $inspections = FireProtection::with('inspectionSession')
+            ->whereIn('id', $this->selectedItems)
             ->get();
 
-        // 2. Loop untuk hapus file fisik dari storage
+        // 2. Kumpulkan ID Session unik yang terlibat dalam penghapusan ini
+        $sessionIds = $inspections->pluck('inspection_session_id')->unique();
+
         foreach ($inspections as $inspection) {
+            // --- A. Hapus Dokumentasi Produk (Selalu dihapus karena milik pribadi item) ---
             if ($inspection->documentation_path && Storage::disk('public')->exists($inspection->documentation_path)) {
                 Storage::disk('public')->delete($inspection->documentation_path);
             }
-            if ($inspection->inspectionSession->area_photo_path && Storage::disk('public')->exists($inspection->inspectionSession->area_photo_path)) {
-                Storage::disk('public')->delete($inspection->inspectionSession->area_photo_path);
+        }
+
+        // --- B. Logika Hapus Foto Area (Hanya jika SEMUA item di session tersebut dihapus) ---
+        foreach ($sessionIds as $sessionId) {
+            $session = InspectionSession::find($sessionId);
+
+            if ($session && $session->area_photo_path) {
+                // Hitung total item yang ada di database untuk session ini
+                $totalItemsInDb = FireProtection::where('inspection_session_id', $sessionId)->count();
+
+                // Hitung berapa banyak item dari session ini yang sedang dipilih untuk dihapus
+                $itemsToDeleteCount = $inspections->where('inspection_session_id', $sessionId)->count();
+
+                // JIKA jumlah yang dihapus SAMA DENGAN total yang ada di DB
+                if ($itemsToDeleteCount === $totalItemsInDb) {
+                    // Hapus file fisik foto area
+                    if (Storage::disk('public')->exists($session->area_photo_path)) {
+                        Storage::disk('public')->delete($session->area_photo_path);
+                    }
+
+                    // Set path di database jadi null (opsional jika session-nya tidak ikut dihapus)
+                    $session->update(['area_photo_path' => null]);
+                }
             }
         }
 
-        // 3. Baru hapus datanya dari database
+        // 3. Eksekusi hapus data dari database
         FireProtection::whereIn('id', $this->selectedItems)->delete();
 
-        // Reset state
+        // Reset UI State
         $this->selectedItems = [];
         $this->selectAll = false;
 
-        $this->dispatch(
-            'alert',
-            [
-                'text' => "Data dan file terkait berhasil dihapus!",
-                'duration' => 5000,
-                'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
-            ]
-        );
+        $this->dispatch('alert', ['text' => "Data berhasil dibersihkan!"]);
     }
 
     public function exportPDF()
