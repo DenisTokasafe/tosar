@@ -122,28 +122,12 @@
                             <td>{{ $manhour->manpower }}</td>
                             @can('create', \App\Models\Manhour::class)
                                 <th class='flex flex-row justify-center gap-2'>
- <x-button.btn-tooltip color="warning" icon="edit" wireClick="open_modal({{ $manhour->id }})" modalId="manhours_modal" tooltip="Detail" />
-                                    <div class="tooltip">
-                                        <div class="z-50 tooltip-content tooltip-warning">
-                                            <div class="text-sm font-black animate-bounce">Edit</div>
-                                        </div>
-                                        <label onclick="manhours_modal.showModal()"
-                                            wire:click="open_modal({{ $manhour->id }})"
-                                            class="btn btn-square btn-xs btn-soft btn-warning">
-                                            <x-icon.edit />
-                                        </label>
-                                    </div>
-                                    <div class="tooltip ">
-                                        <div class="z-50 tooltip-content tooltip-error">
-                                            <div class="text-sm font-black animate-bounce">hapus data </div>
-                                        </div>
-                                        <label wire:click="showDelete({{ $manhour->id }})"
-                                            onclick="delete_modal.showModal()"
-                                            class="btn btn-square btn-xs btn-soft btn-error">
-                                            <x-icon.delete />
-                                        </label>
-                                    </div>
-
+                                    <x-button.btn-tooltip color="warning" icon="edit"
+                                        wireClick="open_modal({{ $manhour->id }})" modalId="manhours_modal"
+                                        tooltip="Detail" />
+                                    <x-button.btn-tooltip color="errpr" icon="delete"
+                                        wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
+                                        tooltip="hapus data" />
                                 </th>
                             @endcan
                         </tr>
