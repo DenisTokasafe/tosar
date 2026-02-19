@@ -118,7 +118,6 @@
                             </label>
                         </div>
                     @elseif ($area_photo_path)
-                        <div>{{ $area_photo_path }} ====== {{ $new_area_photo_path }}</div>
                         <div class="mt-2 position-relative d-inline-block">
                             <img src="{{ asset('storage/' . $area_photo_path) }}" style="height: 150px;"
                                 class="img-thumbnail border-secondary">
