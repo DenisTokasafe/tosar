@@ -163,7 +163,9 @@
                         PDF...</span>
                 </label>
             </div>
-            <label class="modal-backdrop" for="my_modal_6">Close</label>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
         </dialog>
 
         <div class="my-10 overflow-x-auto">
