@@ -9,11 +9,11 @@
                     <div class="me-10 w-full pb-4 md:w-[220px]">
                         <flux:navlist>
                             <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
-
                         </flux:navlist>
                     </div>
 
                     <flux:separator class="md:hidden" />
+                    <flux:separator vertical class="hidden md:block" />
 
                     <div class="self-stretch flex-1 max-md:pt-6">
                         <flux:heading>{{ $heading ?? '' }}</flux:heading>
