@@ -6,7 +6,7 @@
             class="flex-1 h-full p-4 overflow-x-hidden ">
             <div class="w-full max-w-full ">
                 <div class="flex items-start max-md:flex-col">
-                    <div class=" gap-4 w-full pb-4 md:w-[220px] overflow-y-auto">
+                    <div class=" gap-4 w-full p-2 md:w-[220px] overflow-y-auto ">
                         <flux:navlist>
                             <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
                         </flux:navlist>
