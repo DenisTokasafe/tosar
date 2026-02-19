@@ -4,10 +4,12 @@ namespace App\Livewire\Administration\People;
 
 use App\Models\Contractor;
 use App\Models\Department;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Illuminate\Validation\Rule;
+
 class Details extends Component
 {
     public $userId, $name_user;
@@ -110,7 +112,10 @@ class Details extends Component
     }
     public function render()
     {
-        return view('livewire.administration.people.details');
+        return view('livewire.administration.people.details', [
+            'users' => User::search(trim($this->searchTerm))->paginate(20),
+            'role' => Role::all()
+        ]);
     }
 
     public function mount($id)
