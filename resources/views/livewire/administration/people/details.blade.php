@@ -1,6 +1,6 @@
 <section class="w-full">
     <x-toast />
-    <x-tabs-relation.layout>
+    <x-tabs-people.layout>
 test
-    </x-tabs-relation.layout>
+    </x-tabs-people.layout>
 </section>
