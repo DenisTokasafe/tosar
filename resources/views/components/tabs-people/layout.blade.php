@@ -11,12 +11,8 @@
                                 {{ __('Details') }}</flux:navlist.item>
                         </flux:navlist>
                     </div>
-
-
                         <flux:separator class="md:hidden" />
                         <flux:separator vertical class="hidden m-2 md:block" />
-
-
                     <div class="self-stretch flex-1 max-md:pt-6">
 
                         <div class="w-full mt-5 ">
