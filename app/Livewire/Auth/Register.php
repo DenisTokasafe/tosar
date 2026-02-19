@@ -21,6 +21,7 @@ class Register extends Component
     public string $first_name = '';
     public string $last_name = '';
     public string $name = '';
+    public string $name_req = '';
     public string $email_req = '';
     public string $username = '';
     public string $email = '';
@@ -189,15 +190,18 @@ class Register extends Component
     {
         $this->validate([
             'email_req' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+            'name_req' => ['required','string','max:255']
         ], [
+
             'email_req.required' => 'Email wajib diisi untuk request pembuatan user login.',
+            'name_req.required' => 'Nama Lengkap wajib diisi untuk request pembuatan user login.',
             'email_req.email' => 'Format email tidak valid.',
         ]);
         try {
             // Kirim email ke Admin (atau ke user itu sendiri jika maksudnya konfirmasi)
-            Mail::to('yoman.banea@archimining.com')->send(new RequestUserLoginMail($this->email_req));
+            Mail::to('yoman.banea@archimining.com')->send(new RequestUserLoginMail($this->email_req,$this->name_req));
 
-            $this->reset('email_req');
+            $this->reset('email_req','name_req');
 
             // Menggunakan Flux notification jika Anda sudah menginstalnya,
             // atau tetap menggunakan session flash.

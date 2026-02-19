@@ -34,7 +34,8 @@
         </p>
 
         <div class="flex flex-col justify-center gap-4">
-            <x-form.input-text label="Masukan email kantor anda untuk request pembuatan user login" type='email' model="email_req" placeholder="Masukkan email" required />
+            <x-form.input-text label="Nama Lengkap" model="name_req" placeholder="Nama Lengkap..." required />
+            <x-form.input-text label="Masukan email kantor anda untuk request pembuatan user login" type='email' model="email_req" placeholder="Masukkan email.." required />
             <div class="flex items-center justify-end mt-4">
                 <flux:button size="sm" variant="primary" class="w-full" wire:click="requestUserLogin">
                     {{ __('Request User Login') }}

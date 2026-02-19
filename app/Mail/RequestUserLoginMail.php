@@ -13,35 +13,35 @@ use Illuminate\Queue\SerializesModels;
 class RequestUserLoginMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $id_user;
+   public $id_user;
+    public $name; // Tambahkan property untuk nama
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $email)
+   public function __construct(public string $email, string $name_req)
     {
-        $id_user = User::where('email', $email)->first();
-        if ($id_user) {
-            $this->id_user = $id_user->id;
+        $this->name = $name_req;
+
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            $this->id_user = $user->id;
         }
     }
 
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
+  public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Request User Login Mail',
+            subject: 'Request User Login: ' . $this->name, // Subjek lebih dinamis
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
-       return new Content(
-            markdown: 'emails.request-login', // Kita gunakan markdown agar rapi
+        return new Content(
+            markdown: 'emails.request-login',
         );
     }
 

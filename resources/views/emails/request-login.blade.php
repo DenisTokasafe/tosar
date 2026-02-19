@@ -1,12 +1,15 @@
 <x-mail::message>
-# Request Pembuatan Akun
+# Request Akses Login
 
 Halo Admin,
 
-Seseorang dengan alamat email **{{ $email }}** telah mengajukan permintaan untuk pembuatan akun user login baru di sistem.
+Terdapat permintaan login baru dengan detail sebagai berikut:
+
+- **Nama:** {{ $name }}
+- **Email:** {{ $email }}
 
 <x-mail::button :url="route('people')">
-Proses Sekarang
+Lihat Detail User
 </x-mail::button>
 
 Terima kasih,<br>

@@ -14,7 +14,6 @@ use App\Models\Department;
 use App\Models\Likelihood;
 use App\Helpers\FileHelper;
 use App\Helpers\MailHelper;
-use Livewire\Attributes\On;
 use App\Models\ActionHazard;
 use App\Models\EventSubType;
 use App\Models\ErmAssignment;
@@ -24,9 +23,7 @@ use App\Models\RiskMatrixCell;
 use App\Models\RiskConsequence;
 use App\Models\UnsafeCondition;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessmentMatrix;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\DateBeforeOrEqualToday;
@@ -640,16 +637,17 @@ class HazardForm extends Component
             // 3. Notifikasi
             // Dapatkan Penanggung Jawab dari relasi
             $penanggungJawab = $hazard->penanggung_jawab_id;
+            $responsibility = $hazard->penanggungJawab->name;
             if ($penanggungJawab) {
                 MailHelper::sendToUserId(
                     $penanggungJawab,
-                    'Notifikasi Laporan Hazard',
+                    'Anda Menjadi PIC di laporan Hazard Ini',
                     'emails.notification',
                     [
                         'subject'       => 'Laporan Hazard Baru',
                         'title'         => 'Notifikasi Laporan Hazard',
-                        'messageText'   => "Telah dibuat laporan hazard baru.\nSilakan lakukan pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nStatus:  $status",
+                        'messageText'   => "Telah dibuat laporan hazard baru.\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\Penanggung Jawab Area: $responsibility\nStatus: $status",
                         'actionUrl'     => route('hazard-detail', $hazard->id)
                     ]
                 );
