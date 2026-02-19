@@ -56,14 +56,8 @@
                                 <td>{{ $user->email }}</td>
                                 <td class="flex gap-2">
                                     <!-- Edit -->
+                                    <x-button.btn-tooltip color="warning" icon="edit" href="{{ route('people.details', $user->id) }}" tooltip="Details" />
 
-                                    <div class="tooltip tooltip-right ">
-                                        <div class="tooltip-content ">
-                                            <div class="text-xs font-black animate-bounce text-warning">Edit</div>
-                                        </div>
-                                        <flux:button wire:click="edit({{ $user->id }})" size="xs"
-                                            icon="pencil-square" variant="subtle"></flux:button>
-                                    </div>
                                     <!-- Delete -->
                                     <div class="tooltip tooltip-right ">
                                         <div class="tooltip-content ">

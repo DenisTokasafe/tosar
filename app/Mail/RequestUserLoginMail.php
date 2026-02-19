@@ -18,11 +18,11 @@ class RequestUserLoginMail extends Mailable
     /**
      * Create a new message instance.
      */
-   public function __construct(public string $email, string $name_req)
+   public function __construct(public string $email, string $name_req,string $id_users)
     {
         $this->name = $name_req;
 
-        $user = User::where('email', $email)->first();
+        $user = User::where('employee_id', $id_users)->first();
         if ($user) {
             $this->id_user = $user->id;
         }
