@@ -55,6 +55,7 @@ class FireInspectionEdit extends Component
         $this->old_documentation = $inspection->documentation_path;
 
         $this->area_photo_path = $inspection->inspectionSession->area_photo_path;
+        dd($this->area_photo_path);
         // Load Inspected Users
         if ($inspection->inspected_by) {
             $names = explode('|', $inspection->inspected_by);
