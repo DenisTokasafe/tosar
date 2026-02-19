@@ -18,8 +18,6 @@
 
 
                     <div class="self-stretch flex-1 max-md:pt-6">
-                        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-                        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
 
                         <div class="w-full mt-5 ">
                             {{ $slot }}
