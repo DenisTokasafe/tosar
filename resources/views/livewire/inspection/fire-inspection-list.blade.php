@@ -84,7 +84,7 @@
                 @endif
                 <x-button.btn-tooltip color="primary" icon="add" href="{{ route('fire-inspection') }}"
                     tooltip="Laporan Baru" />
-                <x-button.btn-tooltip color="info" icon="file-download" modalId="import_modal" tooltip="export PDF" />
+                <x-button.btn-tooltip color="accent" icon="file-download" modalId="import_modal" tooltip="export PDF" />
             </div>
         </div>
         <dialog id='import_modal' class="modal" wire:ignore.self>
