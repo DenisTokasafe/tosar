@@ -78,30 +78,17 @@
             <div class="flex flex-row items-center justify-start gap-2 md:justify-center">
 
                 @if (count($selectedItems) > 0)
-                 <x-button.btn-tooltip color="error" icon="delete" wireClick="deleteSelected"  tooltip="hapus data pilihan"  onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()" />
+                    <x-button.btn-tooltip color="error" icon="delete" wireClick="deleteSelected"
+                        tooltip="hapus data pilihan"
+                        onclick="confirm('Yakin ingin menghapus {{ count($selectedItems) }} data?') || event.stopImmediatePropagation()" />
                 @endif
-                <div class="tooltip md:tooltip-left">
-                    <div class="z-40 tooltip-content tooltip-primary">
-                        <div class="text-sm font-black animate-bounce">Laporan Baru</div>
-                    </div>
-                    <a href="{{ route('fire-inspection') }}" class="text-xs uppercase btn btn-square btn-primary btn-xs btn-soft">
-                       <x-icon.add />
-                    </a>
-                </div>
-                <div class="tooltip md:tooltip-left">
-                    <div class="z-40 tooltip-content tooltip-accent">
-                        <div class="text-sm font-black animate-bounce">export PDF</div>
-                    </div>
-                    <label wire:click='clear_filter' for="my_modal_6" class="btn btn-square btn-xs btn-soft btn-accent">
-                       <x-icon.file-download />
-                    </label>
-                </div>
-
-
+                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('fire-inspection') }}"
+                    tooltip="Laporan Baru" />
+                <x-button.btn-tooltip color="info" icon="file-download" wireClick="open_modal({{ $manhour->id }})"
+                    modalId="import_modal" tooltip="export PDF" />
             </div>
         </div>
-        <input type="checkbox" id="my_modal_6" class="modal-toggle" />
-        <div class="modal" role="dialog">
+        <dialog id='import_modal' class="modal" wire:ignore.self>
             <div class="modal-box">
                 <h3 class="mb-2 text-lg font-bold">Export To PDF!</h3>
                 <fieldset class="w-full fieldset ">
@@ -160,9 +147,9 @@
                     </div>
                     <x-label-error :messages="$errors->get('date')" />
                 </fieldset>
-                <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation"
-                    modelid="location_id" placeholder="Area..." :options="$locations" :showdropdown="$show_location"
-                    clickaction="selectLocation" namedb="name" />
+                <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id"
+                    placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                    namedb="name" />
                 <label wire:click="exportPDF" wire:loading.attr="disabled"
                     class="flex items-center gap-2 text-white btn btn-error btn-sm">
                     {{-- Icon PDF --}}
@@ -178,7 +165,7 @@
                 </label>
             </div>
             <label class="modal-backdrop" for="my_modal_6">Close</label>
-        </div>
+        </dialog>
 
         <div class="my-10 overflow-x-auto">
             <table class="table table-xs table-zebra">
