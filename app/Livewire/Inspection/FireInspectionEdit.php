@@ -23,6 +23,7 @@ class FireInspectionEdit extends Component
     public $dokumentasi; // File baru yang diupload
     public $old_documentation; // Path file lama dari DB
     public $area_photo_path;
+    public $inspection_session;
 
     // Property untuk Searchable Dropdowns
     public $searchLocation = '';
@@ -41,6 +42,7 @@ class FireInspectionEdit extends Component
     {
         $inspection = FireProtection::findOrFail($id);
         $this->inspectionId = $id;
+        $this->inspection_session = $inspection->inspectionSession->id;
         $this->equipment_master_id = $inspection->equipment_master_id;
         $this->type = $inspection->equipmentMaster->type;
         $this->location = $inspection->equipmentMaster->specific_location;
@@ -176,11 +178,10 @@ class FireInspectionEdit extends Component
 
             // Update path untuk semua record yang satu lokasi/area (jika diperlukan sinkronisasi)
             // atau cukup untuk record ini saja:
-            $data['area_photo_path'] = $path;
             $newAreaPhotoPath = $path;
         }
         FireProtection::find($this->inspectionId)->update($data);
-        InspectionSession::where('id', FireProtection::find($this->inspectionId)->inspection_session_id)
+        InspectionSession::whereId('id',$this->inspection_session)
             ->update([
                 'inspection_date' => $this->inspection_date,
                 'area_photo_path' =>  $newAreaPhotoPath
