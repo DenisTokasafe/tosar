@@ -42,7 +42,7 @@ class FireInspectionEdit extends Component
     {
         $inspection = FireProtection::findOrFail($id);
         $this->inspectionId = $id;
-        $this->inspection_session = $inspection->inspectionSession->id;
+        $this->inspection_session = $inspection->inspectionSession;
         $this->equipment_master_id = $inspection->equipment_master_id;
         $this->type = $inspection->equipmentMaster->type;
         $this->location = $inspection->equipmentMaster->specific_location;
