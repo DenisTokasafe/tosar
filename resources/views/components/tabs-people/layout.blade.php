@@ -1,12 +1,12 @@
 @props(['idUser'])
 <x-tabs-relation.layout>
     <div
-        class="flex w-full flex-1 flex-col gap-4   h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
+        class="flex w-full flex-1 flex-col    h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
         <div
             class="flex-1 h-full p-4 overflow-x-hidden ">
             <div class="w-full max-w-full ">
                 <div class="flex items-start max-md:flex-col">
-                    <div class=" w-full pb-4 md:w-[220px] overflow-y-auto">
+                    <div class=" gap-4 w-full pb-4 md:w-[220px] overflow-y-auto">
                         <flux:navlist>
                             <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
                         </flux:navlist>
