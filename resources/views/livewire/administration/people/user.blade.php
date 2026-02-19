@@ -19,6 +19,7 @@
                     <flux:tooltip content="tambah data" position="top">
                         <flux:button size="xs" wire:click="create" icon="add-icon" variant="primary"></flux:button>
                     </flux:tooltip>
+                    <x-button.btn-tooltip color="warning" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
                     <flux:tooltip content="Import data" position="top">
                         <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="import"
                             variant="subtle"></flux:button>
@@ -77,7 +78,7 @@
     {{ $users->links() }}
 
     {{-- Create/Edit Modal --}}
-    <dialog class="modal" @if ($showModal) open @endif>
+    <dialog id="create_modal" class="modal" >
         <div class="w-11/12 max-w-2xl modal-box">
             <h3 class="text-lg font-bold">{{ $userId ? 'Edit User ' . $name_user : 'Add User' }}</h3>
 

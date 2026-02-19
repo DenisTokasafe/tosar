@@ -334,7 +334,6 @@ class User extends Component
     public function save()
     {
         $this->validate();
-
         $userData = [
             'name' => $this->name,
             'gender' => $this->gender,
@@ -354,11 +353,9 @@ class User extends Component
         }
 
         // Asumsi: UserProfile adalah model yang tepat (misalnya App\Models\User atau UserProfile)
-        UserProfile::updateOrCreate(
-            ['id' => $this->userId],
+        UserProfile::create(
             $userData
         );
-
         $this->resetInput();
         $this->showModal = false;
         $text = $this->userId ? 'user berhasil diupdate!' : 'user berhasil ditambahkan!';
