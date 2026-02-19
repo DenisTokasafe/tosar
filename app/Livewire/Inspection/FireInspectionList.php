@@ -8,6 +8,7 @@ use App\Models\Location;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -118,7 +119,22 @@ class FireInspectionList extends Component
     {
         if (empty($this->selectedItems)) return;
 
-        // Proses hapus
+        // 1. Ambil semua path dokumentasi dari item yang akan dihapus
+        $inspections = FireProtection::whereIn('id', $this->selectedItems)
+            ->select('documentation_path')
+            ->get();
+
+        // 2. Loop untuk hapus file fisik dari storage
+        foreach ($inspections as $inspection) {
+            if ($inspection->documentation_path && Storage::disk('public')->exists($inspection->documentation_path)) {
+                Storage::disk('public')->delete($inspection->documentation_path);
+            }
+            if ($inspection->inspectionSession->area_photo_path && Storage::disk('public')->exists($inspection->inspectionSession->area_photo_path)) {
+                Storage::disk('public')->delete($inspection->inspectionSession->area_photo_path);
+            }
+        }
+
+        // 3. Baru hapus datanya dari database
         FireProtection::whereIn('id', $this->selectedItems)->delete();
 
         // Reset state
@@ -128,11 +144,8 @@ class FireInspectionList extends Component
         $this->dispatch(
             'alert',
             [
-                'text' => "Data berhasil di hapus!!!",
+                'text' => "Data dan file terkait berhasil dihapus!",
                 'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
                 'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
             ]
         );
