@@ -122,8 +122,7 @@
                             <td>{{ $manhour->manpower }}</td>
                             @can('create', \App\Models\Manhour::class)
                                 <th class='flex flex-row justify-center gap-2'>
-                                    <x-button.btn-tooltip color="warning" icon="edit" :wireClick="open_modal({{ $manhour->id }})" onclick="manhours_modal.showModal()"
-                                        tooltip="Detail" />
+                                    <x-button.btn-tooltip color="warning" icon="edit" wireClick="open_modal({{ $manhour->id }})" onclick="manhours_modal.showModal()"tooltip="Detail" />
 
                                     <div class="tooltip ">
                                         <div class="z-50 tooltip-content tooltip-error">
