@@ -1,22 +1,33 @@
-<div class="flex flex-col ">
-    <div class="w-full md:w-60">
-        {{-- <flux:navlist-horizontal>
-            <flux:navlist-horizontal.item :href="route('administration-department-group')"
-                wire:navigate>{{ __('Departemen Group') }}</flux:navlist-horizontal.item>
-            <flux:navlist-horizontal.item :href="route('administration-department-group-group')"
-                wire:navigate>{{ __('Group') }}</flux:navlist-horizontal.item>
-        </flux:navlist-horizontal> --}}
-    </div>
-    <div class="py-2 ">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
+<div class="py-2 ">
+    <flux:heading>{{ $heading ?? '' }}</flux:heading>
+    <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
+    <div
+        class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
         <div
-            class="flex w-full flex-1 flex-col gap-4 rounded-xl inset-shadow-sm h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)]">
-            <div
-                class="flex-1 h-full p-4 overflow-x-hidden overflow-y-auto border rounded-xl border-neutral-200 dark:border-base-200">
-                <div class="w-full max-w-full ">
+            class="flex-1 h-full p-4 overflow-x-hidden overflow-y-auto border rounded-xl border-neutral-200 dark:border-base-200">
+            <div class="w-full max-w-full ">
+                <div class="flex items-start max-md:flex-col">
+                    <div class="me-10 w-full pb-4 md:w-[220px]">
+                        <flux:navlist>
+                            <flux:navlist.item :href="route('settings.profile')" wire:navigate>{{ __('Profile') }}
+                            </flux:navlist.item>
+                            <flux:navlist.item :href="route('settings.password')" wire:navigate>{{ __('Password') }}
+                            </flux:navlist.item>
+                            <flux:navlist.item :href="route('settings.appearance')" wire:navigate>{{ __('Appearance') }}
+                            </flux:navlist.item>
+                        </flux:navlist>
+                    </div>
 
-                    {{ $slot }}
+                    <flux:separator class="md:hidden" />
+
+                    <div class="self-stretch flex-1 max-md:pt-6">
+                        <flux:heading>{{ $heading ?? '' }}</flux:heading>
+                        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
+
+                        <div class="w-full mt-5 ">
+                            {{ $slot }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
