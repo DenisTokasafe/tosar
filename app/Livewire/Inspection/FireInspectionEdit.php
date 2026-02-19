@@ -180,7 +180,7 @@ class FireInspectionEdit extends Component
         }
 
         FireProtection::find($this->inspectionId)->update($data);
-        InspectionSession::whereId('id', $this->inspection_session)
+        InspectionSession::whereId($this->inspection_session)
             ->update([
                 'inspection_date' => $this->inspection_date,
                 'area_photo_path' =>  $this->area_photo_path
