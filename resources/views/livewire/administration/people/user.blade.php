@@ -16,9 +16,6 @@
                 </div>
                 <div>
 
-                    <flux:tooltip content="tambah data" position="top">
-                        <flux:button size="xs" wire:click="create" icon="add-icon" variant="primary"></flux:button>
-                    </flux:tooltip>
                     <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
                     <flux:tooltip content="Import data" position="top">
                         <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="import"
@@ -58,15 +55,9 @@
                             <td class="flex gap-2">
                                 <!-- Edit -->
                                 <x-button.btn-tooltip color="warning" icon="edit" href="{{ route('people.details', $user->id) }}" tooltip="Details" />
+                                <x-button.btn-tooltip color="error" icon="delete" modalId="delete_modal" tooltip="Hapus" />
 
                                 <!-- Delete -->
-                                <div class="tooltip tooltip-right ">
-                                    <div class="tooltip-content ">
-                                        <div class="text-xs font-black animate-bounce text-error">Delete</div>
-                                    </div>
-                                    <flux:button wire:click="confirmDelete({{ $user->id }})" size="xs"
-                                        icon="trash" variant="danger"></flux:button>
-                                </div>
 
                             </td>
                         </tr>
@@ -272,13 +263,15 @@
     </dialog>
 
     {{-- Delete Confirmation Modal --}}
-    <dialog class="modal" @if ($showDeleteModal) open @endif>
+    <dialog class="modal" wire:ignore.self id="delete_modal">
         <div class="modal-box">
-            <h3 class="text-lg font-bold">Confirm Delete</h3>
-            <p>Are you sure you want to delete this user?</p>
+            <h3 class="text-lg font-bold">Konfirmasi Penghapusan</h3>
+            <p>Yakin menghapus Data User ini?</p>
             <div class="modal-action">
-                <button class="btn" wire:click="$set('showDeleteModal', false)">Cancel</button>
-                <button class="btn btn-error" wire:click="delete">Delete</button>
+                 <form method="dialog">
+                    <button class="btn btn-xs btn-error btn-soft">Batal</button>
+                </form>
+                <button class="btn btn-primary btn-soft btn-xs" wire:click="delete">Hapus</button>
             </div>
         </div>
     </dialog>
