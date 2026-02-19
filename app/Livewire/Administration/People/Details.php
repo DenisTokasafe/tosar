@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -191,5 +192,47 @@ class Details extends Component
         $this->dep_cont = $name;
         $this->showContractorDropdown = false;
         $this->validateOnly('contractor_id');
+    }
+
+
+    public function save()
+    {
+        $this->validate();
+
+        $userData = [
+            'name' => $this->name,
+            'gender' => $this->gender,
+            'date_birth' => $this->date_birth,
+            'username' => $this->username,
+            'role_id' => $this->role_id,
+            'department_name' => $this->dep_cont, // atau nama kolom yang sesuai
+            'pilih_divisi' => $this->deptCont,
+            'employee_id' => $this->employee_id,
+            'date_commenced' => $this->date_commenced,
+            'email' => $this->email,
+        ];
+
+        // Logika untuk Password: HANYA perbarui jika field password diisi.
+        if (!empty($this->password)) {
+            $userData['password'] = Hash::make($this->password);
+        }
+
+        // Asumsi: UserProfile adalah model yang tepat (misalnya App\Models\User atau UserProfile)
+        User::whereId($this->userId)
+            ->update($userData);
+
+
+        $this->showModal = false;
+        $this->dispatch(
+            'alert',
+            [
+                'text' => 'user berhasil diupdate!',
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+            ]
+        );
     }
 }
