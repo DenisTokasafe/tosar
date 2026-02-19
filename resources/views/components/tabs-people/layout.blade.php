@@ -1,3 +1,4 @@
+@props(['idUser'])
 <div class="py-2 ">
     <flux:heading>{{ $heading ?? '' }}</flux:heading>
     <flux:subheading size='xs'>{{ $subheading ?? '' }}</flux:subheading>
@@ -9,8 +10,7 @@
                 <div class="flex items-start max-md:flex-col">
                     <div class="me-10 w-full pb-4 md:w-[220px]">
                         <flux:navlist>
-                            <flux:navlist.item :href="route('people.details', $id)" wire:navigate>{{ __('Details') }}
-                            </flux:navlist.item>
+                            <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
 
                         </flux:navlist>
                     </div>
