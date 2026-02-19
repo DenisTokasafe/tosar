@@ -154,7 +154,7 @@ class FireInspectionList extends Component
                     }
 
                     // Set path di database jadi null (opsional jika session-nya tidak ikut dihapus)
-                    $session->update(['area_photo_path' => null]);
+                    $session->delete();
                 }
             }
         }
