@@ -12,10 +12,10 @@
                         </flux:navlist>
                     </div>
 
-                    <div class="m-2">
+
                         <flux:separator class="md:hidden" />
-                        <flux:separator vertical class="hidden md:block" />
-                    </div>
+                        <flux:separator vertical class="hidden m-2 md:block" />
+
 
                     <div class="self-stretch flex-1 max-md:pt-6">
                         <flux:heading>{{ $heading ?? '' }}</flux:heading>
