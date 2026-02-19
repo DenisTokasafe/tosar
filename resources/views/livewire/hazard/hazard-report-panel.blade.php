@@ -23,7 +23,7 @@
                     !empty($filterReporterDept) ||
                     $searchPelapor ||
                     ($start_date && $end_date))
-                    <x-button.btn-tooltip color="success" icon="file-donwload" wireClick="export" tooltip="Download" />
+                    <x-button.btn-tooltip color="success" icon="file-download" wireClick="export" tooltip="Download" />
 
             @endif
             {{-- @livewire('hazard.import-hazard-reports-modal') --}}
