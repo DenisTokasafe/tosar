@@ -15,4 +15,8 @@ class Index extends Component
              'ComplianceMaster' => ComplianceMaster::paginate(20)
         ]);
     }
+    public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
