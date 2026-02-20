@@ -91,6 +91,7 @@
         <thead class="table-light">
             <tr>
                 <th>No</th>
+                <th>name</th>
                 <th>Title (Name & Duration)</th>
                 <th>Class</th>
                 <th>Description</th>
@@ -104,7 +105,10 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>
-                        <strong>{{ $master->title }}</strong>
+                        <strong>{{ $master->name }}</strong>
+                    </td>
+                    <td>
+                      {{ $master->title }}
                     </td>
                     <td>
                         <span class="badge bg-secondary">{{ $master->class }}</span>
