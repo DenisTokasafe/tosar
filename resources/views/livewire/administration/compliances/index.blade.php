@@ -16,7 +16,7 @@
 
             {{-- Tombol 'tambah data' --}}
 
-            <x-button.btn-tooltip modalId="compliance_modal" color="primary" icon="add" tooltip="Tambah Data" />
+            <x-button.btn-tooltip wire:click="create"  color="primary" icon="add" tooltip="Tambah Data" />
             {{-- Komponen Import --}}
             @livewire('administration.compliances.compliance-import')
 
@@ -131,6 +131,14 @@
                             @endif
                         </td>
                         <td class="text-center">
+                             <th class='flex flex-row justify-center gap-2'>
+                                    <x-button.btn-tooltip color="warning" icon="edit"
+                                        wireClick="edit({{ $master->id }})"
+                                        tooltip="Update" />
+                                    <!-- <x-button.btn-tooltip color="error" icon="delete"
+                                        wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
+                                        tooltip="hapus data" /> -->
+                                </th>
                             <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
                             <button wire:confirm="Are you sure?" wire:click="delete({{ $master->id }})" class="btn btn-sm btn-outline-danger">Delete</button>
                         </td>
@@ -239,4 +247,21 @@
             </div>
         </dialog>
     </x-manhours.layout>
+    <script>
+        // Mendengarkan signal dari Livewire untuk BUKA modal
+        window.addEventListener('open-compliance-modal', event => {
+            const modal = document.getElementById('compliance_modal');
+            if (modal) {
+                modal.showModal();
+            }
+        });
+
+        // Mendengarkan signal dari Livewire untuk TUTUP modal
+        window.addEventListener('close-compliance-modal', event => {
+            const modal = document.getElementById('compliance_modal');
+            if (modal) {
+                modal.close();
+            }
+        });
+    </script>
 </section>

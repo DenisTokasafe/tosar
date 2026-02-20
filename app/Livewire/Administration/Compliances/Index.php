@@ -10,6 +10,8 @@ class Index extends Component
 {
     use WithPagination;
     public $name, $description, $class, $duration_months = 12, $status = 1;
+    public $selected_id;
+    public $isEdit = false;
     protected function rules()
     {
         return [
@@ -33,6 +35,30 @@ class Index extends Component
             'duration_months.min'      => 'Durasi tidak boleh negatif. Isi 0 untuk Permanen.',
         ];
     }
+    public function create()
+    {
+        $this->reset(['name', 'description', 'class', 'duration_months', 'selected_id']);
+        $this->isEdit = false;
+        $this->status = 1;
+
+        // Kirim sinyal ke JS untuk buka modal
+        $this->dispatch('open-compliance-modal');
+    }
+    public function edit($id)
+    {
+        $this->isEdit = true;
+        $master = ComplianceMaster::findOrFail($id);
+
+        $this->selected_id = $id;
+        $this->name = $master->name;
+        $this->description = $master->description;
+        $this->class = $master->class;
+        $this->duration_months = $master->duration_months ?? 0;
+        $this->status = $master->status;
+
+        // Kirim sinyal ke JS untuk buka modal
+        $this->dispatch('open-compliance-modal');
+    }
 
     public function save()
     {
@@ -44,7 +70,7 @@ class Index extends Component
             ? "{$this->name} (expiry in {$this->duration_months} bulan)"
             : "{$this->name} (Permanen)";
 
-        ComplianceMaster::create([
+        ComplianceMaster::createupdateOrCreate(['id' => $this->selected_id], [
             'name'            => $this->name,
             'description'     => $this->description,
             'class'           => $this->class,
@@ -54,7 +80,7 @@ class Index extends Component
         ]);
 
         $this->dispatch('alert', ['text' => 'Master data berhasil ditambahkan!']);
-        $this->reset();
+        $this->dispatch('close-compliance-modal');
     }
     public function getExistingClassesProperty()
     {
