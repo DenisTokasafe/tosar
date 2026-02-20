@@ -16,9 +16,9 @@
 
             {{-- Tombol 'tambah data' --}}
 
-            <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" tooltip="Tambah Data" />
+            <x-button.btn-tooltip modalId="compliance_modal" color="primary" icon="add" tooltip="Tambah Data" />
             {{-- Komponen Import --}}
-
+            @livewire('administration.compliances.compliance-import')
 
         </div>
 
@@ -113,7 +113,7 @@
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
 
         </div>
-        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='store'>
+        <dialog id='compliance_modal' class="modal" wire:ignore.self wire:target='store'>
             <div class="overflow-y-auto modal-box">
 
                 <div class="modal-action">
