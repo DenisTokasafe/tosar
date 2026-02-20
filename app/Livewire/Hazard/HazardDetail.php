@@ -250,7 +250,7 @@ class HazardDetail extends Component
         // ✅ Load nama untuk ditampilkan di search input
         if ($this->pelapor_id) {
             // ✅ Jika pelapor_id ada → ambil nama user
-            $this->searchPelapor = User::find($this->pelapor_id)?->name ?? $this->hazard->manualPelaporName??'';
+            $this->searchPelapor = User::find($this->pelapor_id)?->name ?? $this->hazard->manualPelaporName ?? '';
             $this->audit_name = User::find($this->pelapor_id)?->name ?? $this->hazard->manualPelaporName;
             $this->manualPelaporName = $this->searchPelapor; // biar konsisten juga
         } else {
@@ -948,7 +948,7 @@ class HazardDetail extends Component
 
     public function addActionHazard()
     {
-         $this->dispatch('validate-action_description');
+        $this->dispatch('validate-action_description');
         $this->validate(
             [
                 'action_description'       => 'required|string',
@@ -1175,14 +1175,31 @@ class HazardDetail extends Component
         foreach ($moderatorIds as $moderatorId) {
             MailHelper::sendToUserId(
                 $moderatorId,
-                'Notifikasi Laporan Hazard',
+                'Penghapusan Laporan Hazard',
                 'emails.notification',
                 [
-                    'subject'       => 'Update Laporan Hazard ',
-                    'title'         => 'Notifikasi Laporan Hazard',
-                    'messageText'   => "Telah diupdate laporan hazard .\nSilakan lakukan  pemeriksaan.",
+                    'subject'        => 'Laporan Hazard Dihapus',
+                    'title'          => 'Notifikasi Penghapusan Laporan',
+                    // Menambahkan nama user yang sedang login (penghapus)
+                    'messageText'    => "Laporan hazard dengan nomor referensi di bawah ini telah dihapus dari sistem oleh: " . auth()->user()->name,
                     'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
-                    'actionUrl'     => route('hazard-detail', $hazard->id)
+                    'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
+                ]
+            );
+        }
+        $penanggungJawab = $hazard->penanggung_jawab_id;
+        if ($penanggungJawab) {
+            MailHelper::sendToUserId(
+                $penanggungJawab,
+                'Penghapusan Laporan Hazard',
+                'emails.notification',
+                [
+                    'subject'        => 'Laporan Hazard Dihapus',
+                    'title'          => 'Notifikasi Penghapusan Laporan',
+                    // Menambahkan nama user yang sedang login (penghapus)
+                    'messageText'    => "Laporan hazard dengan nomor referensi di bawah ini telah dihapus dari sistem oleh: " . auth()->user()->name,
+                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                    'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
                 ]
             );
         }
