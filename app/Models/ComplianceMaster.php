@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ComplianceMaster extends Model
+{
+    protected $fillable = [
+        'name',
+        'duration_months',
+        'status',
+    ];
+
+    // Casts untuk memastikan tipe data konsisten
+    protected $casts = [
+        'duration_months' => 'integer',
+        'status' => 'boolean',
+    ];
+    /**
+     * Helper untuk mengecek apakah master ini permanen
+     */
+    public function isLifetime(): bool
+    {
+        return is_null($this->duration_months);
+    }
+    /**
+     * Relasi ke tabel transaksi Compliance
+     */
+    public function compliances(): HasMany
+    {
+        return $this->hasMany(Compliance::class);
+    }
+}
