@@ -218,7 +218,7 @@
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <fieldset class="mb-4 fieldset md:col-span-2"wire:key="field-immediate">
-                    {{ $immediate_corrective_action }}
+
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
                         <div x-ref="editorElement"></div>
