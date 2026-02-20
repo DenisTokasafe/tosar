@@ -16,7 +16,7 @@
 
             {{-- Tombol 'tambah data' --}}
 
-            <x-button.btn-tooltip wire:click="create"  color="primary" icon="add" tooltip="Tambah Data" />
+            <x-button.btn-tooltip wire:click="create" color="primary" icon="add" tooltip="Tambah Data" />
             {{-- Komponen Import --}}
             @livewire('administration.compliances.compliance-import')
 
@@ -130,18 +130,16 @@
                             <span class="badge bg-danger">Inactive</span>
                             @endif
                         </td>
-                        <td class="text-center">
-                             <th class='flex flex-row justify-center gap-2'>
-                                    <x-button.btn-tooltip color="warning" icon="edit"
-                                        wireClick="edit({{ $master->id }})"
-                                        tooltip="Update" />
-                                    <!-- <x-button.btn-tooltip color="error" icon="delete"
+
+                        <th class='flex flex-row justify-center gap-2'>
+                            <x-button.btn-tooltip color="warning" icon="edit"
+                                wireClick="edit({{ $master->id }})"
+                                tooltip="Update" />
+                            <!-- <x-button.btn-tooltip color="error" icon="delete"
                                         wireClick="showDelete({{ $master->id }})" modalId="delete_modal"
                                         tooltip="hapus data" /> -->
-                                </th>
-                            <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
-                            <button wire:confirm="Are you sure?" wire:click="delete({{ $master->id }})" class="btn btn-sm btn-outline-danger">Delete</button>
-                        </td>
+                        </th>
+
                     </tr>
                     @empty
                     <tr>
@@ -161,7 +159,7 @@
 
                     <x-form.input-text label="Description" model="description" placeholder="Description..." required />
 
-                     <fieldset class="fieldset">
+                    <fieldset class="fieldset">
                         <x-form.label label="Pilih Class" required />
                         <select wire:model.live="class"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -185,7 +183,7 @@
                             placeholder="Type new class name here..." />
                     </fieldset>
                     @endif
-                   <fieldset class="fieldset">
+                    <fieldset class="fieldset">
                         <x-form.label label="Duration (Months)" required />
                         <select wire:model.live="duration_months"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -198,7 +196,7 @@
                             <option value="60">5 Tahun</option>
                         </select>
                         <small class="mt-1 text-muted">Pilih 0 jika tidak ada masa berlaku.</small>
-                         <x-label-error :messages="$errors->get('duration_months')" />
+                        <x-label-error :messages="$errors->get('duration_months')" />
                     </fieldset>
 
                     <fieldset class="p-2 mt-2 border rounded fieldset bg-gray-50">
@@ -217,7 +215,7 @@
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
-                           <x-label-error :messages="$errors->get('status')" />
+                        <x-label-error :messages="$errors->get('status')" />
                     </fieldset>
                 </div>
                 <div class="modal-action">
