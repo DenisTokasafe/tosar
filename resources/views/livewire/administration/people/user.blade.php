@@ -2,7 +2,7 @@
     <x-toast />
     <x-tabs-relation.layout>
         <div class="p-4">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between md:shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-20 md:flex-row bg-base-100 md:inset-shadow-sm">
                 <div class="flex flex-row">
 
                     <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
@@ -16,10 +16,7 @@
 
                     <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
                      <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
-                    <flux:tooltip content="Import data" position="top">
-                        <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="import"
-                            variant="subtle"></flux:button>
-                    </flux:tooltip>
+
                 </div>
             </div>
 
@@ -301,7 +298,7 @@
             @endif
             <div class="modal-action">
                 {{-- Tombol Import --}}
-                <button wire:click="import" class="btn-xs btn-primary btn-soft"
+                <button wire:click="import" class="btn-xs btn btn-primary btn-soft"
                     wire:loading.attr="disabled" wire:target="import,file">
 
                     <span wire:loading.remove wire:target="import,file">Import</span>
