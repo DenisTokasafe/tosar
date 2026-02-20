@@ -136,7 +136,7 @@
                                         wireClick="edit({{ $master->id }})"
                                         tooltip="Update" />
                                     <!-- <x-button.btn-tooltip color="error" icon="delete"
-                                        wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
+                                        wireClick="showDelete({{ $master->id }})" modalId="delete_modal"
                                         tooltip="hapus data" /> -->
                                 </th>
                             <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
