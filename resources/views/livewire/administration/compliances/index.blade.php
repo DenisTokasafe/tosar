@@ -26,7 +26,7 @@
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
         <div class="flex flex-col w-full gap-2 md:flex-row md:items-center">
             <select wire:model.live="class_search"
-                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                class="w-full max-w-sm select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                 <option value="">-- Select Existing Class --</option>
 
                 {{-- Loop data class yang unik dari database --}}
