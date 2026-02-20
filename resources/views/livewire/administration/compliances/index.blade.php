@@ -153,8 +153,29 @@
 
                     <x-form.input-text label="Description" model="description" placeholder="Description..." required />
 
-                    <x-form.input-text label="Compliance Class" model="class" placeholder="Compliance Class..." required />
+                    <div>
+                        <x-form.label label="Pilih Class" required />
+                        <select wire:model.live="class"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">-- Select Existing Class --</option>
 
+                            {{-- Loop data class yang unik dari database --}}
+                            @foreach($this->existing_classes as $item)
+                            <option value="{{ $item }}">{{ $item }}</option>
+                            @endforeach
+
+                            {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
+                            <option value="new_class">+ Add New Class...</option>
+                        </select>
+                    </div>
+                    @if($class === 'new_class')
+                    <div class="mt-2">
+                        <x-form.input-text
+                            label="New Class Name"
+                            model="class"
+                            placeholder="Type new class name here..." />
+                    </div>
+                    @endif
                     <div>
                         <x-form.label label="Duration (Months)" required />
                         <select wire:model.live="duration_months"
@@ -164,6 +185,7 @@
                             <option value="6">6 Bulan</option>
                             <option value="12">1 Tahun</option>
                             <option value="24">2 Tahun</option>
+                            <option value="36">3 Tahun</option>
                             <option value="60">5 Tahun</option>
                         </select>
                         <small class="mt-1 text-muted">Pilih 0 jika tidak ada masa berlaku.</small>

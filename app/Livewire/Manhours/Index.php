@@ -257,6 +257,8 @@ class Index extends Component
         }
     }
 
+
+
     public function render()
     {
         // authorize viewAny
