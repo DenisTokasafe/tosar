@@ -186,7 +186,7 @@
 
                 <div class="modal-action">
                     <form method="dialog">
-                        <button class="btn btn-xs btn-soft btn-error">Batal</button>
+                        <button class="btn btn-xs btn-soft btn-accent">Batal</button>
                     </form>
 
                     <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
