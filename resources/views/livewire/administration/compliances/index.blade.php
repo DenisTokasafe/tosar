@@ -153,7 +153,7 @@
 
                     <x-form.input-text label="Description" model="description" placeholder="Description..." required />
 
-                    <div>
+                     <fieldset class="fieldset">
                         <x-form.label label="Pilih Class" required />
                         <select wire:model.live="class"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -167,16 +167,17 @@
                             {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
                             <option value="new_class">+ Add New Class...</option>
                         </select>
-                    </div>
+                        <x-label-error :messages="$errors->get('class')" />
+                    </fieldset>
                     @if($class === 'new_class')
-                    <div class="mt-2">
+                    <fieldset class="fieldset">
                         <x-form.input-text
                             label="New Class Name"
                             model="class"
                             placeholder="Type new class name here..." />
-                    </div>
+                    </fieldset>
                     @endif
-                    <div>
+                   <fieldset class="fieldset">
                         <x-form.label label="Duration (Months)" required />
                         <select wire:model.live="duration_months"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -189,17 +190,18 @@
                             <option value="60">5 Tahun</option>
                         </select>
                         <small class="mt-1 text-muted">Pilih 0 jika tidak ada masa berlaku.</small>
-                    </div>
+                         <x-label-error :messages="$errors->get('duration_months')" />
+                    </fieldset>
 
-                    <div class="p-2 mt-2 border rounded bg-gray-50">
+                    <fieldset class="p-2 mt-2 border rounded fieldset bg-gray-50">
                         <label class="text-xs font-semibold text-gray-500">Preview Title:</label>
                         <p class="text-sm font-bold text-info">
                             {{ $name ?: '...' }}
                             ({{ $duration_months > 0 ? "expiry in $duration_months bulan" : "Permanen" }})
                         </p>
-                    </div>
+                    </fieldset>
 
-                    <div>
+                    <fieldset class="fieldset">
                         <x-form.label label="Status" required />
                         <select wire:model.live="status"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
@@ -207,7 +209,8 @@
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
-                    </div>
+                           <x-label-error :messages="$errors->get('status')" />
+                    </fieldset>
                 </div>
                 <div class="modal-action">
                     <button class="btn btn-primary btn-soft btn-xs" wire:click='save'>Save</button>
