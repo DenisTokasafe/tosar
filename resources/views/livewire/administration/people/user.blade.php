@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
     <x-tabs-relation.layout>
-        <div class="p-4">
+
             <div class="flex items-center justify-between md:shadow-md md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-20 md:flex-row bg-base-100 md:inset-shadow-sm">
                 <div class="flex flex-row">
 
@@ -60,7 +60,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+
     </x-tabs-relation.layout>
     {{ $users->links() }}
 
