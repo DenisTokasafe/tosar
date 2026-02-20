@@ -91,6 +91,10 @@ class Index extends Component
             ->orderBy('class', 'asc')
             ->pluck('class');
     }
+    public function showDelete($id)
+    {
+        $this->selected_id = $id;
+    }
     public function delete()
     {
         if ($this->selected_id) {
