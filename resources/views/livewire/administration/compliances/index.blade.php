@@ -88,67 +88,105 @@
     <x-manhours.layout>
         <div class="overflow-x-auto ">
             <table class="table align-middle table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>No</th>
-                <th>name</th>
-                <th>Title (Name & Duration)</th>
-                <th>Class</th>
-                <th>Description</th>
-                <th class="text-center">Duration</th>
-                <th class="text-center">Status</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($ComplianceMaster as $index => $master)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>
-                        <strong>{{ $master->name }}</strong>
-                    </td>
-                    <td>
-                      {{ $master->title }}
-                    </td>
-                    <td>
-                        <span class="badge bg-secondary">{{ $master->class }}</span>
-                    </td>
-                    <td>
-                        <small class="text-muted">{{ Str::limit($master->description, 50) }}</small>
-                    </td>
-                    <td class="text-center">
-                        @if($master->duration_months)
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>name</th>
+                        <th>Title (Name & Duration)</th>
+                        <th>Class</th>
+                        <th>Description</th>
+                        <th class="text-center">Duration</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($ComplianceMaster as $index => $master)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>
+                            <strong>{{ $master->name }}</strong>
+                        </td>
+                        <td>
+                            {{ $master->title }}
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ $master->class }}</span>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ Str::limit($master->description, 50) }}</small>
+                        </td>
+                        <td class="text-center">
+                            @if($master->duration_months)
                             {{ $master->duration_months }} Months
-                        @else
+                            @else
                             <span class="badge bg-info text-dark">Lifetime</span>
-                        @endif
-                    </td>
-                    <td class="text-center">
-                        @if($master->status)
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($master->status)
                             <span class="badge bg-success">Active</span>
-                        @else
+                            @else
                             <span class="badge bg-danger">Inactive</span>
-                        @endif
-                    </td>
-                    <td class="text-center">
-                        <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
-                        <button wire:confirm="Are you sure?" wire:click="delete({{ $master->id }})" class="btn btn-sm btn-outline-danger">Delete</button>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="py-4 text-center">No compliance data found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
+                            <button wire:confirm="Are you sure?" wire:click="delete({{ $master->id }})" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="py-4 text-center">No compliance data found.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
-     {{ $ComplianceMaster->links() }}
+            {{ $ComplianceMaster->links() }}
         </div>
         <dialog id='compliance_modal' class="modal" wire:ignore.self wire:target='store'>
             <div class="overflow-y-auto modal-box">
+                <div class="space-y-4">
+                    <x-form.input-text label="Compliance Name" model="name" placeholder="Contoh: Sertifikasi ISO 9001..." required />
 
+                    <x-form.input-text label="Description" model="description" placeholder="Deskripsi singkat..." required />
+
+                    <x-form.input-text label="Class" model="class" placeholder="Contoh: Drivers Licence / SIMPER..." required />
+
+                    <div>
+                        <x-form.label label="Duration (Months)" required />
+                        <select wire:model.live="duration_months"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">-- Select Duration --</option>
+                            <option value="0">Permanen (Lifetime)</option>
+                            <option value="6">6 Bulan</option>
+                            <option value="12">1 Tahun</option>
+                            <option value="24">2 Tahun</option>
+                            <option value="60">5 Tahun</option>
+                        </select>
+                        <small class="mt-1 text-muted">Pilih 0 jika tidak ada masa berlaku.</small>
+                    </div>
+
+                    <div class="p-2 mt-2 border rounded bg-gray-50">
+                        <label class="text-xs font-semibold text-gray-500">Preview Title:</label>
+                        <p class="text-sm font-bold text-info">
+                            {{ $name ?: '...' }}
+                            ({{ $duration_months > 0 ? "expiry in $duration_months bulan" : "Permanen" }})
+                        </p>
+                    </div>
+
+                    <div>
+                        <x-form.label label="Status" required />
+                        <select wire:model.live="status"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option>Active</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="modal-action">
                     <form method="dialog">
                         <button class="btn btn-xs btn-soft btn-error">Close</button>
