@@ -1150,6 +1150,42 @@ class HazardDetail extends Component
 
     public function deleteHazard(Hazard $hazard)
     {
+        $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+            ->where(function ($query) use ($hazard) {
+                // Moderator ditugaskan untuk Event Type ini,
+                // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
+
+                // Kriteria 1: Penugasan bersifat umum (department_id dan contractor_id di assignment adalah NULL)
+                $query->whereNull('department_id')
+                    ->whereNull('contractor_id');
+
+                // Kriteria 2: Penugasan spesifik untuk Department
+                if ($hazard->department_id) {
+                    $query->orWhere('department_id', $hazard->department_id);
+                }
+
+                // Kriteria 3: Penugasan spesifik untuk Contractor
+                if ($hazard->contractor_id) {
+                    $query->orWhere('contractor_id', $hazard->contractor_id);
+                }
+            })
+            ->distinct('user_id')
+            ->pluck('user_id');
+        // Kirim email ke setiap moderator
+        foreach ($moderatorIds as $moderatorId) {
+            MailHelper::sendToUserId(
+                $moderatorId,
+                'Notifikasi Laporan Hazard',
+                'emails.notification',
+                [
+                    'subject'       => 'Update Laporan Hazard ',
+                    'title'         => 'Notifikasi Laporan Hazard',
+                    'messageText'   => "Telah diupdate laporan hazard .\nSilakan lakukan  pemeriksaan.",
+                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                    'actionUrl'     => route('hazard-detail', $hazard->id)
+                ]
+            );
+        }
         $hazard->delete();
 
         // Setelah model dihapus (dan event 'deleting' telah dijalankan),
