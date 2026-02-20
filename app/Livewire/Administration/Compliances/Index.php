@@ -70,7 +70,7 @@ class Index extends Component
             ? "{$this->name} (expiry in {$this->duration_months} bulan)"
             : "{$this->name} (Permanen)";
 
-        ComplianceMaster::createupdateOrCreate(['id' => $this->selected_id], [
+        ComplianceMaster::updateOrCreate(['id' => $this->selected_id], [
             'name'            => $this->name,
             'description'     => $this->description,
             'class'           => $this->class,
