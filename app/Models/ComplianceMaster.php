@@ -9,7 +9,10 @@ class ComplianceMaster extends Model
 {
     protected $fillable = [
         'name',
+        'description', // Tambahkan ini
+        'class',       // Tambahkan ini
         'duration_months',
+        'title',       // Tambahkan ini
         'status',
     ];
 
