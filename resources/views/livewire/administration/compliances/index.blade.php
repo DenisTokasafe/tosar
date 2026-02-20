@@ -25,63 +25,18 @@
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
         <div class="flex flex-col gap-2 md:flex-row md:items-center">
+            <select wire:model.live="class_search"
+                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                <option value="">-- Select Existing Class --</option>
 
-            {{-- 1. Input Search (w-60) --}}
-            <div class="w-full">
-                {{-- flux:input sudah ada di sini --}}
-                <input type="text" wire:model.live="search"
-                    class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
-                    placeholder="pencarian..." />
-            </div>
-            {{-- 2. Input Rentang Tanggal (w-60) --}}
-            <div class="w-full">
-                <div class="join" wire:ignore x-data="{
-                    fp: null,
-                    range_date: @entangle('range_date').live, // Tambahkan .live agar hook updated langsung terpanggil
+                {{-- Loop data class yang unik dari database --}}
+                @foreach($this->existing_classes as $item)
+                <option value="{{ $item }}">{{ $item }}</option>
+                @endforeach
 
-                    initFlatpickr() {
-                        if (this.fp) this.fp.destroy();
-
-                        this.fp = flatpickr(this.$refs.tanggalInput2, {
-                            disableMobile: true,
-                            enableTime: false,
-                            altInput: true,
-                            altFormat: 'd-M-Y',
-                            dateFormat: 'd-m-Y',
-                            mode: 'range',
-                            defaultDate: this.range_date,
-                            onChange: (dates, str) => {
-                                // Hanya update saat 2 tanggal sudah terpilih (start & end)
-                                // Ini akan otomatis memicu public function updatedRangeDate($value)
-                                if (dates.length === 2) {
-                                    this.range_date = str;
-                                }
-                            },
-                            locale: { rangeSeparator: ' Ke ' },
-                        });
-                    },
-                    clearDate() {
-                        if (this.fp) this.fp.clear();
-                        this.range_date = null; // Memicu updatedRangeDate dengan nilai null (else condition)
-                    }
-                }" x-init="initFlatpickr()">
-
-                    <input type="text" x-ref="tanggalInput2" placeholder="Pilih Rentang Tanggal"
-                        class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
-                        readonly />
-
-                    <button type="button" @click="clearDate()" class="btn btn-xs btn-neutral join-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-refresh-cw">
-                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                            <path d="M21 3v5h-5" />
-                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                            <path d="M8 16H3v5" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+                {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
+                <option value="new_class">+ Add New Class...</option>
+            </select>
         </div>
     </div>
 

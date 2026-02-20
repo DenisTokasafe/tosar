@@ -11,6 +11,7 @@ class Index extends Component
     use WithPagination;
     public $name, $description, $class, $duration_months = 12, $status = 1;
     public $selected_id;
+    public $class_search='';
     public $isEdit = false;
     protected function rules()
     {
@@ -93,7 +94,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.administration.compliances.index', [
-            'ComplianceMaster' => ComplianceMaster::paginate(20)
+            'ComplianceMaster' => ComplianceMaster::search($this->class_search)->paginate(20)
         ]);
     }
     public function paginationView()

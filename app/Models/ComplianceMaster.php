@@ -35,4 +35,8 @@ class ComplianceMaster extends Model
     {
         return $this->hasMany(Compliance::class);
     }
+     public function scopeSearch($query, $term)
+    {
+        return $query->where('class',  'like', '%' . $term . '%');
+    }
 }
