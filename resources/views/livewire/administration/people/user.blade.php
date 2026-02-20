@@ -4,10 +4,8 @@
         <div class="p-4">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex flex-row">
-                    <flux:tooltip content="Bulk Update" position="top">
-                        <flux:button size="xs" variant="primary" icon='refresh-cw'
-                            wire:click="$set('showBulkUpdateModal', true)"></flux:button>
-                    </flux:tooltip>
+
+                    <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
                     <div wire:ignore class="mx-2 w-60">
                         <input type="text" wire:model.live.debounce.300ms="searchTerm"
                             autocomplete="off" placeholder="Cari Pelapor..." readonly onfocus="this.removeAttribute('readonly');"
@@ -312,6 +310,28 @@
                 </button>
 
                 {{-- Tombol Batal --}}
+               <form method="dialog">
+                    <button class="btn btn-xs btn-error btn-soft">Batal</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal"  wire:ignore.self id="showBulkUpdateModal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Bulk Update User</h3>
+
+            <fieldset class="fieldset">
+                <label class="block">Role Baru</label>
+                <select wire:model="bulkRole" class="w-full select select-bordered input-xs">
+                    <option value="">-- Pilih Role --</option>
+                    @foreach ($roles as $r)
+                    <option value="{{ $r->id }}">{{ $r->name }}</option>
+                    @endforeach
+                </select>
+            </fieldset>
+            <div class="modal-action">
+                <button class="btn btn-xs btn-soft btn-primary" wire:click="bulkUpdate" variant="primary">Update</button>
                <form method="dialog">
                     <button class="btn btn-xs btn-error btn-soft">Batal</button>
                 </form>
