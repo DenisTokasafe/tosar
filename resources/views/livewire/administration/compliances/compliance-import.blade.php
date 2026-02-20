@@ -5,7 +5,7 @@
             <h3 class="text-lg font-bold">Import Data Manhours</h3>
             <p class="text-[9px] font-bold text-gray-400 uppercase">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi
                 data manhours.</p>
-            <form wire:submit="import" enctype="multipart/form-data">
+            <form  enctype="multipart/form-data">
 
                 {{-- Input File --}}
                 <div class="w-full my-4 form-control">
@@ -30,7 +30,7 @@
                         <button class="btn btn-soft btn-error btn-xs" wire:click="closeModal">Close</button>
                     </form>
                     {{-- Tombol Submit --}}
-                    <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled">
+                    <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled" wire:click="import">
                         <span wire:loading.add.class='hidden' wire:target='import'><x-icon.file-import /></span>
                         <span wire:loading.remove.class='hidden' wire:target='import' class="hidden loading loading-bars loading-xs"></span>
                         <span wire:loading.add.class='hidden' wire:target='import'>Upload</span>
