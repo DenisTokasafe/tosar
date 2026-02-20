@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <div class="overflow-x-auto">
+            <div class="my-10 overflow-x-auto">
                 <table class="table table-xs">
                     <thead>
                         <tr>
