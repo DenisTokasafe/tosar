@@ -5,7 +5,7 @@ namespace App\Livewire\Administration\Compliances;
 use App\Imports\ComplianceMasterImport;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class ComplianceImport extends Component
