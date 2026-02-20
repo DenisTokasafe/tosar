@@ -91,6 +91,29 @@ class Index extends Component
             ->orderBy('class', 'asc')
             ->pluck('class');
     }
+    public function delete()
+    {
+        if ($this->selected_id) {
+            ComplianceMaster::findOrFail($this->selected_id)->delete();
+
+            // reset
+            $this->selected_id = null;
+           $this->dispatch('close-delete-modal');
+
+            // opsional: emit event untuk notifikasi / refresh tabel
+            $this->dispatch(
+                'alert',
+                [
+                    'text' => "Data berhasil di hapus!!!",
+                    'duration' => 5000,
+                    'destination' => '/contact',
+                    'newWindow' => true,
+                    'close' => true,
+                    'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                ]
+            );
+        }
+    }
     public function render()
     {
         return view('livewire.administration.compliances.index', [

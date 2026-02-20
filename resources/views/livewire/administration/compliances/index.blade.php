@@ -24,7 +24,7 @@
 
         {{-- BAGIAN KANAN: Filter (Search & Date Range) --}}
         {{-- Menggunakan flex-row untuk membuat input search dan date range bersebelahan --}}
-        <div class="flex flex-col gap-2 md:flex-row md:items-center">
+        <div class="flex flex-col w-full gap-2 md:flex-row md:items-center">
             <select wire:model.live="class_search"
                 class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                 <option value="">-- Select Existing Class --</option>
@@ -34,8 +34,6 @@
                 <option value="{{ $item }}">{{ $item }}</option>
                 @endforeach
 
-                {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
-                <option value="new_class">+ Add New Class...</option>
             </select>
         </div>
     </div>
@@ -90,9 +88,9 @@
                             <x-button.btn-tooltip color="warning" icon="edit"
                                 wireClick="edit({{ $master->id }})"
                                 tooltip="Update" />
-                            <!-- <x-button.btn-tooltip color="error" icon="delete"
+                            <x-button.btn-tooltip color="error" icon="delete"
                                         wireClick="showDelete({{ $master->id }})" modalId="delete_modal"
-                                        tooltip="hapus data" /> -->
+                                        tooltip="hapus data" />
                         </th>
 
                     </tr>
@@ -198,6 +196,24 @@
                 </div>
             </div>
         </dialog>
+
+        <dialog id='delete_modal' class="modal" wire:ignore.self>
+            <div class="modal-box">
+                <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
+                <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
+
+                <div class="modal-action">
+                    <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
+                        Batal
+                    </label>
+
+                    <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
+                        wire:target="delete">
+                        Hapus
+                    </label>
+                </div>
+            </div>
+        </dialog>
     </x-manhours.layout>
     <script>
         // Mendengarkan signal dari Livewire untuk BUKA modal
@@ -215,5 +231,11 @@
                 modal.close();
             }
         });
+         window.addEventListener('close-delete-modal', event => {
+        const modal = document.getElementById('delete_modal');
+            if (modal) {
+                modal.close();
+            }
+    });
     </script>
 </section>
