@@ -16,8 +16,7 @@
 
             {{-- Tombol 'tambah data' --}}
 
-            <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal'
-                tooltip="Tambah Data" />
+            <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" tooltip="Tambah Data" />
             {{-- Komponen Import --}}
 
 
