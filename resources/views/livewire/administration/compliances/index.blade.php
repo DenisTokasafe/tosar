@@ -197,23 +197,7 @@
             </div>
         </dialog>
 
-        <dialog id='delete_modal' class="modal" wire:ignore.self>
-            <div class="modal-box">
-                <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
-                <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
-                <div class="modal-action">
-                    <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
-                        Batal
-                    </label>
-
-                    <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
-                        wire:target="delete">
-                        Hapus
-                    </label>
-                </div>
-            </div>
-        </dialog>
     </x-manhours.layout>
     <script>
         // Mendengarkan signal dari Livewire untuk BUKA modal
