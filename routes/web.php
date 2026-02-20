@@ -38,6 +38,7 @@ use App\Livewire\Administrator\UserRoleManager\UserRole;
 use App\Livewire\Administration\DeptGroup\DepartmentGroup;
 use App\Livewire\Administration\EventGeneral\EventSubType;
 use App\Livewire\Administration\BusinessUnit\BusinessUnits;
+use App\Livewire\Administration\Compliances\Index as CompliancesIndex;
 use App\Livewire\Administration\EventGeneral\EventCategory;
 use App\Livewire\Administration\RiskAssessment\Assessement;
 use App\Livewire\Administration\RiskLikelihood\RiskLikelihood;
@@ -119,6 +120,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/workflows/wpi', WpiWorkflowManager::class)->name('wpi.workflows');
     Route::get('administration/equipment-master', EquipmentMasterIndex::class)->name('equipment-master');
     Route::get('administration/equipment-master/inspection-checklist', InspectionChecklist::class)->name('inspection-checklist');
+    Route::get('administration/compliances', CompliancesIndex::class)->name('compliances');
 });
 // route download storage files
 
