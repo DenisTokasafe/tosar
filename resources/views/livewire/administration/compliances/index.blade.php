@@ -1,11 +1,11 @@
 <section class="w-full">
     <x-toast />
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     @endpush
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
 
     <div class="flex flex-col items-center px-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
@@ -14,11 +14,11 @@
         {{-- Ikon Tombol Sejajar Horizontal --}}
         <div class="flex flex-row gap-2">
 
-                {{-- Tombol 'tambah data' --}}
+            {{-- Tombol 'tambah data' --}}
 
-                <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal'
-                    tooltip="Tambah Data" />
-                {{-- Komponen Import --}}
+            <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal'
+                tooltip="Tambah Data" />
+            {{-- Komponen Import --}}
 
 
         </div>
@@ -101,7 +101,7 @@
                         <th>Manhour</th>
                         <th>Manpower</th>
                         @can('create', \App\Models\Manhour::class)
-                            <th>Aksi</th>
+                        <th>Aksi</th>
                         @endcan
                     </tr>
                 </thead>
@@ -114,9 +114,14 @@
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
 
         </div>
-        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='update,store,close_modal,'>
+        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='store'>
             <div class="overflow-y-auto modal-box">
 
+                <div class="modal-action">
+                    <form method="dialog">
+                        <button class="btn btn-xs btn-soft btn-error">Close</button>
+                    </form>
+                </div>
             </div>
         </dialog>
         {{-- Modal konfirmasi --}}
@@ -126,9 +131,9 @@
                 <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
 
                 <div class="modal-action">
-                    <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
-                        Batal
-                    </label>
+                    <form method="dialog">
+                        <button class="btn btn-xs btn-soft btn-error">Batal</button>
+                    </form>
 
                     <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
                         wire:target="delete">
@@ -139,4 +144,3 @@
         </dialog>
     </x-manhours.layout>
 </section>
-
