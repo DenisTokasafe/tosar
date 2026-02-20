@@ -1182,7 +1182,7 @@ class HazardDetail extends Component
                     'title'          => 'Notifikasi Penghapusan Laporan',
                     // Menambahkan nama user yang sedang login (penghapus)
                     'messageText'    => "Laporan hazard dengan nomor referensi di bawah ini telah dihapus dari sistem oleh: " . auth()->user()->name,
-                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nDeskripsi : $hazard->description",
                     'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
                 ]
             );
@@ -1198,7 +1198,7 @@ class HazardDetail extends Component
                     'title'          => 'Notifikasi Penghapusan Laporan',
                     // Menambahkan nama user yang sedang login (penghapus)
                     'messageText'    => "Laporan hazard dengan nomor referensi di bawah ini telah dihapus dari sistem oleh: " . auth()->user()->name,
-                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nDeskripsi : $hazard->description",
                     'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
                 ]
             );
