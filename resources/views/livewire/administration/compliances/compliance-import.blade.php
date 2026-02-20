@@ -27,7 +27,7 @@
                     {{-- Gunakan wire:click="closeModal" agar state Livewire ($showModal) ikut di-update --}}
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
-                        <button class="btn btn-soft btn-error" wire:click="closeModal">Close</button>
+                        <button class="btn btn-soft btn-error btn-xs" wire:click="closeModal">Close</button>
                     </form>
                     {{-- Tombol Submit --}}
                     <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled">
