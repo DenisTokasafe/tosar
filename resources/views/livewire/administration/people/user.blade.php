@@ -2,7 +2,7 @@
     <x-toast />
     <x-tabs-relation.layout>
 
-            <div class="flex items-center justify-between border rounded-xl border-neutral-200 dark:border-base-200 md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-20 md:flex-row bg-base-100 md:inset-shadow-sm">
+            <div class="flex items-center justify-between border rounded-xs border-neutral-200 dark:border-base-200 md:px-4 md:absolute md:inset-x-0 md:top-0 md:z-20 md:flex-row bg-base-100 md:inset-shadow-sm">
                 <div class="flex flex-row">
 
                     <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
