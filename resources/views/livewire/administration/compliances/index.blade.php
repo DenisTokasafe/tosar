@@ -149,11 +149,11 @@
         <dialog id='compliance_modal' class="modal" wire:ignore.self wire:target='store'>
             <div class="overflow-y-auto modal-box">
                 <div class="space-y-4">
-                    <x-form.input-text label="Compliance Name" model="name" placeholder="Contoh: Sertifikasi ISO 9001..." required />
+                    <x-form.input-text label="Compliance Name" model="name" placeholder="Compliance Name..." required />
 
-                    <x-form.input-text label="Description" model="description" placeholder="Deskripsi singkat..." required />
+                    <x-form.input-text label="Description" model="description" placeholder="Description..." required />
 
-                    <x-form.input-text label="Class" model="class" placeholder="Contoh: Drivers Licence / SIMPER..." required />
+                    <x-form.input-text label="Compliance Class" model="class" placeholder="Compliance Class..." required />
 
                     <div>
                         <x-form.label label="Duration (Months)" required />
