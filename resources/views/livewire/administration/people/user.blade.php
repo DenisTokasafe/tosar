@@ -17,6 +17,7 @@
                 <div>
 
                     <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
+                     <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
                     <flux:tooltip content="Import data" position="top">
                         <flux:button size="xs" wire:click="$set('showImportModal', true)" icon="import"
                             variant="subtle"></flux:button>
@@ -277,7 +278,7 @@
     </dialog>
     </div>
 
-    <dialog class="modal" @if ($showImportModal) open @endif>
+    <dialog class="modal" wire:ignore.self id="import_modal">
         <div class="w-11/12 max-w-md modal-box">
             <h3 class="text-lg font-bold">Import Users</h3>
 
@@ -302,40 +303,18 @@
             @endif
             <div class="modal-action">
                 {{-- Tombol Import --}}
-                <flux:button wire:click="import" size="xs" icon:trailing="save" variant="primary"
+                <button wire:click="import" class="btn-xs btn-primary btn-soft"
                     wire:loading.attr="disabled" wire:target="import,file">
 
                     <span wire:loading.remove wire:target="import,file">Import</span>
                     <span wire:loading.class.remove='hidden' class="hidden"
                         wire:target="import,file">Mengimpor...</span>
-                </flux:button>
+                </button>
 
                 {{-- Tombol Batal --}}
-                <flux:button size="xs" wire:click="$set('showImportModal', false)" wire:loading.attr="disabled"
-                    wire:target="import,file" {{-- ⬅️ PERBAIKAN DI SINI --}} icon:trailing="circle-x" variant="danger">
-                    Batal
-                </flux:button>
-            </div>
-        </div>
-    </dialog>
-
-    <dialog class="modal" @if ($showBulkUpdateModal) open @endif>
-        <div class="modal-box">
-            <h3 class="text-lg font-bold">Bulk Update User</h3>
-
-            <fieldset class="fieldset">
-                <label class="block">Role Baru</label>
-                <select wire:model="bulkRole" class="w-full select select-bordered input-xs">
-                    <option value="">-- Pilih Role --</option>
-                    @foreach ($roles as $r)
-                    <option value="{{ $r->id }}">{{ $r->name }}</option>
-                    @endforeach
-                </select>
-            </fieldset>
-            <div class="modal-action">
-                <flux:button size="xs" wire:click="bulkUpdate" variant="primary">Update</flux:button>
-                <flux:button size="xs" wire:click="$set('showBulkUpdateModal', false)" variant="danger">Batal
-                </flux:button>
+               <form method="dialog">
+                    <button class="btn btn-xs btn-error btn-soft">Batal</button>
+                </form>
             </div>
         </div>
     </dialog>
