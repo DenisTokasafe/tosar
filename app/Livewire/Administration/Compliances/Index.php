@@ -78,8 +78,8 @@ class Index extends Component
             'title'           => $generatedTitle,
             'status'          => $this->status,
         ]);
-
-        $this->dispatch('alert', ['text' => 'Master data berhasil ditambahkan!']);
+        $text = $this->selected_id? 'Master data berhasil diupdate!':'Master data berhasil ditambahkan!';
+        $this->dispatch('alert', ['text' => $text]);
         $this->dispatch('close-compliance-modal');
     }
     public function getExistingClassesProperty()
