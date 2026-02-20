@@ -211,7 +211,6 @@
                         <x-form.label label="Status" required />
                         <select wire:model.live="status"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                            <option>Active</option>
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
