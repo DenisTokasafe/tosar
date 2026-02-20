@@ -5,8 +5,6 @@
             <h3 class="text-lg font-bold">Import Data Manhours</h3>
             <p class="text-[9px] font-bold text-gray-400 uppercase">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi
                 data manhours.</p>
-            <form  enctype="multipart/form-data">
-
                 {{-- Input File --}}
                 <div class="w-full my-4 form-control">
                     <label class="label">
@@ -37,7 +35,7 @@
                         <span wire:loading.remove.class='hidden' wire:target='import' class="hidden">Proses Upload</span>
                     </button>
                 </div>
-            </form>
+
         </div>
     </dialog>
 </div>
