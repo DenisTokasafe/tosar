@@ -87,31 +87,60 @@
 
     <x-manhours.layout>
         <div class="overflow-x-auto ">
-            <table class="table table-xs table-pin-rows">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Tanggal</th>
-                        <th>Jenis Entitas</th>
-                        <th>Perusahaan</th>
-                        <th>Departemen</th>
-                        <th>Departemen Group</th>
-                        <th>Job Class</th>
-                        <th>Manhour</th>
-                        <th>Manpower</th>
-                        @can('create', \App\Models\Manhour::class)
-                        <th>Aksi</th>
-                        @endcan
-                    </tr>
-                </thead>
-                <tbody>
-
-
-                </tbody>
-            </table>
+            <table class="table align-middle table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>No</th>
+                <th>Title (Name & Duration)</th>
+                <th>Class</th>
+                <th>Description</th>
+                <th class="text-center">Duration</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($ComplianceMaster as $index => $master)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>
+                        <strong>{{ $master->title }}</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-secondary">{{ $master->class }}</span>
+                    </td>
+                    <td>
+                        <small class="text-muted">{{ Str::limit($master->description, 50) }}</small>
+                    </td>
+                    <td class="text-center">
+                        @if($master->duration_months)
+                            {{ $master->duration_months }} Months
+                        @else
+                            <span class="badge bg-info text-dark">Lifetime</span>
+                        @endif
+                    </td>
+                    <td class="text-center">
+                        @if($master->status)
+                            <span class="badge bg-success">Active</span>
+                        @else
+                            <span class="badge bg-danger">Inactive</span>
+                        @endif
+                    </td>
+                    <td class="text-center">
+                        <button wire:click="edit({{ $master->id }})" class="btn btn-sm btn-outline-primary">Edit</button>
+                        <button wire:confirm="Are you sure?" wire:click="delete({{ $master->id }})" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="py-4 text-center">No compliance data found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
         </div>
         <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
-
+     {{ $ComplianceMaster->links() }}
         </div>
         <dialog id='compliance_modal' class="modal" wire:ignore.self wire:target='store'>
             <div class="overflow-y-auto modal-box">

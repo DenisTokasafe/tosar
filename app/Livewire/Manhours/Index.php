@@ -3,18 +3,14 @@
 namespace App\Livewire\Manhours;
 
 use Carbon\Carbon;
-use App\Mail\TestEmail;
-use App\Models\Company;
 use App\Models\Manhour;
 use Livewire\Component;
 use App\Models\Custodian;
 use App\Models\Contractor;
 use App\Models\Department;
-use App\Helpers\MailHelper;
 use App\Models\BusinessUnit;
 use Livewire\WithPagination;
 use App\Models\Department_group;
-use App\Services\GraphMailService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
