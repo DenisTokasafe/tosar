@@ -210,6 +210,7 @@
                     </div>
                 </div>
                 <div class="modal-action">
+                    <button class="btn btn-primary btn-soft btn-xs" wire:click='save'>Save</button>
                     <form method="dialog">
                         <button class="btn btn-xs btn-soft btn-error">Close</button>
                     </form>
