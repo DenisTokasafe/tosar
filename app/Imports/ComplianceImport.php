@@ -44,7 +44,7 @@ class ComplianceImport implements ToModel, WithHeadingRow
             'user_id'              => $user->id,
             'compliance_master_id' => $master->id,
             'start_date'           => $startDate->format('Y-m-d'),
-            'expired_at'           => $expiredAt ? $expiredAt->format('Y-m-d') : null,
+            'expired_at'           => $expiredAt ? $expiredAt->format('Y-m-d') : $startDate->format('Y-m-d'),
             'status'               => true,
         ]);
     }
