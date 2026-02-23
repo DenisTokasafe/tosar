@@ -41,10 +41,7 @@ class Compliance extends Component
         // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
         if (!$this->compliance_class) return collect();
 
-        return ComplianceMaster::select('name')
-            ->whereNotNull('name')
-            // Menggunakan '=' lebih presisi daripada 'like' untuk dropdown filter
-            ->where('class', $this->compliance_class)
+        return ComplianceMaster::where('class', $this->compliance_class)
             ->orderBy('name', 'asc')
             ->pluck('name');
     }
@@ -66,10 +63,10 @@ class Compliance extends Component
 
         // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
         $this->compliance_class = $data->master->class;
-        $this->compliance_name = $data->master->name;
-
-        // Sesuaikan format tanggal untuk Flatpickr (d-m-Y)
-        $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
+        $this->fill([
+            'compliance_name' => $data->master->name,
+            'start_date'      => Carbon::parse($data->start_date)->format('d-m-Y'),
+        ]);
 
         $this->dispatch('open-modal-compliance');
     }

@@ -65,7 +65,7 @@
                 </fieldset>
                 <fieldset class="fieldset">
                     <x-form.label label="Description" required />
-                    <select wire:model.live="compliance_name" wire:key="'description-for-'.$compliance_class"
+                    <select wire:model.live="compliance_name" :key="'desc-'.($complianceId ?? 'create')"
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Select Existing Compliance --</option>
                         {{-- Loop data class yang unik dari database --}}
