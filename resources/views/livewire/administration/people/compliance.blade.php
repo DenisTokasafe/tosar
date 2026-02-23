@@ -26,8 +26,8 @@
                 <tbody>
                     @foreach($compliances as $index => $item)
                     <?php
-                    use Carbon\Carbon;
-                    $tgl = Carbon::parse($item->start_date)->format('d-m-Y');
+
+                    $tgl = Carbon\Carbon::parse($item->start_date)->format('d-m-Y');
                     ?>
                     <tr>
                         <td>{{ $index + 1 }}</td>
