@@ -286,7 +286,7 @@ class User extends Component
     public function render()
     {
         return view('livewire.administration.people.user', [
-            'users' => UserProfile::search(trim($this->searchTerm))->paginate(20),
+            'users' => UserProfile::search($this->searchPeople)->paginate(20),
             'role' => Role::all()
         ]);
     }
