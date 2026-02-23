@@ -48,7 +48,9 @@
         </div>
         <dialog wire:ignore.self id="compliance_user_modal" class="modal">
             <div class="modal-box">
-
+                <h3 class="mb-4 text-lg font-bold">
+                    {{ $isEditMode ? 'Update Compliance' : 'Add New Compliance' }}
+                </h3>
                 <fieldset class="fieldset">
                     <x-form.label label="Pilih Class" required />
                     <select wire:model.live="compliance_class"
@@ -111,6 +113,14 @@
                     <x-label-error :messages="$errors->get('start_date')" />
                 </fieldset>
                 <div class="modal-action">
+                    <button
+                        type="button"
+                        wire:click="save"
+                        wire:loading.attr="disabled"
+                        class="btn btn-xs btn-soft btn-success">
+                        <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
+                        {{ $isEditMode ? 'Update Data' : 'Save Data' }}
+                    </button>
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
                         <button class="btn btn-xs btn-error btn-soft">Close</button>
