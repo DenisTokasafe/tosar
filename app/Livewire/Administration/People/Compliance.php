@@ -36,22 +36,7 @@ class Compliance extends Component
             ->pluck('class');
     }
 
-    public function getExistingNameProperty()
-    {
-        // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
-        if (!$this->compliance_class) return collect();
 
-        return ComplianceMaster::where('class', $this->compliance_class)
-            ->orderBy('name', 'asc')
-            ->pluck('name');
-    }
-
-    public function openCreateModal()
-    {
-        $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
-        $this->isEditMode = false;
-        $this->dispatch('open-modal-compliance');
-    }
 
     public function edit($id)
     {
@@ -68,6 +53,23 @@ class Compliance extends Component
             'start_date'      => Carbon::parse($data->start_date)->format('d-m-Y'),
         ]);
 
+        $this->dispatch('open-modal-compliance');
+    }
+
+    public function getExistingNameProperty()
+    {
+        // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
+        if (!$this->compliance_class) return collect();
+
+        return ComplianceMaster::searchClass($this->compliance_class)->searchName($this->compliance_name)
+            ->orderBy('name', 'asc')
+            ->pluck('name');
+    }
+
+    public function openCreateModal()
+    {
+        $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
+        $this->isEditMode = false;
         $this->dispatch('open-modal-compliance');
     }
 
