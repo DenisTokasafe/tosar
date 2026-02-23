@@ -53,7 +53,7 @@ public function edit($id)
     $this->isEditMode = true;
     $this->complianceId = $id;
 
-    $data = Compliance::with('master')->findOrFail($id);
+    $data = ModelsCompliance::with('master')->findOrFail($id);
 
     // Isi field form dengan data yang ada
     $this->compliance_class = $data->master->class;
