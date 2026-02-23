@@ -53,11 +53,11 @@ public function edit($id)
     $this->isEditMode = true;
     $this->complianceId = $id;
 
-    $data = Compliance::with('compliance_master')->findOrFail($id);
+    $data = Compliance::with('master')->findOrFail($id);
 
     // Isi field form dengan data yang ada
-    $this->compliance_class = $data->compliance_master->class;
-    $this->compliance_name = $data->compliance_master->name;
+    $this->compliance_class = $data->master->class;
+    $this->compliance_name = $data->master->name;
     $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
 
     $this->dispatch('open-modal-compliance');
