@@ -53,7 +53,7 @@
                 <div class="modal-action">
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
-                        <button class="btn btn-xs btn-soft">Close</button>
+                        <button class="btn btn-xs btn-error btn-soft">Close</button>
                     </form>
                 </div>
             </div>
