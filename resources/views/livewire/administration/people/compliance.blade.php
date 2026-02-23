@@ -25,11 +25,15 @@
                 </thead>
                 <tbody>
                     @foreach($compliances as $index => $item)
+                    <?php
+                    use Carbon\Carbon;
+                    $tgl = Carbon::parse($item->start_date)->format('d-m-Y');
+                    ?>
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         {{-- Mengambil nama dari relasi master --}}
                         <td>{{ $item->master->title ?? 'N/A' }}</td>
-                        <td>{{ $item->start_date }}</td>
+                        <td>{{ $tgl}}</td>
                         <td>
                             {{-- Logika untuk menampilkan NULL sebagai Lifetime --}}
                             <span class="badge {{ $item->expired_at ? 'badge-ghost' : 'badge-success' }}">
