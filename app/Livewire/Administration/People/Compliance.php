@@ -91,7 +91,7 @@ public function save()
     }
 
     $this->dispatch('close-modal-compliance');
-    $this->dispatch('notify', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
+    $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
 }
     public function render()
     {
