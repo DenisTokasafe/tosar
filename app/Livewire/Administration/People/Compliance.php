@@ -46,7 +46,6 @@ class Compliance extends Component
         if (!$this->compliance_class) return collect();
 
         return ComplianceMaster::select('name')
-            ->distinct()
             ->whereNotNull('name')
             // Menggunakan '=' lebih presisi daripada 'like' untuk dropdown filter
             ->where('class', $this->compliance_class)
