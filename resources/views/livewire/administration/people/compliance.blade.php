@@ -86,7 +86,7 @@
                                     enableTime: false,
                                     time_24hr: true,
                                     defaultDate: this.$wire.entangle('start_date').defer,
-                                    dateFormat: 'd-m-Y H:i',
+                                    dateFormat: 'd-m-Y ',
                                     clickOpens: true,
                                     // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
                                     // appendTo: this.$refs.wrapper,
