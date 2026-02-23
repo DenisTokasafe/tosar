@@ -6,7 +6,7 @@
                 Logo/Brand
             </div>
 
-            <div class="rounded ">
+            <div class="flex rounded">
                 <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
                 @livewire('administration.people.compliance-import')
             </div>
