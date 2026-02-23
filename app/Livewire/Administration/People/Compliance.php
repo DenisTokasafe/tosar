@@ -12,6 +12,7 @@ class Compliance extends Component
     public $userId;
     public $compliance_class;
     public $compliance_name;
+    public $start_date;
     public function mount($id)
     {
         $user = User::findOrFail($id);

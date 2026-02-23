@@ -73,6 +73,7 @@
                         </select>
                         <x-label-error :messages="$errors->get('class')" />
                     </fieldset>
+                    <x-form.datepicker label="Start Date" model="start_date" />
                 <div class="modal-action">
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
