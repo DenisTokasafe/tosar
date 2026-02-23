@@ -5,7 +5,7 @@
         <div class="flex-1 h-full">
             <div class="w-full max-w-full ">
                 <div class="relative flex items-start max-md:flex-col ">
-                    <div class=" gap-4 w-full p-2 md:w-[220px] overflow-y-auto absolute top-0 left-0">
+                    <div class=" gap-4 w-full p-2 md:w-[220px] overflow-y-auto absolute inset-y-0 left-0">
                         <flux:navlist>
                             <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
                             <flux:navlist.item :href="route('people.compliance', $idUser)" wire:navigate>{{ __('Compliances') }}</flux:navlist.item>
