@@ -36,7 +36,7 @@ class Compliance extends Component
         return ComplianceMaster::select('name')
             ->distinct()
             ->whereNotNull('name')
-            ->where('class', $this->compliance_class)
+            ->where('class','like', $this->compliance_class)
             ->orderBy('name', 'asc')
             ->pluck('name');
     }
