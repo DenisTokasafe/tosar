@@ -28,6 +28,7 @@
                     <?php
 
                     $tgl = Carbon\Carbon::parse($item->start_date)->format('d-m-Y');
+                    $tgl_expiry = Carbon\Carbon::parse($item->expired_at)->format('d-m-Y');
                     ?>
                     <tr>
                         <td>{{ $index + 1 }}</td>
@@ -37,7 +38,7 @@
                         <td>
                             {{-- Logika untuk menampilkan NULL sebagai Lifetime --}}
                             <span class="badge {{ $item->expired_at ? 'badge-ghost' : 'badge-success' }}">
-                                {{ $item->expired_at ?: 'Lifetime/Permanen' }}
+                                {{ $tgl_expiry ?: 'Lifetime/Permanen' }}
                             </span>
                         </td>
                         <td class="gap-2">
