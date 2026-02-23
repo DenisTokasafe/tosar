@@ -36,63 +36,64 @@ class Compliance extends Component
         return ComplianceMaster::select('name')
             ->distinct()
             ->whereNotNull('name')
-            ->where('class','like', $this->compliance_class)
+
+            ->where('class', 'like', '%' . $this->compliance_class . '%')
             ->orderBy('name', 'asc')
             ->pluck('name');
     }
     public function openCreateModal()
-{
-    $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
-    $this->isEditMode = false;
-    $this->dispatch('open-modal-compliance'); // Event untuk membuka modal
-}
-
-// Fungsi untuk membuka modal Edit
-public function edit($id)
-{
-    $this->isEditMode = true;
-    $this->complianceId = $id;
-
-    $data = ModelsCompliance::with('master')->findOrFail($id);
-
-    // Isi field form dengan data yang ada
-    $this->compliance_class = $data->master->class;
-    $this->compliance_name = $data->master->name;
-    $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
-
-    $this->dispatch('open-modal-compliance');
-}
-
-public function save()
-{
-    $this->validate([
-        'compliance_name' => 'required',
-        'start_date' => 'required',
-    ]);
-
-    $master = ComplianceMaster::where('name', $this->compliance_name)->first();
-    $startDate = Carbon::parse($this->start_date);
-    $expiredAt = ($master->duration_months > 0) ? $startDate->copy()->addMonths($master->duration_months) : null;
-
-    $data = [
-        'user_id' => $this->userId,
-        'compliance_master_id' => $master->id,
-        'start_date' => $startDate->format('Y-m-d'),
-        'expired_at' => $expiredAt ? $expiredAt->format('Y-m-d') : null,
-        'status' => true,
-    ];
-
-    if ($this->isEditMode) {
-        // Logika UPDATE
-        ModelsCompliance::find($this->complianceId)->update($data);
-    } else {
-        // Logika CREATE
-        ModelsCompliance::create($data);
+    {
+        $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
+        $this->isEditMode = false;
+        $this->dispatch('open-modal-compliance'); // Event untuk membuka modal
     }
 
-    $this->dispatch('close-modal-compliance');
-    $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
-}
+    // Fungsi untuk membuka modal Edit
+    public function edit($id)
+    {
+        $this->isEditMode = true;
+        $this->complianceId = $id;
+
+        $data = ModelsCompliance::with('master')->findOrFail($id);
+
+        // Isi field form dengan data yang ada
+        $this->compliance_class = $data->master->class;
+        $this->compliance_name = $data->master->name;
+        $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
+
+        $this->dispatch('open-modal-compliance');
+    }
+
+    public function save()
+    {
+        $this->validate([
+            'compliance_name' => 'required',
+            'start_date' => 'required',
+        ]);
+
+        $master = ComplianceMaster::where('name', $this->compliance_name)->first();
+        $startDate = Carbon::parse($this->start_date);
+        $expiredAt = ($master->duration_months > 0) ? $startDate->copy()->addMonths($master->duration_months) : null;
+
+        $data = [
+            'user_id' => $this->userId,
+            'compliance_master_id' => $master->id,
+            'start_date' => $startDate->format('Y-m-d'),
+            'expired_at' => $expiredAt ? $expiredAt->format('Y-m-d') : null,
+            'status' => true,
+        ];
+
+        if ($this->isEditMode) {
+            // Logika UPDATE
+            ModelsCompliance::find($this->complianceId)->update($data);
+        } else {
+            // Logika CREATE
+            ModelsCompliance::create($data);
+        }
+
+        $this->dispatch('close-modal-compliance');
+        $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
+    }
     public function render()
     {
         return view('livewire.administration.people.compliance', [
