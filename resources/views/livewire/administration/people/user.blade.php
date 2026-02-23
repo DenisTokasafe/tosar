@@ -7,7 +7,7 @@
 
                     <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
                     <div wire:ignore class="mx-2 w-60">
-                              <x-form.input-text label="Cari Pelapor" model="searchTerm" placeholder="Cari Pelapor..." required />
+                              <x-form.input-floating label="Cari Pelapor" model="searchTerm" placeholder="Cari Pelapor..." required />
                     </div>
                 </div>
                 <div>
