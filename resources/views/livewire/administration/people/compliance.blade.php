@@ -46,7 +46,7 @@
                 </tbody>
             </table>
         </div>
-        <dialog id="create_modal" class="modal">
+        <dialog wire:ignore.self id="create_modal" class="modal">
             <div class="modal-box">
 
                 <fieldset class="fieldset">
