@@ -26,10 +26,6 @@ class Compliance extends Component
     /** * Lifecycle Hook:
      * Jika user mengubah dropdown Class, kita kosongkan pilihan Name
      */
-    public function updatedComplianceClass()
-    {
-        $this->compliance_name = '';
-    }
 
     public function getExistingClassesProperty()
     {
