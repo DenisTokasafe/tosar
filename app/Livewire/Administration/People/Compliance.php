@@ -58,15 +58,15 @@ class Compliance extends Component
     {
 
 
-        if ($this->complianceId) {
-            $Master = ComplianceMaster::searchName($this->compliance_name)
-                ->orderBy('name', 'asc')
-                ->pluck('name');
-        } else {
-            $Master = ComplianceMaster::searchClass($this->compliance_class)
-                ->orderBy('name', 'asc')
-                ->pluck('name');
-        }
+        if (empty($this->compliance_class)) {
+        return collect();
+    }
+
+    return ComplianceMaster::select('name')->distinct()
+        ->where('class', $this->compliance_class)
+        ->whereNotNull('name')
+        ->orderBy('name', 'asc')
+        ->pluck('name');
 
 
         return $Master;
