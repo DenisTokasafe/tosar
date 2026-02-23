@@ -28,7 +28,7 @@
                         <button class="btn btn-soft btn-error btn-xs" wire:click="closeModal">Close</button>
                     </form>
                     {{-- Tombol Submit --}}
-                    <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled" wire:click="import,file">
+                    <button class="btn btn-xs btn-soft btn-success" wire:loading.attr="disabled" wire:click="import">
                         <span wire:loading.add.class='hidden' wire:target='import,file'><x-icon.file-import /></span>
                         <span wire:loading.remove.class='hidden' wire:target='import,file' class="hidden loading loading-bars loading-xs"></span>
                         <span wire:loading.add.class='hidden' wire:target='import,file'>Upload</span>
