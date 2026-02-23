@@ -7,7 +7,7 @@
                 Logo/Brand
             </div>
             <div class="flex gap-2 rounded">
-                <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
+                <x-button.btn-tooltip color="primary" icon="add" modalId="compliance_user_modal" tooltip="Tambah Employee" />
                 @livewire('administration.people.compliance-import')
             </div>
         </div>
@@ -46,7 +46,7 @@
                 </tbody>
             </table>
         </div>
-        <dialog wire:ignore.self id="create_modal" class="modal">
+        <dialog wire:ignore.self id="compliance_user_modal" class="modal">
             <div class="modal-box">
 
                 <fieldset class="fieldset">
