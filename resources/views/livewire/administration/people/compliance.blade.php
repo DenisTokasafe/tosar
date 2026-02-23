@@ -11,7 +11,7 @@
                 @livewire('administration.people.compliance-import')
             </div>
         </div>
-        <div class="mt-5 overflow-x-auto">
+        <div class="mt-10 overflow-x-auto">
             <table class="table table-xs">
                 <thead>
                     <tr>
