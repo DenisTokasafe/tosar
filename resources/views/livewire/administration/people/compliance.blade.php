@@ -8,7 +8,7 @@
 
             <div class="rounded ">
                 <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
-                <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
+                @livewire('administration.people.compliance-import')
             </div>
         </div>
         <div class="mt-5 overflow-x-auto">
