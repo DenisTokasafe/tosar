@@ -60,12 +60,12 @@ class Compliance extends Component
 
         if ($this->complianceId) {
             $Master = ComplianceMaster::searchName($this->compliance_name)
-            ->orderBy('name', 'asc')
-            ->pluck('name');
+                ->orderBy('name', 'asc')
+                ->pluck('name');
         } else {
             $Master = ComplianceMaster::searchClass($this->compliance_class)
-            ->orderBy('name', 'asc')
-            ->pluck('name');
+                ->orderBy('name', 'asc')
+                ->pluck('name');
         }
 
 
@@ -114,7 +114,8 @@ class Compliance extends Component
     }
     public function closed()
     {
-         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
+        $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
+        $this->dispatch('close-modal-compliance');
     }
 
     public function render()
