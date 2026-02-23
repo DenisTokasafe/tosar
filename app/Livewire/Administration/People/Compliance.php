@@ -48,19 +48,15 @@ class Compliance extends Component
 
         // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
         $this->compliance_class = $data->master->class;
-        $this->compliance_class = $data->master->class;
-        $this->fill([
-            'compliance_name' => $data->master->title,
-            'start_date'      => Carbon::parse($data->start_date)->format('d-m-Y'),
-        ]);
+        $this->compliance_name = $data->master->name;
+        $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
 
         $this->dispatch('open-modal-compliance');
     }
 
     public function getExistingNameProperty()
     {
-        // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
-        if (!$this->compliance_class) return collect();
+
 
         if ($this->complianceId) {
             $Master = ComplianceMaster::searchName($this->compliance_name)
