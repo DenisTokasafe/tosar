@@ -8,7 +8,7 @@
                     <div class=" gap-4 w-full p-2 md:w-[220px] overflow-y-auto ">
                         <flux:navlist>
                             <flux:navlist.item :href="route('people.details', $idUser)" wire:navigate>{{ __('Details') }}</flux:navlist.item>
-                            <flux:navlist.item :href="route('people.compliances', $idUser)" wire:navigate>{{ __('Compliance') }}</flux:navlist.item>
+                            <flux:navlist.item :href="route('people.compliance', $idUser)" wire:navigate>{{ __('Compliances') }}</flux:navlist.item>
                         </flux:navlist>
                     </div>
                         <flux:separator class="md:hidden" />
