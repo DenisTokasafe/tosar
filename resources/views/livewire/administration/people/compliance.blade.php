@@ -129,4 +129,15 @@
             </div>
         </dialog>
     </x-tabs-people.layout>
+    <script>
+        // Listener untuk membuka modal
+        window.addEventListener('open-modal-compliance', event => {
+            document.getElementById('compliance_user_modal').showModal();
+        });
+
+        // Listener untuk menutup modal
+        window.addEventListener('close-modal-compliance', event => {
+            document.getElementById('compliance_user_modal').close();
+        });
+    </script>
 </section>
