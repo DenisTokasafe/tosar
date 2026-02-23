@@ -6,7 +6,7 @@
                 <div class="flex flex-row">
 
                     <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
-                    <div wire:ignore class="mx-2 w-60">
+                    <div class="mx-2 w-60">
                               <x-form.input-floating label="Cari Pelapor" model="searchTerm" placeholder="Cari Pelapor..." required />
                     </div>
                 </div>
