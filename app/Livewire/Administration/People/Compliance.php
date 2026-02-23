@@ -48,8 +48,9 @@ class Compliance extends Component
 
         // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
         $this->compliance_class = $data->master->class;
+        $this->compliance_class = $data->master->class;
         $this->fill([
-            'compliance_name' => $data->master->name,
+            'compliance_name' => $data->master->title,
             'start_date'      => Carbon::parse($data->start_date)->format('d-m-Y'),
         ]);
 
@@ -61,9 +62,18 @@ class Compliance extends Component
         // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
         if (!$this->compliance_class) return collect();
 
-        return ComplianceMaster::searchClass($this->compliance_class)->searchName($this->compliance_name)
+        if ($this->complianceId) {
+            $Master = ComplianceMaster::searchName($this->compliance_name)
             ->orderBy('name', 'asc')
             ->pluck('name');
+        } else {
+            $Master = ComplianceMaster::searchClass($this->compliance_class)
+            ->orderBy('name', 'asc')
+            ->pluck('name');
+        }
+
+
+        return $Master;
     }
 
     public function openCreateModal()
