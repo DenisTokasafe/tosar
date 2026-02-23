@@ -50,30 +50,67 @@
             <div class="modal-box">
 
                 <fieldset class="fieldset">
-                        <x-form.label label="Pilih Class" required />
-                        <select wire:model.live="compliance_class"
-                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                            <option value="">-- Select Existing Class --</option>
-                            {{-- Loop data class yang unik dari database --}}
-                            @foreach($this->existing_classes as $item)
-                            <option value="{{ $item }}">{{ $item }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('class')" />
-                    </fieldset>
+                    <x-form.label label="Pilih Class" required />
+                    <select wire:model.live="compliance_class"
+                        class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <option value="">-- Select Existing Class --</option>
+                        {{-- Loop data class yang unik dari database --}}
+                        @foreach($this->existing_classes as $item)
+                        <option value="{{ $item }}">{{ $item }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('class')" />
+                </fieldset>
                 <fieldset class="fieldset">
-                        <x-form.label label="Description" required />
-                        <select wire:model.live="compliance_name"
-                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                            <option value="">-- Select Existing Compliance --</option>
-                            {{-- Loop data class yang unik dari database --}}
-                            @foreach($this->existing_name as $item)
-                            <option value="{{ $item }}">{{ $item }}</option>
-                            @endforeach
-                        </select>
-                        <x-label-error :messages="$errors->get('class')" />
-                    </fieldset>
-                    <x-form.datepicker label="Start Date" model="start_date" />
+                    <x-form.label label="Description" required />
+                    <select wire:model.live="compliance_name"
+                        class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <option value="">-- Select Existing Compliance --</option>
+                        {{-- Loop data class yang unik dari database --}}
+                        @foreach($this->existing_name as $item)
+                        <option value="{{ $item }}">{{ $item }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('class')" />
+                </fieldset>
+                <fieldset class="relative fieldset">
+                    <x-form.label label="Tanggal & Waktu" required />
+                    <div
+                        class="{{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+                        <div class="relative " wire:ignore x-data="{
+                            fp: null,
+                            initFlatpickr() {
+                                if (this.fp) this.fp.destroy();
+                                this.fp = flatpickr(this.$refs.tanggalInput, {
+                                    disableMobile: true,
+                                    enableTime: true,
+                                    time_24hr: true,
+                                    defaultDate: this.$wire.entangle('start_date').defer,
+                                    dateFormat: 'd-m-Y H:i',
+                                    clickOpens: true,
+                                    // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
+                                    // appendTo: this.$refs.wrapper,
+
+                                    // TAMBAHKAN ATAU UBAH OPSI POSITION
+                                    position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
+
+                                    onChange: (selectedDates, dateStr) => {
+                                        this.$wire.set('start_date', dateStr);
+                                    }
+                                });
+                            }
+                        }" x-ref="wrapper"
+                            x-init="initFlatpickr();
+                            Livewire.hook('message.processed', () => {
+                                initFlatpickr();
+                            });">
+                            <input type="text" x-ref="tanggalInput" wire:model.live='start_date'
+                                placeholder="Start Date" readonly
+                                class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                        </div>
+                    </div>
+                    <x-label-error :messages="$errors->get('tanggal')" />
+                </fieldset>
                 <div class="modal-action">
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
