@@ -16,7 +16,7 @@ class ComplianceMasterImport implements ToModel, WithHeadingRow
 
         // 2. Logika Gabungan untuk kolom 'title'
         // Format: Nama (expiry in X bulan) atau Nama (Permanen)
-      if ($durasi !== null && $durasi > 0) {
+      if ($durasi > 0) {
             $generatedTitle = "{$name} (expiry in {$durasi} bulan)";
         } else {
             $generatedTitle = "{$name} (Permanen)";

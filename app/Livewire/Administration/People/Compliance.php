@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Administration\People;
 
+use App\Models\Compliance as ModelsCompliance;
 use App\Models\User;
 use Livewire\Component;
 
@@ -17,6 +18,10 @@ class Compliance extends Component
     }
     public function render()
     {
-        return view('livewire.administration.people.compliance');
+        return view('livewire.administration.people.compliance',[
+            'compliances' =>ModelsCompliance::where('user_id', $this->userId)
+            ->with('master')
+            ->get()
+        ]);
     }
 }
