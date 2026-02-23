@@ -118,7 +118,7 @@
                         wire:click="save"
                         wire:loading.attr="disabled"
                         class="btn btn-xs btn-soft btn-success">
-                        <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
+                        <span wire:loading.remove.class='hidden' wire:target="save" class="hidden loading loading-spinner loading-xs"></span>
                         {{ $isEditMode ? 'Update Data' : 'Save Data' }}
                     </button>
                     <form method="dialog">
