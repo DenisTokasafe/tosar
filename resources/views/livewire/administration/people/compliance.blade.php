@@ -37,7 +37,7 @@
                             </span>
                         </td>
                         <td class="gap-2">
-                            <x-button.btn-tooltip color="warning" icon="edit" tooltip="Details" />
+                            <x-button.btn-tooltip wireClick="edit({{ $item->id }})" color="warning" icon="edit" tooltip="Details" />
                             <x-button.btn-tooltip color="error" icon="delete" modalId="delete_modal" tooltip="Hapus" />
 
                         </td>
