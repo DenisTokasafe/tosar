@@ -73,8 +73,8 @@
                     <select wire:model.live="compliance_name"
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Select Existing Compliance --</option>
-                        @foreach($this->existing_name as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                        @foreach($this->existing_name as $name)
+                        <option value="{{ $name }}">{{ $name }}</option>
                         @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('class')" />
