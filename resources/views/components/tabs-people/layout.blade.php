@@ -1,7 +1,7 @@
 @props(['idUser'])
 <x-tabs-relation.layout>
     <div
-        class="flex w-full flex-1 flex-col h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] ">
+        class="flex w-full flex-1 flex-col h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] relative">
         <div class="flex-1 h-full">
             <div class="w-full max-w-full ">
                 <div class="flex items-start max-md:flex-col">
@@ -15,7 +15,7 @@
                         <flux:separator vertical class="hidden m-2 md:block" />
                     <div class="self-stretch flex-1 max-md:pt-6">
 
-                        <div class="relative w-full mt-5">
+                        <div class="w-full mt-5 ">
                             {{ $slot }}
                         </div>
                     </div>
