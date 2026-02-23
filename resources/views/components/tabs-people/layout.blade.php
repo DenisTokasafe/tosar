@@ -1,7 +1,7 @@
 @props(['idUser'])
 <x-tabs-relation.layout>
     <div
-        class="flex w-full flex-1 flex-col h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] relative">
+        class="flex w-full flex-1 flex-col h-full max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-16rem)] md:max-h-[calc(100vh-14rem)] lg:max-h-[calc(100vh-14rem)] 2xl:max-h-[calc(100vh-14rem)] ">
         <div class="flex-1 h-full">
             <div class="w-full max-w-full ">
                 <div class="flex items-start max-md:flex-col">
