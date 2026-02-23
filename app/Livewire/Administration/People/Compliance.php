@@ -112,6 +112,10 @@ class Compliance extends Component
         $this->dispatch('close-modal-compliance');
         $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
     }
+    public function closed()
+    {
+         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
+    }
 
     public function render()
     {
