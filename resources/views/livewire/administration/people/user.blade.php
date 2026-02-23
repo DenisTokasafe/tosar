@@ -7,7 +7,7 @@
 
                     <x-button.btn-tooltip color="secondary" icon="refresh" modalId="showBulkUpdateModal" tooltip="Bulk Update" />
                     <div class="mx-2 w-60">
-                              <x-form.input-floating label="Cari Pelapor" model="searchTerm" placeholder="Cari Pelapor..."  />
+                              <x-form.input-floating label="Cari Pelapor" model="searchPeople" placeholder="Cari Pelapor..."  />
                     </div>
                 </div>
                 <div>
