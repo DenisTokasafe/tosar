@@ -60,7 +60,7 @@
                         @endforeach
                     </tbody>
                 </table>
-
+            </div>
     </x-tabs-relation.layout>
     {{ $users->links() }}
 

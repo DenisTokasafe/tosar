@@ -11,5 +11,20 @@
                 <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
             </div>
         </div>
+        <div class="mt-5 overflow-x-auto">
+                <table class="table table-xs">
+                    <thead>
+                        <tr>
+                            <th>Compliance</th>
+                            <th>Compliance Date</th>
+                            <th>Compliance Expiry Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
     </x-tabs-people.layout>
 </section>
