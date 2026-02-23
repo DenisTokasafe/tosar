@@ -27,7 +27,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         {{-- Mengambil nama dari relasi master --}}
-                        <td>{{ $item->master->name ?? 'N/A' }}</td>
+                        <td>{{ $item->master->title ?? 'N/A' }}</td>
                         <td>{{ $item->start_date }}</td>
                         <td>
                             {{-- Logika untuk menampilkan NULL sebagai Lifetime --}}
