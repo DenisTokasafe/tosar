@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
     <x-tabs-people.layout :idUser="$userId">
-        <div class="flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 md:absolute md:inset-x-0 md:top-0 md:z-20" >
+        <div class="flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 " >
             <div class="rounded ">
                 Logo/Brand
             </div>
