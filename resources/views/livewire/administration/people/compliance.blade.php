@@ -51,11 +51,23 @@
 
                 <fieldset class="fieldset">
                         <x-form.label label="Pilih Class" required />
-                        <select wire:model.live="class"
+                        <select wire:model.live="compliance_class"
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Select Existing Class --</option>
                             {{-- Loop data class yang unik dari database --}}
                             @foreach($this->existing_classes as $item)
+                            <option value="{{ $item }}">{{ $item }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('class')" />
+                    </fieldset>
+                <fieldset class="fieldset">
+                        <x-form.label label="Pilih Class" required />
+                        <select wire:model.live="compliance_name"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">-- Select Existing Compliance --</option>
+                            {{-- Loop data class yang unik dari database --}}
+                            @foreach($this->existing_name as $item)
                             <option value="{{ $item }}">{{ $item }}</option>
                             @endforeach
                         </select>

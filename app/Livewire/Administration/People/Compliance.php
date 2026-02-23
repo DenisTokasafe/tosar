@@ -10,6 +10,8 @@ use Livewire\Component;
 class Compliance extends Component
 {
     public $userId;
+    public $compliance_class;
+    public $compliance_name;
     public function mount($id)
     {
         $user = User::findOrFail($id);
@@ -24,6 +26,14 @@ class Compliance extends Component
             ->whereNotNull('class')
             ->orderBy('class', 'asc')
             ->pluck('class');
+    }
+    public function getExistingNameProperty()
+    {
+        return ComplianceMaster::select('name')
+            ->distinct()
+            ->whereNotNull('name')
+            ->orderBy('name', 'asc')
+            ->pluck('name');
     }
     public function render()
     {
