@@ -2,7 +2,7 @@
     <x-button.btn-tooltip modalId="import_modal" color="accent" icon="file-import" tooltip="Import Data" />
     <dialog id="import_modal" class="modal" wire:ignore.self>
         <div class="modal-box">
-            <h3 class="text-lg font-bold">Import Data Manhours</h3>
+            <h3 class="text-lg font-bold">Import Data Compliance</h3>
             <p class="text-[9px] font-bold text-gray-400 uppercase">Unggah file Excel (.xlsx, .xls) atau CSV yang berisi
                 data manhours.</p>
                 {{-- Input File --}}
