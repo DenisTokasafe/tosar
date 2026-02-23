@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Administration\People;
 
+use App\Models\User;
 use Livewire\Component;
 
 class Compliance extends Component
