@@ -2,7 +2,7 @@
     <x-toast />
     <x-tabs-people.layout :idUser="$userId">
 
-            <div class="fixed flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 md:top-0 md:z-20">
+            <div class="static flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 md:top-0 md:z-20">
                 <div class="rounded ">
                     Logo/Brand
                 </div>
