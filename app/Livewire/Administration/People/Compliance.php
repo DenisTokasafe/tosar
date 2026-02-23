@@ -3,6 +3,7 @@
 namespace App\Livewire\Administration\People;
 
 use App\Models\Compliance as ModelsCompliance;
+use App\Models\ComplianceMaster;
 use App\Models\User;
 use Livewire\Component;
 
@@ -15,6 +16,14 @@ class Compliance extends Component
 
         // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
         $this->userId = $user->id;
+    }
+    public function getExistingClassesProperty()
+    {
+        return ComplianceMaster::select('class')
+            ->distinct()
+            ->whereNotNull('class')
+            ->orderBy('class', 'asc')
+            ->pluck('class');
     }
     public function render()
     {

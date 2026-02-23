@@ -37,7 +37,7 @@
                             </span>
                         </td>
                         <td class="gap-2">
-                            <x-button.btn-tooltip color="warning" icon="edit"  tooltip="Details" />
+                            <x-button.btn-tooltip color="warning" icon="edit" tooltip="Details" />
                             <x-button.btn-tooltip color="error" icon="delete" modalId="delete_modal" tooltip="Hapus" />
 
                         </td>
@@ -48,8 +48,19 @@
         </div>
         <dialog id="create_modal" class="modal">
             <div class="modal-box">
-                <h3 class="text-lg font-bold">Hello!</h3>
-                <p class="py-4">Press ESC key or click the button below to close</p>
+
+                <fieldset class="fieldset">
+                        <x-form.label label="Pilih Class" required />
+                        <select wire:model.live="class"
+                            class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">-- Select Existing Class --</option>
+                            {{-- Loop data class yang unik dari database --}}
+                            @foreach($this->existing_classes as $item)
+                            <option value="{{ $item }}">{{ $item }}</option>
+                            @endforeach
+                        </select>
+                        <x-label-error :messages="$errors->get('class')" />
+                    </fieldset>
                 <div class="modal-action">
                     <form method="dialog">
                         <!-- if there is a button in form, it will close the modal -->
