@@ -74,7 +74,7 @@
                     <x-label-error :messages="$errors->get('class')" />
                 </fieldset>
                 <fieldset class="relative fieldset">
-                    <x-form.label label="Tanggal & Waktu" required />
+                    <x-form.label label="Start Date" required />
                     <div
                         class="{{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
                         <div class="relative " wire:ignore x-data="{
@@ -90,7 +90,7 @@
                                     clickOpens: true,
                                     // HAPUS ATAU KOMENTARI BARIS INI (appendTo)
                                     // appendTo: this.$refs.wrapper,
-
+                                    static: true,
                                     // TAMBAHKAN ATAU UBAH OPSI POSITION
                                     position: 'auto-below', // Opsi ini akan memaksa kalender muncul di bawah input.
 
@@ -109,7 +109,7 @@
                                 class="input input-bordered cursor-pointer w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                         </div>
                     </div>
-                    <x-label-error :messages="$errors->get('tanggal')" />
+                    <x-label-error :messages="$errors->get('start_date')" />
                 </fieldset>
                 <div class="modal-action">
                     <form method="dialog">
