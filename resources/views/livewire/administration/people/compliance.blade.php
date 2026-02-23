@@ -2,11 +2,11 @@
     <x-toast />
     <x-tabs-people.layout :idUser="$userId">
 
-        <div class="flex flex-col items-center gap-2 p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 ">
+        <div class="flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 ">
             <div class="rounded ">
                 Logo/Brand
             </div>
-            <div class="flex rounded">
+            <div class="flex gap-2 rounded">
                 <x-button.btn-tooltip color="primary" icon="add" modalId="create_modal" tooltip="Tambah Employee" />
                 @livewire('administration.people.compliance-import')
             </div>
