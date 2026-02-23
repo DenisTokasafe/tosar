@@ -216,6 +216,7 @@
                         x-init="// Inisialisasi Flatpickr dan simpan instance-nya
                         fp = flatpickr($refs.input, {
                             dateFormat: 'Y-m-d',
+                             static: true,
                         });
 
                         // Dengarkan event 'dateLoaded' dari Livewire
