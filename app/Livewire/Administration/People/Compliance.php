@@ -16,13 +16,21 @@ class Compliance extends Component
     public $start_date;
     public $isEditMode = false;
     public $complianceId;
+
     public function mount($id)
     {
         $user = User::findOrFail($id);
-
-        // ❗ PINDAHKAN INI KE ATAS: Set $this->userId DULU
         $this->userId = $user->id;
     }
+
+    /** * Lifecycle Hook:
+     * Jika user mengubah dropdown Class, kita kosongkan pilihan Name
+     */
+    public function updatedComplianceClass()
+    {
+        $this->compliance_name = '';
+    }
+
     public function getExistingClassesProperty()
     {
         return ComplianceMaster::select('class')
@@ -31,34 +39,41 @@ class Compliance extends Component
             ->orderBy('class', 'asc')
             ->pluck('class');
     }
+
     public function getExistingNameProperty()
     {
+        // Jika class belum dipilih, jangan tampilkan apa-apa atau tampilkan semua
+        if (!$this->compliance_class) return collect();
+
         return ComplianceMaster::select('name')
             ->distinct()
             ->whereNotNull('name')
-
-            ->where('class', 'like', '%' . $this->compliance_class . '%')
+            // Menggunakan '=' lebih presisi daripada 'like' untuk dropdown filter
+            ->where('class', $this->compliance_class)
             ->orderBy('name', 'asc')
             ->pluck('name');
     }
+
     public function openCreateModal()
     {
         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
         $this->isEditMode = false;
-        $this->dispatch('open-modal-compliance'); // Event untuk membuka modal
+        $this->dispatch('open-modal-compliance');
     }
 
-    // Fungsi untuk membuka modal Edit
     public function edit($id)
     {
         $this->isEditMode = true;
         $this->complianceId = $id;
 
+        // Pastikan nama relasi di Model Compliance adalah 'master'
         $data = ModelsCompliance::with('master')->findOrFail($id);
 
-        // Isi field form dengan data yang ada
+        // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
         $this->compliance_class = $data->master->class;
         $this->compliance_name = $data->master->name;
+
+        // Sesuaikan format tanggal untuk Flatpickr (d-m-Y)
         $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
 
         $this->dispatch('open-modal-compliance');
@@ -72,8 +87,13 @@ class Compliance extends Component
         ]);
 
         $master = ComplianceMaster::where('name', $this->compliance_name)->first();
-        $startDate = Carbon::parse($this->start_date);
-        $expiredAt = ($master->duration_months > 0) ? $startDate->copy()->addMonths($master->duration_months) : null;
+
+        // Gunakan createFromFormat jika input d-m-Y agar Carbon tidak bingung
+        $startDate = Carbon::createFromFormat('d-m-Y', trim($this->start_date));
+
+        $expiredAt = ($master->duration_months > 0)
+            ? $startDate->copy()->addMonths($master->duration_months)
+            : null;
 
         $data = [
             'user_id' => $this->userId,
@@ -84,20 +104,22 @@ class Compliance extends Component
         ];
 
         if ($this->isEditMode) {
-            // Logika UPDATE
             ModelsCompliance::find($this->complianceId)->update($data);
         } else {
-            // Logika CREATE
             ModelsCompliance::create($data);
         }
 
         $this->dispatch('close-modal-compliance');
         $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
     }
+
     public function render()
     {
         return view('livewire.administration.people.compliance', [
-            'compliances' => ModelsCompliance::where('user_id', $this->userId)->with('master')->get()
+            'compliances' => ModelsCompliance::where('user_id', $this->userId)
+                ->with('master')
+                ->latest() // Menampilkan data terbaru di atas
+                ->get()
         ]);
     }
 }
