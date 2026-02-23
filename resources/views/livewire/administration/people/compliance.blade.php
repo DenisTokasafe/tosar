@@ -20,6 +20,7 @@
                         <th>Compliance Name</th>
                         <th>Start Date</th>
                         <th>Expiry Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,11 @@
                             <span class="badge {{ $item->expired_at ? 'badge-ghost' : 'badge-success' }}">
                                 {{ $item->expired_at ?: 'Lifetime/Permanen' }}
                             </span>
+                        </td>
+                        <td class="gap-2">
+                            <x-button.btn-tooltip color="warning" icon="edit"  tooltip="Details" />
+                            <x-button.btn-tooltip color="error" icon="delete" modalId="delete_modal" tooltip="Hapus" />
+
                         </td>
                     </tr>
                     @endforeach
