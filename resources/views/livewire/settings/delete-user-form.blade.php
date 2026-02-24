@@ -11,7 +11,7 @@
 
 
     <dialog id="my_modal_2" class="modal" wire:ignore.self>
-        <form wire:submit="deleteUser" class="space-y-6">
+
             <div>
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
 
@@ -25,8 +25,8 @@
                 <form method="dialog" class="modal-backdrop">
                     <button class="btn btn-soft btn-secondary btn-xs">{{ __('Cancel') }}</button>
                 </form>
-                <button class="btn btn-soft btn-error btn-xs" type="submit">{{ __('Delete account') }}</button>
+                <button wire:click='deleteUser' class="btn btn-soft btn-error btn-xs" >{{ __('Delete account') }}</button>
             </div>
-        </form>
+
     </dialog>
 </section>
