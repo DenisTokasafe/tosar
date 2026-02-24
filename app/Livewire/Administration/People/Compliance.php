@@ -56,29 +56,21 @@ class Compliance extends Component
     }
     public function getExistingNameProperty()
     {
-
-
         if (empty($this->compliance_class)) {
             return collect();
         }
-
         return ComplianceMaster::select('name')->distinct()
             ->where('class', $this->compliance_class)
             ->whereNotNull('name')
             ->orderBy('name', 'asc')
             ->pluck('name');
-
-
-        return $Master;
     }
-
     public function openCreateModal()
     {
         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
         $this->isEditMode = false;
         $this->dispatch('open-modal-compliance');
     }
-
     public function save()
     {
         $this->validate([
@@ -87,7 +79,6 @@ class Compliance extends Component
         ]);
 
         $master = ComplianceMaster::where('name', $this->compliance_name)->first();
-
         // Gunakan createFromFormat jika input d-m-Y agar Carbon tidak bingung
         $startDate = Carbon::createFromFormat('d-m-Y', trim($this->start_date));
 
