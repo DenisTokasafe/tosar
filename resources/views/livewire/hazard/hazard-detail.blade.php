@@ -55,7 +55,7 @@
                         </label>
                         <select wire:model="assignTo1"
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($ermList as $erm)
                                 <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
                             @endforeach
@@ -68,7 +68,7 @@
                         </label>
                         <select wire:model="assignTo2"
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($ermList as $erm)
                                 <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
                             @endforeach
@@ -256,7 +256,7 @@
                         <x-form.label label="Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tipe_bahaya"
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($eventTypes as $et)
                                 <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
                             @endforeach
@@ -268,7 +268,7 @@
                         <x-form.label label="Jenis Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="sub_tipe_bahaya"
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @if ($tipe_bahaya)
                                 @foreach ($subTypes as $et)
                                     <option value="{{ $et->id }}">{{ $et->event_sub_type_name }}</option>
@@ -293,7 +293,7 @@
                         <div class="hidden peer-checked/kta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
                                 class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                                <option value="">-- Pilih Kategori Bahaya --</option>
+                                <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ktas as $kta)
                                     <option value="{{ $kta->id }}">{{ $kta->name }}</option>
                                 @endforeach
@@ -302,7 +302,7 @@
                         <div class="hidden peer-checked/tta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
                                 class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                                <option value="">-- Pilih Kategori Bahaya --</option>
+                                <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ttas as $tta)
                                     <option value="{{ $tta->id }}">{{ $tta->name }}</option>
                                 @endforeach
@@ -399,7 +399,7 @@
 
                 </div>
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
-                    <legend class="text-sm font-semibold card-title ">Penanggung Jawab</legend>
+                    <legend class="text-sm font-semibold card-title ">{{ __('Penanggung Jawab') }}</legend>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                         {{-- workgroup --}}
                         <fieldset>
@@ -476,7 +476,7 @@
                             <x-form.label label="PIC" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
                                 class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                                <option value="">-- Pilih --</option>
+                                <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($penanggungJawabOptions as $pj)
                                     <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
                                 @endforeach
@@ -487,7 +487,7 @@
                 </fieldset>
 
                 <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
-                    <legend class="text-sm font-semibold card-title ">Tindakan Lanjutan</legend>
+                    <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Lanjutan') }}</legend>
 
                     <!-- Deskripsi Tindakan -->
                     <fieldset class="fieldset md:col-span-1" wire:key="field-action">
@@ -639,7 +639,7 @@
                             <x-form.label label="Consequence" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="consequence_id"
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
-                                <option value="">-- Pilih --</option>
+                                <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($consequencess as $cons)
                                     <option value="{{ $cons->id }}">{{ $cons->name }}</option>
                                 @endforeach
@@ -663,7 +663,7 @@
                             <x-form.label label="Likelihood" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="likelihood_id"
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
-                                <option value="">-- Pilih --</option>
+                                <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($likelihoodss as $like)
                                     <option value="{{ $like->id }}">{{ $like->name }}</option>
                                 @endforeach
