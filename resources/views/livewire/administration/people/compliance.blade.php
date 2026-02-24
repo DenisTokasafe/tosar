@@ -62,7 +62,7 @@
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Select Existing Class --</option>
                         {{-- Loop data class yang unik dari database --}}
-                        @foreach($compliance_name as $item)
+                        @foreach($this->existing_classes as $item)
                         <option value="{{ $item }}">{{ $item }}</option>
                         @endforeach
                     </select>
@@ -73,7 +73,7 @@
                     <select wire:model.live="compliance_name"
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Select Existing Compliance --</option>
-                        @foreach($this->existing_name as $name)
+                        @foreach($compliance_names as $name)
                         <option value="{{ $name }}">{{ $name }}</option>
                         @endforeach
                     </select>

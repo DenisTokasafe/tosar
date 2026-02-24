@@ -112,7 +112,7 @@ class Compliance extends Component
                 ->with('master')
                 ->latest() // Menampilkan data terbaru di atas
                 ->get(),
-            'compliance_name' => $master
+            'compliance_names' => $master
         ]);
     }
 }
