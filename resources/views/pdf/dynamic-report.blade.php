@@ -280,7 +280,7 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                     <td class="no-border" style="width: 15%; vertical-align: top;">
                         <table class="legend-table">
                             <tr>
-                                <th class="bg-gray">Keerangan</th>
+                                <th class="bg-gray">Keterangan</th>
                             </tr>
                             <tr>
                                 <td><span class="good">✔</span> Baik</td>
