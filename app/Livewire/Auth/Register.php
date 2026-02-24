@@ -212,7 +212,6 @@ class Register extends Component
                 'close' => true,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-            session()->flash('message', 'Request pembuatan user login telah dikirim. Silakan cek email Anda.');
         } catch (\Exception $e) {
             $this->dispatch(
                 'alert',
