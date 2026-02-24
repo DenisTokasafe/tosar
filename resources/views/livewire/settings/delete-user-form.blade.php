@@ -29,10 +29,6 @@
             </div>
 
             <div class="modal-action">
-                <form method="dialog">
-                    <button class="btn btn-ghost btn-xs">{{ __('Cancel') }}</button>
-                </form>
-
                 <button
                     wire:click="deleteUser"
                     wire:loading.attr="disabled"
