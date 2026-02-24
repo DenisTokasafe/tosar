@@ -788,7 +788,7 @@ class Index extends Component
                         'title'          => 'Halo Inspector,',
                         'messageText'    => "Anda telah terdaftar sebagai tim inspeksi untuk laporan berikut. Silakan gunakan link di bawah untuk melihat detail penugasan.",
                         'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
-                        'actionUrl'      => route('wpi-detail', $report->id)
+                        'actionUrl'      => route('wpi.edit', $report->id)
                     ]
                 );
             }
@@ -826,7 +826,7 @@ class Index extends Component
                         'title'          => 'Notifikasi Perubahan Status',
                         'messageText'    => "Laporan WPI telah diupdate ke status: **$currentStatus**. Silakan lakukan pemeriksaan atau tindakan lebih lanjut.",
                         'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus Saat Ini: $currentStatus",
-                        'actionUrl'      => route('wpi-detail', $report->id)
+                        'actionUrl'      => route('wpi.edit', $report->id)
                     ]
                 );
             }
@@ -848,7 +848,7 @@ class Index extends Component
                         'title'          => 'Halo Inspector,',
                         'messageText'    => "Terdapat pembaruan data atau status pada laporan inspeksi di mana Anda ditugaskan. Status saat ini: **$currentStatus**.",
                         'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
-                        'actionUrl'      => route('wpi-detail', $report->id)
+                        'actionUrl'      => route('wpi.edit', $report->id)
                     ]
                 );
             }
