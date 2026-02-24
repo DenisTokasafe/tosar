@@ -54,17 +54,7 @@ class Compliance extends Component
 
         $this->dispatch('open-modal-compliance');
     }
-    public function getExistingNameProperty()
-    {
-        if (empty($this->compliance_class)) {
-            return collect();
-        }
-        return ComplianceMaster::select('name')->distinct()
-            ->where('class', $this->compliance_class)
-            ->whereNotNull('name')
-            ->orderBy('name', 'asc')
-            ->pluck('name');
-    }
+
     public function openCreateModal()
     {
         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
@@ -115,7 +105,12 @@ class Compliance extends Component
             'compliances' => ModelsCompliance::where('user_id', $this->userId)
                 ->with('master')
                 ->latest() // Menampilkan data terbaru di atas
-                ->get()
+                ->get(),
+            'compliance_name' => ComplianceMaster::select('name')->distinct()
+            ->where('class', $this->compliance_class)
+            ->whereNotNull('name')
+            ->orderBy('name', 'asc')
+            ->pluck('name')
         ]);
     }
 }
