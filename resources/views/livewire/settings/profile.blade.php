@@ -2,11 +2,11 @@
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your data account profile information and email address.')">
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                <flux:input wire:model.blur="name" :label="__('Name')" type="text" autofocus autocomplete="name" />
-                <flux:input wire:model.blur="username" :label="__('username')" type="text" autofocus autocomplete="username" />
-                <flux:input wire:model.blur="employee_id" :label="__('employee_id')" type="text" autofocus autocomplete="employee_id" />
+        <form wire:submit="updateProfileInformation" class="w-full my-6 space-y-6">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                 <x-form.input-text label="Nama Lengkap" model="name" placeholder="Nama Lengkap..." required />
+                 <x-form.input-text label="username" model="username" placeholder="username..." required />
+                 <x-form.input-text label="employee id" model="employee_id" placeholder="employee id..." required />
                 <fieldset>
                     <input id="department" value="department" wire:model="deptCont"
                         class="peer/department radio radio-sm radio-accent" type="radio" name="deptCont" checked />
@@ -26,7 +26,7 @@
                             <!-- Dropdown hasil search -->
                             @if ($showDropdown && count($departments) > 0)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik salah satu -->
                                     <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
@@ -53,7 +53,7 @@
                             <!-- Dropdown hasil search -->
                             @if ($showContractorDropdown && count($contractors) > 0)
                                 <ul
-                                    class="absolute z-10 bg-base-100 border rounded-md w-full mt-1 max-h-60 overflow-auto shadow">
+                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
                                     <!-- Spinner ketika klik -->
                                     <div wire:loading wire:target="selectContractor" class="p-2 text-center">
                                         <span class="loading loading-spinner loading-sm text-secondary"></span>
