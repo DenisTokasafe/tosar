@@ -105,7 +105,7 @@
                                     placeholder="Remarks" />
                             </td>
 
-                            <td class="p-2 text-center bg-white border-b">
+                            <td class="p-2 text-center bg-white border-b" wire:loading.add.class="skeleton"  wire:target="dokumentasi.{{ $master->id }}">
                                 <div class="flex flex-col items-center justify-center">
                                     <input type="file" id="file-{{ $master->id }}" class="hidden"
                                         wire:model="dokumentasi.{{ $master->id }}">
