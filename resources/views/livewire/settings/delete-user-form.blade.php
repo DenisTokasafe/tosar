@@ -8,8 +8,6 @@
         <button class="btn btn-soft btn-error btn-xs" x-data="" onclick="my_modal_2.showModal()">
             {{ __('Delete account') }}
         </button>
-
-
     <dialog id="my_modal_2" class="modal" wire:ignore.self>
 
             <div>
