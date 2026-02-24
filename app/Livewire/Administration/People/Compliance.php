@@ -44,7 +44,7 @@ class Compliance extends Component
         $this->complianceId = $id;
 
         // Pastikan nama relasi di Model Compliance adalah 'master'
-        $data = ModelsCompliance::with('master')->findOrFail($id);
+        $data = ModelsCompliance::with('master')->whereId($id)->first();
 
         // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
         $this->compliance_class = $data->master->class;
