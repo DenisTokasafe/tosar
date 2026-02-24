@@ -27,7 +27,7 @@
                     <button class="btn btn-soft btn-secondary btn-xs">{{ __('Cancel') }}</button>
                 </flux:modal.close>
 
-                <flux:button class="btn btn-soft btn-error btn-xs" type="submit">{{ __('Delete account') }}</flux:button>
+                <button class="btn btn-soft btn-error btn-xs" type="submit">{{ __('Delete account') }}</button>
             </div>
         </form>
     </flux:modal>

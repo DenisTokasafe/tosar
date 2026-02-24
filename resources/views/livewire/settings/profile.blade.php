@@ -64,7 +64,7 @@
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <button type="submit" class="btn btn-soft btn-primary btn-xs">{{ __('Save') }}</button>
+                    <button type="submit" class="btn btn-soft btn-success btn-xs">{{ __('Save') }}</button>
                 </div>
 
                 <x-action-message class="me-3" on="profile-updated">
