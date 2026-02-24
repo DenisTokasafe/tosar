@@ -4,27 +4,48 @@
         <flux:subheading>{{ __('Delete your account and all of its resources') }}</flux:subheading>
     </div>
 
+    <button class="btn btn-soft btn-error btn-xs" onclick="delete_account_modal.showModal()">
+        {{ __('Delete account') }}
+    </button>
 
-        <button class="btn btn-soft btn-error btn-xs" x-data="" onclick="my_modal_2.showModal()">
-            {{ __('Delete account') }}
-        </button>
-    <dialog id="my_modal_2" class="modal" wire:ignore.self>
-
-            <div>
+    <dialog id="delete_account_modal" class="modal" wire:ignore.self>
+        <div class="modal-box">
+            <div class="mb-5">
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
 
-                <flux:subheading>
+                <flux:subheading class="mt-2">
                     {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
                 </flux:subheading>
             </div>
-             <x-form.input-text label="Password" type='password' model="password" placeholder="password..." required />
 
-            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-                <form method="dialog" class="modal-backdrop">
-                    <button class="btn btn-soft btn-secondary btn-xs">{{ __('Cancel') }}</button>
-                </form>
-                <button wire:click='deleteUser' class="btn btn-soft btn-error btn-xs" >{{ __('Delete account') }}</button>
+            <div class="mb-6">
+                <x-form.input-text
+                    label="Password"
+                    type="password"
+                    model="password"
+                    placeholder="Masukkan password Anda..."
+                    required
+                />
             </div>
 
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost btn-xs">{{ __('Cancel') }}</button>
+                </form>
+
+                <button
+                    wire:click="deleteUser"
+                    wire:loading.attr="disabled"
+                    class="btn btn-error btn-xs"
+                >
+                    <span wire:loading wire:target="deleteUser" class="loading loading-spinner loading-xs"></span>
+                    {{ __('Delete account') }}
+                </button>
+            </div>
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
     </dialog>
 </section>
