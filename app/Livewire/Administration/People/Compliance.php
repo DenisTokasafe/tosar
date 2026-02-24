@@ -101,16 +101,18 @@ class Compliance extends Component
 
     public function render()
     {
+        $master = [];
+        $master = ComplianceMaster::select('name')->distinct()
+            ->where('class', $this->compliance_class)
+            ->whereNotNull('name')
+            ->orderBy('name', 'asc')
+            ->pluck('name');
         return view('livewire.administration.people.compliance', [
             'compliances' => ModelsCompliance::where('user_id', $this->userId)
                 ->with('master')
                 ->latest() // Menampilkan data terbaru di atas
                 ->get(),
-            'compliance_name' => ComplianceMaster::select('name')->distinct()
-            ->where('class', $this->compliance_class)
-            ->whereNotNull('name')
-            ->orderBy('name', 'asc')
-            ->pluck('name')
+            'compliance_name' => $master
         ]);
     }
 }
