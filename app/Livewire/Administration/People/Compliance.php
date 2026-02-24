@@ -36,37 +36,37 @@ class Compliance extends Component
             ->pluck('class');
     }
 
-
-
-    public function edit($id)
+    public function edit(ModelsCompliance $data)
     {
         $this->isEditMode = true;
-        $this->complianceId = $id;
+        $this->complianceId = $data->id;
 
-        // Pastikan nama relasi di Model Compliance adalah 'master'
-        $data = ModelsCompliance::with('master')->whereId($id)->first();
+        // Load relasi master jika belum ter-load
+        $data->load('master');
 
-        // URUTAN PENTING: Set Class dulu agar list 'ExistingName' tersedia
+        // 1. Set Class (Ini akan memicu Computed Property getExistingNameProperty)
+        $this->compliance_class = $data->master->class;
+
+        // 2. Gunakan $this->fill() untuk memastikan sinkronisasi data ke View lebih stabil
         $this->compliance_class = $data->master->class;
         $this->compliance_name = $data->master->name;
         $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
 
         $this->dispatch('open-modal-compliance');
     }
-
     public function getExistingNameProperty()
     {
 
 
         if (empty($this->compliance_class)) {
-        return collect();
-    }
+            return collect();
+        }
 
-    return ComplianceMaster::select('name')->distinct()
-        ->where('class', $this->compliance_class)
-        ->whereNotNull('name')
-        ->orderBy('name', 'asc')
-        ->pluck('name');
+        return ComplianceMaster::select('name')->distinct()
+            ->where('class', $this->compliance_class)
+            ->whereNotNull('name')
+            ->orderBy('name', 'asc')
+            ->pluck('name');
 
 
         return $Master;
