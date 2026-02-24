@@ -12,7 +12,7 @@
                     <x-form.label label="Tipe Bahaya" required />
                     <select wire:model.live="tipe_bahaya"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tipe_bahaya') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">-- Pilih --</option>
+                        <option value="">{{__('-- Pilih --')}}</option>
                         @foreach ($eventTypes as $et)
                             <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
                         @endforeach
@@ -23,7 +23,7 @@
                     <x-form.label label="Jenis Bahaya" required />
                     <select wire:model.live="sub_tipe_bahaya"
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('sub_tipe_bahaya') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"">
-                        <option value="">-- Pilih --</option>
+                        <option value="">{{__('-- Pilih --')}}</option>
                         @if ($tipe_bahaya)
                             @foreach ($subTypes as $et)
                                 <option value=" {{ $et->id }}">{{ $et->event_sub_type_name }}</option>
@@ -265,7 +265,7 @@
                     <x-label-error :messages="$errors->get('doc_corrective')" />
                 </fieldset>
             </div>
-            <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+            <fieldset class="p-3 my-4 border border-gray-200 shadow-md fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title ">{{ __('Penanggung Jawab') }}</legend>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                     <fieldset>
@@ -300,7 +300,7 @@
                         <x-form.label label="PIC" required />
                         <select wire:model.live="penanggungJawab"
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('penanggungJawab') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($penanggungJawabOptions as $pj)
                                 <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
                             @endforeach
@@ -379,10 +379,10 @@
                 <!-- Tombol Tambah -->
                 <div class="flex justify-end ">
                     <flux:button size="xs" wire:click="addAction" icon:trailing="add-icon" variant="primary">
-                        Tambah</flux:button>
+                        {{ __('Tambah') }}</flux:button>
                 </div>
                 <!-- List Actions -->
-                <div class="my-2 divider">Daftar Tindakan</div>
+                <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>
                 <ul>
                     @forelse ($actions as $index => $action)
                         <li class="p-2 border rounded-md shadow-sm bg-base-100">
@@ -437,7 +437,7 @@
 
                     @empty
                         <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <p class="text-sm text-center text-gray-500">Belum ada tindakan yang ditambahkan.</p>
+                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan') }}.</p>
                         </li>
                     @endforelse
                 </ul>
@@ -452,7 +452,7 @@
                         <x-form.label label="Consequence" required />
                         <select wire:model.live="consequence_id"
                             class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($consequencess as $cons)
                                 <option value="{{ $cons->id }}">{{ $cons->name }}</option>
                             @endforeach
@@ -476,7 +476,7 @@
                         <x-form.label label="Likelihood" required />
                         <select wire:model.live="likelihood_id"
                             class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                            <option value="">-- Pilih --</option>
+                            <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($likelihoodss as $like)
                                 <option value="{{ $like->id }}">{{ $like->name }}</option>
                             @endforeach
@@ -580,12 +580,12 @@
                 </table>
             @endif
             <div class="flex justify-end hidden mt-4 md:block">
-                <flux:button size="xs" type="submit" icon:trailing="send" variant="primary">Kirim Laporan
+                <flux:button size="xs" type="submit" icon:trailing="send" variant="primary">{{ __('Kirim Laporan') }}
                 </flux:button>
             </div>
             <div class="block mt-4 md:hidden">
                 <flux:button size="xs" class="w-full" type="submit" icon:trailing="send" variant="primary">
-                    Kirim Laporan</flux:button>
+                    {{ __('Kirim Laporan') }}</flux:button>
             </div>
         </form>
     </x-manhours.layout>
