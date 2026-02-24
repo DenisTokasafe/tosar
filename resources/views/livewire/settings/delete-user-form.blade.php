@@ -19,8 +19,7 @@
                     {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
                 </flux:subheading>
             </div>
-
-            <flux:input wire:model="password" :label="__('Password')" type="password" />
+             <x-form.input-text label="Password" type='password' model="password" placeholder="password..." required />
 
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
                 <flux:modal.close>
