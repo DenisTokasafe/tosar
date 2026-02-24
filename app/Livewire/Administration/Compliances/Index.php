@@ -121,7 +121,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.administration.compliances.index', [
-            'ComplianceMaster' => ComplianceMaster::search($this->class_search)->paginate(20)
+            'ComplianceMaster' => ComplianceMaster::searchClass($this->class_search)->paginate(20)
         ]);
     }
     public function paginationView()
