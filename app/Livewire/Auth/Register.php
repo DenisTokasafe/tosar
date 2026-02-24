@@ -205,13 +205,14 @@ class Register extends Component
             // Menggunakan Flux notification jika Anda sudah menginstalnya,
             // atau tetap menggunakan session flash.
             $this->dispatch('alert', [
-                'text' => "Request telah dikirim ke Admin.",
+                'text' => "Request telah dikirim, Silahakan menunggu balasan email dari Admin Tosar!!!",
                 'duration' => 5000,
                 'destination' => '/contact',
                 'newWindow' => true,
                 'close' => true,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
+            session()->flash('message', 'Request pembuatan user login telah dikirim. Silakan cek email Anda.');
         } catch (\Exception $e) {
             $this->dispatch(
                 'alert',
@@ -225,7 +226,7 @@ class Register extends Component
                 ]
             );
         }
-        $this->reset('email_req');
-        session()->flash('message', 'Request pembuatan user login telah dikirim. Silakan cek email Anda.');
+         $this->reset(['email_req', 'name_req']);
+
     }
 }
