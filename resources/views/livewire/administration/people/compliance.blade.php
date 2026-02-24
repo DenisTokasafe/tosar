@@ -4,7 +4,7 @@
 
         <div class="flex flex-col items-center p-2 border rounded-t-lg md:flex-row md:justify-between border-neutral-200 ">
             <div class="flex gap-2 rounded">
-                <x-button.btn-tooltip color="primary" icon="add" modalId="compliance_user_modal" tooltip="Tambah Employee" />
+                <x-button.btn-tooltip color="primary" icon="add" modalId="compliance_user_modal" tooltip="Tambah Data" />
                 @livewire('administration.people.compliance-import')
             </div>
             <div class="flex gap-2 rounded">
