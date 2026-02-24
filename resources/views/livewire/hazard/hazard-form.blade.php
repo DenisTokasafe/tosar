@@ -310,8 +310,8 @@
                 </div>
             </fieldset>
 
-            <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
-                <legend class="text-sm font-semibold card-title "> Tindakan Lanjutan</legend>
+            <fieldset class="p-3 my-4 border border-gray-200 shadow-md fieldset card bg-base-100">
+                <legend class="text-sm font-semibold card-title "> {{ __('Tindakan Lanjutan') }}</legend>
                 <!-- Deskripsi Tindakan -->
                 <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                     <x-form.label label="Deskripsi Tindakan" required />
