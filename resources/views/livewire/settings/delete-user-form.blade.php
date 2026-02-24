@@ -24,10 +24,10 @@
 
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
                 <flux:modal.close>
-                    <flux:button variant="filled">{{ __('Cancel') }}</flux:button>
+                    <button class="btn btn-soft btn-secondary btn-xs">{{ __('Cancel') }}</button>
                 </flux:modal.close>
 
-                <flux:button variant="danger" type="submit">{{ __('Delete account') }}</flux:button>
+                <flux:button class="btn btn-soft btn-error btn-xs" type="submit">{{ __('Delete account') }}</flux:button>
             </div>
         </form>
     </flux:modal>

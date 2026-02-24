@@ -59,12 +59,12 @@
                     @endif
                 </div>
 
-                <x-form.tgl  label="Date of Birth" model="date_birth" dateFormat="Y-m-d" />
+                <x-form.tgl  label="Date of Birth" model="date_birth" dateFormat="d-m-Y" />
             </div>
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
+                    <button type="submit" class="btn btn-soft btn-primary btn-xs">{{ __('Save') }}</button>
                 </div>
 
                 <x-action-message class="me-3" on="profile-updated">
