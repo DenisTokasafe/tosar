@@ -10,7 +10,7 @@
         </button>
 
 
-    <dialog id="my_modal_2" class="modal">
+    <dialog id="my_modal_2" class="modal" wire:ignore.self>
         <form wire:submit="deleteUser" class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
