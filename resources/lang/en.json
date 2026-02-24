@@ -11,7 +11,7 @@
     "Pilih": "-- Select --",
     "Kondisi Tidak Aman": "Unsafe Condition",
     "Tindakan Tidak Aman": "Unsafe Action",
-    "Pilih Kategori Bahaya": "-- Select Hazard Category --",
+    "--Pilih Kategori Bahaya--": "-- Select Hazard Category --",
     "Deskripsi": "Description",
     "Lampirkan Foto Dokumentasi Deskripsi": "Attach Description Documentation Photo",
     "Lokasi": "Location",
@@ -43,6 +43,8 @@
     "Simpan": "Save",
     "Batal": "Cancel",
     "Memproses...": "Processing...",
+    "Lampirkan foto atau dokumentasi (optional)": "Attach photo or documentation (optional)",
+    "Lampirkan Foto Dokumentasi Deskripsi (optional)": "Attach Description Documentation Photo (optional)",
     "Belum ada tindakan yang ditambahkan.": "No actions added yet.",
     "Yakin hapus tindakan ini?": "Are you sure you want to delete this action?"
 }
