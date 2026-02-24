@@ -4,13 +4,13 @@
         <flux:subheading>{{ __('Delete your account and all of its resources') }}</flux:subheading>
     </div>
 
-    <flux:modal.trigger name="confirm-user-deletion">
-        <button class="btn btn-soft btn-error btn-xs" x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
+
+        <button class="btn btn-soft btn-error btn-xs" x-data="" onclick="my_modal_2.showModal()">
             {{ __('Delete account') }}
         </button>
-    </flux:modal.trigger>
 
-    <flux:modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
+
+    <dialog id="my_modal_2" class="modal">
         <form wire:submit="deleteUser" class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
@@ -22,12 +22,11 @@
              <x-form.input-text label="Password" type='password' model="password" placeholder="password..." required />
 
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-                <flux:modal.close>
+                <form method="dialog" class="modal-backdrop">
                     <button class="btn btn-soft btn-secondary btn-xs">{{ __('Cancel') }}</button>
-                </flux:modal.close>
-
+                </form>
                 <button class="btn btn-soft btn-error btn-xs" type="submit">{{ __('Delete account') }}</button>
             </div>
         </form>
-    </flux:modal>
+    </dialog>
 </section>
