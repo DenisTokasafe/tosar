@@ -7,7 +7,6 @@
         {!! Breadcrumbs::render($currentRoute, isset($reportId) ? $reportId : null) !!}
         @endif
     </div>
-
     <x-tabs-wpi.layout>
         <div class="mb-2 bg-white ">
             <div class="grid content-center w-full grid-cols-1 gap-2 md:grid-cols-4">
