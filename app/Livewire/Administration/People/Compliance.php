@@ -32,15 +32,15 @@ class Compliance extends Component
         $today = Carbon::now()->startOfDay();
         $expiryDate = $expired_at ? Carbon::parse($expired_at)->startOfDay() : null;
 
-        // 1. Jika NULL (Lifetime)
+        // 1. Jika NULL (Lifetime) -> Hijau
         if (!$expiryDate) {
             return [
-                'class' => 'badge-success',
+                'class' => 'badge-success text-white',
                 'label' => 'Lifetime/Permanen'
             ];
         }
 
-        // 2. Jika sudah lewat tanggal (Expired)
+        // 2. Jika sudah lewat tanggal hari ini -> Merah
         if ($expiryDate->lessThan($today)) {
             return [
                 'class' => 'badge-error text-white font-bold',
@@ -48,17 +48,18 @@ class Compliance extends Component
             ];
         }
 
-        // 3. Jika mendekati 1 bulan (30 hari)
-        if ($expiryDate->diffInDays($today) <= 30) {
+        // 3. Jika selisih hari <= 30 hari ke depan -> Kuning
+        // diffInDays secara default menghasilkan nilai absolut
+        if ($today->diffInDays($expiryDate, false) <= 30) {
             return [
                 'class' => 'badge-warning text-black',
                 'label' => $expiryDate->format('d-m-Y') . ' (Soon)'
             ];
         }
 
-        // 4. Masih Aktif (Normal)
+        // 4. Jika masih lama (> 30 hari) -> Hijau
         return [
-            'class' => 'badge-ghost',
+            'class' => 'badge-success text-white',
             'label' => $expiryDate->format('d-m-Y')
         ];
     }
