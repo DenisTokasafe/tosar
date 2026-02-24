@@ -35,7 +35,7 @@ class Compliance extends Component
         // 1. Jika NULL (Lifetime) -> Hijau
         if (!$expiryDate) {
             return [
-                'class' => 'badge-success text-white',
+                'class' => 'badge-soft badge-success text-white',
                 'label' => 'Lifetime/Permanen'
             ];
         }
@@ -43,7 +43,7 @@ class Compliance extends Component
         // 2. Jika sudah lewat tanggal hari ini -> Merah
         if ($expiryDate->lessThan($today)) {
             return [
-                'class' => 'badge-error text-white font-bold',
+                'class' => 'badge-soft badge-error text-white font-bold',
                 'label' => $expiryDate->format('d-m-Y') . ' (Expired)'
             ];
         }
@@ -52,14 +52,14 @@ class Compliance extends Component
         // diffInDays secara default menghasilkan nilai absolut
         if ($today->diffInDays($expiryDate, false) <= 30) {
             return [
-                'class' => 'badge-warning text-black',
+                'class' => 'badge-soft badge-warning text-black',
                 'label' => $expiryDate->format('d-m-Y') . ' (Soon)'
             ];
         }
 
         // 4. Jika masih lama (> 30 hari) -> Hijau
         return [
-            'class' => 'badge-success text-white',
+            'class' => 'badge-soft badge-success text-white',
             'label' => $expiryDate->format('d-m-Y')
         ];
     }

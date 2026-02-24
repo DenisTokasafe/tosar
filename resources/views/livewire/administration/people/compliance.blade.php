@@ -33,7 +33,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         {{-- Mengambil nama dari relasi master --}}
-                        <td>{{ $item->master->title ?? 'N/A' }}</td>
+                        <td>{{ $item->master->name ?? 'N/A' }}</td>
                         <td>{{ $tgl}}</td>
                         <td>
                             @php
