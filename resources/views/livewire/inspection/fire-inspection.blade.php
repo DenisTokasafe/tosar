@@ -110,6 +110,7 @@
                                                 wire:model="dokumentasi.{{ $master->id }}">
 
                                             @if (isset($dokumentasi[$master->id]))
+                                              <span wire:loading.remove.class="hidden" class="hidden" wire:target="dokumentasi.{{ $master->id }}"></span>
                                                 <div class="relative inline-block group">
                                                     <img src="{{ $dokumentasi[$master->id]->temporaryUrl() }}"
                                                         class="object-cover w-20 h-20 border rounded-md shadow-sm">
