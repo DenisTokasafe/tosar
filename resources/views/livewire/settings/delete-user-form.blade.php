@@ -38,7 +38,7 @@
                     wire:loading.attr="disabled"
                     class="btn btn-error btn-xs"
                 >
-                    <span wire:loading wire:target="deleteUser" class="loading loading-spinner loading-xs"></span>
+                    <span wire:loading.remove.class='hidden' wire:target="deleteUser" class="hidden loading loading-spinner loading-xs"></span>
                     {{ __('Delete account') }}
                 </button>
             </div>
