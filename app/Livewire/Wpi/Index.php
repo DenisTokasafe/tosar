@@ -925,7 +925,7 @@ class Index extends Component
                                 'title'          => 'Halo PIC Responsible,',
                                 'messageText'    => "Terdapat pembaruan data atau status pada temuan WPI di mana Anda ditugaskan sebagai PIC.\nStatus saat ini: **$currentStatus**.",
                                 'additionalInfo' => "Nomor Laporan: $report->no_referensi\nLokasi: $area\nUpdate Terakhir: " . now()->format('d/m/Y H:i') . "\nSilakan periksa instruksi atau detail temuan terbaru pada sistem.",
-                                'actionUrl'      => route('wpi-detail', $report->id) // Mengarah ke detail laporan
+                                 'actionUrl'      => route('wpi.edit', $report->id)
                             ]
                         );
                     }
