@@ -59,7 +59,7 @@
                     @endif
                 </div>
 
-                <x-form.datepicker  label="Date of Birth" model="date_birth" dateFormat="Y-m-d" />
+                <x-form.tgl  label="Date of Birth" model="date_birth" dateFormat="Y-m-d" />
             </div>
 
             <div class="flex items-center gap-4">
