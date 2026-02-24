@@ -36,8 +36,12 @@
                         <td>{{ $item->master->title ?? 'N/A' }}</td>
                         <td>{{ $tgl}}</td>
                         <td>
-                            <span class="badge {{ $item->expiry_status['class'] }}">
-                                {{ $item->expiry_status['label'] }}
+                            @php
+                            $status = $this->getExpiryStatus($item->expired_at);
+                            @endphp
+
+                            <span class="badge {{ $status['class'] }}">
+                                {{ $status['label'] }}
                             </span>
                         </td>
                         <td class="gap-2">

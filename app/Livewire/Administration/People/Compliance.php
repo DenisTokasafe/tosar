@@ -23,9 +23,45 @@ class Compliance extends Component
         $this->userId = $user->id;
     }
 
-    /** * Lifecycle Hook:
-     * Jika user mengubah dropdown Class, kita kosongkan pilihan Name
+    /**
+     * Logika untuk menentukan warna dan label badge expired
+     * Bisa dipanggil di blade dengan $this->getExpiryStatus($item->expired_at)
      */
+    public function getExpiryStatus($expired_at)
+    {
+        $today = Carbon::now()->startOfDay();
+        $expiryDate = $expired_at ? Carbon::parse($expired_at)->startOfDay() : null;
+
+        // 1. Jika NULL (Lifetime)
+        if (!$expiryDate) {
+            return [
+                'class' => 'badge-success',
+                'label' => 'Lifetime/Permanen'
+            ];
+        }
+
+        // 2. Jika sudah lewat tanggal (Expired)
+        if ($expiryDate->lessThan($today)) {
+            return [
+                'class' => 'badge-error text-white font-bold',
+                'label' => $expiryDate->format('d-m-Y') . ' (Expired)'
+            ];
+        }
+
+        // 3. Jika mendekati 1 bulan (30 hari)
+        if ($expiryDate->diffInDays($today) <= 30) {
+            return [
+                'class' => 'badge-warning text-black',
+                'label' => $expiryDate->format('d-m-Y') . ' (Soon)'
+            ];
+        }
+
+        // 4. Masih Aktif (Normal)
+        return [
+            'class' => 'badge-ghost',
+            'label' => $expiryDate->format('d-m-Y')
+        ];
+    }
 
     public function getExistingClassesProperty()
     {
@@ -40,17 +76,13 @@ class Compliance extends Component
     {
         $this->isEditMode = true;
         $this->complianceId = $data->id;
-
-        // Load relasi master jika belum ter-load
         $data->load('master');
 
-        // 1. Set Class (Ini akan memicu Computed Property getExistingNameProperty)
-        $this->compliance_class = $data->master->class;
-
-        // 2. Gunakan $this->fill() untuk memastikan sinkronisasi data ke View lebih stabil
-        $this->compliance_class = $data->master->class;
-        $this->compliance_name = $data->master->name;
-        $this->start_date = Carbon::parse($data->start_date)->format('d-m-Y');
+        $this->fill([
+            'compliance_class' => $data->master->class,
+            'compliance_name' => $data->master->name,
+            'start_date' => Carbon::parse($data->start_date)->format('d-m-Y'),
+        ]);
 
         $this->dispatch('open-modal-compliance');
     }
@@ -61,6 +93,7 @@ class Compliance extends Component
         $this->isEditMode = false;
         $this->dispatch('open-modal-compliance');
     }
+
     public function save()
     {
         $this->validate([
@@ -69,14 +102,13 @@ class Compliance extends Component
         ]);
 
         $master = ComplianceMaster::where('name', $this->compliance_name)->first();
-        // Gunakan createFromFormat jika input d-m-Y agar Carbon tidak bingung
         $startDate = Carbon::createFromFormat('d-m-Y', trim($this->start_date));
 
         $expiredAt = ($master->duration_months > 0)
             ? $startDate->copy()->addMonths($master->duration_months)
             : null;
 
-        $data = [
+        $payload = [
             'user_id' => $this->userId,
             'compliance_master_id' => $master->id,
             'start_date' => $startDate->format('Y-m-d'),
@@ -85,65 +117,35 @@ class Compliance extends Component
         ];
 
         if ($this->isEditMode) {
-            ModelsCompliance::find($this->complianceId)->update($data);
+            ModelsCompliance::find($this->complianceId)->update($payload);
         } else {
-            ModelsCompliance::create($data);
+            ModelsCompliance::create($payload);
         }
 
         $this->dispatch('close-modal-compliance');
         $this->dispatch('alert', 'Data berhasil ' . ($this->isEditMode ? 'diperbarui' : 'disimpan'));
     }
+
     public function closed()
     {
         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
         $this->dispatch('close-modal-compliance');
     }
-    public function getExpiryStatusAttribute()
-    {
-        $today = Carbon::now()->startOfDay();
-        $expiryDate = $this->expired_at ? Carbon::parse($this->expired_at)->startOfDay() : null;
-
-        if (!$expiryDate) {
-            return [
-                'class' => 'badge-success',
-                'label' => 'Lifetime/Permanen'
-            ];
-        }
-
-        if ($expiryDate->lessThan($today)) {
-            return [
-                'class' => 'badge-error text-white font-bold',
-                'label' => $expiryDate->format('d-m-Y') . ' (Expired)'
-            ];
-        }
-
-        if ($expiryDate->diffInDays($today) <= 30) {
-            return [
-                'class' => 'badge-warning text-black',
-                'label' => $expiryDate->format('d-m-Y') . ' (Soon)'
-            ];
-        }
-
-        return [
-            'class' => 'badge-ghost',
-            'label' => $expiryDate->format('d-m-Y')
-        ];
-    }
 
     public function render()
     {
-        $master = [];
-        $master = ComplianceMaster::select('name')->distinct()
-            ->where('class', $this->compliance_class)
+        $names = ComplianceMaster::select('name')->distinct()
+            ->when($this->compliance_class, fn($q) => $q->where('class', $this->compliance_class))
             ->whereNotNull('name')
             ->orderBy('name', 'asc')
             ->pluck('name');
+
         return view('livewire.administration.people.compliance', [
             'compliances' => ModelsCompliance::where('user_id', $this->userId)
                 ->with('master')
-                ->latest() // Menampilkan data terbaru di atas
+                ->latest()
                 ->get(),
-            'compliance_names' => $master
+            'compliance_names' => $names
         ]);
     }
 }
