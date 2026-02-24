@@ -183,8 +183,6 @@
         <div class="modal-action">
             <flux:button wire:click="save" size="xs" icon:trailing="save" variant="primary">
                 {{ $userId ? 'Update' : 'Simpan' }}</flux:button>
-            <flux:button size="xs" wire:click="$set('showModal', false)" icon:trailing="circle-x"
-                variant="danger">Batal</flux:button>
         </div>
     </x-tabs-people.layout>
 </section>
