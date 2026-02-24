@@ -142,7 +142,7 @@
                                             <div class="text-sm font-black text-orange-400 animate-bounce">
                                                 upload foto</div>
                                         </div>
-                                        <label for="file-{{ $master->id }}" wire:loading.add.class="skeleton"  wire:target="dokumentasi.{{ $master->id }}
+                                        <label for="file-{{ $master->id }}" wire:loading.add.class="skeleton"  wire:target="dokumentasi.{{ $master->id }}"
                                                         class=" btn btn-ghost btn-xs text-info hover:bg-info/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
