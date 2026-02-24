@@ -8,70 +8,33 @@
                  <x-form.input-text label="username" model="username" placeholder="username..." required />
                  <x-form.input-text label="employee id" model="employee_id" placeholder="employee id..." required />
                 <fieldset>
-                    <input id="department" value="department" wire:model="deptCont"
-                        class="peer/department radio radio-sm radio-accent" type="radio" name="deptCont" checked />
-                    <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
-                        label="PT. MSM & PT. TTN" required />
-                    <input id="contractor" value="contractor" wire:model="deptCont"
-                        class="peer/contractor radio radio-sm radio-primary" type="radio" name="deptCont" />
-                    <x-form.label for="contractor" class="peer-checked/contractor:text-primary" label="Kontraktor"
-                        required />
+                        <input id="department" value="department" wire:model="deptCont"
+                            class="peer/department radio radio-xs radio-accent" type="radio" name="deptCont"
+                            checked />
+                        <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
+                            label="PT. MSM & PT. TTN" required />
+                        <input id="company" value="company" wire:model="deptCont"
+                            class="peer/company radio radio-xs radio-primary" type="radio" name="deptCont" />
+                        <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
+                            required />
 
-                    <div class="hidden peer-checked/department:block mt-0.5">
-                        {{-- Department --}}
-                        <div class="relative mb-1">
-                            <!-- Input Search -->
-                            <flux:input wire:model.blur="search" type="text" class="w-full" autofocus
-                                autocomplete="name" />
-                            <!-- Dropdown hasil search -->
-                            @if ($showDropdown && count($departments) > 0)
-                                <ul
-                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                    <!-- Spinner ketika klik salah satu -->
-                                    <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    </div>
-                                    @foreach ($departments as $dept)
-                                        <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $dept->department_name }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
+                        <div class="hidden mt-2 peer-checked/department:block">
+                            {{-- Department --}}
+                            <div class="relative mb-1">
+                                <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
+                                    placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
+                                    clickaction="selectDepartment" namedb="department_name" />
+                            </div>
                         </div>
-                        @if ($deptCont === 'department')
-                            <x-label-error :messages="$errors->get('department_name')" />
-                        @endif
-                    </div>
-                    <div class="hidden peer-checked/contractor:block mt-0.5">
-                        {{-- Contractor --}}
-                        <div class="relative mb-1">
-                            <!-- Input Search -->
-                            <flux:input wire:model.blur="searchContractor" type="text" class="w-full" autofocus
-                                autocomplete="name" />
-                            <!-- Dropdown hasil search -->
-                            @if ($showContractorDropdown && count($contractors) > 0)
-                                <ul
-                                    class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                    <!-- Spinner ketika klik -->
-                                    <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                        <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    </div>
-                                    @foreach ($contractors as $contractor)
-                                        <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $contractor->contractor_name }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
+                        <div class="hidden mt-2 peer-checked/company:block">
+                            {{-- Contractor --}}
+                            <div class="relative mb-1">
+                                <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
+                                    placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                                    :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
+                            </div>
                         </div>
-                        @if ($deptCont === 'contractor')
-                            <x-label-error :messages="$errors->get('department_name')" />
-                        @endif
-                    </div>
-                </fieldset>
+                    </fieldset>
                 <div>
                     <flux:input wire:model="email" :label="__('Email')" type="email" required
                         autocomplete="email" />
