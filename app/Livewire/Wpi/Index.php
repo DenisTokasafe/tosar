@@ -744,10 +744,6 @@ class Index extends Component
 
             $currentFindingIds[] = $findingModel->id;
         }
-
-
-
-
         // PROSES DELETE: Hapus temuan yang tidak ada lagi di form
         $findingsToDelete = array_diff($existingFindingIds, $currentFindingIds);
         if (!empty($findingsToDelete)) {
@@ -806,7 +802,7 @@ class Index extends Component
             if (!empty($picNames)) {
                 // 2. Cari User ID berdasarkan kolom 'name' di tabel users
                 $picUserIds = User::whereIn('name', $picNames)->pluck('id')->toArray();
-
+                dd($picUserIds);
                 foreach ($picUserIds as $userId) {
                     // Hindari pengiriman ganda jika PIC juga seorang moderator atau inspector
                     // (Opsional, tergantung kebijakan notifikasi Anda)
@@ -863,6 +859,7 @@ class Index extends Component
 
                     foreach ($picUserIds as $userId) {
                         // Hindari pengiriman ganda jika PIC juga seorang moderator atau inspector
+                         if (in_array($userId, $moderatorIds)) continue;
                         // (Opsional, tergantung kebijakan notifikasi Anda)
 
                         $area = $report->area ?? 'General Area';
