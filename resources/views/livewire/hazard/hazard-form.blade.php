@@ -266,7 +266,7 @@
                 </fieldset>
             </div>
             <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
-                <legend class="text-sm font-semibold card-title ">__("Penanggung Jawab")</legend>
+                <legend class="text-sm font-semibold card-title ">{{ __('Penanggung Jawab') }}</legend>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                     <fieldset>
                         <input id="department" value="department" wire:model="deptCont"
