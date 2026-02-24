@@ -88,7 +88,7 @@
 
     </flux:sidebar>
 
-    <flux:header sticky class="shadow-md max-lg:hidden bg-base-300">
+    <flux:header sticky class="flex justify-between shadow-md max-lg:hidden bg-base-300">
         <div class="block px-2 rounded-lg cursor-pointer group hover:bg-zinc-700 lg:h-0 lg:hidden"
             x-on:click="sidebarHidden = !sidebarHidden">
             <svg class="w-4 h-4 stroke-gray-400 group-hover:stroke-white" viewBox="0 0 24 24"
@@ -120,6 +120,7 @@
                     clip-rule="evenodd" />
             </svg>
         </label>
+        <livewire:language-switcher />
 
     </flux:header>
 
