@@ -5,9 +5,9 @@
     </div>
 
     <flux:modal.trigger name="confirm-user-deletion">
-        <flux:button variant="danger" x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
+        <button class="btn btn-soft btn-error btn-xs" x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
             {{ __('Delete account') }}
-        </flux:button>
+        </button>
     </flux:modal.trigger>
 
     <flux:modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
