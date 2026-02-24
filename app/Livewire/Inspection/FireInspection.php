@@ -313,7 +313,7 @@ class FireInspection extends Component
         $result = FileHelper::compressAndStore($value, 'inspections/documents');
 
         // 4. Simpan path hasil kompresi ke array paths
-        $this->dokumentasi_paths[$key] = $result['path'];
+        $this->dokumentasi_paths[$key] = $result;
     }
     public function save()
     {
