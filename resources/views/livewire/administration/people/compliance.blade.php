@@ -36,9 +36,13 @@
                         <td>{{ $item->master->title ?? 'N/A' }}</td>
                         <td>{{ $tgl}}</td>
                         <td>
-                            {{-- Logika untuk menampilkan NULL sebagai Lifetime --}}
-                            <span class="badge {{ $item->expired_at ? 'badge-ghost' : 'badge-success' }}">
-                                {{ $tgl_expiry ?: 'Lifetime/Permanen' }}
+                            @php
+                            // Cek apakah sudah expired: jika ada tanggalnya DAN tanggal tersebut sudah lewat dari hari ini
+                            $isExpired = $item->expired_at && \Carbon\Carbon::parse($item->expired_at)->isPast();
+                            @endphp
+
+                            <span class="badge {{ !$item->expired_at ? 'badge-success' : ($isExpired ? 'badge-error ' : 'badge-ghost') }}">
+                                {{ $item->expired_at ? \Carbon\Carbon::parse($item->expired_at)->format('d-m-Y') : 'Lifetime/Permanen' }}
                             </span>
                         </td>
                         <td class="gap-2">
