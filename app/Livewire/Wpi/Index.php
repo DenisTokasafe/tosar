@@ -771,6 +771,27 @@ class Index extends Component
                     ]
                 );
             }
+            // B. KIRIM KE INSPECTORS (Penugasan Lapangan)
+            $inspectorIdNumbers = collect($this->inspectors)->pluck('id_number')->filter()->toArray();
+            $inspectorUserIds = User::whereIn('employee_id', $inspectorIdNumbers)->pluck('id')->toArray();
+
+            foreach ($inspectorUserIds as $userId) {
+                // Pastikan tidak mengirim ulang jika inspector juga seorang moderator
+                if (in_array($userId, $moderatorIds)) continue;
+
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Penugasan Inspeksi WPI',
+                    'emails.notification',
+                    [
+                        'subject'        => 'Penugasan Inspeksi',
+                        'title'          => 'Halo Inspector,',
+                        'messageText'    => "Anda telah terdaftar sebagai tim inspeksi untuk laporan berikut. Silakan gunakan link di bawah untuk melihat detail penugasan.",
+                        'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
+                        'actionUrl'      => route('wpi-detail', $report->id)
+                    ]
+                );
+            }
         }
 
         $this->dispatch('alert', [
@@ -780,23 +801,54 @@ class Index extends Component
 
         if ($this->reportId) {
             $this->loadData($this->reportId);
+
+            // 1. Eksekusi perubahan status jika ada instruksi proceedTo
             if ($this->proceedTo === 'Assigned' || $this->proceedTo === 'Review Event') {
                 $this->processStatusChange($this->proceedTo);
+                // Refresh report untuk mendapatkan status terbaru setelah proses status change
+                $report->refresh();
             }
-            $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
+
+            $reporterName = $report->creator->name ?? 'System';
+            $area = $report->area ?? 'General Area';
+            $currentStatus = $report->status;
+
+            // 2. Ambil Moderator berdasarkan status terbaru (bukan hardcode 'Submitted')
+            $moderatorIds = WpiWorkflow::getModeratorsForStatus($currentStatus, $report);
+
             foreach ($moderatorIds as $userId) {
-                $reporterName = $report->creator->name ?? 'System';
-                $area = $report->area ?? 'General Area';
                 MailHelper::sendToUserId(
                     $userId,
-                    'Notifikasi Laporan WPI Update',
+                    "Update Status WPI: $currentStatus",
                     'emails.notification',
                     [
-                        'subject'       => 'Laporan WPI Diupdate',
-                        'title'         => 'Notifikasi Laporan WPI Diupdate',
-                        'messageText'   => "Telah diupdate laporan WPI baru.\nSilakan lakukan  pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus: $report->status",
-                        'actionUrl'     => route('wpi-detail', $report->id)
+                        'subject'        => "Laporan WPI $report->no_referensi diupdate",
+                        'title'          => 'Notifikasi Perubahan Status',
+                        'messageText'    => "Laporan WPI telah diupdate ke status: **$currentStatus**. Silakan lakukan pemeriksaan atau tindakan lebih lanjut.",
+                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus Saat Ini: $currentStatus",
+                        'actionUrl'      => route('wpi-detail', $report->id)
+                    ]
+                );
+            }
+
+            // 3. Ambil Inspector berdasarkan data input terbaru
+            $inspectorIdNumbers = collect($this->inspectors)->pluck('id_number')->filter()->toArray();
+            $inspectorUserIds = User::whereIn('employee_id', $inspectorIdNumbers)->pluck('id')->toArray();
+
+            foreach ($inspectorUserIds as $userId) {
+                // Hindari duplikasi jika inspector adalah moderator yang baru saja dikirimi email
+                if (in_array($userId, $moderatorIds)) continue;
+
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Update Penugasan Inspeksi WPI',
+                    'emails.notification',
+                    [
+                        'subject'        => 'Update Penugasan Inspeksi',
+                        'title'          => 'Halo Inspector,',
+                        'messageText'    => "Terdapat pembaruan data atau status pada laporan inspeksi di mana Anda ditugaskan. Status saat ini: **$currentStatus**.",
+                        'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
+                        'actionUrl'      => route('wpi-detail', $report->id)
                     ]
                 );
             }
