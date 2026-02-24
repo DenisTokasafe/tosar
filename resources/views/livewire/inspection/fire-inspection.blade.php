@@ -38,7 +38,6 @@
                 <x-form.datepicker label="Tanggal / Date" model="inspection_date" />
             </div>
         </div>
-
         <div class="relative overflow-hidden border rounded-lg shadow-inner bg-slate-50">
             @php
             // Ambil checks dari database (config fields)
