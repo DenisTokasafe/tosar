@@ -98,6 +98,37 @@ class Compliance extends Component
         $this->reset(['complianceId', 'compliance_name', 'compliance_class', 'start_date']);
         $this->dispatch('close-modal-compliance');
     }
+    public function getExpiryStatusAttribute()
+    {
+        $today = Carbon::now()->startOfDay();
+        $expiryDate = $this->expired_at ? Carbon::parse($this->expired_at)->startOfDay() : null;
+
+        if (!$expiryDate) {
+            return [
+                'class' => 'badge-success',
+                'label' => 'Lifetime/Permanen'
+            ];
+        }
+
+        if ($expiryDate->lessThan($today)) {
+            return [
+                'class' => 'badge-error text-white font-bold',
+                'label' => $expiryDate->format('d-m-Y') . ' (Expired)'
+            ];
+        }
+
+        if ($expiryDate->diffInDays($today) <= 30) {
+            return [
+                'class' => 'badge-warning text-black',
+                'label' => $expiryDate->format('d-m-Y') . ' (Soon)'
+            ];
+        }
+
+        return [
+            'class' => 'badge-ghost',
+            'label' => $expiryDate->format('d-m-Y')
+        ];
+    }
 
     public function render()
     {
