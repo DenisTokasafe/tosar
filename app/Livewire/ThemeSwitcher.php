@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 
 class ThemeSwitcher extends Component
 {
-    public $themes = ['maybecity', 'corporate', 'wireframe'];
+    public $themes = ['maybecity','unknownpenguin', 'corporate', 'wireframe'];
 
     public function setTheme($theme)
     {
