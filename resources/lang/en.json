@@ -168,7 +168,13 @@
     "2 - Ringan": "2 - Minor",
     "3 - Sedang": "3 - Moderate",
     "4 - Berat": "4 - Major",
-    "5 - Bencana": "5 - Catastrophic"
+    "5 - Bencana": "5 - Catastrophic",
+    "E - Jarang": "E - Rare",
+    "D - Kecil Kemungkinan": "D - Unlikely",
+    "C - Mungkin": "C - Possible",
+    "B - Kemungkinan Besar": "B - Likely",
+    "A - Hampir Pasti": "A - Almost Certain"
+
 
 
 
