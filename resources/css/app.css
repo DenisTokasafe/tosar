@@ -2,6 +2,7 @@
 @import "../../vendor/livewire/flux/dist/flux.css";
 @import "flatpickr/dist/flatpickr.css";
 @import "flatpickr/dist/themes/airbnb.css";
+@import "@flaticon/flaticon-uicons/css/all/all";
 /* @import "./flatpickr-custom.css"; */
 
 @source '../views';
