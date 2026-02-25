@@ -462,7 +462,7 @@
                                     <!-- Input Search -->
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                         wire:model.live.debounce.300ms="searchContractor"
-                                        placeholder="Cari kontraktor..."
+                                        placeholder="{{ __('Cari kontraktor...') }}}}"
                                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                     <!-- Dropdown hasil search -->
                                     @if ($showContractorDropdown && count($contractors) > 0)
