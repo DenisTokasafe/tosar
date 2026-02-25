@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="corporate" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-theme="{{ session('theme', 'corporate') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     {{-- @laravelPWA --}}
@@ -75,6 +75,7 @@
                         </form>
                     </flux:menu>
                 </flux:dropdown>
+                <livewire:theme-switcher />
             </div>
         @else
             {{-- Desktop guest actions (login/register) --}}
