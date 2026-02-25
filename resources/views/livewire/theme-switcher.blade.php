@@ -14,13 +14,14 @@
 
     @foreach($themes as $theme)
     <div>
-        <span class="capitalize">{{ $theme }}</span>
+        <div class="tooltip tooltip-left" data-tip={{ $theme }}>
 
-        <button
-            wire:click="setTheme('{{ $theme }}')"
-            class="btn btn-xs btn-circle {{ session('theme') === $theme ? 'btn-primary' : '' }}">
-            {{ strtoupper(substr($theme, 0, 1)) }}
-        </button>
+            <button
+                wire:click="setTheme('{{ $theme }}')"
+                class="btn btn-xs btn-circle {{ session('theme') === $theme ? 'btn-primary' : '' }}">
+                {{ strtoupper(substr($theme, 0, 1)) }}
+            </button>
+        </div>
     </div>
     @endforeach
 </div>
