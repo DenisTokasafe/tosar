@@ -408,7 +408,7 @@
 
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
-                    <x-form.file-upload label="Dokumentasi Sesudah Tidakan perbaikan langsung (Optional)"
+                    <x-form.file-upload label="Lampirkan foto atau dokumentasi"
                         model="new_doc_corrective" :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
 
                 </div>
