@@ -1,9 +1,8 @@
 <div class="flex items-center space-x-2">
 
-    <flux:select size="xs" wire:model.live="lang" placeholder="{{ __('Pilih Bahasa') }}">
-
-        <flux:select.option value="en">🇬🇧 English</flux:select.option>
-        <flux:select.option value="id">🇮🇩 Bahasa Indonesia</flux:select.option>
-
-    </flux:select>
+    <select wire:model.live="lang" name="" id=""class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
+         <option value="">{{ __('Pilih Bahasa') }}</option>
+         <option value="en">{{ __('English') }}</option>
+         <option value="id">{{ __('Bahasa Indonesia') }}</option>
+    </select>
 </div>
