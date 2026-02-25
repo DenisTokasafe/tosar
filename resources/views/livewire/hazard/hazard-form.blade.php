@@ -14,7 +14,7 @@
                         class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tipe_bahaya') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                         <option value="">{{__('-- Pilih --')}}</option>
                         @foreach ($eventTypes as $et)
-                            <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
+                        <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
                         @endforeach
                     </select>
                     <x-label-error :messages="$errors->get('tipe_bahaya')" />
@@ -27,7 +27,7 @@
                         @if ($tipe_bahaya)
                             @foreach ($subTypes as $et)
                                 <option value=" {{ $et->id }}">{{ __($et->event_sub_type_name) }}</option>
-                            @endforeach
+                        @endforeach
                         @endif
                     </select>
                     <x-label-error :messages="$errors->get('sub_tipe_bahaya')" />
@@ -46,7 +46,7 @@
                             class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                             @foreach ($ktas as $kta)
-                                <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
+                            <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -55,22 +55,22 @@
                             class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                             @foreach ($ttas as $tta)
-                                <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
+                            <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
                             @endforeach
                         </select>
                     </div>
                     @if ($keyWord === 'kta')
-                        <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
+                    <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
                     @endif
                     @if ($keyWord === 'tta')
-                        <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
+                    <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
                     @endif
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" wire:key="field-description">
-                <fieldset  class="mb-4 fieldset lg:col-span-2">
+                <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Deskripsi" required />
-                    <div x-data="ckeditorHelper('description')" wire:ignore >
+                    <div x-data="ckeditorHelper('description')" wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
@@ -81,36 +81,37 @@
                         :file="$doc_deskripsi" />
                     <div wire:loading.remove wire:target="doc_deskripsi">
                         @if ($doc_deskripsi)
-                            @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                <img src="{{ $doc_deskripsi->temporaryUrl() }}"
-                                    class="mt-2 {{ $doc_deskripsi ? 'w-40' : '' }} h-auto rounded border" />
-                            @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                                <div class="flex items-center gap-2 mt-2">
-                                    @if ($doc_deskripsi->getClientOriginalExtension() == 'pdf')
-                                        <x-icon.pdf class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-red-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
-                                    @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['doc', 'docx']))
-                                        <x-icon.word class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-blue-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
-                                    @else
-                                        {{-- Ikon generik untuk file lain --}}
-                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                        </svg>
-                                        <span class="text-sm text-gray-600">File:
-                                            {{ $doc_deskripsi->getClientOriginalName() }}</span>
-                                    @endif
-                                @else
-                                    <p class="mt-2 text-sm text-gray-600">File:
-                                        {{ $doc_deskripsi->getClientOriginalName() }}</p>
+                        @if (in_array($doc_deskripsi->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                        <img src="{{ $doc_deskripsi->temporaryUrl() }}"
+                            class="mt-2 {{ $doc_deskripsi ? 'w-40' : '' }} h-auto rounded border" />
+                        @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                        <div class="flex items-center gap-2 mt-2">
+                            @if ($doc_deskripsi->getClientOriginalExtension() == 'pdf')
+                            <x-icon.pdf class="w-8 h-8" />
+                            <span
+                                class="text-sm text-red-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
+                            @elseif (in_array($doc_deskripsi->getClientOriginalExtension(), ['doc', 'docx']))
+                            <x-icon.word class="w-8 h-8" />
+                            <span
+                                class="text-sm text-blue-600">{{ $doc_deskripsi->getClientOriginalName() }}</span>
+                            @else
+                            {{-- Ikon generik untuk file lain --}}
+                            <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                            </svg>
+                            <span class="text-sm text-gray-600">File:
+                                {{ $doc_deskripsi->getClientOriginalName() }}</span>
                             @endif
-                        @endif
-                    </div>
-                    <x-label-error :messages="$errors->get('doc_deskripsi')" />
+                            @else
+                            <p class="mt-2 text-sm text-gray-600">File:
+                                {{ $doc_deskripsi->getClientOriginalName() }}
+                            </p>
+                            @endif
+                            @endif
+                        </div>
+                        <x-label-error :messages="$errors->get('doc_deskripsi')" />
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
@@ -118,13 +119,13 @@
                     :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
                 {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                 @if ($location_id)
-                    <fieldset class="fieldset">
-                        <x-form.label label="Lokasi Spesifik" required />
-                        <input name="location_specific" type="text" wire:model.live="location_specific"
-                            placeholder="Masukkan detail lokasi spesifik..."
-                            class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
-                        <x-label-error :messages="$errors->get('location_specific')" />
-                    </fieldset>
+                <fieldset class="fieldset">
+                    <x-form.label label="Lokasi Spesifik" required />
+                    <input name="location_specific" type="text" wire:model.live="location_specific"
+                        placeholder="Masukkan detail lokasi spesifik..."
+                        class=" input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
+                    <x-label-error :messages="$errors->get('location_specific')" />
+                </fieldset>
                 @endif
                 <fieldset class="relative fieldset">
                     <x-form.label label="Tanggal & Waktu" required />
@@ -174,50 +175,50 @@
                             {{-- x-ref="searchInput" TIDAK LAGI DIBUTUHKAN --}} />
                         {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
                         @if ($showPelaporDropdown)
-                            <ul
-                                class="absolute z-10 w-full max-w-sm mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                        <ul
+                            class="absolute z-10 w-full max-w-sm mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
 
-                                {{-- Spinner ketika klik --}}
-                                <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
-                                    <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                    {{-- {{ $manualPelaporMode }} --}}
-                                </div>
+                            {{-- Spinner ketika klik --}}
+                            <div wire:loading wire:target="selectPelapor" class="p-2 text-center">
+                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                {{-- {{ $manualPelaporMode }} --}}
+                            </div>
 
-                                @if (count($pelapors) > 0)
-                                    @foreach ($pelapors as $pelapor)
-                                        <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $pelapor->name }}
-                                        </li>
-                                    @endforeach
-                                @else
-                                    {{-- Logika untuk "Tambah pelapor manual" --}}
-                                    @if (!$manualPelaporMode)
-                                        <li class="px-3 py-2">
-                                            <flux:button size="xs" wire:click="enableManualPelapor"
-                                                icon="plus" class="w-full cursor-pointer text-warning"
-                                                variant="primary" color="cyan">
-                                                Tidak ditemukan, tambah pelapor manual
-                                            </flux:button>
-                                        </li>
-                                    @else
-                                        <li class="px-3 py-2 text-sm text-gray-500">
-                                            Nama Pelapor Manual akan digunakan.
-                                        </li>
-                                    @endif
-                                @endif
-                            </ul>
+                            @if (count($pelapors) > 0)
+                            @foreach ($pelapors as $pelapor)
+                            <li wire:click="selectPelapor({{ $pelapor->id }}, '{{ $pelapor->name }}')"
+                                class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                {{ $pelapor->name }}
+                            </li>
+                            @endforeach
+                            @else
+                            {{-- Logika untuk "Tambah pelapor manual" --}}
+                            @if (!$manualPelaporMode)
+                            <li class="px-3 py-2">
+                                <flux:button size="xs" wire:click="enableManualPelapor"
+                                    icon="plus" class="w-full cursor-pointer text-warning"
+                                    variant="primary" color="cyan">
+                                    Tidak ditemukan, tambah pelapor manual
+                                </flux:button>
+                            </li>
+                            @else
+                            <li class="px-3 py-2 text-sm text-gray-500">
+                                Nama Pelapor Manual akan digunakan.
+                            </li>
+                            @endif
+                            @endif
+                        </ul>
                         @endif
                     </div>
                     @if ($manualPelaporMode)
-                        <x-label-error :messages="$errors->get('manualPelaporName')" />
+                    <x-label-error :messages="$errors->get('manualPelaporName')" />
                     @else
-                        <x-label-error :messages="$errors->get('pelapor_id')" />
+                    <x-label-error :messages="$errors->get('pelapor_id')" />
                     @endif
                 </fieldset>
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                <fieldset class="mb-4 fieldset md:col-span-2"wire:key="field-immediate">
+                <fieldset class="mb-4 fieldset md:col-span-2" wire:key="field-immediate">
 
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
@@ -231,35 +232,35 @@
                         :file="$doc_corrective" />
                     <div wire:loading.remove wire:target="doc_corrective">
                         @if ($doc_corrective)
-                            @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                                <img src="{{ $doc_corrective->temporaryUrl() }}"
-                                    class="mt-2 {{ $doc_corrective ? 'w-40' : '' }} h-auto rounded border" />
-                            @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
-                                <div class="flex items-center gap-2 mt-2">
-                                    @if ($doc_corrective->getClientOriginalExtension() == 'pdf')
-                                        <x-icon.pdf class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-red-600">{{ $doc_corrective->getClientOriginalName() }}</span>
-                                    @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['doc', 'docx']))
-                                        <x-icon.word class="w-8 h-8" />
-                                        <span
-                                            class="text-sm text-blue-600">{{ $doc_corrective->getClientOriginalName() }}</span>
-                                    @else
-                                        {{-- Ikon generik untuk file lain --}}
-                                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                        </svg>
-                                        <span class="text-sm text-gray-600">File:
-                                            {{ $doc_corrective->getClientOriginalName() }}</span>
-                                    @endif
-                                </div>
+                        @if (in_array($doc_corrective->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                        <img src="{{ $doc_corrective->temporaryUrl() }}"
+                            class="mt-2 {{ $doc_corrective ? 'w-40' : '' }} h-auto rounded border" />
+                        @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                        <div class="flex items-center gap-2 mt-2">
+                            @if ($doc_corrective->getClientOriginalExtension() == 'pdf')
+                            <x-icon.pdf class="w-8 h-8" />
+                            <span
+                                class="text-sm text-red-600">{{ $doc_corrective->getClientOriginalName() }}</span>
+                            @elseif (in_array($doc_corrective->getClientOriginalExtension(), ['doc', 'docx']))
+                            <x-icon.word class="w-8 h-8" />
+                            <span
+                                class="text-sm text-blue-600">{{ $doc_corrective->getClientOriginalName() }}</span>
                             @else
-                                <p class="mt-2 text-sm text-gray-600">File:
-                                    {{ $doc_corrective->getClientOriginalName() }}
-                                </p>
+                            {{-- Ikon generik untuk file lain --}}
+                            <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                            </svg>
+                            <span class="text-sm text-gray-600">File:
+                                {{ $doc_corrective->getClientOriginalName() }}</span>
                             @endif
+                        </div>
+                        @else
+                        <p class="mt-2 text-sm text-gray-600">File:
+                            {{ $doc_corrective->getClientOriginalName() }}
+                        </p>
+                        @endif
                         @endif
                     </div>
                     <x-label-error :messages="$errors->get('doc_corrective')" />
@@ -302,7 +303,7 @@
                             class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('penanggungJawab') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($penanggungJawabOptions as $pj)
-                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                            <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('penanggungJawab')" />
@@ -315,7 +316,7 @@
                 <!-- Deskripsi Tindakan -->
                 <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                     <x-form.label label="Deskripsi Tindakan" required />
-                     <div x-data="ckeditorHelper('action_description')" wire:ignore>
+                    <div x-data="ckeditorHelper('action_description')" wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('action_description')" />
@@ -379,66 +380,67 @@
                 <!-- Tombol Tambah -->
                 <div class="flex justify-end ">
                     <flux:button size="xs" wire:click="addAction" icon:trailing="add-icon" variant="primary">
-                        {{ __('Tambah') }}</flux:button>
+                        {{ __('Tambah') }}
+                    </flux:button>
                 </div>
                 <!-- List Actions -->
                 <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>
                 <ul>
                     @forelse ($actions as $index => $action)
-                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                                <div>
-                                    <span class="font-semibold">{!! $action['description'] !!}</span>
-                                </div>
-                                <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                    <span class="text-sm badge badge-primary badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
-                                        {{ __('Batas Waktu:') }}
-                                        {{ $action['due_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm badge badge-info badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
-                                        {{ __('Tgl Selesai:') }}
-                                        {{ $action['close_date'] ?? 'N/A' }}</span>
-                                    <span class="text-sm badge badge-success badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-user-check-icon lucide-user-check">
-                                            <path d="m16 11 2 2 4-4" />
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                            <circle cx="9" cy="7" r="4" />
-                                        </svg>
-                                        {{ __('PIC') }}:
-                                        {{ optional(\App\Models\User::find($action['responsible_id']))->name ?? ('-' ?? 'N/A') }}</span>
-                                    <div class="flex gap-2 mt-1 md:mt-0">
+                    <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                        <div class="flex flex-col gap-1 md:flex-row md:justify-between">
+                            <div>
+                                <span class="font-semibold">{!! $action['description'] !!}</span>
+                            </div>
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center">
+                                <span class="text-sm badge badge-primary badge-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-clock-check-icon lucide-clock-check">
+                                        <path d="M12 6v6l4 2" />
+                                        <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                        <path d="m22 16-5.5 5.5L14 19" />
+                                    </svg>
+                                    {{ __('Batas Waktu:') }}
+                                    {{ $action['due_date'] ?? 'N/A' }}</span>
+                                <span class="text-sm badge badge-info badge-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-clock-check-icon lucide-clock-check">
+                                        <path d="M12 6v6l4 2" />
+                                        <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                        <path d="m22 16-5.5 5.5L14 19" />
+                                    </svg>
+                                    {{ __('Tgl Selesai:') }}
+                                    {{ $action['close_date'] ?? 'N/A' }}</span>
+                                <span class="text-sm badge badge-success badge-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-user-check-icon lucide-user-check">
+                                        <path d="m16 11 2 2 4-4" />
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                    </svg>
+                                    {{ __('PIC') }}:
+                                    {{ optional(\App\Models\User::find($action['responsible_id']))->name ?? ('-' ?? 'N/A') }}</span>
+                                <div class="flex gap-2 mt-1 md:mt-0">
 
-                                        <flux:button variant="danger" size="xs"
-                                            wire:click="removeAction({{ $index }})"
-                                            wire:confirm="Yakin hapus tindakan ini?" icon="trash">
-                                        </flux:button>
-                                    </div>
+                                    <flux:button variant="danger" size="xs"
+                                        wire:click="removeAction({{ $index }})"
+                                        wire:confirm="Yakin hapus tindakan ini?" icon="trash">
+                                    </flux:button>
                                 </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
 
                     @empty
-                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
-                        </li>
+                    <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                        <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
+                    </li>
                     @endforelse
                 </ul>
 
@@ -454,21 +456,21 @@
                             class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($consequencess as $cons)
-                                <option value="{{ $cons->id }}">{{ $cons->name }}</option>
+                            <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('consequence_id')" />
 
                         @if ($consequence_id)
-                            @php
-                                $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                            @endphp
-                            @if ($selectedConsequence)
-                                <div
-                                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                    {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
-                                </div>
-                            @endif
+                        @php
+                        $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                        @endphp
+                        @if ($selectedConsequence)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
                         @endif
                     </fieldset>
                     {{-- Likelihood --}}
@@ -478,21 +480,21 @@
                             class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($likelihoodss as $like)
-                                <option value="{{ $like->id }}">{{ $like->name }}</option>
+                            <option value="{{ $like->id }}">{{ __($like->name) }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('likelihood_id')" />
 
                         @if ($likelihood_id)
-                            @php
-                                $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
-                            @endphp
-                            @if ($selectedLikelihood)
-                                <div
-                                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                    {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
-                                </div>
-                            @endif
+                        @php
+                        $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
+                        @endphp
+                        @if ($selectedLikelihood)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
                         @endif
                     </fieldset>
 
@@ -507,77 +509,79 @@
                     <table class="table table-xs w-60">
                         <thead>
                             <tr class="text-center text-[9px]">
-                                <td class=" border-1">Level</td>
-                                <td class="rotate_text border-1 bg-emerald-500">Rendah</td>
-                                <td class="bg-yellow-500 rotate_text border-1">Sedang</td>
-                                <td class="bg-orange-500 rotate_text border-1">Tinggi</td>
-                                <td class="rotate_text border-1 bg-rose-500">Ekstrem</td>
-                                <td class="bg-gray-100 rotate_text border-1">Ditutup</td>
+                                <td class=" border-1">{{ __('Level') }}</td>
+                                <td class="rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                                <td class="bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                                <td class="bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                                <td class="rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                                <td class="bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
                             </tr>
                             <tr class="text-center text-[9px]">
                                 <th class="border-1">Likelihood ↓ / Consequence →</th>
                                 @foreach ($consequences as $c)
-                                    <th class="rotate_text border-1">{{ $c->name }}</th>
+                                <th class="rotate_text border-1">{{ __($c->name) }}</th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($likelihoods as $l)
-                                <tr class="w-32 text-xs text-center">
+                            <tr class="w-32 text-xs text-center">
 
-                                    <td class="w-1 font-bold border-1">{{ $l->name }}</td>
-                                    @foreach ($consequences as $c)
-                                        @php
-                                            $cell =
-                                                App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                                                    ->where('risk_consequence_id', $c->id)
-                                                    ->first() ?? null;
-                                            $score = $l->level * $c->level;
-                                            $severity = $cell?->severity ?? '';
-                                            $color = match ($severity) {
-                                                'Rendah' => 'bg-emerald-500',
-                                                'Sedang' => 'bg-yellow-500',
-                                                'Tinggi' => 'bg-orange-500',
-                                                'Ekstrem' => 'bg-rose-500',
-                                                default => 'bg-gray-100',
-                                            };
-                                        @endphp
-                                        <td
-                                            class="border cursor-pointer  @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-stone-500 @endif">
-                                            <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                                class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr($severity, 0, 1)) }}</span>
-                                        </td>
-                                    @endforeach
-                                </tr>
+                                <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+                                @foreach ($consequences as $c)
+                                @php
+                                $cell =
+                                App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                                ->where('risk_consequence_id', $c->id)
+                                ->first() ?? null;
+                                $score = $l->level * $c->level;
+                                $severity = $cell?->severity ?? '';
+                                $color = match ($severity) {
+                                'Rendah' => 'bg-emerald-500',
+                                'Sedang' => 'bg-yellow-500',
+                                'Tinggi' => 'bg-orange-500',
+                                'Ekstrem' => 'bg-rose-500',
+                                default => 'bg-gray-100',
+                                };
+                                @endphp
+                                <td
+                                    class="border cursor-pointer  @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-stone-500 @endif">
+                                    <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                        class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
+                                </td>
+                                @endforeach
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
             @if ($RiskAssessment != null)
-                <table class="table mt-4 table-xs table-zebra">
+            <table class="table mt-4 table-xs table-zebra">
 
-                    <tr>
-                        <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
-                        <td class="pl-2 text-xs border-slate-400">
-                            {{ $RiskAssessment->name }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border-slate-400">Notify</th>
-                        <td class="pl-2 text-xs border-slate-400">
-                            {{ $RiskAssessment->reporting_obligation }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border-slate-400">Deadline</th>
-                        <td class="pl-2 text-xs border-slate-400">{{ $RiskAssessment->notes }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border-slate-400">Coordinator</th>
-                        <td class="pl-2 text-xs border-slate-400">
-                            {{ $RiskAssessment->coordinator }}
-                        </td>
-                    </tr>
-                </table>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Notify</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->reporting_obligation }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Deadline</th>
+                    <td class="pl-2 text-xs border-slate-400">{{ $RiskAssessment->notes }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Coordinator</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->coordinator }}
+                    </td>
+                </tr>
+            </table>
             @endif
             <div class="flex justify-end hidden mt-4 md:block">
                 <flux:button size="xs" type="submit" icon:trailing="send" variant="primary">{{ __('Kirim Laporan') }}
@@ -585,7 +589,8 @@
             </div>
             <div class="block mt-4 md:hidden">
                 <flux:button size="xs" class="w-full" type="submit" icon:trailing="send" variant="primary">
-                    {{ __('Kirim Laporan') }}</flux:button>
+                    {{ __('Kirim Laporan') }}
+                </flux:button>
             </div>
         </form>
     </x-manhours.layout>
