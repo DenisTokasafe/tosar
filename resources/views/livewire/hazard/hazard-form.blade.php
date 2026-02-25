@@ -400,7 +400,7 @@
                                             <path d="M22 12a10 10 0 1 0-11 9.95" />
                                             <path d="m22 16-5.5 5.5L14 19" />
                                         </svg>
-                                        Batas Waktu:
+                                        {{ __('Batas Waktu:') }}
                                         {{ $action['due_date'] ?? 'N/A' }}</span>
                                     <span class="text-sm badge badge-info badge-outline">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -411,7 +411,7 @@
                                             <path d="M22 12a10 10 0 1 0-11 9.95" />
                                             <path d="m22 16-5.5 5.5L14 19" />
                                         </svg>
-                                        Tgl Selesai:
+                                        {{ __('Tgl Selesai:') }}
                                         {{ $action['close_date'] ?? 'N/A' }}</span>
                                     <span class="text-sm badge badge-success badge-outline">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -422,7 +422,7 @@
                                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                                             <circle cx="9" cy="7" r="4" />
                                         </svg>
-                                        PIC:
+                                        {{ __('PIC') }}:
                                         {{ optional(\App\Models\User::find($action['responsible_id']))->name ?? ('-' ?? 'N/A') }}</span>
                                     <div class="flex gap-2 mt-1 md:mt-0">
 
