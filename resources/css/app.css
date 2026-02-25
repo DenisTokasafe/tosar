@@ -49,8 +49,6 @@
 @plugin "daisyui" {
     themes:
         maybecity,
-        dark --default,
-        dark --prefersdark,
         corporate;
 }
 
