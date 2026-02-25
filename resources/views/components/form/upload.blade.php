@@ -4,13 +4,13 @@
     'model' => null,
     'file' => null,
     'optional' => true,
-    'disabled' => false {{-- Tambahkan prop baru --}}
+    'disabled' => false
 ])
 
 <div class="flex flex-col gap-1">
-    <x-form.label :label="$label . ($optional ? ' (optional)' : '')" />
+    {{-- Label menggunakan helper __() dan memisahkan string (optional) agar fleksibel --}}
+    <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" />
 
-    {{-- Gunakan kondisional class: jika disabled, matikan pointer-events dan ubah visualnya --}}
     <label for="{{ $disabled ? '' : $id }}"
         @class([
             'flex items-center gap-2 border rounded border-info',
@@ -23,14 +23,14 @@
             'btn-info' => !$disabled,
             'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled
         ])>
-            Pilih file atau gambar
+            {{ __('Pilih file atau gambar') }}
         </span>
 
         {{-- Loading State --}}
         <span class="hidden" wire:loading.remove.class='hidden' wire:target="{{ $model }}">
             <span class="flex items-center gap-1 px-2">
                 <span class="loading loading-bars loading-xs text-info"></span>
-                <span class="text-xs text-info">Mengunggah...</span>
+                <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
             </span>
         </span>
 
@@ -41,7 +41,7 @@
             @elseif ($file && is_string($file))
                 {{ basename($file) }}
             @else
-                Belum ada file
+                {{ __('Belum ada file') }}
             @endif
         </span>
     </label>
@@ -52,7 +52,7 @@
         {{ $attributes->whereDoesntStartWith('wire:model') }}
         wire:model="{{ $model }}"
         class="hidden"
-        @disabled($disabled) {{-- Menonaktifkan input file --}}
+        @disabled($disabled)
     />
 
     @error($model)

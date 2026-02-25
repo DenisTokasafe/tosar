@@ -98,7 +98,11 @@
     "Ventilasi buruk": "Poor ventilation",
 
     "Formulir Laporan Berbahaya": "Hazard Report Form",
-    "Lihat potensi bahaya di sekitar? Laporkan sekarang agar semua tetap aman!": "Spot a potential hazard? Report it now to keep everyone safe!"
+    "Lihat potensi bahaya di sekitar? Laporkan sekarang agar semua tetap aman!": "Spot a potential hazard? Report it now to keep everyone safe!",
+    "optional": "optional",
+    "Pilih file atau gambar": "Select file or image",
+    "Mengunggah...": "Uploading...",
+    "Belum ada file": "No file selected"
 
 
 }
