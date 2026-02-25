@@ -9,7 +9,7 @@
     </div>
 
     <div class="fab-close">
-        Tutup <span class="btn btn-circle btn-lg btn-error">✕</span>
+        Tutup <span class="btn btn-circle btn-xs btn-error">✕</span>
     </div>
 
     @foreach($themes as $theme)

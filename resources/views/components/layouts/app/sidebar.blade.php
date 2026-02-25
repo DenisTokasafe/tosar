@@ -75,7 +75,7 @@
                         </form>
                     </flux:menu>
                 </flux:dropdown>
-                <livewire:theme-switcher />
+
             </div>
         @else
             {{-- Desktop guest actions (login/register) --}}
@@ -183,7 +183,7 @@
     </flux:header>
 
     {{ $slot }}
-
+     <livewire:theme-switcher />
     @fluxScripts
     @livewireScripts
     <script>
