@@ -51,11 +51,11 @@
                 @if ($proceedTo === 'in_progress')
                 <div class="max-w-sm">
                     <label class="label">
-                        <span class="text-xs font-semibold label-text">Pilih ERM Utama</span>
+                        <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Utama') }}</span>
                     </label>
                     <select wire:model="assignTo1"
                         class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                        <option value="">{{__('-- Pilih --')}}</option>
+                        <option value="">{{ __('-- Pilih --') }}</option>
                         @foreach ($ermList as $erm)
                         <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
                         @endforeach
@@ -64,11 +64,11 @@
 
                 <div class="max-w-sm">
                     <label class="label">
-                        <span class="text-xs font-semibold label-text">Pilih ERM Tambahan (Opsional)</span>
+                        <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Tambahan (Opsional)') }}</span>
                     </label>
                     <select wire:model="assignTo2"
                         class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                        <option value="">{{__('-- Pilih --')}}</option>
+                        <option value="">{{ __('-- Pilih --') }}</option>
                         @foreach ($ermList as $erm)
                         <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
                         @endforeach
@@ -573,7 +573,7 @@
                     <div class="flex justify-end ">
                         <flux:button size="xs" wire:click="addActionHazard"
                             class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                            icon:trailing="add-icon" variant="primary">Tambah</flux:button>
+                            icon:trailing="add-icon" variant="primary">{{ __('Tambah') }}</flux:button>
                     </div>
                     <!-- List Actions -->
                     <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>

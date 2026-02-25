@@ -152,7 +152,9 @@
     "Masukkan nama manual...": "Enter name manually...",
     "Cari...": "Search...",
     "Batas Waktu:": "Deadline:",
-    "Tgl Selesai:": "Close Date:"
+    "Tgl Selesai:": "Close Date:",
+    "Pilih ERM Utama": "Select Primary ERM",
+    "Pilih ERM Tambahan (Opsional)": "Select Additional ERM (Optional)"
 
 
 }
