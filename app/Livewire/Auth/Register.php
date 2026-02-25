@@ -204,14 +204,7 @@ class Register extends Component
 
             // Menggunakan Flux notification jika Anda sudah menginstalnya,
             // atau tetap menggunakan session flash.
-            $this->dispatch('alert', [
-                'text' => "Request telah dikirim, Silahakan menunggu balasan email dari Admin Tosar!!!",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-            ]);
+
             session()->flash('status', __('Request telah dikirim, Silahakan menunggu balasan email dari Admin Tosar!!!'));
              $this->reset(['email_req', 'name_req']);
         } catch (\Exception $e) {
