@@ -412,7 +412,7 @@
                         model="new_doc_corrective" :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
 
                 </div>
-                <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+                <fieldset class="p-3 my-4 border border-gray-200 shadow-md fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Penanggung Jawab') }}</legend>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mb-4 ">
                         {{-- workgroup --}}
@@ -500,7 +500,7 @@
                     </div>
                 </fieldset>
 
-                <fieldset class="p-3 border border-gray-200 shadow-md fieldset card bg-base-100">
+                <fieldset class="p-3 my-4 border border-gray-200 shadow-md fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Lanjutan') }}</legend>
 
                     <!-- Deskripsi Tindakan -->
