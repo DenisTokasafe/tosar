@@ -433,7 +433,7 @@
                                     <!-- Input Search -->
 
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                        wire:model.live.debounce.300ms="search" placeholder="{{ __('Cari departemen...') }}}}"
+                                        wire:model.live.debounce.300ms="search" placeholder="{{ __('Cari departemen...') }}"
                                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                                     <!-- Dropdown hasil search -->
                                     @if ($showDropdown && count($departments) > 0)
