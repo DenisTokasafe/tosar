@@ -14,7 +14,8 @@
 
     @foreach($themes as $theme)
     <div>
-        <div class="tooltip tooltip-left" data-tip="{{ $theme }}"></div>
+
+        <div class="tooltip tooltip-left" data-tip={{ $theme }}></div>
         <button
             wire:click="setTheme('{{ $theme }}')"
             class="btn btn-xs btn-circle {{ session('theme') === $theme ? 'btn-primary' : '' }}">
