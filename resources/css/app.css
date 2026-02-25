@@ -49,6 +49,7 @@
 @plugin "daisyui" {
     themes:
         maybecity,
+        wireframe,
         corporate;
 }
 
