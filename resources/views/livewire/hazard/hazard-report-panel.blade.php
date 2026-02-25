@@ -91,7 +91,7 @@
     <div class="mt-4 overflow-x-auto max-h-[calc(100vh-18rem)] 2xl:max-h-[calc(100vh-20rem)] ">
         <table class="table text-xs border table-xs">
             <thead>
-                <tr class="text-center bg-gray-100">
+                <tr class="text-center bg-base-100">
                     <th class="border">#</th>
                     <th class="border">{{ __('reference') }}</th>
                     <th class="border">{{ __('Tipe Bahaya') }}
