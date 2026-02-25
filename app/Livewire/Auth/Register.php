@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Mail\RequestUserLoginMail;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Session;
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
@@ -212,6 +212,8 @@ class Register extends Component
                 'close' => true,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
+            session()->flash('status', __('Request telah dikirim, Silahakan menunggu balasan email dari Admin Tosar!!!'));
+             $this->reset(['email_req', 'name_req']);
         } catch (\Exception $e) {
             $this->dispatch(
                 'alert',
@@ -225,7 +227,7 @@ class Register extends Component
                 ]
             );
         }
-         $this->reset(['email_req', 'name_req']);
+
 
     }
 }
