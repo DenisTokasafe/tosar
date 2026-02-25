@@ -11,40 +11,6 @@
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
 /* 1. Definisikan Tema Kustom Kamu di sini */
-@plugin "daisyui/theme" {
-    name: "maybecity";
-    default: false;
-    prefersdark: false;
-    color-scheme: "dark";
-    --color-base-100: oklch(12% 0.042 264.695);
-    --color-base-200: oklch(20% 0.042 265.755);
-    --color-base-300: oklch(27% 0.041 260.031);
-    --color-base-content: oklch(96% 0.007 247.896);
-    --color-primary: oklch(54% 0.245 262.881);
-    --color-primary-content: oklch(97% 0.014 254.604);
-    --color-secondary: oklch(58% 0.253 17.585);
-    --color-secondary-content: oklch(96% 0.015 12.422);
-    --color-accent: oklch(60% 0.118 184.704);
-    --color-accent-content: oklch(98% 0.014 180.72);
-    --color-neutral: oklch(20% 0.042 265.755);
-    --color-neutral-content: oklch(98% 0.003 247.858);
-    --color-info: oklch(78% 0.154 211.53);
-    --color-info-content: oklch(30% 0.056 229.695);
-    --color-success: oklch(76% 0.177 163.223);
-    --color-success-content: oklch(26% 0.051 172.552);
-    --color-warning: oklch(75% 0.183 55.934);
-    --color-warning-content: oklch(26% 0.079 36.259);
-    --color-error: oklch(70% 0.191 22.216);
-    --color-error-content: oklch(25% 0.092 26.042);
-    --radius-selector: 2rem;
-    --radius-field: 0.25rem;
-    --radius-box: 0.5rem;
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-    --border: 1.5px;
-    --depth: 1;
-    --noise: 0;
-}
 
 @plugin "daisyui/theme" {
     name: "unknownpenguin";
@@ -81,8 +47,80 @@
     --noise: 0;
 }
 
+@plugin "daisyui/theme" {
+  name: "fancytide";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(27% 0.046 192.524);
+  --color-base-200: oklch(38% 0.063 188.416);
+  --color-base-300: oklch(43% 0.078 188.216);
+  --color-base-content: oklch(95% 0.051 180.801);
+  --color-primary: oklch(43% 0 0);
+  --color-primary-content: oklch(98% 0 0);
+  --color-secondary: oklch(44% 0.011 73.639);
+  --color-secondary-content: oklch(98% 0.001 106.423);
+  --color-accent: oklch(59% 0.249 0.584);
+  --color-accent-content: oklch(97% 0.014 343.198);
+  --color-neutral: oklch(38% 0.063 188.416);
+  --color-neutral-content: oklch(98% 0.014 180.72);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(79% 0.184 86.047);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(65% 0.241 354.308);
+  --color-error-content: oklch(97% 0.014 343.198);
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.1875rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "cookedzombie";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(12% 0.042 264.695);
+  --color-base-200: oklch(20% 0.042 265.755);
+  --color-base-300: oklch(27% 0.041 260.031);
+  --color-base-content: oklch(96% 0.007 247.896);
+  --color-primary: oklch(70% 0.14 182.503);
+  --color-primary-content: oklch(98% 0.014 180.72);
+  --color-secondary: oklch(70% 0.14 182.503);
+  --color-secondary-content: oklch(98% 0.014 180.72);
+  --color-accent: oklch(58% 0.233 277.117);
+  --color-accent-content: oklch(96% 0.018 272.314);
+  --color-neutral: oklch(44% 0.043 257.281);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(70% 0.165 254.624);
+  --color-info-content: oklch(28% 0.091 267.935);
+  --color-success: oklch(79% 0.209 151.711);
+  --color-success-content: oklch(26% 0.065 152.934);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(26% 0.079 36.259);
+  --color-error: oklch(71% 0.194 13.428);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+
+
 @plugin "daisyui" {
-    themes: unknownpenguin, maybecity, wireframe, corporate;
+    themes: unknownpenguin, fancytide, wireframe, corporate,cookedzombie;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
