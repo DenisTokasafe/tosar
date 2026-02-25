@@ -33,7 +33,7 @@
         <p class="text-xs text-green-500">
             {{ $check_no_id_status }}
         </p>
-            <x-auth-session-status class="text-center" :status="session('status')" />
+
         <div class="flex flex-col justify-center gap-4">
             <x-form.input-text label="Nama Lengkap" model="name_req" placeholder="Nama Lengkap..." required />
             <x-form.input-text label="Masukan email kantor anda untuk request pembuatan user login" type='email' model="email_req" placeholder="Masukkan email.." required />
