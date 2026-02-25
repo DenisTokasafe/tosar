@@ -155,7 +155,21 @@
     "Tgl Selesai:": "Close Date:",
     "Pilih ERM Utama": "Select Primary ERM",
     "Edit Tindakan Lanjutan": "Edit Follow-up Action",
-    "Pilih ERM Tambahan (Opsional)": "Select Additional ERM (Optional)"
+    "Pilih ERM Tambahan (Opsional)": "Select Additional ERM (Optional)",
+    "Anggota Tim & Pengawas/Supervisor": "Team Members & Supervisors",
+    "Kepala Pengawas yang bertanggung jawab": "Responsible Superintendent / Lead Supervisor",
+    "Manajer Departemen & Personel Departemen Keselamatan": "Department Managers & Safety Department Personnel",
+    "Tim yang ditunjuk oleh manajemen senior dan/atau Inspektur Tambang": "Team appointed by Senior Management and/or Mine Inspectors",
+    "1 Bulan": "1 Month",
+    "1 Minggu": "1 Week",
+    "1 Hari": "1 Day",
+    "Segera": "Immediate",
+    "1 - Tidak Signifikan": "1 - Insignificant",
+    "2 - Ringan": "2 - Minor",
+    "3 - Sedang": "3 - Moderate",
+    "4 - Berat": "4 - Major",
+    "5 - Bencana": "5 - Catastrophic"
+
 
 
 

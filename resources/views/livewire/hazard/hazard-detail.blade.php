@@ -652,7 +652,7 @@
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($consequencess as $cons)
-                                <option value="{{ $cons->id }}">{{ $cons->name }}</option>
+                                <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('consequence_id')" />
@@ -664,7 +664,7 @@
                             @if ($selectedConsequence)
                             <div
                                 class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
+                                {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
                             </div>
                             @endif
                             @endif
@@ -676,7 +676,7 @@
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($likelihoodss as $like)
-                                <option value="{{ $like->id }}">{{ $like->name }}</option>
+                                <option value="{{ $like->id }}">{{ __($like->name) }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('likelihood_id')" />
@@ -688,7 +688,7 @@
                             @if ($selectedLikelihood)
                             <div
                                 class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
+                                {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
                             </div>
                             @endif
                             @endif
@@ -761,23 +761,23 @@
                     <tr>
                         <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
                         <td class="pl-2 text-xs border border-slate-200">
-                            {{ $RiskAssessment->name }}
+                            {{ __($RiskAssessment->name) }}
                         </td>
                     </tr>
                     <tr>
                         <th class="w-40 text-xs border border-slate-200">Notify</th>
                         <td class="pl-2 text-xs border border-slate-200">
-                            {{ $RiskAssessment->reporting_obligation }}
+                            {{ __($RiskAssessment->reporting_obligation) }}
                         </td>
                     </tr>
                     <tr>
                         <th class="w-40 text-xs border border-slate-200">Deadline</th>
-                        <td class="pl-2 text-xs border border-slate-200">{{ $RiskAssessment->notes }}</td>
+                        <td class="pl-2 text-xs border border-slate-200">{{ __($RiskAssessment->notes) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40 text-xs border border-slate-200">Coordinator</th>
                         <td class="pl-2 text-xs border border-slate-200">
-                            {{ $RiskAssessment->coordinator }}
+                            {{ __($RiskAssessment->coordinator) }}
                         </td>
                     </tr>
 
