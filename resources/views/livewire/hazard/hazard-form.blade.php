@@ -55,7 +55,7 @@
                             class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                             @foreach ($ttas as $tta)
-                                <option value="{{ $tta->id }}">{{ $tta->name }}</option>
+                                <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
                             @endforeach
                         </select>
                     </div>
