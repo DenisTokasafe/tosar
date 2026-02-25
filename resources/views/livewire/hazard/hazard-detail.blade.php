@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <div class="flex justify-start mb-2 " wire:ignore>
         @if (Breadcrumbs::exists('hazard-detail'))
-            {!! Breadcrumbs::render('hazard-detail', $hazard_id) !!}
+        {!! Breadcrumbs::render('hazard-detail', $hazard_id) !!}
         @endif
     </div>
     <div class="mb-2 shadow-md card bg-base-100 ">
@@ -26,7 +26,7 @@
             </div>
 
             @php
-                $isDisabled = in_array(optional($hazard)->status, ['cancelled', 'closed']);
+            $isDisabled = in_array(optional($hazard)->status, ['cancelled', 'closed']);
             @endphp
 
             {{-- Form Action --}}
@@ -34,46 +34,46 @@
                 {{-- PROCEED TO --}}
                 <div class="max-w-sm">
                     <label class="label">
-                        <span class="text-xs font-semibold label-text">Lanjutkan Ke</span>
+                        <span class="text-xs font-semibold label-text">{{ __('Lanjutkan Ke') }}</span>
                     </label>
                     <select wire:model.live="proceedTo"
                         class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                        <option value="">-- Pilih Aksi --</option>
+                        <option value="">{{__('-- Pilih Aksi --')}}</option>
                         @foreach ($availableTransitions as $label => $status)
-                            <option class="text-{{ $this->getTextColor($status) }}" value="{{ $status }}">
-                                {{ $label }}
-                            </option>
+                        <option class="text-{{ $this->getTextColor($status) }}" value="{{ $status }}">
+                            {{ $label }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
 
                 {{-- PILIH ERM --}}
                 @if ($proceedTo === 'in_progress')
-                    <div class="max-w-sm">
-                        <label class="label">
-                            <span class="text-xs font-semibold label-text">Pilih ERM Utama</span>
-                        </label>
-                        <select wire:model="assignTo1"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">{{__('-- Pilih --')}}</option>
-                            @foreach ($ermList as $erm)
-                                <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="max-w-sm">
+                    <label class="label">
+                        <span class="text-xs font-semibold label-text">Pilih ERM Utama</span>
+                    </label>
+                    <select wire:model="assignTo1"
+                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        <option value="">{{__('-- Pilih --')}}</option>
+                        @foreach ($ermList as $erm)
+                        <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-                    <div class="max-w-sm">
-                        <label class="label">
-                            <span class="text-xs font-semibold label-text">Pilih ERM Tambahan (Opsional)</span>
-                        </label>
-                        <select wire:model="assignTo2"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
-                            <option value="">{{__('-- Pilih --')}}</option>
-                            @foreach ($ermList as $erm)
-                                <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="max-w-sm">
+                    <label class="label">
+                        <span class="text-xs font-semibold label-text">Pilih ERM Tambahan (Opsional)</span>
+                    </label>
+                    <select wire:model="assignTo2"
+                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        <option value="">{{__('-- Pilih --')}}</option>
+                        @foreach ($ermList as $erm)
+                        <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 @endif
 
                 {{-- TOMBOL SIMPAN --}}
@@ -81,7 +81,7 @@
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end hidden card-actions md:block">
                         <div class="tooltip">
                             <div class="z-40 tooltip-content">
-                                <div class="text-sm font-black text-orange-400 animate-bounce">Kirim</div>
+                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
                             <flux:button size="xs" wire:click="processAction" icon:trailing="send"
                                 variant="primary"></flux:button>
@@ -90,10 +90,10 @@
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end block card-actions md:hidden">
                         <div class="tooltip">
                             <div class="z-40 tooltip-content">
-                                <div class="text-sm font-black text-orange-400 animate-bounce">Kirim</div>
+                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
                             <flux:button size="xs" wire:click="processAction" icon:trailing="send" class="w-full"
-                                variant="primary">Kirim</flux:button>
+                                variant="primary">{{ __('Kirim') }}</flux:button>
                         </div>
                     </div>
                 </div>
@@ -117,120 +117,121 @@
                             </thead>
                             <tbody>
                                 @forelse($report->activities as $activity)
-                                    <tr>
-                                        <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
-                                        </td>
-                                        <td class="px-2 py-1 border">
-                                            {{ $activity->causer->name ?? $manualPelaporName }}</td>
-                                        <td class="px-2 py-1 border">
-                                            @if (str_contains($activity->description, 'ActionHazard'))
-                                                {{-- Log khusus ActionHazard --}}
-                                                <div class="mb-1 text-blue-600">
-                                                    {{ $activity->description }}
-                                                </div>
-                                            @endif
-                                            @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
-                                                @continue($field === 'updated_at')
-                                                @php
-                                                    $oldValue = $activity->changes['old'][$field] ?? '-';
-                                                    $newValue = $new;
+                                <tr>
+                                    <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
+                                    </td>
+                                    <td class="px-2 py-1 border">
+                                        {{ $activity->causer->name ?? $manualPelaporName }}
+                                    </td>
+                                    <td class="px-2 py-1 border">
+                                        @if (str_contains($activity->description, 'ActionHazard'))
+                                        {{-- Log khusus ActionHazard --}}
+                                        <div class="mb-1 text-blue-600">
+                                            {{ $activity->description }}
+                                        </div>
+                                        @endif
+                                        @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
+                                        @continue($field === 'updated_at')
+                                        @php
+                                        $oldValue = $activity->changes['old'][$field] ?? '-';
+                                        $newValue = $new;
 
-                                                    switch ($field) {
-                                                        case 'penanggung_jawab_id':
-                                                            $oldValue =
-                                                                $activity->subject->penanggungJawab?->name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\User::find($new)?->name ?? $newValue;
-                                                            break;
-                                                        case 'pelapor_id':
-                                                            $oldValue = $activity->subject->pelapor?->name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\User::find($new)?->name ?? $newValue;
-                                                            break;
-                                                        case 'department_id':
-                                                            $oldValue =
-                                                                $activity->subject->department?->department_name ??
-                                                                $oldValue;
-                                                            $newValue =
-                                                                \App\Models\Department::find($new)?->department_name ??
-                                                                $newValue;
-                                                            break;
-                                                        case 'contractor_id':
-                                                            $oldValue =
-                                                                $activity->subject->contractor?->contractor_name ??
-                                                                $oldValue;
-                                                            $newValue =
-                                                                \App\Models\Contractor::find($new)?->contractor_name ??
-                                                                $newValue;
-                                                            break;
-                                                        case 'location_id':
-                                                            $oldValue =
-                                                                $activity->subject->location?->name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\Location::find($new)?->name ?? $newValue;
-                                                            break;
-                                                        case 'event_type_id':
-                                                            $oldValue =
-                                                                $activity->subject->eventType?->event_type_name ??
-                                                                $oldValue;
-                                                            $newValue =
-                                                                \App\Models\EventType::find($new)?->event_type_name ??
-                                                                $newValue;
-                                                            break;
-                                                        case 'event_sub_type_id':
-                                                            $oldValue =
-                                                                $activity->subject->eventSubType
-                                                                    ?->event_sub_type_name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\EventSubType::find($new)
-                                                                    ?->event_sub_type_name ?? $newValue;
-                                                            break;
-                                                        case 'kondisi_tidak_aman_id':
-                                                            $oldValue =
-                                                                $activity->subject->hazardKondisiTidakAman?->name ??
-                                                                $oldValue;
-                                                            $newValue =
-                                                                \App\Models\UnsafeCondition::find($new)?->name ??
-                                                                $newValue;
-                                                            break;
-                                                        case 'tindakan_tidak_aman_id':
-                                                            $oldValue =
-                                                                $activity->subject->hazardTindakanTidakAman?->name ??
-                                                                $oldValue;
-                                                            $newValue =
-                                                                \App\Models\UnsafeAct::find($new)?->name ?? $newValue;
-                                                            break;
-                                                        case 'consequence_id':
-                                                            $oldValue =
-                                                                $activity->subject->consequence?->name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\RiskConsequence::find($new)?->name ??
-                                                                $newValue;
-                                                            break;
-                                                        case 'likelihood_id':
-                                                            $oldValue =
-                                                                $activity->subject->likelihood?->name ?? $oldValue;
-                                                            $newValue =
-                                                                \App\Models\Likelihood::find($new)?->name ?? $newValue;
-                                                            break;
-                                                    }
-                                                    $label = ucfirst(str_replace('_', ' ', $field));
-                                                @endphp
+                                        switch ($field) {
+                                        case 'penanggung_jawab_id':
+                                        $oldValue =
+                                        $activity->subject->penanggungJawab?->name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\User::find($new)?->name ?? $newValue;
+                                        break;
+                                        case 'pelapor_id':
+                                        $oldValue = $activity->subject->pelapor?->name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\User::find($new)?->name ?? $newValue;
+                                        break;
+                                        case 'department_id':
+                                        $oldValue =
+                                        $activity->subject->department?->department_name ??
+                                        $oldValue;
+                                        $newValue =
+                                        \App\Models\Department::find($new)?->department_name ??
+                                        $newValue;
+                                        break;
+                                        case 'contractor_id':
+                                        $oldValue =
+                                        $activity->subject->contractor?->contractor_name ??
+                                        $oldValue;
+                                        $newValue =
+                                        \App\Models\Contractor::find($new)?->contractor_name ??
+                                        $newValue;
+                                        break;
+                                        case 'location_id':
+                                        $oldValue =
+                                        $activity->subject->location?->name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\Location::find($new)?->name ?? $newValue;
+                                        break;
+                                        case 'event_type_id':
+                                        $oldValue =
+                                        $activity->subject->eventType?->event_type_name ??
+                                        $oldValue;
+                                        $newValue =
+                                        \App\Models\EventType::find($new)?->event_type_name ??
+                                        $newValue;
+                                        break;
+                                        case 'event_sub_type_id':
+                                        $oldValue =
+                                        $activity->subject->eventSubType
+                                        ?->event_sub_type_name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\EventSubType::find($new)
+                                        ?->event_sub_type_name ?? $newValue;
+                                        break;
+                                        case 'kondisi_tidak_aman_id':
+                                        $oldValue =
+                                        $activity->subject->hazardKondisiTidakAman?->name ??
+                                        $oldValue;
+                                        $newValue =
+                                        \App\Models\UnsafeCondition::find($new)?->name ??
+                                        $newValue;
+                                        break;
+                                        case 'tindakan_tidak_aman_id':
+                                        $oldValue =
+                                        $activity->subject->hazardTindakanTidakAman?->name ??
+                                        $oldValue;
+                                        $newValue =
+                                        \App\Models\UnsafeAct::find($new)?->name ?? $newValue;
+                                        break;
+                                        case 'consequence_id':
+                                        $oldValue =
+                                        $activity->subject->consequence?->name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\RiskConsequence::find($new)?->name ??
+                                        $newValue;
+                                        break;
+                                        case 'likelihood_id':
+                                        $oldValue =
+                                        $activity->subject->likelihood?->name ?? $oldValue;
+                                        $newValue =
+                                        \App\Models\Likelihood::find($new)?->name ?? $newValue;
+                                        break;
+                                        }
+                                        $label = ucfirst(str_replace('_', ' ', $field));
+                                        @endphp
 
-                                                <div class="mb-1">
-                                                    <strong>{{ $label }}</strong>:
-                                                    <span class="text-red-500">{{ $oldValue }}</span>
-                                                    →
-                                                    <span class="text-green-600">{{ $newValue }}</span>
-                                                </div>
-                                            @endforeach
-                                        </td>
-                                    </tr>
+                                        <div class="mb-1">
+                                            <strong>{{ $label }}</strong>:
+                                            <span class="text-red-500">{{ $oldValue }}</span>
+                                            →
+                                            <span class="text-green-600">{{ $newValue }}</span>
+                                        </div>
+                                        @endforeach
+                                    </td>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="3" class="py-2 text-center text-gray-500">Belum ada perubahan
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="3" class="py-2 text-center text-gray-500">Belum ada perubahan
+                                    </td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -243,11 +244,24 @@
     </div>
     <form wire:submit.prevent="submit">
         <div class="w-full p-1 mb-2 rounded bg-base-200">
-            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                type="submit" icon:trailing="save" variant="primary">Update Laporan</flux:button>
-            <flux:button size="xs" class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="Yakin hapus Laporan ini?"
-                icon:trailing="trash" variant="danger">Hapus Laporan</flux:button>
+            {{-- Tombol Update --}}
+            <flux:button size="xs"
+                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                type="submit"
+                icon:trailing="save"
+                variant="primary">
+                {{ __('Update Laporan') }}
+            </flux:button>
+
+            {{-- Tombol Hapus dengan Konfirmasi --}}
+            <flux:button size="xs"
+                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                wire:click="deleteHazard({{ $hazard_id }})"
+                wire:confirm="{{ __('Yakin hapus Laporan ini?') }}"
+                icon:trailing="trash"
+                variant="danger">
+                {{ __('Hapus Laporan') }}
+            </flux:button>
         </div>
         <x-tab-hazard.layout>
             <div wire:loading.class="skeleton animate-pulse skeleton-text" wire:target="submit">
@@ -258,7 +272,7 @@
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($eventTypes as $et)
-                                <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
+                            <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('tipe_bahaya')" />
@@ -270,9 +284,9 @@
                             class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @if ($tipe_bahaya)
-                                @foreach ($subTypes as $et)
-                                    <option value="{{ $et->id }}">{{ $et->event_sub_type_name }}</option>
-                                @endforeach
+                            @foreach ($subTypes as $et)
+                            <option value="{{ $et->id }}">{{ __($et->event_sub_type_name) }}</option>
+                            @endforeach
                             @endif
 
                         </select>
@@ -295,7 +309,7 @@
                                 class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ktas as $kta)
-                                    <option value="{{ $kta->id }}">{{ $kta->name }}</option>
+                                <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -304,15 +318,15 @@
                                 class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ttas as $tta)
-                                    <option value="{{ $tta->id }}">{{ $tta->name }}</option>
+                                <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
                                 @endforeach
                             </select>
                         </div>
                         @if ($keyWord === 'kta')
-                            <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
+                        <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
                         @endif
                         @if ($keyWord === 'tta')
-                            <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
+                        <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
                         @endif
                     </fieldset>
                 </div>
@@ -334,13 +348,13 @@
 
                     {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                     @if ($location_id)
-                        <fieldset class="fieldset">
-                            <x-form.label label="Lokasi Spesifik" required />
-                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
-                            <x-label-error :messages="$errors->get('location_specific')" />
-                        </fieldset>
+                    <fieldset class="fieldset">
+                        <x-form.label label="Lokasi Spesifik" required />
+                        <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                            wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
+                            class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                        <x-label-error :messages="$errors->get('location_specific')" />
+                    </fieldset>
                     @endif
                     <fieldset class="relative fieldset">
                         <x-form.label label="Tanggal & Waktu" required />
@@ -385,7 +399,7 @@
                         addManualAction="addPelaporManual" clickaction="selectPelapor" :disabled="$isDisabled" />
                 </div>
                 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-                    <fieldset class="mb-4 fieldset md:col-span-2"wire:key="field-immediate">
+                    <fieldset class="mb-4 fieldset md:col-span-2" wire:key="field-immediate">
 
                         <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                         <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
@@ -423,23 +437,23 @@
                                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
                                     <!-- Dropdown hasil search -->
                                     @if ($showDropdown && count($departments) > 0)
-                                        <ul
-                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                            <!-- Spinner ketika klik salah satu -->
-                                            <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                            </div>
-                                            @foreach ($departments as $dept)
-                                                <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
-                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                    {{ $dept->department_name }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                    <ul
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                        <!-- Spinner ketika klik salah satu -->
+                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        </div>
+                                        @foreach ($departments as $dept)
+                                        <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                            {{ $dept->department_name }}
+                                        </li>
+                                        @endforeach
+                                    </ul>
                                     @endif
                                 </div>
                                 @if ($deptCont === 'department')
-                                    <x-label-error :messages="$errors->get('department_id')" />
+                                <x-label-error :messages="$errors->get('department_id')" />
                                 @endif
                             </div>
                             <div class="hidden mt-2 peer-checked/company:block">
@@ -452,23 +466,23 @@
                                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                     <!-- Dropdown hasil search -->
                                     @if ($showContractorDropdown && count($contractors) > 0)
-                                        <ul
-                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                            <!-- Spinner ketika klik -->
-                                            <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                            </div>
-                                            @foreach ($contractors as $contractor)
-                                                <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                                    {{ $contractor->contractor_name }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                    <ul
+                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                        <!-- Spinner ketika klik -->
+                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
+                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                        </div>
+                                        @foreach ($contractors as $contractor)
+                                        <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                            {{ $contractor->contractor_name }}
+                                        </li>
+                                        @endforeach
+                                    </ul>
                                     @endif
                                 </div>
                                 @if ($deptCont === 'company')
-                                    <x-label-error :messages="$errors->get('contractor_id')" />
+                                <x-label-error :messages="$errors->get('contractor_id')" />
                                 @endif
                             </div>
                         </fieldset>
@@ -478,7 +492,7 @@
                                 class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($penanggungJawabOptions as $pj)
-                                    <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('penanggungJawab')" />
@@ -562,69 +576,69 @@
                             icon:trailing="add-icon" variant="primary">Tambah</flux:button>
                     </div>
                     <!-- List Actions -->
-                    <div class="my-2 divider">Daftar Tindakan</div>
+                    <div class="my-2 divider">{{ __'Daftar Tindakan') }}</div>
                     <ul class="space-y-2">
                         @forelse($actionHazards as $act)
-                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                                <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                                    <div class="w-full rounded md:maxw-96 xl:max-w-1/2 bg-base-200">
-                                        <span class="font-semibold">{!! $act['description'] !!}</span>
-                                    </div>
-                                    <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                        <span class="text-[9px] badge badge-primary badge-outline">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-clock-check-icon lucide-clock-check">
-                                                <path d="M12 6v6l4 2" />
-                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                                <path d="m22 16-5.5 5.5L14 19" />
-                                            </svg>
-                                            Batas Waktu:
-                                            {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}</span>
-                                        <span class="text-[9px] badge badge-info badge-outline">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-clock-check-icon lucide-clock-check">
-                                                <path d="M12 6v6l4 2" />
-                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                                <path d="m22 16-5.5 5.5L14 19" />
-                                            </svg>
-                                            Tgl Selesai:
-                                            {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
-                                        <span class="text-[9px] badge badge-success badge-outline">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-user-check-icon lucide-user-check">
-                                                <path d="m16 11 2 2 4-4" />
-                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                                <circle cx="9" cy="7" r="4" />
-                                            </svg>
-                                            PIC:
-                                            {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
-                                        <div class="flex gap-2 mt-1 md:mt-0">
+                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                            <div class="flex flex-col gap-1 md:flex-row md:justify-between">
+                                <div class="w-full rounded md:maxw-96 xl:max-w-1/2 bg-base-200">
+                                    <span class="font-semibold">{!! $act['description'] !!}</span>
+                                </div>
+                                <div class="flex flex-col gap-1 md:flex-row md:items-center">
+                                    <span class="text-[9px] badge badge-primary badge-outline">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                            <path d="M12 6v6l4 2" />
+                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                            <path d="m22 16-5.5 5.5L14 19" />
+                                        </svg>
+                                        Batas Waktu:
+                                        {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}</span>
+                                    <span class="text-[9px] badge badge-info badge-outline">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                            <path d="M12 6v6l4 2" />
+                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                            <path d="m22 16-5.5 5.5L14 19" />
+                                        </svg>
+                                        Tgl Selesai:
+                                        {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
+                                    <span class="text-[9px] badge badge-success badge-outline">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-user-check-icon lucide-user-check">
+                                            <path d="m16 11 2 2 4-4" />
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                        </svg>
+                                        PIC:
+                                        {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
+                                    <div class="flex gap-2 mt-1 md:mt-0">
 
-                                            <flux:button variant="subtle" size="xs"
-                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                                                wire:click="loadEditAction({{ $act['id'] }})"
-                                                icon="pencil-square">
-                                            </flux:button>
+                                        <flux:button variant="subtle" size="xs"
+                                            class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                            wire:click="loadEditAction({{ $act['id'] }})"
+                                            icon="pencil-square">
+                                        </flux:button>
 
-                                            <flux:button variant="danger" size="xs"
-                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                                                wire:click="removeAction({{ $act['id'] }})"
-                                                wire:confirm="Yakin hapus tindakan ini?" icon="trash">
-                                            </flux:button>
-                                        </div>
+                                        <flux:button variant="danger" size="xs"
+                                            class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                            wire:click="removeAction({{ $act['id'] }})"
+                                            wire:confirm="Yakin hapus tindakan ini?" icon="trash">
+                                        </flux:button>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
                         @empty
-                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                                <div class="text-center text-gray-500">Tidak ada tindakan</div>
-                            </li>
+                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
+                        </li>
                         @endforelse
                     </ul>
 
@@ -641,21 +655,21 @@
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($consequencess as $cons)
-                                    <option value="{{ $cons->id }}">{{ $cons->name }}</option>
+                                <option value="{{ $cons->id }}">{{ $cons->name }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('consequence_id')" />
 
                             @if ($consequence_id)
-                                @php
-                                    $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                                @endphp
-                                @if ($selectedConsequence)
-                                    <div
-                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                        {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
-                                    </div>
-                                @endif
+                            @php
+                            $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                            @endphp
+                            @if ($selectedConsequence)
+                            <div
+                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                                {{ $selectedConsequence->description ?? 'Tidak ada deskripsi' }}
+                            </div>
+                            @endif
                             @endif
                         </fieldset>
                         {{-- Likelihood --}}
@@ -665,21 +679,21 @@
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($likelihoodss as $like)
-                                    <option value="{{ $like->id }}">{{ $like->name }}</option>
+                                <option value="{{ $like->id }}">{{ $like->name }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('likelihood_id')" />
 
                             @if ($likelihood_id)
-                                @php
-                                    $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
-                                @endphp
-                                @if ($selectedLikelihood)
-                                    <div
-                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                        {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
-                                    </div>
-                                @endif
+                            @php
+                            $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
+                            @endphp
+                            @if ($selectedLikelihood)
+                            <div
+                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                                {{ $selectedLikelihood->description ?? 'Tidak ada deskripsi' }}
+                            </div>
+                            @endif
                             @endif
                         </fieldset>
 
@@ -691,48 +705,53 @@
                         <table class="table table-xs w-60">
                             <thead>
                                 <tr class="text-center text-[9px]">
-                                    <td class=" border-1">Level</td>
-                                    <td class="rotate_text border-1 bg-emerald-500">Rendah</td>
-                                    <td class="bg-yellow-500 rotate_text border-1">Sedang</td>
-                                    <td class="bg-orange-500 rotate_text border-1">Tinggi</td>
-                                    <td class="rotate_text border-1 bg-rose-500">Ekstrem</td>
-                                    <td class="bg-gray-100 rotate_text border-1">Ditutup</td>
+                                    {{-- Menterjemahkan Header Statis --}}
+                                    <td class=" border-1">{{ __('Level') }}</td>
+                                    <td class="rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                                    <td class="bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                                    <td class="bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                                    <td class="rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                                    <td class="bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
                                 </tr>
                                 <tr class="text-center text-[9px]">
-                                    <th class="border-1">Likelihooc ↓ / Consequence →</th>
+                                    <th class="border-1">Likelihood ↓ / Consequence →</th>
                                     @foreach ($consequences as $c)
-                                        <th class="rotate_text border-1">{{ $c->name }}</th>
+                                    {{-- Menterjemahkan Nama Konsekuensi dari DB --}}
+                                    <th class="rotate_text border-1">{{ __($c->name) }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($likelihoods as $l)
-                                    <tr class="text-center text-[9px]">
+                                <tr class="text-center text-[9px]">
+                                    {{-- Menterjemahkan Nama Likelihood dari DB --}}
+                                    <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
 
-                                        <td class="w-1 font-bold border-1">{{ $l->name }}</td>
-                                        @foreach ($consequences as $c)
-                                            @php
-                                                $cell =
-                                                    App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                                                        ->where('risk_consequence_id', $c->id)
-                                                        ->first() ?? null;
-                                                $score = $l->level * $c->level;
-                                                $severity = $cell?->severity ?? '';
-                                                $color = match ($severity) {
-                                                    'Rendah' => 'bg-emerald-500',
-                                                    'Sedang' => 'bg-yellow-500',
-                                                    'Tinggi' => 'bg-orange-500',
-                                                    'Ekstrem' => 'bg-rose-500',
-                                                    default => 'bg-gray-100',
-                                                };
-                                            @endphp
-                                            <td
-                                                class="border cursor-pointer  @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-stone-500 @endif">
-                                                <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                                    class="btn btn-square btn-xs   {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">{{ Str::upper(substr($severity, 0, 1)) }}</span>
-                                            </td>
-                                        @endforeach
-                                    </tr>
+                                    @foreach ($consequences as $c)
+                                    @php
+                                    $cell = App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                                    ->where('risk_consequence_id', $c->id)
+                                    ->first() ?? null;
+
+                                    $severity = $cell?->severity ?? '';
+
+                                    $color = match ($severity) {
+                                    'Rendah' => 'bg-emerald-500',
+                                    'Sedang' => 'bg-yellow-500',
+                                    'Tinggi' => 'bg-orange-500',
+                                    'Ekstrem' => 'bg-rose-500',
+                                    default => 'bg-gray-100',
+                                    };
+                                    @endphp
+                                    <td class="border cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-stone-500 @endif">
+                                        <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                            class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
+                                            {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
+                                            {{ Str::upper(substr(__( $severity ), 0, 1)) }}
+                                        </span>
+                                    </td>
+                                    @endforeach
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -740,31 +759,33 @@
 
                 </div>
                 @if ($RiskAssessment != null)
-                    <table class="table mb-4 table-xs">
+                <table class="table mb-4 table-xs">
 
-                        <tr>
-                            <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
-                            <td class="pl-2 text-xs border border-slate-200">
-                                {{ $RiskAssessment->name }}</td>
-                        </tr>
-                        <tr>
-                            <th class="w-40 text-xs border border-slate-200">Notify</th>
-                            <td class="pl-2 text-xs border border-slate-200">
-                                {{ $RiskAssessment->reporting_obligation }}</td>
-                        </tr>
-                        <tr>
-                            <th class="w-40 text-xs border border-slate-200">Deadline</th>
-                            <td class="pl-2 text-xs border border-slate-200">{{ $RiskAssessment->notes }}</td>
-                        </tr>
-                        <tr>
-                            <th class="w-40 text-xs border border-slate-200">Coordinator</th>
-                            <td class="pl-2 text-xs border border-slate-200">
-                                {{ $RiskAssessment->coordinator }}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
+                        <td class="pl-2 text-xs border border-slate-200">
+                            {{ $RiskAssessment->name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="w-40 text-xs border border-slate-200">Notify</th>
+                        <td class="pl-2 text-xs border border-slate-200">
+                            {{ $RiskAssessment->reporting_obligation }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="w-40 text-xs border border-slate-200">Deadline</th>
+                        <td class="pl-2 text-xs border border-slate-200">{{ $RiskAssessment->notes }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40 text-xs border border-slate-200">Coordinator</th>
+                        <td class="pl-2 text-xs border border-slate-200">
+                            {{ $RiskAssessment->coordinator }}
+                        </td>
+                    </tr>
 
 
-                    </table>
+                </table>
                 @endif
             </div>
         </x-tab-hazard.layout>

@@ -128,7 +128,19 @@
     "LTI - Lost Time Injury - Fatality": "LTI - Lost Time Injury - Fatality",
     "LTI - Lost Time Injury - Non Fatality": "LTI - Lost Time Injury - Non Fatality",
     "Lingkungan Sekitar": "Surrounding Environment",
-    "Internal - Workplace Inspection (WPI)": "Internal - Workplace Inspection (WPI)"
+    "Internal - Workplace Inspection (WPI)": "Internal - Workplace Inspection (WPI)",
+    "Lanjutkan Ke" :"Transition To",
+    "-- Pilih Aksi --": "-- Select Action --",
+    "Kirim":"Send",
+    "Update Laporan": "Update Report",
+    "Hapus Laporan": "Delete Report",
+    "Yakin hapus Laporan ini?": "Are you sure you want to delete this report?",
+    "Rendah": "Low",
+    "Sedang": "Medium",
+    "Tinggi": "High",
+    "Ekstrem": "Extreme",
+    "Ditutup": "Closed",
+    "Level": "Level"
 
 
 
