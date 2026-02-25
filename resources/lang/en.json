@@ -105,7 +105,31 @@
     "optional": "optional",
     "Pilih file atau gambar": "Select file or image",
     "Mengunggah...": "Uploading...",
-    "Belum ada file": "No file selected"
+    "Belum ada file": "No file selected",
+
+    "Kimia": "Chemical",
+    "Fisik": "Physical",
+    "Biologi": "Biological",
+    "Ergonomi": "Ergonomics",
+    "Mekanis": "Mechanical",
+    "Lingkungan Hidup": "Environmental",
+    "Psikososial": "Psychosocial",
+    "Tingkah Laku": "Behavioral",
+    "Kelistrikan": "Electrical",
+    "Air Quality Impact": "Air Quality Impact",
+    "Fauna Impact": "Fauna Impact",
+    "Noise Impact": "Noise Impact",
+    "Surface Water Impact": "Surface Water Impact",
+    "Ground Water Impact": "Ground Water Impact",
+    "Land Contamination": "Land Contamination",
+    "FAI": "FAI (First Aid Injury)",
+    "MTI": "MTI (Medical Treatment Injury)",
+    "RDI": "RDI (Restricted Duty Injury)",
+    "LTI - Lost Time Injury - Fatality": "LTI - Lost Time Injury - Fatality",
+    "LTI - Lost Time Injury - Non Fatality": "LTI - Lost Time Injury - Non Fatality",
+    "Lingkungan Sekitar": "Surrounding Environment",
+    "Internal - Workplace Inspection (WPI)": "Internal - Workplace Inspection (WPI)"
+
 
 
 }

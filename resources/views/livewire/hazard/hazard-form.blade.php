@@ -26,7 +26,7 @@
                         <option value="">{{__('-- Pilih --')}}</option>
                         @if ($tipe_bahaya)
                             @foreach ($subTypes as $et)
-                                <option value=" {{ $et->id }}">{{ $et->event_sub_type_name }}</option>
+                                <option value=" {{ $et->id }}">{{ __($et->event_sub_type_name) }}</option>
                             @endforeach
                         @endif
                     </select>
