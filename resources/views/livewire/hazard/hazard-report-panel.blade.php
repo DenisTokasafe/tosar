@@ -339,7 +339,7 @@
 
                     <th class="border">{{ __('Tanggal') }}</th>
                     <th class="flex-col text-center border">
-                        {{ __('Action') }}
+                        {{ __('Aksi') }}
                     </th>
                 </tr>
             </thead>
