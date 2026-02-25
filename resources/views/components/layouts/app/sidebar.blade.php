@@ -131,7 +131,7 @@
         <flux:spacer />
 
         @auth
-        <livewire:language-switcher />
+
             <flux:dropdown position="top" align="end">
                 <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
 
