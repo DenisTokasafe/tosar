@@ -386,7 +386,7 @@
                                 // initFlatpickr();
                             });">
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
-                                wire:model.live='tanggal' placeholder="Pilih Tanggal dan Waktu..." readonly
+                                wire:model.live='tanggal' placeholder="{{ __('Pilih Tanggal') }} dan Waktu..." readonly
                                 class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                         </div>
                         <x-label-error :messages="$errors->get('tanggal')" />
@@ -462,7 +462,7 @@
                                     <!-- Input Search -->
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                         wire:model.live.debounce.300ms="searchContractor"
-                                        placeholder="{{ __('Cari kontraktor...') }}}}"
+                                        placeholder="{{ __('Cari kontraktor...') }}"
                                         class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                     <!-- Dropdown hasil search -->
                                     @if ($showContractorDropdown && count($contractors) > 0)
@@ -531,7 +531,7 @@
                                 x-ref="wrapper">
                                 <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date" type="text"
                                     x-ref="tanggalInput2" wire:model.live="action_due_date"
-                                    placeholder="Pilih Tanggal"
+                                    placeholder="{{ __('Pilih Tanggal') }}"
                                     class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                     readonly />
                             </div>
@@ -555,7 +555,7 @@
                                 x-ref="wrapper">
                                 <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date"
                                     type="text" x-ref="tanggalInput3" wire:model.live="action_actual_close_date"
-                                    placeholder="Pilih Tanggal"
+                                    placeholder="{{ __('Pilih Tanggal') }}"
                                     class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                     readonly />
                             </div>
@@ -831,7 +831,7 @@
                     });"
                         x-ref="wrapper">
                         <input type="text" x-ref="dueEdit" wire:model.live="edit_action_due_date"
-                            class="w-full input input-bordered input-xs" placeholder="Pilih Tanggal" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}" readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_due_date')" />
                 </fieldset>
@@ -855,7 +855,7 @@
                     Livewire.hook('message.processed', () => initFlatpickr());"
                         x-ref="wrapper">
                         <input type="text" x-ref="closeEdit" wire:model.live="edit_action_actual_close_date"
-                            class="w-full input input-bordered input-xs" placeholder="Pilih Tanggal" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}" readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_actual_close_date')" />
                 </fieldset>
