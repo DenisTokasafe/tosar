@@ -690,23 +690,24 @@ class Index extends Component
             $workflowData['status'] = 'Submitted';
             $workflowData['created_by'] = auth()->id();
         }
-        // Mengambil laporan terakhir untuk mendapatkan ID selanjutnya
+
         $lastReport = WpiReport::latest('id')->first();
-        // Catatan: Ganti 'FireProtection' dengan nama Model yang Anda gunakan untuk tabel di Gambar 1
-
         $nextId = $lastReport ? $lastReport->id + 1 : 1;
-
-        // Membuat nomor referensi dengan format WPI-00001
         $referenceNumber = 'WPI-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
-        $workflowData['no_referensi'] = $referenceNumber;
+
+        if (!$this->reportId) {
+            $workflowData['no_referensi'] = $referenceNumber;
+        }
+
         $report = WpiReport::updateOrCreate(
             ['id' => $this->reportId],
             $workflowData
         );
 
-        // 3. Kelola Findings (Logika Sinkronisasi agar Audit Trail Detail)
+        // 3. Kelola Findings & Notifikasi PIC (Anti-Spam)
         $existingFindingIds = $report->findings()->pluck('id')->toArray();
         $currentFindingIds = [];
+        $sentEmailsTo = []; // Array pelacak agar tidak double email ke orang yang sama
 
         foreach ($this->findings as $finding) {
             $photoPaths = $finding['photos'] ?? [];
@@ -724,17 +725,17 @@ class Index extends Component
                 }
             }
 
-            // MENGGUNAKAN updateOrCreate PER BARIS:
-            // Ini memastikan Spatie merekam 'updated' jika data berubah, atau 'created' jika baru.
+            $picValue = is_array($finding['pic_responsible'])
+                ? implode('|', $finding['pic_responsible'])
+                : $finding['pic_responsible'];
+
             $findingModel = $report->findings()->updateOrCreate(
-                ['id' => $finding['id'] ?? null], // Cari berdasarkan ID jika ada
+                ['id' => $finding['id'] ?? null],
                 [
                     'ohs_risk' => $finding['ohs_risk'],
                     'description' => $finding['description'],
                     'prevention_action' => $finding['prevention_action'],
-                    'pic_responsible' => is_array($finding['pic_responsible'])
-                        ? implode('|', $finding['pic_responsible'])
-                        : $finding['pic_responsible'],
+                    'pic_responsible' => $picValue,
                     'due_date' => $finding['due_date'] ? date('Y-m-d', strtotime($finding['due_date'])) : null,
                     'completion_date' => $finding['completion_date'] ? date('Y-m-d', strtotime($finding['completion_date'])) : null,
                     'photos' => $photoPaths,
@@ -743,85 +744,62 @@ class Index extends Component
             );
 
             $currentFindingIds[] = $findingModel->id;
+
+            // --- Logika Notifikasi PIC per Temuan ---
+            $currentPicNames = is_array($finding['pic_responsible'])
+                ? $finding['pic_responsible']
+                : explode('|', $finding['pic_responsible']);
+
+            $currentPicNames = array_filter(array_unique($currentPicNames));
+
+            if (!empty($currentPicNames)) {
+                $picUsers = User::whereIn('name', $currentPicNames)->get();
+                foreach ($picUsers as $user) {
+                    // Cek apakah user ini sudah dikirimi email untuk laporan ini
+                    if (!in_array($user->id, $sentEmailsTo)) {
+                        $areaName = $report->area ?? 'General Area';
+
+                        MailHelper::sendToUserId(
+                            $user->id,
+                            $this->reportId ? "Update Penugasan PIC: $report->no_referensi" : "Penugasan Temuan WPI: $report->no_referensi",
+                            'emails.notification',
+                            [
+                                'subject'        => "Tindakan Perbaikan WPI: $report->no_referensi",
+                                'title'          => "Halo {$user->name},",
+                                'messageText'    => $this->reportId
+                                    ? "Terdapat pembaruan pada temuan WPI di mana Anda ditugaskan sebagai PIC."
+                                    : "Anda telah ditunjuk sebagai PIC untuk menindaklanjuti temuan pada laporan WPI baru.",
+                                'additionalInfo' => "Nomor Laporan: $report->no_referensi\nLokasi: $areaName\nStatus: $report->status",
+                                'actionUrl'      => route('wpi.edit', $report->id)
+                            ]
+                        );
+                        $sentEmailsTo[] = $user->id; // Tandai agar tidak dikirim lagi
+                    }
+                }
+            }
         }
-        // PROSES DELETE: Hapus temuan yang tidak ada lagi di form
+
+        // PROSES DELETE
         $findingsToDelete = array_diff($existingFindingIds, $currentFindingIds);
         if (!empty($findingsToDelete)) {
-            // Ini akan memicu event 'deleted' di Audit Trail untuk setiap item yang dihapus
             WpiFinding::whereIn('id', $findingsToDelete)->get()->each->delete();
         }
 
-        // 4. Notifikasi Otomatis ke Moderator
+        // 4. Notifikasi ke Moderator & Inspector (Logika Existing)
+        $area = $report->area ?? 'General Area';
+        $reporterName = $report->creator->name ?? 'System';
+
         if (!$this->reportId) {
+            // Moderator Baru
             $moderatorIds = WpiWorkflow::getModeratorsForStatus('Submitted', $report);
             foreach ($moderatorIds as $userId) {
-                $reporterName = $report->creator->name ?? 'System';
-                $area = $report->area ?? 'General Area';
-                MailHelper::sendToUserId(
-                    $userId,
-                    'Notifikasi Laporan WPI Baru',
-                    'emails.notification',
-                    [
-                        'subject'       => 'Laporan WPI Baru',
-                        'title'         => 'Notifikasi Laporan WPI Baru',
-                        'messageText'   => "Telah dibuat laporan WPI baru.\nSilakan lakukan  pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus: $report->status",
-                        'actionUrl'     => route('wpi.edit', $report->id)
-                    ]
-                );
-            }
-            // B. KIRIM KE INSPECTORS (Penugasan Lapangan)
-            $inspectorIdNumbers = collect($this->inspectors)->pluck('id_number')->filter()->toArray();
-            $inspectorUserIds = User::whereIn('employee_id', $inspectorIdNumbers)->pluck('id')->toArray();
-
-            foreach ($inspectorUserIds as $userId) {
-                // Pastikan tidak mengirim ulang jika inspector juga seorang moderator
-                if (in_array($userId, $moderatorIds)) continue;
-
-                MailHelper::sendToUserId(
-                    $userId,
-                    'Penugasan Inspeksi WPI',
-                    'emails.notification',
-                    [
-                        'subject'        => 'Penugasan Inspeksi',
-                        'title'          => 'Halo Inspector,',
-                        'messageText'    => "Anda telah terdaftar sebagai tim inspeksi untuk laporan berikut. Silakan gunakan link di bawah untuk melihat detail penugasan.",
-                        'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
-                        'actionUrl'      => route('wpi.edit', $report->id)
-                    ]
-                );
-            }
-            $picNames = collect($this->findings)
-                ->pluck('pic_responsible')
-                ->flatten() // Jika pic_responsible adalah array
-                ->map(fn($item) => is_string($item) ? explode('|', $item) : $item) // Handle jika dipisah pipa
-                ->flatten()
-                ->unique()
-                ->filter()
-                ->toArray();
-            if (!empty($picNames)) {
-                // 2. Cari User ID berdasarkan kolom 'name' di tabel users
-                $picUserIds = User::whereIn('name', $picNames)->pluck('id')->toArray();
-                dd($picUserIds);
-                foreach ($picUserIds as $userId) {
-                    // Hindari pengiriman ganda jika PIC juga seorang moderator atau inspector
-                    // (Opsional, tergantung kebijakan notifikasi Anda)
-
-                    $area = $report->area ?? 'General Area';
-
-                    MailHelper::sendToUserId(
-                        $userId,
-                        'Penugasan Temuan WPI (PIC)',
-                        'emails.notification',
-                        [
-                            'subject'        => "Tindakan Perbaikan Diperlukan: $report->no_referensi",
-                            'title'          => 'Halo PIC Responsible,',
-                            'messageText'    => "Anda telah ditunjuk sebagai PIC untuk melakukan tindakan pencegahan/perbaikan pada temuan laporan WPI berikut.",
-                            'additionalInfo' => "Nomor Laporan: $report->no_referensi\nLokasi: $area\nStatus: $report->status\nSilakan cek detail temuan pada sistem.",
-                            'actionUrl'      => route('wpi.edit', $report->id)
-                        ]
-                    );
-                }
+                MailHelper::sendToUserId($userId, 'Laporan WPI Baru', 'emails.notification', [
+                    'subject' => 'Laporan WPI Baru',
+                    'title' => 'Notifikasi Laporan Baru',
+                    'messageText' => "Telah dibuat laporan WPI baru oleh $reporterName.",
+                    'additionalInfo' => "No: $report->no_referensi\nArea: $area",
+                    'actionUrl' => route('wpi.edit', $report->id)
+                ]);
             }
         }
 
@@ -832,127 +810,23 @@ class Index extends Component
 
         if ($this->reportId) {
             $this->loadData($this->reportId);
-
-            // 1. Eksekusi perubahan status jika ada instruksi proceedTo
-            if ($this->proceedTo === 'Assigned' || $this->proceedTo === 'Review Event') {
+            if (in_array($this->proceedTo, ['Assigned', 'Review Event'])) {
                 $this->processStatusChange($this->proceedTo);
-                // Refresh report untuk mendapatkan status terbaru setelah proses status change
                 $report->refresh();
             }
 
-            $reporterName = $report->creator->name ?? 'System';
-            $area = $report->area ?? 'General Area';
+            // Notifikasi Update Status ke Moderator
             $currentStatus = $report->status;
-
-            if ($report->status === 'Submitted') {
-                $picNames = collect($this->findings)
-                    ->pluck('pic_responsible')
-                    ->flatten() // Jika pic_responsible adalah array
-                    ->map(fn($item) => is_string($item) ? explode('|', $item) : $item) // Handle jika dipisah pipa
-                    ->flatten()
-                    ->unique()
-                    ->filter()
-                    ->toArray();
-                if (!empty($picNames)) {
-                    // 2. Cari User ID berdasarkan kolom 'name' di tabel users
-                    $picUserIds = User::whereIn('name', $picNames)->pluck('id')->toArray();
-
-                    foreach ($picUserIds as $userId) {
-                        // Hindari pengiriman ganda jika PIC juga seorang moderator atau inspector
-                         if (in_array($userId, $moderatorIds)) continue;
-                        // (Opsional, tergantung kebijakan notifikasi Anda)
-
-                        $area = $report->area ?? 'General Area';
-
-                        MailHelper::sendToUserId(
-                            $userId,
-                            'Penugasan Temuan WPI (PIC)',
-                            'emails.notification',
-                            [
-                                'subject'        => "Tindakan Perbaikan Diperlukan: $report->no_referensi",
-                                'title'          => 'Halo PIC Responsible,',
-                                'messageText'    => "Anda telah ditunjuk sebagai PIC untuk melakukan tindakan pencegahan/perbaikan pada temuan laporan WPI berikut.",
-                                'additionalInfo' => "Nomor Laporan: $report->no_referensi\nLokasi: $area\nStatus: $report->status\nSilakan cek detail temuan pada sistem.",
-                                'actionUrl'      => route('wpi.edit', $report->id)
-                            ]
-                        );
-                    }
-                }
-            } else {
-                $moderatorIds = WpiWorkflow::getModeratorsForStatus($currentStatus, $report);
-
-                foreach ($moderatorIds as $userId) {
-                    MailHelper::sendToUserId(
-                        $userId,
-                        "Update Status WPI: $currentStatus",
-                        'emails.notification',
-                        [
-                            'subject'        => "Laporan WPI $report->no_referensi diupdate",
-                            'title'          => 'Notifikasi Perubahan Status',
-                            'messageText'    => "Laporan WPI telah diupdate ke status: **$currentStatus**. Silakan lakukan pemeriksaan atau tindakan lebih lanjut.",
-                            'additionalInfo' => "Nomor Laporan: $report->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $area\nStatus Saat Ini: $currentStatus",
-                            'actionUrl'      => route('wpi.edit', $report->id)
-                        ]
-                    );
-                }
-
-                $picNames = collect($this->findings)
-                    ->pluck('pic_responsible')
-                    ->flatten()
-                    ->map(fn($item) => is_string($item) ? explode('|', $item) : $item)
-                    ->flatten()
-                    ->unique()
-                    ->filter()
-                    ->toArray();
-
-                if (!empty($picNames)) {
-                    // Cari User ID berdasarkan kolom 'name' di tabel users
-                    $picUserIds = User::whereIn('name', $picNames)->pluck('id')->toArray();
-
-                    foreach ($picUserIds as $userId) {
-                        $area = $report->area ?? 'General Area';
-                        $currentStatus = $report->status;
-
-                        MailHelper::sendToUserId(
-                            $userId,
-                            "Update Penugasan PIC: $report->no_referensi", // Subjek diperbarui
-                            'emails.notification',
-                            [
-                                'subject'        => "Pembaruan Temuan WPI: $report->no_referensi",
-                                'title'          => 'Halo PIC Responsible,',
-                                'messageText'    => "Terdapat pembaruan data atau status pada temuan WPI di mana Anda ditugaskan sebagai PIC.\nStatus saat ini: **$currentStatus**.",
-                                'additionalInfo' => "Nomor Laporan: $report->no_referensi\nLokasi: $area\nUpdate Terakhir: " . now()->format('d/m/Y H:i') . "\nSilakan periksa instruksi atau detail temuan terbaru pada sistem.",
-                                'actionUrl'      => route('wpi.edit', $report->id)
-                            ]
-                        );
-                    }
-                }
-
-                // 3. Ambil Inspector berdasarkan data input terbaru
-                $inspectorIdNumbers = collect($this->inspectors)->pluck('id_number')->filter()->toArray();
-                $inspectorUserIds = User::whereIn('employee_id', $inspectorIdNumbers)->pluck('id')->toArray();
-
-                foreach ($inspectorUserIds as $userId) {
-                    // Hindari duplikasi jika inspector adalah moderator yang baru saja dikirimi email
-                    if (in_array($userId, $moderatorIds)) continue;
-
-                    MailHelper::sendToUserId(
-                        $userId,
-                        'Update Penugasan Inspeksi WPI',
-                        'emails.notification',
-                        [
-                            'subject'        => 'Update Penugasan Inspeksi',
-                            'title'          => 'Halo Inspector,',
-                            'messageText'    => "Terdapat pembaruan data atau status pada laporan inspeksi di mana Anda ditugaskan. Status saat ini: **$currentStatus**.",
-                            'additionalInfo' => "No. Referensi: $report->no_referensi\nArea Inspeksi: $area\nTanggal: $report->report_date",
-                            'actionUrl'      => route('wpi.edit', $report->id)
-                        ]
-                    );
-                }
+            $moderatorIds = WpiWorkflow::getModeratorsForStatus($currentStatus, $report);
+            foreach ($moderatorIds as $userId) {
+                MailHelper::sendToUserId($userId, "Update WPI: $currentStatus", 'emails.notification', [
+                    'subject' => "Status WPI $report->no_referensi Updated",
+                    'title' => 'Update Status',
+                    'messageText' => "Status saat ini: **$currentStatus**.",
+                    'additionalInfo' => "No: $report->no_referensi\nPelapor: $reporterName",
+                    'actionUrl' => route('wpi.edit', $report->id)
+                ]);
             }
-
-            // 2. Ambil Moderator berdasarkan status terbaru (bukan hardcode 'Submitted')
-
         } else {
             return $this->redirect(route('wpi.edit', $report->id), navigate: true);
         }
