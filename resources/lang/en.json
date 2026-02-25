@@ -140,7 +140,14 @@
     "Tinggi": "High",
     "Ekstrem": "Extreme",
     "Ditutup": "Closed",
-    "Level": "Level"
+    "Level": "Level",
+
+
+    "Preview file baru:": "New file preview:",
+    "File lama:": "Existing file:",
+    "Lihat Fullscreen": "View Fullscreen",
+    "Pratinjau": "Preview",
+    "Download / Lihat": "Download / View"
 
 
 
