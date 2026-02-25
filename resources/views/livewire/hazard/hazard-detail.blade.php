@@ -562,7 +562,7 @@
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
                         </fieldset>
                         <!-- Dilaporkan Oleh -->
-                        <x-form.searchable-select-advanced label="PIC" placeholder="Cari Nama Pelapor..."
+                        <x-form.searchable-select-advanced label="PIC" placeholder="Cari Nama PIC..."
                             modelsearch="searchActResponsibility" modelid="action_responsible_id"
                             {{-- ID asli di DB --}} :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}}
                             :manualMode="$manualActPelaporMode" manualModelName="manualActPelaporName"
@@ -586,40 +586,36 @@
                                 </div>
                                 <div class="flex flex-col gap-1 md:flex-row md:items-center">
                                     <span class="text-[9px] badge badge-primary badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-check">
                                             <path d="M12 6v6l4 2" />
                                             <path d="M22 12a10 10 0 1 0-11 9.95" />
                                             <path d="m22 16-5.5 5.5L14 19" />
                                         </svg>
-                                        Batas Waktu:
-                                        {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}</span>
+                                        {{ __('Batas Waktu:') }}
+                                        {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}
+                                    </span>
+
                                     <span class="text-[9px] badge badge-info badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-clock-check-icon lucide-clock-check">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-check">
                                             <path d="M12 6v6l4 2" />
                                             <path d="M22 12a10 10 0 1 0-11 9.95" />
                                             <path d="m22 16-5.5 5.5L14 19" />
                                         </svg>
-                                        Tgl Selesai:
-                                        {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}</span>
+                                        {{ __('Tgl Selesai:') }}
+                                        {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}
+                                    </span>
+
                                     <span class="text-[9px] badge badge-success badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-user-check-icon lucide-user-check">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check">
                                             <path d="m16 11 2 2 4-4" />
                                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                                             <circle cx="9" cy="7" r="4" />
                                         </svg>
-                                        PIC:
-                                        {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}</span>
-                                    <div class="flex gap-2 mt-1 md:mt-0">
+                                        {{ __('PIC:') }}
+                                        {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}
+                                    </span>
 
+                                    <div class="flex gap-2 mt-1 md:mt-0">
                                         <flux:button variant="subtle" size="xs"
                                             class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                             wire:click="loadEditAction({{ $act['id'] }})"
@@ -629,7 +625,8 @@
                                         <flux:button variant="danger" size="xs"
                                             class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
                                             wire:click="removeAction({{ $act['id'] }})"
-                                            wire:confirm="Yakin hapus tindakan ini?" icon="trash">
+                                            wire:confirm="{{ __('Yakin hapus tindakan ini?') }}"
+                                            icon="trash">
                                         </flux:button>
                                     </div>
                                 </div>
