@@ -576,7 +576,7 @@
                             icon:trailing="add-icon" variant="primary">Tambah</flux:button>
                     </div>
                     <!-- List Actions -->
-                    <div class="my-2 divider">{{ __'Daftar Tindakan') }}</div>
+                    <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>
                     <ul class="space-y-2">
                         @forelse($actionHazards as $act)
                         <li class="p-2 border rounded-md shadow-sm bg-base-100">
