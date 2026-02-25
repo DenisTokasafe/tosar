@@ -437,7 +437,7 @@
 
                     @empty
                         <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan') }}.</p>
+                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
                         </li>
                     @endforelse
                 </ul>
