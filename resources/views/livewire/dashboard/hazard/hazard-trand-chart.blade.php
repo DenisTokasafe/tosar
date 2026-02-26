@@ -1,157 +1,144 @@
 <div>
+    <div wire:ignore id="hazardTrend" style="height: 355px" class="w-full border bg-base-100 border-base-200"></div>
 
-        <div wire:ignore id="hazardTrend" style="height: 355px"" class="w-full border bg-base-100 border-base-200"></div>
-
-    <!-- Load ECharts dari CDN -->
     <script type="module">
-        const data = @json($data);
-        var dom = document.getElementById('hazardTrend');
-        var myChart = echarts.init(dom);
-        var option;
+        // 1. Definisikan fungsi inisialisasi utama
+        const initHazardTrendChart = () => {
+            const dom = document.getElementById('hazardTrend');
 
-        /**
-         * Fungsi untuk mengambil warna dari variabel CSS daisyUI
-         * dan mengonversinya ke format RGB agar didukung oleh ECharts Canvas
-         */
-        const getThemeColor = (variable) => {
-            const temp = document.createElement('div');
-            temp.style.color = `var(${variable})`;
-            document.body.appendChild(temp);
-            const style = getComputedStyle(temp).color;
-            document.body.removeChild(temp);
-            return style;
-        };
+            // Safety check: jika elemen tidak ada di halaman ini, berhenti
+            if (!dom) return;
 
-        // Fungsi helper untuk mendapatkan semua warna yang dibutuhkan
-        const fetchColors = () => ({
-            primary: getThemeColor('--color-primary'),
-            content: getThemeColor('--color-base-content'),
-            base100: getThemeColor('--color-base-100'),
-            base300: getThemeColor('--color-base-300'),
-        });
+            // 2. Bersihkan instance lama jika ada (Penting untuk wire:navigate)
+            let myChart = echarts.getInstanceByDom(dom);
+            if (myChart) {
+                myChart.dispose();
+            }
 
-        let colors = fetchColors();
+            myChart = echarts.init(dom);
 
-        option = {
-            // Set background menjadi transparan agar menyatu dengan container
-            backgroundColor: 'transparent',
-            title: {
-                text: 'Jumlah Laporan Hazard per Bulan',
-                left: 'center',
-                top: 5,
-                textStyle: {
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 14,
-                    fontWeight: 'bold',
-                    color: colors.content
-                },
-                subtext: 'Data laporan berdasarkan bulan berjalan',
-                subtextStyle: {
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 8,
-                    color: colors.content
-                }
-            },
-            textStyle: {
-                fontFamily: 'Microsoft YaHei',
-                fontSize: 12,
-                color: colors.content
-            },
-            grid: {
-                top: 90,
-                right: 30,
-                bottom: 50,
-                left: 50,
-                containLabel: true
-            },
-            tooltip: {
-                trigger: 'axis',
-                backgroundColor: colors.base100,
-                borderColor: colors.primary,
-                borderWidth: 1,
-                textStyle: {
-                    color: colors.content,
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 12,
-                }
-            },
-            legend: {
-                data: ['Jumlah Laporan'],
-                top: 50,
-                left: 'center',
-                textStyle: {
-                    color: colors.content
-                }
-            },
-            xAxis: {
-                type: 'category',
-                data: data.months,
-                axisLine: {
-                    lineStyle: {
+            // 3. Ambil data awal dari PHP
+            // Note: Karena $data di encode di PHP, pastikan formatnya benar
+            const dataRaw = @json($data);
+            const data = typeof dataRaw === 'string' ? JSON.parse(dataRaw) : dataRaw;
+
+            const getThemeColor = (variable) => {
+                const temp = document.createElement('div');
+                temp.style.color = `var(${variable})`;
+                document.body.appendChild(temp);
+                const style = getComputedStyle(temp).color;
+                document.body.removeChild(temp);
+                return style;
+            };
+
+            const fetchColors = () => ({
+                primary: getThemeColor('--color-primary'),
+                content: getThemeColor('--color-base-content'),
+                base100: getThemeColor('--color-base-100'),
+                base300: getThemeColor('--color-base-300'),
+            });
+
+            let colors = fetchColors();
+
+            const option = {
+                backgroundColor: 'transparent',
+                title: {
+                    text: 'Jumlah Laporan Hazard per Bulan',
+                    left: 'center',
+                    top: 5,
+                    textStyle: {
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: colors.content
+                    },
+                    subtext: 'Data laporan berdasarkan bulan berjalan',
+                    subtextStyle: {
+                        fontSize: 10,
                         color: colors.content
                     }
                 },
-                axisLabel: {
-                    color: colors.content,
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 12
+                grid: {
+                    top: 90,
+                    right: 30,
+                    bottom: 50,
+                    left: 50,
+                    containLabel: true
                 },
-                axisTick: {
-                    show: false
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLine: {
-                    lineStyle: {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: colors.base100,
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    textStyle: {
                         color: colors.content
                     }
                 },
-                splitLine: {
-                    lineStyle: {
-                        type: 'dashed',
-                        color: colors.base300
+                legend: {
+                    data: ['Jumlah Laporan'],
+                    top: 50,
+                    textStyle: {
+                        color: colors.content
                     }
                 },
-                axisLabel: {
-                    color: colors.content,
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 12
-                }
-            },
-            series: [{
-                name: 'Jumlah Laporan',
-                data: data.counts,
-                type: 'line',
-                smooth: false,
-                emphasis: {
-                    disabled: false,
-                    focus: 'none', // Mencegah elemen lain menjadi blur/hilang
+                xAxis: {
+                    type: 'category',
+                    data: data.months,
+                    axisLine: {
+                        lineStyle: {
+                            color: colors.base300
+                        }
+                    },
+                    axisLabel: {
+                        color: colors.content
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        show: false
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed',
+                            color: colors.base300
+                        }
+                    },
+                    axisLabel: {
+                        color: colors.content
+                    }
+                },
+                series: [{
+                    name: 'Jumlah Laporan',
+                    data: data.counts,
+                    type: 'line',
+                    smooth: 0.3,
                     lineStyle: {
-                        width: 4, // Sedikit lebih tebal saat di-hover
+                        width: 4,
                         color: colors.primary
+                    },
+                    symbol: 'circle',
+                    symbolSize: 8,
+                    itemStyle: {
+                        color: colors.primary,
+                        borderWidth: 2,
+                        borderColor: colors.base100
+                    },
+                    emphasis: {
+                        focus: 'none',
+                        lineStyle: {
+                            width: 5
+                        }
                     }
-                },
-                lineStyle: {
-                    width: 3,
-                    color: colors.primary
-                },
-                symbol: 'circle',
-                symbolSize: 6,
-                itemStyle: {
-                    color: colors.primary
-                }
-            }]
-        };
+                }]
+            };
 
-        if (option && typeof option === 'object') {
             myChart.setOption(option);
 
+            // 4. Observer untuk ganti tema (DaisyUI)
             const observer = new MutationObserver(() => {
                 const newColors = fetchColors();
                 myChart.setOption({
-                    // Tetap transparan saat tema berubah
-                    backgroundColor: 'transparent',
                     title: {
                         textStyle: {
                             color: newColors.content
@@ -173,21 +160,16 @@
                         }
                     },
                     xAxis: {
-                        axisLine: {
-                            lineStyle: {
-                                color: newColors.content
-                            }
-                        },
                         axisLabel: {
                             color: newColors.content
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.base300
+                            }
                         }
                     },
                     yAxis: {
-                        axisLine: {
-                            lineStyle: {
-                                color: newColors.content
-                            }
-                        },
                         axisLabel: {
                             color: newColors.content
                         },
@@ -202,30 +184,42 @@
                             color: newColors.primary
                         },
                         itemStyle: {
-                            color: newColors.primary
+                            color: newColors.primary,
+                            borderColor: newColors.base100
                         }
                     }]
                 });
             });
-
             observer.observe(document.documentElement, {
                 attributes: true,
                 attributeFilter: ['data-theme']
             });
 
-            Livewire.on('trandChart', event => {
-                let payload_trand = JSON.parse(event);
+            // 5. Handle Livewire Dispatch
+            Livewire.on('trandChart', (event) => {
+                // Livewire v3 mengirim data dalam array [payload]
+                const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart.setOption({
                     xAxis: {
-                        data: payload_trand.months
+                        data: payload.months
                     },
                     series: [{
-                        data: payload_trand.counts
+                        data: payload.counts
                     }]
                 });
             });
-        }
 
-        window.addEventListener('resize', myChart.resize);
+            // 6. Handle Resize
+            window.addEventListener('resize', () => myChart.resize());
+        };
+
+        // --- CORE LIVEWIRE NAVIGATE LOGIC ---
+        // Jalankan saat pertama kali load
+        initHazardTrendChart();
+
+        // Jalankan setiap kali Livewire selesai melakukan navigasi SPA
+        document.addEventListener('livewire:navigated', () => {
+            initHazardTrendChart();
+        });
     </script>
 </div>
