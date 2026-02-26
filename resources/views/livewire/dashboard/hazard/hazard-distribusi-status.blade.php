@@ -1,95 +1,138 @@
 <div>
-        <div wire:ignore id="chart-container" style="height: 320px;" class="w-full"></div>
-    <!-- Load ECharts dari CDN -->
-     <script type="module">
+    <div wire:ignore id="chart-container" style="height: 320px;" class="w-full bg-base-100"></div>
+
+    <script type="module">
         var dom_status = document.getElementById('chart-container');
-        // 🧠 Ambil data dari Livewire (JSON string → object JS)
-        // const chartData = JSON.parse('<?php echo $statusChart ?>');
         const chartData = JSON.parse(@json($statusChart));
 
         const labels = chartData.labels;
         const values = chartData.values;
-        // 🔥 Masukkan data Livewire ke format yang ECharts butuh
+
         const seriesData = labels.map((label, i) => ({
-            name: label
-            , value: values[i]
+            name: label,
+            value: values[i]
         }));
+
         var myChart_status = echarts.init(dom_status, null, {
-            renderer: 'canvas'
-            , useDirtyRect: false
+            renderer: 'canvas',
+            useDirtyRect: false
         });
-        var app = {};
+
+        // --- UTILS TEMA DAISYUI ---
+        const getThemeColor = (variable) => {
+            const temp = document.createElement('div');
+            temp.style.color = `var(${variable})`;
+            document.body.appendChild(temp);
+            const style = getComputedStyle(temp).color;
+            document.body.removeChild(temp);
+            return style;
+        };
+
+        const fetchColors = () => ({
+            primary: getThemeColor('--color-primary'),
+            content: getThemeColor('--color-base-content'),
+            base100: getThemeColor('--color-base-100'),
+        });
+
+        let theme = fetchColors();
+
         var option_status;
         option_status = {
+            backgroundColor: 'transparent',
             title: {
-                text: 'Distribusi Status'
-                , left: 'center'
-            }
-            , tooltip: {
-                trigger: 'item'
-                , formatter: '{b}: {c} laporan ({d}%)' // tooltip tetap bisa tampil dua-duanya
-            }
-            , legend: {
-                top: 'bottom'
-                , left: 'center'
-                , textStyle: {
-                    fontSize: 8, // 🔹 Ukuran teks legend
-                    fontWeight: 'normal', // opsional: 'bold', 'bolder', dll
-                    color: '#333', // opsional: warna teks legend
-                    fontFamily: 'Arial' // opsional: jenis font
+                text: 'Distribusi Status',
+                left: 'center',
+                textStyle: {
+                    color: theme.content,
+                    fontFamily: 'Arial',
+                    fontSize: 16
                 }
-            }
-            , series: [{
-                name: 'Status'
-                , type: 'pie'
-                , radius: '40%'
-                , data: seriesData
-                , label: {
-                    formatter: '{c}' // 🔥 tampilkan total value (jumlah laporan)
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: theme.base100,
+                borderColor: theme.primary,
+                borderWidth: 1,
+                textStyle: { color: theme.content },
+                formatter: '{b}: {c} laporan ({d}%)'
+            },
+            legend: {
+                top: 'bottom',
+                left: 'center',
+                textStyle: {
+                    fontSize: 10,
+                    color: theme.content,
+                    fontFamily: 'Arial'
                 }
-                , emphasis: {
+            },
+            series: [{
+                name: 'Status',
+                type: 'pie',
+                radius: ['30%', '60%'], // Diubah ke donut style agar lebih modern
+                avoidLabelOverlap: true,
+                data: seriesData,
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}: {c}',
+                    color: theme.content // Warna teks label mengikuti tema
+                },
+                // --- FIX: Agar Pie tidak redup saat dihover ---
+                emphasis: {
+                    focus: 'none',
                     itemStyle: {
-                        shadowBlur: 10
-                        , shadowOffsetX: 0
-                        , shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
                     }
                 }
             }]
         };
+
         if (option_status && typeof option_status === 'object') {
             myChart_status.setOption(option_status);
+
+            // --- OBSERVER PERUBAHAN TEMA ---
+            const observer = new MutationObserver(() => {
+                const newTheme = fetchColors();
+                myChart_status.setOption({
+                    title: { textStyle: { color: newTheme.content } },
+                    tooltip: {
+                        backgroundColor: newTheme.base100,
+                        borderColor: newTheme.primary,
+                        textStyle: { color: newTheme.content }
+                    },
+                    legend: { textStyle: { color: newTheme.content } },
+                    series: [{
+                        label: { color: newTheme.content }
+                    }]
+                });
+            });
+
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
+
+            // --- LIVEWIRE EVENT ---
             Livewire.on('distribusiStatus', event => {
-                let payload_status = JSON.parse(event); // ini parse JSON dari PHP
+                let payload_status = JSON.parse(event);
                 const labels = payload_status.labels;
                 const values = payload_status.values;
 
-                // Bentuk ulang data untuk series chart
-                const seriesData = labels.map((label, i) => ({
-                    name: label
-                    , value: values[i]
+                const newSeriesData = labels.map((label, i) => ({
+                    name: label,
+                    value: values[i]
                 }));
 
                 myChart_status.setOption({
                     series: [{
-                        name: 'Status'
-                        , type: 'pie'
-                        , radius: '40%'
-                        , data: seriesData
-                        , label: {
-                            formatter: '{c}' // 🔥 tampilkan total value (jumlah laporan)
-                        }
-                        , emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10
-                                , shadowOffsetX: 0
-                                , shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
-                        }
+                        data: newSeriesData
                     }]
                 });
             });
         }
-        window.addEventListener('resize', myChart_status.resize);
 
+        window.addEventListener('resize', myChart_status.resize);
     </script>
 </div>
