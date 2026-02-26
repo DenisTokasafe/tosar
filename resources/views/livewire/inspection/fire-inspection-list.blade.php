@@ -18,7 +18,7 @@
                     <fieldset class="w-full fieldset md:max-w-80">
                         <x-form.label label="Pilih Jenis Alat" required />
                         <select wire:model.live="search_type"
-                            class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">-- Pilih --</option>
                             @foreach ($availableTypes as $typeName)
                                 <option value="{{ $typeName }}">{{ $typeName }}</option>
@@ -65,7 +65,7 @@
                             x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
 
                             <input x-ref="input" type="text" readonly
-                                class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
                                 placeholder="Pilih bulan" />
                         </div>
                         <x-label-error :messages="$errors->get('date')" />
@@ -93,7 +93,7 @@
                 <fieldset class="w-full fieldset ">
                     <x-form.label label="Pilih Jenis Alat" required />
                     <select wire:model.live="type"
-                        class="select select-xs select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                        class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('type') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                         <option value="">-- Pilih --</option>
                         @foreach ($availableTypes as $typeName)
                             <option value="{{ $typeName }}">{{ $typeName }}</option>
@@ -141,7 +141,7 @@
                         x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
 
                         <input x-ref="input" type="text" readonly
-                            class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                            class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
                             placeholder="Pilih bulan" />
                     </div>
                     <x-label-error :messages="$errors->get('date')" />

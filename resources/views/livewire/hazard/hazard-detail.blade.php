@@ -646,7 +646,7 @@
                         <fieldset class="fieldset ">
                             <x-form.label label="Consequence" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="consequence_id"
-                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($consequencess as $cons)
                                 <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
@@ -670,7 +670,7 @@
                         <fieldset class="fieldset ">
                             <x-form.label label="Likelihood" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="likelihood_id"
-                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($likelihoodss as $like)
                                 <option value="{{ $like->id }}">{{ __($like->name) }}</option>
