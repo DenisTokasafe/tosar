@@ -25,7 +25,7 @@
 
         // Mengumpulkan warna-warna tema yang dibutuhkan
         const fetchColors = () => ({
-            primary: getThemeColor('--color-primary'), // Warna garis
+            primary: getThemeColor('--color-success'), // Warna garis
             content: getThemeColor('--color-base-content'), // Warna teks & sumbu
             base100: getThemeColor('--color-base-100'), // Background tooltip
             base300: getThemeColor('--color-base-300'), // Garis bantu (grid)
@@ -205,28 +205,20 @@
                         }
                     },
                     series: [{
-                        name: 'Jumlah Laporan',
-                        data: data.counts,
-                        type: 'line',
-                        smooth: true,
                         lineStyle: {
-                            width: 3,
-                            color: colors.primary // Pastikan warna solid untuk garis
+                            color: newColors.primary
                         },
-                        symbol: 'circle',
-                        symbolSize: 6,
                         itemStyle: {
-                            color: colors.primary
+                            color: newColors.primary
                         },
                         areaStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                     offset: 0,
-                                    // MENGGUNAKAN FUNGSI BAWAAN ECHARTS (Lebih Aman)
-                                    color: echarts.color.modifyAlpha(colors.primary, 0.3)
+                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)')
                                 },
                                 {
                                     offset: 1,
-                                    color: echarts.color.modifyAlpha(colors.primary, 0)
+                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0)')
                                 }
                             ])
                         }
