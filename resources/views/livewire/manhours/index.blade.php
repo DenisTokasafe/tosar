@@ -33,7 +33,7 @@
             <div class="w-full">
                 {{-- flux:input sudah ada di sini --}}
                 <input type="text" wire:model.live="search"
-                    class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                    class="w-full input input-bordered md:max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
                     placeholder="pencarian..." />
             </div>
             {{-- 2. Input Rentang Tanggal (w-60) --}}
@@ -70,7 +70,7 @@
                 }" x-init="initFlatpickr()">
 
                     <input type="text" x-ref="tanggalInput2" placeholder="Pilih Rentang Tanggal"
-                        class="w-full input input-bordered md:max-w-sm focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs join-item"
+                        class="w-full input input-bordered md:max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs join-item"
                         readonly />
 
                     <button type="button" @click="clearDate()" class="btn btn-xs btn-neutral join-item">
@@ -177,7 +177,7 @@
                                 }"
                                     x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
                                     <input x-ref="input" type="text" readonly
-                                        class="w-full input input-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                        class="w-full input input-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
                                         placeholder="Pilih bulan" />
                                 </div>
                                 <x-label-error :messages="$errors->get('date')" />
@@ -285,7 +285,7 @@
 
                                         <input type="number" wire:model.live="manhours.{{ $key }}"
                                             placeholder="Masukkan Jumlah Jam Kerja..."
-                                            class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                                            class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
                                             @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
                                         <x-label-error :messages="$errors->get('manhours.' . $key)" />
@@ -297,7 +297,7 @@
 
                                         <input type="number" wire:model.live="manpower.{{ $key }}"
                                             placeholder="Masukkan Jumlah Tenaga Kerja..."
-                                            class="w-full input input-bordered input-xs focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden"
+                                            class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
                                             @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
                                         <x-label-error :messages="$errors->get('manpower.' . $key)" />

@@ -37,7 +37,7 @@
                         <span class="text-xs font-semibold label-text">{{ __('Lanjutkan Ke') }}</span>
                     </label>
                     <select wire:model.live="proceedTo"
-                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">{{__('-- Pilih Aksi --')}}</option>
                         @foreach ($availableTransitions as $label => $status)
                         <option class="text-{{ $this->getTextColor($status) }}" value="{{ $status }}">
@@ -54,7 +54,7 @@
                         <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Utama') }}</span>
                     </label>
                     <select wire:model="assignTo1"
-                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">{{ __('-- Pilih --') }}</option>
                         @foreach ($ermList as $erm)
                         <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
@@ -67,7 +67,7 @@
                         <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Tambahan (Opsional)') }}</span>
                     </label>
                     <select wire:model="assignTo2"
-                        class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                        class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">{{ __('-- Pilih --') }}</option>
                         @foreach ($ermList as $erm)
                         <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
@@ -269,7 +269,7 @@
                     <fieldset class="fieldset">
                         <x-form.label label="Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tipe_bahaya"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($eventTypes as $et)
                             <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
@@ -281,7 +281,7 @@
                     <fieldset class="fieldset">
                         <x-form.label label="Jenis Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="sub_tipe_bahaya"
-                            class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                            class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @if ($tipe_bahaya)
                             @foreach ($subTypes as $et)
@@ -306,7 +306,7 @@
                             label="Tindakan Tidak Aman" required />
                         <div class="hidden peer-checked/kta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
-                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                                class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ktas as $kta)
                                 <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
@@ -315,7 +315,7 @@
                         </div>
                         <div class="hidden peer-checked/tta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
-                                class="select select-xs mb-1 select-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                                class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                                 <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
                                 @foreach ($ttas as $tta)
                                 <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
@@ -352,7 +352,7 @@
                         <x-form.label label="Lokasi Spesifik" required />
                         <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                             wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                            class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                            class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
                         <x-label-error :messages="$errors->get('location_specific')" />
                     </fieldset>
                     @endif
@@ -387,7 +387,7 @@
                             });">
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
                                 wire:model.live='tanggal' placeholder="{{ __('Pilih Tanggal') }} dan Waktu..." readonly
-                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                class="w-full cursor-pointer input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
                         </div>
                         <x-label-error :messages="$errors->get('tanggal')" />
                     </fieldset>
@@ -434,7 +434,7 @@
 
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                         wire:model.live.debounce.300ms="search" placeholder="{{ __('Cari departemen...') }}"
-                                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs " />
+                                        class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs " />
                                     <!-- Dropdown hasil search -->
                                     @if ($showDropdown && count($departments) > 0)
                                     <ul
@@ -463,7 +463,7 @@
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
                                         wire:model.live.debounce.300ms="searchContractor"
                                         placeholder="{{ __('Cari kontraktor...') }}"
-                                        class="w-full input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
+                                        class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
                                     <!-- Dropdown hasil search -->
                                     @if ($showContractorDropdown && count($contractors) > 0)
                                     <ul
@@ -489,7 +489,7 @@
                         <fieldset class="fieldset">
                             <x-form.label label="PIC" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
-                                class="w-full select select-xs select-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden">
+                                class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($penanggungJawabOptions as $pj)
                                 <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
@@ -532,7 +532,7 @@
                                 <input {{ $isDisabled ? 'disabled' : '' }} name="action_due_date" type="text"
                                     x-ref="tanggalInput2" wire:model.live="action_due_date"
                                     placeholder="{{ __('Pilih Tanggal') }}"
-                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                                    class="input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                     readonly />
                             </div>
                             <x-label-error :messages="$errors->get('action_due_date')" />
@@ -556,7 +556,7 @@
                                 <input {{ $isDisabled ? 'disabled' : '' }} name="action_actual_close_date"
                                     type="text" x-ref="tanggalInput3" wire:model.live="action_actual_close_date"
                                     placeholder="{{ __('Pilih Tanggal') }}"
-                                    class="input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                                    class="input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('action_actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                                     readonly />
                             </div>
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
