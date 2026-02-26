@@ -106,10 +106,10 @@
                         <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
                     </form>
                     <h3 class="mb-2 text-lg font-bold">Audit Trail</h3>
-                    <div class="max-h-[80vh] overflow-y-auto">
+                    <div class="max-h-[80vh] overflow-y-auto overflow-x-auto">
                         <table class="table border table-xs table-pin-rows">
                             <thead>
-                                <tr class="bg-gray-100">
+                                <tr class="bg-primary/10">
                                     <th class="px-2 py-1 border">Tanggal</th>
                                     <th class="px-2 py-1 border">User</th>
                                     <th class="px-2 py-1 border">Perubahan</th>
