@@ -2,7 +2,7 @@
     <div class="overflow-hidden shadow-xl card bg-base-100">
         <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     </div>
-
+    <!-- Load ECharts dari CDN -->
     <script type="module">
         const data = @json($data);
         var dom = document.getElementById('hazardTrend');
@@ -10,7 +10,9 @@
         var option;
 
         /**
-         * Mengonversi variabel CSS OKLCH daisyUI ke RGB agar terbaca oleh Canvas
+         * Helper untuk mengambil warna dari CSS Variable daisyUI.
+         * Menggunakan trik getComputedStyle agar format OKLCH dikonversi ke RGB oleh browser
+         * sehingga ECharts bisa membacanya dengan benar.
          */
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
@@ -21,17 +23,18 @@
             return style;
         };
 
+        // Mengumpulkan warna-warna tema yang dibutuhkan
         const fetchColors = () => ({
-            primary: getThemeColor('--color-primary'),
-            content: getThemeColor('--color-base-content'),
-            base100: getThemeColor('--color-base-100'),
-            base300: getThemeColor('--color-base-300'),
+            primary: getThemeColor('--color-primary'), // Warna garis
+            content: getThemeColor('--color-base-content'), // Warna teks & sumbu
+            base100: getThemeColor('--color-base-100'), // Background tooltip
+            base300: getThemeColor('--color-base-300'), // Garis bantu (grid)
         });
 
         let colors = fetchColors();
 
         option = {
-            // backgroundColor: 'transparent' adalah kunci agar mengikuti background card
+            // Membuat background chart transparan agar menyatu dengan card
             backgroundColor: 'transparent',
             title: {
                 text: 'Jumlah Laporan Hazard per Bulan',
@@ -46,7 +49,7 @@
                 subtext: 'Data laporan berdasarkan bulan berjalan',
                 subtextStyle: {
                     fontFamily: 'Microsoft YaHei',
-                    fontSize: 10,
+                    fontSize: 8,
                     color: colors.content
                 }
             },
@@ -85,19 +88,25 @@
                 type: 'category',
                 data: data.months,
                 axisLine: {
-                    lineStyle: { color: colors.content }
+                    lineStyle: {
+                        color: colors.content
+                    }
                 },
                 axisLabel: {
                     color: colors.content,
                     fontFamily: 'Microsoft YaHei',
-                    fontSize: 11
+                    fontSize: 12
                 },
-                axisTick: { show: false }
+                axisTick: {
+                    show: false
+                }
             },
             yAxis: {
                 type: 'value',
                 axisLine: {
-                    lineStyle: { color: colors.content }
+                    lineStyle: {
+                        color: colors.content
+                    }
                 },
                 splitLine: {
                     lineStyle: {
@@ -108,30 +117,33 @@
                 axisLabel: {
                     color: colors.content,
                     fontFamily: 'Microsoft YaHei',
-                    fontSize: 11
+                    fontSize: 12
                 }
             },
             series: [{
                 name: 'Jumlah Laporan',
                 data: data.counts,
                 type: 'line',
-                smooth: true, // Membuat garis lebih melengkung (modern)
+                smooth: true, // Membuat garis lebih modern (melengkung)
                 lineStyle: {
-                    width: 4,
+                    width: 3,
                     color: colors.primary
                 },
                 symbol: 'circle',
-                symbolSize: 8,
+                symbolSize: 6,
                 itemStyle: {
-                    color: colors.primary,
-                    borderWidth: 2,
-                    borderColor: colors.base100 // Efek dot putih di tengah jika perlu
+                    color: colors.primary
                 },
-                // Efek area di bawah garis
+                // Menambahkan gradasi di bawah garis agar terlihat lebih profesional
                 areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: colors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)') },
-                        { offset: 1, color: colors.primary.replace('rgb', 'rgba').replace(')', ', 0)') }
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: colors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)')
+                        },
+                        {
+                            offset: 1,
+                            color: colors.primary.replace('rgb', 'rgba').replace(')', ', 0)')
+                        }
                     ])
                 }
             }]
@@ -140,39 +152,74 @@
         if (option && typeof option === 'object') {
             myChart.setOption(option);
 
+            /**
+             * Observer untuk mendeteksi perubahan atribut data-theme pada <html>
+             * Chart akan otomatis update warna saat tema diganti.
+             */
             const observer = new MutationObserver(() => {
                 const newColors = fetchColors();
                 myChart.setOption({
-                    backgroundColor: 'transparent',
                     title: {
-                        textStyle: { color: newColors.content },
-                        subtextStyle: { color: newColors.content }
+                        textStyle: {
+                            color: newColors.content
+                        },
+                        subtextStyle: {
+                            color: newColors.content
+                        }
                     },
-                    legend: { textStyle: { color: newColors.content } },
+                    legend: {
+                        textStyle: {
+                            color: newColors.content
+                        }
+                    },
                     tooltip: {
                         backgroundColor: newColors.base100,
                         borderColor: newColors.primary,
-                        textStyle: { color: newColors.content }
+                        textStyle: {
+                            color: newColors.content
+                        }
                     },
                     xAxis: {
-                        axisLine: { lineStyle: { color: newColors.content } },
-                        axisLabel: { color: newColors.content }
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.content
+                            }
+                        },
+                        axisLabel: {
+                            color: newColors.content
+                        }
                     },
                     yAxis: {
-                        axisLine: { lineStyle: { color: newColors.content } },
-                        axisLabel: { color: newColors.content },
-                        splitLine: { lineStyle: { color: newColors.base300 } }
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.content
+                            }
+                        },
+                        axisLabel: {
+                            color: newColors.content
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: newColors.base300
+                            }
+                        }
                     },
                     series: [{
-                        lineStyle: { color: newColors.primary },
+                        lineStyle: {
+                            color: newColors.primary
+                        },
                         itemStyle: {
-                            color: newColors.primary,
-                            borderColor: newColors.base100
+                            color: newColors.primary
                         },
                         areaStyle: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                { offset: 0, color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)') },
-                                { offset: 1, color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0)') }
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)')
+                                },
+                                {
+                                    offset: 1,
+                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0)')
+                                }
                             ])
                         }
                     }]
@@ -187,8 +234,12 @@
             Livewire.on('trandChart', event => {
                 let payload_trand = JSON.parse(event);
                 myChart.setOption({
-                    xAxis: { data: payload_trand.months },
-                    series: [{ data: payload_trand.counts }]
+                    xAxis: {
+                        data: payload_trand.months
+                    },
+                    series: [{
+                        data: payload_trand.counts
+                    }]
                 });
             });
         }
