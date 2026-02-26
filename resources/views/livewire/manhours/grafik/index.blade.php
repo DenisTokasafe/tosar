@@ -3,163 +3,128 @@
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
 
     <script type="module">
-        // --- GRAFIK MANHOURS ---
-        const data = @json($data);
-        const currentYear = @json($years);
-        var dom = document.getElementById('grafik-manhours');
-        var myChart = echarts.init(dom);
+        /**
+         * Fungsi utama untuk inisialisasi semua grafik.
+         * Dibungkus agar bisa dipanggil ulang saat navigasi Livewire (SPA).
+         */
+        const initSafetyCharts = () => {
+            // 1. Ambil data dari PHP
+            const dataMH = @json($data);
+            const dataMP = @json($manpowerData);
+            const currentYear = @json($years);
 
-        var option = {
-            title: {
-                text: 'Manhours Bulanan Tahun ' + currentYear,
-            },
-            tooltip: {
-                trigger: 'axis',
-                // Menambahkan garis bantu vertikal
-                axisPointer: {
-                    type: 'line',
-                    lineStyle: { type: 'dashed' }
-                }
-            },
-            legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
-                selected: (function(initialData) {
-                    let selected = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
-                    if (initialData.hidden_legends) {
-                        initialData.hidden_legends.forEach(name => { selected[name] = false; });
-                    }
-                    return selected;
-                })(@json($data))
-            },
-            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-            toolbox: { feature: { saveAsImage: {} } },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: data.months
-            },
-            yAxis: { type: 'value' },
-            series: [
-                {
-                    name: 'PT. MSM',
-                    type: 'line',
-                    data: data.msm,
-                    emphasis: { focus: 'series' } // Menjaga garis tetap solid saat hover
-                },
-                {
-                    name: 'PT. TTN',
-                    type: 'line',
-                    data: data.ttn,
-                    emphasis: { focus: 'series' }
-                },
-                {
-                    name: 'CONTRACTOR',
-                    type: 'line',
-                    data: data.contractor,
-                    emphasis: { focus: 'series' }
-                }
-            ]
-        };
+            // 2. Helper untuk inisialisasi atau pembersihan instance ECharts
+            const setupChart = (elementId) => {
+                const dom = document.getElementById(elementId);
+                if (!dom) return null;
 
-        if (option) {
-            myChart.setOption(option);
-            Livewire.on('manhoursChart', event => {
-                let payload = JSON.parse(event);
-                let selectedLegends = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                // Dispose instance lama jika ada (penting agar tidak error saat navigasi balik)
+                let existingChart = echarts.getInstanceByDom(dom);
+                if (existingChart) {
+                    existingChart.dispose();
+                }
+                return echarts.init(dom);
+            };
+
+            const myChartMH = setupChart('grafik-manhours');
+            const myChartMP = setupChart('grafik-manpower');
+
+            // 3. Fungsi pembuat opsi (karena strukturnya mirip)
+            const createOption = (titlePrefix, data, year) => {
+                // Parse jika data berupa string JSON
+                const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+
+                return {
+                    title: { text: titlePrefix + ' Bulanan Tahun ' + (year || '') },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'line', lineStyle: { type: 'dashed' } }
+                    },
+                    legend: {
+                        data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
+                        selected: (function() {
+                            let sel = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                            if (parsedData.hidden_legends) {
+                                parsedData.hidden_legends.forEach(name => { sel[name] = false; });
+                            }
+                            return sel;
+                        })()
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                    toolbox: { feature: { saveAsImage: {} } },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: parsedData.months
+                    },
+                    yAxis: { type: 'value' },
+                    series: [
+                        { name: 'PT. MSM', type: 'line', data: parsedData.msm, emphasis: { focus: 'series' } },
+                        { name: 'PT. TTN', type: 'line', data: parsedData.ttn, emphasis: { focus: 'series' } },
+                        { name: 'CONTRACTOR', type: 'line', data: parsedData.contractor, emphasis: { focus: 'series' } }
+                    ]
+                };
+            };
+
+            // 4. Set Opsi Awal
+            if (myChartMH) myChartMH.setOption(createOption('Manhours', dataMH, currentYear));
+            if (myChartMP) myChartMP.setOption(createOption('Manpower', dataMP, currentYear));
+
+            // 5. Livewire Event Listeners (v3 menggunakan array untuk payload)
+            Livewire.on('manhoursChart', (event) => {
+                if (!myChartMH) return;
+                const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
+
+                let selMH = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
                 if (payload.hidden_legends) {
-                    payload.hidden_legends.forEach(name => { selectedLegends[name] = false; });
+                    payload.hidden_legends.forEach(name => { selMH[name] = false; });
                 }
-                myChart.setOption({
-                    legend: { selected: selectedLegends },
+
+                myChartMH.setOption({
+                    legend: { selected: selMH },
                     xAxis: { data: payload.months },
                     series: [
-                        { name: 'PT. MSM', data: payload.msm, emphasis: { focus: 'series' } },
-                        { name: 'PT. TTN', data: payload.ttn, emphasis: { focus: 'series' } },
-                        { name: 'CONTRACTOR', data: payload.contractor, emphasis: { focus: 'series' } }
+                        { data: payload.msm },
+                        { data: payload.ttn },
+                        { data: payload.contractor }
                     ]
                 });
             });
-        }
-        window.addEventListener('resize', myChart.resize);
-    </script>
 
-    <script type="module">
-        // --- GRAFIK MANPOWER ---
-        const data_manpower = @json($manpowerData);
-        const year_mp = @json($years);
-        var dom_mp = document.getElementById('grafik-manpower');
-        var myChart_mp = echarts.init(dom_mp);
+            Livewire.on('manpowerChart', (event) => {
+                if (!myChartMP) return;
+                const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
 
-        var option_mp = {
-            title: {
-                text: 'Manpower Bulanan Tahun ' + year_mp,
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    lineStyle: { type: 'dashed' }
-                }
-            },
-            legend: {
-                data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
-                selected: (function(initialData) {
-                    let selected = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
-                    if (initialData.hidden_legends) {
-                        initialData.hidden_legends.forEach(name => { selected[name] = false; });
-                    }
-                    return selected;
-                })(@json($manpowerData))
-            },
-            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-            toolbox: { feature: { saveAsImage: {} } },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: data_manpower.months
-            },
-            yAxis: { type: 'value' },
-            series: [
-                {
-                    name: 'PT. MSM',
-                    type: 'line',
-                    data: data_manpower.msm,
-                    emphasis: { focus: 'series' }
-                },
-                {
-                    name: 'PT. TTN',
-                    type: 'line',
-                    data: data_manpower.ttn,
-                    emphasis: { focus: 'series' }
-                },
-                {
-                    name: 'CONTRACTOR',
-                    type: 'line',
-                    data: data_manpower.contractor,
-                    emphasis: { focus: 'series' }
-                }
-            ]
-        };
-
-        if (option_mp) {
-            myChart_mp.setOption(option_mp);
-            Livewire.on('manpowerChart', event => {
-                let payload = JSON.parse(event);
-                let selectedLegends_mp = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                let selMP = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
                 if (payload.hidden_legends) {
-                    payload.hidden_legends.forEach(name => { selectedLegends_mp[name] = false; });
+                    payload.hidden_legends.forEach(name => { selMP[name] = false; });
                 }
-                myChart_mp.setOption({
-                    legend: { selected: selectedLegends_mp },
+
+                myChartMP.setOption({
+                    legend: { selected: selMP },
                     xAxis: { data: payload.months },
                     series: [
-                        { name: 'PT. MSM', data: payload.msm, emphasis: { focus: 'series' } },
-                        { name: 'PT. TTN', data: payload.ttn, emphasis: { focus: 'series' } },
-                        { name: 'CONTRACTOR', data: payload.contractor, emphasis: { focus: 'series' } }
+                        { data: payload.msm },
+                        { data: payload.ttn },
+                        { data: payload.contractor }
                     ]
                 });
             });
-        }
-        window.addEventListener('resize', myChart_mp.resize);
+
+            // 6. Handle Resize
+            const resizeCharts = () => {
+                myChartMH?.resize();
+                myChartMP?.resize();
+            };
+            window.addEventListener('resize', resizeCharts);
+        };
+
+        // Jalankan saat halaman pertama kali dimuat
+        initSafetyCharts();
+
+        // Jalankan ulang setiap kali navigasi Livewire selesai (wire:navigate)
+        document.addEventListener('livewire:navigated', () => {
+            initSafetyCharts();
+        });
     </script>
 </div>
