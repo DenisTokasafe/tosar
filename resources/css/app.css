@@ -195,11 +195,54 @@
   --depth: 1;                  /* Memberikan sedikit efek dimensi */
   --noise: 0.05;               /* Sedikit tekstur agar terasa seperti material tambang */
 }
+@plugin "daisyui/theme" {
+  name: "goldore-light";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
 
+  /* Background & Surface - Warna Pasir & Debu Mineral */
+  --color-base-100: oklch(97% 0.015 80);      /* Background utama (Cream/Sand) */
+  --color-base-200: oklch(94% 0.03 80);       /* Sidebar (Beige lembut) */
+  --color-base-300: oklch(89% 0.05 80);       /* Hover/Input state */
+  --color-base-content: oklch(25% 0.02 60);   /* Teks utama (Cokelat gelap/Arang) */
+
+  /* Primary - Emas Batangan (Solid Gold) */
+  --color-primary: oklch(75% 0.16 85);        /* Emas yang lebih pekat untuk light mode */
+  --color-primary-content: oklch(20% 0.05 85); /* Teks gelap di atas emas */
+
+  /* Secondary - Batuan Sedimen (Earth Brown) */
+  --color-secondary: oklch(50% 0.08 60);
+  --color-secondary-content: oklch(98% 0.01 60);
+
+  /* Accent - Tembaga Teroksidasi (Copper/Rust) */
+  --color-accent: oklch(60% 0.14 45);
+  --color-accent-content: oklch(98% 0.01 45);
+
+  /* Neutral - Logam Alat Berat (Steel Gray) */
+  --color-neutral: oklch(35% 0.03 260);
+  --color-neutral-content: oklch(95% 0.01 260);
+
+  /* Status Colors - Lebih berani untuk latar terang */
+  --color-info: oklch(65% 0.12 240);          /* Biru mineral */
+  --color-success: oklch(62% 0.15 160);       /* Hijau zamrud mentah */
+  --color-warning: oklch(78% 0.18 85);        /* Kuning safety */
+  --color-error: oklch(55% 0.2 25);           /* Merah tanah liat */
+
+  /* Global UI Style */
+  --radius-selector: 0.25rem;
+  --radius-field: 0.125rem;
+  --radius-box: 0.375rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0.5;
+  --noise: 0.02;
+}
 
 
 @plugin "daisyui" {
-    themes:  fancytide, mysteryriver, corporate, cookedzombie, vibebutnew,goldmine;
+    themes:  fancytide, mysteryriver, corporate, cookedzombie, vibebutnew,goldmine,goldore-light;
 }
 
 /* --- 4. TAILWIND THEME & VARIANTS --- */
