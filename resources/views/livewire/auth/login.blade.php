@@ -29,7 +29,7 @@
 
         <label class="label">
             <input type="checkbox" wire:model="remember" checked="checked" class="checkbox checkbox-sm  border-[var(--color-base-300)] bg-[var(--color-base-200)] checked:border-[var(--color-primary)] checked:bg-[var(--color-primary)] checked:text-[var(--color-primary-content)]" />
-            <span class="label-text text-[var(--color-base-content)]/80 hover:text-[var(--color-base-content)] transition-colors cursor-pointer">
+            <span class="label-text text-[var(--color-primary)]/50 hover:text-[var(--color-primary)] transition-colors cursor-pointer">
                 {{ __('Remember me') }}
             </span>
         </label>

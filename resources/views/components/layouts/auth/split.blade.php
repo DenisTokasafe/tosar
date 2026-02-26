@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen antialiased bg-linear-to-b from-neutral-950 to-neutral-900">
+    <body class="min-h-screen antialiased bg-linear-to-b from-base-300 to-base-200">
         <div class="relative grid flex-col items-center justify-center px-8 h-dvh sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
             <div class="relative flex-col hidden h-full p-10 text-white bg-muted lg:flex dark:border-e dark:border-neutral-800">
                 <div class="absolute inset-0 bg-neutral-900"></div>
