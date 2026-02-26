@@ -13,13 +13,13 @@
         <div class="flex items-center justify-between ">
             <!-- Logo -->
             @auth
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                    <x-app-logo />
-                </a>
+            <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+                <x-app-logo />
+            </a>
             @else
-                <a href="{{ url('/') }}" class="flex items-center space-x-2 rtl:space-x-reverse">
-                    <x-app-logo />
-                </a>
+            <a href="{{ url('/') }}" class="flex items-center space-x-2 rtl:space-x-reverse">
+                <x-app-logo />
+            </a>
             @endauth
 
             <!-- Toggle button di lingkaran kuning -->
@@ -33,58 +33,59 @@
 
         {{-- Desktop User Menu: hanya tampil kalau user login --}}
         @auth
-            <div wire:ignore.self>
-                <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-                    <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
-                        icon:trailing="chevrons-up-down" />
+        <div wire:ignore.self>
+            <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+                <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
+                    icon:trailing="chevrons-up-down" />
 
-                    <flux:menu class="w-[220px]">
-                        <flux:menu.radio.group>
-                            <div class="p-0 text-sm font-normal">
-                                <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                    <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
-                                        <span
-                                            class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
-                                            {{ auth()->user()->initials() }}
-                                        </span>
+                <flux:menu class="w-[220px]">
+                    <flux:menu.radio.group>
+                        <div class="p-0 text-sm font-normal">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
+                                    <span
+                                        class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
+                                        {{ auth()->user()->initials() }}
                                     </span>
+                                </span>
 
-                                    <div class="grid flex-1 text-sm leading-tight text-start">
-                                        <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
-                                        <span class="text-xs truncate">{{ auth()->user()->email }}</span>
-                                    </div>
+                                <div class="grid flex-1 text-sm leading-tight text-start">
+                                    <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
+                                    <span class="text-xs truncate">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
-                        </flux:menu.radio.group>
+                        </div>
+                    </flux:menu.radio.group>
 
-                        <flux:menu.separator />
+                    <flux:menu.separator />
 
-                        <flux:menu.radio.group>
-                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
-                                {{ __('Settings') }}</flux:menu.item>
-                        </flux:menu.radio.group>
+                    <flux:menu.radio.group>
+                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                            {{ __('Settings') }}
+                        </flux:menu.item>
+                    </flux:menu.radio.group>
 
-                        <flux:menu.separator />
+                    <flux:menu.separator />
 
-                        <form method="POST" action="{{ route('logout') }}" class="w-full">
-                            @csrf
-                            <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
-                                class="w-full">
-                                {{ __('Log Out') }}
-                            </flux:menu.item>
-                        </form>
-                    </flux:menu>
-                </flux:dropdown>
+                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                        @csrf
+                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
+                            class="w-full">
+                            {{ __('Log Out') }}
+                        </flux:menu.item>
+                    </form>
+                </flux:menu>
+            </flux:dropdown>
 
-            </div>
+        </div>
         @else
-            {{-- Desktop guest actions (login/register) --}}
-            <div class="items-center hidden gap-2 lg:flex">
-                <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
-                @endif
-            </div>
+        {{-- Desktop guest actions (login/register) --}}
+        <div class="items-center hidden gap-2 lg:flex">
+            <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
+            @if (Route::has('register'))
+            <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
+            @endif
+        </div>
         @endauth
 
     </flux:sidebar>
@@ -133,76 +134,72 @@
 
         @auth
         <livewire:language-switcher />
-            <flux:dropdown position="top" align="end">
-                <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
+        <flux:dropdown position="top" align="end">
+            <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
-                                    <span
-                                        class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
-                                        {{ auth()->user()->initials() }}
-                                    </span>
+            <flux:menu>
+                <flux:menu.radio.group>
+                    <div class="p-0 text-sm font-normal">
+                        <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                            <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
+                                <span
+                                    class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
+                                    {{ auth()->user()->initials() }}
                                 </span>
+                            </span>
 
-                                <div class="grid flex-1 text-sm leading-tight text-start">
-                                    <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
-                                    <span class="text-xs truncate">{{ auth()->user()->email }}</span>
-                                </div>
+                            <div class="grid flex-1 text-sm leading-tight text-start">
+                                <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
+                                <span class="text-xs truncate">{{ auth()->user()->email }}</span>
                             </div>
                         </div>
-                    </flux:menu.radio.group>
+                    </div>
+                </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                <flux:menu.separator />
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}
-                        </flux:menu.item>
-                    </flux:menu.radio.group>
+                <flux:menu.radio.group>
+                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}
+                    </flux:menu.item>
+                </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                <flux:menu.separator />
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
+                        {{ __('Log Out') }}
+                    </flux:menu.item>
+                </form>
+            </flux:menu>
+        </flux:dropdown>
         @else
-            <div class="flex items-center gap-2">
-                <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
-                @endif
-            </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
+            @if (Route::has('register'))
+            <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
+            @endif
+        </div>
         @endauth
     </flux:header>
 
     {{ $slot }}
-     <livewire:theme-switcher />
+    <livewire:theme-switcher />
     @fluxScripts
     @livewireScripts
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
-                // Variabel lokal tetap di luar return agar aman dari Proxy
                 let editorInstance = null;
+                let listeners = []; // Untuk menampung fungsi cleanup
 
                 return {
                     init() {
-                        // 1. Tambahkan pengecekan agar tidak inisialisasi dua kali pada elemen yang sama
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
-                        // 2. Gunakan window.ClassicEditor secara eksplisit (sesuai app.js Anda)
                         window.ClassicEditor
                             .create(this.$refs.editorElement, {
-                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo',
-                                    'redo'
-                                ],
+                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
                                 removePlugins: ['ImageUpload', 'EasyImage']
                             })
                             .then(editor => {
@@ -215,51 +212,51 @@
                                 // Sinkronisasi ke Backend
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    // Gunakan set dengan defer (true)
                                     this.$wire.set(modelName, data, true);
 
                                     if (data.trim() !== '') {
-                                        editorInstance.ui.view.editable.element.classList
-                                            .remove('error');
+                                        editorInstance.ui.view.editable.element.classList.remove('error');
                                     }
                                 });
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- Event Listeners ---
-
-                        // Handler untuk update data dari Livewire v3
-                        const updateHandler = (event) => {
+                        // Simpan listener agar bisa di-destroy nantinya (Best Practice Livewire v3)
+                        listeners.push(Livewire.on('update-editor-data', (event) => {
                             const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
                                 editorInstance.setData(data.value || '');
                             }
-                        };
+                        }));
 
-                        Livewire.on('update-editor-data', updateHandler);
-
-                        // Validasi & Reset
-                        Livewire.on(`validate-${modelName}`, () => {
+                        listeners.push(Livewire.on(`validate-${modelName}`, () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
                             }
-                        });
+                        }));
 
-                        Livewire.on('validate-all-editors', () => {
+                        listeners.push(Livewire.on('validate-all-editors', () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
                             }
-                        });
+                        }));
 
-                        Livewire.on('reset-all-editors', () => {
+                        listeners.push(Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
                                 editorInstance.ui.view.editable.element.classList.remove('error');
                             }
-                        });
+                        }));
                     },
 
                     destroy() {
+                        // 1. Bersihkan event listeners Livewire agar tidak menumpuk di RAM
+                        listeners.forEach(unsubscribe => {
+                            if (typeof unsubscribe === 'function') unsubscribe();
+                            else if (unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                        });
+
+                        // 2. Hancurkan instance CKEditor
                         if (editorInstance) {
                             editorInstance.destroy()
                                 .then(() => editorInstance = null)
