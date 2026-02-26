@@ -34,7 +34,7 @@ true => [
 'border border-transparent',
 ],
 false => [
-'data-current:text-zinc-100 data-current:border-zinc-200 ',
+'data-current:text-(--color-neutral-content) data-current:border-zinc-200 ',
 'data-current:bg-white/10 data-current:border data-current:border-white/10 data-current:shadow-xs',
 'hover:text-(--color-neutral-content) hover:bg-accent',
 ],
