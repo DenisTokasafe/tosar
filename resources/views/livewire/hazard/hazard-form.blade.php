@@ -453,7 +453,7 @@
                     <fieldset class="fieldset ">
                         <x-form.label label="Consequence" required />
                         <select wire:model.live="consequence_id"
-                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($consequencess as $cons)
                             <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
@@ -477,7 +477,7 @@
                     <fieldset class="fieldset ">
                         <x-form.label label="Likelihood" required />
                         <select wire:model.live="likelihood_id"
-                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
                             <option value="">{{__('-- Pilih --')}}</option>
                             @foreach ($likelihoodss as $like)
                             <option value="{{ $like->id }}">{{ __($like->name) }}</option>
