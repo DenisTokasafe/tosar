@@ -13,7 +13,7 @@
                 <path d="M7 2h1" />
                 <path d="m22 22-5-10-5 10" />
                 <path d="M14 18h6" />
-            </svg>{{ __('Pilih Bahasa') }}
+            </svg>
             @endif
         </div>
         <select wire:model.live="lang" name="" id="" class=" select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 join-item">
