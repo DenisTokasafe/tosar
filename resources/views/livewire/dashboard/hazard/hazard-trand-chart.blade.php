@@ -1,7 +1,7 @@
 <div>
-    <div class="overflow-hidden shadow-xl bg-base-100">
-        <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
-    </div>
+
+        <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full bg-base-100"></div>
+
     <!-- Load ECharts dari CDN -->
     <script type="module">
         const data = @json($data);
