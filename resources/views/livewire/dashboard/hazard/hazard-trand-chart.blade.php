@@ -15,7 +15,7 @@
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
             document.body.appendChild(temp);
-            const style = getComputedStyle(temp).color; // Browser mengonversi OKLCH ke RGB di sini
+            const style = getComputedStyle(temp).color;
             document.body.removeChild(temp);
             return style;
         };
@@ -31,6 +31,7 @@
         let colors = fetchColors();
 
         option = {
+            // Set background menjadi transparan agar menyatu dengan container
             backgroundColor: 'transparent',
             title: {
                 text: 'Jumlah Laporan Hazard per Bulan',
@@ -40,7 +41,7 @@
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 14,
                     fontWeight: 'bold',
-                    color: colors.content // Warna teks judul
+                    color: colors.content
                 },
                 subtext: 'Data laporan berdasarkan bulan berjalan',
                 subtextStyle: {
@@ -92,6 +93,9 @@
                     color: colors.content,
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 12
+                },
+                axisTick: {
+                    show: false
                 }
             },
             yAxis: {
@@ -104,7 +108,7 @@
                 splitLine: {
                     lineStyle: {
                         type: 'dashed',
-                        color: colors.base300 // Garis bantu grid
+                        color: colors.base300
                     }
                 },
                 axisLabel: {
@@ -120,12 +124,12 @@
                 smooth: false,
                 lineStyle: {
                     width: 3,
-                    color: colors.primary // Warna garis utama
+                    color: colors.primary
                 },
                 symbol: 'circle',
                 symbolSize: 6,
                 itemStyle: {
-                    color: colors.primary // Warna titik data
+                    color: colors.primary
                 }
             }]
         };
@@ -133,10 +137,10 @@
         if (option && typeof option === 'object') {
             myChart.setOption(option);
 
-            // Update warna otomatis saat tema daisyUI diganti
             const observer = new MutationObserver(() => {
                 const newColors = fetchColors();
                 myChart.setOption({
+                    // Tetap transparan saat tema berubah
                     backgroundColor: 'transparent',
                     title: {
                         textStyle: {
@@ -147,6 +151,13 @@
                         }
                     },
                     legend: {
+                        textStyle: {
+                            color: newColors.content
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: newColors.base100,
+                        borderColor: newColors.primary,
                         textStyle: {
                             color: newColors.content
                         }
