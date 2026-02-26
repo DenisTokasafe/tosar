@@ -1,6 +1,6 @@
 <div>
 
-    <div class="bg-base-100" wire:ignore id="container" style="height: 320px"></div>
+    <div class="border bg-base-100" wire:ignore id="container" style="height: 320px"></div>
 
     <script type="module">
         var dom_divis = document.getElementById('container');
