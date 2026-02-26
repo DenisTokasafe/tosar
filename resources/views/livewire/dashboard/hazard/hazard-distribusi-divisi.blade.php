@@ -1,107 +1,204 @@
 <div>
-    <div wire:ignore id="container" style="height: 320px"></div>
-<script type="module">
-    var dom_divis = document.getElementById('container');
-    const categories = @json($categories);
-    var myChart_divis = echarts.init(dom_divis, null, {
-        renderer: 'canvas'
-        , useDirtyRect: false
-    });
-    // 🎨 Fungsi untuk menghasilkan warna berbeda-beda otomatis
-    function generateColor(index, total) {
-        // Gunakan lingkaran warna (HSL)
-        const hue = (index * (360 / total)) % 360; // bagi rata keliling 360°
-        return `hsl(${hue}, 65%, 55%)`; // saturasi & lightness agar tetap cerah
-    }
-
-    var option_divis;
-
-    option_divis = {
-        title: {
-            text: 'Jumlah Laporan'
-        }
-        , grid: {
-            top: 50
-            , left: 110
-            , right: 30
-            , bottom: 60
-        }
-        , tooltip: {
-            trigger: 'axis'
-            , axisPointer: {
-                type: 'shadow'
-            }
-        }
-        , legend: {}
-        , xAxis: {
-            type: 'value'
-            , boundaryGap: [0, 0.01]
-        }
-        , yAxis: {
-            type: 'category'
-            , data: categories.label
-            , inverse: true
-            , axisLabel: {
-                color: '#333', // warna teks
-                fontSize: 7, // ukuran font
-                fontWeight: 'bold', // ketebalan font (normal | bold | bolder | lighter)
-                fontFamily: 'Poppins, sans-serif', // jenis font
-                overflow: 'truncate', // potong teks jika terlalu panjang
-                width: 150, // batas lebar teks (bisa disesuaikan)
-                align: 'right' // posisi teks relatif ke sumbu
-            }, // ⬅️ urutkan dari atas ke bawah sesuai urutan data // ⬅️ urutkan dari atas ke bawah sesuai urutan data
-        }
-        , series: [{
-            name: categories.year // ✅ ambil dari data Livewire
-            , type: 'bar'
-            , data: categories.counts
-            , itemStyle: {
-                color: function(params) {
-                    // Gunakan warna dinamis berdasarkan posisi bar
-                    return generateColor(params.dataIndex, categories.counts.length);
-                }
-                , borderRadius: [0, 6, 6, 0]
-            }
-        }]
-    };
-
-    if (option_divis && typeof option_divis === 'object') {
-        myChart_divis.setOption(option_divis);
-        Livewire.on('distribusiDivisi', event => {
-            const payload_divisi = JSON.parse(event);
-
-            // Bentuk ulang warna berdasarkan jumlah bar baru
-            const seriesData = payload_divisi.counts.map((count, index) => ({
-                value: count
-                , itemStyle: {
-                    color: generateColor(index, payload_divisi.counts.length)
-                }
-            }));
-
-            // Update chart tanpa re-init
-            myChart_divis.setOption({
-                title: {
-                    text: 'Jumlah Laporan ' + payload_divisi.year
-                }
-                , yAxis: {
-                    data: payload_divisi.label
-                    , inverse: true // biar tetap urut dari atas ke bawah
-                }
-                , series: [{
-                    name: payload_divisi.year
-                    , data: payload_divisi.counts
-                    , itemStyle: {
-                        color: function(params) {
-                            return generateColor(params.dataIndex, payload_divisi.counts.length);
-                        }
-                        , borderRadius: [0, 6, 6, 0]
-                    }
-                }]
-            });
+     <div class="overflow-hidden shadow-xl card bg-base-100">
+         <div wire:ignore id="container" style="height: 320px"></div>
+     </div>
+    <script type="module">
+        var dom_divis = document.getElementById('container');
+        const categories = @json($categories);
+        var myChart_divis = echarts.init(dom_divis, null, {
+            renderer: 'canvas',
+            useDirtyRect: false
         });
-    }
 
-    window.addEventListener('resize', myChart_divis.resize);
+        // --- UTILS TEMA DAISYUI ---
+        const getThemeColor = (variable) => {
+            const temp = document.createElement('div');
+            temp.style.color = `var(${variable})`;
+            document.body.appendChild(temp);
+            const style = getComputedStyle(temp).color;
+            document.body.removeChild(temp);
+            return style;
+        };
 
-</script>
+        const fetchColors = () => ({
+            primary: getThemeColor('--color-primary'),
+            content: getThemeColor('--color-base-content'),
+            base100: getThemeColor('--color-base-100'),
+            base300: getThemeColor('--color-base-300'),
+        });
+
+        let theme = fetchColors();
+
+        // 🎨 Fungsi Warna HSL Tetap Cerah
+        function generateColor(index, total) {
+            const hue = (index * (360 / total)) % 360;
+            return `hsl(${hue}, 65%, 55%)`;
+        }
+
+        var option_divis;
+
+        option_divis = {
+            backgroundColor: 'transparent', // Agar menyatu dengan card
+            title: {
+                text: 'Jumlah Laporan',
+                textStyle: {
+                    color: theme.content,
+                    fontFamily: 'Poppins, sans-serif'
+                }
+            },
+            grid: {
+                top: 50,
+                left: 110,
+                right: 30,
+                bottom: 60,
+                containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: theme.base100,
+                borderColor: theme.primary,
+                borderWidth: 1,
+                textStyle: {
+                    color: theme.content
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                textStyle: {
+                    color: theme.content
+                }
+            },
+            xAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01],
+                axisLabel: {
+                    color: theme.content
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: theme.base300,
+                        type: 'dashed'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: categories.label,
+                inverse: true,
+                axisLabel: {
+                    color: theme.content, // Dinamis mengikuti tema
+                    fontSize: 9,
+                    fontWeight: 'bold',
+                    fontFamily: 'Poppins, sans-serif',
+                    overflow: 'truncate',
+                    width: 100,
+                    align: 'right'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: theme.base300
+                    }
+                }
+            },
+            series: [{
+                name: categories.year,
+                type: 'bar',
+                data: categories.counts,
+                // --- FIX: Agar bar tidak hilang saat kursor masuk ---
+                emphasis: {
+                    focus: 'none', // Mencegah bar lain menjadi blur berlebihan
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0,0,0,0.5)'
+                    }
+                },
+                itemStyle: {
+                    color: function(params) {
+                        return generateColor(params.dataIndex, categories.counts.length);
+                    },
+                    borderRadius: [0, 6, 6, 0]
+                }
+            }]
+        };
+
+        if (option_divis && typeof option_divis === 'object') {
+            myChart_divis.setOption(option_divis);
+
+            // --- OBSERVER UNTUK PERUBAHAN TEMA ---
+            const observer = new MutationObserver(() => {
+                const newTheme = fetchColors();
+                myChart_divis.setOption({
+                    title: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: newTheme.base100,
+                        borderColor: newTheme.primary,
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
+                    legend: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
+                    xAxis: {
+                        axisLabel: {
+                            color: newTheme.content
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: newTheme.base300
+                            }
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: {
+                            color: newTheme.content
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: newTheme.base300
+                            }
+                        }
+                    }
+                });
+            });
+
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
+
+            // --- LIVEWIRE EVENT ---
+            Livewire.on('distribusiDivisi', event => {
+                const payload_divisi = JSON.parse(event);
+                myChart_divis.setOption({
+                    title: {
+                        text: 'Jumlah Laporan ' + payload_divisi.year
+                    },
+                    yAxis: {
+                        data: payload_divisi.label
+                    },
+                    series: [{
+                        name: payload_divisi.year,
+                        data: payload_divisi.counts,
+                        itemStyle: {
+                            color: function(params) {
+                                return generateColor(params.dataIndex, payload_divisi.counts.length);
+                            }
+                        }
+                    }]
+                });
+            });
+        }
+
+        window.addEventListener('resize', myChart_divis.resize);
+    </script>
 </div>
