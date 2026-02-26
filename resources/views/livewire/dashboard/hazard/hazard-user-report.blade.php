@@ -1,5 +1,6 @@
 <div>
-    <div wire:ignore id="container_reportby" style="height: 355px" class="w-full border bg-base-100 border-base-200"></div>
+    <div class="border bg-base-100 border-base-200" wire:ignore id="container_reportby" style="height: 355px"></div>
+
     <script type="module">
         var dom_reportBy = document.getElementById('container_reportby');
         const pelapor = @json($pelapor);
@@ -27,7 +28,7 @@
 
         let theme = fetchColors();
 
-        // 🎨 Fungsi Warna HSL Acak tapi Tetap Konsisten
+        // 🎨 Fungsi Warna HSL Acak tapi Konsisten
         function generateColor(index, total) {
             const seed = Math.sin(index + 1) * 10000;
             const hue = (seed - Math.floor(seed)) * 360;
@@ -40,8 +41,7 @@
                 text: 'Top Kontributor',
                 textStyle: {
                     color: theme.content,
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: 16
+                    fontFamily: 'Poppins, sans-serif'
                 }
             },
             grid: {
@@ -66,14 +66,19 @@
                 type: 'value',
                 boundaryGap: [0, 0.01],
                 axisLabel: { color: theme.content },
-                splitLine: { lineStyle: { color: theme.base300, type: 'dashed' } }
+                splitLine: {
+                    lineStyle: {
+                        color: theme.base300,
+                        type: 'dashed'
+                    }
+                }
             },
             yAxis: {
                 type: 'category',
                 data: pelapor.label,
                 inverse: true,
                 axisLabel: {
-                    color: theme.content, // Warna teks dinamis
+                    color: theme.content,
                     fontSize: 9,
                     fontWeight: 'bold',
                     fontFamily: 'Poppins, sans-serif',
@@ -81,18 +86,21 @@
                     width: 100,
                     align: 'right'
                 },
-                axisLine: { lineStyle: { color: theme.base300 } }
+                axisLine: {
+                    lineStyle: { color: theme.base300 }
+                }
             },
             series: [{
                 name: pelapor.year,
                 type: 'bar',
                 data: pelapor.counts,
-                // --- FIX: Mencegah elemen lain blur saat hover ---
+                // --- FIX: Agar bar tidak redup/hilang saat di-hover ---
                 emphasis: {
                     focus: 'none',
                     itemStyle: {
                         shadowBlur: 10,
-                        shadowColor: 'rgba(0,0,0,0.3)'
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0,0,0,0.5)'
                     }
                 },
                 itemStyle: {
@@ -105,17 +113,17 @@
         if (option_reportBy && typeof option_reportBy === 'object') {
             myChart_reportBy.setOption(option_reportBy);
 
-            // --- OBSERVER PERUBAHAN TEMA ---
+            // --- OBSERVER UNTUK PERUBAHAN TEMA ---
             const observer = new MutationObserver(() => {
                 const newTheme = fetchColors();
                 myChart_reportBy.setOption({
                     title: { textStyle: { color: newTheme.content } },
-                    legend: { textStyle: { color: newTheme.content } },
                     tooltip: {
                         backgroundColor: newTheme.base100,
                         borderColor: newTheme.primary,
                         textStyle: { color: newTheme.content }
                     },
+                    legend: { textStyle: { color: newTheme.content } },
                     xAxis: {
                         axisLabel: { color: newTheme.content },
                         splitLine: { lineStyle: { color: newTheme.base300 } }
@@ -137,7 +145,7 @@
                 const payload = JSON.parse(event);
                 myChart_reportBy.setOption({
                     title: { text: 'Top Kontributor ' + payload.year },
-                    yAxis: { data: payload.label },
+                    yAxis: { data: payload.label, inverse: true },
                     series: [{
                         name: payload.year,
                         data: payload.counts,
