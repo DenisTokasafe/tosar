@@ -245,7 +245,7 @@
         <div class="w-full p-1 mb-2 rounded bg-base-200">
             {{-- Tombol Update --}}
             <button
-                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-primary btn-xs btn-active' }}"
+                class="{{ $isDisabled ? 'btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-primary btn-xs btn-active' }}"
                 type="submit">
                 <x-icon.edit/>
                 {{ __('Update Laporan') }}
@@ -253,7 +253,7 @@
 
             {{-- Tombol Hapus dengan Konfirmasi --}}
             <button
-                class=" {{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
+                class=" {{ $isDisabled ? ' btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
                 wire:click="deleteHazard({{ $hazard_id }})"
                 wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
                 <x-icon.delete/>
