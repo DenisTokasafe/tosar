@@ -1,5 +1,5 @@
 <div>
-    <div wire:ignore id="chart-container" style="height: 320px;" class="w-full border bg-base-100"></div>
+    <div wire:ignore id="chart-container" style="height: 320px;" class="w-full border bg-base-100 border-base-200"></div>
 
     <script type="module">
         var dom_status = document.getElementById('chart-container');
