@@ -108,11 +108,11 @@
                     <h3 class="mb-2 text-lg font-bold">Audit Trail</h3>
                     <div class="max-h-[80vh] overflow-y-auto overflow-x-auto">
                         <table class="table border table-xs table-pin-rows">
-                            <thead>
+                            <thead class="z-20">
                                 <tr class="bg-primary/10">
-                                    <th class="px-2 py-1 border">Tanggal</th>
-                                    <th class="px-2 py-1 border">User</th>
-                                    <th class="px-2 py-1 border">Perubahan</th>
+                                    <th class="px-2 py-1 border">{{ __('Tanggal') }}</th>
+                                    <th class="px-2 py-1 border">{{ __('User') }}</th>
+                                    <th class="px-2 py-1 border">{{ __('Perubahan') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
