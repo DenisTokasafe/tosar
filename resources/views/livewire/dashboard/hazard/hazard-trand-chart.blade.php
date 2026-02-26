@@ -113,6 +113,14 @@
                     data: data.counts,
                     type: 'line',
                     smooth: 0.3,
+                    emphasis: {
+                        disabled: false,
+                        focus: 'none', // Mencegah elemen lain menjadi blur/hilang
+                        lineStyle: {
+                            width: 4, // Sedikit lebih tebal saat di-hover
+                            color: colors.primary
+                        }
+                    },
                     lineStyle: {
                         width: 4,
                         color: colors.primary
