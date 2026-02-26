@@ -205,20 +205,28 @@
                         }
                     },
                     series: [{
+                        name: 'Jumlah Laporan',
+                        data: data.counts,
+                        type: 'line',
+                        smooth: true,
                         lineStyle: {
-                            color: newColors.primary
+                            width: 3,
+                            color: colors.primary // Pastikan warna solid untuk garis
                         },
+                        symbol: 'circle',
+                        symbolSize: 6,
                         itemStyle: {
-                            color: newColors.primary
+                            color: colors.primary
                         },
                         areaStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                     offset: 0,
-                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0.3)')
+                                    // MENGGUNAKAN FUNGSI BAWAAN ECHARTS (Lebih Aman)
+                                    color: echarts.color.modifyAlpha(colors.primary, 0.3)
                                 },
                                 {
                                     offset: 1,
-                                    color: newColors.primary.replace('rgb', 'rgba').replace(')', ', 0)')
+                                    color: echarts.color.modifyAlpha(colors.primary, 0)
                                 }
                             ])
                         }
