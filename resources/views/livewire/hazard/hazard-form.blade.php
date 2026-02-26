@@ -545,7 +545,7 @@
                                 };
                                 @endphp
                                 <td
-                                    class="border cursor-pointer bg-primary  @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-primary-content @endif">
+                                    class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
                                     <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
                                         class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
                                 </td>
