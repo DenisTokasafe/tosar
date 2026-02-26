@@ -3,6 +3,7 @@
 @import "flatpickr/dist/flatpickr.css";
 @import "flatpickr/dist/themes/airbnb.css";
 @import "@flaticon/flaticon-uicons/css/all/all";
+@import "flag-icons/css/flag-icons.min.css";
 /* @import "./flatpickr-custom.css"; */
 
 @source '../views';
