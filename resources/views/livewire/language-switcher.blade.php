@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-2">
     <div class="join">
-        <div class=" badge badge-outline badge-md bg-primary join-item badge-soft badge-primary-content">
+        <div class=" badge badge-outline badge-md bg-primary join-item badge-primary-content">
             @if ($lang === 'en')
             <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
             @elseif ($lang === 'id')
