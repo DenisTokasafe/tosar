@@ -128,23 +128,23 @@
         </div>
         {{-- Grafik --}}
         <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-3">
-            <div class="shadow  rounded-xl lg:col-span-2">
+            <div class="shadow rounded-xl lg:col-span-2">
                 <livewire:dashboard.hazard.hazard-trand-chart />
             </div>
-            <div class="p-4 shadow rounded-xl">
+            <div class="shadow  rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-status />
             </div>
         </div>
         <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-2">
-            <div class="shadow  rounded-xl">
+            <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-divisi />
             </div>
-            <div class="p-4 shadow rounded-xl">
+            <div class="shadow  rounded-xl">
                 <livewire:dashboard.hazard.hazard-user-report />
             </div>
         </div>
         <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-2">
-            <div class="shadow  rounded-xl">
+            <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.status-by-cont-dept />
             </div>
         </div>
