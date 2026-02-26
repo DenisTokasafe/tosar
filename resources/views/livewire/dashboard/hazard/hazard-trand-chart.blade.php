@@ -1,5 +1,5 @@
 <div>
-    <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
+    <div wire:ignore bg-base-100 id="hazardTrend" style="height: 320px;" class="w-full"></div>
     <!-- Load ECharts dari CDN -->
     <script type="module">
         const data = @json($data);
