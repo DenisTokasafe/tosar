@@ -209,7 +209,7 @@
                                 </div>
                                 <div class="font-bold">{{ $item->equipmentMaster->specific_location }}</div>
                             </td>
-                            <td>
+                            <td class="border">
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
                                     @foreach ($item->conditions as $key => $value)
                                         <div class="flex justify-between py-1 border-b border-dotted">
