@@ -1,6 +1,6 @@
 <div>
 
-        <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full border bg-base-100 border-base-200"></div>
+        <div wire:ignore id="hazardTrend" style="height: 355px"" class="w-full border bg-base-100 border-base-200"></div>
 
     <!-- Load ECharts dari CDN -->
     <script type="module">
