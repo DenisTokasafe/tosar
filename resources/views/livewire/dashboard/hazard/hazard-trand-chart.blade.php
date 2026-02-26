@@ -60,7 +60,7 @@
             grid: {
                 top: 90,
                 right: 30,
-
+                bottom: 50,
                 left: 50,
                 containLabel: true
             },
