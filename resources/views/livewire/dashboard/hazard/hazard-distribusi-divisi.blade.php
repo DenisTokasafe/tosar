@@ -1,7 +1,7 @@
 <div>
-     <div class="overflow-hidden shadow-xl bg-base-100">
-         <div wire:ignore id="container" style="height: 320px"></div>
-     </div>
+
+    <div class="bg-base-100" wire:ignore id="container" style="height: 320px"></div>
+
     <script type="module">
         var dom_divis = document.getElementById('container');
         const categories = @json($categories);
