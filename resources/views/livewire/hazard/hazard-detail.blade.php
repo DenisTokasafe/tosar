@@ -245,23 +245,22 @@
     <form wire:submit.prevent="submit">
         <div class="w-full p-1 mb-2 rounded bg-base-200">
             {{-- Tombol Update --}}
-            <flux:button size="xs"
-                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+            <button
+                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-primary btn-xs btn-active' }}"
                 type="submit"
                 icon:trailing="save"
-                variant="primary">
+                <x-icon.edit/>
                 {{ __('Update Laporan') }}
-            </flux:button>
+            </button>
 
             {{-- Tombol Hapus dengan Konfirmasi --}}
-            <flux:button size="xs"
-                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+            <button
+                class=" {{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
                 wire:click="deleteHazard({{ $hazard_id }})"
                 wire:confirm="{{ __('Yakin hapus Laporan ini?') }}"
-                icon:trailing="trash"
-                variant="danger">
+                <x-icon.delete/>
                 {{ __('Hapus Laporan') }}
-            </flux:button>
+            </button>
         </div>
         <x-tab-hazard.layout>
             <div wire:loading.class="skeleton animate-pulse skeleton-text" wire:target="submit">
