@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-2">
     <div class="join">
-        <label class="rounded-l-md btn btn-sm btn-primary join-item">
+        <span class="rounded-l-md bg-primary join-item">
             @if ($lang === 'en')
             <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
             @elseif ($lang === 'id')
@@ -15,7 +15,7 @@
                 <path d="M14 18h6" />
             </svg>{{ __('Pilih Bahasa') }}
             @endif
-        </label>
+        </span>
         <select wire:model.live="lang" name="" id="" class=" select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 join-item">
             <option value="">{{ __('Pilih Bahasa') }}</option>
             <option value="en"><i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>{{ __('English') }}</option>
