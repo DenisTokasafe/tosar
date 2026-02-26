@@ -663,7 +663,7 @@
                             @endphp
                             @if ($selectedConsequence)
                             <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                                class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
                                 {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
                             </div>
                             @endif
@@ -687,7 +687,7 @@
                             @endphp
                             @if ($selectedLikelihood)
                             <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                                class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
                                 {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
                             </div>
                             @endif
