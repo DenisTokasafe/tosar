@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-2">
     <div class="join">
-        <label class="rounded-r-full btn btn-xs btn-primary join-item">
+        <label class="rounded-l-md btn btn-xs btn-primary join-item">
             @if (session('lang') == 'en')
             <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
             @elseif (session('lang') == 'id')
