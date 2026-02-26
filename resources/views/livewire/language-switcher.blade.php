@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-2">
     <div class="join">
-        <label class="rounded-l-md btn btn-xs btn-primary join-item">
+        <label class="rounded-l-md btn btn-sm btn-primary join-item">
             @if ($lang === 'en')
             <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
             @elseif ($lang === 'id')
