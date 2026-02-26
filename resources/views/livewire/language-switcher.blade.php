@@ -2,9 +2,9 @@
     <div class="join">
         <div class=" badge badge-outline badge-md join-item badge-primary-content">
             @if ($lang === 'en')
-            <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
+            <i class="fi fi-gb"></i>
             @elseif ($lang === 'id')
-            <i class="inline-block w-4 h-4 text-2xl fi fi-id"></i>
+            <i class="fi fi-id"></i>
             @else
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages-icon lucide-languages">
                 <path d="m5 8 6 6" />
@@ -18,8 +18,8 @@
         </div>
         <select wire:model.live="lang" name="" id="" class=" select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 join-item">
             <option value="">{{ __('Pilih Bahasa') }}</option>
-            <option value="en"><i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>{{ __('English') }}</option>
-            <option value="id"><i class="inline-block w-4 h-4 text-2xl fi fi-id"></i>{{ __('Bahasa Indonesia') }}</option>
+            <option value="en"><i class="fi fi-gb"></i>{{ __('English') }}</option>
+            <option value="id"><i class="fi fi-id"></i>{{ __('Bahasa Indonesia') }}</option>
         </select>
     </div>
 </div>
