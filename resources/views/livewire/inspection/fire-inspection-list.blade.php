@@ -171,7 +171,7 @@
         <div class="my-10 overflow-x-auto">
             <table class="table table-xs table-zebra">
                 <thead>
-                    <tr class="text-center bg-gray-100">
+                    <tr class="text-center bg-base-200 text-base-content">
                         <th class="border">#</th>
                         <th class="border">
                             <input type="checkbox" wire:model.live="selectAll"
@@ -190,7 +190,7 @@
                     @forelse ($inspections as $index => $item)
                         <tr wire:key="row-{{ $item->id }}" wire:loading.add.class='hidden'
                             wire:target='location_id,search_type,date'
-                            class="{{ in_array($item->id, $selectedItems) ? 'bg-error/10' : 'odd:bg-white even:bg-gray-100' }}">
+                            class="{{ in_array($item->id, $selectedItems) ? 'bg-error/10' : 'odd:bg-base-200 even:bg-base-300 text-base-content' }}">
                             <td class="text-center border">{{ $inspections->firstItem() + $index }}</td>
                             <td class="text-center border">
                                 <input type="checkbox" wire:model.live="selectedItems" value="{{ $item->id }}"
