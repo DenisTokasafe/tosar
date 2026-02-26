@@ -3,9 +3,16 @@
         <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     </div>
     <!-- Load ECharts dari CDN -->
-    <script type="module">
-        // ... kode data dan init ...
+   <script type="module">
+        const data = @json($data);
+        var dom = document.getElementById('hazardTrend');
+        var myChart = echarts.init(dom);
+        var option;
 
+        /**
+         * Fungsi untuk mengambil warna dari variabel CSS daisyUI
+         * dan mengonversinya ke format RGB agar didukung oleh ECharts Canvas
+         */
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
@@ -15,19 +22,19 @@
             return style;
         };
 
+        // Fungsi helper untuk mendapatkan semua warna yang dibutuhkan
         const fetchColors = () => ({
             primary: getThemeColor('--color-primary'),
             content: getThemeColor('--color-base-content'),
-            base100: getThemeColor('--color-base-100'), // Warna latar belakang dasar
+            base100: getThemeColor('--color-base-100'),
             base300: getThemeColor('--color-base-300'),
         });
 
         let colors = fetchColors();
 
         option = {
-            // --- TAMBAHKAN INI ---
-            backgroundColor: 'transparent', // Mengatur agar chart tidak memiliki background sendiri (transparan)
-            // ---------------------
+            // Set background menjadi transparan agar menyatu dengan container
+            backgroundColor: 'transparent',
             title: {
                 text: 'Jumlah Laporan Hazard per Bulan',
                 left: 'center',
@@ -45,8 +52,71 @@
                     color: colors.content
                 }
             },
-            // ... grid, tooltip, legend tetap sama ...
-
+            textStyle: {
+                fontFamily: 'Microsoft YaHei',
+                fontSize: 12,
+                color: colors.content
+            },
+            grid: {
+                top: 90,
+                right: 30,
+                bottom: 50,
+                left: 50,
+                containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: colors.base100,
+                borderColor: colors.primary,
+                borderWidth: 1,
+                textStyle: {
+                    color: colors.content,
+                    fontFamily: 'Microsoft YaHei',
+                    fontSize: 12,
+                }
+            },
+            legend: {
+                data: ['Jumlah Laporan'],
+                top: 50,
+                left: 'center',
+                textStyle: {
+                    color: colors.content
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: data.months,
+                axisLine: {
+                    lineStyle: {
+                        color: colors.content
+                    }
+                },
+                axisLabel: {
+                    color: colors.content,
+                    fontFamily: 'Microsoft YaHei',
+                    fontSize: 12
+                },
+                axisTick: { show: false }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: colors.content
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: colors.base300
+                    }
+                },
+                axisLabel: {
+                    color: colors.content,
+                    fontFamily: 'Microsoft YaHei',
+                    fontSize: 12
+                }
+            },
             series: [{
                 name: 'Jumlah Laporan',
                 data: data.counts,
@@ -67,52 +137,35 @@
         if (option && typeof option === 'object') {
             myChart.setOption(option);
 
-            // Update otomatis saat ganti tema
             const observer = new MutationObserver(() => {
                 const newColors = fetchColors();
                 myChart.setOption({
-                    // Opsional: Jika tidak ingin transparan, set ke newColors.base100
+                    // Tetap transparan saat tema berubah
                     backgroundColor: 'transparent',
                     title: {
-                        textStyle: {
-                            color: newColors.content
-                        },
-                        subtextStyle: {
-                            color: newColors.content
-                        }
+                        textStyle: { color: newColors.content },
+                        subtextStyle: { color: newColors.content }
+                    },
+                    legend: {
+                        textStyle: { color: newColors.content }
+                    },
+                    tooltip: {
+                        backgroundColor: newColors.base100,
+                        borderColor: newColors.primary,
+                        textStyle: { color: newColors.content }
                     },
                     xAxis: {
-                        axisLine: {
-                            lineStyle: {
-                                color: newColors.content
-                            }
-                        },
-                        axisLabel: {
-                            color: newColors.content
-                        }
+                        axisLine: { lineStyle: { color: newColors.content } },
+                        axisLabel: { color: newColors.content }
                     },
                     yAxis: {
-                        axisLine: {
-                            lineStyle: {
-                                color: newColors.content
-                            }
-                        },
-                        axisLabel: {
-                            color: newColors.content
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: newColors.base300
-                            }
-                        }
+                        axisLine: { lineStyle: { color: newColors.content } },
+                        axisLabel: { color: newColors.content },
+                        splitLine: { lineStyle: { color: newColors.base300 } }
                     },
                     series: [{
-                        lineStyle: {
-                            color: newColors.primary
-                        },
-                        itemStyle: {
-                            color: newColors.primary
-                        }
+                        lineStyle: { color: newColors.primary },
+                        itemStyle: { color: newColors.primary }
                     }]
                 });
             });
@@ -122,7 +175,19 @@
                 attributeFilter: ['data-theme']
             });
 
-            // ... Livewire.on dan resize ...
+            Livewire.on('trandChart', event => {
+                let payload_trand = JSON.parse(event);
+                myChart.setOption({
+                    xAxis: {
+                        data: payload_trand.months
+                    },
+                    series: [{
+                        data: payload_trand.counts
+                    }]
+                });
+            });
         }
+
+        window.addEventListener('resize', myChart.resize);
     </script>
 </div>
