@@ -151,10 +151,55 @@
   --noise: 0;
 }
 
+@plugin "daisyui/theme" {
+  name: "goldmine";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+
+  /* Background & Surface - Menggunakan warna batuan tambang (Deep Slate) */
+  --color-base-100: oklch(25% 0.02 260);      /* Background utama (Gelap batuan) */
+  --color-base-200: oklch(20% 0.02 260);      /* Sidebar/Card */
+  --color-base-300: oklch(15% 0.02 260);      /* Input/Deep background */
+  --color-base-content: oklch(92% 0.01 260);  /* Teks utama (Off-white) */
+
+  /* Primary - Warna Emas Murni (Muted Gold) */
+  --color-primary: oklch(82% 0.15 85);        /* Emas yang lembut di mata */
+  --color-primary-content: oklch(25% 0.05 85); /* Teks di atas tombol emas */
+
+  /* Secondary - Warna Tembaga/Bronze (Earth tone) */
+  --color-secondary: oklch(65% 0.12 50);
+  --color-secondary-content: oklch(98% 0.01 50);
+
+  /* Accent - Warna Safety/Lampu Tambang */
+  --color-accent: oklch(75% 0.18 65);
+  --color-accent-content: oklch(20% 0.05 65);
+
+  /* Neutral - Warna Logam Industri */
+  --color-neutral: oklch(40% 0.03 260);
+  --color-neutral-content: oklch(95% 0.01 260);
+
+  /* Status Colors - Disesuaikan agar harmonis */
+  --color-info: oklch(70% 0.1 220);           /* Biru redup */
+  --color-success: oklch(75% 0.12 150);       /* Hijau mineral */
+  --color-warning: oklch(80% 0.16 80);        /* Kuning peringatan */
+  --color-error: oklch(65% 0.18 25);          /* Merah tanah */
+
+  /* Global UI Style */
+  --radius-selector: 0.5rem;   /* Sedikit membulat agar modern */
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;                  /* Memberikan sedikit efek dimensi */
+  --noise: 0.05;               /* Sedikit tekstur agar terasa seperti material tambang */
+}
+
 
 
 @plugin "daisyui" {
-    themes:  fancytide, mysteryriver, corporate, cookedzombie, vibebutnew;
+    themes:  fancytide, mysteryriver, corporate, cookedzombie, vibebutnew,goldmine;
 }
 
 /* --- 4. TAILWIND THEME & VARIANTS --- */

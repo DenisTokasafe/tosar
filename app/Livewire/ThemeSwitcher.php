@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 
 class ThemeSwitcher extends Component
 {
-    public $themes = ['vibebutnew','fancytide', 'corporate', 'mysteryriver','cookedzombie'];
+    public $themes = ['vibebutnew','fancytide', 'corporate', 'mysteryriver','cookedzombie','goldmine'];
 
     public function setTheme($theme)
     {
