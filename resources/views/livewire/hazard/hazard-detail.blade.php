@@ -83,7 +83,7 @@
                             <div class="z-40 tooltip-content">
                                 <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
-                            <flux:button size="xs" wire:click="processAction" class="btn btn-active btn-square btn-primary"> <x-icon.send/></flux:button>
+                            <flux:button size="xs" wire:click="processAction" class="btn btn-active btn-square btn-primary btn-xs"> <x-icon.send/></flux:button>
                         </div>
                     </div>
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end block card-actions md:hidden">
@@ -91,7 +91,7 @@
                             <div class="z-40 tooltip-content">
                                 <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
-                            <button  wire:click="processAction" icon:trailing="send" class="btn btn-xs btn-active btn-primary">
+                            <button  wire:click="processAction" class="btn btn-xs btn-active btn-primary">
                                {{ __('Kirim') }} <x-icon.send/></button>
                         </div>
                     </div>
