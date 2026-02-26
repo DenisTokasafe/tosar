@@ -46,7 +46,7 @@ true => [
 'hover:text-(--color-neutral-content) hover:bg-accent ',
 ],
 false => [
-'data-current:text-zinc-100',
+'data-current:text-base-content',
 'data-current:bg-white/10',
 'hover:text-(--color-neutral-content) hover:bg-accent',
 ],
