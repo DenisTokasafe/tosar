@@ -13,41 +13,6 @@
 
 /* --- 3. DAISYUI CUSTOM THEMES --- */
 @plugin "daisyui/theme" {
-    name: "unknownpenguin";
-    default: false;
-    prefersdark: false;
-    color-scheme: "light";
-    --color-base-100: oklch(96% 0.018 272.314);
-    --color-base-200: oklch(93% 0.034 272.788);
-    --color-base-300: oklch(87% 0.065 274.039);
-    --color-base-content: oklch(35% 0.144 278.697);
-    --color-primary: oklch(71% 0.143 215.221);
-    --color-primary-content: oklch(98% 0.019 200.873);
-    --color-secondary: oklch(58% 0.233 277.117);
-    --color-secondary-content: oklch(96% 0.018 272.314);
-    --color-accent: oklch(62% 0.214 259.815);
-    --color-accent-content: oklch(97% 0.014 254.604);
-    --color-neutral: oklch(51% 0.262 276.966);
-    --color-neutral-content: oklch(96% 0.018 272.314);
-    --color-info: oklch(68% 0.169 237.323);
-    --color-info-content: oklch(97% 0.013 236.62);
-    --color-success: oklch(70% 0.14 182.503);
-    --color-success-content: oklch(98% 0.014 180.72);
-    --color-warning: oklch(76% 0.188 70.08);
-    --color-warning-content: oklch(98% 0.022 95.277);
-    --color-error: oklch(65% 0.241 354.308);
-    --color-error-content: oklch(97% 0.014 343.198);
-    --radius-selector: 0rem;
-    --radius-field: 0rem;
-    --radius-box: 2rem;
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-    --border: 1.5px;
-    --depth: 1;
-    --noise: 0;
-}
-
-@plugin "daisyui/theme" {
     name: "fancytide";
     default: false;
     prefersdark: false;
@@ -81,7 +46,6 @@
     --depth: 0;
     --noise: 0;
 }
-
 @plugin "daisyui/theme" {
     name: "cookedzombie";
     default: false;
@@ -116,7 +80,6 @@
     --depth: 1;
     --noise: 1;
 }
-
 
 @plugin "daisyui/theme" {
   name: "vibebutnew";
@@ -155,7 +118,7 @@
 
 
 @plugin "daisyui" {
-    themes: unknownpenguin, fancytide, wireframe, corporate, cookedzombie, vibebutnew;
+    themes:  fancytide, wireframe, corporate, cookedzombie, vibebutnew;
 }
 
 /* --- 4. TAILWIND THEME & VARIANTS --- */
