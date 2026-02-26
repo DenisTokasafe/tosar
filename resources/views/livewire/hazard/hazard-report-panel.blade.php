@@ -345,7 +345,7 @@
             </thead>
             <tbody>
                 @forelse ($reports as $no => $report)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-primary/40">
                         <td class="border">{{ $reports->firstItem() + $no }}</td>
                         <td class="border">
                             @can('view', $report)
