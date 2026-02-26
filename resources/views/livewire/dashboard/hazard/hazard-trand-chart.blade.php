@@ -31,6 +31,7 @@
         let colors = fetchColors();
 
         option = {
+            backgroundColor: 'transparent',
             title: {
                 text: 'Jumlah Laporan Hazard per Bulan',
                 left: 'center',
@@ -136,6 +137,7 @@
             const observer = new MutationObserver(() => {
                 const newColors = fetchColors();
                 myChart.setOption({
+                    backgroundColor: 'transparent',
                     title: {
                         textStyle: {
                             color: newColors.content
