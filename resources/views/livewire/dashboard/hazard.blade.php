@@ -131,7 +131,7 @@
             <div class="shadow rounded-xl lg:col-span-2">
                 <livewire:dashboard.hazard.hazard-trand-chart />
             </div>
-            <div class="shadow  rounded-xl">
+            <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-status />
             </div>
         </div>
@@ -139,7 +139,7 @@
             <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-divisi />
             </div>
-            <div class="shadow  rounded-xl">
+            <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-user-report />
             </div>
         </div>
@@ -154,7 +154,7 @@
             <h3 class="mb-4 font-semibold">Laporan Hazard Terbaru</h3>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
-                    <thead class="bg-neutral">
+                    <thead class="bg-neutral text-neutral-content">
                         <tr>
                             <th class="px-3 py-2 border">Referensi</th>
                             <th class="px-3 py-2 border">Deskripsi</th>
