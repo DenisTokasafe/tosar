@@ -107,7 +107,7 @@
                     <h3 class="mb-2 text-lg font-bold">Audit Trail</h3>
                     <div class="max-h-[80vh] overflow-y-auto overflow-x-auto">
                         <table class="table border table-xs table-pin-rows">
-                            <thead class="z-20">
+                            <thead >
                                 <tr class="bg-primary">
                                     <th class="px-2 py-1 border">{{ __('Tanggal') }}</th>
                                     <th class="px-2 py-1 border">{{ __('User') }}</th>
