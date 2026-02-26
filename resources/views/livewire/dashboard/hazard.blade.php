@@ -150,11 +150,11 @@
         </div>
 
         {{-- Daftar Laporan Terbaru --}}
-        <div class="p-4 bg-white shadow rounded-xl">
+        <div class="p-4 shadow rounded-xl">
             <h3 class="mb-4 font-semibold">Laporan Hazard Terbaru</h3>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
-                    <thead class="bg-gray-100">
+                    <thead class="bg-neutral">
                         <tr>
                             <th class="px-3 py-2 border">Referensi</th>
                             <th class="px-3 py-2 border">Deskripsi</th>
