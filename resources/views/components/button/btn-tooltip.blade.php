@@ -41,7 +41,7 @@
 
         @if($wireClick) wire:click="{{ $wireClick }}" @endif
 
-        {{ $attributes->class(['btn btn-square btn-xs btn-soft', $colorClass]) }}
+        {{ $attributes->class(['btn btn-square btn-xs ', $colorClass]) }}
     >
         <x-dynamic-component :component="'icon.' . $icon" class="w-4 h-4" />
     </{{ $tag }}>
