@@ -247,8 +247,7 @@
             {{-- Tombol Update --}}
             <button
                 class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-primary btn-xs btn-active' }}"
-                type="submit"
-                icon:trailing="save"
+                type="submit">
                 <x-icon.edit/>
                 {{ __('Update Laporan') }}
             </button>
@@ -257,7 +256,7 @@
             <button
                 class=" {{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
                 wire:click="deleteHazard({{ $hazard_id }})"
-                wire:confirm="{{ __('Yakin hapus Laporan ini?') }}"
+                wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
                 <x-icon.delete/>
                 {{ __('Hapus Laporan') }}
             </button>
