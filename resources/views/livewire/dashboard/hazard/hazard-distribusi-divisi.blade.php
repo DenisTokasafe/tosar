@@ -1,5 +1,5 @@
 <div>
-<div class="" wire:ignore id="container" style="height: 355px; width: 100%;"></div>
+<div class="" wire:ignore id="container" style="height: 355px; width: 50%;"></div>
     <script type="module">
         var dom_divis = document.getElementById('container');
         const categories = @json($categories);
