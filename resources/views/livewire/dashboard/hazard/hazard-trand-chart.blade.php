@@ -18,7 +18,6 @@
             myChart = echarts.init(dom);
 
             // 3. Ambil data awal dari PHP
-            // Note: Karena $data di encode di PHP, pastikan formatnya benar
             const dataRaw = @json($data);
             const data = typeof dataRaw === 'string' ? JSON.parse(dataRaw) : dataRaw;
 
@@ -72,6 +71,15 @@
                     borderWidth: 1,
                     textStyle: {
                         color: colors.content
+                    },
+                    // FIX: Menambahkan axisPointer agar ada garis bantu vertikal saat hover
+                    axisPointer: {
+                        type: 'line',
+                        lineStyle: {
+                            color: colors.base300,
+                            width: 1,
+                            type: 'dashed'
+                        }
                     }
                 },
                 legend: {
@@ -113,14 +121,6 @@
                     data: data.counts,
                     type: 'line',
                     smooth: 0.3,
-                    emphasis: {
-                        disabled: false,
-                        focus: 'none', // Mencegah elemen lain menjadi blur/hilang
-                        lineStyle: {
-                            width: 4, // Sedikit lebih tebal saat di-hover
-                            color: colors.primary
-                        }
-                    },
                     lineStyle: {
                         width: 4,
                         color: colors.primary
@@ -132,10 +132,12 @@
                         borderWidth: 2,
                         borderColor: colors.base100
                     },
+                    // FIX: Mengubah focus dari 'none' ke 'series' agar garis tidak hilang saat hover
                     emphasis: {
-                        focus: 'none',
+                        focus: 'series',
                         lineStyle: {
-                            width: 5
+                            width: 5,
+                            color: colors.primary
                         }
                     }
                 }]
@@ -165,6 +167,11 @@
                         borderColor: newColors.primary,
                         textStyle: {
                             color: newColors.content
+                        },
+                        axisPointer: {
+                            lineStyle: {
+                                color: newColors.base300
+                            }
                         }
                     },
                     xAxis: {
@@ -194,10 +201,16 @@
                         itemStyle: {
                             color: newColors.primary,
                             borderColor: newColors.base100
+                        },
+                        emphasis: {
+                            lineStyle: {
+                                color: newColors.primary
+                            }
                         }
                     }]
                 });
             });
+
             observer.observe(document.documentElement, {
                 attributes: true,
                 attributeFilter: ['data-theme']
@@ -205,7 +218,6 @@
 
             // 5. Handle Livewire Dispatch
             Livewire.on('trandChart', (event) => {
-                // Livewire v3 mengirim data dalam array [payload]
                 const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart.setOption({
                     xAxis: {
@@ -222,10 +234,8 @@
         };
 
         // --- CORE LIVEWIRE NAVIGATE LOGIC ---
-        // Jalankan saat pertama kali load
         initHazardTrendChart();
 
-        // Jalankan setiap kali Livewire selesai melakukan navigasi SPA
         document.addEventListener('livewire:navigated', () => {
             initHazardTrendChart();
         });
