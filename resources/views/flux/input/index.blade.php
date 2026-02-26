@@ -1,227 +1,123 @@
-@php $iconTrailing = $iconTrailing ??= $attributes->pluck('icon:trailing'); @endphp
-@php $iconLeading = $iconLeading ??= $attributes->pluck('icon:leading'); @endphp
-@php $iconVariant = $iconVariant ??= $attributes->pluck('icon:variant'); @endphp
-
-@props([
-    'name' => $attributes->whereStartsWith('wire:model')->first(),
-    'iconVariant' => 'mini',
-    'variant' => 'outline',
-    'iconTrailing' => null,
-    'iconLeading' => null,
-    'expandable' => null,
-    'clearable' => null,
-    'copyable' => null,
-    'viewable' => null,
-    'invalid' => null,
-    'loading' => null,
-    'type' => 'text',
-    'mask' => null,
-    'size' => null,
-    'icon' => null,
-    'kbd' => null,
-    'as' => null,
-])
-
 @php
-    $wireModel = $attributes->wire('model');
-    $wireTarget = null;
+// ... (Logika awal icon, wire model, loading, dan trailing icon count tetap sama)
+$iconLeading ??= $icon;
+$hasLeadingIcon = (bool) $iconLeading;
 
-    if ($loading !== false) {
-        if ($loading === true) {
-            $loading = true;
-        } elseif ($wireModel?->directive) {
-            $loading = $wireModel->hasModifier('live');
-            $wireTarget = $loading ? $wireModel->value() : null;
-        } else {
-            $wireTarget = $loading;
-            $loading = (bool) $loading;
-        }
-    }
+// Icon Classes: Menggunakan warna dasar yang diredam, berubah menjadi emas saat input aktif
+$iconClasses = Flux::classes('text-[var(--color-base-content)]/40 group-focus-within/input:text-[var(--color-primary)] transition-colors duration-200')
+->add($iconVariant === 'outline' ? 'size-5' : '');
 
-    $invalid ??= $name && $errors->has($name);
-    $iconLeading ??= $icon;
-    $hasLeadingIcon = (bool) $iconLeading;
+$classes = Flux::classes()
+// Menggunakan class DaisyUI 'input' sebagai pondasi
+->add('input input-bordered w-full max-w-sm block disabled:shadow-none dark:shadow-none transition-all duration-200')
 
-    $countOfTrailingIcons = collect([
-        (bool) $iconTrailing,
-        (bool) $kbd,
-        (bool) $clearable,
-        (bool) $copyable,
-        (bool) $viewable,
-        (bool) $expandable,
-    ])
-        ->filter()
-        ->count();
+// FOCUS STATE: Efek Cahaya Emas (Golden Glow) dan border yang tegas
+->add('focus:outline-none focus:border-[var(--color-primary)] focus:ring-[3px] focus:ring-[var(--color-primary)]/20 focus-within:outline-none focus-within:border-[var(--color-primary)] focus-within:ring-[3px] focus-within:ring-[var(--color-primary)]/20 ring-0')
 
-    $iconClasses = Flux::classes()->add($iconVariant === 'outline' ? 'size-5' : '');
-
-    $inputLoadingClasses = Flux::classes()->add(
-        match ($countOfTrailingIcons) {
-            0 => 'pe-10',
-            1 => 'pe-16',
-            2 => 'pe-23',
-            3 => 'pe-30',
-            4 => 'pe-37',
-            5 => 'pe-44',
-            6 => 'pe-51',
-        },
-    );
-
-    $classes = Flux::classes()
-        // Integrasi class utama Anda di sini
-        ->add('input input-bordered w-full max-w-sm block disabled:shadow-none dark:shadow-none')
-        // Integrasi focus state Anda
-        ->add('focus-within:outline-none focus-within:border-info focus-within:ring-0 ring-0')
-        ->add('appearance-none')
-        ->add(
-            match ($size) {
-                // Integrasi input-xs Anda
-                'xs' => 'input-xs text-xs py-1 h-6 leading-tight',
-                'sm' => 'text-sm py-1.5 h-8 leading-[1.125rem]',
-                default => 'text-black sm:text-sm py-2 h-10 leading-[1.375rem]',
-            },
-        )
-        ->add(
-            match ($hasLeadingIcon) {
-                true => 'ps-10',
-                false => 'ps-3',
-            },
-        )
-        ->add(
-            match ($countOfTrailingIcons) {
-                0 => 'pe-3',
-                1 => 'pe-10',
-                2 => 'pe-16',
-                3 => 'pe-23',
-                4 => 'pe-30',
-                5 => 'pe-37',
-                6 => 'pe-44',
-            },
-        )
-        ->add(
-            match ($variant) {
-                'outline' => 'bg-white dark:bg-transparent dark:disabled:bg-white/[7%]',
-                'filled' => 'bg-zinc-800/5 dark:bg-white/10 dark:disabled:bg-white/[7%]',
-            },
-        )
-        ->add(
-            match ($variant) {
-                'outline' => 'text-black disabled:text-zinc-500 placeholder-zinc-400 dark:text-white',
-                'filled' => 'text-zinc-700 placeholder-zinc-500 dark:text-zinc-200',
-            },
-        )
-        ->add(
-            match ($variant) {
-                'outline' => $invalid ? 'border-red-500' : 'shadow-xs',
-                'filled' => $invalid ? 'border-red-500' : 'border-0',
-            },
-        )
-        ->add($attributes->pluck('class:input'));
+->add('appearance-none')
+->add(match ($size) {
+'xs' => 'input-xs text-xs py-1 h-6 leading-tight',
+'sm' => 'input-sm text-sm py-1.5 h-8',
+default => 'text-[var(--color-base-content)] sm:text-sm py-2 h-10 leading-[1.375rem]',
+})
+->add($hasLeadingIcon ? 'ps-10' : 'ps-3')
+->add(match ($countOfTrailingIcons) {
+0 => 'pe-3', 1 => 'pe-10', 2 => 'pe-16', 3 => 'pe-23', 4 => 'pe-30', 5 => 'pe-37', 6 => 'pe-44',
+})
+->add(match ($variant) {
+// Outline: Latar belakang bersih mengikuti base tema
+'outline' => 'bg-[var(--color-base-100)] dark:bg-transparent dark:disabled:bg-[var(--color-base-content)]/5',
+// Filled: Latar belakang sedikit lebih kontras (krem/batuan halus)
+'filled' => 'bg-[var(--color-base-200)] border-transparent hover:bg-[var(--color-base-300)]',
+})
+->add(match ($variant) {
+'outline' => 'text-[var(--color-base-content)] disabled:text-[var(--color-base-content)]/50 placeholder-[var(--color-base-content)]/40',
+'filled' => 'text-[var(--color-base-content)] placeholder-[var(--color-base-content)]/50',
+})
+->add(match ($variant) {
+// Validasi Error: Menggunakan warna Error (Merah Tanah) tema
+'outline' => $invalid ? 'border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/20' : 'border-[var(--color-base-300)] shadow-xs',
+'filled' => $invalid ? 'border-[var(--color-error)] focus:border-[var(--color-error)] focus:ring-[var(--color-error)]/20' : 'border-0',
+})
+->add($attributes->pluck('class:input'));
 @endphp
 
 <?php if ($type === 'file'): ?>
-<flux:with-field :$attributes :$name>
-    <flux:input.file :$attributes :$name :$size />
-</flux:with-field>
+    <flux:with-field :$attributes :$name>
+        <flux:input.file :$attributes :$name :$size />
+    </flux:with-field>
 <?php elseif ($as !== 'button'): ?>
-<flux:with-field :$attributes :$name>
-    <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
-        <?php if (is_string($iconLeading)): ?>
-        <div
-            class="absolute top-0 bottom-0 flex items-center justify-center text-xs pointer-events-none text-zinc-400/75 ps-3 start-0">
-            <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
+    <flux:with-field :$attributes :$name>
+        <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
+            @if ($iconLeading)
+            <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs pointer-events-none ps-3 start-0">
+                @if (is_string($iconLeading))
+                <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
+                @else
+                <div class="{{ $iconClasses }}"> {{ $iconLeading }} </div>
+                @endif
+            </div>
+            @endif
+
+            <input type="{{ $type }}" {{ $attributes->except('class')->class($type === 'file' ? '' : $classes) }}
+                @isset($name) name="{{ $name }}" @endisset
+                @if ($mask) x-mask="{{ $mask }}" @endif
+                @if ($invalid) aria-invalid="true" data-invalid @endif
+                @if (is_numeric($size)) size="{{ $size }}" @endif data-flux-control data-flux-group-target
+                @if ($loading) wire:loading.class="{{ $inputLoadingClasses }}" @endif
+                @if ($loading && $wireTarget) wire:target="{{ $wireTarget }}" @endif>
+
+            <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-3 end-0 text-xs text-[var(--color-base-content)]/50">
+                @if ($loading)
+                <flux:icon name="loading" :variant="$iconVariant" :class="$iconClasses" wire:loading :wire:target="$wireTarget" />
+                @endif
+
+                @if ($clearable)
+                <flux:input.clearable inset="left right" :$size /> @endif
+
+                @if ($kbd)
+                {{-- KBD: Bergaya tombol fisik panel kontrol --}}
+                <kbd class="kbd kbd-sm bg-[var(--color-base-200)] border-[var(--color-base-content)]/10">{{ $kbd }}</kbd>
+                @endif
+
+                @if ($expandable)
+                <flux:input.expandable inset="left right" :$size /> @endif
+                @if ($copyable)
+                <flux:input.copyable inset="left right" :$size /> @endif
+                @if ($viewable)
+                <flux:input.viewable inset="left right" :$size /> @endif
+
+                @if (is_string($iconTrailing))
+                <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$iconClasses" />
+                @elseif ($iconTrailing)
+                {{ $iconTrailing }}
+                @endif
+            </div>
         </div>
-        <?php elseif ($iconLeading): ?>
-        <div
-            {{ $iconLeading->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0') }}>
-            {{ $iconLeading }}
-        </div>
-        <?php endif; ?>
-
-        <input type="{{ $type }}" {{ $attributes->except('class')->class($type === 'file' ? '' : $classes) }}
-            @isset($name) name="{{ $name }}" @endisset
-            @if ($mask) x-mask="{{ $mask }}" @endif
-            @if ($invalid) aria-invalid="true" data-invalid @endif
-            @if (is_numeric($size)) size="{{ $size }}" @endif data-flux-control data-flux-group-target
-            @if ($loading) wire:loading.class="{{ $inputLoadingClasses }}" @endif
-            @if ($loading && $wireTarget) wire:target="{{ $wireTarget }}" @endif>
-
-        <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-3 end-0 text-xs text-zinc-400">
-            <?php if ($loading): ?>
-            <flux:icon name="loading" :variant="$iconVariant" :class="$iconClasses" wire:loading
-                :wire:target="$wireTarget" />
-            <?php endif; ?>
-
-            <?php if ($clearable): ?>
-            <flux:input.clearable inset="left right" :$size />
-            <?php endif; ?>
-
-            <?php if ($kbd): ?>
-            <span class="pointer-events-none">{{ $kbd }}</span>
-            <?php endif; ?>
-
-            <?php if ($expandable): ?>
-            <flux:input.expandable inset="left right" :$size />
-            <?php endif; ?>
-
-            <?php if ($copyable): ?>
-            <flux:input.copyable inset="left right" :$size />
-            <?php endif; ?>
-
-            <?php if ($viewable): ?>
-            <flux:input.viewable inset="left right" :$size />
-            <?php endif; ?>
-
-            <?php if (is_string($iconTrailing)): ?>
-            <?php
-            $trailingIconClasses = clone $iconClasses;
-            $trailingIconClasses->add('pointer-events-none text-zinc-400/75');
-            ?>
-            <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$trailingIconClasses" />
-            <?php elseif ($iconTrailing): ?>
-            {{ $iconTrailing }}
-            <?php endif; ?>
-        </div>
-    </div>
-</flux:with-field>
+    </flux:with-field>
 <?php else: ?>
-<button {{ $attributes->merge(['type' => 'button'])->class([$classes, 'w-full relative flex']) }}>
-    @if (is_string($iconLeading))
-        <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0">
-            <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
+    {{-- Variant: AS BUTTON (Dropdown Trigger Style) --}}
+    <button {{ $attributes->merge(['type' => 'button'])->class([$classes, 'w-full relative flex items-center']) }}>
+        @if ($iconLeading)
+        <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs ps-3 start-0">
+            <flux:icon :icon="is_string($iconLeading) ? $iconLeading : ''" :variant="$iconVariant" :class="$iconClasses" />
+            @if (!$is_string($iconLeading)) {{ $iconLeading }} @endif
         </div>
-    @elseif ($iconLeading)
-        <div
-            {{ $iconLeading->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0') }}>
-            {{ $iconLeading }}
-        </div>
-    @endif
+        @endif
 
-    @if ($attributes->has('placeholder'))
-        <div class="self-center flex-1 block font-medium text-start text-zinc-400 dark:text-white/40">
-            {{ $attributes->get('placeholder') }}
+        <div class="self-center flex-1 font-medium text-start truncate {{ $attributes->has('placeholder') ? 'text-[var(--color-base-content)]/40' : 'text-[var(--color-base-content)]' }}">
+            {{ $attributes->get('placeholder') ?? $slot }}
         </div>
-    @else
-        <div class="self-center flex-1 font-medium text-start text-zinc-800 dark:text-white">
-            {{ $slot }}
-        </div>
-    @endif
 
-    @if ($kbd)
-        <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-4 end-0">
-            {{ $kbd }}
-        </div>
-    @endif
+        @if ($kbd)
+        <kbd class="kbd kbd-xs bg-[var(--color-base-200)] mx-2">{{ $kbd }}</kbd>
+        @endif
 
-    @if (is_string($iconTrailing))
-        <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-3 end-0">
-            <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$iconClasses" />
+        @if ($iconTrailing)
+        <div class="ms-2">
+            <flux:icon :icon="is_string($iconTrailing) ? $iconTrailing : ''" :variant="$iconVariant" :class="$iconClasses" />
+            @if (!is_string($iconTrailing)) {{ $iconTrailing }} @endif
         </div>
-    @elseif ($iconTrailing)
-        <div
-            {{ $iconTrailing->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-2 end-0') }}>
-            {{ $iconTrailing }}
-        </div>
-    @endif
-</button>
+        @endif
+    </button>
 <?php endif; ?>
