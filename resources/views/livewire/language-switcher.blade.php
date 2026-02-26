@@ -1,9 +1,9 @@
 <div class="flex items-center space-x-2">
     <div class="join">
         <label class="rounded-l-md btn btn-xs btn-primary join-item">
-            @if (session('lang') == 'en')
+            @if ($lang === 'en')
             <i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>
-            @elseif (session('lang') == 'id')
+            @elseif ($lang === 'id')
             <i class="inline-block w-4 h-4 text-2xl fi fi-id"></i>
             @else
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages-icon lucide-languages">
