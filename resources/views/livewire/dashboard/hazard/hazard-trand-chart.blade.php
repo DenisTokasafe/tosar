@@ -7,13 +7,28 @@
         var myChart = echarts.init(dom);
         var option;
 
-        // Fungsi untuk mengambil variabel warna OKLCH dari daisyUI
+        /**
+         * Fungsi untuk mengambil warna dari variabel CSS daisyUI
+         * dan mengonversinya ke format RGB agar didukung oleh ECharts Canvas
+         */
         const getThemeColor = (variable) => {
-            return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+            const temp = document.createElement('div');
+            temp.style.color = `var(${variable})`;
+            document.body.appendChild(temp);
+            const style = getComputedStyle(temp).color; // Browser mengonversi OKLCH ke RGB di sini
+            document.body.removeChild(temp);
+            return style;
         };
 
-        // Helper untuk merender warna agar dipahami ECharts
-        const currentColor = (prop) => `oklch(${getThemeColor(prop)})`;
+        // Fungsi helper untuk mendapatkan semua warna yang dibutuhkan
+        const fetchColors = () => ({
+            primary: getThemeColor('--color-primary'),
+            content: getThemeColor('--color-base-content'),
+            base100: getThemeColor('--color-base-100'),
+            base300: getThemeColor('--color-base-300'),
+        });
+
+        let colors = fetchColors();
 
         option = {
             title: {
@@ -24,21 +39,19 @@
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 14,
                     fontWeight: 'bold',
-                    color: currentColor('--color-base-content') // Mengikuti warna teks tema
+                    color: colors.content // Warna teks judul
                 },
                 subtext: 'Data laporan berdasarkan bulan berjalan',
                 subtextStyle: {
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 8,
-                    color: currentColor('--color-base-content') // Mengikuti warna teks tema
+                    color: colors.content
                 }
             },
             textStyle: {
                 fontFamily: 'Microsoft YaHei',
                 fontSize: 12,
-                fontStyle: 'normal',
-                fontWeight: 'normal',
-                color: currentColor('--color-base-content')
+                color: colors.content
             },
             grid: {
                 top: 90,
@@ -49,11 +62,11 @@
             },
             tooltip: {
                 trigger: 'axis',
-                backgroundColor: currentColor('--color-base-100'), // Background tooltip sesuai tema
-                borderColor: currentColor('--color-primary'),
+                backgroundColor: colors.base100,
+                borderColor: colors.primary,
                 borderWidth: 1,
                 textStyle: {
-                    color: currentColor('--color-base-content'),
+                    color: colors.content,
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 12,
                 }
@@ -63,10 +76,7 @@
                 top: 50,
                 left: 'center',
                 textStyle: {
-                    fontFamily: 'Microsoft YaHei',
-                    fontSize: 12,
-                    fontWeight: 'normal',
-                    color: currentColor('--color-base-content')
+                    color: colors.content
                 }
             },
             xAxis: {
@@ -74,35 +84,32 @@
                 data: data.months,
                 axisLine: {
                     lineStyle: {
-                        color: currentColor('--color-base-content') // Garis axis mengikuti tema
+                        color: colors.content
                     }
                 },
                 axisLabel: {
+                    color: colors.content,
                     fontFamily: 'Microsoft YaHei',
-                    fontSize: 12,
-                    color: currentColor('--color-base-content')
-                },
-                axisTick: {
-                    show: false
+                    fontSize: 12
                 }
             },
             yAxis: {
                 type: 'value',
                 axisLine: {
                     lineStyle: {
-                        color: currentColor('--color-base-content')
+                        color: colors.content
                     }
                 },
                 splitLine: {
                     lineStyle: {
                         type: 'dashed',
-                        color: currentColor('--color-base-300') // Garis grid mengikuti base-300 tema
+                        color: colors.base300 // Garis bantu grid
                     }
                 },
                 axisLabel: {
+                    color: colors.content,
                     fontFamily: 'Microsoft YaHei',
-                    fontSize: 12,
-                    color: currentColor('--color-base-content')
+                    fontSize: 12
                 }
             },
             series: [{
@@ -112,12 +119,12 @@
                 smooth: false,
                 lineStyle: {
                     width: 3,
-                    color: currentColor('--color-primary') // Garis utama mengikuti warna Primary
+                    color: colors.primary // Warna garis utama
                 },
                 symbol: 'circle',
                 symbolSize: 6,
                 itemStyle: {
-                    color: currentColor('--color-primary') // Titik mengikuti warna Primary
+                    color: colors.primary // Warna titik data
                 }
             }]
         };
@@ -125,43 +132,54 @@
         if (option && typeof option === 'object') {
             myChart.setOption(option);
 
-            // Update warna saat tema berubah (MutationObserver)
+            // Update warna otomatis saat tema daisyUI diganti
             const observer = new MutationObserver(() => {
+                const newColors = fetchColors();
                 myChart.setOption({
                     title: {
                         textStyle: {
-                            color: currentColor('--color-base-content')
+                            color: newColors.content
                         },
                         subtextStyle: {
-                            color: currentColor('--color-base-content')
+                            color: newColors.content
+                        }
+                    },
+                    legend: {
+                        textStyle: {
+                            color: newColors.content
                         }
                     },
                     xAxis: {
                         axisLine: {
                             lineStyle: {
-                                color: currentColor('--color-base-content')
+                                color: newColors.content
                             }
                         },
                         axisLabel: {
-                            color: currentColor('--color-base-content')
+                            color: newColors.content
                         }
                     },
                     yAxis: {
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.content
+                            }
+                        },
                         axisLabel: {
-                            color: currentColor('--color-base-content')
+                            color: newColors.content
                         },
                         splitLine: {
                             lineStyle: {
-                                color: currentColor('--color-base-300')
+                                color: newColors.base300
                             }
                         }
                     },
                     series: [{
                         lineStyle: {
-                            color: currentColor('--color-primary')
+                            color: newColors.primary
                         },
                         itemStyle: {
-                            color: currentColor('--color-primary')
+                            color: newColors.primary
                         }
                     }]
                 });
