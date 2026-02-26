@@ -383,7 +383,7 @@
 
                                 {{-- Teks yang disingkat (sudah bersih dari HTML) --}}
                                 <span @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
-                                    class="text-blue-600 cursor-pointer hover:text-blue-800">
+                                    class="font-medium cursor-pointer text-primary-content hover:text-primary">
                                     {{ $truncatedDescription }}
                                 </span>
 
@@ -395,7 +395,7 @@
                                     x-transition:leave="transition ease-in duration-100"
                                     x-transition:leave-start="opacity-100 scale-100"
                                     x-transition:leave-end="opacity-0 scale-90"
-                                    class="absolute z-50 p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
+                                    class="absolute z-[9999] p-3 mt-2 text-sm text-gray-700 whitespace-normal bg-white border border-gray-300 rounded-lg shadow-lg pointer-events-none top-full w-80">
 
                                     <strong>Deskripsi Lengkap:</strong>
                                     {{-- Teks lengkap (sudah bersih dari HTML) --}}
@@ -409,14 +409,14 @@
                                 {{-- Baris Total --}}
                                 <div class="flex items-baseline gap-1 ">
                                     <span
-                                        class="text-sm font-bold text-slate-700">{{ $report->total_due_dates }}</span>
+                                        class="text-sm font-bold text-base-content">{{ $report->total_due_dates }}</span>
                                     <span class="text-[10px] italic font-semibold text-gray-400">total </span>
                                 </div>
 
                                 {{-- Baris Open --}}
                                 <div class="flex items-baseline gap-1">
                                     <span
-                                        class="text-sm font-bold text-slate-700">{{ $report->pending_actual_closes }}</span>
+                                        class="text-sm font-bold text-base-content">{{ $report->pending_actual_closes }}</span>
                                     <span class="text-[10px] italic font-semibold text-gray-400">Open</span>
                                 </div>
                             </div>
