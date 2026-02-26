@@ -109,7 +109,7 @@
                     <div class="max-h-[80vh] overflow-y-auto overflow-x-auto">
                         <table class="table border table-xs table-pin-rows">
                             <thead class="z-20">
-                                <tr class="bg-primary/10">
+                                <tr class="bg-primary">
                                     <th class="px-2 py-1 border">{{ __('Tanggal') }}</th>
                                     <th class="px-2 py-1 border">{{ __('User') }}</th>
                                     <th class="px-2 py-1 border">{{ __('Perubahan') }}</th>
