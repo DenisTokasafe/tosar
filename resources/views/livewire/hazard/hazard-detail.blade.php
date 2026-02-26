@@ -740,7 +740,7 @@
                                     default => 'bg-gray-100',
                                     };
                                     @endphp
-                                    <td class="border cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-stone-500 @endif">
+                                    <td class=" cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 border-base-300 @endif">
                                         <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
                                             class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
                                             {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
