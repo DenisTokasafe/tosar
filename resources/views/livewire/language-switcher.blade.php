@@ -16,7 +16,7 @@
             </svg>{{ __('Pilih Bahasa') }}
             @endif
         </label>
-        <select wire:model.live="lang" name="" id="" class=" select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
+        <select wire:model.live="lang" name="" id="" class=" select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 join-item">
             <option value="">{{ __('Pilih Bahasa') }}</option>
             <option value="en"><i class="inline-block w-4 h-4 text-2xl fi fi-gb"></i>{{ __('English') }}</option>
             <option value="id"><i class="inline-block w-4 h-4 text-2xl fi fi-id"></i>{{ __('Bahasa Indonesia') }}</option>
