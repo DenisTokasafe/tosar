@@ -187,7 +187,7 @@
                             <fieldset class="fieldset">
                                 <x-form.label label="Pilih Entitas" required />
                                 <select wire:model.live="entityType"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                     <option value="">-- Pilih --</option>
                                     <option value="owner">Perusahaan (Owner)</option>
                                     <option value="contractor">Kontraktor</option>
@@ -201,7 +201,7 @@
                             <fieldset class="fieldset">
                                 <x-form.label label="Perusahaan" required />
                                 <select wire:model.live="company"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                     <option value="">-- Pilih --</option>
 
                                     {{-- kalau ada owners --}}
@@ -238,7 +238,7 @@
                                 @endif
                                 {{-- MODIFIKASI BERAKHIR DI SINI --}}
                                 <select wire:model.live="department"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus:ring-1 focus:border-info focus:ring-info focus:outline-none">
+                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                     <option value="">-- Pilih --</option>
                                     @if ($entityType === 'contractor')
                                         @foreach ($custodian as $cust)
