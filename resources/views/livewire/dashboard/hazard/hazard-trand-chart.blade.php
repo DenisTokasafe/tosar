@@ -1,5 +1,5 @@
 <div>
-    <div class="overflow-hidden shadow-xl card bg-base-100">
+    <div class="overflow-hidden shadow-xl bg-base-100">
         <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     </div>
     <!-- Load ECharts dari CDN -->

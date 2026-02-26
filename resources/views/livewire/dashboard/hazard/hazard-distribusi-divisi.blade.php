@@ -1,5 +1,5 @@
 <div>
-     <div class="overflow-hidden shadow-xl card bg-base-100">
+     <div class="overflow-hidden shadow-xl bg-base-100">
          <div wire:ignore id="container" style="height: 320px"></div>
      </div>
     <script type="module">
