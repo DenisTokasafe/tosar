@@ -3,7 +3,7 @@
         <div wire:ignore id="hazardTrend" style="height: 320px;" class="w-full"></div>
     </div>
     <!-- Load ECharts dari CDN -->
-   <script type="module">
+    <script type="module">
         const data = @json($data);
         var dom = document.getElementById('hazardTrend');
         var myChart = echarts.init(dom);
@@ -96,7 +96,9 @@
                     fontFamily: 'Microsoft YaHei',
                     fontSize: 12
                 },
-                axisTick: { show: false }
+                axisTick: {
+                    show: false
+                }
             },
             yAxis: {
                 type: 'value',
@@ -122,6 +124,14 @@
                 data: data.counts,
                 type: 'line',
                 smooth: false,
+                emphasis: {
+                    disabled: false,
+                    focus: 'none', // Mencegah elemen lain menjadi blur/hilang
+                    lineStyle: {
+                        width: 4, // Sedikit lebih tebal saat di-hover
+                        color: colors.primary
+                    }
+                },
                 lineStyle: {
                     width: 3,
                     color: colors.primary
@@ -143,29 +153,57 @@
                     // Tetap transparan saat tema berubah
                     backgroundColor: 'transparent',
                     title: {
-                        textStyle: { color: newColors.content },
-                        subtextStyle: { color: newColors.content }
+                        textStyle: {
+                            color: newColors.content
+                        },
+                        subtextStyle: {
+                            color: newColors.content
+                        }
                     },
                     legend: {
-                        textStyle: { color: newColors.content }
+                        textStyle: {
+                            color: newColors.content
+                        }
                     },
                     tooltip: {
                         backgroundColor: newColors.base100,
                         borderColor: newColors.primary,
-                        textStyle: { color: newColors.content }
+                        textStyle: {
+                            color: newColors.content
+                        }
                     },
                     xAxis: {
-                        axisLine: { lineStyle: { color: newColors.content } },
-                        axisLabel: { color: newColors.content }
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.content
+                            }
+                        },
+                        axisLabel: {
+                            color: newColors.content
+                        }
                     },
                     yAxis: {
-                        axisLine: { lineStyle: { color: newColors.content } },
-                        axisLabel: { color: newColors.content },
-                        splitLine: { lineStyle: { color: newColors.base300 } }
+                        axisLine: {
+                            lineStyle: {
+                                color: newColors.content
+                            }
+                        },
+                        axisLabel: {
+                            color: newColors.content
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: newColors.base300
+                            }
+                        }
                     },
                     series: [{
-                        lineStyle: { color: newColors.primary },
-                        itemStyle: { color: newColors.primary }
+                        lineStyle: {
+                            color: newColors.primary
+                        },
+                        itemStyle: {
+                            color: newColors.primary
+                        }
                     }]
                 });
             });
