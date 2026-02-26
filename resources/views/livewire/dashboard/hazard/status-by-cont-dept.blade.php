@@ -32,7 +32,8 @@
                 left: 'center',
                 textStyle: {
                     color: theme.content, // Dinamis
-                    fontFamily: 'Poppins, sans-serif'
+                    fontFamily: 'Poppins, sans-serif',
+                     fontSize: 14
                 },
                 subtext: rawData.range ? 'Periode: ' + rawData.range : '12 Bulan Terakhir',
                 subtextStyle: {
