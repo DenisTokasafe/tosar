@@ -166,7 +166,7 @@
             </tr>
         </table>
         @endif
-        <flux:separator variant="subtle" class="mb-4" />
+        <flux:separator variant="subtle" class="space-y-4" />
         <div class="w-full" wire:key="field-description">
             <fieldset class="mb-4 fieldset lg:col-span-2">
                 <x-form.label label="Kronologi Kejadian" required />
