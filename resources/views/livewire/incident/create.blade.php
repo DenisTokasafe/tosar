@@ -233,5 +233,5 @@
                 @endif
         </div>
     </x-incident.layout>
-    <progress class="w-full h-2 progress progress-primary" value="{{ ($currentStep / $totalSteps) * 100 }}" max="100"></progress>
+
 </section>
