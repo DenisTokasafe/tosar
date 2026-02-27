@@ -28,11 +28,16 @@ class EventType extends Model
     }
     public function EventCategories()
     {
-        return $this->belongsTo(EventCategory::class,'event_category_id');
+        return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
     public function EventSubType()
     {
         return $this->hasMany(EventSubType::class);
     }
-
+    public function scopeOnlyIncidents($query)
+    {
+         return $query->whereHas('EventCategories', function ($q) {
+            $q->where('event_category_name', 'Incident');
+        });
+    }
 }
