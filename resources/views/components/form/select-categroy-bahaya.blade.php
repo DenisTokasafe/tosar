@@ -7,7 +7,7 @@
 ])
 
 <fieldset {{ $attributes->merge(['class' => 'fieldset']) }}>
-    <div class="flex items-center gap-4 mb-2">
+    <div class="flex items-center gap-4 ">
         <div class="flex items-center gap-1">
             <input id="kta" value="kta" wire:model.live="keyWord"
                 class="peer/kta radio radio-xs radio-accent" type="radio" name="keyWord" />
