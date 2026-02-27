@@ -32,7 +32,7 @@ class WpiReportExportController extends Controller
                 'Lokasi'         => $report->location,
                 'Site'           => $report->site_name,
                 'Area'           => $report->area,
-                'Departemen'     => $report->department_rel?->department_name ?? $report->department,
+                'Departemen'     => $report->department_rel?->department_name ?? '-',
                 'Kontraktor'     => $report->contractor_rel?->contractor_name ?? '-',
                 'Daftar Inspektur'=> $inspectorsList,
                 'Status'         => strtoupper($report->status),
