@@ -5,8 +5,9 @@
         {{ Breadcrumbs::render('incident-create') }}
     </div>
     <x-incident.layout></x-incident.layout>
-        <x-slot name="heading">Buat Laporan Insiden</x-slot>
-        <x-slot name="subheading">Laporkan insiden dengan detail untuk penanganan yang tepat.</x-slot>
+    <flux:heading level="1" class="mb-1 capitalize">>Buat Laporan Insiden</flux:heading>
+    <flux:subheading size="sm" class="mb-1 text-accent">Laporkan insiden dengan detail untuk penanganan yang tepat.</flux:subheading>
+    <flux:separator variant="subtle" class="mb-4" />
 
     </x-incident.layout>
 </section>
