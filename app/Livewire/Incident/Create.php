@@ -16,11 +16,15 @@ class Create extends Component
         $description,
         $location_id,
         $location_spesific,
+        $documentation,
+        $documentation_description,
         $date_time;
     public $keyWord = 'kta';
     public $locations = [];
     public $searchLocation = '';
     public $show_location = false;
+    public $currentStep = 1;
+    public $totalSteps = 3;
 
     protected $rules = [
         'event_type_id' => 'required|exists:event_types,id',
@@ -29,6 +33,17 @@ class Create extends Component
         'location' => 'required|string',
         'date_time' => 'required|date',
     ];
+
+    public function nextStep()
+    {
+        $this->validate($this->rules()[$this->currentStep]);
+        $this->currentStep++;
+    }
+
+    public function previousStep()
+    {
+        $this->currentStep--;
+    }
 
     // Search Location
      public function updatedSearchLocation()
