@@ -18,7 +18,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public $event_type_id,$pelapor_id, $searchPelapor,$likelihoods, $consequences,
+    public $event_type_id, $pelapor_id, $searchPelapor, $likelihoods = [], $consequences = [],
         $event_sub_type_id,
         $description,
         $location_id,
@@ -32,10 +32,10 @@ class Create extends Component
     public $show_location = false;
     public $currentStep = 1;
     public $totalSteps = 3;
-    public $contractor_id,$department_id,$likelihood_id, $consequence_id;
+    public $contractor_id, $department_id, $likelihood_id, $consequence_id;
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
-        public function mount()
+    public function mount()
     {
         if (Auth::check()) {
             $this->pelapor_id = Auth::id();
