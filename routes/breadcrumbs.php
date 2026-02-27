@@ -74,3 +74,14 @@ Breadcrumbs::for('fire-inspection-edit', function (Trail $trail, $id) {
     $trail->parent('fire-inspection-list');
     $trail->push('Edit Fire Protection Report', route('fire-inspection-edit', $id));
 });
+
+// Incident
+Breadcrumbs::for('incident', function ($trail) {
+    $trail->push('Incident List', route('incident'));
+});
+
+//Incident > Create Incident
+Breadcrumbs::for('incident-create', function ($trail) {
+    $trail->parent('incident');
+    $trail->push('Create Incident', route('incident-create'));
+});

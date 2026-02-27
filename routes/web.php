@@ -53,6 +53,8 @@ use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 use App\Livewire\Administration\EquipmentMaster\Index as EquipmentMasterIndex;
 use App\Livewire\Administration\People\Compliance;
 use App\Livewire\Administration\People\Details as PeopleDetails;
+use App\Livewire\Incident\Create as IncidentCreate;
+use App\Livewire\Incident\Index as IncidentIndex;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -87,6 +89,8 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('inspeksi/wpi/edit/{id?}', WpiForm::class)->name('wpi.edit');
     Route::get('hazard', HazardReportPanel::class)->name('hazard');
     Route::get('hazard/{hazard}', HazardDetail::class)->name('hazard-detail');
+    Route::get('incident', IncidentIndex::class)->name('incident');
+    Route::get('incident/create', IncidentCreate::class)->name('incident-create');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
