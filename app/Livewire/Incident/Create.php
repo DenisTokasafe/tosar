@@ -8,7 +8,19 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public $event_type_id;
+    public $event_type_id,
+        $event_sub_type_id,
+        $description,
+        $location,
+        $date_time;
+
+     protected $rules = [
+        'event_type_id' => 'required|exists:event_types,id',
+        'event_sub_type_id' => 'required|exists:event_sub_types,id',
+        'description' => 'required|string',
+        'location' => 'required|string',
+        'date_time' => 'required|date',
+    ];
     public function render()
     {
         return view('livewire.incident.create', [
