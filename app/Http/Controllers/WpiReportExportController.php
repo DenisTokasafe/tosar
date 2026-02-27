@@ -27,7 +27,7 @@ class WpiReportExportController extends Controller
             return [
                 'ID'             => $report->id,
                 'No Referensi'   => $report->no_referensi,
-                'Tanggal'        => $report->report_date?->format('d-m-Y') ?? '-',
+                'Tanggal'        => $report->report_date ?? '-',
                 'Waktu'          => $report->report_time,
                 'Lokasi'         => $report->location,
                 'Site'           => $report->site_name,
