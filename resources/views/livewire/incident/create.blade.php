@@ -8,17 +8,7 @@
     <flux:subheading size="sm" class="mb-1 text-accent">Laporkan insiden dengan detail untuk penanganan yang tepat.</flux:subheading>
     <flux:separator variant="subtle" class="mb-4" />
     {{-- PROGRESS & STEPS VISUAL --}}
-    <div class="mb-8 space-y-4">
-        {{-- DaisyUI Progress Bar --}}
-        <progress class="w-full h-2 progress progress-primary" value="{{ ($currentStep / $totalSteps) * 100 }}" max="100"></progress>
 
-        {{-- DaisyUI Steps --}}
-        <ul class="w-full steps lg:steps-horizontal">
-            <li class="step {{ $currentStep >= 1 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Informasi Dasar</li>
-            <li class="step {{ $currentStep >= 2 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Detail & Risiko</li>
-            <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Dokumentasi</li>
-        </ul>
-    </div>
     <x-incident.layout>
         {{-- STEP 1: Info Dasar --}}
         @if($currentStep == 1)
@@ -243,4 +233,5 @@
                 @endif
         </div>
     </x-incident.layout>
+    <progress class="w-full h-2 progress progress-primary" value="{{ ($currentStep / $totalSteps) * 100 }}" max="100"></progress>
 </section>
