@@ -601,7 +601,7 @@ class HazardDetail extends Component
         $this->showDropdown = false;
 
         // Ambil user dari erm_assignments berdasarkan contractor_id
-        $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
+        $this->penanggungJawabOptions = ErmAssignment::where('department_id', $id)
             ->with('user:id,name')
             ->get()
             ->pluck('user')
