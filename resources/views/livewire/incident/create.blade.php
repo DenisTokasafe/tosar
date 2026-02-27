@@ -141,24 +141,24 @@
             <table class="table mt-4 table-xs table-zebra">
 
                 <tr>
-                    <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
-                    <td class="pl-2 text-xs border-slate-400">
+                    <th class="w-40 text-xs border-base-100">Potential Risk Rating</th>
+                    <td class="pl-2 text-xs border-base-100">
                         {{ $RiskAssessment->name }}
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-40 text-xs border-slate-400">Notify</th>
-                    <td class="pl-2 text-xs border-slate-400">
+                    <th class="w-40 text-xs border-base-100">Notify</th>
+                    <td class="pl-2 text-xs border-base-100">
                         {{ $RiskAssessment->reporting_obligation }}
                     </td>
                 </tr>
                 <tr>
-                    <th class="w-40 text-xs border-slate-400">Deadline</th>
-                    <td class="pl-2 text-xs border-slate-400">{{ $RiskAssessment->notes }}</td>
+                    <th class="w-40 text-xs border-base-100">Deadline</th>
+                    <td class="pl-2 text-xs border-base-100">{{ $RiskAssessment->notes }}</td>
                 </tr>
                 <tr>
-                    <th class="w-40 text-xs border-slate-400">Coordinator</th>
-                    <td class="pl-2 text-xs border-slate-400">
+                    <th class="w-40 text-xs border-base-100">Coordinator</th>
+                    <td class="pl-2 text-xs border-base-100">
                         {{ $RiskAssessment->coordinator }}
                     </td>
                 </tr>
