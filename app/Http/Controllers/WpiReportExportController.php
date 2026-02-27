@@ -21,7 +21,7 @@ class WpiReportExportController extends Controller
         $data = $reports->map(function ($report) {
             // Mengolah array inspectors dari JSON menjadi String
             $inspectorsList = is_array($report->inspectors)
-                ? collect($report->inspectors)->pluck('name')->filter()->implode(', ')
+                ? collect($report->inspectors)->pluck('name')->filter()->implode('| ')
                 : '-';
 
             return [
