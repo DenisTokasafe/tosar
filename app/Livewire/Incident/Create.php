@@ -14,6 +14,7 @@ use App\Models\RiskConsequence;
 use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Create extends Component
