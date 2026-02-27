@@ -137,6 +137,34 @@
                 </div>
             </div>
 
+             @if ($RiskAssessment != null)
+            <table class="table mt-4 table-xs table-zebra">
+
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Potential Risk Rating</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Notify</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->reporting_obligation }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Deadline</th>
+                    <td class="pl-2 text-xs border-slate-400">{{ $RiskAssessment->notes }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-slate-400">Coordinator</th>
+                    <td class="pl-2 text-xs border-slate-400">
+                        {{ $RiskAssessment->coordinator }}
+                    </td>
+                </tr>
+            </table>
+            @endif
+
         <div class="w-full" wire:key="field-description">
             <fieldset class="mb-4 fieldset lg:col-span-2">
                 <x-form.label label="Kronologi Kejadian" required />
