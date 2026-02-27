@@ -9,12 +9,8 @@
     <flux:separator variant="subtle" class="mb-4" />
     <x-incident.layout>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <x-form.select
-                label="Tipe Bahaya"
-                model="tipe_bahaya"
-                :options="$eventTypes"
-                option-label="event_type_name"
-                required />
+            <x-form.select label="Tipe Bahaya" model="tipe_bahaya" :options="$eventTypes" option-label="event_type_name" required />
+            <x-form.select label="Jenis Bahaya" model="jenis_bahaya" :options="$eventSubTypes" option-label="event_sub_type_name" required />
         </div>
     </x-incident.layout>
 </section>
