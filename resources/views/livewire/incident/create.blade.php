@@ -25,21 +25,60 @@
         @endif
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" wire:key="field-description">
-                <fieldset class="mb-4 fieldset lg:col-span-2">
-                    <x-form.label label="Deskripsi" required />
-                    <div x-data="ckeditorHelper('description')" wire:ignore>
-                        <div x-ref="editorElement"></div>
-                    </div>
-                    <x-label-error :messages="$errors->get('description')" />
-                </fieldset>
-            </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" wire:key="field-description">
+            <fieldset class="mb-4 fieldset lg:col-span-2">
+                <x-form.label label="Deskripsi" required />
+                <div x-data="ckeditorHelper('description')" wire:ignore>
+                    <div x-ref="editorElement"></div>
+                </div>
+                <x-label-error :messages="$errors->get('description')" />
+            </fieldset>
+
+
+        </div>
         </div>
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
         <div class="grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2 lg:grid-cols-3">
-
+            <fieldset class=" fieldset">
+                <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="documentation_description"
+                    :file="$documentation_description" />
+                <div wire:loading.remove wire:target="documentation_description">
+                    @if ($documentation_description)
+                    @if (in_array($documentation_description->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                    <img src="{{ $documentation_description->temporaryUrl() }}"
+                        class="mt-2 {{ $documentation_description ? 'w-40' : '' }} h-auto rounded border" />
+                    @elseif (in_array($documentation_description->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                    <div class="flex items-center gap-2 mt-2">
+                        @if ($documentation_description->getClientOriginalExtension() == 'pdf')
+                        <x-icon.pdf class="w-8 h-8" />
+                        <span
+                            class="text-sm text-red-600">{{ $documentation_description->getClientOriginalName() }}</span>
+                        @elseif (in_array($documentation_description->getClientOriginalExtension(), ['doc', 'docx']))
+                        <x-icon.word class="w-8 h-8" />
+                        <span
+                            class="text-sm text-blue-600">{{ $documentation_description->getClientOriginalName() }}</span>
+                        @else
+                        {{-- Ikon generik untuk file lain --}}
+                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                        </svg>
+                        <span class="text-sm text-gray-600">File:
+                            {{ $documentation_description->getClientOriginalName() }}</span>
+                        @endif
+                        @else
+                        <p class="mt-2 text-sm text-gray-600">File:
+                            {{ $documentation_description->getClientOriginalName() }}
+                        </p>
+                        @endif
+                        @endif
+                    </div>
+                    <x-label-error :messages="$errors->get('documentation_description')" />
+            </fieldset>
         </div>
         @endif
         {{-- Navigasi Step --}}
@@ -48,10 +87,10 @@
             <button type="button" class="btn btn-xs btn-outline" wire:click="$set('currentStep', {{ $currentStep - 1 }})">Sebelumnya</button>
             @endif
             @if($currentStep < $totalSteps)
-            <button type="button" class="btn btn-xs btn-primary" wire:click="$set('currentStep', {{ $currentStep + 1 }})">Selanjutnya</button>
-            @else
-            <button type="button" class="btn btn-xs btn-success" wire:click="submit">Submit</button>
-            @endif
+                <button type="button" class="btn btn-xs btn-primary" wire:click="$set('currentStep', {{ $currentStep + 1 }})">Selanjutnya</button>
+                @else
+                <button type="button" class="btn btn-xs btn-success" wire:click="submit">Submit</button>
+                @endif
         </div>
     </x-incident.layout>
 </section>
