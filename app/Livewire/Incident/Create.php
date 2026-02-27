@@ -15,22 +15,26 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Create extends Component
 {
     public $event_type_id, $pelapor_id, $searchPelapor, $likelihoods = [], $consequences = [],
         $event_sub_type_id,
-        $description,
         $location_id,
         $location_spesific,
         $documentation,
         $documentation_description,
         $date_time;
+
+    #[Url]
+    public $description;
     public $keyWord = 'kta';
     public $locations = [];
     public $searchLocation = '';
     public $show_location = false;
+    #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
     public $contractor_id, $department_id, $likelihood_id, $consequence_id;
@@ -41,6 +45,9 @@ class Create extends Component
         if (Auth::check()) {
             $this->pelapor_id = Auth::id();
             $this->searchPelapor = Auth::user()->name;
+        }
+        if (session()->has('incident_data')) {
+            $this->fill(session('incident_data'));
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
@@ -55,7 +62,8 @@ class Create extends Component
     ];
     public function nextStep()
     {
-        $this->validate($this->rules()[$this->currentStep]);
+        // Simpan ke session
+        session(['incident_data' => $this->all()]);
         $this->currentStep++;
     }
     public function previousStep()
