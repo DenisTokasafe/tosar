@@ -4,6 +4,7 @@ namespace App\Livewire\Incident;
 
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\Location;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use Livewire\Component;
@@ -13,9 +14,13 @@ class Create extends Component
     public $event_type_id,
         $event_sub_type_id,
         $description,
-        $location,
+        $location_id,
+        $location_spesific,
         $date_time;
     public $keyWord = 'kta';
+    public $locations = [];
+    public $searchLocation = '';
+    public $show_location = false;
 
     protected $rules = [
         'event_type_id' => 'required|exists:event_types,id',
@@ -24,6 +29,28 @@ class Create extends Component
         'location' => 'required|string',
         'date_time' => 'required|date',
     ];
+
+    // Search Location
+     public function updatedSearchLocation()
+    {
+        if (strlen($this->searchLocation) > 2) {
+            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
+                ->orderBy('name')
+                ->limit(80)
+                ->get();
+            $this->show_location = true;
+        } else {
+            $this->locations = [];
+            $this->show_location = false;
+        }
+    }
+    public function selectLocation($id, $name)
+    {
+        $this->location_id = $id;
+        $this->searchLocation = $name;
+        $this->show_location = false;
+        $this->validateOnly('location_id');
+    }
     public function render()
     {
         return view('livewire.incident.create', [
