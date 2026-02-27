@@ -33,18 +33,15 @@ class Create extends Component
         'location' => 'required|string',
         'date_time' => 'required|date',
     ];
-
     public function nextStep()
     {
         $this->validate($this->rules()[$this->currentStep]);
         $this->currentStep++;
     }
-
     public function previousStep()
     {
         $this->currentStep--;
     }
-
     // Search Location
      public function updatedSearchLocation()
     {

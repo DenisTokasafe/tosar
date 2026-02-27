@@ -26,7 +26,7 @@
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
 
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" wire:key="field-description">
+        <div class="w-full" wire:key="field-description">
             <fieldset class="mb-4 fieldset lg:col-span-2">
                 <x-form.label label="Deskripsi" required />
                 <div x-data="ckeditorHelper('description')" wire:ignore>
@@ -34,7 +34,6 @@
                 </div>
                 <x-label-error :messages="$errors->get('description')" />
             </fieldset>
-
 
         </div>
         </div>
