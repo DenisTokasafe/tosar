@@ -83,19 +83,16 @@
             </div>
             {{-- Kolom Risk Matrix --}}
             <div class="flex-none overflow-x-auto ">
-                <div role="tablist" class="flex">
 
-
-                </div>
                 <table class="table table-xs w-60">
                     <thead>
                         <tr class="text-center text-[9px]">
                             <td class=" border-1">{{ __('Level') }}</td>
-                            <td class="rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
-                            <td class="bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
-                            <td class="bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
-                            <td class="rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
-                            <td class="bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
+                            <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                            <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                            <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                            <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                            <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
                         </tr>
                         <tr class="text-center text-[9px]">
                             <th class="border-1">Likelihood ↓ / Consequence →</th>
