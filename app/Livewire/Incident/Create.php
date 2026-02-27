@@ -49,7 +49,6 @@ class Create extends Component
         $this->location_id = $id;
         $this->searchLocation = $name;
         $this->show_location = false;
-        $this->validateOnly('location_id');
     }
     public function render()
     {
