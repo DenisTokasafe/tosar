@@ -88,12 +88,10 @@
                             <x-label-error :messages="$errors->get('category')" />
                         </fieldset>
                         @if($category === 'new_category')
-                        <fieldset class="fieldset">
                             <x-form.input-text
                                 label="New Category Name"
                                 model="category"
                                 placeholder="Type new category name here..." required/>
-                        </fieldset>
                         @endif
                         <x-form.input-text label="Kode (Slug)" model="code" placeholder="Contoh: head_eye_right" class="font-mono text-sm"
                         required />
