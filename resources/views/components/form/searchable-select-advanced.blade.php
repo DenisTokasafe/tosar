@@ -26,7 +26,7 @@
             x-ref="searchInput"
             {{ $disabled ? 'disabled' : '' }}
             type="text"
-            wire:model.live="{{ $modelsearch }}"
+            wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
             x-on:focus="open = true"
             @click.away="open = false"
@@ -41,7 +41,7 @@
 
         {{-- Dropdown menggunakan Teleport --}}
         @if (!$disabled && $showdropdown)
-            <template wire:ignore.self x-teleport="body">
+            <template  x-teleport="body">
                 <ul
                     x-show="open"
                     {{-- Anchor memastikan posisi menempel di bawah input --}}
