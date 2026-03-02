@@ -32,6 +32,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Eyewash & Safety Shower',
             'Muster Point',
             'Alarm',
+            'First Aid Box'
         ];
 
         // 1. Decode entitas HTML (mengubah &amp; kembali menjadi &)
