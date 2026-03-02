@@ -4,7 +4,7 @@
     <x-body.layout heading=" {{ __('Manajemen Bagian Tubuh') }}" subheading="{{ __('Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.') }}">
 
         <div class="flex justify-between w-full p-6">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div class="flex flex-col w-full gap-2 sm:flex-row">
                 <x-form.input-text label="Nama (Bahasa Indonesia)" model="search" placeholder="Masukkan Nama (Bahasa Indonesia)"
                          />
                 <fieldset class="fieldset">
@@ -17,9 +17,6 @@
                                 @foreach($this->existing_categories as $item)
                                 <option value="{{ $item }}">{{ __($item) }}</option>
                                 @endforeach
-
-                                {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
-                                <option value="new_category">+ {{ __('Add New Category') }}...</option>
                             </select>
                             <x-label-error :messages="$errors->get('category')" />
                         </fieldset>
