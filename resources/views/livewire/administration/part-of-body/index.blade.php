@@ -5,9 +5,11 @@
 
         <div class="flex justify-between w-full p-6">
             <div class="gap-4">
+                <x-form.input-text label="Nama (Bahasa Indonesia)" model="search" placeholder="Masukkan Nama (Bahasa Indonesia)"
+                         />
                 <fieldset class="fieldset">
-                            <x-form.label label="{{ __('Pilih Kategori') }}}}" required />
-                            <select wire:model.live="category"
+                            <x-form.label label="{{ __('Pilih Kategori') }}"  />
+                            <select wire:model.live="filterCategory"
                                 class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                 <option value="">-- Select Existing Category --</option>
 
