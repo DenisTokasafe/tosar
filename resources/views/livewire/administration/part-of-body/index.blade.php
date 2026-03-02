@@ -54,7 +54,7 @@
                             <td><span class="badge badge-ghost">{{ $part->category }}</span></td>
                             <td class="flex justify-center gap-2">
                                 <x-button.btn-tooltip wireClick="edit({{ $part->id }})" color="Warning" icon="edit" tooltip="Edit Data" />
-                                <x-button.btn-tooltip wireClick="delete({{ $part->id }})" color="Error" icon="trash" tooltip="Hapus Data" onclick="confirm('Hapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $part->id }})"/>
+                                <x-button.btn-tooltip wireClick="delete({{ $part->id }})" color="error" icon="delete" tooltip="Hapus Data" onclick="confirm('Hapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $part->id }})"/>
 
                             </td>
                         </tr>
