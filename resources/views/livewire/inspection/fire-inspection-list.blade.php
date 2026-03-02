@@ -150,7 +150,7 @@
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
                 <label wire:click="exportPDF" wire:loading.attr="disabled"
-                    class="flex items-center gap-2 text-white btn btn-error btn-sm">
+                    class="flex items-center gap-2 text-white btn btn-success btn-sm @if($this->isFormIncomplete()) btn-disabled @endif" >
                     {{-- Icon PDF --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">

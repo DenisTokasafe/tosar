@@ -242,6 +242,11 @@ class FireInspectionList extends Component
                 ->paginate(10),
         ]);
     }
+    public function isFormIncomplete(): bool
+    {
+        // Mengembalikan true jika ada salah satu field yang kosong
+        return empty($this->type) || empty($this->date) || empty($this->location_id);
+    }
     public function paginationView()
     {
         return 'paginate.pagination';
