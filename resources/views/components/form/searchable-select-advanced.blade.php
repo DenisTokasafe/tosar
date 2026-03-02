@@ -26,7 +26,7 @@
             x-ref="searchInput"
             {{ $disabled ? 'disabled' : '' }}
             type="text"
-            wire:model.live.debounce.300ms="{{ $modelsearch }}"
+            wire:model.live="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
             x-on:focus="open = true"
             @click.away="open = false"
