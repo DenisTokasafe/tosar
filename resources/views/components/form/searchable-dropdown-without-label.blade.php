@@ -27,7 +27,7 @@
     />
 
     @if ($showdropdown && count($options) > 0)
-        <template x-teleport="body">
+        <template wire:ignore.self x-teleport="body">
             <ul
                 x-show="open"
                 {{-- Memposisikan dropdown tepat di bawah input lokasi --}}

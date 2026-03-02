@@ -41,7 +41,7 @@
 
         {{-- Dropdown menggunakan Teleport --}}
         @if (!$disabled && $showdropdown)
-            <template x-teleport="body">
+            <template wire:ignore.self x-teleport="body">
                 <ul
                     x-show="open"
                     {{-- Anchor memastikan posisi menempel di bawah input --}}
