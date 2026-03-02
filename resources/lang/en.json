@@ -199,7 +199,22 @@
 
     "Tidak ada deskripsi": "No description available",
     "Manajemen Bagian Tubuh": "Part of Body Management",
-    "Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.": "Manage the parts of the body related to incidents, including their names, categories, and codes."
+    "Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.": "Manage the parts of the body related to incidents, including their names, categories, and codes.",
+    "Head": "Kepala",
+    "Upper Body": "Anggota Tubuh Bagian Atas",
+    "Trunk": "Batang Tubuh / Badan",
+    "Lower Body": "Anggota Tubuh Bagian Bawah",
+    "lainnya": "Other",
+    "Kategori": "Category",
+    "Kode": "Code",
+    "Cari nama bagian tubuh...": "Search body part name...",
+    "Edit Bagian Tubuh": "Edit Body Part",
+    "Tambah Bagian Tubuh Baru": "Add New Body Part",
+    "Data berhasil disimpan.": "Data saved successfully.",
+    "Data berhasil dihapus.": "Data deleted successfully.",
+    "Nama (Bahasa Indonesia)": "Name (Indonesian)",
+    "Name (English)": "Name (English)"
+
 
 
 

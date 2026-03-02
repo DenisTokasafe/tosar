@@ -27,13 +27,21 @@ class Index extends Component
     ];
     public function render()
     {
-        return view('livewire.administration.part-of-body.index',[
+        return view('livewire.administration.part-of-body.index', [
             'bodyParts' => BodyPart::query()
-            ->searchName($this->search)          // Memanggil scopeSearchName
-            ->searchCategory($this->filterCategory) // Memanggil scopeSearchCategory
-            ->latest()
-            ->paginate(10)
+                ->searchName($this->search)          // Memanggil scopeSearchName
+                ->searchCategory($this->filterCategory) // Memanggil scopeSearchCategory
+                ->latest()
+                ->paginate(10)
         ]);
+    }
+    public function getExistingCategoriesProperty()
+    {
+        return BodyPart::select('category')
+            ->distinct()
+            ->whereNotNull('category')
+            ->orderBy('category', 'asc')
+            ->pluck('category');
     }
     public function openModal()
     {
@@ -77,7 +85,7 @@ class Index extends Component
         $this->validate([
             'name' => 'required',
             'category' => 'required',
-            'code' => 'required|unique:body_parts,code,'.$this->body_part_id,
+            'code' => 'required|unique:body_parts,code,' . $this->body_part_id,
         ]);
 
         $part = BodyPart::find($this->body_part_id);
@@ -97,7 +105,7 @@ class Index extends Component
         BodyPart::destroy($id);
         session()->flash('success', 'Data berhasil dihapus.');
     }
-        public function paginationView()
+    public function paginationView()
     {
         return 'paginate.pagination';
     }

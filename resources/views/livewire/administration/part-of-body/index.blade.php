@@ -64,37 +64,47 @@
                 <form wire:submit.prevent="{{ $isEditing ? 'update' : 'store' }}" class="space-y-4">
 
                     <x-form.input-text label="Nama (Bahasa Indonesia)" model="name" placeholder="Masukkan Nama (Bahasa Indonesia)"
-                    required />
+                        required />
+                    <x-form.input-text label="Name (English)" model="name_en" placeholder="Contoh: Right Eye"
+                        required />
 
-                    <div class="form-control">
-                        <label class="label"><span class="label-text">Name (English)</span></label>
-                        <input type="text" wire:model="name_en" class="w-full input input-bordered" placeholder="Contoh: Right Eye" />
-                    </div>
+
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">Kategori</span></label>
-                            <select wire:model="category" class="w-full select select-bordered">
-                                <option value="">-- Pilih --</option>
-                                <option value="Head">Kepala (Head)</option>
-                                <option value="Upper Body">Tubuh Atas</option>
-                                <option value="Trunk">Batang Tubuh</option>
-                                <option value="Lower Body">Tubuh Bawah</option>
-                            </select>
-                            @error('category') <span class="mt-1 text-xs text-error">{{ $message }}</span> @enderror
-                        </div>
+                        <fieldset class="fieldset">
+                            <x-form.label label="Pilih Kategori" required />
+                            <select wire:model.live="category"
+                                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Select Existing Category --</option>
 
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">Kode (Slug)</span></label>
-                            <input type="text" wire:model="code" class="w-full font-mono text-sm input input-bordered" placeholder="head_eye_right" />
-                            @error('code') <span class="mt-1 text-xs text-error">{{ $message }}</span> @enderror
-                        </div>
+                                {{-- Loop data category yang unik dari database --}}
+                                @foreach($this->existing_categories as $item)
+                                <option value="{{ $item }}">{{ $item }}</option>
+                                @endforeach
+
+                                {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
+                                <option value="new_category">+ Add New Category...</option>
+                            </select>
+                            <x-label-error :messages="$errors->get('category')" />
+                        </fieldset>
+                        @if($category === 'new_category')
+                        <fieldset class="fieldset">
+                            <x-form.input-text
+                                label="New Category Name"
+                                model="new_category_name"
+                                placeholder="Type new category name here..." />
+                        </fieldset>
+                        @endif
+                        <x-form.input-text label="Kode (Slug)" model="code" placeholder="Contoh: head_eye_right" class="font-mono text-sm"
+                        required />
+
+
                     </div>
 
                     <div class="modal-action">
-                        <button type="button" class="btn" onclick="body_modal.close()">Batal</button>
-                        <button type="submit" class="btn btn-primary">
-                            <span wire:loading class="loading loading-spinner loading-xs"></span>
+                        <button type="button" class="btn btn-error btn-xs" onclick="body_modal.close()">Batal</button>
+                        <button type="submit" class="btn btn-primary btn-xs" wire:loading.attr="disabled">
+                            <span wire:loading.remove.class="hidden" class="hidden loading loading-spinner loading-xs"></span>
                             {{ $isEditing ? 'Simpan Perubahan' : 'Simpan Data' }}
                         </button>
                     </div>
