@@ -91,7 +91,7 @@
                         <fieldset class="fieldset">
                             <x-form.input-text
                                 label="New Category Name"
-                                model="new_category_name"
+                                model="category"
                                 placeholder="Type new category name here..." required/>
                         </fieldset>
                         @endif
