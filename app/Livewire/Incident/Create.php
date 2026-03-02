@@ -161,7 +161,7 @@ class Create extends Component
 
     public function updatedSearchPelapor()
     {
-        $this->pelapor_id = null;
+
         $this->reset('manualPelaporName');
         if (strlen($this->searchPelapor) > 1) {
             $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
@@ -172,6 +172,7 @@ class Create extends Component
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
+            $this->reset('pelapor_id', 'manualPelaporMode', 'manualPelaporName');
         }
     }
     public function selectPelapor($id, $name)
