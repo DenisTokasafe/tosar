@@ -195,7 +195,7 @@
             </div>
             <div class="w-full md:max-w-md">
                 <x-form.searchable-select-advanced label="Pemeriksa" placeholder="Cari Nama Pemeriksa..."
-                    modelsearch="searchResponsibility" modelid="action_responsible_id" :options="$pelapors"
+                    modelsearch="searchResponsibility" modelid="inspected_users" :options="$pelapors"
                     :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode" manualModelName="manualPelaporName"
                     enableManualAction="enableManualPelapor" addManualAction="addPelaporManual"
                     clickaction="selectPelapor" />
