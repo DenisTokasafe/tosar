@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('category'); // Kelompok besar: Kepala, Tubuh Atas, dll.
             $table->string('code')->unique(); // Kode unik untuk mapping SVG/Heatmap
             $table->timestamps();
-            $table->timestamps();
         });
     }
 
