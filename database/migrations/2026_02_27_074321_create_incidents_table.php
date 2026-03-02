@@ -37,7 +37,6 @@ return new class extends Migration
             $table->foreignId('consequence_id')->nullable()->constrained('risk_consequences')->nullOnDelete();
             $table->foreignId('likelihood_id')->nullable()->constrained('likelihoods')->nullOnDelete();
             $table->string('risk_level')->nullable(); // Low, Moderate, High, Extreme
-            $table->text('description');
             $table->string('unit_involved')->nullable(); // No. Lambung Alat
             $table->enum('status', ['submitted', 'in_progress', 'pending', 'closed', 'cancelled'])->default('submitted');
             $table->timestamps();
