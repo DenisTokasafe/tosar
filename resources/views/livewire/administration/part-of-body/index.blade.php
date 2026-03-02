@@ -33,11 +33,9 @@
 
 
         <div class="border shadow-xl card bg-base-100 border-base-200">
-            <div class="p-4 bg-base-200/50">
-                <input type="text" wire:model.live="search" placeholder="Cari nama atau kategori..." class="w-full max-w-xs input input-bordered input-sm" />
-            </div>
+
             <div class="overflow-x-auto">
-                <table class="table table-zebra">
+                <table class="table table-xs">
                     <thead>
                         <tr>
                             <th>Kode</th>
@@ -49,7 +47,7 @@
                     </thead>
                     <tbody>
                         @forelse($bodyParts as $part)
-                        <tr>
+                        <tr class="odd:bg-base-200 even:bg-base-300 text-base-content">
                             <td class="font-mono text-xs">{{ $part->code }}</td>
                             <td>{{ $part->name }}</td>
                             <td class="italic text-base-content/70">{{ $part->name_en ?? '-' }}</td>
