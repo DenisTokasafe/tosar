@@ -17,7 +17,8 @@
 
 <fieldset class="relative fieldset md:col-span-1"
     x-data="{
-        open: @entangle($attributes->wire('model')).live,
+        /* Gunakan entangle langsung ke properti showdropdown agar lebih stabil */
+        open: @entangle($showdropdown),
         dropdownStyles: { top: '0px', left: '0px', width: '0px' },
         calculatePosition() {
             this.$nextTick(() => {
@@ -31,7 +32,6 @@
             });
         }
     }"
-    {{-- Listener agar tetap muncul & update posisi saat Livewire update data --}}
     @search-updated.window="calculatePosition()"
     x-init="$watch('open', value => { if(value) calculatePosition() })"
     @scroll.window="if(open) calculatePosition()"
@@ -42,14 +42,12 @@
     @endif
 
     <div class="relative">
-        {{-- Input Search --}}
         <input
             x-ref="inputField"
             {{ $disabled ? 'disabled' : '' }}
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
-            {{-- Paksa open true dan hitung posisi saat mengetik --}}
             x-on:input="open = true; calculatePosition()"
             x-on:focus="open = true; calculatePosition()"
             {{ $attributes->merge([
@@ -61,7 +59,6 @@
             ]) }}
         />
 
-        {{-- Dropdown menggunakan Teleport agar keluar dari container layout --}}
         @if (!$disabled && $showdropdown)
             <template x-teleport="body">
                 <div
@@ -86,7 +83,6 @@
                                 </li>
                             @endforeach
                         @else
-                            {{-- Mode Manual Trigger --}}
                             @if (!$manualMode)
                                 <li wire:click="{{ $enableManualAction }}"
                                     class="px-3 py-2 text-sm italic cursor-pointer text-warning hover:bg-base-200">
@@ -95,7 +91,6 @@
                             @endif
                         @endif
 
-                        {{-- Input Manual Field --}}
                         @if ($manualMode)
                             <li class="p-2 border-t bg-base-50">
                                 <div class="flex items-center gap-1">
