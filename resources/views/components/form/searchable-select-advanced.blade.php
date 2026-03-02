@@ -52,7 +52,6 @@
         />
 
         {{-- Bungkus dengan wire:ignore agar Livewire tidak merusak teleport saat render ulang --}}
-        <div wire:ignore>
             @if (!$disabled)
                 <template x-teleport="body">
                     <ul
@@ -107,7 +106,6 @@
                     </ul>
                 </template>
             @endif
-        </div>
     </div>
 
     @if ($manualMode && $manualModelName)
