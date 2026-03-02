@@ -97,4 +97,8 @@ class Index extends Component
         BodyPart::destroy($id);
         session()->flash('success', 'Data berhasil dihapus.');
     }
+        public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
