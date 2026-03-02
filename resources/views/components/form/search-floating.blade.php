@@ -11,7 +11,7 @@
     'namedb' => 'name'
 ])
 
-<fieldset wire:ignore.self wire:ignore.self class="fieldset">
+<fieldset  wire:ignore.self class="fieldset">
     {{-- Container utama --}}
     <div class="relative w-full" x-data="{ open: false }">
 
