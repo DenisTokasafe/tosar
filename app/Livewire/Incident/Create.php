@@ -175,7 +175,6 @@ class Create extends Component
             $this->showPelaporDropdown = true;
 
             // Dispatch event untuk memberitahu Alpine agar re-calculate posisi dropdown
-            $this->dispatch('search-updated');
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
