@@ -9,7 +9,7 @@
     'namedb' => 'name'
 ])
 
-<div class="relative mb-1" x-data="{ open: false }">
+<div wire:ignore.self class="relative mb-1" x-data="{ open: false }">
     <input
         x-ref="locationInput"
         {{ $disabled ? 'disabled' : '' }}
@@ -27,7 +27,7 @@
     />
 
     @if ($showdropdown && count($options) > 0)
-        <template wire:ignore.self x-teleport="body">
+        <template  x-teleport="body">
             <ul
                 x-show="open"
                 {{-- Memposisikan dropdown tepat di bawah input lokasi --}}

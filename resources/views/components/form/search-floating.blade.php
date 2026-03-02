@@ -11,7 +11,7 @@
     'namedb' => 'name'
 ])
 
-<fieldset class="fieldset">
+<fieldset wire:ignore.self wire:ignore.self class="fieldset">
     {{-- Container utama --}}
     <div class="relative w-full" x-data="{ open: false }">
 
@@ -41,7 +41,7 @@
 
         {{-- Dropdown Hasil Pencarian dengan Teleport --}}
         @if ($showdropdown && count($options) > 0)
-            <template wire:ignore.self x-teleport="body">
+            <template  x-teleport="body">
                 <ul
                     x-show="open"
                     {{-- Menempelkan dropdown di bawah container label agar tidak menutupi teks input --}}
