@@ -224,7 +224,7 @@
                                             @else
                                                 {{-- Ini untuk data seperti "01" atau "6.8 Kg" --}}
                                                 <span
-                                                    class="text-blue-600 font-semibold text-[10px]">{{ $value }}</span>
+                                                    class="text-base-content font-semibold text-[10px]">{{ $value }}</span>
                                             @endif
                                         </div>
                                     @endforeach
