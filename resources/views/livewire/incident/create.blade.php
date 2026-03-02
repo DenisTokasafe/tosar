@@ -31,154 +31,155 @@
         @endif
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
-
-        <div class="flex flex-col-reverse gap-2 mt-2 md:mt-12 md:flex-row">
-            {{-- Kolom Likelihood & Consequence --}}
-            <div class="space-y-4 md:grow">
-                {{-- Consequence --}}
-                <fieldset class="fieldset ">
-                    <x-form.label label="Consequence" required />
-                    <select wire:model.live="consequence_id"
-                        class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">{{__('-- Pilih --')}}</option>
-                        @foreach ($consequencess as $cons)
-                        <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('consequence_id')" />
-
-                    @if ($consequence_id)
-                    @php
-                    $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                    @endphp
-                    @if ($selectedConsequence)
-                    <div
-                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                        {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                    </div>
-                    @endif
-                    @endif
-                </fieldset>
-                {{-- Likelihood --}}
-                <fieldset class="fieldset ">
-                    <x-form.label label="Likelihood" required />
-                    <select wire:model.live="likelihood_id"
-                        class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                        <option value="">{{__('-- Pilih --')}}</option>
-                        @foreach ($likelihoodss as $like)
-                        <option value="{{ $like->id }}">{{ __($like->name) }}</option>
-                        @endforeach
-                    </select>
-                    <x-label-error :messages="$errors->get('likelihood_id')" />
-
-                    @if ($likelihood_id)
-                    @php
-                    $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
-                    @endphp
-                    @if ($selectedLikelihood)
-                    <div
-                        class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                        {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
-                    </div>
-                    @endif
-                    @endif
-                </fieldset>
-
-
-            </div>
-            {{-- Kolom Risk Matrix --}}
-            <div class="flex-none overflow-x-auto ">
-
-                <table class="table table-xs w-60">
-                    <thead>
-                        <tr class="text-center text-[9px]">
-                            <td class=" border-1">{{ __('Level') }}</td>
-                            <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
-                            <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
-                            <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
-                            <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
-                            <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
-                        </tr>
-                        <tr class="text-center text-[9px]">
-                            <th class="border-1">Likelihood ↓ / Consequence →</th>
-                            @foreach ($consequences as $c)
-                            <th class="rotate_text border-1">{{ __($c->name) }}</th>
+        <div class="md:mt-12">
+            <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
+                {{-- Kolom Likelihood & Consequence --}}
+                <div class="space-y-4 md:grow">
+                    {{-- Consequence --}}
+                    <fieldset class="fieldset ">
+                        <x-form.label label="Consequence" required />
+                        <select wire:model.live="consequence_id"
+                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            <option value="">{{__('-- Pilih --')}}</option>
+                            @foreach ($consequencess as $cons)
+                            <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
                             @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($likelihoods as $l)
-                        <tr class="w-32 text-xs text-center">
+                        </select>
+                        <x-label-error :messages="$errors->get('consequence_id')" />
 
-                            <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
-                            @foreach ($consequences as $c)
-                            @php
-                            $cell =
-                            App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                            ->where('risk_consequence_id', $c->id)
-                            ->first() ?? null;
-                            $score = $l->level * $c->level;
-                            $severity = $cell?->severity ?? '';
-                            $color = match ($severity) {
-                            'Rendah' => 'bg-emerald-500',
-                            'Sedang' => 'bg-yellow-500',
-                            'Tinggi' => 'bg-orange-500',
-                            'Ekstrem' => 'bg-rose-500',
-                            default => 'bg-gray-100',
-                            };
-                            @endphp
-                            <td
-                                class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
-                                <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                    class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
-                            </td>
+                        @if ($consequence_id)
+                        @php
+                        $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                        @endphp
+                        @if ($selectedConsequence)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
+                        @endif
+                    </fieldset>
+                    {{-- Likelihood --}}
+                    <fieldset class="fieldset ">
+                        <x-form.label label="Likelihood" required />
+                        <select wire:model.live="likelihood_id"
+                            class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                            <option value="">{{__('-- Pilih --')}}</option>
+                            @foreach ($likelihoodss as $like)
+                            <option value="{{ $like->id }}">{{ __($like->name) }}</option>
                             @endforeach
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        </select>
+                        <x-label-error :messages="$errors->get('likelihood_id')" />
 
-        @if ($RiskAssessment != null)
-        <table class="table mt-4 table-xs table-zebra">
+                        @if ($likelihood_id)
+                        @php
+                        $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
+                        @endphp
+                        @if ($selectedLikelihood)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
+                        @endif
+                    </fieldset>
 
-            <tr>
-                <th class="w-40 text-xs border-base-300">Potential Risk Rating</th>
-                <td class="pl-2 text-xs border-base-300">
-                    {{ $RiskAssessment->name }}
-                </td>
-            </tr>
-            <tr>
-                <th class="w-40 text-xs border-base-300">Notify</th>
-                <td class="pl-2 text-xs border-base-300">
-                    {{ $RiskAssessment->reporting_obligation }}
-                </td>
-            </tr>
-            <tr>
-                <th class="w-40 text-xs border-base-300">Deadline</th>
-                <td class="pl-2 text-xs border-base-300">{{ $RiskAssessment->notes }}</td>
-            </tr>
-            <tr>
-                <th class="w-40 text-xs border-base-300">Coordinator</th>
-                <td class="pl-2 text-xs border-base-300">
-                    {{ $RiskAssessment->coordinator }}
-                </td>
-            </tr>
-        </table>
-        @endif
-        <flux:separator variant="subtle" class="my-4" />
-        <div class="w-full" wire:key="field-description">
-            <fieldset class="mb-4 fieldset lg:col-span-2">
-                <x-form.label label="Kronologi Kejadian" required />
-                <div x-data="ckeditorHelper('description')" wire:ignore>
-                    <div x-ref="editorElement"></div>
+
                 </div>
-                <x-label-error :messages="$errors->get('description')" />
-            </fieldset>
+                {{-- Kolom Risk Matrix --}}
+                <div class="flex-none overflow-x-auto ">
 
+                    <table class="table table-xs w-60">
+                        <thead>
+                            <tr class="text-center text-[9px]">
+                                <td class=" border-1">{{ __('Level') }}</td>
+                                <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                                <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                                <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                                <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                                <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
+                            </tr>
+                            <tr class="text-center text-[9px]">
+                                <th class="border-1">Likelihood ↓ / Consequence →</th>
+                                @foreach ($consequences as $c)
+                                <th class="rotate_text border-1">{{ __($c->name) }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($likelihoods as $l)
+                            <tr class="w-32 text-xs text-center">
+
+                                <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+                                @foreach ($consequences as $c)
+                                @php
+                                $cell =
+                                App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                                ->where('risk_consequence_id', $c->id)
+                                ->first() ?? null;
+                                $score = $l->level * $c->level;
+                                $severity = $cell?->severity ?? '';
+                                $color = match ($severity) {
+                                'Rendah' => 'bg-emerald-500',
+                                'Sedang' => 'bg-yellow-500',
+                                'Tinggi' => 'bg-orange-500',
+                                'Ekstrem' => 'bg-rose-500',
+                                default => 'bg-gray-100',
+                                };
+                                @endphp
+                                <td
+                                    class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
+                                    <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                        class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
+                                </td>
+                                @endforeach
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @if ($RiskAssessment != null)
+            <table class="table mt-4 table-xs table-zebra">
+
+                <tr>
+                    <th class="w-40 text-xs border-base-300">Potential Risk Rating</th>
+                    <td class="pl-2 text-xs border-base-300">
+                        {{ $RiskAssessment->name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-base-300">Notify</th>
+                    <td class="pl-2 text-xs border-base-300">
+                        {{ $RiskAssessment->reporting_obligation }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-base-300">Deadline</th>
+                    <td class="pl-2 text-xs border-base-300">{{ $RiskAssessment->notes }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40 text-xs border-base-300">Coordinator</th>
+                    <td class="pl-2 text-xs border-base-300">
+                        {{ $RiskAssessment->coordinator }}
+                    </td>
+                </tr>
+            </table>
+            @endif
+            <flux:separator variant="subtle" class="my-4" />
+            <div class="w-full" wire:key="field-description">
+                <fieldset class="mb-4 fieldset lg:col-span-2">
+                    <x-form.label label="Kronologi Kejadian" required />
+                    <div x-data="ckeditorHelper('description')" wire:ignore>
+                        <div x-ref="editorElement"></div>
+                    </div>
+                    <x-label-error :messages="$errors->get('description')" />
+                </fieldset>
+
+            </div>
         </div>
-        </div>
+
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
