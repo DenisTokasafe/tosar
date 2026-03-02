@@ -142,7 +142,8 @@ class Index extends Component
                 'Ring Buoy',
                 'Eyewash & Safety Shower',
                 'Muster Point',
-                'Alarm'
+                'Alarm',
+                'First Aid Box'
             ];
 
             // 2. Cari tahu $this->type itu ada di urutan ke berapa (index)
