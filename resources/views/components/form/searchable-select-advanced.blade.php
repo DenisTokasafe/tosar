@@ -52,7 +52,7 @@
         />
 
         {{-- Bungkus dengan wire:ignore agar Livewire tidak merusak teleport saat render ulang --}}
-        <div wire:ignore>
+        <div wire:ignore.self>
             @if (!$disabled)
                 <template x-teleport="body">
                     <ul
