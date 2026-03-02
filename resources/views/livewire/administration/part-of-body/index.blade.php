@@ -92,7 +92,7 @@
                             <x-form.input-text
                                 label="New Category Name"
                                 model="new_category_name"
-                                placeholder="Type new category name here..." />
+                                placeholder="Type new category name here..." required/>
                         </fieldset>
                         @endif
                         <x-form.input-text label="Kode (Slug)" model="code" placeholder="Contoh: head_eye_right" class="font-mono text-sm"
