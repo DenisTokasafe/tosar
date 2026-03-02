@@ -3,8 +3,8 @@
 
     <x-body.layout heading=" {{ __('Manajemen Bagian Tubuh') }}" subheading="{{ __('Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.') }}">
 
-        <div class="flex justify-between w-full p-6">
-            <div class="flex flex-col w-full gap-2 sm:flex-row">
+        <div class="flex flex-col items-center px-2 py-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
+           <div class="flex flex-col gap-2  md:flex-row md:items-center"></div>
                 <x-form.input-text label="{{ __('Cari nama bagian tubuh') }}" class="max-w-sm" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}"
                          />
                 <fieldset class="fieldset">
@@ -21,7 +21,7 @@
                             <x-label-error :messages="$errors->get('category')" />
                         </fieldset>
             </div>
-            <div class="flex flex-shrink-0 gap-2">
+           <div class="flex flex-row gap-2">
                 <x-button.btn-tooltip wireClick="openModal" color="primary" icon="add" tooltip="Tambah Baru" />
                  @livewire('administration.part-of-body.import-data')
             </div>
