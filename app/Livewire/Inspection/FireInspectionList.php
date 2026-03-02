@@ -47,6 +47,7 @@ class FireInspectionList extends Component
     }
     public function updatedSearchLocation()
     {
+        $this->location_id = null; // Reset location_id saat searchLocation berubah
         if (strlen($this->searchLocation) > 2) {
             $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
                 ->orderBy('name')
