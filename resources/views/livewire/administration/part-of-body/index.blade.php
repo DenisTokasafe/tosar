@@ -3,9 +3,29 @@
 
     <x-body.layout heading=" {{ __('Manajemen Bagian Tubuh') }}" subheading="{{ __('Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.') }}">
 
-        <div class="flex justify-end w-full p-6">
-            <x-button.btn-tooltip wireClick="openModal" color="primary" icon="add" tooltip="Tambah Baru" />
-             @livewire('administration.part-of-body.import-data')
+        <div class="flex justify-between w-full p-6">
+            <div class="gap-4">
+                <fieldset class="fieldset">
+                            <x-form.label label="{{ __('Pilih Kategori') }}}}" required />
+                            <select wire:model.live="category"
+                                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Select Existing Category --</option>
+
+                                {{-- Loop data category yang unik dari database --}}
+                                @foreach($this->existing_categories as $item)
+                                <option value="{{ $item }}">{{ __($item) }}</option>
+                                @endforeach
+
+                                {{-- Opsi jika ingin menambah kategori baru secara manual (opsional) --}}
+                                <option value="new_category">+ {{ __('Add New Category') }}...</option>
+                            </select>
+                            <x-label-error :messages="$errors->get('category')" />
+                        </fieldset>
+            </div>
+            <div class="gap-4 ">
+                <x-button.btn-tooltip wireClick="openModal" color="primary" icon="add" tooltip="Tambah Baru" />
+                 @livewire('administration.part-of-body.import-data')
+            </div>
         </div>
 
 
