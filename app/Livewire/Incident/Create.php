@@ -172,7 +172,7 @@ class Create extends Component
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
-
+            $this->reset('pelapor_id', 'manualPelaporMode', 'manualPelaporName');
         }
     }
     public function selectPelapor($id, $name)
