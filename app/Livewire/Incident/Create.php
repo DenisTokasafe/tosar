@@ -14,6 +14,7 @@ use App\Models\RiskConsequence;
 use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -40,6 +41,13 @@ class Create extends Component
     public $contractor_id, $department_id, $likelihood_id, $consequence_id;
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
+
+    public $risk_consequence;
+        // Pelapor
+    public $pelapors = [];
+    public $showPelaporDropdown = false;
+    public $manualPelaporMode = false;
+    public $manualPelaporName;
     public function mount()
     {
         if (Auth::check()) {
@@ -145,5 +153,50 @@ class Create extends Component
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
         ]);
+    }
+
+     public function updatedSearchPelapor()
+    {
+        $this->reset('manualPelaporName');
+        if (strlen($this->searchPelapor) > 1) {
+            $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+            $this->showPelaporDropdown = true;
+        } else {
+            $this->pelapors = [];
+            $this->showPelaporDropdown = false;
+        }
+    }
+    public function selectPelapor($id, $name)
+    {
+        $this->pelapor_id = $id;
+        $this->searchPelapor = $name;
+        $this->showPelaporDropdown = false;
+        $this->manualPelaporMode = false;
+        $this->validateOnly('pelapor_id');
+    }
+    public function enableManualPelapor()
+    {
+        $this->manualPelaporMode = true;
+        $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
+        $this->showPelaporDropdown = false;
+        $this->pelapor_id = null;
+        $this->dispatch(
+            'alert',
+            [
+                'text' => "nama sudah di tambahkan!!!",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+            ]
+        );
+    }
+    public function updatedManualPelaporName($value)
+    {
+        $this->pelapor_id = null;
     }
 }
