@@ -20,7 +20,6 @@
                 ($disabled ? 'bg-gray-100 cursor-not-allowed opacity-70' : '') {{-- Tambahkan styling visual --}}
             ]) }}
         ></textarea>
-
         @if ($label)
             <span>{{ $label }} @if ($required)<span class="font-bold text-red-500">*</span>@endif</span>
         @endif
