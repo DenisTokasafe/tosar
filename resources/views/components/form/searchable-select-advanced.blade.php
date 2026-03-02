@@ -20,14 +20,19 @@
         open: @entangle($attributes->wire('model')).live,
         dropdownStyles: { top: '0px', left: '0px', width: '0px' },
         calculatePosition() {
-            const rect = this.$refs.inputField.getBoundingClientRect();
-            this.dropdownStyles = {
-                top: (rect.bottom + window.scrollY) + 'px',
-                left: (rect.left + window.scrollX) + 'px',
-                width: rect.width + 'px'
-            };
+            this.$nextTick(() => {
+                if (!this.$refs.inputField) return;
+                const rect = this.$refs.inputField.getBoundingClientRect();
+                this.dropdownStyles = {
+                    top: (rect.bottom + window.scrollY) + 'px',
+                    left: (rect.left + window.scrollX) + 'px',
+                    width: rect.width + 'px'
+                };
+            });
         }
     }"
+    {{-- Listener agar tetap muncul & update posisi saat Livewire update data --}}
+    @search-updated.window="calculatePosition()"
     x-init="$watch('open', value => { if(value) calculatePosition() })"
     @scroll.window="if(open) calculatePosition()"
     @resize.window="if(open) calculatePosition()"
@@ -44,6 +49,8 @@
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
+            {{-- Paksa open true dan hitung posisi saat mengetik --}}
+            x-on:input="open = true; calculatePosition()"
             x-on:focus="open = true; calculatePosition()"
             {{ $attributes->merge([
                 'class' => 'input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs ' .
@@ -54,7 +61,7 @@
             ]) }}
         />
 
-        {{-- Dropdown Teleported --}}
+        {{-- Dropdown menggunakan Teleport agar keluar dari container layout --}}
         @if (!$disabled && $showdropdown)
             <template x-teleport="body">
                 <div
@@ -65,7 +72,7 @@
                     style="display: none;"
                 >
                     <ul class="overflow-auto max-h-60">
-                        <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}" class="flex flex-col items-center justify-center px-4 py-2 text-center">
+                        <div wire:loading wire:target="{{ $modelsearch }}, {{ $clickaction }}, {{ $enableManualAction }}" class="flex flex-col items-center justify-center px-4 py-2 text-center">
                             <span class="loading loading-spinner loading-sm text-secondary"></span>
                         </div>
 
@@ -79,6 +86,7 @@
                                 </li>
                             @endforeach
                         @else
+                            {{-- Mode Manual Trigger --}}
                             @if (!$manualMode)
                                 <li wire:click="{{ $enableManualAction }}"
                                     class="px-3 py-2 text-sm italic cursor-pointer text-warning hover:bg-base-200">

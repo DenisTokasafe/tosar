@@ -161,18 +161,24 @@ class Create extends Component
 
     public function updatedSearchPelapor()
     {
-    $this->reset('pelapor_id', 'manualPelaporMode', 'manualPelaporName');
-        $this->reset('manualPelaporName');
+        // Hindari reset total jika hanya ingin mengosongkan ID tapi tetap mau mencari
+        $this->pelapor_id = null;
+        $this->manualPelaporMode = false;
+        $this->manualPelaporName = null;
+
         if (strlen($this->searchPelapor) > 1) {
             $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
                 ->orderBy('name')
                 ->limit(50)
                 ->get();
+
             $this->showPelaporDropdown = true;
+
+            // Dispatch event untuk memberitahu Alpine agar re-calculate posisi dropdown
+            $this->dispatch('search-updated');
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
-
         }
     }
     public function selectPelapor($id, $name)
