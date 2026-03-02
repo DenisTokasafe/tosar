@@ -62,11 +62,9 @@
                 <h3 class="mb-4 text-lg font-bold">{{ $isEditing ? 'Edit Bagian Tubuh' : 'Tambah Bagian Tubuh Baru' }}</h3>
 
                 <form wire:submit.prevent="{{ $isEditing ? 'update' : 'store' }}" class="space-y-4">
-                    <div class="form-control">
-                        <label class="label"><span class="label-text">Nama (Bahasa Indonesia)</span></label>
-                        <input type="text" wire:model="name" class="w-full input input-bordered" placeholder="Contoh: Mata Kanan" />
-                        @error('name') <span class="mt-1 text-xs text-error">{{ $message }}</span> @enderror
-                    </div>
+
+                    <x-form.input-text label="Nama (Bahasa Indonesia)" model="name" placeholder="Masukkan Nama (Bahasa Indonesia)"
+                    required />
 
                     <div class="form-control">
                         <label class="label"><span class="label-text">Name (English)</span></label>
