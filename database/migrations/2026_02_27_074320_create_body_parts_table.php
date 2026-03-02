@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('body_parts', function (Blueprint $table) {
             $table->id();
-            $table->id();
             $table->string('name'); // Nama bagian tubuh (Bahasa Indonesia)
             $table->string('name_en')->nullable(); // Nama (Bahasa Inggris untuk standarisasi jika perlu)
             $table->string('category'); // Kelompok besar: Kepala, Tubuh Atas, dll.
