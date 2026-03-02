@@ -5,7 +5,7 @@
 
         <div class="flex justify-between w-full p-6">
             <div class="flex flex-col w-full gap-2 sm:flex-row">
-                <x-form.input-text label="Nama (Bahasa Indonesia)" model="search" placeholder="Masukkan Nama (Bahasa Indonesia)"
+                <x-form.input-text label="{{ __('Cari nama bagian tubuh') }}" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}"
                          />
                 <fieldset class="fieldset">
                             <x-form.label label="{{ __('Pilih Kategori') }}"  />
