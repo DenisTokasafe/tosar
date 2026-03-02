@@ -4,26 +4,25 @@
     <x-body.layout heading=" {{ __('Manajemen Bagian Tubuh') }}" subheading="{{ __('Kelola bagian tubuh yang terkait dengan insiden, termasuk nama, kategori, dan kode.') }}">
 
         <div class="flex flex-col items-center px-2 py-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
-           <div class="flex flex-col gap-2  md:flex-row md:items-center"></div>
-                <x-form.input-text label="{{ __('Cari nama bagian tubuh') }}" class="max-w-sm" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}"
-                         />
+            <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                <x-form.input-text label="{{ __('Cari nama bagian tubuh') }}" class="max-w-sm" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}" />
                 <fieldset class="fieldset">
-                            <x-form.label label="{{ __('Pilih Kategori') }}"  />
-                            <select wire:model.live="filterCategory"
-                                class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                <option value="">-- Select Existing Category --</option>
+                    <x-form.label label="{{ __('Pilih Kategori') }}" />
+                    <select wire:model.live="filterCategory"
+                        class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                        <option value="">-- Select Existing Category --</option>
 
-                                {{-- Loop data category yang unik dari database --}}
-                                @foreach($this->existing_categories as $item)
-                                <option value="{{ $item }}">{{ __($item) }}</option>
-                                @endforeach
-                            </select>
-                            <x-label-error :messages="$errors->get('category')" />
-                        </fieldset>
+                        {{-- Loop data category yang unik dari database --}}
+                        @foreach($this->existing_categories as $item)
+                        <option value="{{ $item }}">{{ __($item) }}</option>
+                        @endforeach
+                    </select>
+                    <x-label-error :messages="$errors->get('category')" />
+                </fieldset>
             </div>
-           <div class="flex flex-row gap-2">
+            <div class="flex flex-row gap-2">
                 <x-button.btn-tooltip wireClick="openModal" color="primary" icon="add" tooltip="Tambah Baru" />
-                 @livewire('administration.part-of-body.import-data')
+                @livewire('administration.part-of-body.import-data')
             </div>
         </div>
 
@@ -51,7 +50,7 @@
                             <td><span class="badge badge-ghost">{{ $part->category }}</span></td>
                             <td class="flex justify-center gap-2">
                                 <x-button.btn-tooltip wireClick="edit({{ $part->id }})" color="Warning" icon="edit" tooltip="Edit Data" />
-                                <x-button.btn-tooltip wireClick="delete({{ $part->id }})" color="error" icon="delete" tooltip="Hapus Data" onclick="confirm('Hapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $part->id }})"/>
+                                <x-button.btn-tooltip wireClick="delete({{ $part->id }})" color="error" icon="delete" tooltip="Hapus Data" onclick="confirm('Hapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $part->id }})" />
 
                             </td>
                         </tr>
@@ -99,13 +98,13 @@
                             <x-label-error :messages="$errors->get('category')" />
                         </fieldset>
                         @if($category === 'new_category')
-                            <x-form.input-text
-                                label="New Category Name"
-                                model="category"
-                                placeholder="Type new category name here..." required/>
+                        <x-form.input-text
+                            label="New Category Name"
+                            model="category"
+                            placeholder="Type new category name here..." required />
                         @endif
                         <x-form.input-text label="Kode (Slug)" model="code" placeholder="Contoh: head_eye_right" class="font-mono text-sm"
-                        required />
+                            required />
 
 
                     </div>
