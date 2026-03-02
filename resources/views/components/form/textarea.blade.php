@@ -7,7 +7,6 @@
     'required' => false,
     'disabled' => false,
 ])
-
 <div class="w-full">
     <label class="w-full mb-1 floating-label">
         <textarea
