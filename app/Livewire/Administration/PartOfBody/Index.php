@@ -105,6 +105,14 @@ class Index extends Component
         BodyPart::destroy($id);
         session()->flash('success', 'Data berhasil dihapus.');
     }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatatingFilterCategory()
+    {
+        $this->resetPage();
+    }
     public function paginationView()
     {
         return 'paginate.pagination';
