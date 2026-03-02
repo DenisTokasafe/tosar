@@ -24,7 +24,7 @@
                             <x-label-error :messages="$errors->get('category')" />
                         </fieldset>
             </div>
-            <div class="gap-4 ">
+            <div class="flex flex-shrink-0 gap-4">
                 <x-button.btn-tooltip wireClick="openModal" color="primary" icon="add" tooltip="Tambah Baru" />
                  @livewire('administration.part-of-body.import-data')
             </div>
