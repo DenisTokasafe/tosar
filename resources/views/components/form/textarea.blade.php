@@ -5,7 +5,7 @@
     'rows' => 3,
     'size' => 'text-xs',
     'required' => false,
-    'disabled' => false, {{-- Tambahkan prop baru --}}
+    'disabled' => false,
 ])
 
 <div class="w-full">

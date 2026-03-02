@@ -24,6 +24,7 @@ use App\Livewire\Administration\Locations\Location;
 use App\Livewire\Administration\Menu\ExtraSubMenu;
 use App\Livewire\Administration\Menu\ListMenu;
 use App\Livewire\Administration\Menu\ListSubMenu;
+use App\Livewire\Administration\PartOfBody\Index as PartOfBodyIndex;
 use App\Livewire\Administration\People\Compliance;
 use App\Livewire\Administration\People\Details as PeopleDetails;
 use App\Livewire\Administration\People\User;
@@ -129,8 +130,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/equipment-master', EquipmentMasterIndex::class)->name('equipment-master');
     Route::get('administration/equipment-master/inspection-checklist', InspectionChecklist::class)->name('inspection-checklist');
     Route::get('administration/compliances', CompliancesIndex::class)->name('compliances');
+    Route::get('administration/body-of-part', PartOfBodyIndex::class)->name('body-of-part');
 });
 // route download storage files
-
-
 require __DIR__ . '/auth.php';
