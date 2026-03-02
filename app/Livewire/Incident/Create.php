@@ -43,7 +43,7 @@ class Create extends Component
     public $RiskAssessment;
 
     public $risk_consequence;
-        // Pelapor
+    // Pelapor
     public $pelapors = [];
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
@@ -67,6 +67,10 @@ class Create extends Component
         'description' => 'required|string',
         'location' => 'required|string',
         'date_time' => 'required|date',
+        'pelapor_id' => 'required|exists:users,id',
+        'manualPelaporName' => 'nullable|string|max:255',
+        // ... rules lainnya
+
     ];
     public function nextStep()
     {
@@ -155,7 +159,7 @@ class Create extends Component
         ]);
     }
 
-     public function updatedSearchPelapor()
+    public function updatedSearchPelapor()
     {
         $this->reset('manualPelaporName');
         if (strlen($this->searchPelapor) > 1) {
