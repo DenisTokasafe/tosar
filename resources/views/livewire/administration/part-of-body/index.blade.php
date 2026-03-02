@@ -5,9 +5,8 @@
 
         <div class="flex flex-col items-center px-2 py-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
             <div class="flex flex-col gap-2 md:flex-row md:items-center">
-                <x-form.input-text label="{{ __('Cari nama bagian tubuh') }}" class="max-w-sm" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}" />
+                <x-form.input-floating label="{{ __('Cari nama bagian tubuh') }}" class="max-w-sm" model="search" placeholder="{{ __('Cari nama bagian tubuh') }}" />
                 <fieldset class="fieldset">
-                    <x-form.label label="{{ __('Pilih Kategori') }}" />
                     <select wire:model.live="filterCategory"
                         class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                         <option value="">-- Select Existing Category --</option>
