@@ -49,6 +49,8 @@ class Create extends Component
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
     public $manualPelaporName;
+
+    public $selectedBodyPartCategory;
     public function mount()
     {
         if (Auth::check()) {
