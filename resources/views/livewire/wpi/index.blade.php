@@ -386,12 +386,12 @@
                 </div>
             </div>
 
-            <div class="p-6 bg-white">
+            <div class="p-6 ">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold tracking-wider text-gray-700 uppercase">Nama Petugas Inspeksi /
                         Inspector</h3>
                     <button type="button" wire:click="addInspector"
-                        class="px-3 py-1 text-xs text-white transition {{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
+                        class="px-3 py-1 text-xs text-base-content transition {{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
                         + Tambah Petugas
                     </button>
                 </div>
@@ -463,7 +463,7 @@
             <div class="hidden lg:block">
                 <div class="p-6 overflow-x-auto border-t border-gray-200">
                     <table class="w-full text-xs text-left border border-collapse border-gray-300">
-                        <thead class="italic text-white uppercase bg-gray-800">
+                        <thead class="italic uppercase bg-gray-800 text-base-content">
                             <tr>
                                 <th class="w-8 p-2 text-center border border-gray-300">#</th>
                                 <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
