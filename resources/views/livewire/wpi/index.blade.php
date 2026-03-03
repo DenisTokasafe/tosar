@@ -1240,7 +1240,7 @@
             {{-- ===== FORM ACTION BUTTONS ===== --}}
 
             <div
-                class="flex flex-col items-center justify-between gap-4 p-6 border-t border-gray-200 bg-gray-50 md:flex-row">
+                class="flex flex-col items-center justify-between gap-4 p-6 border-t border-gray-200 md:flex-row">
                 <button type="button" wire:click="addFinding"
                     class="{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
                     + Tambah Baris Temuan
