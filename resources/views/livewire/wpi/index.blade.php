@@ -478,7 +478,7 @@
                         </thead>
                         <tbody>
                             @foreach ($findings as $index => $finding)
-                                <tr wire:key="find-{{ $index }}" class="align-top hover:bg-gray-50">
+                                <tr wire:key="find-{{ $index }}" class="align-top hover:bg-base-300">
                                     <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}
                                     </td>
                                     <td class="p-2 text-center border border-gray-300 ">
