@@ -24,7 +24,7 @@
 
         @foreach ($options as $option)
             <option value="{{ $option->$optionValue }}">
-                {{ $option->$optionLabel }}
+                {{ __($option->$optionLabel) }}
             </option>
         @endforeach
     </select>

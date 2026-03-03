@@ -146,13 +146,14 @@ class Create extends Component
             ? RiskAssessment::find($matrix->risk_assessment_id)
             : null;
     }
-     public function getExistingCategoryProperty()
+    public function getExistingCategoryProperty()
     {
-        return BodyPart::select('category')
+        return BodyPart::query()
+            ->select('category')
             ->distinct()
             ->whereNotNull('category')
             ->orderBy('category', 'asc')
-            ->pluck('category');
+            ->get(); // Mengembalikan Collection berisi objek dengan properti 'category'
     }
     public function render()
     {
