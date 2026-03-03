@@ -177,7 +177,9 @@
             <flux:separator text="{{ __('Bagian Tubuh yang Terluka') }}" />
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <x-form.select label="Kategori Bagian Tubuh" model="selectedBodyPartCategory" :options="$this->existingCategory" option-value="category" option-label="category" placeholder="-- {{__('Pilih Kategori Bagian Tubuh')}} --" required />
-                <x-form.select label="Detail Bagian Tubuh" model="selectedBodyPartCategory" :options="$detailsBodyPart" option-label="display_name" placeholder="-- {{__('Pilih Detail Bagian Tubuh')}} --" required />
+                @if ($selectedBodyPartCategory)
+                <x-form.select label="Detail Bagian Tubuh" model="selectedBodyPart" :options="$detailsBodyPart" option-label="display_name" placeholder="-- {{__('Pilih Detail Bagian Tubuh')}} --" required />
+                @endif
             </div>
         </div>
 
