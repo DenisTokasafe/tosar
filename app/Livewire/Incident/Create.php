@@ -150,12 +150,15 @@ class Create extends Component
     }
     public function getExistingCategoryProperty()
     {
+        // Definisikan urutan kategori secara manual
+        $order = "'Kepala', 'Tubuh Atas', 'Batang Tubuh', 'Tubuh Bawah', 'Lainnya'";
+
         return BodyPart::query()
             ->select('category')
             ->distinct()
             ->whereNotNull('category')
-            ->orderBy('category', 'asc')
-            ->get(); // Mengembalikan Collection berisi objek dengan properti 'category'
+            ->orderByRaw("FIELD(category, $order)")
+            ->get();
     }
     public function render()
     {
