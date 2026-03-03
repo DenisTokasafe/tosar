@@ -9,7 +9,7 @@
 
     <x-incident.layout>
         {{-- PROGRESS & STEPS VISUAL --}}
-        <ul class="absolute inset-x-0 top-0 z-10 steps lg:steps-horizontal bg-base-100 rounded-t-sm shadow-md">
+        <ul class="absolute inset-x-0 top-0 z-10 rounded-t-sm shadow-md steps lg:steps-horizontal bg-base-100">
             <li class="step {{ $currentStep >= 1 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Informasi Dasar</li>
             <li class="step {{ $currentStep >= 2 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Detail & Risiko</li>
             <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Dokumentasi</li>
