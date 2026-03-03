@@ -191,11 +191,10 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
                 let editorInstance = null;
-                let listeners = [];
+                let listeners = []; // Untuk menampung fungsi cleanup
 
                 return {
                     init() {
-                        // Cek jika sudah ada instance untuk menghindari double render
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
                         window.ClassicEditor
@@ -206,15 +205,14 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // 1. Ambil data awal dari Livewire
+                                // Set data awal
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // 2. Sinkronisasi ke Backend (Lazy update)
+                                // Sinkronisasi ke Backend
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    // Menggunakan true untuk 'defer' agar tidak request setiap ketikan (opsional)
-                                    this.$wire.set(modelName, data);
+                                    this.$wire.set(modelName, data, true);
 
                                     if (data.trim() !== '') {
                                         editorInstance.ui.view.editable.element.classList.remove('error');
@@ -223,27 +221,26 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- Listeners Event dari Livewire ---
-
-                        // Update data jika backend mengirim perintah update
+                        // Simpan listener agar bisa di-destroy nantinya (Best Practice Livewire v3)
                         listeners.push(Livewire.on('update-editor-data', (event) => {
-                            const payload = Array.isArray(event) ? event[0] : event;
-                            if (editorInstance && payload.name === modelName) {
-                                editorInstance.setData(payload.value || '');
+                            const data = Array.isArray(event) ? event[0] : event;
+                            if (editorInstance && data.name === modelName) {
+                                editorInstance.setData(data.value || '');
                             }
                         }));
 
-                        // Validasi Visual
-                        const applyErrorClass = () => {
+                        listeners.push(Livewire.on(`validate-${modelName}`, () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
                             }
-                        };
+                        }));
 
-                        listeners.push(Livewire.on(`validate-${modelName}`, applyErrorClass));
-                        listeners.push(Livewire.on('validate-all-editors', applyErrorClass));
+                        listeners.push(Livewire.on('validate-all-editors', () => {
+                            if (editorInstance && editorInstance.getData().trim() === '') {
+                                editorInstance.ui.view.editable.element.classList.add('error');
+                            }
+                        }));
 
-                        // Reset Editor
                         listeners.push(Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
@@ -252,27 +249,22 @@
                         }));
                     },
 
-                    // Fungsi ini otomatis dipanggil Alpine saat elemen dihapus dari DOM
                     destroy() {
-                        // 1. Unsubscribe semua event Livewire agar tidak memory leak
+                        // 1. Bersihkan event listeners Livewire agar tidak menumpuk di RAM
                         listeners.forEach(unsubscribe => {
                             if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                            else if (unsubscribe.unsubscribe) unsubscribe.unsubscribe();
                         });
-                        listeners = [];
 
-                        // 2. Hancurkan instance CKEditor dengan bersih
+                        // 2. Hancurkan instance CKEditor
                         if (editorInstance) {
                             editorInstance.destroy()
-                                .then(() => {
-                                    editorInstance = null;
-                                    console.log(`Editor ${modelName} destroyed.`);
-                                })
+                                .then(() => editorInstance = null)
                                 .catch(err => console.error('Destroy Error:', err));
                         }
                     }
                 }
-            });
+            })
         });
     </script>
     @stack('scripts')
