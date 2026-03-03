@@ -26,12 +26,12 @@
             @endif
             <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
-            <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required/>
+            <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required />
             <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
-                        :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
-                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                        addManualAction="addPelaporManual" clickaction="selectPelapor" />
+                modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
+                :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                addManualAction="addPelaporManual" clickaction="selectPelapor" />
         </div>
         @endif
         {{-- STEP 2: Detail Kejadian --}}
@@ -173,15 +173,17 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <div  class="w-full" wire:key="field-cronology">
+            <div class="w-full" wire:key="field-description-step2"> {{-- Key harus unik dan spesifik --}}
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
-                    <div x-data="ckeditorHelper('cronology')" >
+
+                    {{-- Gunakan wire:ignore di sini agar Livewire tidak merusak instance CKEditor --}}
+                    <div x-data="ckeditorHelper('description')" wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
-                    <x-label-error :messages="$errors->get('cronology')" />
-                </fieldset>
 
+                    <x-label-error :messages="$errors->get('description')" />
+                </fieldset>
             </div>
         </div>
 
