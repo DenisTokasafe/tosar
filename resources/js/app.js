@@ -5,6 +5,7 @@ import flatpickr from "flatpickr";
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index";
 import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/plugins/monthSelect/style.css";
+window.flatpickr = flatpickr
 import * as echarts from 'echarts';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 window.ClassicEditor = ClassicEditor;
@@ -18,7 +19,7 @@ Alpine.plugin(Anchor)
 Livewire.start()
 
 window.echarts = echarts
-window.flatpickr = flatpickr;
+
 window.monthSelectPlugin = monthSelectPlugin.default || monthSelectPlugin;
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (registration) {

@@ -8415,4 +8415,4 @@ focus-trap/dist/focus-trap.js:
   * focus-trap 6.9.4
   * @license MIT, https://github.com/focus-trap/focus-trap/blob/master/LICENSE
   *)
-*/window.Toastify=Rae;S2e.plugin(HEe);h2.start();window.ClassicEditor=lEe;window.echarts=oEe;window.flatpickr=ei;window.monthSelectPlugin=V4.default||V4;"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js",{scope:"/"}).then(function(n){}).catch(function(n){});
+*/window.Toastify=Rae;window.flatpickr=ei;window.ClassicEditor=lEe;S2e.plugin(HEe);h2.start();window.echarts=oEe;window.monthSelectPlugin=V4.default||V4;"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js",{scope:"/"}).then(function(n){}).catch(function(n){});
