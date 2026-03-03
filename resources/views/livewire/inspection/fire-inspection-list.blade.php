@@ -102,50 +102,8 @@
                     <x-label-error :messages="$errors->get('type')" />
                 </fieldset>
                 {{-- Bulan --}}
-                <fieldset class="w-full fieldset">
-                    <x-form.label label="Bulan" required />
+                <x-form.tgl label="Bulan" model="date" placeholder="Masukkan detail lokasi spesifik..." required />
 
-                    <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
-                        x-data="{
-                            fp: null,
-                            dateValue: @entangle('date').live,
-                            initFlatpickr() {
-                                // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
-                                this.$nextTick(() => {
-                                    if (this.fp) {
-                                        this.fp.destroy();
-                                    }
-
-                                    // Pastikan x-ref input tersedia
-                                    if (!this.$refs.input) return;
-
-                                    this.fp = flatpickr(this.$refs.input, {
-                                        static: true,
-                                        plugins: [
-                                            new monthSelectPlugin({
-                                                disableMobile: false,
-                                                shorthand: true,
-                                                dateFormat: 'M-Y',
-                                                altFormat: 'F Y',
-                                                theme: 'light'
-                                            })
-                                        ],
-                                        defaultDate: this.dateValue,
-                                        onChange: (selectedDates, dateStr) => {
-                                            this.dateValue = dateStr;
-                                        }
-                                    });
-                                });
-                            }
-                        }" x-init="initFlatpickr()"
-                        x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
-
-                        <input x-ref="input" type="text" readonly
-                            class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
-                            placeholder="Pilih bulan" />
-                    </div>
-                    <x-label-error :messages="$errors->get('date')" />
-                </fieldset>
                 <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
                     namedb="name" />
