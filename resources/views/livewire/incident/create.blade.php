@@ -178,14 +178,10 @@
                 <div class="{{ $currentStep == 2 ? 'block' : 'hidden' }} w-full" wire:key="container-description">
                     <fieldset class="mb-4 fieldset lg:col-span-2">
                         <x-form.label label="Kronologi Kejadian" required />
-
                         {{-- Tambahkan wire:ignore.self agar Livewire tidak merusak instance editor --}}
-                        <div x-data="ckeditorHelper('description')"
-                            x-init="init()"
-                            wire:ignore>
+                        <div x-data="ckeditorHelper('description')" x-init="init()" wire:ignore>
                             <div x-ref="editorElement"></div>
                         </div>
-
                         <x-label-error :messages="$errors->get('description')" />
                     </fieldset>
                 </div>
