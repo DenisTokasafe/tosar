@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\EventSubType;
@@ -144,6 +145,14 @@ class Create extends Component
         $this->RiskAssessment = $matrix
             ? RiskAssessment::find($matrix->risk_assessment_id)
             : null;
+    }
+     public function getExistingCategoryProperty()
+    {
+        return BodyPart::select('category')
+            ->distinct()
+            ->whereNotNull('category')
+            ->orderBy('category', 'asc')
+            ->pluck('category');
     }
     public function render()
     {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Builder;
+
 class BodyPart extends Model
 {
 
@@ -22,6 +23,13 @@ class BodyPart extends Model
         'code',
     ];
 
+    public function getDisplayNameAttribute()
+    {
+        $columnEn = 'name_en';
+        return (app()->getLocale() === 'en' && !empty($this->$columnEn))
+            ? $this->$columnEn
+            : $this->name;
+    }
     public function incidents(): BelongsToMany
     {
         return $this->belongsToMany(Incident::class, 'incident_body_parts', 'body_part_id', 'incident_id');
@@ -31,8 +39,8 @@ class BodyPart extends Model
     {
         return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('name_en', 'like', "%{$term}%")
-              ->orWhere('code', 'like', "%{$term}%");
+                ->orWhere('name_en', 'like', "%{$term}%")
+                ->orWhere('code', 'like', "%{$term}%");
         });
     }
 

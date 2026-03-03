@@ -216,11 +216,9 @@
     "Data berhasil disimpan.": "Data saved successfully.",
     "Data berhasil dihapus.": "Data deleted successfully.",
     "Nama (Bahasa Indonesia)": "Name (Indonesian)",
-    "Name (English)": "Name (English)"
-
-
-
-
-
-
+    "Name (English)": "Name (English)",
+    "Bagian Tubuh yang Terluka": "Injured Body Part",
+    "Kategori Bagian Tubuh": "Body Part Category",
+    "Detail Bagian Tubuh": "Body Part Detail",
+   "Pilih Kategori Bagian Tubuh": "Select Body Part Category"
 }
