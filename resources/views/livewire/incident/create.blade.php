@@ -174,6 +174,7 @@
             @endif
             <flux:separator variant="subtle" class="my-4" />
             <x-form.text_area label="Kronologi Kejadian" model="description" placeholder="Jelaskan kronologi kejadian..." required />
+
         </div>
 
         @endif
