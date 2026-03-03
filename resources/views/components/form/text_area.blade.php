@@ -19,7 +19,7 @@
         @if($model) wire:model.live="{{ $model }}" @endif
         placeholder="{{ $placeholder ?: $label }}"
         {{ $attributes->merge([
-            'class' => "textarea textarea-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
+            'class' => "textarea w-full textarea-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
             ($errors->has($model) ? 'border-rose-500 focus-within:border-rose-500' : '')
         ]) }}
     ></textarea> {{-- WAJIB ditutup seperti ini --}}
