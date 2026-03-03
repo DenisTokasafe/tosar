@@ -3,6 +3,7 @@ import Toastify from "toastify-js";
 window.Toastify = Toastify
 import flatpickr from "flatpickr";
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index";
+window.monthSelectPlugin = monthSelectPlugin.default || monthSelectPlugin;
 import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/plugins/monthSelect/style.css";
 window.flatpickr = flatpickr
@@ -20,7 +21,7 @@ Livewire.start()
 
 window.echarts = echarts
 
-window.monthSelectPlugin = monthSelectPlugin.default || monthSelectPlugin;
+
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (registration) {
     }).catch(function (registrationError) {

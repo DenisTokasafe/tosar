@@ -36,7 +36,7 @@
         @endif
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
-        <div class="md:mt-12">
+        <div class="md:mt-12" wire:key="step-2">
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
                 <div class="space-y-4 md:grow">
@@ -188,7 +188,7 @@
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
-        <div class="grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2 lg:grid-cols-3 md:mt-12">
+        <div class="grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2 lg:grid-cols-3 md:mt-12" wire:key>
             <fieldset class=" fieldset">
                 <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="documentation_description"
                     :file="$documentation_description" />
