@@ -195,7 +195,7 @@
 
                 return {
                     init() {
-                        // Mencegah duplikasi: Jika elemen ck-editor sudah ada di dalam, jangan buat lagi
+                        // PENGAMAN 1: Jangan inisialisasi jika elemen sudah punya editor
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
                         window.ClassicEditor
@@ -206,24 +206,23 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // Set data awal dari Livewire
+                                // Ambil data terakhir dari Livewire (agar teks tidak hilang saat balik step)
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // Sinkronisasi ke Livewire
+                                // Sinkronisasi ke Livewire (setiap ada perubahan ketikan)
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
                                     this.$wire.set(modelName, data);
 
-                                    // Reset error class jika user mulai mengetik
                                     if (data.trim() !== '' && editorInstance.ui.view.editable.element) {
                                         editorInstance.ui.view.editable.element.classList.remove('error');
                                     }
                                 });
                             })
-                            .catch(error => console.error('CKEditor Init Error:', error));
+                            .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- Event Listeners (Aman untuk halaman lain) ---
+                        // --- Listeners (Event dari Livewire) ---
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const payload = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && payload.name === modelName) {
@@ -231,16 +230,15 @@
                             }
                         }));
 
-                        // Helper function untuk validasi agar tidak duplikasi kode
-                        const handleError = () => {
+                        const applyError = () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 const el = editorInstance.ui.view.editable.element;
                                 if (el) el.classList.add('error');
                             }
                         };
 
-                        listeners.push(Livewire.on(`validate-${modelName}`, handleError));
-                        listeners.push(Livewire.on('validate-all-editors', handleError));
+                        listeners.push(Livewire.on(`validate-${modelName}`, applyError));
+                        listeners.push(Livewire.on('validate-all-editors', applyError));
 
                         listeners.push(Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
@@ -251,22 +249,22 @@
                         }));
                     },
 
-                    // BAGIAN PENTING: Menangani sistem Step/Tab/Modal
+                    // PENGAMAN 2: Otomatis dipanggil Alpine saat User pindah Step
                     destroy() {
-                        // Hapus listener Livewire agar tidak menumpuk di memori
+                        // Bersihkan memory dari listeners Livewire
                         listeners.forEach(unsubscribe => {
                             if (typeof unsubscribe === 'function') unsubscribe();
                             else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
                         });
                         listeners = [];
 
-                        // Hancurkan instance CKEditor jika elemen ini dihancurkan (pindah step)
+                        // Hancurkan instance CKEditor agar ID-nya bisa dipakai lagi saat balik ke Step 2
                         if (editorInstance) {
                             editorInstance.destroy()
                                 .then(() => {
                                     editorInstance = null;
                                 })
-                                .catch(err => console.error('CKEditor Destroy Error:', err));
+                                .catch(err => console.error('Destroy Error:', err));
                         }
                     }
                 }
