@@ -463,7 +463,7 @@
             <div class="hidden lg:block">
                 <div class="p-6 overflow-x-auto border-t border-primary">
                     <table class="w-full text-xs text-left border border-collapse border-primary/80">
-                        <thead class="italic uppercase bg-base-100 text-base-content">
+                        <thead class="italic uppercase bg-base-300 text-base-content">
                             <tr>
                                 <th class="w-8 p-2 text-center border border-primary/80">#</th>
                                 <th class="w-24 p-2 text-center border border-primary/80">OHS Risk</th>
