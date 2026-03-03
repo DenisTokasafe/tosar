@@ -19,6 +19,7 @@
         reportDate: @entangle($model),
         fp: null,
         init() {
+         static: true,
             this.fp = flatpickr(this.$refs.tanggalInput, {
                 disableMobile: true,
                 altInput: true,
