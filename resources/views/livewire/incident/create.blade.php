@@ -173,19 +173,7 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <div class="w-full" wire:key="container-description-step-2">
-                <fieldset class="mb-4 fieldset lg:col-span-2">
-                    <x-form.label label="Kronologi Kejadian" required />
-
-                    <div x-data="ckeditorHelper('description')"
-                        wire:ignore
-                        wire:key="editor-description-instance">
-                        <div x-ref="editorElement"></div>
-                    </div>
-
-                    <x-label-error :messages="$errors->get('description')" />
-                </fieldset>
-            </div>
+            <x-form.text_area label="Kronologi Kejadian" model="description" placeholder="Jelaskan kronologi kejadian..." required />
         </div>
 
         @endif
