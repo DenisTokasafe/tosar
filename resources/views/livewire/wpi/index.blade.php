@@ -254,7 +254,7 @@
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
 
-            <div class="p-6 border-b border-gray-200 bg-gray-50">
+            <div class="p-6 border-b border-gray-200 ">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
                         <fieldset class="relative fieldset">
