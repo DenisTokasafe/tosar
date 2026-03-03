@@ -462,26 +462,26 @@
             </div>
             <div class="hidden lg:block">
                 <div class="p-6 overflow-x-auto border-t border-primary">
-                    <table class="w-full text-xs text-left border border-collapse border-gray-300">
+                    <table class="w-full text-xs text-left border border-collapse border-primary/80">
                         <thead class="italic uppercase bg-gray-800 text-base-content">
                             <tr>
-                                <th class="w-8 p-2 text-center border border-gray-300">#</th>
-                                <th class="w-24 p-2 text-center border border-gray-300">OHS Risk</th>
-                                <th class="p-2 border border-gray-300">Uraian Temuan & Foto / Descibe Unsafe Act &
+                                <th class="w-8 p-2 text-center border border-primary/80">#</th>
+                                <th class="w-24 p-2 text-center border border-primary/80">OHS Risk</th>
+                                <th class="p-2 border border-primary/80">Uraian Temuan & Foto / Descibe Unsafe Act &
                                     Photo
                                 </th>
-                                <th class="p-2 border border-gray-300">Tindakan Pencegahan & Foto / Prevention Action &
+                                <th class="p-2 border border-primary/80">Tindakan Pencegahan & Foto / Prevention Action &
                                     Photo</th>
-                                <th class="w-48 p-2 border border-gray-300">Tindak Lanjut/ Follow Up</th>
-                                <th class="w-12 p-2 text-center border border-gray-300">Aksi</th>
+                                <th class="w-48 p-2 border border-primary/80">Tindak Lanjut/ Follow Up</th>
+                                <th class="w-12 p-2 text-center border border-primary/80">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($findings as $index => $finding)
                                 <tr wire:key="find-{{ $index }}" class="align-top hover:bg-base-200">
-                                    <td class="p-2 font-bold text-center border border-gray-300">{{ $index + 1 }}
+                                    <td class="p-2 font-bold text-center border border-primary/80">{{ $index + 1 }}
                                     </td>
-                                    <td class="p-2 text-center border border-gray-300 ">
+                                    <td class="p-2 text-center border border-primary/80 ">
                                         {{-- Select OHS Risk --}}
                                         <select wire:model="findings.{{ $index }}.ohs_risk"
                                             {{ $isDisabled ? 'disabled' : '' }}
@@ -499,7 +499,7 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td class="p-2 border border-gray-300">
+                                    <td class="p-2 border border-primary/80">
                                         {{-- Input Textarea Deskripsi --}}
                                         <x-form.textarea label="Deskripsi Temuan" required :disabled="$isDisabled"
                                             model="findings.{{ $index }}.description" />
@@ -626,7 +626,7 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="p-2 border border-gray-300">
+                                    <td class="p-2 border border-primary/80">
                                         {{-- Input Textarea --}}
                                         <x-form.textarea label="Tindakan pencegahan" required :disabled="$isDisabled"
                                             placeholder="Tindakan pencegahan..."
@@ -751,7 +751,7 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="p-2 space-y-2 border border-gray-300">
+                                    <td class="p-2 space-y-2 border border-primary/80">
                                         <x-form.searchable-select-advanced label="Person in charge (PIC)"
                                             placeholder="Cari dan klik nama..." :disabled="$isDisabled"
                                             modelsearch="search_pic.{{ $index }}"
@@ -852,7 +852,7 @@
                                             <x-label-error :messages="$errors->get('findings.' . $index . '.completion_date')" />
                                         </fieldset>
                                     </td>
-                                    <td class="p-2 text-center border border-gray-300">
+                                    <td class="p-2 text-center border border-primary/80">
                                         @if (count($findings) > 1)
                                             <button type="button" wire:click="removeFinding({{ $index }})"
                                                 class="btn btn-xs btn-square btn-error {{ $isDisabled ? 'btn-disabled cursor-not-allowed' : '' }}">
