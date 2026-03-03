@@ -9,7 +9,7 @@
 
     <x-incident.layout>
         {{-- PROGRESS & STEPS VISUAL --}}
-        <ul class="absolute inset-x-0 top-0 z-10 border-t rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100">
+        <ul class="absolute inset-x-0 top-0 z-10 border-t rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100 border-l-0 border-r-0">
             <li class="step {{ $currentStep >= 1 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Informasi Dasar</li>
             <li class="step {{ $currentStep >= 2 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Detail & Risiko</li>
             <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Dokumentasi</li>
@@ -200,7 +200,6 @@
                 </div>
             </fieldset>
         </div>
-
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
@@ -256,5 +255,4 @@
                 @endif
         </div>
     </x-incident.layout>
-
 </section>
