@@ -2,30 +2,29 @@
     'label' => null,
     'placeholder' => '',
     'model' => null,
-    'type' => 'text',
-    'size' => 'input-xs',
+    'size' => 'textarea-xs',
     'required' => false,
-     'disabled' => false,
+    'disabled' => false,
 ])
 
 <fieldset class="w-full fieldset">
-    {{-- Label dengan indikator required --}}
-   @if ($label)
+    {{-- Label --}}
+    @if ($label)
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- Input Element --}}
-    <textarea  {{ $disabled ? 'disabled' : '' }}
-        type="{{ $type }}"
-        {{ $model ? "wire:model.live=$model" : '' }}
+    {{-- Textarea Element --}}
+    <textarea
+        @if($disabled) disabled @endif
+        @if($model) wire:model.live="{{ $model }}" @endif
         placeholder="{{ $placeholder ?: $label }}"
         {{ $attributes->merge([
-            'class' => "textarea textarea-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
-            ($errors->has($model) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '')
+            'class' => "textarea textarea-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
+            ($errors->has($model) ? 'border-rose-500 focus-within:border-rose-500' : '')
         ]) }}
-    />
+    ></textarea> {{-- WAJIB ditutup seperti ini --}}
 
-    {{-- Penanganan Error Otomatis --}}
+    {{-- Error Handling --}}
     @if($model)
         <x-label-error :messages="$errors->get($model)" />
     @endif
