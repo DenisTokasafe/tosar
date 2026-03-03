@@ -176,7 +176,7 @@
             <div class="w-full" wire:key="field-description">
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
-                    <div x-data="ckeditorHelper('description')" wire:ignore>
+                    <div x-data="ckeditorHelper('description')" wire:ignore.self>
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
