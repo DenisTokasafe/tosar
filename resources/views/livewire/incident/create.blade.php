@@ -9,14 +9,14 @@
 
     <x-incident.layout>
         {{-- PROGRESS & STEPS VISUAL --}}
-        <ul class="absolute inset-x-0 top-0 z-10 border-t rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100 border-l-0 border-r-0">
+        <ul class="absolute inset-x-0 top-0 z-10 border-t border-l-0 border-r-0 rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100">
             <li class="step {{ $currentStep >= 1 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Informasi Dasar</li>
             <li class="step {{ $currentStep >= 2 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Detail & Risiko</li>
             <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">Dokumentasi</li>
         </ul>
         {{-- STEP 1: Info Dasar --}}
         @if($currentStep == 1)
-        <div class="grid grid-cols-1 gap-4 space-y-4 md:mt-12 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 mt-12 space-y-4 md:grid-cols-2 lg:grid-cols-3">
             <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
             <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation" modelid="location_id"
                 :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
@@ -36,7 +36,7 @@
         @endif
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
-        <div class="md:mt-12">
+        <div class="mt-12">
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
                 <div class="space-y-4 md:grow">
@@ -203,7 +203,7 @@
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
-        <div class="grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2 lg:grid-cols-3 md:mt-12">
+        <div class="grid grid-cols-1 gap-4 mt-12 space-y-4 md:grid-cols-2 lg:grid-cols-3">
             <fieldset class=" fieldset">
                 <x-form.upload label="Lampirkan Foto Dokumentasi Deskripsi" model="documentation_description"
                     :file="$documentation_description" />
