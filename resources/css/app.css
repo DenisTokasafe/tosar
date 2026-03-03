@@ -5,6 +5,7 @@
 @import "flatpickr/dist/themes/airbnb.css";
 @import "flag-icons/css/flag-icons.min.css";
 
+
 /* --- 2. SOURCES --- */
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

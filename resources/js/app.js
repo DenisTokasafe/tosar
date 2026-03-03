@@ -7,6 +7,14 @@ import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/plugins/monthSelect/style.css";
 import * as echarts from 'echarts';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Anchor from '@alpinejs/anchor'
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm.js';
+
+// Daftarkan plugin di sini
+Alpine.plugin(Anchor)
+
+// Start Livewire
+Livewire.start()
 window.ClassicEditor = ClassicEditor;
 window.echarts = echarts
 window.flatpickr = flatpickr;
