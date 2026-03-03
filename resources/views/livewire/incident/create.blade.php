@@ -173,7 +173,7 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <div class="w-full" wire:key="field-description">
+            <div class="w-full" wire:key="field-description-step-2">
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
                     <div x-data="ckeditorHelper('description')" wire:ignore>

@@ -191,10 +191,11 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
                 let editorInstance = null;
-                let listeners = []; // Untuk menampung fungsi cleanup
+                let listeners = [];
 
                 return {
                     init() {
+                        // Mencegah duplikasi: Jika elemen ck-editor sudah ada di dalam, jangan buat lagi
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
                         window.ClassicEditor
@@ -205,66 +206,71 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // Set data awal
+                                // Set data awal dari Livewire
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // Sinkronisasi ke Backend
+                                // Sinkronisasi ke Livewire
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    this.$wire.set(modelName, data, true);
+                                    this.$wire.set(modelName, data);
 
-                                    if (data.trim() !== '') {
+                                    // Reset error class jika user mulai mengetik
+                                    if (data.trim() !== '' && editorInstance.ui.view.editable.element) {
                                         editorInstance.ui.view.editable.element.classList.remove('error');
                                     }
                                 });
                             })
-                            .catch(error => console.error('CKEditor Error:', error));
+                            .catch(error => console.error('CKEditor Init Error:', error));
 
-                        // Simpan listener agar bisa di-destroy nantinya (Best Practice Livewire v3)
+                        // --- Event Listeners (Aman untuk halaman lain) ---
                         listeners.push(Livewire.on('update-editor-data', (event) => {
-                            const data = Array.isArray(event) ? event[0] : event;
-                            if (editorInstance && data.name === modelName) {
-                                editorInstance.setData(data.value || '');
+                            const payload = Array.isArray(event) ? event[0] : event;
+                            if (editorInstance && payload.name === modelName) {
+                                editorInstance.setData(payload.value || '');
                             }
                         }));
 
-                        listeners.push(Livewire.on(`validate-${modelName}`, () => {
+                        // Helper function untuk validasi agar tidak duplikasi kode
+                        const handleError = () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
-                                editorInstance.ui.view.editable.element.classList.add('error');
+                                const el = editorInstance.ui.view.editable.element;
+                                if (el) el.classList.add('error');
                             }
-                        }));
+                        };
 
-                        listeners.push(Livewire.on('validate-all-editors', () => {
-                            if (editorInstance && editorInstance.getData().trim() === '') {
-                                editorInstance.ui.view.editable.element.classList.add('error');
-                            }
-                        }));
+                        listeners.push(Livewire.on(`validate-${modelName}`, handleError));
+                        listeners.push(Livewire.on('validate-all-editors', handleError));
 
                         listeners.push(Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
-                                editorInstance.ui.view.editable.element.classList.remove('error');
+                                const el = editorInstance.ui.view.editable.element;
+                                if (el) el.classList.remove('error');
                             }
                         }));
                     },
 
+                    // BAGIAN PENTING: Menangani sistem Step/Tab/Modal
                     destroy() {
-                        // 1. Bersihkan event listeners Livewire agar tidak menumpuk di RAM
+                        // Hapus listener Livewire agar tidak menumpuk di memori
                         listeners.forEach(unsubscribe => {
                             if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
                         });
+                        listeners = [];
 
-                        // 2. Hancurkan instance CKEditor
+                        // Hancurkan instance CKEditor jika elemen ini dihancurkan (pindah step)
                         if (editorInstance) {
                             editorInstance.destroy()
-                                .then(() => editorInstance = null)
-                                .catch(err => console.error('Destroy Error:', err));
+                                .then(() => {
+                                    editorInstance = null;
+                                })
+                                .catch(err => console.error('CKEditor Destroy Error:', err));
                         }
                     }
                 }
-            })
+            });
         });
     </script>
     @stack('scripts')
