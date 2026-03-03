@@ -191,28 +191,10 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('ckeditorHelper', (modelName) => {
                 let editorInstance = null;
-                let listeners = [];
+                let listeners = []; // Untuk menampung fungsi cleanup
 
                 return {
                     init() {
-                        // 1. Coba inisialisasi saat pertama kali Alpine load (jika elemen sudah ada)
-                        this.$nextTick(() => this.initEditor());
-
-                        // 2. Pantau perpindahan step Livewire secara aktif
-                        this.$watch('$wire.currentStep', (newStep) => {
-                            // Kita beri delay kecil 50-100ms agar Livewire selesai memproses DOM
-                            // dan elemen x-ref benar-benar sudah muncul di layar.
-                            setTimeout(() => {
-                                this.initEditor();
-                            }, 100);
-                        });
-                    },
-
-                    initEditor() {
-                        // Validasi: Berhenti jika elemen target tidak ditemukan di DOM
-                        if (!this.$refs.editorElement) return;
-
-                        // Validasi: Berhenti jika elemen sudah memiliki instance CKEditor (mencegah duplikasi)
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
                         window.ClassicEditor
@@ -223,14 +205,13 @@
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // Ambil data terbaru dari backend Livewire
+                                // Set data awal
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // Sinkronisasi input user ke Backend
+                                // Sinkronisasi ke Backend
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
-                                    // 'true' berarti lazy/silent update agar tidak mengganggu fokus mengetik
                                     this.$wire.set(modelName, data, true);
 
                                     if (data.trim() !== '') {
@@ -240,13 +221,7 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // Register Livewire Listeners (Hanya dilakukan sekali)
-                        if (listeners.length === 0) {
-                            this.registerListeners();
-                        }
-                    },
-
-                    registerListeners() {
+                        // Simpan listener agar bisa di-destroy nantinya (Best Practice Livewire v3)
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
@@ -255,6 +230,12 @@
                         }));
 
                         listeners.push(Livewire.on(`validate-${modelName}`, () => {
+                            if (editorInstance && editorInstance.getData().trim() === '') {
+                                editorInstance.ui.view.editable.element.classList.add('error');
+                            }
+                        }));
+
+                        listeners.push(Livewire.on('validate-all-editors', () => {
                             if (editorInstance && editorInstance.getData().trim() === '') {
                                 editorInstance.ui.view.editable.element.classList.add('error');
                             }
@@ -269,21 +250,18 @@
                     },
 
                     destroy() {
-                        // Bersihkan instance saat elemen dibuang (pindah step keluar dari area editor)
-                        if (editorInstance) {
-                            editorInstance.destroy()
-                                .then(() => {
-                                    editorInstance = null;
-                                })
-                                .catch(err => console.error('Destroy Error:', err));
-                        }
-
-                        // Unsubscribe Livewire events
+                        // 1. Bersihkan event listeners Livewire agar tidak menumpuk di RAM
                         listeners.forEach(unsubscribe => {
                             if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                            else if (unsubscribe.unsubscribe) unsubscribe.unsubscribe();
                         });
-                        listeners = [];
+
+                        // 2. Hancurkan instance CKEditor
+                        if (editorInstance) {
+                            editorInstance.destroy()
+                                .then(() => editorInstance = null)
+                                .catch(err => console.error('Destroy Error:', err));
+                        }
                     }
                 }
             })
