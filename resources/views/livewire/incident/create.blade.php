@@ -173,13 +173,13 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <div wire:ignore class="w-full" wire:key="field-description">
+            <div  class="w-full" wire:key="field-cronology">
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
-                    <div x-data="ckeditorHelper('description')" >
+                    <div x-data="ckeditorHelper('cronology')" >
                         <div x-ref="editorElement"></div>
                     </div>
-                    <x-label-error :messages="$errors->get('description')" />
+                    <x-label-error :messages="$errors->get('cronology')" />
                 </fieldset>
 
             </div>
