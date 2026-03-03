@@ -13,7 +13,7 @@
         @endif
     </div>
     @if ($reportId)
-        <div class="mb-2 border shadow-md border-base-100 card bg-base-100">
+        <div class="mb-2 border shadow-md border-primary card bg-base-100">
             <div class="px-4 py-2 card-body">
                 {{-- STATUS + Tombol Audit Trail --}}
                 <div class="flex items-center justify-between">
@@ -220,7 +220,7 @@
                                                         $label = ucfirst(str_replace(['_id', '_'], ['', ' '], $field));
                                                     @endphp
 
-                                                    <div class="text-[10px] border-l-2 border-base-100 pl-2 ml-1 mb-1">
+                                                    <div class="text-[10px] border-l-2 border-primary pl-2 ml-1 mb-1">
                                                         <strong class="text-gray-600">{{ $label }}</strong>:
                                                         <span
                                                             class="text-red-500 line-through">{{ $oldValue ?: '-' }}</span>
@@ -254,7 +254,7 @@
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
         <form wire:submit.prevent="save" class="overflow-hidden border rounded-lg shadow-xl border-base-200">
 
-            <div class="p-6 border-b border-base-100 ">
+            <div class="p-6 border-b border-primary ">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="space-y-4">
                         <fieldset class="relative fieldset">
@@ -461,7 +461,7 @@
                 </div>
             </div>
             <div class="hidden lg:block">
-                <div class="p-6 overflow-x-auto border-t border-base-100">
+                <div class="p-6 overflow-x-auto border-t border-primary">
                     <table class="w-full text-xs text-left border border-collapse border-gray-300">
                         <thead class="italic uppercase bg-gray-800 text-base-content">
                             <tr>
@@ -1240,7 +1240,7 @@
             {{-- ===== FORM ACTION BUTTONS ===== --}}
 
             <div
-                class="flex flex-col items-center justify-between gap-4 p-6 border-t border-base-100 md:flex-row">
+                class="flex flex-col items-center justify-between gap-4 p-6 border-t border-primary md:flex-row">
                 <button type="button" wire:click="addFinding"
                     class="{{ $isDisabled ? 'btn btn-xs btn-disabled cursor-not-allowed' : 'btn btn-xs btn-info ' }} ">
                     + Tambah Baris Temuan
