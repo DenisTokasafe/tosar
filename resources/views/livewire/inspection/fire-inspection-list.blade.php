@@ -105,10 +105,10 @@
                 <fieldset class="w-full fieldset">
                     <x-form.label label="Bulan" required />
 
-                    <div class="w-full" wire:ignore.self wire:key="manhours-month-picker-{{ time() }}"
+                    <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
                         x-data="{
                             fp: null,
-                            dateValue: @entangle('date').live,
+                            dateValue: @entangle('date_export').live,
                             initFlatpickr() {
                                 // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
                                 this.$nextTick(() => {
@@ -144,7 +144,7 @@
                             class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
                             placeholder="Pilih bulan" />
                     </div>
-                    <x-label-error :messages="$errors->get('date')" />
+                    <x-label-error :messages="$errors->get('date_export')" />
                 </fieldset>
                 <x-form.searchable-dropdown label="Area" required modelsearch="searchLocation" modelid="location_id"
                     placeholder="Area..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"

@@ -22,6 +22,7 @@ class FireInspectionList extends Component
     public $fields = [];
     public $type;
     public $date;
+    public $date_export;
     public $area;
     public $search_type = '';
     public $location_id;
@@ -38,6 +39,10 @@ class FireInspectionList extends Component
         $this->resetPage();
     }
     public function updatingDate()
+    {
+        $this->resetPage();
+    }
+    public function updatingDateExport()
     {
         $this->resetPage();
     }
@@ -246,7 +251,7 @@ class FireInspectionList extends Component
     public function isFormIncomplete(): bool
     {
         // Mengembalikan true jika ada salah satu field yang kosong
-        return empty($this->type) || empty($this->date) || empty($this->location_id);
+        return empty($this->type) || empty($this->date_export) || empty($this->location_id);
     }
     public function paginationView()
     {
