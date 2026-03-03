@@ -46,39 +46,48 @@
             text-transform: uppercase;
         }
 
-        /* Style Baru untuk Lampiran Foto */
+        /* --- Perbaikan Style Lampiran Foto --- */
         .photo-section {
             page-break-before: always;
             margin-top: 20px;
-        }
-
-        .photo-grid {
             width: 100%;
         }
 
-        .photo-card {
-            width: 31%;
-            display: inline-block;
-            margin: 1%;
-            border: 1px solid #000;
+        .photo-table {
+            width: 100%;
+            table-layout: fixed; /* Memaksa kolom bagi rata */
+            border-collapse: separate;
+            border-spacing: 5px; /* Jarak antar kotak */
+        }
+
+        .photo-card-td {
             vertical-align: top;
+            border: 1px solid #000;
             background-color: #fff;
+            padding: 0;
+        }
+
+        .photo-img-container {
+            padding: 5px;
         }
 
         .photo-img {
             width: 100%;
-            height: 160px;
+            height: 150px; /* Tinggi proporsional untuk landscape */
             object-fit: cover;
-            border-bottom: 1px solid #000;
+            display: block;
         }
 
-        .photo-caption {
+        .photo-info {
+            background-color: #fcd5b4;
+            border-top: 1px solid #000;
             padding: 5px;
-            text-align: left;
             font-size: 7pt;
+            min-height: 55px;
             line-height: 1.2;
         }
 
+        /* --- Footer & Legend --- */
         .good {
             font-family: DejaVu Sans, sans-serif;
             color: green;
@@ -117,14 +126,16 @@
     <header>
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;"><img
-                        src="{{ public_path('images/logo-msm.png') }}" width="60"></td>
+                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;">
+                    <img src="{{ public_path('images/logo-msm.png') }}" width="60">
+                </td>
                 <td style="border-bottom: 2px solid #999; width: 70%; text-align: center;">
                     <strong style="font-size: 14pt;">TOKA TINDUNG PROJECT</strong><br>
                     <strong style="font-size: 11pt;">LAPORAN INSPEKSI {{ strtoupper($type) }}</strong>
                 </td>
-                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;"><img
-                        src="{{ public_path('images/logo-archi.png') }}" width="60"></td>
+                <td style="border-bottom: 2px solid #999; width: 15%; text-align: center;">
+                    <img src="{{ public_path('images/logo-archi.png') }}" width="60">
+                </td>
             </tr>
         </table>
     </header>
@@ -170,34 +181,21 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }}
-                        </td>
+                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }} </td>
                         <td>
                             @php
-                                // Hapus filter kosong agar hitungan $loop->last akurat
-                                $daftarNama = array_filter(
-                                    explode('|', $item->inspected_by ?? ''),
-                                    fn($n) => !empty(trim($n)),
-                                );
+                                $daftarNama = array_filter(explode('|', $item->inspected_by ?? ''), fn($n) => !empty(trim($n)));
                             @endphp
-
                             @foreach ($daftarNama as $namaOrang)
                                 @php
-                                    // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
-$search = ['"', ','];
-$replace = ['', ' '];
-$cleanName = str_replace($search, $replace, $namaOrang);
-
-// 2. Ambil inisial
-$initials = collect(preg_split('/\s+/', trim($cleanName)))
-    ->filter()
-    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-    ->implode('');
+                                    $search = ['"', ','];
+                                    $cleanName = str_replace($search, '', $namaOrang);
+                                    $initials = collect(preg_split('/\s+/', trim($cleanName)))
+                                        ->filter()
+                                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                                        ->implode('');
                                 @endphp
-
-                                {{ $initials }}@if (!$loop->last)
-                                    ,
-                                @endif
+                                {{ $initials }}@if (!$loop->last), @endif
                             @endforeach
                         </td>
                         <td style="text-align: left;">{{ $item->remarks }}</td>
@@ -205,95 +203,78 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                 @endforeach
             </tbody>
         </table>
+
         <div class="photo-section" style="font-family: Arial, sans-serif;">
-            <div
-                style="background-color: #eee; padding: 5px; text-align: center; border: 1px solid #000; margin-bottom: 20px;">
+            <div style="background-color: #eee; padding: 5px; text-align: center; border: 1px solid #000; margin-bottom: 10px;">
                 <strong style="font-size: 10pt; letter-spacing: 1px;">LAMPIRAN DOKUMENTASI FOTO</strong>
             </div>
 
             @php
                 $firstItem = $data->first();
-                $areaPhotoPath =
-                    $firstItem && $firstItem->inspectionSession ? $firstItem->inspectionSession->area_photo_path : null;
-
-                $documentationPhotos = $data->filter(
-                    fn($item) => $item->documentation_path &&
-                        file_exists(storage_path('app/public/' . $item->documentation_path)),
-                );
-
+                $areaPhotoPath = $firstItem && $firstItem->inspectionSession ? $firstItem->inspectionSession->area_photo_path : null;
+                $documentationPhotos = $data->filter(fn($item) => $item->documentation_path && file_exists(storage_path('app/public/' . $item->documentation_path)));
                 $areaPhotoExists = $areaPhotoPath && file_exists(storage_path('app/public/' . $areaPhotoPath));
+
+                // Gabungkan semua item yang akan ditampilkan di grid
+                $gridItems = collect();
+                if($areaPhotoExists) {
+                    $gridItems->push(['type' => 'area', 'path' => $areaPhotoPath]);
+                }
+                foreach($documentationPhotos as $photo) {
+                    $gridItems->push(['type' => 'doc', 'data' => $photo]);
+                }
             @endphp
 
-            <div style="width: 100%; display: block;">
-                {{-- 1. FOTO INSPEKSI AREA (KIRI) --}}
-                @if ($areaPhotoExists)
-                    <div
-                        style="width: 30%; float: left; margin-right: 20px; border: 1px solid #000; box-sizing: border-box;">
-                        <div style="padding: 5px;">
-                            <img src="{{ storage_path('app/public/' . $areaPhotoPath) }}"
-                                style="width: 100%; height: 200px; object-fit: cover; display: block;">
-                        </div>
-                        <div
-                            style="background-color: #fcd5b4; border-top: 1px solid #000; padding: 10px; min-height: 60px;">
-                            <span style="font-size: 11pt; font-weight: bold;">Foto Inspeksi Area :</span><br>
-                            <span style="font-size: 11pt; color: blue; text-decoration: underline;">
-                                {{ $firstItem->inspectionSession->area_name ?? 'Environment' }}
-                            </span>
-                        </div>
-                    </div>
-                @endif
-
-                {{-- 2. FOTO DOKUMENTASI (KANAN - BERJEJER) --}}
-                @foreach ($documentationPhotos as $item)
-                    <div
-                        style="width: 25%; float: left; margin-right: 15px; border: 1px solid #000; box-sizing: border-box; margin-bottom: 20px;">
-                        <div style="padding: 5px;">
-                            <img src="{{ storage_path('app/public/' . $item->documentation_path) }}"
-                                style="width: 100%; height: 200px; object-fit: cover; display: block;">
-                        </div>
-                        <div
-                            style="background-color: #fcd5b4; border-top: 1px solid #000; padding: 8px; font-size: 9pt; min-height: 80px;">
-                            <strong>No:</strong> {{ $loop->iteration }}<br>
-                            <strong>Lokasi :</strong>
-                            {{ $item->equipmentMaster->specific_location ?? 'Environment' }}<br>
-                            <strong>Ket :</strong> {{ Str::limit($item->remarks ?? '-', 30) }}
-                        </div>
-                    </div>
-                @endforeach
-
-                <div style="clear: both;"></div>
-            </div>
-
-            @if (!$areaPhotoExists && $documentationPhotos->isEmpty())
+            @if($gridItems->isEmpty())
                 <div style="text-align: center; color: #999; padding: 40px; border: 1px dashed #ccc;">
                     Tidak ada lampiran foto dokumentasi.
                 </div>
+            @else
+                <table class="photo-table">
+                    @foreach ($gridItems->chunk(4) as $chunk)
+                        <tr>
+                            @foreach ($chunk as $cell)
+                                <td class="photo-card-td">
+                                    <div class="photo-img-container">
+                                        @php $path = ($cell['type'] == 'area') ? $cell['path'] : $cell['data']->documentation_path; @endphp
+                                        <img src="{{ storage_path('app/public/' . $path) }}" class="photo-img">
+                                    </div>
+                                    <div class="photo-info">
+                                        @if($cell['type'] == 'area')
+                                            <strong>Foto Inspeksi Area :</strong><br>
+                                            <span style="color: blue; text-decoration: underline;">
+                                                {{ $firstItem->inspectionSession->area_name ?? 'Environment' }}
+                                            </span>
+                                        @else
+                                            <strong>No:</strong> {{ $loop->parent->index * 4 + $loop->iteration - ($areaPhotoExists ? 0 : 0) }}<br>
+                                            <strong>Lokasi:</strong> {{ $cell['data']->equipmentMaster->specific_location ?? '-' }}<br>
+                                            <strong>Ket:</strong> {{ Str::limit($cell['data']->remarks ?? '-', 35) }}
+                                        @endif
+                                    </div>
+                                </td>
+                            @endforeach
+                            {{-- Mengisi kolom kosong jika jumlah foto tidak kelipatan 4 --}}
+                            @for ($i = 0; $i < (4 - $chunk->count()); $i++)
+                                <td style="border: none;"></td>
+                            @endfor
+                        </tr>
+                    @endforeach
+                </table>
             @endif
         </div>
-
 
         {{-- Footer Section --}}
         <div style="margin-top: 30px; page-break-inside: avoid;">
             <table class="no-border" style="width: 100%;">
                 <tr>
-                    {{-- Legenda --}}
                     <td class="no-border" style="width: 15%; vertical-align: top;">
                         <table class="legend-table">
-                            <tr>
-                                <th class="bg-gray">Keterangan</th>
-                            </tr>
-                            <tr>
-                                <td><span class="good">✔</span> Baik</td>
-                            </tr>
-                            <tr>
-                                <td><span class="nogood">✘</span> Rusak / Tidak Baik</td>
-                            </tr>
+                            <tr><th class="bg-gray">Keterangan</th></tr>
+                            <tr><td><span class="good">✔</span> Baik</td></tr>
+                            <tr><td><span class="nogood">✘</span> Rusak / Tidak Baik</td></tr>
                         </table>
                     </td>
-
                     <td class="no-border" style="width: 5%;"></td>
-
-                    {{-- Approval --}}
                     <td class="no-border" style="width: 45%; vertical-align: top;">
                         <table class="legend-table">
                             <tr>
@@ -301,7 +282,7 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                                 <td>: {{ $submitted_by ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <td class="bg-gray" style="font-weight: bold; ">Nomor Inspeksi</td>
+                                <td class="bg-gray" style="font-weight: bold;">Nomor Inspeksi</td>
                                 <td>: {{ $inspection_number ?? 'N/A' }}</td>
                             </tr>
                             <tr>
@@ -310,42 +291,21 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
                             </tr>
                         </table>
                     </td>
-
                     <td class="no-border" style="width: 5%;"></td>
-
-                    {{-- Inisial Pemeriksa --}}
                     <td class="no-border" style="width: 30%; vertical-align: top;">
                         <table class="legend-table">
                             @php
-                                $daftarNama = collect($data)
-                                    ->pluck('inspected_by')
-                                    ->flatMap(fn($item) => explode('|', $item))
-                                    ->map(fn($name) => trim($name))
-                                    ->unique()
-                                    ->filter();
+                                $daftarNamaUnik = collect($data)->pluck('inspected_by')->flatMap(fn($item) => explode('|', $item))->map(fn($name) => trim($name))->unique()->filter();
                             @endphp
-                            <tr>
-                                <th colspan="2">Inisial Pemeriksa</th>
-                            </tr>
-                            @foreach ($daftarNama as $name)
+                            <tr><th colspan="2">Inisial Pemeriksa</th></tr>
+                            @foreach ($daftarNamaUnik as $name)
                                 <tr>
                                     <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
                                         @php
-                                            if (empty(trim($name))) {
-                                                continue;
-                                            }
-                                            // 1. Hapus tanda kutip (") DAN ubah koma (,) menjadi spasi
-$search = ['"', ','];
-$replace = ['', ' '];
-$cleanName = str_replace($search, $replace, $name);
-
-// 2. Ambil inisial dari tiap kata yang sudah bersih
-$initials = collect(preg_split('/\s+/', trim($cleanName)))
-    ->filter()
-    ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-    ->implode('');
+                                            $clean = str_replace(['"', ','], '', $name);
+                                            $init = collect(preg_split('/\s+/', trim($clean)))->filter()->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('');
                                         @endphp
-                                        {{ $initials }}
+                                        {{ $init }}
                                     </td>
                                     <td style="text-align: left;"> {{ trim(str_replace('"', '', $name)) }}</td>
                                 </tr>
@@ -357,5 +317,4 @@ $initials = collect(preg_split('/\s+/', trim($cleanName)))
         </div>
     </main>
 </body>
-
 </html>
