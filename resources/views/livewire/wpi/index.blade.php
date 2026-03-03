@@ -252,7 +252,7 @@
     {{-- BAGIAN CONTENT UTAMA --}}
     <x-dynamic-component :component="$layoutComponent" :heading="$reportId ? '' : 'Buat Laporan WPI Baru'" :subheading="$reportId ? '' : 'TT-MGT-FRS-024A'">
         {{-- BAGIAN WORKFLOW & AUDIT TRAIL (Hanya tampil jika Edit/Bukan laporan baru) --}}
-        <form wire:submit.prevent="save" class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl">
+        <form wire:submit.prevent="save" class="overflow-hidden border rounded-lg shadow-xl border-base-200">
 
             <div class="p-6 border-b border-gray-200 ">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
