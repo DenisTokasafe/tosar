@@ -187,60 +187,66 @@
     <livewire:theme-switcher />
     @fluxScripts
     @livewireScripts
-   <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('ckeditorHelper', (modelName) => {
-            let editorInstance = null;
-            let listeners = [];
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('ckeditorHelper', (modelName) => {
+                let editorInstance = null;
+                let listeners = [];
 
-            return {
-                init() {
-                    // 1. Jalankan inisialisasi saat pertama kali komponen Alpine muncul
-                    this.$nextTick(() => this.initEditor());
+                return {
+                    init() {
+                        // 1. Coba inisialisasi saat pertama kali Alpine load (jika elemen sudah ada)
+                        this.$nextTick(() => this.initEditor());
 
-                    // 2. Pantau perubahan 'currentStep' di Livewire
-                    // Setiap kali step berubah, kita pastikan editor diinisialisasi ulang
-                    this.$watch('$wire.currentStep', (value) => {
-                        // Gunakan timeout kecil untuk memastikan Livewire selesai merender elemen di step baru
-                        setTimeout(() => {
-                            this.initEditor();
-                        }, 50);
-                    });
-                },
+                        // 2. Pantau perpindahan step Livewire secara aktif
+                        this.$watch('$wire.currentStep', (newStep) => {
+                            // Kita beri delay kecil 50-100ms agar Livewire selesai memproses DOM
+                            // dan elemen x-ref benar-benar sudah muncul di layar.
+                            setTimeout(() => {
+                                this.initEditor();
+                            }, 100);
+                        });
+                    },
 
-                initEditor() {
-                    // Cek apakah elemen target ada di DOM (penting jika sedang di step lain)
-                    if (!this.$refs.editorElement) return;
+                    initEditor() {
+                        // Validasi: Berhenti jika elemen target tidak ditemukan di DOM
+                        if (!this.$refs.editorElement) return;
 
-                    // Jangan inisialisasi jika editor sudah terpasang
-                    if (this.$refs.editorElement.querySelector('.ck-editor')) return;
+                        // Validasi: Berhenti jika elemen sudah memiliki instance CKEditor (mencegah duplikasi)
+                        if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
-                    window.ClassicEditor
-                        .create(this.$refs.editorElement, {
-                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                            removePlugins: ['ImageUpload', 'EasyImage']
-                        })
-                        .then(editor => {
-                            editorInstance = editor;
+                        window.ClassicEditor
+                            .create(this.$refs.editorElement, {
+                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                                removePlugins: ['ImageUpload', 'EasyImage']
+                            })
+                            .then(editor => {
+                                editorInstance = editor;
 
-                            // Set data awal dari properti Livewire
-                            const initialData = this.$wire.get(modelName) || '';
-                            editorInstance.setData(initialData);
+                                // Ambil data terbaru dari backend Livewire
+                                const initialData = this.$wire.get(modelName) || '';
+                                editorInstance.setData(initialData);
 
-                            // Sinkronisasi ke Backend
-                            editorInstance.model.document.on('change:data', () => {
-                                const data = editorInstance.getData();
-                                this.$wire.set(modelName, data, true);
+                                // Sinkronisasi input user ke Backend
+                                editorInstance.model.document.on('change:data', () => {
+                                    const data = editorInstance.getData();
+                                    // 'true' berarti lazy/silent update agar tidak mengganggu fokus mengetik
+                                    this.$wire.set(modelName, data, true);
 
-                                if (data.trim() !== '') {
-                                    editorInstance.ui.view.editable.element.classList.remove('error');
-                                }
-                            });
-                        })
-                        .catch(error => console.error('CKEditor Error:', error));
+                                    if (data.trim() !== '') {
+                                        editorInstance.ui.view.editable.element.classList.remove('error');
+                                    }
+                                });
+                            })
+                            .catch(error => console.error('CKEditor Error:', error));
 
-                    // Daftarkan listener Livewire (hanya jika belum ada)
-                    if (listeners.length === 0) {
+                        // Register Livewire Listeners (Hanya dilakukan sekali)
+                        if (listeners.length === 0) {
+                            this.registerListeners();
+                        }
+                    },
+
+                    registerListeners() {
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
@@ -254,40 +260,35 @@
                             }
                         }));
 
-                        listeners.push(Livewire.on('validate-all-editors', () => {
-                            if (editorInstance && editorInstance.getData().trim() === '') {
-                                editorInstance.ui.view.editable.element.classList.add('error');
-                            }
-                        }));
-
                         listeners.push(Livewire.on('reset-all-editors', () => {
                             if (editorInstance) {
                                 editorInstance.setData('');
                                 editorInstance.ui.view.editable.element.classList.remove('error');
                             }
                         }));
-                    }
-                },
+                    },
 
-                destroy() {
-                    // Bersihkan listener Livewire
-                    listeners.forEach(unsubscribe => {
-                        if (typeof unsubscribe === 'function') unsubscribe();
-                        else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
-                    });
-                    listeners = [];
+                    destroy() {
+                        // Bersihkan instance saat elemen dibuang (pindah step keluar dari area editor)
+                        if (editorInstance) {
+                            editorInstance.destroy()
+                                .then(() => {
+                                    editorInstance = null;
+                                })
+                                .catch(err => console.error('Destroy Error:', err));
+                        }
 
-                    // Hancurkan instance CKEditor
-                    if (editorInstance) {
-                        editorInstance.destroy()
-                            .then(() => editorInstance = null)
-                            .catch(err => console.error('Destroy Error:', err));
+                        // Unsubscribe Livewire events
+                        listeners.forEach(unsubscribe => {
+                            if (typeof unsubscribe === 'function') unsubscribe();
+                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                        });
+                        listeners = [];
                     }
                 }
-            }
-        })
-    });
-</script>
+            })
+        });
+    </script>
     @stack('scripts')
 </body>
 
