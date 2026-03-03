@@ -26,16 +26,15 @@
             @endif
             <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
-            <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required />
+            <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required/>
             <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
-                :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
-                manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
-                addManualAction="addPelaporManual" clickaction="selectPelapor" />
+                        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
+                        :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+                        manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
+                        addManualAction="addPelaporManual" clickaction="selectPelapor" />
         </div>
         @endif
         {{-- STEP 2: Detail Kejadian --}}
-
         @if($currentStep == 2)
         <div class="md:mt-12">
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
@@ -174,20 +173,19 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            {{-- Gunakan div pembungkus yang selalu ada di DOM, tapi disembunyikan secara visual --}}
-            <div class="{{ $currentStep == 2 ? 'block' : 'hidden' }} w-full" wire:key="container-description">
+            <div class="w-full" wire:key="field-description">
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
-                    {{-- Tambahkan wire:ignore.self agar Livewire tidak merusak instance editor --}}
-                    <div x-data="ckeditorHelper('description')" x-init="init()" wire:ignore>
+                    <div x-data="ckeditorHelper('description')" wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
+
             </div>
         </div>
-        @endif
 
+        @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
         <div class="grid grid-cols-1 gap-4 space-y-4 md:grid-cols-2 lg:grid-cols-3 md:mt-12">
