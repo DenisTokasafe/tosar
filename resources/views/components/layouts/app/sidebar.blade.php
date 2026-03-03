@@ -187,41 +187,60 @@
     <livewire:theme-switcher />
     @fluxScripts
     @livewireScripts
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('ckeditorHelper', (modelName) => {
-                let editorInstance = null;
-                let listeners = []; // Untuk menampung fungsi cleanup
+   <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('ckeditorHelper', (modelName) => {
+            let editorInstance = null;
+            let listeners = [];
 
-                return {
-                    init() {
-                        if (this.$refs.editorElement.querySelector('.ck-editor')) return;
+            return {
+                init() {
+                    // 1. Jalankan inisialisasi saat pertama kali komponen Alpine muncul
+                    this.$nextTick(() => this.initEditor());
 
-                        window.ClassicEditor
-                            .create(this.$refs.editorElement, {
-                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                                removePlugins: ['ImageUpload', 'EasyImage']
-                            })
-                            .then(editor => {
-                                editorInstance = editor;
+                    // 2. Pantau perubahan 'currentStep' di Livewire
+                    // Setiap kali step berubah, kita pastikan editor diinisialisasi ulang
+                    this.$watch('$wire.currentStep', (value) => {
+                        // Gunakan timeout kecil untuk memastikan Livewire selesai merender elemen di step baru
+                        setTimeout(() => {
+                            this.initEditor();
+                        }, 50);
+                    });
+                },
 
-                                // Set data awal
-                                const initialData = this.$wire.get(modelName) || '';
-                                editorInstance.setData(initialData);
+                initEditor() {
+                    // Cek apakah elemen target ada di DOM (penting jika sedang di step lain)
+                    if (!this.$refs.editorElement) return;
 
-                                // Sinkronisasi ke Backend
-                                editorInstance.model.document.on('change:data', () => {
-                                    const data = editorInstance.getData();
-                                    this.$wire.set(modelName, data, true);
+                    // Jangan inisialisasi jika editor sudah terpasang
+                    if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
-                                    if (data.trim() !== '') {
-                                        editorInstance.ui.view.editable.element.classList.remove('error');
-                                    }
-                                });
-                            })
-                            .catch(error => console.error('CKEditor Error:', error));
+                    window.ClassicEditor
+                        .create(this.$refs.editorElement, {
+                            toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                            removePlugins: ['ImageUpload', 'EasyImage']
+                        })
+                        .then(editor => {
+                            editorInstance = editor;
 
-                        // Simpan listener agar bisa di-destroy nantinya (Best Practice Livewire v3)
+                            // Set data awal dari properti Livewire
+                            const initialData = this.$wire.get(modelName) || '';
+                            editorInstance.setData(initialData);
+
+                            // Sinkronisasi ke Backend
+                            editorInstance.model.document.on('change:data', () => {
+                                const data = editorInstance.getData();
+                                this.$wire.set(modelName, data, true);
+
+                                if (data.trim() !== '') {
+                                    editorInstance.ui.view.editable.element.classList.remove('error');
+                                }
+                            });
+                        })
+                        .catch(error => console.error('CKEditor Error:', error));
+
+                    // Daftarkan listener Livewire (hanya jika belum ada)
+                    if (listeners.length === 0) {
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const data = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && data.name === modelName) {
@@ -247,26 +266,28 @@
                                 editorInstance.ui.view.editable.element.classList.remove('error');
                             }
                         }));
-                    },
+                    }
+                },
 
-                    destroy() {
-                        // 1. Bersihkan event listeners Livewire agar tidak menumpuk di RAM
-                        listeners.forEach(unsubscribe => {
-                            if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe.unsubscribe) unsubscribe.unsubscribe();
-                        });
+                destroy() {
+                    // Bersihkan listener Livewire
+                    listeners.forEach(unsubscribe => {
+                        if (typeof unsubscribe === 'function') unsubscribe();
+                        else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
+                    });
+                    listeners = [];
 
-                        // 2. Hancurkan instance CKEditor
-                        if (editorInstance) {
-                            editorInstance.destroy()
-                                .then(() => editorInstance = null)
-                                .catch(err => console.error('Destroy Error:', err));
-                        }
+                    // Hancurkan instance CKEditor
+                    if (editorInstance) {
+                        editorInstance.destroy()
+                            .then(() => editorInstance = null)
+                            .catch(err => console.error('Destroy Error:', err));
                     }
                 }
-            })
-        });
-    </script>
+            }
+        })
+    });
+</script>
     @stack('scripts')
 </body>
 

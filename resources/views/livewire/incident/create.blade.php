@@ -173,12 +173,15 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <div class="w-full" wire:key="field-description-step2"> {{-- Key harus unik dan spesifik --}}
+            {{-- Gunakan div pembungkus yang selalu ada di DOM, tapi disembunyikan secara visual --}}
+            <div class="{{ $currentStep == 2 ? 'block' : 'hidden' }} w-full" wire:key="container-description">
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Kronologi Kejadian" required />
 
-                    {{-- Gunakan wire:ignore di sini agar Livewire tidak merusak instance CKEditor --}}
-                    <div x-data="ckeditorHelper('description')" wire:ignore>
+                    {{-- Tambahkan wire:ignore.self agar Livewire tidak merusak instance editor --}}
+                    <div x-data="ckeditorHelper('description')"
+                        x-init="init()"
+                        wire:ignore>
                         <div x-ref="editorElement"></div>
                     </div>
 
