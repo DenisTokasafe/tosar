@@ -46,7 +46,7 @@
         @if (!$disabled && $showdropdown)
             <template x-teleport="body">
                 <ul
-                    x-show="open"
+                    x-show="open" wire:ignore.self
                     {{-- Menggunakan x-anchor agar posisi presisi di bawah input --}}
                     x-anchor.bottom-start.offset.4="$refs.trigger"
                     x-on:click.outside="open = false"
