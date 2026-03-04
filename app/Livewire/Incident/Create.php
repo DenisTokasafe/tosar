@@ -94,6 +94,8 @@ class Create extends Component
         'event_type_id' => 'required|exists:event_types,id',
         'event_sub_type_id' => 'required|exists:event_sub_types,id',
         'description' => 'required|string',
+        'documentation_description' => 'nullable|image|max:10240',
+        'documentation_description_path' => 'nullable|string',
         'location' => 'required|string',
         'date_time' => 'required|date',
         'pelapor_id' => 'required|exists:users,id',
