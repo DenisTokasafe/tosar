@@ -14,10 +14,10 @@
         class="peer/department radio radio-xs radio-accent" type="radio" name="{{ $model }}"
         checked />
     <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
-        label="PT. MSM & PT. TTN" required />
+        label="{{ $label_dept }}" required />
     <input id="company" value="company" wire:model="{{ $model }}"
         class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
-    <x-form.label for="company" class="peer-checked/company:text-primary" label="Kontraktor"
+    <x-form.label for="company" class="peer-checked/company:text-primary" label="{{ $label_contractor }}"
         required />
 
     <div class="hidden peer-checked/department:block">
