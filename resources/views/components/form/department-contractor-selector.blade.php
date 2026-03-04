@@ -2,6 +2,8 @@
 'model' => 'deptCont', // wire:model untuk radio button
 'departments' => [],
 'contractors' => [],
+'label_dept' => 'Departemen Terkait',
+'label_contractor' => 'Kontraktor Terkait',
 'showDropdown' => false, // status dropdown department
 'showContractorDropdown' => false, // status dropdown contractor
 ])
