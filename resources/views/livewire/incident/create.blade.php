@@ -23,7 +23,7 @@
             @if ($location_id)
             <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
             @endif
-            <x-form.dept-cont-selector
+            <x-form.department-contractor-selector
                 model="deptCont"
                 :departments="$departments"
                 :contractors="$contractors"
