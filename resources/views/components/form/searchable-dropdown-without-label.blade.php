@@ -20,7 +20,7 @@
         x-on:focus="open = true"
         x-on:keydown.escape="open = false"
         {{ $attributes->merge([
-            'class' => 'input input-bordered w-full focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs ' .
+            'class' => 'input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs ' .
             ($disabled ? 'bg-base-200 opacity-70 ' : '') .
             ($errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '')
         ]) }}
