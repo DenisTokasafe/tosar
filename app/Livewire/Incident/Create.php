@@ -207,7 +207,6 @@ class Create extends Component
             ->pluck('user')
             ->filter()
             ->toArray();
-        $this->validateOnly('department_id');
     }
     public function updatedSearchContractor()
     {
@@ -236,7 +235,6 @@ class Create extends Component
             ->pluck('user')
             ->filter()
             ->toArray();
-        $this->validateOnly('contractor_id');
     }
     public function render()
     {
