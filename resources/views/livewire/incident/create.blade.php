@@ -244,7 +244,7 @@
         </div>
         @endif
         {{-- Navigasi Step --}}
-        <div class="absolute inset-x-0 bottom-0 z-50 flex justify-end gap-2 p-2 mt-12 shadow-md md:mt-4 bg-base-100">
+        <div class="absolute inset-x-0 bottom-0 z-50 flex justify-end gap-2 p-2 shadow-md mt-14 md:mt-4 bg-base-100">
             @if($currentStep > 1)
             <button type="button" class="btn btn-xs btn-outline" wire:click="$set('currentStep', {{ $currentStep - 1 }})">Sebelumnya</button>
             @endif
