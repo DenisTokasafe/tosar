@@ -222,25 +222,12 @@
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {{-- Searchable Select untuk tiap baris --}}
-                        <x-form.searchable-select-advanced
-                            label="Nama Personel #{{ $index + 1 }}"
-                            placeholder="Cari Nama..."
-                            :modelsearch="'involved_personnel.'.$index.'.search_name'"
-                            :modelid="'involved_personnel.'.$index.'.user_id'"
-                            :options="$personnelOptions"
-                            :showdropdown="$involved_personnel[$index]['show_dropdown']"
-                            :clickaction="'selectPersonnel('.$index.', '" {{-- Kirim index ke method --}} />
+                        <x-form.searchable-select-advanced label="Personel Terlibat / Korban" placeholder="Cari Nama..."
+                            modelsearch="searchName" modelid="involved_personnel_id" :options="$involved_personnel_options"
+                            :showdropdown="$showinvolvedPersonnelDropdown" :manualMode="$involvedPersonnelManualMode"
+                            manualModelName="involved_personnel_name" enableManualAction="enableInvolvedPersonnelManual"
+                            addManualAction="addInvolvedPersonnelManual" clickaction="selectInvolvedPersonnel" />
 
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="fieldset">
-                                <label class="fieldset-label text-[10px]">{{ __('NPK') }}</label>
-                                <input type="text" wire:model="involved_personnel.{{ $index }}.npk" readonly class="input input-xs bg-base-200" />
-                            </div>
-                            <div class="fieldset">
-                                <label class="fieldset-label text-[10px]">{{ __('Jabatan') }}</label>
-                                <input type="text" wire:model="involved_personnel.{{ $index }}.position" readonly class="input input-xs bg-base-200" />
-                            </div>
-                        </div>
                     </div>
 
                     {{-- Status Fit/Fatigue per individu --}}

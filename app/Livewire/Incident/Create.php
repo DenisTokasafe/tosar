@@ -23,7 +23,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public $event_type_id, $pelapor_id, $searchPelapor, $likelihoods = [], $consequences = [],
+    public $event_type_id, $likelihoods = [], $consequences = [],
         $event_sub_type_id,
         $location_id,
         $location_spesific,
@@ -45,11 +45,7 @@ class Create extends Component
     public $RiskAssessment;
 
     public $risk_consequence;
-    // Pelapor
-    public $pelapors = [];
-    public $showPelaporDropdown = false;
-    public $manualPelaporMode = false;
-    public $manualPelaporName;
+
 
     public $selectedBodyPartCategory;
     // deptContractor
@@ -61,7 +57,18 @@ class Create extends Component
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
     public $deptCont = 'department'; // default ke department
-    public $involved_personnel = [];
+    // Pelapor
+    public $pelapor_id, $searchPelapor = '';
+    public $pelapors = [];
+    public $showPelaporDropdown = false;
+    public $manualPelaporMode = false;
+    public $manualPelaporName;
+    // Involved Personnel
+    public $involved_personnel_id, $searchName, $involved_personnel_name;
+    public $involved_personnel_options = [];
+    public $showinvolvedPersonnelDropdown = false;
+    public $involvedPersonnelManualMode = false;
+
     public function mount()
     {
         if (Auth::check()) {
@@ -73,20 +80,8 @@ class Create extends Component
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
+    }
 
-        $this->addPersonnelRow();
-    }
-    public function addPersonnelRow()
-    {
-        $this->involved_personnel[] = [
-            'user_id' => null,
-            'search_name' => '',
-            'npk' => '',
-            'position' => '',
-            'status' => 'fit', // Default status
-            'show_dropdown' => false
-        ];
-    }
 
     protected $rules = [
         'event_type_id' => 'required|exists:event_types,id',
@@ -314,5 +309,80 @@ class Create extends Component
     public function updatedManualPelaporName($value)
     {
         $this->pelapor_id = null;
+    }
+
+    /**
+     * Pencarian Personel Terlibat
+     */
+    public function updatedSearchName()
+    {
+        $this->involved_personnel_id = null;
+        $this->involvedPersonnelManualMode = false;
+        $this->involved_personnel_name = null;
+
+        if (strlen($this->searchName) > 1) {
+            $this->involved_personnel_options = User::where('name', 'like', '%' . $this->searchName . '%')
+                ->orderBy('name')
+                ->limit(50)
+                ->get();
+
+            $this->showinvolvedPersonnelDropdown = true;
+        } else {
+            $this->involved_personnel_options = [];
+            $this->showinvolvedPersonnelDropdown = false;
+        }
+    }
+
+    /**
+     * Memilih Personel dari Dropdown
+     */
+    public function selectInvolvedPersonnel($id, $name)
+    {
+        $this->involved_personnel_id = $id;
+        $this->searchName = $name;
+        $this->showinvolvedPersonnelDropdown = false;
+        $this->involvedPersonnelManualMode = false;
+
+        // Opsional: Ambil data tambahan seperti NPK/Jabatan jika diperlukan
+        // $person = User::find($id);
+        // if ($person) {
+        //     $this->person_npk = $person->npk ?? '-';
+        //     $this->person_position = $person->position ?? '-';
+        // }
+    }
+
+    /**
+     * Aktifkan Mode Input Manual jika nama tidak ada di database
+     */
+    public function enableInvolvedPersonnelManual()
+    {
+        $this->involvedPersonnelManualMode = true;
+        $this->involved_personnel_name = $this->searchName;
+        $this->showinvolvedPersonnelDropdown = false;
+        $this->involved_personnel_id = null;
+
+        $this->dispatch('alert', [
+            'text' => "Mode input manual aktif untuk personel terlibat.",
+            'duration' => 3000,
+            'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
+        ]);
+    }
+
+    /**
+     * Logika jika nama manual diketik ulang
+     */
+    public function updatedInvolvedPersonnelName($value)
+    {
+        $this->involved_personnel_id = null;
+    }
+
+    /**
+     * Placeholder untuk tombol 'Tambah' di mode manual jika Anda ingin menyimpan ke DB segera
+     */
+    public function addInvolvedPersonnelManual()
+    {
+        // Anda bisa membiarkannya kosong jika data hanya akan disimpan saat Form Utama disubmit
+        // Atau lakukan validasi di sini
+        $this->validateOnly('involved_personnel_name');
     }
 }
