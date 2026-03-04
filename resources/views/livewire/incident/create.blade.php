@@ -195,7 +195,7 @@
             </table>
             @endif
             <flux:separator variant="subtle" class="my-4" />
-            <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="Narasi detail mengenai urutan kejadian (5W+1H)" required />
+            <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.') }}}}" required />
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
                 <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory,
