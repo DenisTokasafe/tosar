@@ -23,12 +23,12 @@
             @if ($location_id)
             <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
             @endif
-            <x-form.department-contractor-selector
+            <x-form.dept-cont-selector
                 model="deptCont"
                 :departments="$departments"
-                :showDeptDropdown="$showDropdown"
                 :contractors="$contractors"
-                :showContDropdown="$showContractorDropdown" />
+                :showDropdown="$showDropdown"
+                :showContractorDropdown="$showContractorDropdown" />
             <fieldset class="fieldset">
                 <x-form.label label="PIC" required />
                 <select wire:model.live="penanggungJawab"

@@ -1,85 +1,75 @@
 @props([
-    'selectedType' => 'department', // Default value untuk radio
-    'model' => 'deptCont',          // wire:model untuk radio
-
-    // Props untuk Department Dropdown
+    'model' => 'deptCont', // wire:model untuk radio button
     'departments' => [],
-    'showDeptDropdown' => false,
-    'deptSearchModel' => 'search',
-    'deptIdModel' => 'department_id',
-
-    // Props untuk Contractor Dropdown
     'contractors' => [],
-    'showContDropdown' => false,
-    'contSearchModel' => 'searchContractor',
-    'contIdModel' => 'contractor_id',
+    'showDropdown' => false, // status dropdown department
+    'showContractorDropdown' => false, // status dropdown contractor
 ])
 
-<fieldset class="fieldset">
-    <div class="flex items-center gap-4 mb-2">
-        {{-- Radio: Department (MSM & TTN) --}}
-        <div class="flex items-center gap-2">
+<fieldset {{ $attributes->merge(['class' => 'fieldset']) }}>
+    <div class="flex items-center gap-4">
+        {{-- Radio: Department --}}
+        <div class="flex items-center">
             <input
-                id="type_dept"
+                id="department"
                 value="department"
                 wire:model.live="{{ $model }}"
-                class="peer/dept radio radio-xs radio-accent"
+                class="peer/department radio radio-xs radio-accent"
                 type="radio"
                 name="{{ $model }}"
+                checked
             />
             <x-form.label
-                for="type_dept"
-                class="peer-checked/dept:text-accent text-[10px] cursor-pointer"
-                label="Departemen (TTN & MSM) Terkait"
+                for="department"
+                class="peer-checked/department:text-accent text-[10px] ml-2"
+                label="PT. MSM & PT. TTN"
                 required
             />
         </div>
 
-        {{-- Radio: Contractor --}}
-        <div class="flex items-center gap-2">
+        {{-- Radio: Company/Contractor --}}
+        <div class="flex items-center">
             <input
-                id="type_cont"
+                id="company"
                 value="company"
                 wire:model.live="{{ $model }}"
-                class="peer/comp radio radio-xs radio-primary"
+                class="peer/company radio radio-xs radio-primary"
                 type="radio"
                 name="{{ $model }}"
             />
             <x-form.label
-                for="type_cont"
-                class="peer-checked/comp:text-primary text-[10px] cursor-pointer"
-                label="Kontraktor Terkait"
+                for="company"
+                class="peer-checked/company:text-primary text-[10px] ml-2"
+                label="Kontraktor"
                 required
             />
         </div>
     </div>
 
-    {{-- Container untuk Dropdown Departemen --}}
-    {{-- Menggunakan peer-checked dari radio type_dept --}}
-    <div class="hidden peer-has-[#type_dept:checked]:block mt-2">
+    {{-- Container Dropdown Department --}}
+    <div class="hidden mt-2 peer-has-[#department:checked]:block">
         <div class="relative mb-1">
             <x-form.searchable-dropdown-without-label
-                :modelsearch="$deptSearchModel"
-                :modelid="$deptIdModel"
+                modelsearch="search"
+                modelid="department_id"
                 placeholder="Cari Departemen..."
                 :options="$departments"
-                :showdropdown="$showDeptDropdown"
+                :showdropdown="$showDropdown"
                 clickaction="selectDepartment"
                 namedb="department_name"
             />
         </div>
     </div>
 
-    {{-- Container untuk Dropdown Kontraktor --}}
-    {{-- Menggunakan peer-checked dari radio type_cont --}}
-    <div class="hidden peer-has-[#type_cont:checked]:block mt-2">
+    {{-- Container Dropdown Contractor --}}
+    <div class="hidden mt-2 peer-has-[#company:checked]:block">
         <div class="relative mb-1">
             <x-form.searchable-dropdown-without-label
-                :modelsearch="$contSearchModel"
-                :modelid="$contIdModel"
+                modelsearch="searchContractor"
                 placeholder="Cari Kontraktor..."
+                modelid="contractor_id"
                 :options="$contractors"
-                :showdropdown="$showContDropdown"
+                :showdropdown="$showContractorDropdown"
                 clickaction="selectContractor"
                 namedb="contractor_name"
             />

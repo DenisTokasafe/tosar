@@ -52,6 +52,7 @@ class Create extends Component
     public $manualPelaporName;
 
     public $selectedBodyPartCategory;
+    // deptContractor
     public $search = '';
     public $departments = [];
     public $showDropdown = false;
@@ -59,6 +60,7 @@ class Create extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
+    public $deptCont;
     public function mount()
     {
         if (Auth::check()) {
