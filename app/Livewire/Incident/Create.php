@@ -21,9 +21,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Create extends Component
 {
+    use WithFileUploads,WithPagination;
     public $event_type_id, $likelihoods = [], $consequences = [],
         $event_sub_type_id,
         $location_id,
