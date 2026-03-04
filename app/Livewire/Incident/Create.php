@@ -83,8 +83,6 @@ class Create extends Component
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-
-        $this->addPersonnelRow();
     }
 
 
@@ -316,29 +314,6 @@ class Create extends Component
         $this->pelapor_id = null;
     }
 
-    /**
-     * Pencarian Personel Terlibat
-     */
-
-    public function addPersonnelRow()
-{
-    $this->involved_personnel[] = [
-        'user_id' => null,
-        'search_name' => '',
-        'manual_name' => '',
-        'is_manual' => false,
-        'show_dropdown' => false,
-        'npk' => '',
-        'position' => '',
-        'status' => 'fit' // Default bugar
-    ];
-}
-public function removePersonnelRow($index)
-{
-    unset($this->involved_personnel[$index]);
-    $this->involved_personnel = array_values($this->involved_personnel); // Reset index array agar tetap berurutan
-}
-
     public function updatedSearchName()
     {
         $this->involved_personnel_id = null;
@@ -357,10 +332,6 @@ public function removePersonnelRow($index)
             $this->showinvolvedPersonnelDropdown = false;
         }
     }
-
-    /**
-     * Memilih Personel dari Dropdown
-     */
     public function selectInvolvedPersonnel($id, $name)
     {
         $this->involved_personnel_id = $id;
@@ -375,10 +346,6 @@ public function removePersonnelRow($index)
         //     $this->person_position = $person->position ?? '-';
         // }
     }
-
-    /**
-     * Aktifkan Mode Input Manual jika nama tidak ada di database
-     */
     public function enableInvolvedPersonnelManual()
     {
         $this->involvedPersonnelManualMode = true;
@@ -392,22 +359,9 @@ public function removePersonnelRow($index)
             'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
         ]);
     }
-
-    /**
-     * Logika jika nama manual diketik ulang
-     */
     public function updatedInvolvedPersonnelName($value)
     {
         $this->involved_personnel_id = null;
     }
 
-    /**
-     * Placeholder untuk tombol 'Tambah' di mode manual jika Anda ingin menyimpan ke DB segera
-     */
-    public function addInvolvedPersonnelManual()
-    {
-        // Anda bisa membiarkannya kosong jika data hanya akan disimpan saat Form Utama disubmit
-        // Atau lakukan validasi di sini
-        $this->validateOnly('involved_personnel_name');
-    }
 }
