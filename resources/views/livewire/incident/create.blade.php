@@ -201,49 +201,11 @@
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
 
             <div class="space-y-6">
-                <div class="flex items-center justify-between pb-2 border-b">
-                    <h3 class="text-sm font-bold uppercase">{{ __('Personel Terlibat / Korban') }}</h3>
-                    <button type="button" wire:click="addPersonnelRow" class="btn btn-primary btn-xs">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        {{ __('Tambah Korban') }}
-                    </button>
-                </div>
-
-                @foreach($involved_personnel as $index => $person)
-                <div class="relative p-4 border rounded-xl bg-base-50" wire:key="person-row-{{ $index }}">
-                    {{-- Tombol Hapus Baris (Hanya muncul jika lebih dari 1 korban) --}}
-                    @if(count($involved_personnel) > 1)
-                    <button type="button" wire:click="removePersonnelRow({{ $index }})" class="absolute top-2 right-2 btn btn-ghost btn-circle btn-xs text-error">
-                        ✕
-                    </button>
-                    @endif
-
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {{-- Searchable Select untuk tiap baris --}}
-                        <x-form.searchable-select-advanced label="Personel Terlibat / Korban" placeholder="Cari Nama..."
+                 <x-form.searchable-select-advanced label="Personel Terlibat / Korban" placeholder="Cari Nama..."
                             modelsearch="searchName" modelid="involved_personnel_id" :options="$involved_personnel_options"
                             :showdropdown="$showinvolvedPersonnelDropdown" :manualMode="$involvedPersonnelManualMode"
                             manualModelName="involved_personnel_name" enableManualAction="enableInvolvedPersonnelManual"
                             addManualAction="addInvolvedPersonnelManual" clickaction="selectInvolvedPersonnel" />
-
-                    </div>
-
-                    {{-- Status Fit/Fatigue per individu --}}
-                    <div class="flex items-center gap-6 mt-4">
-                        <span class="text-xs font-bold">{{ __('Kondisi:') }}</span>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" wire:model="involved_personnel.{{ $index }}.status" value="fit" class="radio radio-success radio-xs" />
-                            <span class="text-xs">{{ __('Fit') }}</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" wire:model="involved_personnel.{{ $index }}.status" value="fatigue" class="radio radio-error radio-xs" />
-                            <span class="text-xs">{{ __('Fatigue') }}</span>
-                        </label>
-                    </div>
-                </div>
-                @endforeach
             </div>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
