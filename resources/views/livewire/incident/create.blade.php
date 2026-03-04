@@ -201,32 +201,35 @@
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
 
             <div class="space-y-6">
-                <x-form.searchable-select-advanced
-                    label="Personel Terlibat / Korban"
-                    placeholder="Cari Nama..."
-                    modelsearch="searchName"
-                    :options="$involved_personnel_options"
-                    :showdropdown="$showinvolvedPersonnelDropdown"
-                    enableManualAction="enableInvolvedPersonnelManual"
-                    clickaction="selectInvolvedPersonnel" />
+                <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+                    <legend class="text-sm font-semibold card-title ">{{ __('Personel Terlibat / Korban') }}</legend>
+                    <x-form.searchable-select-advanced
+                        label="Nama Personel Terlibat/Korban"
+                        placeholder="Cari Nama..."
+                        modelsearch="searchName"
+                        :options="$involved_personnel_options"
+                        :showdropdown="$showinvolvedPersonnelDropdown"
+                        enableManualAction="enableInvolvedPersonnelManual"
+                        clickaction="selectInvolvedPersonnel" />
 
-                <div class="flex flex-wrap gap-2 mt-2">
-                    @foreach($selected_personnel as $index => $person)
-                    <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
-                        {{ $person['name'] }}
-                        @if($person['is_manual']) (Manual) @endif
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        @foreach($selected_personnel as $index => $person)
+                        <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                            {{ $person['name'] }}
+                            @if($person['is_manual']) (Manual) @endif
 
-                        <button type="button" wire:click="removePersonnel({{ $index }})" class="ml-2 text-blue-600 hover:text-blue-900">
-                            &times;
-                        </button>
-                    </span>
+                            <button type="button" wire:click="removePersonnel({{ $index }})" class="ml-2 text-blue-600 hover:text-blue-900">
+                                &times;
+                            </button>
+                        </span>
+                        @endforeach
+                    </div>
+
+                    @foreach($selected_personnel as $person)
+                    <input type="hidden" name="involved_ids[]" value="{{ $person['id'] }}">
+                    <input type="hidden" name="involved_names[]" value="{{ $person['name'] }}">
                     @endforeach
-                </div>
-
-                @foreach($selected_personnel as $person)
-                <input type="hidden" name="involved_ids[]" value="{{ $person['id'] }}">
-                <input type="hidden" name="involved_names[]" value="{{ $person['name'] }}">
-                @endforeach
+                </fieldset>
             </div>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
