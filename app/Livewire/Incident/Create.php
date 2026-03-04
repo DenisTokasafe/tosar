@@ -321,44 +321,24 @@ class Create extends Component
      */
 
     public function addPersonnelRow()
-    {
-        $this->involved_personnel[] = [
-            'user_id' => null,
-            'search_name' => '',
-            'manual_name' => '',
-            'is_manual' => false,
-            'show_dropdown' => false,
-            'npk' => '',
-            'position' => '',
-            'status' => 'fit' // Default bugar
-        ];
-    }
-    public function removePersonnelRow($index)
-    {
-        unset($this->involved_personnel[$index]);
-        $this->involved_personnel = array_values($this->involved_personnel); // Reset index array agar tetap berurutan
-    }
-    /**
-     * Logic Pencarian Spesifik per Baris (Index)
-     */
-    public function updatedInvolvedPersonnel($value, $key)
-    {
-        // Cek jika yang diupdate adalah field 'search_name' di dalam array
-        // Format key biasanya: involved_personnel.0.search_name
-        if (str_contains($key, 'search_name')) {
-            $parts = explode('.', $key);
-            $index = $parts[1];
-            $searchTerm = $value;
+{
+    $this->involved_personnel[] = [
+        'user_id' => null,
+        'search_name' => '',
+        'manual_name' => '',
+        'is_manual' => false,
+        'show_dropdown' => false,
+        'npk' => '',
+        'position' => '',
+        'status' => 'fit' // Default bugar
+    ];
+}
+public function removePersonnelRow($index)
+{
+    unset($this->involved_personnel[$index]);
+    $this->involved_personnel = array_values($this->involved_personnel); // Reset index array agar tetap berurutan
+}
 
-            if (strlen($searchTerm) > 1) {
-                $this->involved_personnel_options = User::where('name', 'like', '%' . $searchTerm . '%')
-                    ->limit(10)->get();
-                $this->involved_personnel[$index]['show_dropdown'] = true;
-            } else {
-                $this->involved_personnel[$index]['show_dropdown'] = false;
-            }
-        }
-    }
     public function updatedSearchName()
     {
         $this->involved_personnel_id = null;
@@ -381,31 +361,36 @@ class Create extends Component
     /**
      * Memilih Personel dari Dropdown
      */
-    /**
-     * Memilih Personel untuk Baris Tertentu
-     */
-    public function selectInvolvedPersonnel($index, $id, $name)
+    public function selectInvolvedPersonnel($id, $name)
     {
-        $person = User::find($id);
-        if ($person) {
-            $this->involved_personnel[$index]['user_id'] = $id;
-            $this->involved_personnel[$index]['search_name'] = $name;
-            $this->involved_personnel[$index]['npk'] = $person->npk ?? '-';
-            $this->involved_personnel[$index]['position'] = $person->position ?? '-';
-            $this->involved_personnel[$index]['show_dropdown'] = false;
-            $this->involved_personnel[$index]['is_manual'] = false;
-        }
+        $this->involved_personnel_id = $id;
+        $this->searchName = $name;
+        $this->showinvolvedPersonnelDropdown = false;
+        $this->involvedPersonnelManualMode = false;
+
+        // Opsional: Ambil data tambahan seperti NPK/Jabatan jika diperlukan
+        // $person = User::find($id);
+        // if ($person) {
+        //     $this->person_npk = $person->npk ?? '-';
+        //     $this->person_position = $person->position ?? '-';
+        // }
     }
 
     /**
      * Aktifkan Mode Input Manual jika nama tidak ada di database
      */
-    public function enableInvolvedPersonnelManual($index)
+    public function enableInvolvedPersonnelManual()
     {
-        $this->involved_personnel[$index]['is_manual'] = true;
-        $this->involved_personnel[$index]['manual_name'] = $this->involved_personnel[$index]['search_name'];
-        $this->involved_personnel[$index]['show_dropdown'] = false;
-        $this->involved_personnel[$index]['user_id'] = null;
+        $this->involvedPersonnelManualMode = true;
+        $this->involved_personnel_name = $this->searchName;
+        $this->showinvolvedPersonnelDropdown = false;
+        $this->involved_personnel_id = null;
+
+        $this->dispatch('alert', [
+            'text' => "Mode input manual aktif untuk personel terlibat.",
+            'duration' => 3000,
+            'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
+        ]);
     }
 
     /**

@@ -200,51 +200,12 @@
             <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
 
-            <div class="space-y-4">
-                <div class="flex items-center justify-between pb-2 border-b">
-                    <h3 class="text-sm font-bold uppercase">Personel Terlibat / Korban</h3>
-                    <button type="button" wire:click="addPersonnelRow" class="btn btn-primary btn-xs">+ Tambah Korban</button>
-                </div>
-
-                @foreach($involved_personnel as $index => $row)
-                <div class="relative p-4 border rounded-xl bg-base-50" wire:key="person-row-{{ $index }}">
-
-                    {{-- Tombol Hapus Baris --}}
-                    @if(count($involved_personnel) > 1)
-                    <button type="button" wire:click="removePersonnelRow({{ $index }})" class="absolute top-2 right-2 text-error">✕</button>
-                    @endif
-
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {{-- Searchable Select Dinamis --}}
-                        <x-form.searchable-select-advanced
-                            label="Nama Korban #{{ $index + 1 }}"
-                            placeholder="Cari Nama..."
-                            modelsearch="involved_personnel.{{ $index }}.search_name"
-                            modelid="involved_personnel.{{ $index }}.user_id"
-                            :options="$involved_personnel_options"
-                            :showdropdown="$involved_personnel[$index]['show_dropdown']"
-                            :manualMode="$involved_personnel[$index]['is_manual']"
-                            manualModelName="involved_personnel.{{ $index }}.manual_name"
-                            enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
-                            addManualAction="addInvolvedPersonnelManual"
-                            clickaction="selectInvolvedPersonnel({{ $index }}," {{-- Membuka parameter index --}} />
-
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="fieldset">
-                                <label class="fieldset-label text-[10px]">NPK</label>
-                                <input type="text" wire:model="involved_personnel.{{ $index }}.npk" readonly class="input input-xs bg-base-200" />
-                            </div>
-                            <div class="fieldset">
-                                <label class="fieldset-label text-[10px]">Status Kondisi</label>
-                                <select wire:model="involved_personnel.{{ $index }}.status" class="select select-xs select-bordered">
-                                    <option value="fit">Fit (Bugar)</option>
-                                    <option value="fatigue">Fatigue (Lelah)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
+            <div class="space-y-6">
+                 <x-form.searchable-select-advanced label="Personel Terlibat / Korban" placeholder="Cari Nama..."
+                            modelsearch="searchName" modelid="involved_personnel_id" :options="$involved_personnel_options"
+                            :showdropdown="$showinvolvedPersonnelDropdown" :manualMode="$involvedPersonnelManualMode"
+                            manualModelName="involved_personnel_name" enableManualAction="enableInvolvedPersonnelManual"
+                            addManualAction="addInvolvedPersonnelManual" clickaction="selectInvolvedPersonnel" />
             </div>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
