@@ -59,10 +59,9 @@
                 @endif
                 <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
             </div>
-            <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
+            <fieldset class="flex flex-col-reverse gap-2 p-3 my-4 mt-2 border shadow-md md:flex-row border-base-300 fieldset card bg-base-100">
                 {{-- Kolom Likelihood & Consequence --}}
-               <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-                <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
+                    <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
                     {{-- Consequence --}}
                     <fieldset class="fieldset ">
                         <x-form.label label="Consequence" required />
@@ -76,15 +75,15 @@
                         <x-label-error :messages="$errors->get('consequence_id')" />
 
                         @if ($consequence_id)
-                            @php
-                            $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                            @endphp
-                            @if ($selectedConsequence)
-                            <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                            </div>
-                            @endif
+                        @php
+                        $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                        @endphp
+                        @if ($selectedConsequence)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
                         @endif
                     </fieldset>
                     {{-- Likelihood --}}
@@ -111,62 +110,60 @@
                         @endif
                         @endif
                     </fieldset>
+                    {{-- Kolom Risk Matrix --}}
+                    <div class="flex-none overflow-x-auto ">
 
+                        <table class="table table-xs w-60">
+                            <thead>
+                                <tr class="text-center text-[9px]">
+                                    <td class=" border-1">{{ __('Level') }}</td>
+                                    <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                                    <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                                    <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                                    <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                                    <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
+                                </tr>
+                                <tr class="text-center text-[9px]">
+                                    <th class="border-1">Likelihood ↓ / Consequence →</th>
+                                    @foreach ($consequences as $c)
+                                    <th class="rotate_text border-1">{{ __($c->name) }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($likelihoods as $l)
+                                <tr class="w-32 text-xs text-center">
 
-                </fieldset>
-                {{-- Kolom Risk Matrix --}}
-                <div class="flex-none overflow-x-auto ">
-
-                    <table class="table table-xs w-60">
-                        <thead>
-                            <tr class="text-center text-[9px]">
-                                <td class=" border-1">{{ __('Level') }}</td>
-                                <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
-                                <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
-                                <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
-                                <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
-                                <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
-                            </tr>
-                            <tr class="text-center text-[9px]">
-                                <th class="border-1">Likelihood ↓ / Consequence →</th>
-                                @foreach ($consequences as $c)
-                                <th class="rotate_text border-1">{{ __($c->name) }}</th>
+                                    <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+                                    @foreach ($consequences as $c)
+                                    @php
+                                    $cell =
+                                    App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                                    ->where('risk_consequence_id', $c->id)
+                                    ->first() ?? null;
+                                    $score = $l->level * $c->level;
+                                    $severity = $cell?->severity ?? '';
+                                    $color = match ($severity) {
+                                    'Rendah' => 'bg-emerald-500',
+                                    'Sedang' => 'bg-yellow-500',
+                                    'Tinggi' => 'bg-orange-500',
+                                    'Ekstrem' => 'bg-rose-500',
+                                    default => 'bg-gray-100',
+                                    };
+                                    @endphp
+                                    <td
+                                        class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
+                                        <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                            class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
+                                    </td>
+                                    @endforeach
+                                </tr>
                                 @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($likelihoods as $l)
-                            <tr class="w-32 text-xs text-center">
+                            </tbody>
+                        </table>
+                    </div>
 
-                                <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
-                                @foreach ($consequences as $c)
-                                @php
-                                $cell =
-                                App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                                ->where('risk_consequence_id', $c->id)
-                                ->first() ?? null;
-                                $score = $l->level * $c->level;
-                                $severity = $cell?->severity ?? '';
-                                $color = match ($severity) {
-                                'Rendah' => 'bg-emerald-500',
-                                'Sedang' => 'bg-yellow-500',
-                                'Tinggi' => 'bg-orange-500',
-                                'Ekstrem' => 'bg-rose-500',
-                                default => 'bg-gray-100',
-                                };
-                                @endphp
-                                <td
-                                    class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
-                                    <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                        class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
-                                </td>
-                                @endforeach
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </fieldset>
 
             @if ($RiskAssessment != null)
             <table class="table mt-4 table-xs table-zebra">
