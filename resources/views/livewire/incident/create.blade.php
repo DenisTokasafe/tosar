@@ -197,7 +197,6 @@
                 </table>
                 @endif
             </fieldset>
-            <flux:separator variant="subtle" class="my-4" />
             <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
