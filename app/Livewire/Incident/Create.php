@@ -137,7 +137,6 @@ class Create extends Component
         $this->validate([
             'documentation_description' => [
                 'required',
-                'image',
                 'max:10240', // Maksimal 10MB
                 'mimes:jpg,jpeg,png,webp,avif,heic'
             ],
