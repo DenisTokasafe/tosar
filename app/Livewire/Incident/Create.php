@@ -61,6 +61,7 @@ class Create extends Component
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
     public $deptCont = 'department'; // default ke department
+    public $involved_personnel = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -72,6 +73,19 @@ class Create extends Component
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
+
+        $this->addPersonnelRow();
+    }
+    public function addPersonnelRow()
+    {
+        $this->involved_personnel[] = [
+            'user_id' => null,
+            'search_name' => '',
+            'npk' => '',
+            'position' => '',
+            'status' => 'fit', // Default status
+            'show_dropdown' => false
+        ];
     }
 
     protected $rules = [
