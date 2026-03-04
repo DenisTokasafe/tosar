@@ -61,7 +61,8 @@
             </div>
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
-                <div class="space-y-4 md:grow">
+               <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+                <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
                     {{-- Consequence --}}
                     <fieldset class="fieldset ">
                         <x-form.label label="Consequence" required />
@@ -75,15 +76,15 @@
                         <x-label-error :messages="$errors->get('consequence_id')" />
 
                         @if ($consequence_id)
-                        @php
-                        $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                        @endphp
-                        @if ($selectedConsequence)
-                        <div
-                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                            {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                        </div>
-                        @endif
+                            @php
+                            $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                            @endphp
+                            @if ($selectedConsequence)
+                            <div
+                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                                {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                            </div>
+                            @endif
                         @endif
                     </fieldset>
                     {{-- Likelihood --}}
@@ -112,7 +113,7 @@
                     </fieldset>
 
 
-                </div>
+                </fieldset>
                 {{-- Kolom Risk Matrix --}}
                 <div class="flex-none overflow-x-auto ">
 
