@@ -35,8 +35,13 @@
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
         <div class="mt-12 mb-8">
-            <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
-            <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
+            <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
+                'md:grid-cols-1' => !$this->hasSubTypes,])>
+                <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
+                @if($this->hasSubTypes)
+                <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
+                @endif
+            </div>
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
                 <div class="space-y-4 md:grow">

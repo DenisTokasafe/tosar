@@ -160,6 +160,15 @@ class Create extends Component
             ->orderByRaw("FIELD(category, $order)")
             ->get();
     }
+    public function getHasSubTypesProperty()
+{
+    if (!$this->event_type_id) {
+        return false;
+    }
+
+    // Cek apakah ada anak (sub-tipe) untuk tipe yang dipilih
+    return EventSubType::where('event_type_id', $this->event_type_id)->exists();
+}
     public function render()
     {
         return view('livewire.incident.create', [
