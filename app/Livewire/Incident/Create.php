@@ -5,6 +5,7 @@ namespace App\Livewire\Incident;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
+use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
 use App\Models\Likelihood;
@@ -51,6 +52,13 @@ class Create extends Component
     public $manualPelaporName;
 
     public $selectedBodyPartCategory;
+    public $search = '';
+    public $departments = [];
+    public $showDropdown = false;
+    public $searchContractor = '';
+    public $contractors = [];
+    public $showContractorDropdown = false;
+    public $penanggungJawabOptions = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -161,14 +169,73 @@ class Create extends Component
             ->get();
     }
     public function getHasSubTypesProperty()
-{
-    if (!$this->event_type_id) {
-        return false;
+    {
+        if (!$this->event_type_id) {
+            return false;
+        }
+
+        // Cek apakah ada anak (sub-tipe) untuk tipe yang dipilih
+        return EventSubType::where('event_type_id', $this->event_type_id)->exists();
     }
 
-    // Cek apakah ada anak (sub-tipe) untuk tipe yang dipilih
-    return EventSubType::where('event_type_id', $this->event_type_id)->exists();
-}
+    public function updatedSearch()
+    {
+        if (strlen($this->search) > 1) {
+            $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
+                ->orderBy('department_name')
+                ->limit(80)
+                ->get();
+            $this->showDropdown = true;
+        } else {
+            $this->departments = [];
+            $this->showDropdown = false;
+        }
+    }
+    public function selectDepartment($id, $name)
+    {
+        $this->reset('searchContractor', 'contractor_id');
+        $this->department_id = $id;
+        $this->search = $name;
+        $this->showDropdown = false;
+
+        // Ambil user dari erm_assignments berdasarkan department_id
+        $this->penanggungJawabOptions = ErmAssignment::where('department_id', $id)
+            ->with('user:id,name')   // pastikan relasi user() ada di model
+            ->get()
+            ->pluck('user')
+            ->filter()
+            ->toArray();
+        $this->validateOnly('department_id');
+    }
+    public function updatedSearchContractor()
+    {
+        if (strlen($this->searchContractor) > 1) {
+            $this->contractors = Contractor::query()
+                ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
+                ->orderBy('contractor_name')
+                ->limit(80)
+                ->get();
+            $this->showContractorDropdown = true;
+        } else {
+            $this->contractors = [];
+            $this->showContractorDropdown = false;
+        }
+    }
+    public function selectContractor($id, $name)
+    {
+        $this->reset('search', 'department_id');
+        $this->contractor_id = $id;
+        $this->searchContractor = $name;
+        $this->showContractorDropdown = false;
+        // Ambil user dari erm_assignments berdasarkan contractor_id
+        $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
+            ->with('user:id,name')
+            ->get()
+            ->pluck('user')
+            ->filter()
+            ->toArray();
+        $this->validateOnly('contractor_id');
+    }
     public function render()
     {
         return view('livewire.incident.create', [

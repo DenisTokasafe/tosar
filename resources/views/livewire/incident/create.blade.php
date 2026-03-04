@@ -23,8 +23,24 @@
             @if ($location_id)
             <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
             @endif
+            <x-form.department-contractor-selector
+                model="deptCont"
+                :departments="$departments"
+                :showDeptDropdown="$showDropdown"
+                :contractors="$contractors"
+                :showContDropdown="$showContractorDropdown" />
+            <fieldset class="fieldset">
+                <x-form.label label="PIC" required />
+                <select wire:model.live="penanggungJawab"
+                    class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('penanggungJawab') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                    <option value="">{{__('-- Pilih --')}}</option>
+                    @foreach ($penanggungJawabOptions as $pj)
+                    <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                    @endforeach
+                </select>
+                <x-label-error :messages="$errors->get('penanggungJawab')" />
+            </fieldset>
 
-            <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
             <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
                 modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
                 :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
@@ -35,12 +51,13 @@
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
         <div class="mt-12 mb-8">
-            <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
-                'md:grid-cols-1' => !$this->hasSubTypes,])>
+            <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-3'=> $this->hasSubTypes,
+                'md:grid-cols-2' => !$this->hasSubTypes,])>
                 <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
                 @if($this->hasSubTypes)
                 <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
                 @endif
+                <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
             </div>
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
