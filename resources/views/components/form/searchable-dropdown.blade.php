@@ -1,14 +1,14 @@
 @props([
     'label' => null,
     'placeholder' => 'Cari...',
-    'modelsearch' => null, // Menampung 'searchLocation'
-    'modelid' => null,     // Menampung 'location_id' untuk error highlight
-    'options' => [],      // Data array/collection hasil search
+    'modelsearch' => null,
+    'modelid' => null,
+    'options' => [],
     'showdropdown' => false,
     'required' => false,
     'disabled' => false,
     'clickaction' => 'selectLocation',
-    'namedb' => 'name',    // Nama kolom di database
+    'namedb' => 'name',
 ])
 
 <fieldset class="relative fieldset md:col-span-1">
@@ -16,7 +16,8 @@
         <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div class="relative" x-data="{ open: @entangle($attributes->wire('model') . '.live') }">
+    {{-- Perbaikan: Kita entangle langsung ke properti showdropdown agar lebih aman dari error server --}}
+    <div class="relative" x-data="{ open: @entangle($showdropdown) }">
         {{-- Input Search --}}
         <input
             x-ref="trigger"
@@ -33,7 +34,7 @@
             ]) }}
         />
 
-        {{-- Dropdown Teleport (Muncul di depan modal DaisyUI) --}}
+        {{-- Dropdown Teleport (Kunci utama muncul di depan modal) --}}
         @if (!$disabled && $showdropdown)
             <template x-teleport="body">
                 <ul
@@ -41,8 +42,9 @@
                     wire:ignore.self
                     x-anchor.bottom-start.offset.4="$refs.trigger"
                     x-on:click.outside="open = false"
-                    :style="{ width: $refs.trigger.offsetWidth + 'px' }"
-                    class="fixed z-[9999] overflow-auto border rounded-md shadow-xl bg-base-100 border-base-300 max-h-60"
+                    {{-- Perbaikan: Z-index 999999 memastikan dropdown berada di atas layer modal DaisyUI --}}
+                    :style="{ width: $refs.trigger.offsetWidth + 'px', zIndex: 999999 }"
+                    class="fixed overflow-auto border rounded-md shadow-2xl bg-base-100 border-base-300 max-h-60"
                 >
                     {{-- Spinner Loading --}}
                     <div wire:loading wire:target="{{ $modelsearch }}, {{ $clickaction }}"
