@@ -199,6 +199,66 @@
             </fieldset>
             <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
+
+            <div class="space-y-6">
+                <div class="flex items-center justify-between pb-2 border-b">
+                    <h3 class="text-sm font-bold uppercase">{{ __('Personel Terlibat / Korban') }}</h3>
+                    <button type="button" wire:click="addPersonnelRow" class="btn btn-primary btn-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        {{ __('Tambah Korban') }}
+                    </button>
+                </div>
+
+                @foreach($involved_personnel as $index => $person)
+                <div class="relative p-4 border rounded-xl bg-base-50" wire:key="person-row-{{ $index }}">
+                    {{-- Tombol Hapus Baris (Hanya muncul jika lebih dari 1 korban) --}}
+                    @if(count($involved_personnel) > 1)
+                    <button type="button" wire:click="removePersonnelRow({{ $index }})" class="absolute top-2 right-2 btn btn-ghost btn-circle btn-xs text-error">
+                        ✕
+                    </button>
+                    @endif
+
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {{-- Searchable Select untuk tiap baris --}}
+                        <x-form.searchable-select-advanced
+                            label="Nama Personel #{{ $index + 1 }}"
+                            placeholder="Cari Nama..."
+                            :modelsearch="'involved_personnel.'.$index.'.search_name'"
+                            :modelid="'involved_personnel.'.$index.'.user_id'"
+                            :options="$personnelOptions"
+                            :showdropdown="$involved_personnel[$index]['show_dropdown']"
+                            :clickaction="'selectPersonnel('.$index.', '" {{-- Kirim index ke method --}} />
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="fieldset">
+                                <label class="fieldset-label text-[10px]">{{ __('NPK') }}</label>
+                                <input type="text" wire:model="involved_personnel.{{ $index }}.npk" readonly class="input input-xs bg-base-200" />
+                            </div>
+                            <div class="fieldset">
+                                <label class="fieldset-label text-[10px]">{{ __('Jabatan') }}</label>
+                                <input type="text" wire:model="involved_personnel.{{ $index }}.position" readonly class="input input-xs bg-base-200" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Status Fit/Fatigue per individu --}}
+                    <div class="flex items-center gap-6 mt-4">
+                        <span class="text-xs font-bold">{{ __('Kondisi:') }}</span>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" wire:model="involved_personnel.{{ $index }}.status" value="fit" class="radio radio-success radio-xs" />
+                            <span class="text-xs">{{ __('Fit') }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" wire:model="involved_personnel.{{ $index }}.status" value="fatigue" class="radio radio-error radio-xs" />
+                            <span class="text-xs">{{ __('Fatigue') }}</span>
+                        </label>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
                 <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory,
@@ -269,7 +329,7 @@
         </div>
         @endif
         {{-- Navigasi Step --}}
-        <div class="flex justify-end gap-2 p-2 shadow-md  md:mt-4 bg-base-100">
+        <div class="flex justify-end gap-2 p-2 shadow-md md:mt-4 bg-base-100">
             @if($currentStep > 1)
             <button type="button" class="btn btn-xs btn-outline" wire:click="$set('currentStep', {{ $currentStep - 1 }})">Sebelumnya</button>
             @endif
