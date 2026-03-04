@@ -59,8 +59,7 @@
                 @endif
                 <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
             </div>
-            <fieldset class="flex flex-col-reverse gap-2 p-3 my-4 mt-2 border shadow-md md:flex-row border-base-300 fieldset card bg-base-100">
-                 <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
+            <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
                 {{-- Kolom Likelihood & Consequence --}}
                 <div class="space-y-4 md:grow">
                     {{-- Consequence --}}
@@ -79,12 +78,12 @@
                         @php
                         $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
                         @endphp
-                            @if ($selectedConsequence)
-                            <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                                {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                            </div>
-                            @endif
+                        @if ($selectedConsequence)
+                        <div
+                            class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
+                            {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                        </div>
+                        @endif
                         @endif
                     </fieldset>
                     {{-- Likelihood --}}
@@ -166,7 +165,7 @@
                         </tbody>
                     </table>
                 </div>
-            </fieldset>
+            </div>
 
             @if ($RiskAssessment != null)
             <table class="table mt-4 table-xs table-zebra">
