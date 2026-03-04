@@ -174,7 +174,7 @@
             </flux:menu>
         </flux:dropdown>
         @else
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 px-2">
             <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
             @if (Route::has('register'))
             <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
