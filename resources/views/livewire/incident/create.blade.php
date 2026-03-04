@@ -18,7 +18,7 @@
         @if($currentStep == 1)
         <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 lg:grid-cols-3">
             <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
-            <x-form.searchable-dropdown label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+            <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
             {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
             @if ($location_id)
             <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
