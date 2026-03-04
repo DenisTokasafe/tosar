@@ -70,7 +70,7 @@ class Create extends Component
     public $involvedPersonnelManualMode = false;
 
     public $involved_personnel = []; // Array utama untuk menampung banyak korban
-
+    public $selected_personnel = [];
 
     public function mount()
     {
@@ -314,12 +314,9 @@ class Create extends Component
         $this->pelapor_id = null;
     }
 
+    // Pencarian tetap sama, tapi tidak mereset id tunggal
     public function updatedSearchName()
     {
-        $this->involved_personnel_id = null;
-        $this->involvedPersonnelManualMode = false;
-        $this->involved_personnel_name = null;
-
         if (strlen($this->searchName) > 1) {
             $this->involved_personnel_options = User::where('name', 'like', '%' . $this->searchName . '%')
                 ->orderBy('name')
@@ -332,36 +329,47 @@ class Create extends Component
             $this->showinvolvedPersonnelDropdown = false;
         }
     }
+
     public function selectInvolvedPersonnel($id, $name)
     {
-        $this->involved_personnel_id = $id;
-        $this->searchName = $name;
-        $this->showinvolvedPersonnelDropdown = false;
-        $this->involvedPersonnelManualMode = false;
+        // Cek apakah user sudah ada di list agar tidak duplikat
+        $exists = collect($this->selected_personnel)->contains('id', $id);
 
-        // Opsional: Ambil data tambahan seperti NPK/Jabatan jika diperlukan
-        // $person = User::find($id);
-        // if ($person) {
-        //     $this->person_npk = $person->npk ?? '-';
-        //     $this->person_position = $person->position ?? '-';
-        // }
+        if (!$exists) {
+            $this->selected_personnel[] = [
+                'id' => $id,
+                'name' => $name,
+                'is_manual' => false
+            ];
+        }
+
+        $this->searchName = ''; // Reset search input
+        $this->showinvolvedPersonnelDropdown = false;
     }
+
     public function enableInvolvedPersonnelManual()
     {
-        $this->involvedPersonnelManualMode = true;
-        $this->involved_personnel_name = $this->searchName;
-        $this->showinvolvedPersonnelDropdown = false;
-        $this->involved_personnel_id = null;
+        if (!empty($this->searchName)) {
+            $this->selected_personnel[] = [
+                'id' => null,
+                'name' => $this->searchName,
+                'is_manual' => true
+            ];
 
-        $this->dispatch('alert', [
-            'text' => "Mode input manual aktif untuk personel terlibat.",
-            'duration' => 3000,
-            'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
-        ]);
+            $this->searchName = ''; // Reset
+            $this->showinvolvedPersonnelDropdown = false;
+
+            $this->dispatch('alert', [
+                'text' => "Personel manual ditambahkan.",
+                'duration' => 3000,
+                'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
+            ]);
+        }
     }
-    public function updatedInvolvedPersonnelName($value)
+
+    public function removePersonnel($index)
     {
-        $this->involved_personnel_id = null;
+        unset($this->selected_personnel[$index]);
+        $this->selected_personnel = array_values($this->selected_personnel); // Re-index array
     }
-
 }
