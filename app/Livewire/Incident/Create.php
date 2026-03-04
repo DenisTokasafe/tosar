@@ -60,7 +60,7 @@ class Create extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
-    public $deptCont;
+    public $deptCont = 'department'; // default ke department
     public function mount()
     {
         if (Auth::check()) {
