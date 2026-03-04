@@ -26,13 +26,13 @@ use Livewire\WithPagination;
 
 class Create extends Component
 {
-    use WithFileUploads,WithPagination;
+    use WithFileUploads, WithPagination;
     public $event_type_id, $likelihoods = [], $consequences = [],
         $event_sub_type_id,
         $location_id,
         $location_spesific,
         $documentation,
-        $documentation_description,$documentation_description_path,
+        $documentation_description, $documentation_description_path,
         $date_time;
 
     #[Url]
@@ -132,9 +132,16 @@ class Create extends Component
         $this->show_location = false;
     }
 
-        public function updatedDocumentationDescription()
+    public function updatedDocumentationDescription()
     {
-        $this->validate(['documentation_description' => 'image|max:10240|mimes:png,jpg,avif']); // Validasi awal 10MB max
+        $this->validate([
+            'documentation_description' => [
+                'required',
+                'image',
+                'max:10240', // Maksimal 10MB
+                'mimes:jpg,jpeg,png,webp,avif,heic'
+            ],
+        ]);
 
         // Hapus file lama jika user mengganti gambar sebelum submit
         if ($this->documentation_description_path) {
