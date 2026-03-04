@@ -214,7 +214,7 @@
 
                     <div class="flex flex-wrap gap-2 mt-2">
                         @foreach($selected_personnel as $index => $person)
-                        <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full text-info-content bg-info">
+                        <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-sm text-info-content bg-info">
                             {{ $person['name'] }}
                             @if($person['is_manual']) (Manual) @endif
 

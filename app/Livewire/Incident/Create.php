@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
@@ -28,7 +29,7 @@ class Create extends Component
         $location_id,
         $location_spesific,
         $documentation,
-        $documentation_description,
+        $documentation_description,$documentation_description_path,
         $date_time;
 
     #[Url]
@@ -126,6 +127,19 @@ class Create extends Component
         $this->location_id = $id;
         $this->searchLocation = $name;
         $this->show_location = false;
+    }
+
+        public function updatedDocumentationDescription()
+    {
+        $this->validate(['documentation_description' => 'image|max:10240']); // Validasi awal 10MB max
+
+        // Hapus file lama jika user mengganti gambar sebelum submit
+        if ($this->documentation_description_path) {
+            FileHelper::deleteFile($this->documentation_description_path);
+        }
+
+        // Langsung kompres dan simpan path-nya
+        $this->documentation_description_path = FileHelper::compressAndStore($this->documentation_description, 'sebelum_perbaikan');
     }
 
     public function edit($likelihoodId, $consequenceId)
