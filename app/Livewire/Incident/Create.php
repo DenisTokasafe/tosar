@@ -134,7 +134,7 @@ class Create extends Component
 
         public function updatedDocumentationDescription()
     {
-        $this->validate(['documentation_description' => 'image|max:10240']); // Validasi awal 10MB max
+        $this->validate(['documentation_description' => 'image|max:10240|mimes:png,jpg,avif']); // Validasi awal 10MB max
 
         // Hapus file lama jika user mengganti gambar sebelum submit
         if ($this->documentation_description_path) {
