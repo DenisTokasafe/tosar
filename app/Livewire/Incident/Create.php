@@ -139,7 +139,7 @@ class Create extends Component
         }
 
         // Langsung kompres dan simpan path-nya
-        $this->documentation_description_path = FileHelper::compressAndStore($this->documentation_description, 'sebelum_perbaikan');
+        $this->documentation_description_path = FileHelper::compressAndStore($this->documentation_description, 'incident/documentation');
     }
 
     public function edit($likelihoodId, $consequenceId)
