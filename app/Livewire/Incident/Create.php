@@ -353,7 +353,7 @@ class Create extends Component
         }
     }
 
-    public function selectInvolvedPersonnel($id, $name)
+    public function selectInvolvedPersonnel($id, $name, $employee_id, $department_name)
     {
         // Cek apakah user sudah ada di list agar tidak duplikat
         $exists = collect($this->selected_personnel)->contains('id', $id);
@@ -362,6 +362,8 @@ class Create extends Component
             $this->selected_personnel[] = [
                 'id' => $id,
                 'name' => $name,
+                'employee_id' => $employee_id,
+                'department_name' => $department_name,
                 'is_manual' => false
             ];
         }
@@ -376,6 +378,8 @@ class Create extends Component
             $this->selected_personnel[] = [
                 'id' => null,
                 'name' => $this->searchName,
+                'employee_id' => null,
+                'department_name' => null,
                 'is_manual' => true
             ];
 

@@ -214,12 +214,26 @@
 
                     <div class="flex flex-wrap gap-2 mt-2">
                         @foreach($selected_personnel as $index => $person)
-                        <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-sm text-info-content bg-info">
-                            {{ $person['name'] }}
-                            @if($person['is_manual']) (Manual) @endif
+                        <span class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md shadow-sm bg-info text-info-content">
+                            <div class="flex flex-col leading-tight">
+                                <span class="font-bold uppercase">
+                                    {{ $person['name'] }}
+                                    @if($person['is_manual']) <span class="text-[10px] italic opacity-75">(Manual)</span> @endif
+                                </span>
 
-                            <button type="button" wire:click="removePersonnel({{ $index }})" class="ml-2 text-blue-600 hover:text-blue-900">
-                                &times;
+                                <span class="text-[10px] opacity-90 mt-0.5">
+                                    {{ $person['employee_id'] ?? '-' }} • {{ $person['department_name'] ?? 'No Department' }}
+                                </span>
+                            </div>
+
+                            <button
+                                type="button"
+                                wire:click="removePersonnel({{ $index }})"
+                                class="inline-flex items-center justify-center w-4 h-4 ml-3 transition-colors duration-200 bg-black/10 hover:bg-black/20 rounded-full focus:outline-none"
+                                title="Hapus">
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
                             </button>
                         </span>
                         @endforeach
@@ -228,6 +242,8 @@
                     @foreach($selected_personnel as $person)
                     <input type="hidden" name="involved_ids[]" value="{{ $person['id'] }}">
                     <input type="hidden" name="involved_names[]" value="{{ $person['name'] }}">
+                    <input type="hidden" name="involved_employee_ids[]" value="{{ $person['employee_id'] }}">
+                    <input type="hidden" name="involved_department_names[]" value="{{ $person['department_name'] }}">
                     @endforeach
                 </fieldset>
             </div>
