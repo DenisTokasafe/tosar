@@ -36,8 +36,12 @@ class EventType extends Model
     }
     public function scopeOnlyIncidents($query)
     {
-         return $query->whereHas('EventCategories', function ($q) {
+        return $query->whereHas('EventCategories', function ($q) {
             $q->where('event_category_name', 'Incident');
         });
+    }
+    public function isInjury()
+    {
+        return strtolower($this->event_type_name) === 'injury';
     }
 }

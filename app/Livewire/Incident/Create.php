@@ -273,6 +273,14 @@ class Create extends Component
     }
     public function render()
     {
+        // Cek apakah ID yang dipilih memiliki nama 'injury'
+        $showBodyPart = false;
+        if ($this->event_type_id) {
+            $type = EventType::find($this->event_type_id);
+            if ($type && strtolower($type->event_type_name) === 'injury') {
+                $showBodyPart = true;
+            }
+        }
         return view('livewire.incident.create', [
             'Department'   => Department::all(),
             'Contractors'  => Contractor::all(),
@@ -283,6 +291,7 @@ class Create extends Component
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
             'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get(),
+            'showBodyPart' => $showBodyPart,
         ]);
     }
 

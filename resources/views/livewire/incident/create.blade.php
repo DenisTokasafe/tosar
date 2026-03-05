@@ -197,9 +197,6 @@
                 </table>
                 @endif
             </fieldset>
-            <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
-            <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
-
             <div class="space-y-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Personel Terlibat / Korban') }}</legend>
@@ -246,7 +243,7 @@
                     <input type="hidden" name="involved_department_names[]" value="{{ $person['department_name'] }}">
                     @endforeach
                 </fieldset>
-
+                @if($showBodyPart)
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
                     <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory,
@@ -272,7 +269,17 @@
                         @endif
                     </div>
                 </fieldset>
+                @else
+                <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+                    <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
+                    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" model="damage_detail" placeholder="{{ __('Jelaskan kerusakan alat atau dampak lingkungan...')}}" required />
+                    @endif
+                </fieldset>
             </div>
+            <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
+            <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
+
+
 
         </div>
         @endif
