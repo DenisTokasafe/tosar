@@ -363,8 +363,8 @@
                         label.innerText = name;
 
                         // Set ke Livewire Property
-                        Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id')).set('body_part_id', idString);
-                        Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id')).set('body_part_name', name);
+                        @this.set('body_part_id', idString);
+                        @this.set('body_part_name', name);
                     });
                 });
             };
