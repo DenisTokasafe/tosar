@@ -269,7 +269,7 @@
                         @endif
                     </div>
                 </fieldset>
-
+                @include('livewire.incident.body-map')
                 @else
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
