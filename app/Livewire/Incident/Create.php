@@ -75,6 +75,7 @@ class Create extends Component
 
     public $involved_personnel = []; // Array utama untuk menampung banyak korban
     public $selected_personnel = [];
+    public $showBodyPart = false;
 
     public function mount()
     {
@@ -271,16 +272,20 @@ class Create extends Component
             ->filter()
             ->toArray();
     }
-    public function render()
+    public function updatedEventTypeId()
     {
-        // Cek apakah ID yang dipilih memiliki nama 'injury'
-        $showBodyPart = false;
+        $this->event_sub_type_id = null;
         if ($this->event_type_id) {
             $type = EventType::find($this->event_type_id);
             if ($type && strtolower($type->event_type_name) === 'injury') {
-                $showBodyPart = true;
+                $this->showBodyPart = true;
             }
+        } else {
+            $this->showBodyPart = false;
         }
+    }
+    public function render()
+    {
         return view('livewire.incident.create', [
             'Department'   => Department::all(),
             'Contractors'  => Contractor::all(),
@@ -290,8 +295,7 @@ class Create extends Component
             'eventSubTypes' => EventSubType::where('event_type_id', $this->event_type_id)->get(),
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
-            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get(),
-            'showBodyPart' => $showBodyPart,
+            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
 
