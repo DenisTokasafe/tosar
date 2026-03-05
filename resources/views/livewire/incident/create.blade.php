@@ -339,43 +339,5 @@
         </div>
 
     </x-incident.layout>
-    <script>
-        document.addEventListener('livewire:initialized', () => {
-            const initBodyMap = () => {
-                const svg = document.getElementById('body-map-svg');
-                if (!svg) return;
 
-                const parts = svg.querySelectorAll('.bp-part');
-                const label = document.getElementById('selected-part-label');
-
-                parts.forEach(part => {
-                    part.addEventListener('click', function() {
-                        // Reset semua warna
-                        parts.forEach(p => p.classList.remove('selected'));
-
-                        // Aktifkan yang diklik
-                        this.classList.add('selected');
-
-                        // Ambil data
-                        const name = this.getAttribute('data-name');
-                        const idString = this.id.replace('part-', ''); // Ambil angka ID-nya saja
-
-                        label.innerText = name;
-
-                        // Set ke Livewire Property
-                        @this.set('body_part_id', idString);
-                        @this.set('body_part_name', name);
-                    });
-                });
-            };
-
-            // Inisialisasi awal
-            initBodyMap();
-
-            // Re-inisialisasi setiap kali Livewire melakukan update (karena @if menghapus elemen dari DOM)
-            Livewire.hook('morph.updated', (el, component) => {
-                initBodyMap();
-            });
-        });
-    </script>
 </section>
