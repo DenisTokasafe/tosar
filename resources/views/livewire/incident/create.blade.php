@@ -243,7 +243,7 @@
                     <input type="hidden" name="involved_department_names[]" value="{{ $person['department_name'] }}">
                     @endforeach
                 </fieldset>
-                @if($showBodyPart)
+                @if($this->isInjury)
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
                     <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory,

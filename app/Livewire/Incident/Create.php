@@ -19,6 +19,7 @@ use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -272,17 +273,17 @@ class Create extends Component
             ->filter()
             ->toArray();
     }
-    public function updatedEventTypeId()
+    #[Computed]
+    public function isInjury()
     {
-        $this->event_sub_type_id = null;
-        if ($this->event_type_id) {
-            $type = EventType::find($this->event_type_id);
-            if ($type && strtolower($type->event_type_name) === 'injury') {
-                $this->showBodyPart = true;
-            }
-        } else {
-            $this->showBodyPart = false;
+        if (!$this->event_type_id) {
+            return false;
         }
+
+        $type = EventType::find($this->event_type_id);
+
+        // Menggunakan str_contains atau strtolower untuk keamanan ekstra
+        return $type && str_contains(strtolower($type->event_type_name), 'injury');
     }
     public function render()
     {
