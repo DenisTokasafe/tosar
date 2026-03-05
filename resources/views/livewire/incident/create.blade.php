@@ -57,7 +57,7 @@
                 @if($this->hasSubTypes)
                 <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
                 @endif
-                <x-form.select-categroy-bahaya :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
+                <x-form.select-categroy-bahaya options_label="-- Pilih Kategori Insiden --" :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
             </div>
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                 <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
