@@ -352,23 +352,27 @@ class Create extends Component
             $this->showinvolvedPersonnelDropdown = false;
         }
     }
-
-    public function selectInvolvedPersonnel($id, $name, $employee_id, $department_name)
+    // Di Blade, panggil dengan: wire:click="selectInvolvedPersonnel({{ $user->id }})"
+    public function selectInvolvedPersonnel($id)
     {
-        // Cek apakah user sudah ada di list agar tidak duplikat
-        $exists = collect($this->selected_personnel)->contains('id', $id);
+        $user = User::find($id); // Ambil data lengkap user
 
-        if (!$exists) {
-            $this->selected_personnel[] = [
-                'id' => $id,
-                'name' => $name,
-                'employee_id' => $employee_id,
-                'department_name' => $department_name,
-                'is_manual' => false
-            ];
+        if ($user) {
+            $exists = collect($this->selected_personnel)->contains('id', $id);
+
+            if (!$exists) {
+                $this->selected_personnel[] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    // Sesuaikan nama kolom di bawah dengan kolom di tabel Anda
+                    'employee_id' => $user->employee_id ?? 'N/A',
+                    'department_name' => $user->department_name ?? 'N/A',
+                    'is_manual' => false
+                ];
+            }
         }
 
-        $this->searchName = ''; // Reset search input
+        $this->searchName = '';
         $this->showinvolvedPersonnelDropdown = false;
     }
 
