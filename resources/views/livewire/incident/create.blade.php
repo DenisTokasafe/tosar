@@ -269,7 +269,54 @@
                         @endif
                     </div>
                 </fieldset>
-                @include('livewire.incident.body-map')
+                <div class="d-flex justify-content-center bg-white border rounded p-3">
+                    <svg id="body-map-svg" width="500" height="400" viewBox="0 0 520 520">
+                        <style>
+                            .bp-part {
+                                fill: #e2e8f0;
+                                stroke: #475569;
+                                stroke-width: 1;
+                                transition: all 0.2s;
+                                cursor: pointer;
+                            }
+
+                            .bp-part:hover {
+                                fill: #94a3b8;
+                            }
+
+                            .bp-part.selected {
+                                fill: #ef4444;
+                                stroke: #b91c1c;
+                                filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5));
+                            }
+
+                            .label-text {
+                                font-family: sans-serif;
+                                font-size: 12px;
+                                font-weight: bold;
+                                fill: #1e293b;
+                                pointer-events: none;
+                            }
+                        </style>
+
+                        <g transform="translate(10, 30)">
+                            <text x="125" y="-10" class="label-text" text-anchor="middle">TAMPAK DEPAN</text>
+                            <ellipse id="part-9" class="bp-part" cx="125" cy="50" rx="30" ry="35" data-name="Kepala" />
+                            <rect id="part-26" class="bp-part" x="90" y="90" width="70" height="60" rx="5" data-name="Dada" />
+                            <rect id="part-27" class="bp-part" x="90" y="155" width="70" height="50" rx="5" data-name="Perut" />
+                            <rect id="part-11" class="bp-part" x="55" y="90" width="30" height="20" rx="5" data-name="Bahu Kanan" />
+                            <rect id="part-12" class="bp-part" x="165" y="90" width="30" height="20" rx="5" data-name="Bahu Kiri" />
+                            <rect id="part-33" class="bp-part" x="90" y="210" width="32" height="80" rx="5" data-name="Paha Kanan" />
+                            <rect id="part-34" class="bp-part" x="128" y="210" width="32" height="80" rx="5" data-name="Paha Kiri" />
+                        </g>
+
+                        <g transform="translate(260, 30)">
+                            <text x="125" y="-10" class="label-text" text-anchor="middle">TAMPAK BELAKANG</text>
+                            <path id="part-28" class="bp-part" d="M80,90 L170,90 L160,200 L90,200 Z" data-name="Punggung Atas" />
+                            <rect id="part-32" class="bp-part" x="90" y="205" width="70" height="40" rx="10" data-name="Bokong" />
+                        </g>
+                    </svg>
+                </div>
                 @else
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
