@@ -269,6 +269,7 @@
                         @endif
                     </div>
                 </fieldset>
+                @include('livewire.incident.body-map')
                 @else
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
@@ -336,5 +337,45 @@
                 <button type="button" class="btn btn-xs btn-success" wire:click="submit">Submit</button>
                 @endif
         </div>
+
     </x-incident.layout>
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            const initBodyMap = () => {
+                const svg = document.getElementById('body-map-svg');
+                if (!svg) return;
+
+                const parts = svg.querySelectorAll('.bp-part');
+                const label = document.getElementById('selected-part-label');
+
+                parts.forEach(part => {
+                    part.addEventListener('click', function() {
+                        // Reset semua warna
+                        parts.forEach(p => p.classList.remove('selected'));
+
+                        // Aktifkan yang diklik
+                        this.classList.add('selected');
+
+                        // Ambil data
+                        const name = this.getAttribute('data-name');
+                        const idString = this.id.replace('part-', ''); // Ambil angka ID-nya saja
+
+                        label.innerText = name;
+
+                        // Set ke Livewire Property
+                        Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id')).set('body_part_id', idString);
+                        Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id')).set('body_part_name', name);
+                    });
+                });
+            };
+
+            // Inisialisasi awal
+            initBodyMap();
+
+            // Re-inisialisasi setiap kali Livewire melakukan update (karena @if menghapus elemen dari DOM)
+            Livewire.hook('morph.updated', (el, component) => {
+                initBodyMap();
+            });
+        });
+    </script>
 </section>

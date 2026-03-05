@@ -77,6 +77,8 @@ class Create extends Component
     public $involved_personnel = []; // Array utama untuk menampung banyak korban
     public $selected_personnel = [];
     public $showBodyPart = false;
+    public $body_part_id;
+    public $body_part_name;
 
     public function mount()
     {
