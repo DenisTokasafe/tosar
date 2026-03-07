@@ -60,7 +60,8 @@
 </fieldset>
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Perbaikan') }}</legend>
-    <x-form.textarea label="Deskripsi Tindakan" model="action_description" placeholder="Jelaskan tindakan perbaikan yang sudah dilakukan atau direncanakan..." />
+    <x-form.text_area label="Tindakan Langsung" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" disabled />
+    <x-form.textarea label="Rencana Perbaikan Jangka Panjang" model="action_description" placeholder="Langkah agar tidak terulang..." />
     <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 ">
         <x-form.tgl-waktu label="Batas Waktu Penyelesaian" model="completion_deadline" :min-date="now()->format('Y-m-d\TH:i')" />
         <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan" model="actual_completion_date" :min-date="now()->format('Y-m-d\TH:i')" />
