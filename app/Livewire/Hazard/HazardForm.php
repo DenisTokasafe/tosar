@@ -211,7 +211,7 @@ class HazardForm extends Component
     // Hook untuk doc_deskripsi
     public function updatedDocDeskripsi()
     {
-        $this->validate(['doc_deskripsi' => 'image|max:10240']); // Validasi awal 10MB max
+        $this->validate(['doc_deskripsi' => 'max:10240']); // Validasi awal 10MB max
 
         // Hapus file lama jika user mengganti gambar sebelum submit
         if ($this->doc_deskripsi_path) {
@@ -225,7 +225,7 @@ class HazardForm extends Component
     // Hook untuk doc_corrective
     public function updatedDocCorrective()
     {
-        $this->validate(['doc_corrective' => 'image|max:10240']);
+        $this->validate(['doc_corrective' => 'max:10240']);
 
         if ($this->doc_corrective_path) {
             FileHelper::deleteFile($this->doc_corrective_path);
@@ -452,7 +452,7 @@ class HazardForm extends Component
     public function addAction()
     {
 
-       $this->dispatch('validate-action_description');
+        $this->dispatch('validate-action_description');
         $this->validate(
             [
                 'action_description'       => 'required|string',
