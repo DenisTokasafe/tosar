@@ -1,4 +1,4 @@
- <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 lg:grid-cols-3">
+ <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 ">
      <fieldset class="fieldset">
          <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" title="Pilih Gambar" keterangan="Pilih Bukti Visual: Foto"
              :file="$visual_evidence" />
