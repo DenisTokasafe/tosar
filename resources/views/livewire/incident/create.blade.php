@@ -4,8 +4,8 @@
     <div class="flex justify-start mb-2 " wire:ignore>
         {{ Breadcrumbs::render('incident-create') }}
     </div>
-    <flux:heading level="1" class="mb-1 capitalize">Buat Laporan Insiden</flux:heading>
-    <flux:subheading size="sm" class="mb-1 text-accent">Laporkan insiden dengan detail untuk penanganan yang tepat.</flux:subheading>
+    <flux:heading level="1" class="mb-1 capitalize">{{ __('Buat Laporan Insiden') }}</flux:heading>
+    <flux:subheading size="sm" class="mb-1 text-accent">{{ __('Laporkan insiden dengan detail untuk penanganan yang tepat.') }}</flux:subheading>
     <x-incident.layout>
         {{-- PROGRESS & STEPS VISUAL --}}
         <ul class="absolute inset-x-0 top-0 z-10 border-t border-l-0 border-r-0 rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100">
