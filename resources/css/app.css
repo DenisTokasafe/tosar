@@ -247,49 +247,44 @@
 @plugin "daisyui/theme" {
     name: "sentry-interlock";
     default: false;
-    prefersdark: false;
+    prefersdark: true;
     color-scheme: "light";
 
-    /* --- Base Colors (Muted & Soft) --- */
-    /* Base 100: Putih gading/off-white (tidak menyilaukan) */
-    --color-base-100: oklch(98% 0.01 240);
-    /* Base 200: Abu-abu kebiruan lembut untuk background utama */
-    --color-base-200: oklch(96% 0.01 245);
-    /* Base 300: Border yang sangat halus */
-    --color-base-300: oklch(92% 0.01 240);
-    --color-base-content: oklch(35% 0.02 240);
+    /* Color Palette */
+    --color-base-100: oklch(98% 0.003 247.858);
+    --color-base-200: oklch(96% 0.007 247.896);
+    --color-base-300: oklch(92% 0.013 255.508);
+    --color-base-content: oklch(20% 0.042 265.755);
+    --color-primary: oklch(70% 0.191 22.216);
+    --color-primary-content: oklch(25% 0.092 26.042);
+    --color-secondary: oklch(71% 0.202 349.761);
+    --color-secondary-content: oklch(28% 0.109 3.907);
+    --color-accent: oklch(79% 0.209 151.711);
+    --color-accent-content: oklch(26% 0.065 152.934);
+    --color-neutral: oklch(44% 0.043 257.281);
+    --color-neutral-content: oklch(98% 0.003 247.858);
 
-    /* --- Primary: SOFT GOLD (Modern & Elegant) --- */
-    /* Emas yang lebih redup, memberikan kesan premium namun tenang */
-    --color-primary: oklch(85% 0.1 95);
-    --color-primary-content: oklch(40% 0.05 90);
+    /* State Colors */
+    --color-info: oklch(78% 0.154 211.53);
+    --color-info-content: oklch(30% 0.056 229.695);
+    --color-success: oklch(84% 0.238 128.85);
+    --color-success-content: oklch(27% 0.072 132.109);
+    --color-warning: oklch(75% 0.183 55.934);
+    --color-warning-content: oklch(26% 0.079 36.259);
+    --color-error: oklch(70% 0.191 22.216);
+    --color-error-content: oklch(25% 0.092 26.042);
 
-    /* --- Secondary: SLATE NAVY (Professional) --- */
-    /* Navy yang lebih ke arah Slate/Abu-abu tua agar tidak terlalu tajam */
-    --color-secondary: oklch(45% 0.05 240);
-    --color-secondary-content: oklch(98% 0.01 240);
-
-    /* --- Accent: ETHER BLUE (Intuisi & Kompetensi) --- */
-    /* Biru langit yang sangat lembut */
-    --color-accent: oklch(90% 0.05 210);
-    --color-accent-content: oklch(40% 0.05 210);
-
-    /* --- State Colors (Soft Tones) --- */
-    --color-info: oklch(88% 0.05 240);
-    --color-success: oklch(88% 0.05 160);
-    --color-warning: oklch(88% 0.05 90);
-    --color-error: oklch(88% 0.05 30);
-
-    /* --- Visual Geometry (Modern & Round) --- */
-    /* Menggunakan radius yang lebih bulat agar terkesan modern dan "friendly" */
+    /* --- Efek Tambahan --- */
     --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
-    --radius-box: 1rem;
-
-    /* Border tipis untuk kesan minimalis */
+    --radius-field: 0.25rem; /* Memberikan sedikit lengkungan agar tidak terlalu kaku */
+    --radius-box: 0.5rem; /* Memberikan sedikit lengkungan agar tidak terlalu kaku */
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
     --border: 1px;
-    --depth: 0;
-    --noise: 0;
+
+    /* Peningkatan Kedalaman Visual */
+    --depth: 2; /* Memberikan efek elevasi yang lebih terasa pada tombol dan card */
+    --noise: 0.05; /* Menambahkan tekstur halus agar warna solid tidak membosankan */
 }
 
 @plugin "daisyui" {
