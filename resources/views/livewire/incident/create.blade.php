@@ -11,7 +11,7 @@
         <ul class="absolute inset-x-0 top-0 z-10 border-t border-l-0 border-r-0 rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100">
             <li class="step {{ $currentStep >= 1 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">{{ __('Informasi Dasar') }}</li>
             <li class="step {{ $currentStep >= 2 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">{{ __('Detail & Risiko') }}</li>
-            <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">{{ __('Dokumentasi') }}</li>
+            <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">{{ __('Dokumentasi') }}& {{ __('Tindakan Perbaikan') }}</li>
         </ul>
         {{-- STEP 1: Info Dasar --}}
         @if($currentStep == 1)
