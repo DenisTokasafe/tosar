@@ -21,7 +21,7 @@
         <span @class([ 'btn btn-xs' , 'btn-info'=> !$disabled,
             'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled
             ])>
-            {{ __($placeholder) }}
+            {{ __($title) }}
         </span>
 
         {{-- Loading State --}}
