@@ -80,7 +80,7 @@ class Create extends Component
     public $showBodyPart = false;
     public $body_part_id;
     public $body_part_name;
-
+    public $corrective_actions = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -92,6 +92,9 @@ class Create extends Component
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
+        if (empty($this->corrective_actions)) {
+            $this->addCorrectiveRow();
+        }
     }
 
 
@@ -375,8 +378,6 @@ class Create extends Component
     {
         $this->pelapor_id = null;
     }
-
-    // Pencarian tetap sama, tapi tidak mereset id tunggal
     public function updatedSearchName()
     {
         if (strlen($this->searchName) > 1) {
@@ -414,7 +415,6 @@ class Create extends Component
         $this->searchName = '';
         $this->showinvolvedPersonnelDropdown = false;
     }
-
     public function enableInvolvedPersonnelManual()
     {
         if (!empty($this->searchName)) {
@@ -441,5 +441,43 @@ class Create extends Component
     {
         unset($this->selected_personnel[$index]);
         $this->selected_personnel = array_values($this->selected_personnel); // Re-index array
+    }
+
+    // fungsi untuk menambahkan baris tindakan perbaikan
+    public function addCorrectiveRow()
+    {
+        $this->corrective_actions[] = [
+            'plan' => '',
+            'pic_id' => null,
+            'pic_name' => '',
+            'due_date' => '',
+            'show_pic_dropdown' => false
+        ];
+    }
+
+    public function removeCorrectiveRow($index)
+    {
+        unset($this->corrective_actions[$index]);
+        $this->corrective_actions = array_values($this->corrective_actions);
+    }
+    public function updatedCorrectiveActions($value, $key)
+    {
+        if (str_ends_with($key, '.pic_name')) {
+            $index = explode('.', $key)[0];
+            if (strlen($value) > 1) {
+                // Gunakan variabel options yang sudah ada atau buat baru
+                $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
+                $this->corrective_actions[$index]['show_pic_dropdown'] = true;
+            } else {
+                $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+            }
+        }
+    }
+
+    public function selectPIC($index, $id, $name)
+    {
+        $this->corrective_actions[$index]['pic_id'] = $id;
+        $this->corrective_actions[$index]['pic_name'] = $name;
+        $this->corrective_actions[$index]['show_pic_dropdown'] = false;
     }
 }
