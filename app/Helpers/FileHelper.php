@@ -44,7 +44,7 @@ class FileHelper
         } else {
             // Jika bukan gambar, simpan asli
             $path = $folder . '/' . $filename;
-            Storage::disk('public')->put($path, file_get_contents($file));
+            Storage::disk('public')->put($path, file_get_contents($file->getRealPath()));
         }
 
         return $path;

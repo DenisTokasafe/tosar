@@ -160,18 +160,22 @@ class Create extends Component
         $this->validate([
             'supporting_documents' => [
                 'required',
-                'max:10240', // Maksimal 10MB
-                'mimes:pdf,doc,docx,xls,xlsx,txt|max:5120', // Maks 5MB'
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx,txt',
+                'max:10240', // Maksimal 10MB total
             ],
         ]);
 
-        // Hapus file lama jika user mengganti gambar sebelum submit
+        // Hapus file lama jika ada
         if ($this->supporting_documents_path) {
             FileHelper::deleteFile($this->supporting_documents_path);
         }
 
-        // Langsung kompres dan simpan path-nya
-        $this->supporting_documents_path = FileHelper::compressAndStore($this->supporting_documents, 'incident/supporting_documents/documentation');
+        // Simpan file
+        $this->supporting_documents_path = FileHelper::compressAndStore(
+            $this->supporting_documents,
+            'incident/supporting_documents/documentation'
+        );
     }
 
     public function edit($likelihoodId, $consequenceId)
