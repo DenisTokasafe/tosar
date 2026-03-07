@@ -282,7 +282,7 @@
         @if($currentStep == 3)
         <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 lg:grid-cols-3">
             <fieldset class="fieldset">
-                <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" title="Pilih Bukti Visual: Foto"
+                <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" keterangan="Pilih Bukti Visual: Foto"
                     :file="$visual_evidence" />
 
                 <div wire:loading.remove wire:target="visual_evidence">
@@ -303,7 +303,7 @@
                 <x-label-error :messages="$errors->get('visual_evidence')" />
             </fieldset>
             <fieldset class="fieldset">
-                <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" title="Pilih Dokumen Pendukung:Word, PDF" :file="$supporting_documents" />
+                <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" keterangan="Pilih Dokumen Pendukung:Word, PDF" :file="$supporting_documents" />
 
                 <div wire:loading.remove wire:target="supporting_documents">
                     @if ($supporting_documents)
