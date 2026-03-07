@@ -246,49 +246,49 @@
 
 @plugin "daisyui/theme" {
     name: "sentry-interlock";
-    default: true;
+    default: false;
     prefersdark: false;
     color-scheme: "light";
 
-    /* --- Base Colors (Stabilitas & Kebersihan Data) --- */
-    /* Base 100: Putih bersih untuk laporan yang mudah diaudit */
-    --color-base-100: oklch(100% 0 0);
-    /* Base 200: Abu-abu sangat muda untuk area input/form */
-    --color-base-200: oklch(98% 0.005 247.85);
-    /* Base 300: Border yang halus namun tegas */
-    --color-base-300: oklch(92% 0.01 255.32);
-    --color-base-content: oklch(25% 0.02 255);
+    /* --- Base Colors (Muted & Soft) --- */
+    /* Base 100: Putih gading/off-white (tidak menyilaukan) */
+    --color-base-100: oklch(98% 0.01 240);
+    /* Base 200: Abu-abu kebiruan lembut untuk background utama */
+    --color-base-200: oklch(96% 0.01 245);
+    /* Base 300: Border yang sangat halus */
+    --color-base-300: oklch(92% 0.01 240);
+    --color-base-content: oklch(35% 0.02 240);
 
-    /* --- Primary: EMAS (Operasional & Kilauan) --- */
-    /* Melambangkan jam kerja, training, dan data yang 'berkilau' */
-    --color-primary: oklch(77% 0.15 90);
-    --color-primary-content: oklch(20% 0.02 255);
+    /* --- Primary: SOFT GOLD (Modern & Elegant) --- */
+    /* Emas yang lebih redup, memberikan kesan premium namun tenang */
+    --color-primary: oklch(85% 0.1 95);
+    --color-primary-content: oklch(40% 0.05 90);
 
-    /* --- Secondary: NAVY (Ketangguhan & Struktur) --- */
-    /* Melambangkan perisai pelindung dan integrasi sistem */
-    --color-secondary: oklch(28% 0.06 250);
-    --color-secondary-content: oklch(98% 0.005 247.85);
+    /* --- Secondary: SLATE NAVY (Professional) --- */
+    /* Navy yang lebih ke arah Slate/Abu-abu tua agar tidak terlalu tajam */
+    --color-secondary: oklch(45% 0.05 240);
+    --color-secondary-content: oklch(98% 0.01 240);
 
-    /* --- Accent: INTUISI (Celah Presisi) --- */
-    /* Melambangkan peran manusia dan kompetensi */
-    --color-accent: oklch(84% 0.1 200);
-    --color-accent-content: oklch(25% 0.05 210);
+    /* --- Accent: ETHER BLUE (Intuisi & Kompetensi) --- */
+    /* Biru langit yang sangat lembut */
+    --color-accent: oklch(90% 0.05 210);
+    --color-accent-content: oklch(40% 0.05 210);
 
-    /* --- State Colors --- */
-    --color-info: oklch(65% 0.18 250);
-    --color-success: oklch(70% 0.15 150);
-    --color-warning: oklch(80% 0.16 85);
-    --color-error: oklch(65% 0.22 25);
+    /* --- State Colors (Soft Tones) --- */
+    --color-info: oklch(88% 0.05 240);
+    --color-success: oklch(88% 0.05 160);
+    --color-warning: oklch(88% 0.05 90);
+    --color-error: oklch(88% 0.05 30);
 
-    /* --- Visual Geometry (Filosofi Geometris) --- */
-    /* Sudut yang lebih tegas (S-Geometris) namun tetap modern */
-    --radius-selector: 0.2rem;
-    --radius-field: 0.375rem;
-    --radius-box: 0.5rem;
+    /* --- Visual Geometry (Modern & Round) --- */
+    /* Menggunakan radius yang lebih bulat agar terkesan modern dan "friendly" */
+    --radius-selector: 0.5rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
 
-    /* Ketebalan border untuk kesan 'Interlock' yang kuat */
-    --border: 1.5px;
-    --depth: 1;
+    /* Border tipis untuk kesan minimalis */
+    --border: 1px;
+    --depth: 0;
     --noise: 0;
 }
 
