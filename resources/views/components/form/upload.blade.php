@@ -3,7 +3,8 @@
 'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()),
 'model' => null,
 'file' => null,
-'placeholder' => 'Pilih file atau gambar',
+'title' => 'Pilih file atau gambar',
+'keterangan' => 'Tidak ada file yang dipilih',
 'optional' => true,
 'disabled' => false
 ])
@@ -38,7 +39,7 @@
             @elseif ($file && is_string($file))
             {{ basename($file) }}
             @else
-            {{ __('Belum ada file') }}
+            {{ __($keterangan) }}
             @endif
         </span>
     </label>

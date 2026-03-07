@@ -303,16 +303,12 @@
                 <x-label-error :messages="$errors->get('visual_evidence')" />
             </fieldset>
             <fieldset class="fieldset">
-                <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" placeholder="JSA,Permit to Work, checklist, sertifikat inspeksi, dll" :file="$supporting_documents" />
+                <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" title="Supporting Documents" :file="$supporting_documents" />
 
                 <div wire:loading.remove wire:target="supporting_documents">
                     @if ($supporting_documents)
-                    {{-- CEK GAMBAR --}}
-                    @if (in_array($supporting_documents->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                    <img src="{{ $supporting_documents->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded" />
-
                     {{-- CEK DOKUMEN --}}
-                    @elseif (in_array($supporting_documents->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+                    @if (in_array($supporting_documents->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
                     <div class="flex items-center gap-2 mt-2">
                         @if ($supporting_documents->getClientOriginalExtension() == 'pdf')
                         <x-icon.pdf class="w-8 h-8" />
