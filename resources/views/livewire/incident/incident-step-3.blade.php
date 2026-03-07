@@ -66,8 +66,8 @@
             + {{ __('Tambah Rencana') }}
         </button>
     </div>
-    @foreach($corrective_actions as $index => $action)
     <x-form.text_area label="Tindakan Langsung" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" disabled />
+    @foreach($corrective_actions as $index => $action)
     <x-form.textarea label="Rencana Perbaikan Jangka Panjang" model="action_description" placeholder="Langkah agar tidak terulang..." />
     <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-3 ">
         <x-form.searchable-select-advanced
