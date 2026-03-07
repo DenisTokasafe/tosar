@@ -6,6 +6,7 @@ use App\Models\Hazard;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Builder;
+
 class HazardPolicy
 {
     /**
@@ -42,16 +43,12 @@ class HazardPolicy
         if ($hazard->assignedErms()->wherePivot('erm_id', $user->id)->exists()) {
             return true;
         }
-
-        // 5. ✅ Moderator (Logika Diperbarui)
-        // Moderator hanya bisa akses jika penugasannya cocok dengan Hazard (EventType + Department/Contractor)
-        $isAssignedModerator = $user->moderatorAssignments()
-            ->where('event_type_id', $hazard->event_type_id)
+        $isAssignedEerm = $user->ermAssignments()
             ->where(function (Builder $query) use ($hazard) {
 
                 // Kriteria A: Penugasan bersifat umum (tidak spesifik pada Department/Contractor)
                 $query->whereNull('department_id')
-                      ->whereNull('contractor_id');
+                    ->whereNull('contractor_id');
 
                 // Kriteria B: Penugasan spesifik untuk Department
                 if ($hazard->department_id) {
@@ -62,11 +59,35 @@ class HazardPolicy
                 if ($hazard->contractor_id) {
                     $query->orWhere('contractor_id', $hazard->contractor_id);
                 }
+            })
+            ->exists();
 
+        // 5. ✅ Moderator (Logika Diperbarui)
+        // Moderator hanya bisa akses jika penugasannya cocok dengan Hazard (EventType + Department/Contractor)
+        $isAssignedModerator = $user->moderatorAssignments()
+            ->where('event_type_id', $hazard->event_type_id)
+            ->where(function (Builder $query) use ($hazard) {
+
+                // Kriteria A: Penugasan bersifat umum (tidak spesifik pada Department/Contractor)
+                $query->whereNull('department_id')
+                    ->whereNull('contractor_id');
+
+                // Kriteria B: Penugasan spesifik untuk Department
+                if ($hazard->department_id) {
+                    $query->orWhere('department_id', $hazard->department_id);
+                }
+
+                // Kriteria C: Penugasan spesifik untuk Contractor
+                if ($hazard->contractor_id) {
+                    $query->orWhere('contractor_id', $hazard->contractor_id);
+                }
             })
             ->exists();
 
         if ($isAssignedModerator) {
+            return true;
+        }
+        if ($isAssignedEerm) {
             return true;
         }
 

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+
 class User extends Authenticatable implements LdapAuthenticatable
 {
     use Notifiable, AuthenticatesWithLdap;
@@ -86,6 +87,10 @@ class User extends Authenticatable implements LdapAuthenticatable
     public function moderatorAssignments()
     {
         return $this->hasMany(ModeratorAssignment::class);
+    }
+    public function ermAssignments()
+    {
+        return $this->hasMany(ErmAssignment::class,);
     }
     public function assignedTo(Hazard $report): bool
     {
