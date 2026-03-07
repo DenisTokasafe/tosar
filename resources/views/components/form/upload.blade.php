@@ -1,10 +1,11 @@
 @props([
-    'label' => 'Lampirkan foto atau dokumentasi',
-    'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()),
-    'model' => null,
-    'file' => null,
-    'optional' => true,
-    'disabled' => false
+'label' => 'Lampirkan foto atau dokumentasi',
+'id' => 'upload-' . md5($attributes->get('wire:model') ?? uniqid()),
+'model' => null,
+'file' => null,
+'placeholder' => 'Pilih file atau gambar',
+'optional' => true,
+'disabled' => false
 ])
 
 <div class="flex flex-col gap-1">
@@ -12,18 +13,14 @@
     <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" />
 
     <label for="{{ $disabled ? '' : $id }}"
-        @class([
-            'flex items-center gap-2 border rounded border-info',
-            'cursor-pointer hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden' => !$disabled,
-            'cursor-not-allowed bg-gray-100 opacity-60 border-gray-300' => $disabled,
+        @class([ 'flex items-center gap-2 border rounded border-info' , 'cursor-pointer hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden'=> !$disabled,
+        'cursor-not-allowed bg-gray-100 opacity-60 border-gray-300' => $disabled,
         ])>
 
-        <span @class([
-            'btn btn-xs',
-            'btn-info' => !$disabled,
+        <span @class([ 'btn btn-xs' , 'btn-info'=> !$disabled,
             'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled
-        ])>
-            {{ __('Pilih file atau gambar') }}
+            ])>
+            {{ __($placeholder) }}
         </span>
 
         {{-- Loading State --}}
@@ -37,11 +34,11 @@
         {{-- File Name State --}}
         <span wire:loading.remove wire:target="{{ $model }}" class="px-2 text-xs text-gray-500 truncate">
             @if ($file && is_object($file))
-                {{ $file->getClientOriginalName() }}
+            {{ $file->getClientOriginalName() }}
             @elseif ($file && is_string($file))
-                {{ basename($file) }}
+            {{ basename($file) }}
             @else
-                {{ __('Belum ada file') }}
+            {{ __('Belum ada file') }}
             @endif
         </span>
     </label>
@@ -52,10 +49,9 @@
         {{ $attributes->whereDoesntStartWith('wire:model') }}
         wire:model="{{ $model }}"
         class="hidden"
-        @disabled($disabled)
-    />
+        @disabled($disabled) />
 
     @error($model)
-        <span class="mt-1 text-xs text-error">{{ $message }}</span>
+    <span class="mt-1 text-xs text-error">{{ $message }}</span>
     @enderror
 </div>

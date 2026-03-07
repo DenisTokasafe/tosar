@@ -6,7 +6,6 @@
     </div>
     <flux:heading level="1" class="mb-1 capitalize">Buat Laporan Insiden</flux:heading>
     <flux:subheading size="sm" class="mb-1 text-accent">Laporkan insiden dengan detail untuk penanganan yang tepat.</flux:subheading>
-
     <x-incident.layout>
         {{-- PROGRESS & STEPS VISUAL --}}
         <ul class="absolute inset-x-0 top-0 z-10 border-t border-l-0 border-r-0 rounded-t-sm shadow-md border-base-300 steps lg:steps-horizontal bg-base-100">
@@ -197,7 +196,7 @@
                 </table>
                 @endif
             </fieldset>
-            <div class="space-y-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 space-y-6 md:grid-cols-2">
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Personel Terlibat / Korban') }}</legend>
                     <x-form.searchable-select-advanced
@@ -226,7 +225,7 @@
                             <button
                                 type="button"
                                 wire:click="removePersonnel({{ $index }})"
-                                class="inline-flex items-center justify-center w-4 h-4 ml-3 transition-colors duration-200 bg-black/10 hover:bg-black/20 rounded-full focus:outline-none"
+                                class="inline-flex items-center justify-center w-4 h-4 ml-3 transition-colors duration-200 rounded-full bg-black/10 hover:bg-black/20 focus:outline-none"
                                 title="Hapus">
                                 <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -235,7 +234,6 @@
                         </span>
                         @endforeach
                     </div>
-
                     @foreach($selected_personnel as $person)
                     <input type="hidden" name="involved_ids[]" value="{{ $person['id'] }}">
                     <input type="hidden" name="involved_names[]" value="{{ $person['name'] }}">
@@ -269,7 +267,6 @@
                         @endif
                     </div>
                 </fieldset>
-                @include('livewire.incident.body-map')
                 @else
                 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
                     <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
@@ -279,50 +276,69 @@
             </div>
             <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
             <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
-
-
-
         </div>
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)
         <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 md:grid-cols-2 lg:grid-cols-3">
-            <fieldset class=" fieldset">
-                <x-form.upload label="Lampirkan Bukti Visual(Foto)" model="documentation_description"
-                    :file="$documentation_description" />
-                <div wire:loading.remove wire:target="documentation_description">
-                    @if ($documentation_description)
-                    @if (in_array($documentation_description->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
-                    <img src="{{ $documentation_description->temporaryUrl() }}"
-                        class="mt-2 {{ $documentation_description ? 'w-40' : '' }} h-auto rounded border" />
-                    @elseif (in_array($documentation_description->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
+            <fieldset class="fieldset">
+                <x-form.upload label="Lampirkan Bukti Visual (Foto)" model="visual_evidence"
+                    :file="$visual_evidence" />
+
+                <div wire:loading.remove wire:target="visual_evidence">
+                    @if ($visual_evidence)
+                    @if (in_array($visual_evidence->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                    {{-- Preview Gambar --}}
+                    <img src="{{ $visual_evidence->temporaryUrl() }}"
+                        class="w-40 h-auto mt-2 border rounded" />
+                    @else
+                    {{-- Fallback jika format lain --}}
+                    <p class="mt-2 text-sm text-gray-600">
+                        File: {{ $visual_evidence->getClientOriginalName() }}
+                    </p>
+                    @endif
+                    @endif
+                </div>
+
+                <x-label-error :messages="$errors->get('visual_evidence')" />
+            </fieldset>
+            <fieldset class="fieldset">
+                <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" placeholder="JSA,Permit to Work, checklist, sertifikat inspeksi, dll" :file="$supporting_documents" />
+
+                <div wire:loading.remove wire:target="supporting_documents">
+                    @if ($supporting_documents)
+                    {{-- CEK GAMBAR --}}
+                    @if (in_array($supporting_documents->getClientOriginalExtension(), ['jpg', 'jpeg', 'png']))
+                    <img src="{{ $supporting_documents->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded" />
+
+                    {{-- CEK DOKUMEN --}}
+                    @elseif (in_array($supporting_documents->getClientOriginalExtension(), ['pdf', 'doc', 'docx']))
                     <div class="flex items-center gap-2 mt-2">
-                        @if ($documentation_description->getClientOriginalExtension() == 'pdf')
+                        @if ($supporting_documents->getClientOriginalExtension() == 'pdf')
                         <x-icon.pdf class="w-8 h-8" />
-                        <span
-                            class="text-sm text-red-600">{{ $documentation_description->getClientOriginalName() }}</span>
-                        @elseif (in_array($documentation_description->getClientOriginalExtension(), ['doc', 'docx']))
+                        <span class="text-sm text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                        @elseif (in_array($supporting_documents->getClientOriginalExtension(), ['doc', 'docx']))
                         <x-icon.word class="w-8 h-8" />
-                        <span
-                            class="text-sm text-blue-600">{{ $documentation_description->getClientOriginalName() }}</span>
+                        <span class="text-sm text-blue-600">{{ $supporting_documents->getClientOriginalName() }}</span>
                         @else
-                        {{-- Ikon generik untuk file lain --}}
-                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                        {{-- Ikon generik --}}
+                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
                         </svg>
-                        <span class="text-sm text-gray-600">File:
-                            {{ $documentation_description->getClientOriginalName() }}</span>
+                        <span class="text-sm text-gray-600">{{ $supporting_documents->getClientOriginalName() }}</span>
                         @endif
-                        @else
-                        <p class="mt-2 text-sm text-gray-600">File:
-                            {{ $documentation_description->getClientOriginalName() }}
-                        </p>
-                        @endif
-                        @endif
-                    </div>
-                    <x-label-error :messages="$errors->get('documentation_description')" />
+                    </div> {{-- DIV PENUTUP DARI FLEX ITEM --}}
+
+                    {{-- FALLBACK JIKA BUKAN GAMBAR MAUPUN DOKUMEN DI ATAS --}}
+                    @else
+                    <p class="mt-2 text-sm text-gray-600">
+                        File: {{ $supporting_documents->getClientOriginalName() }}
+                    </p>
+                    @endif {{-- TUTUP if UTAMA --}}
+                    @endif
+                </div> {{-- TUTUP wire:loading.remove --}}
+
+                <x-label-error :messages="$errors->get('supporting_documents')" />
             </fieldset>
         </div>
         @endif

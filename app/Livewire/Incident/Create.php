@@ -33,7 +33,8 @@ class Create extends Component
         $location_id,
         $location_spesific,
         $documentation,
-        $documentation_description, $documentation_description_path,
+        $visual_evidence, $visual_evidence_path,
+        $supporting_documents, $supporting_documents_path,
         $date_time;
 
     #[Url]
@@ -136,10 +137,10 @@ class Create extends Component
         $this->show_location = false;
     }
 
-    public function updatedDocumentationDescription()
+    public function updatedVisualEvidence()
     {
         $this->validate([
-            'documentation_description' => [
+            'visual_evidence' => [
                 'required',
                 'max:10240', // Maksimal 10MB
                 'mimes:jpg,jpeg,png,webp,avif,heic'
@@ -147,12 +148,30 @@ class Create extends Component
         ]);
 
         // Hapus file lama jika user mengganti gambar sebelum submit
-        if ($this->documentation_description_path) {
-            FileHelper::deleteFile($this->documentation_description_path);
+        if ($this->visual_evidence_path) {
+            FileHelper::deleteFile($this->visual_evidence_path);
         }
 
         // Langsung kompres dan simpan path-nya
-        $this->documentation_description_path = FileHelper::compressAndStore($this->documentation_description, 'incident/documentation');
+        $this->visual_evidence_path = FileHelper::compressAndStore($this->visual_evidence, 'incident/visual_evidence/documentation');
+    }
+    public function updatedSupportingDocuments()
+    {
+        $this->validate([
+            'supporting_documents' => [
+                'required',
+                'max:10240', // Maksimal 10MB
+                'mimes:pdf,doc,docx,xls,xlsx,txt|max:5120', // Maks 5MB'
+            ],
+        ]);
+
+        // Hapus file lama jika user mengganti gambar sebelum submit
+        if ($this->supporting_documents_path) {
+            FileHelper::deleteFile($this->supporting_documents_path);
+        }
+
+        // Langsung kompres dan simpan path-nya
+        $this->supporting_documents_path = FileHelper::compressAndStore($this->supporting_documents, 'incident/supporting_documents/documentation');
     }
 
     public function edit($likelihoodId, $consequenceId)
