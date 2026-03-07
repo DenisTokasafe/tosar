@@ -60,6 +60,12 @@
 </fieldset>
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Perbaikan') }}</legend>
+    <div class="flex items-center justify-between pb-2 border-b">
+        <h3 class="text-sm font-bold uppercase">{{ __('Rencana Perbaikan Jangka Panjang') }}</h3>
+        <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs">
+            + {{ __('Tambah Rencana') }}
+        </button>
+    </div>
     @foreach($corrective_actions as $index => $action)
     <x-form.text_area label="Tindakan Langsung" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" disabled />
     <x-form.textarea label="Rencana Perbaikan Jangka Panjang" model="action_description" placeholder="Langkah agar tidak terulang..." />
