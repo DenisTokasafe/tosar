@@ -365,9 +365,9 @@
                     <td class="border">
                         {{ $report->pelapor->department_name ?? '#N/A' }}
                     </td>
-                    <td class="border">
+                    <td class="text-xs border">
                         <span
-                            class="badge badge-xs badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
+                            class="badge badge-xs  badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
                             {{ str_replace('_', ' ', $report->status) }}
                         </span>
                     </td>
