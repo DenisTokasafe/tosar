@@ -331,7 +331,7 @@
                     <fieldset class="mb-4 fieldset lg:col-span-2">
                         <x-form.label label="Deskripsi" required />
                         <div x-data="ckeditorHelper('description')" wire:ignore>
-                            <div x-ref="editorElement"></div>
+                            <div x-ref="editorElement" data-placeholder="Masukkan deskripsi..."></div>
                         </div>
                         <x-label-error :messages="$errors->get('description')" />
                     </fieldset>
@@ -400,7 +400,7 @@
 
                         <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                         <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
-                            <div x-ref="editorElement"></div>
+                            <div x-ref="editorElement" data-placeholder="Masukkan kondisi atau tindakan yang sudah dilakukan..."></div>
                         </div>
 
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
@@ -504,7 +504,7 @@
                     <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                         <x-form.label label="Deskripsi Tindakan" required />
                         <div x-data="ckeditorHelper('action_description')" wire:ignore>
-                            <div x-ref="editorElement"></div>
+                            <div x-ref="editorElement" data-placeholder="Masukkan action deskripsi..."></div>
                         </div>
                         <x-label-error :messages="$errors->get('action_description')" />
                     </fieldset>
@@ -783,11 +783,11 @@
                 @endif
                 @if($hazard->isModerator())
                 <fieldset class="mt-4 fieldset" wire:key="field-action">
-                    <x-form.label label="Komentar Moderator" required />
-                    <div x-data="ckeditorHelper('action_description')" wire:ignore>
-                        <div x-ref="editorElement"></div>
+                    <x-form.label label="Komentar Moderator" />
+                    <div x-data="ckeditorHelper('moderator_comment')" wire:ignore>
+                        <div x-ref="editorElement" data-placeholder="Masukkan komentar moderator..."></div>
                     </div>
-                    <x-label-error :messages="$errors->get('action_description')" />
+                    <x-label-error :messages="$errors->get('moderator_comment')" />
                 </fieldset>
                 @endif
             </div>
@@ -805,7 +805,7 @@
             <fieldset class="fieldset md:col-span-1" wire:key="field-edit_action">
                 <x-form.label label="Deskripsi Tindakan" required />
                 <div x-data="ckeditorHelper('edit_action_description')" wire:ignore>
-                    <div x-ref="editorElement"></div>
+                    <div x-ref="editorElement" data-placeholder="Masukkan deskripsi tindakan..."></div>
                 </div>
                 <x-label-error :messages="$errors->get('edit_action_description')" />
             </fieldset>

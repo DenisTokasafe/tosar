@@ -200,6 +200,7 @@
 
                         window.ClassicEditor
                             .create(this.$refs.editorElement, {
+                                placeholder: 'Tuliskan komentar atau catatan moderator di sini...',
                                 toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
                                 removePlugins: ['ImageUpload', 'EasyImage']
                             })

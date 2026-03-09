@@ -31,6 +31,7 @@ class Hazard extends Model
         'location_specific',
         'tanggal',
         'description',
+        'moderator_comment',
         'doc_deskripsi',
         'immediate_corrective_action',
         'doc_corrective',
