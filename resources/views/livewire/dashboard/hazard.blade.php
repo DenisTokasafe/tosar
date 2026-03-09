@@ -136,6 +136,7 @@
             </div>
         </div>
         <livewire:dashboard.hazard.jenis-bahaya />
+        <livewire:dashboard.hazard.env-hazard />
         <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-2">
             <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.hazard-distribusi-divisi />
