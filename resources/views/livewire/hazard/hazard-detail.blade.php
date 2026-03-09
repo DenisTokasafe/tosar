@@ -957,7 +957,7 @@
 
                 @if($isModerator || $hasModeratorChatted)
                 <div class="flex gap-2">
-                    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" model="newMessage" placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}" wire:keydown.enter="sendMessage" />
+                    <x-form.text_area label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}" model="newMessage" placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}" wire:keydown.enter="sendMessage" />
                     <input
                         wire:model.defer="newMessage"
                         type="text"
