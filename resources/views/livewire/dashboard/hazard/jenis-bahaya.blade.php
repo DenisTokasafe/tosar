@@ -148,7 +148,7 @@
             backgroundColor: 'transparent',
             color: ['#4F75FE', '#FAC858'],
             title: {
-                text: 'Kategori Hazard (KTA vs TTA)',
+                text: 'Kategori OHS Hazard (KTA vs TTA)',
                 left: 'center',
                 textStyle: {
                     color: currentTheme.content,
