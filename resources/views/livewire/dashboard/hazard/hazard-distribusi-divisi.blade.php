@@ -2,29 +2,21 @@
     <div class="border bg-base-100 border-base-200" wire:ignore id="container-distribusi" style="height: 355px; width: 100%;"></div>
 
     <script type="module">
-        // Bungkus dalam fungsi agar bisa dipanggil berulang saat navigasi
         const initHazardChart = () => {
             const dom_divis = document.getElementById('container-distribusi');
-
-            // Cek apakah elemen ada di DOM (mencegah error di halaman lain)
             if (!dom_divis) return;
 
-            // 1. Bersihkan instance lama jika sudah ada (Penting untuk Livewire v3)
             let myChart_divis = echarts.getInstanceByDom(dom_divis);
             if (myChart_divis) {
                 myChart_divis.dispose();
             }
 
-            myChart_divis = echarts.init(dom_divis, null, {
-                renderer: 'canvas',
-                useDirtyRect: false
-            });
+            myChart_divis = echarts.init(dom_divis);
 
-            // 2. Ambil data awal dari PHP
-            // Catatan: Karena $categories di-encode di PHP, kita decode sekali di JS
-            const categories = @json(json_decode($categories));
+            // Ambil data awal - Langsung parse dari property categories
+            const rawData = @json($categories);
+            const categories = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
 
-            // --- UTILS TEMA ---
             const getThemeColor = (variable) => {
                 const temp = document.createElement('div');
                 temp.style.color = `var(${variable})`;
@@ -43,43 +35,40 @@
 
             let theme = fetchColors();
 
+            // Fungsi generate warna agar lebih kontras (seperti permintaan sebelumnya)
             function generateColor(index, total) {
-                const hue = (index * (360 / (total || 1))) % 360;
-                return `hsl(${hue}, 65%, 55%)`;
+                const colors = ['#10B981', '#34D399', '#059669', '#6EE7B7', '#115E59', '#2DD4BF', '#065F46'];
+                return colors[index % colors.length];
             }
 
-            // 3. Konfigurasi Option
             const option_divis = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Jumlah Laporan ',
+                    text: 'Distribusi Laporan per Divisi',
                     textStyle: {
                         color: theme.content,
-                        fontFamily: 'Poppins, sans-serif'
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: 14
                     },
                     subtext: categories.range,
                     subtextStyle: {
-                        color: currentTheme.content,
+                        color: theme.content, // PERBAIKAN: Sebelumnya currentTheme (Error)
                         opacity: 0.7
                     }
                 },
                 grid: {
-                    top: 50,
-                    left: 110,
-                    right: 30,
-                    bottom: 60,
+                    top: 60,
+                    left: '3%',
+                    right: '10%',
+                    bottom: '5%',
                     containLabel: true
                 },
                 tooltip: {
                     trigger: 'axis',
                     backgroundColor: theme.base100,
                     borderColor: theme.primary,
-                    borderWidth: 1,
                     textStyle: {
                         color: theme.content
-                    },
-                    axisPointer: {
-                        type: 'shadow'
                     }
                 },
                 xAxis: {
@@ -100,84 +89,41 @@
                     inverse: true,
                     axisLabel: {
                         color: theme.content,
-                        fontSize: 9,
-                        fontWeight: 'bold',
-                        width: 100,
+                        fontSize: 10,
+                        width: 120,
                         overflow: 'truncate'
                     }
                 },
                 series: [{
-                    name: categories.year,
+                    name: 'Jumlah',
                     type: 'bar',
                     data: categories.counts,
-                    emphasis: {
-                        focus: 'none'
-                    },
                     itemStyle: {
-                        color: (params) => generateColor(params.dataIndex, categories.counts.length),
-                        borderRadius: [0, 6, 6, 0]
+                        color: (params) => generateColor(params.dataIndex),
+                        borderRadius: [0, 4, 4, 0]
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        color: theme.content
                     }
                 }]
             };
 
             myChart_divis.setOption(option_divis);
 
-            // --- PERUBAHAN TEMA (DaisyUI) ---
-            const observer = new MutationObserver(() => {
-                const newTheme = fetchColors();
-                myChart_divis.setOption({
-                    title: {
-                        textStyle: {
-                            color: newTheme.content
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: newTheme.base100,
-                        borderColor: newTheme.primary,
-                        textStyle: {
-                            color: newTheme.content
-                        }
-                    },
-                    xAxis: {
-                        axisLabel: {
-                            color: newTheme.content
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: newTheme.base300
-                            }
-                        }
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            color: newTheme.content
-                        }
-                    }
-                });
-            });
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-theme']
-            });
-
-            // --- LIVEWIRE UPDATE EVENT ---
-            // Listener ini harus di-refresh tiap kali initChart dipanggil
+            // Listener Livewire
             Livewire.on('distribusiDivisi', (event) => {
                 const data = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart_divis.setOption({
                     title: {
-                        text: 'Jumlah Laporan ',
-                        subtext: data.range,
+                        subtext: data.range
                     },
                     yAxis: {
                         data: data.label
                     },
                     series: [{
-                        name: data.year,
-                        data: data.counts,
-                        itemStyle: {
-                            color: (params) => generateColor(params.dataIndex, data.counts.length)
-                        }
+                        data: data.counts
                     }]
                 });
             });
@@ -185,10 +131,8 @@
             window.addEventListener('resize', () => myChart_divis.resize());
         };
 
-        // Jalankan saat navigasi Livewire selesai
-        document.addEventListener('livewire:navigated', initHazardChart);
-
-        // Fallback untuk load pertama kali tanpa wire:navigate
+        // Initialize
         initHazardChart();
+        document.addEventListener('livewire:navigated', initHazardChart);
     </script>
 </div>
