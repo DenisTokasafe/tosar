@@ -2,28 +2,22 @@
     <div class="border bg-base-100 border-base-200" wire:ignore id="container_reportby" style="height: 355px"></div>
 
     <script type="module">
-        /**
-         * Membungkus seluruh logika chart dalam satu fungsi utama
-         */
         const initHazardUserChart = () => {
-            var dom_reportBy = document.getElementById('container_reportby');
+            const dom_reportBy = document.getElementById('container_reportby');
             if (!dom_reportBy) return;
 
-            // --- PEMBERSIHAN INSTANCE LAMA (PENTING UNTUK wire:navigate) ---
+            // Pembersihan instance lama
             let existingChart = echarts.getInstanceByDom(dom_reportBy);
             if (existingChart) {
                 existingChart.dispose();
             }
 
+            // Ambil data dari PHP
             const pelaporData = @json($pelapor);
             const pelapor = typeof pelaporData === 'string' ? JSON.parse(pelaporData) : pelaporData;
 
-            var myChart_reportBy = echarts.init(dom_reportBy, null, {
-                renderer: 'canvas',
-                useDirtyRect: false
-            });
+            const myChart_reportBy = echarts.init(dom_reportBy);
 
-            // --- UTILS TEMA DAISYUI ---
             const getThemeColor = (variable) => {
                 const temp = document.createElement('div');
                 temp.style.color = `var(${variable})`;
@@ -42,32 +36,33 @@
 
             let theme = fetchColors();
 
-            function generateColor(index, total) {
+            function generateColor(index) {
                 const seed = Math.sin(index + 1) * 10000;
                 const hue = (seed - Math.floor(seed)) * 360;
                 return `hsl(${hue}, 70%, 55%)`;
             }
 
-            var option_reportBy = {
+            const option_reportBy = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Top Kontributor',
-                    text: 'Jumlah Laporan ',
+                    text: 'Top Kontributor (Jumlah Laporan)', // Diperbaiki: Gabungkan teks
+                    left: 'center',
                     textStyle: {
                         color: theme.content,
-                        fontFamily: 'Poppins, sans-serif'
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: 14
                     },
                     subtext: pelapor.range,
                     subtextStyle: {
-                        color: currentTheme.content,
+                        color: theme.content, // Diperbaiki: currentTheme -> theme
                         opacity: 0.7
                     }
                 },
                 grid: {
-                    top: 50,
-                    left: 110,
-                    right: 30,
-                    bottom: 60,
+                    top: 60,
+                    left: '3%',
+                    right: '10%',
+                    bottom: '5%',
                     containLabel: true
                 },
                 tooltip: {
@@ -82,14 +77,8 @@
                         type: 'shadow'
                     }
                 },
-                legend: {
-                    textStyle: {
-                        color: theme.content
-                    }
-                },
                 xAxis: {
                     type: 'value',
-                    boundaryGap: [0, 0.01],
                     axisLabel: {
                         color: theme.content
                     },
@@ -106,109 +95,45 @@
                     inverse: true,
                     axisLabel: {
                         color: theme.content,
-                        fontSize: 9,
+                        fontSize: 10,
                         fontWeight: 'bold',
-                        fontFamily: 'Poppins, sans-serif',
-                        overflow: 'truncate',
-                        width: 100,
-                        align: 'right'
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: theme.base300
-                        }
+                        width: 120,
+                        overflow: 'truncate'
                     }
                 },
                 series: [{
-                    name: pelapor.year,
+                    name: 'Jumlah Laporan',
                     type: 'bar',
                     data: pelapor.counts,
-                    emphasis: {
-                        focus: 'none',
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0,0,0,0.5)'
-                        }
-                    },
+                    barMaxWidth: 25,
                     itemStyle: {
-                        color: params => generateColor(params.dataIndex, pelapor.counts.length),
+                        color: params => generateColor(params.dataIndex),
                         borderRadius: [0, 6, 6, 0]
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        color: theme.content
                     }
                 }]
             };
 
             myChart_reportBy.setOption(option_reportBy);
 
-            // --- OBSERVER UNTUK PERUBAHAN TEMA ---
-            const observer = new MutationObserver(() => {
-                const newTheme = fetchColors();
-                myChart_reportBy.setOption({
-                    title: {
-                        textStyle: {
-                            color: newTheme.content
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: newTheme.base100,
-                        borderColor: newTheme.primary,
-                        textStyle: {
-                            color: newTheme.content
-                        }
-                    },
-                    legend: {
-                        textStyle: {
-                            color: newTheme.content
-                        }
-                    },
-                    xAxis: {
-                        axisLabel: {
-                            color: newTheme.content
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: newTheme.base300
-                            }
-                        }
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            color: newTheme.content
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: newTheme.base300
-                            }
-                        }
-                    }
-                });
-            });
-
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-theme']
-            });
-
-            // --- LIVEWIRE EVENT (v3 menggunakan array payload) ---
+            // Livewire Event Listener
             Livewire.on('distribusiPelapor', event => {
                 const rawPayload = Array.isArray(event) ? event[0] : event;
                 const payload = typeof rawPayload === 'string' ? JSON.parse(rawPayload) : rawPayload;
 
                 myChart_reportBy.setOption({
                     title: {
-                        text: 'Top Kontributor ',
-                        subtext: payload.range,
+                        subtext: payload.range
                     },
                     yAxis: {
-                        data: payload.label,
-                        inverse: true
+                        data: payload.label
                     },
                     series: [{
-                        name: payload.year,
-                        data: payload.counts,
-                        itemStyle: {
-                            color: params => generateColor(params.dataIndex, payload.counts.length)
-                        }
+                        data: payload.counts
                     }]
                 });
             });
@@ -216,10 +141,9 @@
             window.addEventListener('resize', () => myChart_reportBy.resize());
         };
 
-        // 1. Jalankan saat load pertama kali
+        // Jalankan
         initHazardUserChart();
 
-        // 2. Jalankan ulang setiap kali navigasi Livewire (wire:navigate) selesai
         document.addEventListener('livewire:navigated', () => {
             initHazardUserChart();
         });
