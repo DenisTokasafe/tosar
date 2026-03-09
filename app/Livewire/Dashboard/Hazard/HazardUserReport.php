@@ -59,44 +59,47 @@ class HazardUserReport extends Component
         $this->loadData();
     }
 
-   public function loadData()
-{
-    // 1. Ambil data hazard dengan relasi pelapor dan filter range yang konsisten
-    $hazards = Hazard::with('pelapor')
-        ->when($this->start_date && $this->end_date, function ($q) {
-            // Gunakan scope dateRange yang sudah kita buat
-            return $q->dateRange($this->start_date, $this->end_date);
-        })
-        ->when(!$this->start_date || !$this->end_date, function ($q) {
-            // Fallback: Jika range kosong, gunakan filter years atau tahun dari bulan lalu
-            $yearFilter = $this->years ?? now()->subMonth()->year;
-            return $q->whereYear('tanggal', $yearFilter);
-        })
-        ->get();
+    public function loadData()
+    {
+        // 1. Ambil data hazard dengan relasi pelapor dan filter range yang konsisten
+        $hazards = Hazard::with('pelapor')
+            ->when($this->start_date && $this->end_date, function ($q) {
+                // Gunakan scope dateRange yang sudah kita buat
+                return $q->dateRange($this->start_date, $this->end_date);
+            })
+            ->when(!$this->start_date || !$this->end_date, function ($q) {
+                // Fallback: Jika range kosong, gunakan filter years atau tahun dari bulan lalu
+                $yearFilter = $this->years ?? now()->subMonth()->year;
+                return $q->whereYear('tanggal', $yearFilter);
+            })
+            ->get();
 
-    // 2. Kumpulkan kategori berdasarkan nama pelapor
-    $grouped = $hazards->groupBy(function ($hazard) {
-        return $hazard->pelapor ? $hazard->pelapor->name : 'Tidak Diketahui';
-    });
+        // 2. Kumpulkan kategori berdasarkan nama pelapor
+        $grouped = $hazards->groupBy(function ($hazard) {
+            return $hazard->pelapor ? $hazard->pelapor->name : 'Tidak Diketahui';
+        });
 
-    // 3. Hitung jumlah laporan per orang, urutkan terbesar ke terkecil, dan ambil TOP 10
-    $counts = $grouped->map->count()
-        ->sortDesc()
-        ->take(10);
+        // 3. Hitung jumlah laporan per orang, urutkan terbesar ke terkecil, dan ambil TOP 10
+        $counts = $grouped->map->count()
+            ->sortDesc()
+            ->take(10);
 
-    // 4. Format data untuk Chart (menggunakan 'range' agar lebih informatif daripada sekedar 'year')
-    $value = [
-        'year'  => ($this->start_date && $this->end_date)
-                    ? $this->start_date . ' s/d ' . $this->end_date
-                    : ($this->years ?? now()->year),
-        'label'  => $counts->keys()->values()->toArray(), // Nama-nama pelapor top 10
-        'counts' => $counts->values()->toArray(),         // Jumlah laporan mereka
-    ];
+        // 4. Format data untuk Chart (menggunakan 'range' agar lebih informatif daripada sekedar 'year')
+        $value = [
+            'year'  => ($this->start_date && $this->end_date)
+                ? $this->start_date . ' s/d ' . $this->end_date
+                : ($this->years ?? now()->year),
+            'label'  => $counts->keys()->values()->toArray(), // Nama-nama pelapor top 10
+            'counts' => $counts->values()->toArray(),
+            'range'  => ($this->start_date && $this->end_date)
+                ? \Carbon\Carbon::parse($this->start_date)->format('d M Y') . " - " . \Carbon\Carbon::parse($this->end_date)->format('d M Y')
+                : "Tahun $this->years"         // Jumlah laporan mereka
+        ];
 
-    // 5. Simpan ke property dan Dispatch ke frontend
-    $this->pelapor = json_encode($value);
-    $this->dispatch('distribusiPelapor', $this->pelapor);
-}
+        // 5. Simpan ke property dan Dispatch ke frontend
+        $this->pelapor = json_encode($value);
+        $this->dispatch('distribusiPelapor', $this->pelapor);
+    }
     public function render()
     {
         $this->loadData();

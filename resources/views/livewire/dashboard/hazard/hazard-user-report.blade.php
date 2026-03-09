@@ -49,7 +49,7 @@
             }
 
             var option_reportBy = {
-                backgroundColor: 'transparent',
+                backgroundColor: 'transparent' + pelapor.range,
                 title: {
                     text: 'Top Kontributor',
                     textStyle: {
@@ -57,21 +57,42 @@
                         fontFamily: 'Poppins, sans-serif'
                     }
                 },
-                grid: { top: 50, left: 110, right: 30, bottom: 60, containLabel: true },
+                grid: {
+                    top: 50,
+                    left: 110,
+                    right: 30,
+                    bottom: 60,
+                    containLabel: true
+                },
                 tooltip: {
                     trigger: 'axis',
                     backgroundColor: theme.base100,
                     borderColor: theme.primary,
                     borderWidth: 1,
-                    textStyle: { color: theme.content },
-                    axisPointer: { type: 'shadow' }
+                    textStyle: {
+                        color: theme.content
+                    },
+                    axisPointer: {
+                        type: 'shadow'
+                    }
                 },
-                legend: { textStyle: { color: theme.content } },
+                legend: {
+                    textStyle: {
+                        color: theme.content
+                    }
+                },
                 xAxis: {
                     type: 'value',
                     boundaryGap: [0, 0.01],
-                    axisLabel: { color: theme.content },
-                    splitLine: { lineStyle: { color: theme.base300, type: 'dashed' } }
+                    axisLabel: {
+                        color: theme.content
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: theme.base300,
+                            type: 'dashed'
+                        }
+                    }
                 },
                 yAxis: {
                     type: 'category',
@@ -86,7 +107,11 @@
                         width: 100,
                         align: 'right'
                     },
-                    axisLine: { lineStyle: { color: theme.base300 } }
+                    axisLine: {
+                        lineStyle: {
+                            color: theme.base300
+                        }
+                    }
                 },
                 series: [{
                     name: pelapor.year,
@@ -94,7 +119,11 @@
                     data: pelapor.counts,
                     emphasis: {
                         focus: 'none',
-                        itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.5)' }
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0,0,0,0.5)'
+                        }
                     },
                     itemStyle: {
                         color: params => generateColor(params.dataIndex, pelapor.counts.length),
@@ -109,20 +138,42 @@
             const observer = new MutationObserver(() => {
                 const newTheme = fetchColors();
                 myChart_reportBy.setOption({
-                    title: { textStyle: { color: newTheme.content } },
+                    title: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
                     tooltip: {
                         backgroundColor: newTheme.base100,
                         borderColor: newTheme.primary,
-                        textStyle: { color: newTheme.content }
+                        textStyle: {
+                            color: newTheme.content
+                        }
                     },
-                    legend: { textStyle: { color: newTheme.content } },
+                    legend: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
                     xAxis: {
-                        axisLabel: { color: newTheme.content },
-                        splitLine: { lineStyle: { color: newTheme.base300 } }
+                        axisLabel: {
+                            color: newTheme.content
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: newTheme.base300
+                            }
+                        }
                     },
                     yAxis: {
-                        axisLabel: { color: newTheme.content },
-                        axisLine: { lineStyle: { color: newTheme.base300 } }
+                        axisLabel: {
+                            color: newTheme.content
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: newTheme.base300
+                            }
+                        }
                     }
                 });
             });
@@ -138,8 +189,13 @@
                 const payload = typeof rawPayload === 'string' ? JSON.parse(rawPayload) : rawPayload;
 
                 myChart_reportBy.setOption({
-                    title: { text: 'Top Kontributor ' + payload.year },
-                    yAxis: { data: payload.label, inverse: true },
+                    title: {
+                        text: 'Top Kontributor ' + payload.range
+                    },
+                    yAxis: {
+                        data: payload.label,
+                        inverse: true
+                    },
                     series: [{
                         name: payload.year,
                         data: payload.counts,
