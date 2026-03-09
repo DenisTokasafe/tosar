@@ -933,7 +933,7 @@
 
                     <div class="chat {{ $isMe ? 'chat-end' : 'chat-start' }}">
                         <div class="chat-image avatar">
-                            <div class="w-10 rounded-full ring ring-offset-base-100 ring-offset-2 {{ $isSenderModerator ? 'ring-info' : 'ring-primary' }}">
+                            <div class="w-8 rounded-full ring ring-offset-base-100 ring-offset-2 {{ $isSenderModerator ? 'ring-info' : 'ring-primary' }}">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}&background=random" />
                             </div>
                         </div>
