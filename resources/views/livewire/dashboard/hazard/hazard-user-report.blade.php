@@ -49,9 +49,10 @@
             }
 
             var option_reportBy = {
-                backgroundColor: 'transparent' + pelapor.range,
+                backgroundColor: 'transparent',
                 title: {
                     text: 'Top Kontributor',
+                    text: 'Jumlah Laporan ' + (pelapor.range || ''),
                     textStyle: {
                         color: theme.content,
                         fontFamily: 'Poppins, sans-serif'
