@@ -28,8 +28,20 @@
         const getOption = (data, currentTheme) => {
             return {
                 backgroundColor: 'transparent',
-                // Definisi Palet Warna sesuai Gambar Referensi (Biru, Hijau, Slate)
-                color: ['#4F75FE', '#B6DB35', '#4B4E6D', '#70A1FF', '#E9F0C4', '#FF9F43', '#00CFE8'],
+                // --- DEFINISI PALET WARNA BARU (KONTRAST TINGGI & BERBEDA) ---
+                // Urutan: Biru, Hijau, Merah/Oranye, Kuning, Ungu, Cyan, Pink, Cokelat, Kelabu
+                color: [
+                    '#5470c6', // Biru Solid (Default ECharts)
+                    '#91cc75', // Hijau Rumput
+                    '#fac858', // Kuning Emas
+                    '#ee6666', // Merah Salem
+                    '#73c0de', // Cyan Cerah
+                    '#3ba272', // Hijau Emerald
+                    '#fc8452', // Oranye Jernih
+                    '#9a60b4', // Ungu
+                    '#ea7ccc', // Pink
+                    '#333333' // Kelabu Gelap
+                ],
                 title: {
                     text: 'Tren OHS Hazard Report per Jenis Bahaya',
                     left: 'center',
@@ -58,8 +70,12 @@
                     },
                     formatter: function(params) {
                         let res = '<b>' + params[0].name + '</b>';
+                        // Urutkan tooltip berdasarkan nilai terbesar
+                        params.sort((a, b) => b.value - a.value);
                         params.forEach(item => {
-                            res += `<br/>${item.marker} ${item.seriesName}: <b>${item.value}</b>`;
+                            if (item.value > 0) {
+                                res += `<br/>${item.marker} ${item.seriesName}: <b>${item.value}</b>`;
+                            }
                         });
                         return res;
                     }
@@ -70,7 +86,10 @@
                     textStyle: {
                         color: currentTheme.content
                     },
-                    type: 'scroll'
+                    type: 'scroll',
+                    itemGap: 15,
+                    itemWidth: 14,
+                    itemHeight: 14
                 },
                 grid: {
                     top: 70,
@@ -87,7 +106,7 @@
                     },
                     axisLabel: {
                         interval: 0,
-                        rotate: 0, // Dibuat horizontal agar rapi seperti gambar
+                        rotate: 0,
                         fontSize: 10,
                         color: currentTheme.content
                     },
@@ -102,8 +121,8 @@
                     splitLine: {
                         lineStyle: {
                             color: currentTheme.base300,
-                            type: 'solid',
-                            opacity: 0.4
+                            type: 'dashed', // Dibuat putus-putus agar visual modern
+                            opacity: 0.6
                         }
                     },
                     axisLabel: {
@@ -114,9 +133,9 @@
                     name: s.name,
                     data: s.data,
                     type: 'bar',
-                    // Menghapus 'stack' agar menjadi Grouped Bar
-                    barMaxWidth: 25,
-                    barGap: '15%', // Spasi antar batang dalam satu kategori
+                    barMaxWidth: 20, // Sedikit lebih ramping agar tidak padat jika banyak series
+                    barGap: '10%',
+                    barCategoryGap: '30%',
                     itemStyle: {
                         borderRadius: [3, 3, 0, 0] // Membuat ujung atas sedikit rounded
                     },
@@ -184,8 +203,7 @@
         // --- LIVEWIRE EVENT ---
         Livewire.on('updateJenisBahayaChart', event => {
             let payload = JSON.parse(event);
-            // Gunakan true agar series lama (stacking) dibersihkan sepenuhnya
-            myChart.setOption(getOption(payload, theme), true);
+            myChart.setOption(getOption(payload, theme), true); // true untuk full redraw
         });
 
         window.addEventListener('resize', () => {
