@@ -23,7 +23,7 @@
                 {{-- Tombol buka modal --}}
                 <div class=" flex gap-2">
                     <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
-                    <flux:button size="xs" variant="info" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
+                    <flux:button size="xs" variant="filled" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
 
                 </div>
             </div>
