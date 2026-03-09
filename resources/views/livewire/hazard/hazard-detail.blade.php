@@ -781,14 +781,18 @@
 
                 </table>
                 @endif
+                @if($hazard->isModerator() || !empty($hazard->moderator_comment))
                 @if($hazard->isModerator())
-                <fieldset class="mt-4 fieldset" wire:key="field-action">
-                    <x-form.label label="Komentar Moderator" />
-                    <div x-data="ckeditorHelper('moderator_comment')" wire:ignore>
-                        <div x-ref="editorElement" data-placeholder="Masukkan komentar moderator..."></div>
-                    </div>
-                    <x-label-error :messages="$errors->get('moderator_comment')" />
-                </fieldset>
+                {{-- Mode Edit: Jika dia moderator, tampilkan CKEditor --}}
+                <div x-data="ckeditorHelper('moderator_comment')" wire:ignore>
+                    <div x-ref="editorElement" data-placeholder="Masukkan komentar moderator..."></div>
+                </div>
+                @else
+                {{-- Mode Read-Only: Jika bukan moderator tapi komentar ada, tampilkan teks saja --}}
+                <div class="p-3 bg-gray-100 rounded-lg prose max-w-none">
+                    {!! $hazard->moderator_comment !!}
+                </div>
+                @endif
                 @endif
             </div>
         </x-tab-hazard.layout>
