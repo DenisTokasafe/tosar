@@ -52,14 +52,17 @@
             const option_divis = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Jumlah Laporan ' + (categories.year || ''),
+                    text: 'Jumlah Laporan ' + (categories.range || ''),
                     textStyle: {
                         color: theme.content,
                         fontFamily: 'Poppins, sans-serif'
                     }
                 },
                 grid: {
-                    top: 50, left: 110, right: 30, bottom: 60,
+                    top: 50,
+                    left: 110,
+                    right: 30,
+                    bottom: 60,
                     containLabel: true
                 },
                 tooltip: {
@@ -67,13 +70,24 @@
                     backgroundColor: theme.base100,
                     borderColor: theme.primary,
                     borderWidth: 1,
-                    textStyle: { color: theme.content },
-                    axisPointer: { type: 'shadow' }
+                    textStyle: {
+                        color: theme.content
+                    },
+                    axisPointer: {
+                        type: 'shadow'
+                    }
                 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { color: theme.content },
-                    splitLine: { lineStyle: { color: theme.base300, type: 'dashed' } }
+                    axisLabel: {
+                        color: theme.content
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: theme.base300,
+                            type: 'dashed'
+                        }
+                    }
                 },
                 yAxis: {
                     type: 'category',
@@ -91,7 +105,9 @@
                     name: categories.year,
                     type: 'bar',
                     data: categories.counts,
-                    emphasis: { focus: 'none' },
+                    emphasis: {
+                        focus: 'none'
+                    },
                     itemStyle: {
                         color: (params) => generateColor(params.dataIndex, categories.counts.length),
                         borderRadius: [0, 6, 6, 0]
@@ -105,21 +121,51 @@
             const observer = new MutationObserver(() => {
                 const newTheme = fetchColors();
                 myChart_divis.setOption({
-                    title: { textStyle: { color: newTheme.content } },
-                    tooltip: { backgroundColor: newTheme.base100, borderColor: newTheme.primary, textStyle: { color: newTheme.content } },
-                    xAxis: { axisLabel: { color: newTheme.content }, splitLine: { lineStyle: { color: newTheme.base300 } } },
-                    yAxis: { axisLabel: { color: newTheme.content } }
+                    title: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: newTheme.base100,
+                        borderColor: newTheme.primary,
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
+                    xAxis: {
+                        axisLabel: {
+                            color: newTheme.content
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: newTheme.base300
+                            }
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: {
+                            color: newTheme.content
+                        }
+                    }
                 });
             });
-            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
 
             // --- LIVEWIRE UPDATE EVENT ---
             // Listener ini harus di-refresh tiap kali initChart dipanggil
             Livewire.on('distribusiDivisi', (event) => {
                 const data = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart_divis.setOption({
-                    title: { text: 'Jumlah Laporan ' + data.year },
-                    yAxis: { data: data.label },
+                    title: {
+                        text: 'Jumlah Laporan ' + data.year
+                    },
+                    yAxis: {
+                        data: data.label
+                    },
                     series: [{
                         name: data.year,
                         data: data.counts,
