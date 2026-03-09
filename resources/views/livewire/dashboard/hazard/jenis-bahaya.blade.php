@@ -1,9 +1,9 @@
 <div class="grid grid-cols-1 gap-2 my-2 lg:grid-cols-3">
-    <div class="shadow rounded-xl lg:col-span-2">
+    <div class="shadow rounded-xl lg:col-span-2 bg-base-100 p-2">
         <div wire:ignore id="hazardJenisChart" style="height: 350px;" class="w-full"></div>
     </div>
 
-    <div class="shadow rounded-xl">
+    <div class="shadow rounded-xl bg-base-100 p-2">
         <div wire:ignore id="ktaTtaPieChart" style="height: 350px;" class="w-full"></div>
     </div>
 
@@ -132,10 +132,10 @@
             }))
         });
 
-        // --- 4. KONFIGURASI PIE CHART ---
+        // --- 4. KONFIGURASI PIE CHART (DIPERBARUI AGAR TIDAK TINDIH) ---
         const getPieOption = (data, currentTheme) => ({
             backgroundColor: 'transparent',
-            color: ['#4F75FE', '#FAC858'], // Biru (KTA), Oranye/Kuning (TTA)
+            color: ['#4F75FE', '#FAC858'],
             title: {
                 text: 'Kategori Hazard (KTA vs TTA)',
                 left: 'center',
@@ -164,8 +164,10 @@
             series: [{
                 name: 'Kategori',
                 type: 'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
+                // Radius dikecilkan (dari 70% ke 60%) untuk memberi ruang label
+                radius: ['35%', '60%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true, // Mencegah tumpang tindih
                 itemStyle: {
                     borderRadius: 10,
                     borderColor: currentTheme.base100,
@@ -173,13 +175,30 @@
                 },
                 label: {
                     show: true,
+                    position: 'outer',
+                    alignTo: 'none',
+                    bleedMargin: 5,
                     color: currentTheme.content,
+                    fontSize: 11,
+                    // Penambahan margin antar label
+                    minMargin: 5,
                     formatter: '{b}\n{c} ({d}%)'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15, // Garis pertama
+                    length2: 10, // Garis kedua horizontal ke teks
+                    smooth: true // Garis melengkung halus
+                },
+                // Layout otomatis untuk memindahkan label jika terdeteksi tabrakan
+                labelLayout: {
+                    hideOverlap: false,
+                    moveOverlap: 'shiftY'
                 },
                 emphasis: {
                     label: {
                         show: true,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: 'bold'
                     }
                 },
