@@ -50,10 +50,11 @@ class JenisBahaya extends Component
 
     public function loadData()
     {
-        // 1. Query utama dengan filter OHS Hazard Report yang ketat
+        // 1. Query utama - Menggunakan scopeByEventType melalui relasi eventSubType
+        // Ini memastikan kita hanya mengambil data Hazard yang sub-tipenya milik 'OHS Hazard Report'
         $query = Hazard::query()
-            ->whereHas('eventType', function ($q) {
-                $q->where('event_type_name', 'OHS Hazard Report');
+            ->whereHas('eventSubType', function ($q) {
+                $q->byEventType('OHS Hazard Report');
             })
             ->when($this->start_date && $this->end_date, function ($q) {
                 $q->dateRange($this->start_date, $this->end_date);
@@ -64,7 +65,7 @@ class JenisBahaya extends Component
 
         // 2. Ambil raw data untuk chart
         $rawData = (clone $query)
-            ->with(['eventSubType'])->ohsOnly()
+            ->with(['eventSubType']) // Scope byEventType di model EventSubType akan otomatis menyaring record yang statusnya aktif (EnabledEventSubTypeScope)
             ->select(
                 DB::raw("DATE_FORMAT(tanggal, '%b %Y') as bulan_tahun"),
                 'event_sub_type_id',
@@ -75,16 +76,16 @@ class JenisBahaya extends Component
             ->orderBy('urutan_bulan')
             ->get();
 
-        // 3. Ambil daftar bulan (X-Axis)
+        // 3. Ambil daftar bulan unik untuk Label X-Axis
         $months = $rawData->pluck('bulan_tahun')->unique()->values()->toArray();
 
-        // 4. Ambil daftar Jenis Bahaya UNIK yang hanya berelasi dengan OHS Hazard Report
-        // Ini memastikan legend hanya berisi sub-type yang relevan
+        // 4. Ambil daftar Jenis Bahaya UNIK menggunakan scope untuk legend
+        // Ini memastikan legend konsisten dengan data yang difilter
         $jenisLabels = $rawData->map(function ($item) {
             return $item->eventSubType->event_sub_type_name ?? 'N/A';
         })->unique()->values();
 
-        // 5. Bangun Series Data untuk ECharts (Grouped Bar)
+        // 5. Bangun Series Data untuk ECharts (Grouped Bar + Data Labels)
         $series = [];
         foreach ($jenisLabels as $jenis) {
             $dataPoint = [];
@@ -93,14 +94,29 @@ class JenisBahaya extends Component
                     return $item->bulan_tahun === $month &&
                         ($item->eventSubType->event_sub_type_name ?? 'N/A') === $jenis;
                 });
-                $dataPoint[] = $match ? $match->total : 0;
+                $dataPoint[] = $match ? (int)$match->total : 0;
             }
 
             $series[] = [
                 'name' => $jenis,
                 'type' => 'bar',
                 'barMaxWidth' => 20,
-                'barGap' => '10%',
+                'barGap' => '15%',
+                'barCategoryGap' => '35%',
+                'label' => [
+                    'show' => true,
+                    'position' => 'top',
+                    'distance' => 5,
+                    'fontSize' => 10,
+                    'formatter' => '{text|{c}}', // Syntax ECharts untuk custom label
+                    'rich' => [
+                        'text' => [
+                            'align' => 'center'
+                        ]
+                    ],
+                    // Logika agar angka 0 tidak tampil di JS formatter tetap disarankan,
+                    // namun di sini kita siapkan strukturnya.
+                ],
                 'itemStyle' => [
                     'borderRadius' => [3, 3, 0, 0]
                 ],
@@ -112,7 +128,9 @@ class JenisBahaya extends Component
             'labels' => $months,
             'series' => $series,
             'legend' => $jenisLabels->toArray(),
-            'range'  => ($this->start_date && $this->end_date) ? "$this->start_date s/d $this->end_date" : "Tahun $this->years"
+            'range'  => ($this->start_date && $this->end_date)
+                ? "Periode: " . \Carbon\Carbon::parse($this->start_date)->format('d M Y') . " - " . \Carbon\Carbon::parse($this->end_date)->format('d M Y')
+                : "Tahun $this->years"
         ]);
 
         $this->dispatch('updateJenisBahayaChart', $this->chartJenisBahaya);
