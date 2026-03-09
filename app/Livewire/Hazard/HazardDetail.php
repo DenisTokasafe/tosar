@@ -531,6 +531,12 @@ class HazardDetail extends Component
         );
         $this->reset('proceedTo');
     }
+    public function getHasUnreadProperty()
+    {
+        $lastChat = $this->hazard->chats->last();
+
+        return $lastChat && $lastChat->user_id !== Auth::id();
+    }
     public function sendMessage()
     {
         $this->validate(['newMessage' => 'required|string|max:500']);

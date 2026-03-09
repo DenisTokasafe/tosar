@@ -21,9 +21,22 @@
                 </div>
 
                 {{-- Tombol buka modal --}}
-                <div class=" flex gap-2">
+                <div class="flex gap-2 ">
                     <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
-                    <flux:button size="xs" variant="filled" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
+
+                    <div class="relative inline-block" wire:poll.10s>
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            icon="message-circle-more"
+                            onclick="my_modal_5.showModal()" />
+
+                        @if($this->hasUnread)
+                        <div class="absolute flex items-center justify-center -top-1 -right-1">
+                            <div class="w-3 h-3 border-2 rounded-full status status-info animate-bounce border-base-100"></div>
+                        </div>
+                        @endif
+                    </div>
 
                 </div>
             </div>
@@ -792,7 +805,7 @@
                 </div>
                 @else
                 {{-- Mode Read-Only: Jika bukan moderator tapi komentar ada, tampilkan teks saja --}}
-                <div class="p-3 bg-gray-100 rounded-lg prose max-w-none">
+                <div class="p-3 prose bg-gray-100 rounded-lg max-w-none">
                     {!! $hazard->moderator_comment !!}
                 </div>
                 @endif
@@ -898,10 +911,10 @@
     </div>
 
 
-    <dialog id="my_modal_5" class="modal"wire:ignore.self>
-        <div class="modal-box w-11/12 max-w-2xl">
+    <dialog id="my_modal_5" class="modal" wire:ignore.self>
+        <div class="w-11/12 max-w-2xl modal-box">
             <div class="p-2">
-                <h3 class="font-bold text-lg mb-4">Diskusi Hazard</h3>
+                <h3 class="mb-4 text-lg font-bold">Diskusi Hazard</h3>
 
                 @php
                 $isModerator = $hazard->isModerator();
@@ -911,7 +924,7 @@
                 });
                 @endphp
 
-                <div class="space-y-4 max-h-96 overflow-y-auto mb-6 p-4 border rounded-xl bg-base-200/50">
+                <div class="p-4 mb-6 space-y-4 overflow-y-auto border max-h-96 rounded-xl bg-base-200/50">
                     @forelse($hazard->chats as $chat)
                     @php
                     $isMe = $chat->user_id === auth()->id();
@@ -931,12 +944,12 @@
                         <div class="chat-bubble {{ $isSenderModerator ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
                             {{ $chat->message }}
                         </div>
-                        <div class="chat-footer opacity-50 text-xs mt-1">
+                        <div class="mt-1 text-xs opacity-50 chat-footer">
                             {{ $isSenderModerator ? '🛡️ Moderator' : '👤 Pelapor' }}
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-4 opacity-50">
+                    <div class="py-4 text-center opacity-50">
                         <p>Belum ada diskusi.</p>
                     </div>
                     @endforelse
@@ -944,20 +957,20 @@
 
                 @if($isModerator || $hasModeratorChatted)
                 <div class="flex gap-2">
+                    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" model="newMessage" placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}" wire:keydown.enter="sendMessage" />
                     <input
                         wire:model.defer="newMessage"
                         type="text"
                         placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}"
-                        class="input input-bordered w-full"
-                        wire:keydown.enter="sendMessage" />
-                    <button wire:click="sendMessage" class="btn btn-primary" wire:loading.attr="disabled">
-                        <span wire:loading.remove>Kirim</span>
-                        <span wire:loading class="loading loading-spinner loading-xs"></span>
+                        class="w-full input input-bordered" />
+                    <button wire:click="sendMessage" class="btn btn-xs btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.add.class='hidden' wire:target='sendMessage'>Kirim</span>
+                        <span class='hidden loading loading-spinner loading-xs' wire:loading.remove.class="hidden"></span>
                     </button>
                 </div>
                 @else
-                <div class="alert alert-warning shadow-sm italic text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <div class="text-sm italic shadow-sm alert alert-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <span>Hanya moderator yang dapat memulai diskusi ini.</span>
