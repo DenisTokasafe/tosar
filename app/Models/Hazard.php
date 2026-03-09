@@ -275,7 +275,8 @@ class Hazard extends Model
 
     public function chats()
     {
-        return $this->hasMany(HazardChat::class)->orderBy('created_at', 'asc');
+        // Tambahkan parameter kedua untuk menentukan nama kolom foreign key yang benar
+        return $this->hasMany(HazardChat::class, 'hazard_report_id')->orderBy('created_at', 'asc');
     }
     public function isModerator($userId = null): bool
     {
