@@ -16,7 +16,7 @@ class StatusByContDept extends Component
 
 
     // Trigger awal saat komponen dimuat
-     public function mount()
+    public function mount()
     {
         // Ambil tanggal paling akhir dari database
         $lastDateRaw = Hazard::max('tanggal');
@@ -39,9 +39,9 @@ class StatusByContDept extends Component
         $this->loadData();
     }
     #[On('dateRangeUpdated')]
-   public function updatedDateRange($data)
+    public function updatedDateRange($data)
     {
-       if (!empty($data['start']) && !empty($data['end'])) {
+        if (!empty($data['start']) && !empty($data['end'])) {
             // Jika user memilih tanggal manual
             $this->start_date = $data['start'];
             $this->end_date   = $data['end'];
@@ -104,6 +104,9 @@ class StatusByContDept extends Component
             'labels' => array_column($tempData, 'label'),
             'closed' => array_column($tempData, 'closed'),
             'open'   => array_column($tempData, 'open'),
+            'range'  => ($this->start_date && $this->end_date)
+                ? \Carbon\Carbon::parse($this->start_date)->format('d M Y') . " - " . \Carbon\Carbon::parse($this->end_date)->format('d M Y')
+                : "Tahun $this->years"
         ];
 
         $this->statusDeptCont = json_encode($chartData);

@@ -35,7 +35,7 @@
                     fontFamily: 'Poppins, sans-serif',
                     fontSize: 14
                 },
-                subtext: rawData.range ? 'Periode: ' + rawData.range : '12 Bulan Terakhir',
+                subtext: rawData.range,
                 subtextStyle: {
                     color: theme.content, // Dinamis (bisa disesuaikan opasitasnya)
                     opacity: 0.7,
