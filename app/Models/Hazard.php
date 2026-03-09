@@ -271,4 +271,40 @@ class Hazard extends Model
             $q->whereRaw('LOWER(event_type_name) = ?', ['ohs hazard report']);
         });
     }
+    public function isModerator($userId = null): bool
+    {
+        // Jika ID tidak dikirim, ambil ID user yang sedang login
+        $userId = $userId ?? auth()->id();
+
+        if (!$userId) {
+            return false;
+        }
+
+        return ModeratorAssignment::where('user_id', $userId)
+            ->where('event_type_id', $this->event_type_id)
+            ->where(function ($query) {
+                // Kriteria 1: Penugasan Umum
+                $query->where(function ($q) {
+                    $q->whereNull('department_id')
+                        ->whereNull('contractor_id');
+                })
+                    // Kriteria 2: Spesifik Department
+                    ->orWhere(function ($q) {
+                        if ($this->department_id) {
+                            $q->where('department_id', $this->department_id);
+                        } else {
+                            $q->whereRaw('0 = 1'); // Paksa false jika hazard tidak punya dept
+                        }
+                    })
+                    // Kriteria 3: Spesifik Contractor
+                    ->orWhere(function ($q) {
+                        if ($this->contractor_id) {
+                            $q->where('contractor_id', $this->contractor_id);
+                        } else {
+                            $q->whereRaw('0 = 1');
+                        }
+                    });
+            })
+            ->exists();
+    }
 }

@@ -2,38 +2,39 @@
 
 namespace App\Livewire\Hazard;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Hazard;
-use Livewire\Component;
-use App\Models\Location;
-use App\Models\EventType;
-use App\Models\UnsafeAct;
-use App\Models\Contractor;
-use App\Models\Department;
-use App\Models\Likelihood;
 use App\Enums\HazardStatus;
 use App\Helpers\FileHelper;
 use App\Helpers\MailHelper;
-use Livewire\Attributes\On;
 use App\Models\ActionHazard;
-use App\Models\EventSubType;
+use App\Models\Contractor;
+use App\Models\Department;
 use App\Models\ErmAssignment;
-use Livewire\WithFileUploads;
+use App\Models\EventSubType;
+use App\Models\EventType;
+use App\Models\Hazard;
 use App\Models\HazardWorkflow;
+use App\Models\Likelihood;
+use App\Models\Location;
+use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessment;
-use App\Models\RiskMatrixCell;
-use App\Models\RiskConsequence;
-use App\Models\UnsafeCondition;
-use Livewire\Attributes\Validate;
-use Illuminate\Support\Facades\DB;
 use App\Models\RiskAssessmentMatrix;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Notification;
+use App\Models\RiskConsequence;
+use App\Models\RiskMatrixCell;
+use App\Models\UnsafeAct;
+use App\Models\UnsafeCondition;
+use App\Models\User;
 use App\Notifications\HazardSubmittedNotification;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class HazardDetail extends Component
 {
@@ -111,6 +112,7 @@ class HazardDetail extends Component
     public $tindakan_tidak_aman;
     #[Validate('required|date')]
     public $tanggal;
+    public $isModerator = false;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
     public $manualActPelaporMode = false;
@@ -846,7 +848,7 @@ class HazardDetail extends Component
         // [START] Logika Baru: Notifikasi ke Semua Moderator
         // Dapatkan semua ID pengguna moderator yang relevan
         // Dapatkan semua ID pengguna moderator yang relevan
-        $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+        $moderatorIds = ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
             ->where(function ($query) use ($hazard) {
                 // Moderator ditugaskan untuk Event Type ini,
                 // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
@@ -1171,7 +1173,7 @@ class HazardDetail extends Component
             })
             ->distinct('user_id')
             ->pluck('user_id');
-            $clearDeskription  =strip_tags($hazard->description);
+        $clearDeskription  = strip_tags($hazard->description);
         // Kirim email ke setiap moderator
         foreach ($moderatorIds as $moderatorId) {
             MailHelper::sendToUserId(

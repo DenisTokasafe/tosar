@@ -83,7 +83,7 @@
                             <div class="z-40 tooltip-content">
                                 <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
-                            <flux:button size="xs" wire:click="processAction" class="btn btn-active btn-square btn-primary btn-xs"> <x-icon.send/></flux:button>
+                            <flux:button size="xs" wire:click="processAction" class="btn btn-active btn-square btn-primary btn-xs"> <x-icon.send /></flux:button>
                         </div>
                     </div>
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end block card-actions md:hidden">
@@ -91,8 +91,8 @@
                             <div class="z-40 tooltip-content">
                                 <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
                             </div>
-                            <button  wire:click="processAction" class="btn btn-xs btn-active btn-primary">
-                               {{ __('Kirim') }} <x-icon.send/></button>
+                            <button wire:click="processAction" class="btn btn-xs btn-active btn-primary">
+                                {{ __('Kirim') }} <x-icon.send /></button>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                     <h3 class="mb-2 text-lg font-bold">Audit Trail</h3>
                     <div class="max-h-[80vh] overflow-y-auto overflow-x-auto">
                         <table class="table border table-xs table-pin-rows">
-                            <thead >
+                            <thead>
                                 <tr class="bg-primary">
                                     <th class="px-2 py-1 border">{{ __('Tanggal') }}</th>
                                     <th class="px-2 py-1 border">{{ __('User') }}</th>
@@ -247,7 +247,7 @@
             <button
                 class="{{ $isDisabled ? 'btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-primary btn-xs btn-active' }}"
                 type="submit">
-                <x-icon.edit/>
+                <x-icon.edit />
                 {{ __('Update Laporan') }}
             </button>
 
@@ -256,7 +256,7 @@
                 class=" {{ $isDisabled ? ' btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
                 wire:click="deleteHazard({{ $hazard_id }})"
                 wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
-                <x-icon.delete/>
+                <x-icon.delete />
                 {{ __('Hapus Laporan') }}
             </button>
         </div>
@@ -780,6 +780,15 @@
 
 
                 </table>
+                @endif
+                @if($hazard->isModerator())
+                <fieldset class="mt-4 fieldset" wire:key="field-action">
+                    <x-form.label label="Komentar Moderator" required />
+                    <div x-data="ckeditorHelper('action_description')" wire:ignore>
+                        <div x-ref="editorElement"></div>
+                    </div>
+                    <x-label-error :messages="$errors->get('action_description')" />
+                </fieldset>
                 @endif
             </div>
         </x-tab-hazard.layout>
