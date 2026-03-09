@@ -958,10 +958,7 @@
                 @if($isModerator || $hasModeratorChatted)
                 <div class="flex gap-2">
                     <x-form.text_area label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}" model="newMessage" placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}" wire:keydown.enter="sendMessage" />
-                    <button wire:click="sendMessage" class="btn btn-xs btn-primary" wire:loading.attr="disabled">
-                        <span wire:loading.add.class='hidden' wire:target='sendMessage'>Kirim</span>
-                        <span class='hidden loading loading-spinner loading-xs' wire:loading.remove.class="hidden"></span>
-                    </button>
+
                 </div>
                 @else
                 <div class="text-sm italic shadow-sm alert alert-warning">
@@ -974,9 +971,12 @@
             </div>
 
             <div class="modal-action">
-                <form method="dialog">
-                    <button class="btn">Tutup</button>
-                </form>
+                <button wire:click="sendMessage" class="btn btn-xs btn-primary" wire:loading.attr="disabled">
+                    <span wire:loading.add.class='hidden' wire:target='sendMessage'>Kirim</span>
+                    <span class='hidden loading loading-spinner loading-xs' wire:loading.remove.class="hidden"></span>
+                </button>
+                <button onclick="my_modal_5.close()" class="btn btn-xs btn-error">Tutup</button>
+
             </div>
         </div>
     </dialog>
