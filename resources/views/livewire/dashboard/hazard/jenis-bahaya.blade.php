@@ -20,7 +20,6 @@
         });
 
         let theme = fetchColors();
-        // Parsing data awal dari Livewire
         let rawData = @json(json_decode($chartJenisBahaya, true));
 
         var dom = document.getElementById('hazardJenisChart');
@@ -29,6 +28,8 @@
         const getOption = (data, currentTheme) => {
             return {
                 backgroundColor: 'transparent',
+                // Definisi Palet Warna sesuai Gambar Referensi (Biru, Hijau, Slate)
+                color: ['#4F75FE', '#B6DB35', '#4B4E6D', '#70A1FF', '#E9F0C4', '#FF9F43', '#00CFE8'],
                 title: {
                     text: 'Tren OHS Hazard Report per Jenis Bahaya',
                     left: 'center',
@@ -41,7 +42,7 @@
                     subtextStyle: {
                         color: currentTheme.content,
                         opacity: 0.7,
-                        fontSize: 12
+                        fontSize: 11
                     }
                 },
                 tooltip: {
@@ -57,51 +58,36 @@
                     },
                     formatter: function(params) {
                         let res = '<b>' + params[0].name + '</b>';
-                        let total = 0;
                         params.forEach(item => {
-                            res += `<br/>${item.marker} ${item.seriesName}: ${item.value}`;
-                            total += item.value;
+                            res += `<br/>${item.marker} ${item.seriesName}: <b>${item.value}</b>`;
                         });
-                        res += `<br/><b>Total: ${total}</b>`;
                         return res;
                     }
                 },
                 legend: {
                     data: data.legend,
-                    bottom: 5,
+                    bottom: 0,
                     textStyle: {
                         color: currentTheme.content
                     },
-                    type: 'scroll' // Jika jenis bahaya terlalu banyak
+                    type: 'scroll'
                 },
                 grid: {
-                    top: 80,
+                    top: 70,
                     left: '3%',
                     right: '4%',
-                    bottom: '20%',
+                    bottom: '15%',
                     containLabel: true
                 },
-                dataZoom: [{
-                        type: 'inside',
-                        start: 0,
-                        end: 100
-                    },
-                    {
-                        show: true,
-                        type: 'slider',
-                        top: 'bottom',
-                        height: 20,
-                        textStyle: {
-                            color: currentTheme.content
-                        }
-                    }
-                ],
                 xAxis: {
                     type: 'category',
                     data: data.labels,
+                    axisTick: {
+                        show: false
+                    },
                     axisLabel: {
                         interval: 0,
-                        rotate: 30,
+                        rotate: 0, // Dibuat horizontal agar rapi seperti gambar
                         fontSize: 10,
                         color: currentTheme.content
                     },
@@ -113,23 +99,27 @@
                 },
                 yAxis: {
                     type: 'value',
-                    name: 'Jumlah',
-                    nameTextStyle: {
-                        color: currentTheme.content
-                    },
-                    axisLabel: {
-                        color: currentTheme.content
-                    },
                     splitLine: {
                         lineStyle: {
                             color: currentTheme.base300,
-                            type: 'dashed'
+                            type: 'solid',
+                            opacity: 0.4
                         }
+                    },
+                    axisLabel: {
+                        color: currentTheme.content
                     }
                 },
                 series: data.series.map(s => ({
-                    ...s,
-                    barMaxWidth: 40,
+                    name: s.name,
+                    data: s.data,
+                    type: 'bar',
+                    // Menghapus 'stack' agar menjadi Grouped Bar
+                    barMaxWidth: 25,
+                    barGap: '15%', // Spasi antar batang dalam satu kategori
+                    itemStyle: {
+                        borderRadius: [3, 3, 0, 0] // Membuat ujung atas sedikit rounded
+                    },
                     emphasis: {
                         focus: 'series'
                     }
@@ -175,9 +165,6 @@
                     }
                 },
                 yAxis: {
-                    nameTextStyle: {
-                        color: theme.content
-                    },
                     axisLabel: {
                         color: theme.content
                     },
@@ -186,15 +173,9 @@
                             color: theme.base300
                         }
                     }
-                },
-                dataZoom: [{}, {
-                    textStyle: {
-                        color: theme.content
-                    }
-                }]
+                }
             });
         });
-
         observer.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme']
@@ -203,7 +184,7 @@
         // --- LIVEWIRE EVENT ---
         Livewire.on('updateJenisBahayaChart', event => {
             let payload = JSON.parse(event);
-            // Gunakan notasi fungsional agar seluruh series terupdate dengan benar
+            // Gunakan true agar series lama (stacking) dibersihkan sepenuhnya
             myChart.setOption(getOption(payload, theme), true);
         });
 
