@@ -87,6 +87,7 @@
             xAxis: {
                 type: 'category',
                 data: data.labels,
+                boundaryGap: true, // Memastikan garis pemisah berada di antara kategori
                 axisLabel: {
                     color: currentTheme.content,
                     fontSize: 10
@@ -94,6 +95,16 @@
                 axisLine: {
                     lineStyle: {
                         color: currentTheme.base300
+                    }
+                },
+                // --- PENAMBAHAN BORDER PEMISAH ANTAR BULAN ---
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: currentTheme.base300,
+                        type: 'solid', // Garis tegas sebagai pemisah
+                        width: 1,
+                        opacity: 0.5
                     }
                 }
             },
@@ -132,7 +143,7 @@
             }))
         });
 
-        // --- 4. KONFIGURASI PIE CHART (DIPERBARUI AGAR TIDAK TINDIH) ---
+        // --- 4. KONFIGURASI PIE CHART ---
         const getPieOption = (data, currentTheme) => ({
             backgroundColor: 'transparent',
             color: ['#4F75FE', '#FAC858'],
@@ -164,10 +175,9 @@
             series: [{
                 name: 'Kategori',
                 type: 'pie',
-                // Radius dikecilkan (dari 70% ke 60%) untuk memberi ruang label
-                radius: ['35%', '60%'],
+                radius: ['35%', '60%'], // Diperkecil agar ruang label luas
                 center: ['50%', '50%'],
-                avoidLabelOverlap: true, // Mencegah tumpang tindih
+                avoidLabelOverlap: true,
                 itemStyle: {
                     borderRadius: 10,
                     borderColor: currentTheme.base100,
@@ -176,21 +186,17 @@
                 label: {
                     show: true,
                     position: 'outer',
-                    alignTo: 'none',
-                    bleedMargin: 5,
                     color: currentTheme.content,
                     fontSize: 11,
-                    // Penambahan margin antar label
                     minMargin: 5,
                     formatter: '{b}\n{c} ({d}%)'
                 },
                 labelLine: {
                     show: true,
-                    length: 15, // Garis pertama
-                    length2: 10, // Garis kedua horizontal ke teks
-                    smooth: true // Garis melengkung halus
+                    length: 15,
+                    length2: 10,
+                    smooth: true
                 },
-                // Layout otomatis untuk memindahkan label jika terdeteksi tabrakan
                 labelLayout: {
                     hideOverlap: false,
                     moveOverlap: 'shiftY'
@@ -222,7 +228,7 @@
             pieChart.setOption(getPieOption(JSON.parse(event), theme), true);
         });
 
-        // --- 7. OBSERVER TEMA (DARK/LIGHT) ---
+        // --- 7. OBSERVER TEMA ---
         const observer = new MutationObserver(() => {
             theme = fetchColors();
             barChart.setOption(getBarOption(JSON.parse(@json($chartJenisBahaya)), theme));
