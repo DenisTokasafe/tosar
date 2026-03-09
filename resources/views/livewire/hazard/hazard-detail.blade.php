@@ -898,7 +898,7 @@
     </div>
 
 
-    <dialog id="my_modal_5" class="modal">
+    <dialog id="my_modal_5" class="modal"wire:ignore.self>
         <div class="modal-box w-11/12 max-w-2xl">
             <div class="p-2">
                 <h3 class="font-bold text-lg mb-4">Diskusi Hazard</h3>
