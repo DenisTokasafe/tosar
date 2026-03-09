@@ -23,7 +23,7 @@
                 {{-- Tombol buka modal --}}
                 <div class=" flex gap-2">
                     <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
-                    <flux:button size="xs" variant="accent" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
+                    <flux:button size="xs" variant="info" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
 
                 </div>
             </div>
@@ -899,52 +899,75 @@
 
 
     <dialog id="my_modal_5" class="modal">
-        <div class="modal-box">
-            <div class="mt-8 p-4 border rounded-xl bg-base-200">
-                <h3 class="font-bold mb-4">Diskusi Hazard</h3>
+        <div class="modal-box w-11/12 max-w-2xl">
+            <div class="p-2">
+                <h3 class="font-bold text-lg mb-4">Diskusi Hazard</h3>
 
-                <div class="space-y-4 max-h-96 overflow-y-auto mb-4 p-2">
-                    @foreach($hazard->chats as $chat)
+                @php
+                $isModerator = $hazard->isModerator();
+                // Cek apakah sudah ada pesan dari moderator di percakapan ini
+                $hasModeratorChatted = $hazard->chats->contains(function($chat) use ($hazard) {
+                return $hazard->isModerator($chat->user_id);
+                });
+                @endphp
+
+                <div class="space-y-4 max-h-96 overflow-y-auto mb-6 p-4 border rounded-xl bg-base-200/50">
+                    @forelse($hazard->chats as $chat)
                     @php
                     $isMe = $chat->user_id === auth()->id();
-                    // Tentukan apakah pengirim adalah moderator untuk label/warna
-                    $isModeratorChat = $hazard->isModerator($chat->user_id);
+                    $isSenderModerator = $hazard->isModerator($chat->user_id);
                     @endphp
 
                     <div class="chat {{ $isMe ? 'chat-end' : 'chat-start' }}">
                         <div class="chat-image avatar">
-                            <div class="w-10 rounded-full">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}" />
+                            <div class="w-10 rounded-full ring ring-offset-base-100 ring-offset-2 {{ $isSenderModerator ? 'ring-info' : 'ring-primary' }}">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}&background=random" />
                             </div>
                         </div>
                         <div class="chat-header">
                             {{ $chat->user->name }}
                             <time class="text-xs opacity-50">{{ $chat->created_at->diffForHumans() }}</time>
                         </div>
-                        <div class="chat-bubble {{ $isModeratorChat ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
+                        <div class="chat-bubble {{ $isSenderModerator ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
                             {{ $chat->message }}
                         </div>
-                        <div class="chat-footer opacity-50 text-xs">
-                            {{ $isModeratorChat ? 'Moderator' : 'Pelapor/User' }}
+                        <div class="chat-footer opacity-50 text-xs mt-1">
+                            {{ $isSenderModerator ? '🛡️ Moderator' : '👤 Pelapor' }}
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <div class="text-center py-4 opacity-50">
+                        <p>Belum ada diskusi.</p>
+                    </div>
+                    @endforelse
                 </div>
 
+                @if($isModerator || $hasModeratorChatted)
                 <div class="flex gap-2">
                     <input
                         wire:model.defer="newMessage"
                         type="text"
-                        placeholder="Tulis pesan..."
+                        placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}"
                         class="input input-bordered w-full"
                         wire:keydown.enter="sendMessage" />
+                    <button wire:click="sendMessage" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Kirim</span>
+                        <span wire:loading class="loading loading-spinner loading-xs"></span>
+                    </button>
                 </div>
+                @else
+                <div class="alert alert-warning shadow-sm italic text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Hanya moderator yang dapat memulai diskusi ini.</span>
+                </div>
+                @endif
             </div>
+
             <div class="modal-action">
-                <button wire:click="sendMessage" class="btn btn-primary">Kirim</button>
                 <form method="dialog">
-                    <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn">Close</button>
+                    <button class="btn">Tutup</button>
                 </form>
             </div>
         </div>

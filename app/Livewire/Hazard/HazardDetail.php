@@ -533,16 +533,27 @@ class HazardDetail extends Component
     }
     public function sendMessage()
     {
-        $this->validate(['newMessage' => 'required|min:1']);
+        $this->validate(['newMessage' => 'required|string|max:500']);
 
-        // Simpan pesan ke database
+        $isModerator = $this->hazard->isModerator();
+        $hasModeratorChatted = $this->hazard->chats()->get()->contains(function ($chat) {
+            return $this->hazard->isModerator($chat->user_id);
+        });
+
+        // Validasi: Jika bukan moderator DAN moderator belum pernah chat, batalkan
+        if (!$isModerator && !$hasModeratorChatted) {
+            $this->addError('newMessage', 'Anda tidak dapat mengirim pesan sebelum moderator memulai.');
+            return;
+        }
+
         HazardChat::create([
-            'hazard_id' => $this->hazard->id,
+            'hazard_report_id' => $this->hazard->id,
             'user_id' => auth()->id(),
             'message' => $this->newMessage,
         ]);
 
         $this->reset('newMessage');
+        $this->hazard->refresh(); // Refresh relasi agar chat muncul seketika
         // Jika menggunakan polling atau refresh, data otomatis terupdate
     }
     public function uploadImage()
