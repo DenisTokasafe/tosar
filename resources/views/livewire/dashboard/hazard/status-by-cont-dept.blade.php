@@ -1,5 +1,5 @@
 <div>
-    <div wire:ignore id="hazardStatusByContDept" style="height: 320px;" class="w-full"></div>
+    <div wire:ignore id="hazardStatusByContDept" style="height: 350px;" class="w-full"></div>
 
     <script type="module">
         // --- UTILS TEMA DAISYUI ---
