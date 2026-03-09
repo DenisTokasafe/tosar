@@ -148,7 +148,7 @@
             backgroundColor: 'transparent',
             color: ['#4F75FE', '#FAC858'],
             title: {
-                text: 'Kategori Env Hazard (KTA vs TTA)',
+                text: 'Kategori Bahaya Env (KTA vs TTA)',
                 left: 'center',
                 textStyle: {
                     color: currentTheme.content,
