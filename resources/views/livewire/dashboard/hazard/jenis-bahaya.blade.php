@@ -28,19 +28,18 @@
         const getOption = (data, currentTheme) => {
             return {
                 backgroundColor: 'transparent',
-                // --- DEFINISI PALET WARNA BARU (KONTRAST TINGGI & BERBEDA) ---
-                // Urutan: Biru, Hijau, Merah/Oranye, Kuning, Ungu, Cyan, Pink, Cokelat, Kelabu
+                // --- PALET WARNA KONTRAST TINGGI ---
                 color: [
-                    '#5470c6', // Biru Solid (Default ECharts)
-                    '#91cc75', // Hijau Rumput
-                    '#fac858', // Kuning Emas
-                    '#ee6666', // Merah Salem
-                    '#73c0de', // Cyan Cerah
-                    '#3ba272', // Hijau Emerald
-                    '#fc8452', // Oranye Jernih
+                    '#5470c6', // Biru
+                    '#91cc75', // Hijau
+                    '#fac858', // Kuning
+                    '#ee6666', // Merah
+                    '#73c0de', // Cyan
+                    '#3ba272', // Emerald
+                    '#fc8452', // Oranye
                     '#9a60b4', // Ungu
                     '#ea7ccc', // Pink
-                    '#333333' // Kelabu Gelap
+                    '#333333' // Hitam/Abu Gelap
                 ],
                 title: {
                     text: 'Tren OHS Hazard Report per Jenis Bahaya',
@@ -50,7 +49,7 @@
                         fontFamily: 'Poppins, sans-serif',
                         fontSize: 14
                     },
-                    subtext: data.range ? 'Periode: ' + data.range : '12 Bulan Terakhir',
+                    subtext: data.range,
                     subtextStyle: {
                         color: currentTheme.content,
                         opacity: 0.7,
@@ -70,7 +69,7 @@
                     },
                     formatter: function(params) {
                         let res = '<b>' + params[0].name + '</b>';
-                        // Urutkan tooltip berdasarkan nilai terbesar
+                        // Sortir agar yang terbanyak muncul di atas pada tooltip
                         params.sort((a, b) => b.value - a.value);
                         params.forEach(item => {
                             if (item.value > 0) {
@@ -87,9 +86,7 @@
                         color: currentTheme.content
                     },
                     type: 'scroll',
-                    itemGap: 15,
-                    itemWidth: 14,
-                    itemHeight: 14
+                    itemGap: 12
                 },
                 grid: {
                     top: 70,
@@ -103,7 +100,7 @@
                     data: data.labels,
                     axisTick: {
                         show: false
-                    },
+                    }, // Menghilangkan garis kecil di sumbu X
                     axisLabel: {
                         interval: 0,
                         rotate: 0,
@@ -121,23 +118,36 @@
                     splitLine: {
                         lineStyle: {
                             color: currentTheme.base300,
-                            type: 'dashed', // Dibuat putus-putus agar visual modern
-                            opacity: 0.6
+                            type: 'dashed',
+                            opacity: 0.5
                         }
                     },
                     axisLabel: {
                         color: currentTheme.content
                     }
                 },
+                // Mapping series dari PHP ke format grouped bar
                 series: data.series.map(s => ({
                     name: s.name,
                     data: s.data,
                     type: 'bar',
-                    barMaxWidth: 20, // Sedikit lebih ramping agar tidak padat jika banyak series
-                    barGap: '10%',
-                    barCategoryGap: '30%',
+                    barMaxWidth: 20,
+                    barGap: '15%',
+                    barCategoryGap: '35%',
+                    // --- PENAMBAHAN DATA LABELS ---
+                    label: {
+                        show: true,
+                        position: 'top', // Angka muncul di atas batang
+                        distance: 5, // Jarak antara angka dan batang
+                        color: currentTheme.content, // Warna teks mengikuti tema
+                        fontSize: 10,
+                        fontFamily: 'Poppins, sans-serif',
+                        formatter: function(params) {
+                            return params.value > 0 ? params.value : ''; // Hanya munculkan jika > 0
+                        }
+                    },
                     itemStyle: {
-                        borderRadius: [3, 3, 0, 0] // Membuat ujung atas sedikit rounded
+                        borderRadius: [3, 3, 0, 0]
                     },
                     emphasis: {
                         focus: 'series'
@@ -146,10 +156,10 @@
             };
         };
 
-        // Render Pertama
+        // Render Awal
         myChart.setOption(getOption(rawData, theme));
 
-        // --- OBSERVER PERUBAHAN TEMA ---
+        // --- OBSERVER TEMA (DARK/LIGHT) ---
         const observer = new MutationObserver(() => {
             theme = fetchColors();
             myChart.setOption({
@@ -200,10 +210,12 @@
             attributeFilter: ['data-theme']
         });
 
-        // --- LIVEWIRE EVENT ---
+        // --- LIVEWIRE UPDATE EVENT ---
         Livewire.on('updateJenisBahayaChart', event => {
             let payload = JSON.parse(event);
-            myChart.setOption(getOption(payload, theme), true); // true untuk full redraw
+            // 'true' di sini sangat penting agar ECharts menghapus series lama
+            // dan merender ulang dengan kategori yang mungkin berbeda.
+            myChart.setOption(getOption(payload, theme), true);
         });
 
         window.addEventListener('resize', () => {
