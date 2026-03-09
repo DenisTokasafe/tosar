@@ -13,6 +13,7 @@ class JenisBahaya extends Component
     public $start_date;
     public $end_date;
     public $chartJenisBahaya;
+    public $chartKtaTta; // Tambahkan variabel untuk Pie Chart
     public $years;
 
     public function mount()
@@ -50,8 +51,7 @@ class JenisBahaya extends Component
 
     public function loadData()
     {
-        // 1. Query utama - Menggunakan scopeByEventType melalui relasi eventSubType
-        // Ini memastikan kita hanya mengambil data Hazard yang sub-tipenya milik 'OHS Hazard Report'
+        // 1. Base Query Filter
         $query = Hazard::query()
             ->whereHas('eventSubType', function ($q) {
                 $q->byEventType('OHS Hazard Report');
@@ -63,9 +63,9 @@ class JenisBahaya extends Component
                 $q->whereYear('tanggal', $this->years);
             });
 
-        // 2. Ambil raw data untuk chart
+        // --- A. LOGIKA BAR CHART (JENIS BAHAYA) ---
         $rawData = (clone $query)
-            ->with(['eventSubType']) // Scope byEventType di model EventSubType akan otomatis menyaring record yang statusnya aktif (EnabledEventSubTypeScope)
+            ->with(['eventSubType'])
             ->select(
                 DB::raw("DATE_FORMAT(tanggal, '%b %Y') as bulan_tahun"),
                 'event_sub_type_id',
@@ -76,16 +76,11 @@ class JenisBahaya extends Component
             ->orderBy('urutan_bulan')
             ->get();
 
-        // 3. Ambil daftar bulan unik untuk Label X-Axis
         $months = $rawData->pluck('bulan_tahun')->unique()->values()->toArray();
-
-        // 4. Ambil daftar Jenis Bahaya UNIK menggunakan scope untuk legend
-        // Ini memastikan legend konsisten dengan data yang difilter
         $jenisLabels = $rawData->map(function ($item) {
             return $item->eventSubType->event_sub_type_name ?? 'N/A';
         })->unique()->values();
 
-        // 5. Bangun Series Data untuk ECharts (Grouped Bar + Data Labels)
         $series = [];
         foreach ($jenisLabels as $jenis) {
             $dataPoint = [];
@@ -108,14 +103,6 @@ class JenisBahaya extends Component
                     'position' => 'top',
                     'distance' => 5,
                     'fontSize' => 10,
-                    'formatter' => '{text|{c}}', // Syntax ECharts untuk custom label
-                    'rich' => [
-                        'text' => [
-                            'align' => 'center'
-                        ]
-                    ],
-                    // Logika agar angka 0 tidak tampil di JS formatter tetap disarankan,
-                    // namun di sini kita siapkan strukturnya.
                 ],
                 'itemStyle' => [
                     'borderRadius' => [3, 3, 0, 0]
@@ -129,11 +116,34 @@ class JenisBahaya extends Component
             'series' => $series,
             'legend' => $jenisLabels->toArray(),
             'range'  => ($this->start_date && $this->end_date)
-                ? "Periode: " . \Carbon\Carbon::parse($this->start_date)->format('d M Y') . " - " . \Carbon\Carbon::parse($this->end_date)->format('d M Y')
+                ? \Carbon\Carbon::parse($this->start_date)->format('d M Y') . " - " . \Carbon\Carbon::parse($this->end_date)->format('d M Y')
                 : "Tahun $this->years"
         ]);
 
+        // --- B. LOGIKA PIE CHART (KTA VS TTA) ---
+        $pieDataRaw = (clone $query)
+            ->select('key_word', DB::raw('count(*) as total'))
+            // Pastikan key_word sesuai dengan isi database (Kondisi Tidak Aman / Tindakan Tidak Aman)
+            ->whereIn('key_word', ['kta', 'tta'])
+            ->groupBy('key_word')
+            ->get();
+
+        // Map data dengan Label yang lebih rapi untuk tampilan Chart
+        $pieSeriesData = $pieDataRaw->map(function ($item) {
+            $label = ($item->key_word === 'kta') ? 'Kondisi Tidak Aman' : 'Tindakan Tidak Aman';
+            return [
+                'name' => $label,
+                'value' => (int)$item->total
+            ];
+        })->toArray();
+
+        $this->chartKtaTta = json_encode([
+            'series' => $pieSeriesData
+        ]);
+
+        // Dispatch Event ke Browser
         $this->dispatch('updateJenisBahayaChart', $this->chartJenisBahaya);
+        $this->dispatch('updatePieChart', $this->chartKtaTta);
     }
 
     public function render()
