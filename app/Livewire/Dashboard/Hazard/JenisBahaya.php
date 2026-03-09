@@ -64,7 +64,7 @@ class JenisBahaya extends Component
 
         // 2. Ambil raw data untuk chart
         $rawData = (clone $query)
-            ->with(['eventSubType'])
+            ->with(['eventSubType'])->ohsOnly()
             ->select(
                 DB::raw("DATE_FORMAT(tanggal, '%b %Y') as bulan_tahun"),
                 'event_sub_type_id',
