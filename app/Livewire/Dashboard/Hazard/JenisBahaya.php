@@ -87,7 +87,7 @@ class JenisBahaya extends Component
             foreach ($months as $month) {
                 $match = $rawData->first(function ($item) use ($month, $jenis) {
                     return $item->bulan_tahun === $month &&
-                        ($item->eventSubType->event_sub_type_name ?? 'N/A') === $jenis;
+                        (__($item->eventSubType->event_sub_type_name) ?? 'N/A') === $jenis;
                 });
                 $dataPoint[] = $match ? (int)$match->total : 0;
             }
