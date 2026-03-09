@@ -21,8 +21,11 @@
                 </div>
 
                 {{-- Tombol buka modal --}}
-                <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()">
-                </flux:button>
+                <div class=" flex gap-2">
+                    <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
+                    <flux:button size="xs" variant="accent" icon='message-circle-more' onclick="my_modal_5.showModal()"></flux:button>
+
+                </div>
             </div>
 
             @php
@@ -893,5 +896,58 @@
             </div>
         </div>
     </div>
+
+
+    <dialog id="my_modal_5" class="modal">
+        <div class="modal-box">
+            <div class="mt-8 p-4 border rounded-xl bg-base-200">
+                <h3 class="font-bold mb-4">Diskusi Hazard</h3>
+
+                <div class="space-y-4 max-h-96 overflow-y-auto mb-4 p-2">
+                    @foreach($hazard->chats as $chat)
+                    @php
+                    $isMe = $chat->user_id === auth()->id();
+                    // Tentukan apakah pengirim adalah moderator untuk label/warna
+                    $isModeratorChat = $hazard->isModerator($chat->user_id);
+                    @endphp
+
+                    <div class="chat {{ $isMe ? 'chat-end' : 'chat-start' }}">
+                        <div class="chat-image avatar">
+                            <div class="w-10 rounded-full">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}" />
+                            </div>
+                        </div>
+                        <div class="chat-header">
+                            {{ $chat->user->name }}
+                            <time class="text-xs opacity-50">{{ $chat->created_at->diffForHumans() }}</time>
+                        </div>
+                        <div class="chat-bubble {{ $isModeratorChat ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
+                            {{ $chat->message }}
+                        </div>
+                        <div class="chat-footer opacity-50 text-xs">
+                            {{ $isModeratorChat ? 'Moderator' : 'Pelapor/User' }}
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="flex gap-2">
+                    <input
+                        wire:model.defer="newMessage"
+                        type="text"
+                        placeholder="Tulis pesan..."
+                        class="input input-bordered w-full"
+                        wire:keydown.enter="sendMessage" />
+                </div>
+            </div>
+            <div class="modal-action">
+                <button wire:click="sendMessage" class="btn btn-primary">Kirim</button>
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
 
 </section>

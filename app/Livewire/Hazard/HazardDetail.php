@@ -12,10 +12,10 @@ use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
 use App\Models\Hazard;
+use App\Models\HazardChat;
 use App\Models\HazardWorkflow;
 use App\Models\Likelihood;
 use App\Models\Location;
-use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessment;
 use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
@@ -112,12 +112,12 @@ class HazardDetail extends Component
     public $tindakan_tidak_aman;
     #[Validate('required|date')]
     public $tanggal;
-    public $isModerator = false;
     public $manualPelaporMode = false;
     public $manualPelaporName = '';
     public $manualActPelaporMode = false;
     public $manualActPelaporName = '';
     public $hazard_id;
+    public $newMessage;
 
     // Data Action Hazard
     public $action_description;
@@ -531,6 +531,20 @@ class HazardDetail extends Component
         );
         $this->reset('proceedTo');
     }
+    public function sendMessage()
+    {
+        $this->validate(['newMessage' => 'required|min:1']);
+
+        // Simpan pesan ke database
+        HazardChat::create([
+            'hazard_id' => $this->hazard->id,
+            'user_id' => auth()->id(),
+            'message' => $this->newMessage,
+        ]);
+
+        $this->reset('newMessage');
+        // Jika menggunakan polling atau refresh, data otomatis terupdate
+    }
     public function uploadImage()
     {
         if (request()->hasFile('upload')) {
@@ -848,7 +862,7 @@ class HazardDetail extends Component
         // [START] Logika Baru: Notifikasi ke Semua Moderator
         // Dapatkan semua ID pengguna moderator yang relevan
         // Dapatkan semua ID pengguna moderator yang relevan
-        $moderatorIds = ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+        $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
             ->where(function ($query) use ($hazard) {
                 // Moderator ditugaskan untuk Event Type ini,
                 // DAN penugasan tersebut harus berlaku (cocok dengan laporan)

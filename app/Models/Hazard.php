@@ -272,6 +272,11 @@ class Hazard extends Model
             $q->whereRaw('LOWER(event_type_name) = ?', ['ohs hazard report']);
         });
     }
+
+    public function chats()
+    {
+        return $this->hasMany(HazardChat::class)->orderBy('created_at', 'asc');
+    }
     public function isModerator($userId = null): bool
     {
         // Jika ID tidak dikirim, ambil ID user yang sedang login
