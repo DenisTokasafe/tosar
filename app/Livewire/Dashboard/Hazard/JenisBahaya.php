@@ -130,7 +130,8 @@ class JenisBahaya extends Component
 
         // Map data dengan Label yang lebih rapi untuk tampilan Chart
         $pieSeriesData = $pieDataRaw->map(function ($item) {
-            $label = ($item->key_word === 'kta') ? 'Kondisi Tidak Aman' : 'Tindakan Tidak Aman';
+            $label = ($item->key_word === 'kta') ? __('Kondisi Tidak Aman')
+                : __('Tindakan Tidak Aman');
             return [
                 'name' => $label,
                 'value' => (int)$item->total
