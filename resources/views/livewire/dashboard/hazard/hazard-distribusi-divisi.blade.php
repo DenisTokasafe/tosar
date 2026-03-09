@@ -52,10 +52,15 @@
             const option_divis = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Jumlah Laporan ' + (categories.range || ''),
+                    text: 'Jumlah Laporan ',
                     textStyle: {
                         color: theme.content,
                         fontFamily: 'Poppins, sans-serif'
+                    },
+                    subtext: categories.range,
+                    subtextStyle: {
+                        color: currentTheme.content,
+                        opacity: 0.7
                     }
                 },
                 grid: {
@@ -161,7 +166,8 @@
                 const data = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart_divis.setOption({
                     title: {
-                        text: 'Jumlah Laporan ' + data.year
+                        text: 'Jumlah Laporan ',
+                        subtext: data.range,
                     },
                     yAxis: {
                         data: data.label

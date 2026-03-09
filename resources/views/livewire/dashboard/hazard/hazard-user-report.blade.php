@@ -52,10 +52,15 @@
                 backgroundColor: 'transparent',
                 title: {
                     text: 'Top Kontributor',
-                    text: 'Jumlah Laporan ' + (pelapor.range || ''),
+                    text: 'Jumlah Laporan ',
                     textStyle: {
                         color: theme.content,
                         fontFamily: 'Poppins, sans-serif'
+                    },
+                    subtext: pelapor.range,
+                    subtextStyle: {
+                        color: currentTheme.content,
+                        opacity: 0.7
                     }
                 },
                 grid: {
@@ -191,7 +196,8 @@
 
                 myChart_reportBy.setOption({
                     title: {
-                        text: 'Top Kontributor ' + payload.range
+                        text: 'Top Kontributor ',
+                        subtext: payload.range,
                     },
                     yAxis: {
                         data: payload.label,
