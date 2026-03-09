@@ -87,13 +87,13 @@ class JenisBahaya extends Component
             foreach ($months as $month) {
                 $match = $rawData->first(function ($item) use ($month, $jenis) {
                     return $item->bulan_tahun === $month &&
-                        (__($item->eventSubType->event_sub_type_name) ?? 'N/A') === $jenis;
+                        ($item->eventSubType->event_sub_type_name ?? 'N/A') === $jenis;
                 });
                 $dataPoint[] = $match ? (int)$match->total : 0;
             }
 
             $series[] = [
-                'name' => $jenis,
+                'name' => __($jenis),
                 'type' => 'bar',
                 'barMaxWidth' => 20,
                 'barGap' => '15%',
