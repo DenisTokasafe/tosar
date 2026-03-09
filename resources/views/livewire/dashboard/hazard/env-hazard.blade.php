@@ -27,7 +27,16 @@
         let theme = fetchColors();
 
         // --- WARNA KHUSUS ENV (Hijau/Teal) AGAR BEDA DENGAN OHS ---
-        const barColors = ['#10B981', '#34D399', '#059669', '#6EE7B7', '#115E59', '#2DD4BF', '#065F46'];
+        // Gradasi Ekstrim Hijau (Masih Hijau, tapi kontras nilai)
+        const barColors = [
+            '#022C22', // Teal Kehitaman (Sangat Gelap)
+            '#6EE7B7', // Emerald Terang (Sangat Terang)
+            '#065F46', // Emerald Tua (Gelap)
+            '#B9FBC0', // Hijau Limau Sangat Terang (Hampir Putih)
+            '#10B981', // Emerald Standar (Medium Jernih)
+            '#818C78', // Hijau Lumut Kusam (Pembeda Saturasi)
+            '#D1FAE5' // Hijau Mint Sangat Terang
+        ];
 
         const barChart = echarts.init(document.getElementById('hazardEnvJenisChart'));
         const pieChart = echarts.init(document.getElementById('ktaTtaEnvPieChart'));
