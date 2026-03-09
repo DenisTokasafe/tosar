@@ -36,9 +36,10 @@
             let theme = fetchColors();
 
             // Fungsi generate warna agar lebih kontras (seperti permintaan sebelumnya)
-            function generateColor(index, total) {
-                const colors = ['#10B981', '#34D399', '#059669', '#6EE7B7', '#115E59', '#2DD4BF', '#065F46'];
-                return colors[index % colors.length];
+            function generateColor(index) {
+                const seed = Math.sin(index + 1) * 10000;
+                const hue = (seed - Math.floor(seed)) * 360;
+                return `hsl(${hue}, 70%, 55%)`;
             }
 
             const option_divis = {
