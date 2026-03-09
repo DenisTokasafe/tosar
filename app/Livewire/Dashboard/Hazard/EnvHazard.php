@@ -142,8 +142,8 @@ class EnvHazard extends Component
         ]);
 
         // Dispatch Event ke Browser
-        $this->dispatch('updateJenisBahayaChart', $this->chartJenisBahaya);
-        $this->dispatch('updatePieChart', $this->chartKtaTta);
+        $this->dispatch('updateEnvJenisBahayaChart', $this->chartJenisBahaya);
+        $this->dispatch('updateEnvPieChart', $this->chartKtaTta);
     }
     public function render()
     {

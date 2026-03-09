@@ -8,7 +8,6 @@
     </div>
 
     <script type="module">
-        // --- 1. UTILS TEMA & WARNA ---
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
@@ -26,13 +25,13 @@
         });
 
         let theme = fetchColors();
-        const barColors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
 
-        // --- 2. INISIALISASI CHART ---
+        // --- WARNA KHUSUS ENV (Hijau/Teal) AGAR BEDA DENGAN OHS ---
+        const barColors = ['#10B981', '#34D399', '#059669', '#6EE7B7', '#115E59', '#2DD4BF', '#065F46'];
+
         const barChart = echarts.init(document.getElementById('hazardEnvJenisChart'));
         const pieChart = echarts.init(document.getElementById('ktaTtaEnvPieChart'));
 
-        // --- 3. KONFIGURASI BAR CHART ---
         const getBarOption = (data, currentTheme) => ({
             backgroundColor: 'transparent',
             color: barColors,
@@ -60,14 +59,6 @@
                 },
                 axisPointer: {
                     type: 'shadow'
-                },
-                formatter: function(params) {
-                    let res = '<b>' + params[0].name + '</b>';
-                    params.sort((a, b) => b.value - a.value);
-                    params.forEach(item => {
-                        if (item.value > 0) res += `<br/>${item.marker} ${item.seriesName}: <b>${item.value}</b>`;
-                    });
-                    return res;
                 }
             },
             legend: {
@@ -87,7 +78,6 @@
             xAxis: {
                 type: 'category',
                 data: data.labels,
-                boundaryGap: true, // Memastikan garis pemisah berada di antara kategori
                 axisLabel: {
                     color: currentTheme.content,
                     fontSize: 10
@@ -97,13 +87,10 @@
                         color: currentTheme.base300
                     }
                 },
-                // --- PENAMBAHAN BORDER PEMISAH ANTAR BULAN ---
                 splitLine: {
                     show: true,
                     lineStyle: {
                         color: currentTheme.base300,
-                        type: 'solid', // Garis tegas sebagai pemisah
-                        width: 1,
                         opacity: 0.5
                     }
                 }
@@ -122,31 +109,22 @@
                 }
             },
             series: data.series.map(s => ({
-                name: s.name,
-                data: s.data,
+                ...s,
                 type: 'bar',
                 barMaxWidth: 20,
-                barGap: '15%',
                 label: {
                     show: true,
                     position: 'top',
                     color: currentTheme.content,
                     fontSize: 10,
                     formatter: (p) => p.value > 0 ? p.value : ''
-                },
-                itemStyle: {
-                    borderRadius: [3, 3, 0, 0]
-                },
-                emphasis: {
-                    focus: 'series'
                 }
             }))
         });
 
-        // --- 4. KONFIGURASI PIE CHART ---
         const getPieOption = (data, currentTheme) => ({
             backgroundColor: 'transparent',
-            color: ['#4F75FE', '#FAC858'],
+            color: ['#059669', '#FBBF24'], // Hijau untuk KTA, Kuning untuk TTA
             title: {
                 text: 'Kategori Bahaya Env (KTA vs TTA)',
                 left: 'center',
@@ -158,12 +136,6 @@
             },
             tooltip: {
                 trigger: 'item',
-                backgroundColor: currentTheme.base100,
-                borderColor: currentTheme.primary,
-                borderWidth: 1,
-                textStyle: {
-                    color: currentTheme.content
-                },
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
             legend: {
@@ -173,10 +145,8 @@
                 }
             },
             series: [{
-                name: 'Kategori',
                 type: 'pie',
-                radius: ['35%', '60%'], // Diperkecil agar ruang label luas
-                center: ['50%', '50%'],
+                radius: ['35%', '60%'],
                 avoidLabelOverlap: true,
                 itemStyle: {
                     borderRadius: 10,
@@ -184,55 +154,32 @@
                     borderWidth: 2
                 },
                 label: {
-                    show: true,
-                    position: 'outer',
                     color: currentTheme.content,
-                    fontSize: 11,
-                    minMargin: 5,
                     formatter: '{b}\n{c} ({d}%)'
-                },
-                labelLine: {
-                    show: true,
-                    length: 15,
-                    length2: 10,
-                    smooth: true
-                },
-                labelLayout: {
-                    hideOverlap: false,
-                    moveOverlap: 'shiftY'
-                },
-                emphasis: {
-                    label: {
-                        show: true,
-                        fontSize: 13,
-                        fontWeight: 'bold'
-                    }
                 },
                 data: data.series
             }]
         });
 
         // --- 5. RENDER AWAL ---
-        const rawBarData = @json(json_decode($chartJenisBahaya, true));
-        const rawPieData = @json(json_decode($chartKtaTta, true));
+        barChart.setOption(getBarOption(@json(json_decode($chartJenisBahaya, true)), theme));
+        pieChart.setOption(getPieOption(@json(json_decode($chartKtaTta, true)), theme));
 
-        barChart.setOption(getBarOption(rawBarData, theme));
-        pieChart.setOption(getPieOption(rawPieData, theme));
-
-        // --- 6. LIVEWIRE UPDATE EVENTS ---
-        Livewire.on('updateJenisBahayaChart', event => {
+        // --- 6. LIVEWIRE UPDATE EVENTS (Disesuaikan dengan Dispatch baru) ---
+        Livewire.on('updateEnvJenisBahayaChart', event => {
             barChart.setOption(getBarOption(JSON.parse(event), theme), true);
         });
 
-        Livewire.on('updatePieChart', event => {
+        Livewire.on('updateEnvPieChart', event => {
             pieChart.setOption(getPieOption(JSON.parse(event), theme), true);
         });
 
         // --- 7. OBSERVER TEMA ---
         const observer = new MutationObserver(() => {
             theme = fetchColors();
-            barChart.setOption(getBarOption(JSON.parse(@json($chartJenisBahaya)), theme));
-            pieChart.setOption(getPieOption(JSON.parse(@json($chartKtaTta)), theme));
+            // Gunakan @this untuk mengambil data terbaru dari property Livewire
+            barChart.setOption(getBarOption(JSON.parse(@this.chartJenisBahaya), theme));
+            pieChart.setOption(getPieOption(JSON.parse(@this.chartKtaTta), theme));
         });
         observer.observe(document.documentElement, {
             attributes: true,
