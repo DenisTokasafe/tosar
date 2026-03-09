@@ -265,4 +265,10 @@ class Hazard extends Model
     {
         return $this->department->company_id ?? $this->contractor->company_id ?? null;
     }
+    public function scopeOhsOnly($query)
+    {
+        return $query->whereHas('eventType', function ($q) {
+            $q->whereRaw('LOWER(event_type_name) = ?', ['ohs hazard report']);
+        });
+    }
 }

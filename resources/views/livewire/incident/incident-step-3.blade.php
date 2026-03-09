@@ -67,24 +67,34 @@
         </button>
     </div>
     <x-form.text_area label="Tindakan Langsung" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" disabled />
-    @foreach($corrective_actions as $index => $action)
-    <x-form.textarea label="Rencana Perbaikan Jangka Panjang" model="action_description" placeholder="Langkah agar tidak terulang..." />
-    <div class="grid grid-cols-1 gap-4 mt-12 mb-8 space-y-4 border-b md:grid-cols-3">
-        <x-form.searchable-select-advanced
-            label="PIC"
-            placeholder="Cari PIC..."
-            modelsearch="corrective_actions.{{ $index }}.pic_name"
-            modelid="corrective_actions.{{ $index }}.pic_id"
-            :options="$involved_personnel_options"
-            :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
-            clickaction="selectPIC({{ $index }}, " />
-        <x-form.tgl-waktu label="Batas Waktu Penyelesaian" model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d\TH:i')" />
-        <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan" model="corrective_actions.{{ $index }}.actual_completion_date" :min-date="now()->format('Y-m-d\TH:i')" />
-    </div>
-    {{-- Action --}}
-    <div class="flex items-end justify-center pb-1 md:col-span-1">
-        @if(count($corrective_actions) > 1)
-        <button type="button" wire:click="removeCorrectiveRow({{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
-        @endif
-    </div>
-    @endforeach
+    <table>
+        <tbody>
+            @foreach($corrective_actions as $index => $action)
+            <tr>
+                <td class="w-1/2 pr-4">
+                    <x-form.text_area label="Rencana Perbaikan Jangka Panjang" model="corrective_actions.{{ $index }}.action_description" placeholder="{{ __('Langkah agar tidak terulang...')}}" />
+                </td>
+                <td class="w-1/4 px-2">
+                    <x-form.searchable-select-advanced
+                        label="PIC"
+                        placeholder="Cari PIC..."
+                        modelsearch="corrective_actions.{{ $index }}.pic_name"
+                        modelid="corrective_actions.{{ $index }}.pic_id"
+                        :options="$involved_personnel_options"
+                        :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
+                        clickaction="selectPIC({{ $index }}, " />
+                </td>
+                <td class="w-1/4 px-2">
+                    <x-form.tgl-waktu label="Batas Waktu Penyelesaian" model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d\TH:i')" />
+                    <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan" model="corrective_actions.{{ $index }}.actual_completion_date" :min-date="now()->format('Y-m-d\TH:i')" />
+                </td>
+                <td class="w-1/12 pl-4">
+                    @if(count($corrective_actions) > 1)
+                    <button type="button" wire:click="removeCorrectiveRow({{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+            <td></td>
+        </tbody>
+    </table>

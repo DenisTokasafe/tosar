@@ -44,4 +44,12 @@ class EventType extends Model
     {
         return strtolower($this->event_type_name) === 'injury';
     }
+    public function isOhsHazard()
+    {
+        return strtolower($this->event_type_name) === 'OHS Hazard Report';
+    }
+    public function isEnvHazard()
+    {
+        return strtolower($this->event_type_name) === 'ENV Hazard Report';
+    }
 }

@@ -147,6 +147,9 @@
             <div class="shadow rounded-xl">
                 <livewire:dashboard.hazard.status-by-cont-dept />
             </div>
+            <div class="shadow rounded-xl">
+                <livewire:dashboard.hazard.jenis-bahaya />
+            </div>
         </div>
 
         {{-- Daftar Laporan Terbaru --}}
@@ -169,18 +172,18 @@
                         <tr>
                             <td class="px-3 py-2 border">
                                 @can('view', $report)
-                                    <a href="{{ route('hazard-detail', $report) }}"
-                                        class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
+                                <a href="{{ route('hazard-detail', $report) }}"
+                                    class="text-xs text-blue-600 hover:underline">{{ $report->no_referensi ?? '-' }}</a>
                                 @else
-                                    <span
-                                        class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
+                                <span
+                                    class="text-xs text-gray-400 cursor-not-allowed">{{ $report->no_referensi ?? '-' }}</span>
                                 @endcan
                             </td>
                             <td class="px-3 py-2 border">
                                 {{-- Bersihkan Tag HTML dari Deskripsi --}}
                                 @php
-                                    $cleanDescription = strip_tags($report->description);
-                                    $truncatedDescription = Str::limit($cleanDescription, 50, '...');
+                                $cleanDescription = strip_tags($report->description);
+                                $truncatedDescription = Str::limit($cleanDescription, 50, '...');
                                 @endphp
 
                                 {{-- Container Alpine.js untuk Tooltip --}}
