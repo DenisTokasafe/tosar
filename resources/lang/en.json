@@ -9,6 +9,8 @@
     "Tipe Bahaya": "Hazard Type",
     "Jenis Bahaya": "Hazard Category",
     "-- Pilih --": "-- Select --",
+    "Distribusi Laporan per Divisi": "Report Distribution per Division",
+    "Jumlah": "Total",
     "Kondisi Tidak Aman": "Unsafe Condition",
     "Tindakan Tidak Aman": "Unsafe Action",
     "-- Pilih Kategori Bahaya --": "-- Select Hazard Category --",
@@ -30,6 +32,28 @@
     "Pilih Dokumen": "Select Document",
     "Informasi Dasar": "Basic Information",
     "Detail & Risiko": "Details & Risks",
+    "Distribusi Status": "Distribusi Status",
+    "Status": "Status",
+    "laporan": "laporan",
+    "Tren Env Hazard Report per Jenis Bahaya": "Env Hazard Report Trend by Hazard Type",
+    "Kategori Bahaya Env (KTA vs TTA)": "Env Hazard Categories (UC vs UA)",
+    "Periode": "Period",
+
+    "Status Laporan Responsible Departemen/Kontraktor": "Report Status by Responsible Department/Contractor",
+    "Open": "Open",
+    "Closed": "Closed",
+    "Periode: ": "Period: ",
+    "12 Bulan Terakhir": "Last 12 Months",
+
+    "Tren OHS Hazard Report per Jenis Bahaya": "OHS Hazard Report Trend by Hazard Type",
+    "Kategori Bahaya OHS (KTA vs TTA)": "OHS Hazard Categories (Unsafe Condition vs Unsafe Act)",
+
+
+    "Jumlah Laporan Hazard per Bulan": "Monthly Hazard Report Trend",
+    "Data laporan berdasarkan bulan berjalan": "Report data based on current month",
+    "Jumlah Laporan": "Total Reports",
+    "Top Kontributor (Jumlah Laporan)": "Top Kontributor (Jumlah Laporan)",
+
     "Dokumentasi": "Documentation",
     "Tindakan Perbaikan": "Corrective Actions",
     "Tindakan Langsung": "Immediate Actions",

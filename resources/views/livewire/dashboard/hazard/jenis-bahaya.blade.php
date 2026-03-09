@@ -8,7 +8,13 @@
     </div>
 
     <script type="module">
-        // --- 1. UTILS TEMA & WARNA ---
+        // --- 1. UTILS & LOKALISASI (Bilingual) ---
+        const i18n = {
+            barTitle: @json(__('Tren OHS Hazard Report per Jenis Bahaya')),
+            pieTitle: @json(__('Kategori Bahaya OHS (KTA vs TTA)')),
+            categoryName: @json(__('Kategori'))
+        };
+
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
@@ -37,7 +43,7 @@
             backgroundColor: 'transparent',
             color: barColors,
             title: {
-                text: 'Tren OHS Hazard Report per Jenis Bahaya',
+                text: i18n.barTitle, // MENGGUNAKAN i18n
                 left: 'center',
                 textStyle: {
                     color: currentTheme.content,
@@ -87,7 +93,7 @@
             xAxis: {
                 type: 'category',
                 data: data.labels,
-                boundaryGap: true, // Memastikan garis pemisah berada di antara kategori
+                boundaryGap: true,
                 axisLabel: {
                     color: currentTheme.content,
                     fontSize: 10
@@ -97,12 +103,11 @@
                         color: currentTheme.base300
                     }
                 },
-                // --- PENAMBAHAN BORDER PEMISAH ANTAR BULAN ---
                 splitLine: {
                     show: true,
                     lineStyle: {
                         color: currentTheme.base300,
-                        type: 'solid', // Garis tegas sebagai pemisah
+                        type: 'solid',
                         width: 1,
                         opacity: 0.5
                     }
@@ -148,7 +153,7 @@
             backgroundColor: 'transparent',
             color: ['#4F75FE', '#FAC858'],
             title: {
-                text: 'Kategori Bahaya OHS (KTA vs TTA)',
+                text: i18n.pieTitle, // MENGGUNAKAN i18n
                 left: 'center',
                 textStyle: {
                     color: currentTheme.content,
@@ -173,9 +178,9 @@
                 }
             },
             series: [{
-                name: 'Kategori',
+                name: i18n.categoryName, // MENGGUNAKAN i18n
                 type: 'pie',
-                radius: ['35%', '60%'], // Diperkecil agar ruang label luas
+                radius: ['35%', '60%'],
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: {
@@ -188,18 +193,7 @@
                     position: 'outer',
                     color: currentTheme.content,
                     fontSize: 11,
-                    minMargin: 5,
                     formatter: '{b}\n{c} ({d}%)'
-                },
-                labelLine: {
-                    show: true,
-                    length: 15,
-                    length2: 10,
-                    smooth: true
-                },
-                labelLayout: {
-                    hideOverlap: false,
-                    moveOverlap: 'shiftY'
                 },
                 emphasis: {
                     label: {
@@ -208,6 +202,7 @@
                         fontWeight: 'bold'
                     }
                 },
+                // Data mapping untuk memastikan label KTA/TTA bisa diterjemahkan jika perlu
                 data: data.series
             }]
         });
@@ -231,8 +226,8 @@
         // --- 7. OBSERVER TEMA ---
         const observer = new MutationObserver(() => {
             theme = fetchColors();
-            barChart.setOption(getBarOption(JSON.parse(@json($chartJenisBahaya)), theme));
-            pieChart.setOption(getPieOption(JSON.parse(@json($chartKtaTta)), theme));
+            barChart.setOption(getBarOption(rawBarData, theme));
+            pieChart.setOption(getPieOption(rawPieData, theme));
         });
         observer.observe(document.documentElement, {
             attributes: true,

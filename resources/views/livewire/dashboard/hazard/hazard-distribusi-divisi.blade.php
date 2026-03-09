@@ -13,7 +13,12 @@
 
             myChart_divis = echarts.init(dom_divis);
 
-            // Ambil data awal - Langsung parse dari property categories
+            // Lokalisasi Teks dari Laravel
+            const i18n = {
+                title: @json(__('Distribusi Laporan per Divisi')),
+                seriesName: @json(__('Jumlah'))
+            };
+
             const rawData = @json($categories);
             const categories = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
 
@@ -35,7 +40,6 @@
 
             let theme = fetchColors();
 
-            // Fungsi generate warna agar lebih kontras (seperti permintaan sebelumnya)
             function generateColor(index) {
                 const seed = Math.sin(index + 1) * 10000;
                 const hue = (seed - Math.floor(seed)) * 360;
@@ -45,7 +49,7 @@
             const option_divis = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Distribusi Laporan per Divisi',
+                    text: i18n.title, // MENGGUNAKAN i18n
                     textStyle: {
                         color: theme.content,
                         fontFamily: 'Poppins, sans-serif',
@@ -53,7 +57,7 @@
                     },
                     subtext: categories.range,
                     subtextStyle: {
-                        color: theme.content, // PERBAIKAN: Sebelumnya currentTheme (Error)
+                        color: theme.content,
                         opacity: 0.7
                     }
                 },
@@ -96,7 +100,7 @@
                     }
                 },
                 series: [{
-                    name: 'Jumlah',
+                    name: i18n.seriesName, // MENGGUNAKAN i18n
                     type: 'bar',
                     data: categories.counts,
                     itemStyle: {
@@ -113,7 +117,6 @@
 
             myChart_divis.setOption(option_divis);
 
-            // Listener Livewire
             Livewire.on('distribusiDivisi', (event) => {
                 const data = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
                 myChart_divis.setOption({
@@ -132,7 +135,6 @@
             window.addEventListener('resize', () => myChart_divis.resize());
         };
 
-        // Initialize
         initHazardChart();
         document.addEventListener('livewire:navigated', initHazardChart);
     </script>

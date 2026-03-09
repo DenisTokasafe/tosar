@@ -1,10 +1,17 @@
 <div>
-    <div wire:ignore id="chart-container" style="height: 355px"" class="w-full border bg-base-100 border-base-200"></div>
+    <div wire:ignore id="chart-container" style="height: 355px" class="w-full border bg-base-100 border-base-200"></div>
 
     <script type="module">
         var dom_status = document.getElementById('chart-container');
-        const chartData = JSON.parse(@json($statusChart));
 
+        // --- 1. LOKALISASI TEKS (Bilingual) ---
+        const i18n = {
+            title: @json(__('Distribusi Status')),
+            seriesName: @json(__('Status')),
+            unit: @json(__('laporan'))
+        };
+
+        const chartData = JSON.parse(@json($statusChart));
         const labels = chartData.labels;
         const values = chartData.values;
 
@@ -18,7 +25,6 @@
             useDirtyRect: false
         });
 
-        // --- UTILS TEMA DAISYUI ---
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
@@ -36,15 +42,14 @@
 
         let theme = fetchColors();
 
-        var option_status;
-        option_status = {
+        var option_status = {
             backgroundColor: 'transparent',
             title: {
-                text: 'Distribusi Status',
+                text: i18n.title, // MENGGUNAKAN i18n
                 left: 'center',
                 textStyle: {
                     color: theme.content,
-                    fontFamily: 'Arial',
+                    fontFamily: 'Poppins, Arial, sans-serif',
                     fontSize: 16
                 }
             },
@@ -53,8 +58,11 @@
                 backgroundColor: theme.base100,
                 borderColor: theme.primary,
                 borderWidth: 1,
-                textStyle: { color: theme.content },
-                formatter: '{b}: {c} laporan ({d}%)'
+                textStyle: {
+                    color: theme.content
+                },
+                // Formatter menggunakan unit dinamis (laporan/reports)
+                formatter: `{b}: {c} ${i18n.unit} ({d}%)`
             },
             legend: {
                 top: 'bottom',
@@ -62,22 +70,21 @@
                 textStyle: {
                     fontSize: 10,
                     color: theme.content,
-                    fontFamily: 'Arial'
+                    fontFamily: 'Poppins, Arial, sans-serif'
                 }
             },
             series: [{
-                name: 'Status',
+                name: i18n.seriesName, // MENGGUNAKAN i18n
                 type: 'pie',
-                radius: ['30%', '60%'], // Diubah ke donut style agar lebih modern
+                radius: ['30%', '60%'],
                 avoidLabelOverlap: true,
                 data: seriesData,
                 label: {
                     show: true,
                     position: 'outside',
                     formatter: '{b}: {c}',
-                    color: theme.content // Warna teks label mengikuti tema
+                    color: theme.content
                 },
-                // --- FIX: Agar Pie tidak redup saat dihover ---
                 emphasis: {
                     focus: 'none',
                     itemStyle: {
@@ -92,19 +99,30 @@
         if (option_status && typeof option_status === 'object') {
             myChart_status.setOption(option_status);
 
-            // --- OBSERVER PERUBAHAN TEMA ---
             const observer = new MutationObserver(() => {
                 const newTheme = fetchColors();
                 myChart_status.setOption({
-                    title: { textStyle: { color: newTheme.content } },
+                    title: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
                     tooltip: {
                         backgroundColor: newTheme.base100,
                         borderColor: newTheme.primary,
-                        textStyle: { color: newTheme.content }
+                        textStyle: {
+                            color: newTheme.content
+                        }
                     },
-                    legend: { textStyle: { color: newTheme.content } },
+                    legend: {
+                        textStyle: {
+                            color: newTheme.content
+                        }
+                    },
                     series: [{
-                        label: { color: newTheme.content }
+                        label: {
+                            color: newTheme.content
+                        }
                     }]
                 });
             });
@@ -114,15 +132,11 @@
                 attributeFilter: ['data-theme']
             });
 
-            // --- LIVEWIRE EVENT ---
             Livewire.on('distribusiStatus', event => {
                 let payload_status = JSON.parse(event);
-                const labels = payload_status.labels;
-                const values = payload_status.values;
-
-                const newSeriesData = labels.map((label, i) => ({
+                const newSeriesData = payload_status.labels.map((label, i) => ({
                     name: label,
-                    value: values[i]
+                    value: payload_status.values[i]
                 }));
 
                 myChart_status.setOption({
@@ -133,6 +147,6 @@
             });
         }
 
-        window.addEventListener('resize', myChart_status.resize);
+        window.addEventListener('resize', () => myChart_status.resize());
     </script>
 </div>

@@ -2,14 +2,11 @@
     <div wire:ignore id="hazardTrend" style="height: 355px" class="w-full border bg-base-100 border-base-200"></div>
 
     <script type="module">
-        // 1. Definisikan fungsi inisialisasi utama
         const initHazardTrendChart = () => {
             const dom = document.getElementById('hazardTrend');
 
-            // Safety check: jika elemen tidak ada di halaman ini, berhenti
             if (!dom) return;
 
-            // 2. Bersihkan instance lama jika ada (Penting untuk wire:navigate)
             let myChart = echarts.getInstanceByDom(dom);
             if (myChart) {
                 myChart.dispose();
@@ -17,7 +14,13 @@
 
             myChart = echarts.init(dom);
 
-            // 3. Ambil data awal dari PHP
+            // --- 1. LOKALISASI TEKS (Bilingual) ---
+            const i18n = {
+                title: @json(__('Jumlah Laporan Hazard per Bulan')),
+                subtext: @json(__('Data laporan berdasarkan bulan berjalan')),
+                legend: @json(__('Jumlah Laporan'))
+            };
+
             const dataRaw = @json($data);
             const data = typeof dataRaw === 'string' ? JSON.parse(dataRaw) : dataRaw;
 
@@ -42,7 +45,7 @@
             const option = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Jumlah Laporan Hazard per Bulan',
+                    text: i18n.title, // MENGGUNAKAN i18n
                     left: 'center',
                     top: 5,
                     textStyle: {
@@ -51,7 +54,7 @@
                         fontWeight: 'bold',
                         color: colors.content
                     },
-                    subtext: 'Data laporan berdasarkan bulan berjalan',
+                    subtext: i18n.subtext, // MENGGUNAKAN i18n
                     subtextStyle: {
                         fontSize: 10,
                         color: colors.content
@@ -72,7 +75,6 @@
                     textStyle: {
                         color: colors.content
                     },
-                    // FIX: Menambahkan axisPointer agar ada garis bantu vertikal saat hover
                     axisPointer: {
                         type: 'line',
                         lineStyle: {
@@ -83,7 +85,7 @@
                     }
                 },
                 legend: {
-                    data: ['Jumlah Laporan'],
+                    data: [i18n.legend], // MENGGUNAKAN i18n
                     top: 50,
                     textStyle: {
                         color: colors.content
@@ -117,7 +119,7 @@
                     }
                 },
                 series: [{
-                    name: 'Jumlah Laporan',
+                    name: i18n.legend, // MENGGUNAKAN i18n agar sinkron dengan Legend
                     data: data.counts,
                     type: 'line',
                     smooth: 0.3,
@@ -132,7 +134,6 @@
                         borderWidth: 2,
                         borderColor: colors.base100
                     },
-                    // FIX: Mengubah focus dari 'none' ke 'series' agar garis tidak hilang saat hover
                     emphasis: {
                         focus: 'series',
                         lineStyle: {
@@ -229,11 +230,9 @@
                 });
             });
 
-            // 6. Handle Resize
             window.addEventListener('resize', () => myChart.resize());
         };
 
-        // --- CORE LIVEWIRE NAVIGATE LOGIC ---
         initHazardTrendChart();
 
         document.addEventListener('livewire:navigated', () => {

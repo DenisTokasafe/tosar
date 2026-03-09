@@ -12,6 +12,12 @@
                 existingChart.dispose();
             }
 
+            // --- 1. LOKALISASI TEKS (Bilingual) ---
+            const i18n = {
+                title: @json(__('Top Kontributor (Jumlah Laporan)')),
+                seriesName: @json(__('Jumlah Laporan')),
+            };
+
             // Ambil data dari PHP
             const pelaporData = @json($pelapor);
             const pelapor = typeof pelaporData === 'string' ? JSON.parse(pelaporData) : pelaporData;
@@ -45,7 +51,7 @@
             const option_reportBy = {
                 backgroundColor: 'transparent',
                 title: {
-                    text: 'Top Kontributor (Jumlah Laporan)', // Diperbaiki: Gabungkan teks
+                    text: i18n.title, // MENGGUNAKAN i18n
                     left: 'center',
                     textStyle: {
                         color: theme.content,
@@ -54,7 +60,7 @@
                     },
                     subtext: pelapor.range,
                     subtextStyle: {
-                        color: theme.content, // Diperbaiki: currentTheme -> theme
+                        color: theme.content,
                         opacity: 0.7
                     }
                 },
@@ -102,7 +108,7 @@
                     }
                 },
                 series: [{
-                    name: 'Jumlah Laporan',
+                    name: i18n.seriesName, // MENGGUNAKAN i18n
                     type: 'bar',
                     data: pelapor.counts,
                     barMaxWidth: 25,

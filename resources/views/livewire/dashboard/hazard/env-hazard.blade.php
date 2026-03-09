@@ -8,6 +8,15 @@
     </div>
 
     <script type="module">
+        // --- 1. LOKALISASI TEKS (Bilingual) ---
+        const i18n = {
+            barTitle: @json(__('Tren Env Hazard Report per Jenis Bahaya')),
+            pieTitle: @json(__('Kategori Bahaya Env (KTA vs TTA)')),
+            period: @json(__('Periode')),
+            uc: @json(__('Kondisi Tidak Aman')), // Unsafe Condition
+            ua: @json(__('Tindakan Tidak Aman')) // Unsafe Action
+        };
+
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
             temp.style.color = `var(${variable})`;
@@ -26,17 +35,7 @@
 
         let theme = fetchColors();
 
-        // --- WARNA KHUSUS ENV (Hijau/Teal) AGAR BEDA DENGAN OHS ---
-        // Gradasi Ekstrim Hijau (Masih Hijau, tapi kontras nilai)
-        const barColors = [
-            '#022C22', // Teal Kehitaman (Sangat Gelap)
-            '#6EE7B7', // Emerald Terang (Sangat Terang)
-            '#065F46', // Emerald Tua (Gelap)
-            '#B9FBC0', // Hijau Limau Sangat Terang (Hampir Putih)
-            '#10B981', // Emerald Standar (Medium Jernih)
-            '#818C78', // Hijau Lumut Kusam (Pembeda Saturasi)
-            '#D1FAE5' // Hijau Mint Sangat Terang
-        ];
+        const barColors = ['#022C22', '#6EE7B7', '#065F46', '#B9FBC0', '#10B981', '#818C78', '#D1FAE5'];
 
         const barChart = echarts.init(document.getElementById('hazardEnvJenisChart'));
         const pieChart = echarts.init(document.getElementById('ktaTtaEnvPieChart'));
@@ -45,14 +44,14 @@
             backgroundColor: 'transparent',
             color: barColors,
             title: {
-                text: 'Tren Env Hazard Report per Jenis Bahaya',
+                text: i18n.barTitle,
                 left: 'center',
                 textStyle: {
                     color: currentTheme.content,
                     fontFamily: 'Poppins, sans-serif',
                     fontSize: 14
                 },
-                subtext: data.range,
+                subtext: data.range ? `${i18n.period}: ${data.range}` : '',
                 subtextStyle: {
                     color: currentTheme.content,
                     opacity: 0.7
@@ -95,13 +94,6 @@
                     lineStyle: {
                         color: currentTheme.base300
                     }
-                },
-                splitLine: {
-                    show: true,
-                    lineStyle: {
-                        color: currentTheme.base300,
-                        opacity: 0.5
-                    }
                 }
             },
             yAxis: {
@@ -131,50 +123,63 @@
             }))
         });
 
-        const getPieOption = (data, currentTheme) => ({
-            backgroundColor: 'transparent',
-            color: ['#059669', '#FBBF24'], // Hijau untuk KTA, Kuning untuk TTA
-            title: {
-                text: 'Kategori Bahaya Env (KTA vs TTA)',
-                left: 'center',
-                textStyle: {
-                    color: currentTheme.content,
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: 14
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: '{b}: <b>{c}</b> ({d}%)'
-            },
-            legend: {
-                bottom: 0,
-                textStyle: {
-                    color: currentTheme.content
-                }
-            },
-            series: [{
-                type: 'pie',
-                radius: ['35%', '60%'],
-                avoidLabelOverlap: true,
-                itemStyle: {
-                    borderRadius: 10,
-                    borderColor: currentTheme.base100,
-                    borderWidth: 2
-                },
-                label: {
-                    color: currentTheme.content,
-                    formatter: '{b}\n{c} ({d}%)'
-                },
-                data: data.series
-            }]
-        });
+        const getPieOption = (data, currentTheme) => {
+            // Pemetaan nama kategori agar mengikuti bahasa aktif
+            const mappedData = data.series.map(item => {
+                let name = item.name;
+                if (name === 'KTA' || name === 'Unsafe Condition') name = i18n.uc;
+                if (name === 'TTA' || name === 'Unsafe Action') name = i18n.ua;
+                return {
+                    ...item,
+                    name: name
+                };
+            });
 
-        // --- 5. RENDER AWAL ---
+            return {
+                backgroundColor: 'transparent',
+                color: ['#059669', '#FBBF24'],
+                title: {
+                    text: i18n.pieTitle,
+                    left: 'center',
+                    textStyle: {
+                        color: currentTheme.content,
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: 14
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: <b>{c}</b> ({d}%)'
+                },
+                legend: {
+                    bottom: 0,
+                    textStyle: {
+                        color: currentTheme.content
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['35%', '60%'],
+                    avoidLabelOverlap: true,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: currentTheme.base100,
+                        borderWidth: 2
+                    },
+                    label: {
+                        color: currentTheme.content,
+                        formatter: '{b}\n{c} ({d}%)'
+                    },
+                    data: mappedData
+                }]
+            };
+        };
+
+        // Render Awal
         barChart.setOption(getBarOption(@json(json_decode($chartJenisBahaya, true)), theme));
         pieChart.setOption(getPieOption(@json(json_decode($chartKtaTta, true)), theme));
 
-        // --- 6. LIVEWIRE UPDATE EVENTS (Disesuaikan dengan Dispatch baru) ---
+        // Update Events
         Livewire.on('updateEnvJenisBahayaChart', event => {
             barChart.setOption(getBarOption(JSON.parse(event), theme), true);
         });
@@ -183,10 +188,9 @@
             pieChart.setOption(getPieOption(JSON.parse(event), theme), true);
         });
 
-        // --- 7. OBSERVER TEMA ---
+        // Theme Observer
         const observer = new MutationObserver(() => {
             theme = fetchColors();
-            // Gunakan @this untuk mengambil data terbaru dari property Livewire
             barChart.setOption(getBarOption(JSON.parse(@this.chartJenisBahaya), theme));
             pieChart.setOption(getPieOption(JSON.parse(@this.chartKtaTta), theme));
         });

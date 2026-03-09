@@ -2,6 +2,16 @@
     <div wire:ignore id="hazardStatusByContDept" style="height: 350px;" class="w-full"></div>
 
     <script type="module">
+        // --- 1. LOKALISASI TEKS (Bilingual) ---
+        const i18n = {
+            title: @json(__('Status Laporan Responsible Departemen/Kontraktor')),
+            yAxisName: @json(__('Jumlah Laporan')),
+            statusOpen: @json(__('Open')),
+            statusClosed: @json(__('Closed')),
+            periodPrefix: @json(__('Periode: ')),
+            defaultRange: @json(__('12 Bulan Terakhir'))
+        };
+
         // --- UTILS TEMA DAISYUI ---
         const getThemeColor = (variable) => {
             const temp = document.createElement('div');
@@ -26,29 +36,29 @@
         var myChart = echarts.init(dom);
 
         var option = {
-            backgroundColor: 'transparent', // Agar menyatu dengan background
+            backgroundColor: 'transparent',
             title: {
-                text: 'Status Laporan Responsible Departemen/Kontraktor',
+                text: i18n.title, // MENGGUNAKAN i18n
                 left: 'center',
                 textStyle: {
-                    color: theme.content, // Dinamis
+                    color: theme.content,
                     fontFamily: 'Poppins, sans-serif',
                     fontSize: 14
                 },
                 subtext: rawData.range,
                 subtextStyle: {
-                    color: theme.content, // Dinamis (bisa disesuaikan opasitasnya)
+                    color: theme.content,
                     opacity: 0.7,
                     fontSize: 12
                 }
             },
             tooltip: {
                 trigger: 'axis',
-                backgroundColor: theme.base100, // Dinamis
-                borderColor: theme.primary, // Dinamis
+                backgroundColor: theme.base100,
+                borderColor: theme.primary,
                 borderWidth: 1,
                 textStyle: {
-                    color: theme.content // Dinamis
+                    color: theme.content
                 },
                 axisPointer: {
                     type: 'shadow'
@@ -65,10 +75,10 @@
                 }
             },
             legend: {
-                data: ['Open', 'Closed'],
+                data: [i18n.statusOpen, i18n.statusClosed], // MENGGUNAKAN i18n
                 bottom: 5,
                 textStyle: {
-                    color: theme.content // Dinamis
+                    color: theme.content
                 }
             },
             grid: {
@@ -92,7 +102,7 @@
                     height: 20,
                     textStyle: {
                         color: theme.content
-                    } // Dinamis
+                    }
                 }
             ],
             xAxis: {
@@ -102,7 +112,7 @@
                     interval: 0,
                     rotate: 35,
                     fontSize: 10,
-                    color: theme.content, // Dinamis
+                    color: theme.content,
                     formatter: function(value) {
                         return value.length > 12 ? value.substring(0, 12) + '...' : value;
                     }
@@ -110,12 +120,12 @@
                 axisLine: {
                     lineStyle: {
                         color: theme.base300
-                    } // Dinamis
+                    }
                 }
             },
             yAxis: {
                 type: 'value',
-                name: 'Jumlah Laporan',
+                name: i18n.yAxisName, // MENGGUNAKAN i18n
                 nameTextStyle: {
                     color: theme.content
                 },
@@ -124,26 +134,26 @@
                 },
                 splitLine: {
                     lineStyle: {
-                        color: theme.base300, // Dinamis
+                        color: theme.base300,
                         type: 'dashed'
                     }
                 }
             },
             series: [{
-                    name: 'Open',
+                    name: i18n.statusOpen, // MENGGUNAKAN i18n
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 40,
                     itemStyle: {
                         color: '#F87171'
-                    }, // Tetap merah (status bahaya)
+                    },
                     emphasis: {
                         focus: 'series'
                     },
                     data: rawData.open
                 },
                 {
-                    name: 'Closed',
+                    name: i18n.statusClosed, // MENGGUNAKAN i18n
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 40,
@@ -161,7 +171,7 @@
 
         myChart.setOption(option);
 
-        // --- OBSERVER PERUBAHAN TEMA (DARK/LIGHT MODE) ---
+        // --- OBSERVER PERUBAHAN TEMA ---
         const observer = new MutationObserver(() => {
             const newTheme = fetchColors();
             myChart.setOption({
@@ -226,7 +236,7 @@
             let payload = JSON.parse(event);
             myChart.setOption({
                 title: {
-                    subtext: payload.range ? 'Periode: ' + payload.range : '12 Bulan Terakhir'
+                    subtext: payload.range ? i18n.periodPrefix + payload.range : i18n.defaultRange
                 },
                 xAxis: {
                     data: payload.labels
@@ -241,8 +251,6 @@
             });
         });
 
-        window.addEventListener('resize', () => {
-            myChart.resize();
-        });
+        window.addEventListener('resize', () => myChart.resize());
     </script>
 </div>
