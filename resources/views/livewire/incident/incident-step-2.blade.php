@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between pb-2 border-b">
             <h3 class="text-sm font-bold uppercase">{{ __('Pihak Terlibat Langsung') }}</h3>
             <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs">
-                + {{ __('Tambah Pihak') }}
+                + {{ __('+ Tambah Personel') }}
             </button>
         </div>
         <div class="overflow-x-auto">
@@ -31,7 +31,7 @@
                                 modelsearch="directly_involved.{{ $index }}.employee_name"
                                 modelid="directly_involved.{{ $index }}.employee_id"
                                 :options="$involved_personnel_options"
-                                :showdropdown="$person['show_employee_dropdown']"
+                                :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
                                 enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
                                 clickaction="selectEmployee({{ $index }}, " />
                         </td>
@@ -88,10 +88,6 @@
             </table>
         </div>
 
-        <div class="mt-2">
-            <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-outline btn-sm">
-                + Tambah Personel
-            </button>
-        </div>
+
     </fieldset>
 </div>
