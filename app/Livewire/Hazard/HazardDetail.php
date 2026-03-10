@@ -587,10 +587,12 @@ class HazardDetail extends Component
                 ->pluck('user_id')
                 ->unique();
         }
-
+        if ($recipientIds->isEmpty()) {
+            dd('Daftar penerima kosong. Cek kriteria isModerator atau ErmAssignment.');
+        }
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
         $recipientIds->each(function ($userId) use ($currentUserId, $noRef) {
-
+            if ($userId == $currentUserId) return;
 
             MailHelper::sendToUserId(
                 $userId,
