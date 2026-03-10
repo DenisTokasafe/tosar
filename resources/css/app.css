@@ -321,7 +321,6 @@
     --depth: 1;
     --noise: 1;
 }
-
 @plugin "daisyui" {
     themes:
         fancytide, mysteryriver, corporate, cookedzombie, vibebutnew, goldmine,
