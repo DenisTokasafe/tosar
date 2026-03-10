@@ -87,10 +87,10 @@
                 <td class="w-1/4 px-2">
                     <x-form.tgl-waktu label="Batas Waktu Penyelesaian" model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d\TH:i')" />
                 </td>
-                <td class="w-1/4 px-2">
+                <td class="w-12 px-2">
                     <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan" model="corrective_actions.{{ $index }}.actual_completion_date" :min-date="now()->format('Y-m-d\TH:i')" />
                 </td>
-                <td class="w-1/12 pl-4">
+                <td class="w-12 px-2">
                     @if(count($corrective_actions) > 1)
                     <button type="button" wire:click="removeCorrectiveRow({{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
                     @endif
