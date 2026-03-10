@@ -39,21 +39,8 @@
                     <h3>BAGIAN 3 </h3>- Partisipan Investigasi
                 </span>
             </div>
-            <div class="collapse-content text-sm">Go to "My Account" settings and select "Edit Profile" to make changes.</div>
+            <div class="collapse-content text-sm"> @include('livewire.incident.incident-step-3')</div>
         </div>
-
-        @if($currentStep == 1)
-
-
-        @endif
-        {{-- STEP 2: Detail Kejadian --}}
-        @if($currentStep == 2)
-
-        @endif
-        {{-- STEP 3: Tindakan --}}
-        @if($currentStep == 3)
-        @include('livewire.incident.incident-step-3')
-        @endif
         {{-- Navigasi Step --}}
         <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
             @if($currentStep > 1)

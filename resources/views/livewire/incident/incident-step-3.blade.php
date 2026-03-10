@@ -1,4 +1,4 @@
-<fieldset class="p-3 my-4 mt-12 border shadow-md border-base-300 fieldset card bg-base-100">
+<fieldset class="p-3 my-4  border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title ">{{ __('Dokumentasi') }}</legend>
     <div class="grid grid-cols-1 gap-4 mb-8 space-y-4 md:grid-cols-2 ">
         <fieldset class="fieldset">
