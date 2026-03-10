@@ -81,6 +81,7 @@ class Create extends Component
     public $body_part_id;
     public $body_part_name;
     public $corrective_actions = [];
+    public $directly_involved = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -94,6 +95,9 @@ class Create extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
+        }
+        if (empty($this->directly_involved)) {
+            $this->addDirectlyInvolvedRow();
         }
     }
 
@@ -479,5 +483,43 @@ class Create extends Component
         $this->corrective_actions[$index]['pic_id'] = $id;
         $this->corrective_actions[$index]['pic_name'] = $name;
         $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+    }
+    public function addDirectlyInvolvedRow()
+    {
+        $this->directly_involved[] = [
+            'jabatan' => '',
+            'roster' => '',
+            'sift' => '',
+            'keterlibatan' => '',
+            'employee_id' => '',
+            'employee_name' => '',
+            'is_manual' => false,
+            'show_employee_dropdown' => false
+        ];
+    }
+    public function removeDirectlyInvolvedRow($index)
+    {
+        unset($this->directly_involved[$index]);
+        $this->directly_involved = array_values($this->directly_involved);
+    }
+    public function updatedDirectlyInvolved($value, $key)
+    {
+        if (str_ends_with($key, '.employee_name')) {
+            $index = explode('.', $key)[0];
+            if (strlen($value) > 1) {
+                $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(30)->get();
+                $this->directly_involved[$index]['show_employee_dropdown'] = true;
+            } else {
+                $this->directly_involved[$index]['show_employee_dropdown'] = false;
+            }
+        }
+    }
+    public function selectEmployee($index, $id, $name, $employeeId, $department_name)
+    {
+        $this->directly_involved[$index]['employee_id'] = $id;
+        $this->directly_involved[$index]['employee_name'] = $name;
+        $this->directly_involved[$index]['employee_nik'] = $employeeId;
+        $this->directly_involved[$index]['dept_cont'] = $department_name;
+        $this->directly_involved[$index]['show_employee_dropdown'] = false;
     }
 }
