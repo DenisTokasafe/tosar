@@ -18,6 +18,10 @@ class HazardChat extends Model
         'hazard_report_id',
         'user_id',
         'message',
+        'read_at',
+    ];
+    protected $casts = [
+        'read_at' => 'datetime',
     ];
 
     /**
