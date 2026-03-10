@@ -29,6 +29,7 @@
                             size="xs"
                             variant="filled"
                             icon="message-circle-more"
+                            wire:click="markAsRead" {{-- Tambahkan ini --}}
                             onclick="my_modal_5.showModal()" />
 
                         @if($this->hasUnread)
@@ -924,7 +925,8 @@
                 });
                 @endphp
 
-                <div class="p-4 mb-6 space-y-4 overflow-y-auto border max-h-96 rounded-xl bg-base-200/50">
+                {{-- Tambahkan wire:poll agar status centang dan pesan baru terupdate otomatis --}}
+                <div class="p-4 mb-6 space-y-4 overflow-y-auto border max-h-96 rounded-xl bg-base-200/50" wire:poll.5s>
                     @forelse($hazard->chats as $chat)
                     @php
                     $isMe = $chat->user_id === auth()->id();
@@ -939,13 +941,31 @@
                         </div>
                         <div class="chat-header">
                             {{ $chat->user->name }}
-                            <time class="text-xs opacity-50">{{ $chat->created_at->diffForHumans() }}</time>
+                            <time class="text-xs opacity-50 ml-1">{{ $chat->created_at->diffForHumans() }}</time>
                         </div>
                         <div class="chat-bubble {{ $isSenderModerator ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
                             {{ $chat->message }}
                         </div>
-                        <div class="mt-1 text-xs opacity-50 chat-footer">
+
+                        {{-- Implementasi Chat Footer dengan Status Centang --}}
+                        <div class="mt-1 text-[10px] opacity-50 chat-footer flex items-center gap-1">
                             {{ $isSenderModerator ? '🛡️ Moderator' : '👤 Pelapor' }}
+
+                            @if($isMe)
+                            @if($chat->read_at)
+                            <span class="text-info flex" title="Dibaca pada {{ $chat->read_at->format('d M H:i') }}"> {{-- Centang Biru --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            @else
+                            <span class="flex" title="Terkirim"> {{-- Centang Abu-abu --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            @endif
+                            @endif
                         </div>
                     </div>
                     @empty
@@ -957,8 +977,11 @@
 
                 @if($isModerator || $hasModeratorChatted)
                 <div class="flex gap-2">
-                    <x-form.text_area label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}" model="newMessage" placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}" wire:keydown.enter="sendMessage" />
-
+                    <x-form.text_area
+                        label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}"
+                        model="newMessage"
+                        placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}"
+                        wire:keydown.enter="sendMessage" />
                 </div>
                 @else
                 <div class="text-sm italic shadow-sm alert alert-warning">
@@ -975,10 +998,26 @@
                     <span wire:loading.add.class='hidden' wire:target='sendMessage'>Kirim</span>
                     <span class='hidden loading loading-spinner loading-xs' wire:loading.remove.class="hidden"></span>
                 </button>
-                <button onclick="my_modal_5.close()" class="btn btn-xs btn-error">Tutup</button>
-
+                <button wire:loading.add.class='btn-hidden' wire:target='sendMessage' onclick="my_modal_5.close()" class="btn btn-xs btn-error">Tutup</button>
             </div>
         </div>
     </dialog>
+    @push('scripts')
+    <script>
+        window.addEventListener('scroll-bottom', () => {
+            const container = document.querySelector('.overflow-y-auto.max-h-96');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        });
 
+        // Jalankan juga saat modal pertama kali dibuka
+        document.getElementById('my_modal_5').addEventListener('show', () => {
+            setTimeout(() => {
+                const container = document.querySelector('.overflow-y-auto.max-h-96');
+                if (container) container.scrollTop = container.scrollHeight;
+            }, 100);
+        });
+    </script>
+    @endpush
 </section>

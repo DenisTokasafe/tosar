@@ -542,25 +542,78 @@ class HazardDetail extends Component
         $this->validate(['newMessage' => 'required|string|max:500']);
 
         $isModerator = $this->hazard->isModerator();
-        $hasModeratorChatted = $this->hazard->chats()->get()->contains(function ($chat) {
+
+        // Ambil semua chat untuk pengecekan moderator yang pernah chat
+        $allChats = $this->hazard->chats()->get();
+
+        $hasModeratorChatted = $allChats->contains(function ($chat) {
             return $this->hazard->isModerator($chat->user_id);
         });
 
-        // Validasi: Jika bukan moderator DAN moderator belum pernah chat, batalkan
+        // Validasi: Moderator harus mulai duluan
         if (!$isModerator && !$hasModeratorChatted) {
             $this->addError('newMessage', 'Anda tidak dapat mengirim pesan sebelum moderator memulai.');
             return;
         }
 
+        // 1. Simpan Pesan Baru
         HazardChat::create([
             'hazard_report_id' => $this->hazard->id,
             'user_id' => auth()->id(),
             'message' => $this->newMessage,
         ]);
 
+        $currentUserId = auth()->id();
+        $noRef = $this->hazard->no_referensi;
+
+        // 2. Tentukan Siapa yang Menerima Email
+        $recipientIds = collect();
+
+        if ($isModerator) {
+            // SKENARIO A: Moderator yang chat -> Kirim ke semua ERM
+            $recipientIds = ErmAssignment::where('department_id', $this->hazard->department_id)
+                ->orWhere('contractor_id', $this->hazard->contractor_id)
+                ->pluck('user_id');
+        } else {
+            // SKENARIO B: ERM yang chat -> Kirim ke Moderator yang PERNAH chat di sini
+            $recipientIds = $allChats->filter(function ($chat) {
+                return $this->hazard->isModerator($chat->user_id);
+            })
+                ->pluck('user_id')
+                ->unique();
+        }
+
+        // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
+        $recipientIds->each(function ($userId) use ($currentUserId, $noRef) {
+            if ($userId == $currentUserId) return;
+
+            MailHelper::sendToUserId(
+                $userId,
+                'Notifikasi Pesan Baru di Chat Laporan Hazard',
+                ['emails.notification'],
+                [
+                    'subject'        => 'Pesan Baru di Chat Laporan Hazard: ' . $noRef,
+                    'title'          => 'Pesan Baru di Chat',
+                    'messageText'    => "Ada pesan baru di chat laporan hazard ini. Mohon cek untuk informasi lebih lanjut.",
+                    'additionalInfo' => "Nomor Laporan: {$noRef}\nPengirim: " . auth()->user()->name . "\nStatus: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
+                    'actionUrl'      => route('hazard-detail', $this->hazard->id)
+                ]
+            );
+        });
+
         $this->reset('newMessage');
-        $this->hazard->refresh(); // Refresh relasi agar chat muncul seketika
-        // Jika menggunakan polling atau refresh, data otomatis terupdate
+        $this->hazard->refresh();
+        // Tambahkan ini agar JS tahu harus scroll ke bawah
+        $this->dispatchBrowserEvent('scroll-bottom');
+    }
+    public function markAsRead()
+    {
+        HazardChat::where('hazard_report_id', $this->hazard->id)
+            ->where('user_id', '!=', auth()->id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        $this->hazard->refresh();
     }
     public function uploadImage()
     {
@@ -917,11 +970,7 @@ class HazardDetail extends Component
         }
         // [END] Logika Baru: Notifikasi ke Semua Moderator
 
-        $ermUsers = ErmAssignment::where('department_id', $this->department_id)
-            ->orWhere('contractor_id', $this->contractor_id)
-            ->with('user')
-            ->get()
-            ->pluck('user');
+
 
         $this->dispatch(
             'alert',
