@@ -626,7 +626,7 @@ class HazardDetail extends Component
 
 
         $this->reset('newMessage');
-        $this->hazard->refresh();
+        // $this->hazard->refresh();
         // Tambahkan ini agar JS tahu harus scroll ke bawah
         $this->dispatch('scroll-bottom');
     }
@@ -637,7 +637,7 @@ class HazardDetail extends Component
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
-        $this->hazard->refresh();
+        // $this->hazard->refresh();
     }
     public function uploadImage()
     {
