@@ -296,7 +296,7 @@
     --color-base-200: oklch(96% 0.003 264.542);
     --color-base-300: oklch(92% 0.006 264.531);
     --color-base-content: oklch(21% 0.034 264.665);
-    --color-primary: oklch(59% 0.249 0.584);
+    --color-primary: oklch(60% 0.118 184.704);
     --color-primary-content: oklch(97% 0.014 343.198);
     --color-secondary: oklch(58% 0.158 241.966);
     --color-secondary-content: oklch(97% 0.013 236.62);
@@ -321,6 +321,7 @@
     --depth: 1;
     --noise: 1;
 }
+
 @plugin "daisyui" {
     themes:
         fancytide, mysteryriver, corporate, cookedzombie, vibebutnew, goldmine,
