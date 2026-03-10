@@ -22,7 +22,7 @@
 
     <div class="hidden peer-checked/department:block">
         {{-- Department --}}
-        <div class="relative mb-1">
+        <div class="relative mb-1.5">
             <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
                 placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
                 clickaction="selectDepartment" namedb="department_name" />
@@ -30,7 +30,7 @@
     </div>
     <div class="hidden peer-checked/company:block">
         {{-- Contractor --}}
-        <div class="relative mb-1">
+        <div class="relative mb-1.5">
             <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
                 placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
                 :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />

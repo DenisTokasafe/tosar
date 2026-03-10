@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }}">
+    <div class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mb-1.5">
         <select {{ $model_kta ? "wire:model.live=$model_kta" : '' }}
             class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 border-rose-500' : '' }}">
             <option value="">{{__($options_label)}}</option>
@@ -35,7 +35,7 @@
         <x-label-error :messages="$errors->get('model_kta')" />
     </div>
 
-    <div class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }}">
+    <div class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} mb-1.5">
         <select {{ $model_tta ? "wire:model.live=$model_tta" : '' }}
             class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 border-rose-500' : '' }}">
             <option value="">{{__($options_label)}}</option>
