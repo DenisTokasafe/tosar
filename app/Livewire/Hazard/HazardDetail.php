@@ -614,7 +614,7 @@ class HazardDetail extends Component
                         'title'          => 'Ada Pesan Baru untuk Anda',
                         'messageText'    => "Seseorang telah mengirimkan pesan baru pada diskusi laporan Hazard dengan nomor referensi **{$noRef}** cek di **Chat Laporan Hazard**.",
                         'additionalInfo' => "Pengirim: " . auth()->user()->name . "\n" .
-                            "Isi Pesan: \"" . $this->newMessage . "\"\n" . // Menambahkan pesan chat di sini
+                            "Isi Pesan: " . $this->newMessage . "\n" . // Menambahkan pesan chat di sini
                             "Waktu: " . now()->format('d M Y H:i') . "\n" .
                             "Status Laporan: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
                         'actionUrl'      => route('hazard-detail', $this->hazard->id),
