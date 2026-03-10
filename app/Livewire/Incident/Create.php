@@ -516,6 +516,7 @@ class Create extends Component
     }
     public function selectEmployee($index, $id, $name, $employeeId, $department_name)
     {
+        dd(123);
         $this->directly_involved[$index]['employee_id'] = $id;
         $this->directly_involved[$index]['employee_name'] = $name;
         $this->directly_involved[$index]['employee_nik'] = $employeeId;
