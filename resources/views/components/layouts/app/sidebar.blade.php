@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="{{ session('theme', 'spicyup') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-theme="{{ session('theme', 'tokasafe') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     {{-- @laravelPWA --}}

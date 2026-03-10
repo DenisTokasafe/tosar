@@ -288,7 +288,7 @@
 }
 
 @plugin "daisyui/theme" {
-    name: "spicyup";
+    name: "tokasafe";
     default: false;
     prefersdark: false;
     color-scheme: "light";
@@ -325,7 +325,7 @@
 @plugin "daisyui" {
     themes:
         fancytide, mysteryriver, corporate, cookedzombie, vibebutnew, goldmine,
-        goldore-light, sentry-interlock, spicyup;
+        goldore-light, sentry-interlock, tokasafe;
 }
 
 /* --- 4. TAILWIND THEME & VARIANTS --- */
