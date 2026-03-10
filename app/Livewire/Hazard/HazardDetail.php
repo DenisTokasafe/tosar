@@ -571,8 +571,13 @@ class HazardDetail extends Component
 
         if ($isModerator) {
             // SKENARIO A: Moderator yang chat -> Kirim ke semua ERM
-            $recipientIds = ErmAssignment::where('department_id', $this->hazard->department_id)
-                ->orWhere('contractor_id', $this->hazard->contractor_id)
+            $recipientIds = ErmAssignment::query()
+                ->when($this->hazard->department_id, function ($q) {
+                    return $q->where('department_id', $this->hazard->department_id);
+                })
+                ->when($this->hazard->contractor_id, function ($q) {
+                    return $q->orWhere('contractor_id', $this->hazard->contractor_id);
+                })
                 ->pluck('user_id');
         } else {
             // SKENARIO B: ERM yang chat -> Kirim ke Moderator yang PERNAH chat di sini
@@ -585,7 +590,7 @@ class HazardDetail extends Component
 
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
         $recipientIds->each(function ($userId) use ($currentUserId, $noRef) {
-            if ($userId == $currentUserId) return;
+
 
             MailHelper::sendToUserId(
                 $userId,
