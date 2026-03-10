@@ -589,6 +589,7 @@ class HazardDetail extends Component
         }
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
         foreach ($recipientIds->toArray() as $userId) {
+            dd($userId);
             // Di dalam foreach, gunakan 'continue' untuk melewati iterasi (skip diri sendiri)
             if ($userId == $currentUserId) continue;
 
