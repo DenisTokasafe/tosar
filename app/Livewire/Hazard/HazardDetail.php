@@ -591,7 +591,7 @@ class HazardDetail extends Component
         foreach ($recipientIds->toArray() as $userId) {
             if ($userId == $currentUserId) continue;
             MailHelper::sendToUserId(
-                $userId,
+                3353,
                 'Notifikasi Pesan Baru di Chat Laporan Hazard',
                 ['emails.notification'],
                 [
