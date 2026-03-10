@@ -16,7 +16,7 @@
         {{-- STEP 1: Info Dasar --}}
         <div class="collapse collapse-arrow bg-base-100 mt-12 border border-base-300">
             <input type="radio" name="my-accordion-2" checked="checked" />
-            <div class="collapse-title font-semibold">
+            <div class="collapse-title font-semibold bg-base-300 text-base-content">
                 <span class="flex">
                     <h3>BAGIAN 1 </h3>- Detail Laporan
                 </span>
