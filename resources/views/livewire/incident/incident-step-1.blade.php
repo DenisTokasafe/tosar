@@ -177,3 +177,4 @@
 </fieldset>
 <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
 <x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
+<x-form.text_area label="Detil Cedera / Kerusakan Peralatan/Kerusakan Lingkungan/Kehilangan Proses" model="emergency_action" placeholder="{{ __('Jelaskan Detil Cedera / Kerusakan Peralatan/Kerusakan Lingkungan/Kehilangan Proses...')}}" required />
