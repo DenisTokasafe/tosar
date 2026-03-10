@@ -118,7 +118,7 @@
             </div>
 
             {{-- Modal DaisyUI --}}
-            <dialog class="modal" id="my_modal_2" role="dialog">
+            <dialog class="modal" id="my_modal_2" role="dialog" wire:ignore.self>
                 <div class="md:max-w-4xl modal-box ">
                     <form method="dialog">
                         <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
