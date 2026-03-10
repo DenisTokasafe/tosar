@@ -14,7 +14,22 @@
             <li class="step {{ $currentStep >= 3 ? 'step-primary' : '' }} text-[10px] uppercase font-bold">{{ __('Dokumentasi') }} & {{ __('Tindakan Perbaikan') }}</li>
         </ul>
         {{-- STEP 1: Info Dasar --}}
+        <details class="collapse bg-base-100 border-base-300 border">
+            <summary class="collapse-title font-semibold">How do I create an account?</summary>
+            <div class="collapse-content text-sm">
+                Click the "Sign Up" button in the top right corner and follow the registration process.
+            </div>
+            <summary class="collapse-title font-semibold">How do I create an account?</summary>
+            <div class="collapse-content text-sm">
+                Click the "Sign Up" button in the top right corner and follow the registration process.
+            </div>
+            <summary class="collapse-title font-semibold">How do I create an account?</summary>
+            <div class="collapse-content text-sm">
+                Click the "Sign Up" button in the top right corner and follow the registration process.
+            </div>
+        </details>
         @if($currentStep == 1)
+
         @include('livewire.incident.incident-step-1')
         @endif
         {{-- STEP 2: Detail Kejadian --}}
