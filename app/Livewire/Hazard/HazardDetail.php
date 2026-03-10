@@ -587,10 +587,10 @@ class HazardDetail extends Component
                 ->pluck('user_id')
                 ->unique();
         }
-        dd($recipientIds);
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
-        $recipientIds->each(function ($userId) use ($currentUserId, $noRef) {
-            if ($userId == $currentUserId) return;
+        foreach ($recipientIds->toArray() as $userId) {
+            // Di dalam foreach, gunakan 'continue' untuk melewati iterasi (skip diri sendiri)
+            if ($userId == $currentUserId) continue;
 
             MailHelper::sendToUserId(
                 $userId,
@@ -601,10 +601,10 @@ class HazardDetail extends Component
                     'title'          => 'Pesan Baru di Chat',
                     'messageText'    => "Ada pesan baru di chat laporan hazard ini. Mohon cek untuk informasi lebih lanjut.",
                     'additionalInfo' => "Nomor Laporan: {$noRef}\nPengirim: " . auth()->user()->name . "\nStatus: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
-                    'actionUrl'      => route('hazard-detail', $this->hazard_id)
+                    'actionUrl'      => route('hazard-detail', $this->hazard->id) // Saya sarankan pakai $this->hazard->id
                 ]
             );
-        });
+        }
 
         $this->reset('newMessage');
         $this->hazard->refresh();
