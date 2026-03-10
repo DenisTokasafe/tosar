@@ -571,22 +571,32 @@ class HazardDetail extends Component
         $recipientIds = collect();
 
         if ($isModerator) {
-            // SKENARIO A: Moderator yang chat -> Kirim ke semua ERM
-            $recipientIds = ErmAssignment::query()
-                ->when($this->hazard->department_id, function ($q) {
-                    return $q->where('department_id', $this->hazard->department_id);
-                })
-                ->when($this->hazard->contractor_id, function ($q) {
-                    return $q->orWhere('contractor_id', $this->hazard->contractor_id);
-                })
-                ->pluck('user_id');
+            // 1. Ambil semua ID user dari chat yang BUKAN moderator (Pihak ERM)
+            $ermChatterIds = $allChats->filter(function ($chat) {
+                return !$this->hazard->isModerator($chat->user_id);
+            })->pluck('user_id')->unique();
+
+            // 2. Cek apakah sudah ada ERM yang pernah chat
+            if ($ermChatterIds->isNotEmpty()) {
+                // JIKA SUDAH ADA: Kirim ke semua ERM yang pernah ikut chat saja
+                $recipientIds = $ermChatterIds;
+            } else {
+                // JIKA BELUM ADA: Kirim ke semua ERM yang ditugaskan di Dept/Kontraktor ini
+                $recipientIds = ErmAssignment::query()
+                    ->when($this->hazard->department_id, function ($q) {
+                        return $q->where('department_id', $this->hazard->department_id);
+                    })
+                    ->when($this->hazard->contractor_id, function ($q) {
+                        return $q->orWhere('contractor_id', $this->hazard->contractor_id);
+                    })
+                    ->pluck('user_id')
+                    ->unique();
+            }
         } else {
-            // SKENARIO B: ERM yang chat -> Kirim ke Moderator yang PERNAH chat di sini
+            // SKENARIO B: ERM yang chat -> Kirim ke Moderator (Tetap sama)
             $recipientIds = $allChats->filter(function ($chat) {
                 return $this->hazard->isModerator($chat->user_id);
-            })
-                ->pluck('user_id')
-                ->unique();
+            })->pluck('user_id')->unique();
         }
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
         foreach ($recipientIds->toArray() as $userId) {
