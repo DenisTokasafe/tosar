@@ -31,7 +31,7 @@
                             icon="message-circle-more"
                             wire:click="markAsRead" {{-- Tambahkan ini --}}
                             onclick="my_modal_5.showModal()">
-                            Komentar Moderator
+                            Chat Laporan Hazard
                         </flux:button>
 
                         @if($this->hasUnread)
