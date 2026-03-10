@@ -74,7 +74,7 @@
                 <td class="w-1/2 pr-4">
                     <x-form.text_area label="Rencana Perbaikan Jangka Panjang" model="corrective_actions.{{ $index }}.action_description" placeholder="{{ __('Langkah agar tidak terulang...')}}" />
                 </td>
-                <td class="w-1/4 px-2">
+                <td class="w-1/5 px-2">
                     <x-form.searchable-select-advanced
                         label="PIC"
                         placeholder="Cari PIC..."
