@@ -30,7 +30,9 @@
                             variant="filled"
                             icon="message-circle-more"
                             wire:click="markAsRead" {{-- Tambahkan ini --}}
-                            onclick="my_modal_5.showModal()" />
+                            onclick="my_modal_5.showModal()">
+                            Komentar Moderator
+                        </flux:button>
 
                         @if($this->hasUnread)
                         <div class="absolute flex items-center justify-center -top-1 -right-1">
