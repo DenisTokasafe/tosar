@@ -25,12 +25,20 @@
         </div>
         <div class="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="radio" name="my-accordion-2" />
-            <div class="collapse-title font-semibold">I forgot my password. What should I do?</div>
-            <div class="collapse-content text-sm">Click on "Forgot Password" on the login page and follow the instructions sent to your email.</div>
+            <div class="collapse-title font-semibold bg-base-300 text-base-content">
+                <span class="flex">
+                    <h3>BAGIAN 2 </h3>- Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)
+                </span>
+            </div>
+            <div class="collapse-content text-sm">@include('livewire.incident.incident-step-2')</div>
         </div>
         <div class="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="radio" name="my-accordion-2" />
-            <div class="collapse-title font-semibold">How do I update my profile information?</div>
+            <div class="collapse-title font-semibold bg-base-300 text-base-content">
+                <span class="flex">
+                    <h3>BAGIAN 3 </h3>- Partisipan Investigasi
+                </span>
+            </div>
             <div class="collapse-content text-sm">Go to "My Account" settings and select "Edit Profile" to make changes.</div>
         </div>
 
@@ -40,7 +48,7 @@
         @endif
         {{-- STEP 2: Detail Kejadian --}}
         @if($currentStep == 2)
-        @include('livewire.incident.incident-step-2')
+
         @endif
         {{-- STEP 3: Tindakan --}}
         @if($currentStep == 3)

@@ -1,4 +1,4 @@
-<div class="mt-12 mb-8">
+<div class="">
     <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-3'=> $this->hasSubTypes,
         'md:grid-cols-2' => !$this->hasSubTypes,])>
         <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
