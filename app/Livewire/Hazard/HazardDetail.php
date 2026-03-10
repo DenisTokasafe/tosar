@@ -40,6 +40,7 @@ class HazardDetail extends Component
 {
     use WithFileUploads, AuthorizesRequests;
     public $hazard;
+    public $recipientIds = collect();
     public string $proceedTo = '';
     public array $availableTransitions = [];
     public string $effectiveRole = '';
@@ -567,11 +568,11 @@ class HazardDetail extends Component
         $noRef = $this->hazard->no_referensi;
 
         // 2. Tentukan Siapa yang Menerima Email
-        $recipientIds = collect();
+
 
         if ($isModerator) {
             // SKENARIO A: Moderator yang chat -> Kirim ke semua ERM
-            $recipientIds = ErmAssignment::query()
+            $this->recipientIds = ErmAssignment::query()
                 ->when($this->hazard->department_id, function ($q) {
                     return $q->where('department_id', $this->hazard->department_id);
                 })
@@ -581,20 +582,22 @@ class HazardDetail extends Component
                 ->pluck('user_id');
         } else {
             // SKENARIO B: ERM yang chat -> Kirim ke Moderator yang PERNAH chat di sini
-            $recipientIds = $allChats->filter(function ($chat) {
+            $this->recipientIds = $allChats->filter(function ($chat) {
                 return $this->hazard->isModerator($chat->user_id);
             })
                 ->pluck('user_id')
                 ->unique();
         }
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
-        foreach ($recipientIds->toArray() as $userId) {
+        foreach ($this->recipientIds->toArray() as $userId) {
             // Lewati jika ID penerima adalah orang yang sedang mengirim chat
             if ($userId == $currentUserId) continue;
 
             try {
+                $user = User::find($userId);
+
                 MailHelper::sendToUserId(
-                    $userId,
+                    $user->id,
                     'Notifikasi Pesan Baru di Chat Laporan Hazard',
                     ['emails.notification'], // Pastikan file view ini ada di resources/views/emails/notification.blade.php
                     [
