@@ -367,7 +367,7 @@
                     </td>
                     <td class="text-xs border">
                         <span
-                            class="badge badge-xs  badge-soft {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
+                            class="badge badge-xs  badge-outline {{ $this->getRandomBadgeColor($report->status) }} uppercase px-2">
                             {{ str_replace('_', ' ', $report->status) }}
                         </span>
                     </td>
