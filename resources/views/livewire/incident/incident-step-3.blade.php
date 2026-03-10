@@ -86,6 +86,8 @@
                 </td>
                 <td class="w-1/4 px-2">
                     <x-form.tgl-waktu label="Batas Waktu Penyelesaian" model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d\TH:i')" />
+                </td>
+                <td>
                     <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan" model="corrective_actions.{{ $index }}.actual_completion_date" :min-date="now()->format('Y-m-d\TH:i')" />
                 </td>
                 <td class="w-1/12 pl-4">
