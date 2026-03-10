@@ -1005,20 +1005,41 @@
     </dialog>
     @push('scripts')
     <script>
+        // 1. Mendengarkan sinyal dari PHP ($this->dispatch)
         window.addEventListener('scroll-bottom', () => {
-            const container = document.querySelector('.overflow-y-auto.max-h-96');
-            if (container) {
-                container.scrollTop = container.scrollHeight;
-            }
+            scrollToBottom();
         });
 
-        // Jalankan juga saat modal pertama kali dibuka
-        document.getElementById('my_modal_5').addEventListener('show', () => {
-            setTimeout(() => {
-                const container = document.querySelector('.overflow-y-auto.max-h-96');
-                if (container) container.scrollTop = container.scrollHeight;
-            }, 100);
+        // 2. Fungsi umum untuk scroll
+        function scrollToBottom() {
+            // Gunakan ID agar lebih spesifik dan tidak salah pilih container lain
+            const container = document.querySelector('.overflow-y-auto.max-h-96');
+            if (container) {
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: 'smooth' // Efek scroll halus seperti WhatsApp
+                });
+            }
+        }
+
+        // 3. Khusus untuk Modal DaisyUI / HTML5 Dialog
+        // Kita gunakan MutationObserver atau cek saat modal terbuka
+        const modal = document.getElementById('my_modal_5');
+
+        // Jika menggunakan <dialog>, event-nya adalah 'toggle' atau kita pantau atribut 'open'
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'open' && modal.open) {
+                    setTimeout(scrollToBottom, 200);
+                }
+            });
         });
+
+        if (modal) {
+            observer.observe(modal, {
+                attributes: true
+            });
+        }
     </script>
     @endpush
 </section>
