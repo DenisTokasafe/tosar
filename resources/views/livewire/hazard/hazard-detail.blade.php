@@ -954,8 +954,9 @@
                             @if($isMe)
                             @if($chat->read_at)
                             <span class="text-info flex" title="Dibaca pada {{ $chat->read_at->format('d M H:i') }}"> {{-- Centang Biru --}}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7M5 13l4 4L19 7" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-check-icon lucide-check-check">
+                                    <path d="M18 6 7 17l-5-5" />
+                                    <path d="m22 10-7.5 7.5L13 16" />
                                 </svg>
                             </span>
                             @else

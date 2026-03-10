@@ -596,7 +596,7 @@ class HazardDetail extends Component
                     'title'          => 'Pesan Baru di Chat',
                     'messageText'    => "Ada pesan baru di chat laporan hazard ini. Mohon cek untuk informasi lebih lanjut.",
                     'additionalInfo' => "Nomor Laporan: {$noRef}\nPengirim: " . auth()->user()->name . "\nStatus: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
-                    'actionUrl'      => route('hazard-detail', $this->hazard->id)
+                    'actionUrl'      => route('hazard-detail', $this->hazard_id)
                 ]
             );
         });
