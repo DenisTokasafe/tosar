@@ -40,7 +40,7 @@ class HazardDetail extends Component
 {
     use WithFileUploads, AuthorizesRequests;
     public $hazard;
-    public $recipientIds = [];
+    public $recipientIds;
     public string $proceedTo = '';
     public array $availableTransitions = [];
     public string $effectiveRole = '';
@@ -568,7 +568,7 @@ class HazardDetail extends Component
         $noRef = $this->hazard->no_referensi;
 
         // 2. Tentukan Siapa yang Menerima Email
-
+        $this->recipientIds = collect();
 
         if ($isModerator) {
             // SKENARIO A: Moderator yang chat -> Kirim ke semua ERM
