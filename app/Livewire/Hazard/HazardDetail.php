@@ -604,7 +604,7 @@ class HazardDetail extends Component
         $this->reset('newMessage');
         $this->hazard->refresh();
         // Tambahkan ini agar JS tahu harus scroll ke bawah
-        $this->dispatchBrowserEvent('scroll-bottom');
+        $this->dispatch('scroll-bottom');
     }
     public function markAsRead()
     {
