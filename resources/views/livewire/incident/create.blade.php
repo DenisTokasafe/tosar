@@ -17,7 +17,9 @@
         <div class="collapse collapse-arrow bg-base-100 mt-12 border border-base-300">
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="collapse-title font-semibold">
-                <h3>BAGIAN 1 </h3>- Detail Laporan
+                <span>
+                    <h3>BAGIAN 1 </h3>- Detail Laporan
+                </span>
             </div>
             <div class="collapse-content text-sm"> @include('livewire.incident.incident-step-1')</div>
         </div>
