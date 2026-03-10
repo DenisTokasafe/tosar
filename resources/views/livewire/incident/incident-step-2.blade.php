@@ -21,7 +21,7 @@
                     clickaction="selectInvolvedPersonnel({{ $index }}, " />
             </div>
             <div class="w-1/4">
-                @if ($person['id'])
+                @if ($person['employee_id'])
                 <x-form.input-text label="NIK" model="directly_involved.{{ $index }}.employee_nik" disabled />
                 @else
                 <x-form.input-text label="NIK" model="directly_involved.{{ $index }}.employee_nik" />
@@ -46,7 +46,7 @@
                     </x-form.select>
                 </div>
                 <div class="w-1/4">
-                    @if ($person['id'])
+                    @if ($person['employee_id'])
                     <x-form.input-text label="Departemen/Divisi" model="directly_involved.{{ $index }}.dept_cont" disabled />
                     @else
                     <x-form.input-text label="Departemen/Divisi" model="directly_involved.{{ $index }}.dept_cont" />
