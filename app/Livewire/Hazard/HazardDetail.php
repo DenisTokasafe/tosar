@@ -599,7 +599,7 @@ class HazardDetail extends Component
                 MailHelper::sendToUserId(
                     $user->id,
                     'Notifikasi Pesan Baru di Chat Laporan Hazard',
-                    ['emails.notification'], // Pastikan file view ini ada di resources/views/emails/notification.blade.php
+                    'emails.notification', // Pastikan file view ini ada di resources/views/emails/notification.blade.php
                     [
                         'subject'        => 'Pesan Baru di Chat Laporan Hazard: ' . $noRef,
                         'title'          => 'Ada Pesan Baru untuk Anda',
