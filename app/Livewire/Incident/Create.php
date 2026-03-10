@@ -514,7 +514,7 @@ class Create extends Component
             }
         }
     }
-    public function selectInvolvedPersonnel($index, $id, $name, $employeeId, $department_name)
+    public function selectEmployee($index, $id, $name, $employeeId, $department_name)
     {
         $this->directly_involved[$index]['employee_id'] = $id;
         $this->directly_involved[$index]['employee_name'] = $name;
