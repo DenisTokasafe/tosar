@@ -589,44 +589,41 @@ class HazardDetail extends Component
         }
         // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
         foreach ($recipientIds->toArray() as $userId) {
+            // Lewati jika ID penerima adalah orang yang sedang mengirim chat
             if ($userId == $currentUserId) continue;
-            // 3. Kirim Email ke Recipient (Kecuali diri sendiri)
-            foreach ($recipientIds->toArray() as $userId) {
-                // Lewati jika ID penerima adalah orang yang sedang mengirim chat
-                if ($userId == $currentUserId) continue;
 
-                try {
-                    MailHelper::sendToUserId(
-                        $userId,
-                        'Notifikasi Pesan Baru di Chat Laporan Hazard',
-                        ['emails.notification'], // Pastikan file view ini ada di resources/views/emails/notification.blade.php
-                        [
-                            'subject'        => 'Pesan Baru di Chat Laporan Hazard: ' . $noRef,
-                            'title'          => 'Ada Pesan Baru untuk Anda',
-                            'messageText'    => "Seseorang telah mengirimkan pesan baru pada diskusi laporan Hazard dengan nomor referensi **{$noRef}**.",
-                            'additionalInfo' => "Pengirim: " . auth()->user()->name . "\n" .
-                                "Waktu: " . now()->format('d M Y H:i') . "\n" .
-                                "Status Laporan: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
-                            'actionUrl'      => route('hazard-detail', $this->hazard->id), // Menggunakan ID dari objek hazard
-                            'actionText'     => 'Lihat Pesan di Aplikasi'
-                        ]
-                    );
-                } catch (\Exception $e) {
-                    // Catat error ke log jika pengiriman ke satu user ini gagal, tapi biarkan loop lanjut ke user berikutnya
-                    $this->dispatch(
-                        'alert',
-                        [
-                            'text' => "Gagal mengirim email chat ke User ID {$userId}: " . $e->getMessage(),
-                            'duration' => 5000,
-                            'destination' => '/contact',
-                            'newWindow' => true,
-                            'close' => true,
-                            'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
-                        ]
-                    );
-                }
+            try {
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Notifikasi Pesan Baru di Chat Laporan Hazard',
+                    ['emails.notification'], // Pastikan file view ini ada di resources/views/emails/notification.blade.php
+                    [
+                        'subject'        => 'Pesan Baru di Chat Laporan Hazard: ' . $noRef,
+                        'title'          => 'Ada Pesan Baru untuk Anda',
+                        'messageText'    => "Seseorang telah mengirimkan pesan baru pada diskusi laporan Hazard dengan nomor referensi **{$noRef}**.",
+                        'additionalInfo' => "Pengirim: " . auth()->user()->name . "\n" .
+                            "Waktu: " . now()->format('d M Y H:i') . "\n" .
+                            "Status Laporan: " . ucfirst(str_replace('_', ' ', $this->hazard->status)),
+                        'actionUrl'      => route('hazard-detail', $this->hazard->id), // Menggunakan ID dari objek hazard
+                        'actionText'     => 'Lihat Pesan di Aplikasi'
+                    ]
+                );
+            } catch (\Exception $e) {
+                // Catat error ke log jika pengiriman ke satu user ini gagal, tapi biarkan loop lanjut ke user berikutnya
+                $this->dispatch(
+                    'alert',
+                    [
+                        'text' => "Gagal mengirim email chat ke User ID {$userId}: " . $e->getMessage(),
+                        'duration' => 5000,
+                        'destination' => '/contact',
+                        'newWindow' => true,
+                        'close' => true,
+                        'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                    ]
+                );
             }
         }
+
 
         $this->reset('newMessage');
         $this->hazard->refresh();
