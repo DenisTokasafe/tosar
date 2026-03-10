@@ -466,12 +466,15 @@ class Create extends Component
     public function addDirectlyInvolvedRow()
     {
         $this->directly_involved[] = [
+            'employee_id' => '',
+            'employee_name' => '',
+            'employee_nik' => '', // Tambahkan ini
             'jabatan' => '',
             'roster' => '',
             'sift' => '',
             'keterlibatan' => '',
-            'employee_id' => '',
-            'employee_name' => '',
+            'dept_cont' => '',    // Tambahkan ini
+            'pengalaman_kerja' => '', // Tambahkan ini agar tidak error di view
             'is_manual' => false,
             'show_employee_dropdown' => false
         ];
@@ -493,13 +496,16 @@ class Create extends Component
             }
         }
     }
-    public function selectInvolvedPersonnel($index, $id, $name, $employeeId, $department_name)
+    public function selectInvolvedPersonnel($index, $id, $name, $nik, $dept)
     {
-        dd(123);
+        // Jika dd(123) sudah muncul, berarti koneksi sudah aman
         $this->directly_involved[$index]['employee_id'] = $id;
         $this->directly_involved[$index]['employee_name'] = $name;
-        $this->directly_involved[$index]['employee_nik'] = $employeeId;
-        $this->directly_involved[$index]['dept_cont'] = $department_name;
+        $this->directly_involved[$index]['employee_nik'] = $nik;
+        $this->directly_involved[$index]['dept_cont'] = $dept;
         $this->directly_involved[$index]['show_employee_dropdown'] = false;
+
+        // Reset options setelah memilih
+        $this->involved_personnel_options = [];
     }
 }

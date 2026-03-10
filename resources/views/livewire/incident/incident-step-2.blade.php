@@ -33,7 +33,7 @@
                                 :options="$involved_personnel_options"
                                 :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
                                 enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
-                                clickaction="selectInvolvedPersonnel({{ $index }}, " />
+                                clickaction="selectInvolvedPersonnel({{ $index }})" />
                         </td>
 
                         <td class="align-top">
