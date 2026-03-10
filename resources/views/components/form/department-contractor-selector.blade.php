@@ -20,17 +20,17 @@
     <x-form.label for="company" class="peer-checked/company:text-primary" label="{{ $label_contractor }}"
         required />
 
-    <div class="hidden peer-checked/department:block">
+    <div class="hidden peer-checked/department:block mt-1.5">
         {{-- Department --}}
-        <div class="relative mb-1.5">
+        <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
                 placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
                 clickaction="selectDepartment" namedb="department_name" />
         </div>
     </div>
-    <div class="hidden peer-checked/company:block">
+    <div class="hidden peer-checked/company:block mt-1.5">
         {{-- Contractor --}}
-        <div class="relative mb-1.5">
+        <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
                 placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
                 :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
