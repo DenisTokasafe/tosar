@@ -397,28 +397,7 @@ class Create extends Component
         }
     }
     // Di Blade, panggil dengan: wire:click="selectInvolvedPersonnel({{ $user->id }})"
-    public function selectInvolvedPersonnel($id)
-    {
-        $user = User::find($id); // Ambil data lengkap user
 
-        if ($user) {
-            $exists = collect($this->selected_personnel)->contains('id', $id);
-
-            if (!$exists) {
-                $this->selected_personnel[] = [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    // Sesuaikan nama kolom di bawah dengan kolom di tabel Anda
-                    'employee_id' => $user->employee_id ?? 'N/A',
-                    'department_name' => $user->department_name ?? 'N/A',
-                    'is_manual' => false
-                ];
-            }
-        }
-
-        $this->searchName = '';
-        $this->showinvolvedPersonnelDropdown = false;
-    }
     public function enableInvolvedPersonnelManual()
     {
         if (!empty($this->searchName)) {
@@ -514,7 +493,7 @@ class Create extends Component
             }
         }
     }
-    public function selectEmployee($index, $id, $name, $employeeId, $department_name)
+    public function selectInvolvedPersonnel($index, $id, $name, $employeeId, $department_name)
     {
         dd(123);
         $this->directly_involved[$index]['employee_id'] = $id;
