@@ -40,7 +40,7 @@ class HazardDetail extends Component
 {
     use WithFileUploads, AuthorizesRequests;
     public $hazard;
-    public $recipientIds = collect();
+    public $recipientIds = [];
     public string $proceedTo = '';
     public array $availableTransitions = [];
     public string $effectiveRole = '';
