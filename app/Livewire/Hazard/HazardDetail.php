@@ -608,7 +608,7 @@ class HazardDetail extends Component
     }
     public function markAsRead()
     {
-        HazardChat::where('hazard_report_id', $this->hazard->id)
+        HazardChat::where('hazard_report_id', $this->hazard_id)
             ->where('user_id', '!=', auth()->id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
