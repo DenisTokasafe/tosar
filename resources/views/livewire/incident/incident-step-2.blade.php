@@ -16,7 +16,7 @@
                     modelsearch="directly_involved.{{ $index }}.employee_name"
                     modelid="directly_involved.{{ $index }}.employee_id"
                     :options="$involved_personnel_options"
-                    :showdropdown="$person['show_dropdown']"
+                    :showdropdown="$person['show_employee_dropdown']"
                     enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
                     clickaction="selectInvolvedPersonnel({{ $index }}, " />
             </div>
