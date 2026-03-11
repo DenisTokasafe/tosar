@@ -17,12 +17,15 @@
                         @if($loop->first) Pemimpin Investigasi: @endif
                     </td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
+                        {{-- Contoh untuk Pemimpin --}}
+                        <x-form.searchable-select-advanced wire:key="select-pemimpin-{{ $index }}"
                             placeholder="Cari Pemimpin..." modelsearch="searchQuery"
                             modelid="pemimpin.{{ $index }}.user_id" :options="$options"
+                            {{-- Langsung cek active index & type --}}
                             :showdropdown="$showDropdownPartisipan && $activeType === 'pemimpin' && $activeIndex === $index"
                             clickaction="selectUser('{{ $index }}', 'pemimpin')"
-                            x-on:focus="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
+                            {{-- Tambahkan set showDropdownPartisipan ke true --}}
+                            x-on:focusin="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }}); $wire.set('showDropdownPartisipan', true)" />
                     </td>
                     <td class="p-1 border border-base-300">
                         <input type="text" wire:model="pemimpin.{{ $index }}.jabatan" class="w-full input input-xs"
@@ -48,7 +51,7 @@
                         @if($loop->first) Facilitator: (Personil KPLH) @endif
                     </td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
+                        <x-form.searchable-select-advanced wire:key="select-facilitator-{{ $index }}"
                             placeholder="Cari Facilitator..."
                             {{-- ... props lainnya sama seperti di atas ... --}} />
                     </td>
@@ -80,7 +83,7 @@
                 <tr wire:key="row-anggota-{{ $index }}">
                     <td class="border border-base-300"></td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select2 wire:key="select-anggota-{{ $index }}"
+                        <x-form.searchable-select-advanced wire:key="select-anggota-{{ $index }}"
                             {{-- ... props lainnya ... --}} />
                     </td>
                     <td class="p-1 border border-base-300">
