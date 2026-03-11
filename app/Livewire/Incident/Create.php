@@ -42,6 +42,7 @@ class Create extends Component
     public $keyWord = 'kta';
     public $locations = [];
     public $searchKorban = [];
+     public $show_employee_dropdown = [];
     public $searchLocation = '';
     public $show_location = false;
     #[Url(as: 'step')]
@@ -497,6 +498,7 @@ class Create extends Component
             }
 
     }
+
     public function selectInvolvedPersonnel($id, $name,)
     {
           $index = collect($this->show_employee_dropdown)->search(true);
