@@ -496,13 +496,13 @@ class Create extends Component
             }
         }
     }
-    public function selectInvolvedPersonnel($index, $id, $name, $nik, $dept)
+    public function selectInvolvedPersonnel($index, $id, $name, $employee_id, $department_name)
     {
         // Jika dd(123) sudah muncul, berarti koneksi sudah aman
         $this->directly_involved[$index]['employee_id'] = $id;
         $this->directly_involved[$index]['employee_name'] = $name;
-        $this->directly_involved[$index]['employee_nik'] = $nik;
-        $this->directly_involved[$index]['dept_cont'] = $dept;
+        $this->directly_involved[$index]['employee_nik'] = $employee_id;
+        $this->directly_involved[$index]['dept_cont'] = $department_name;
         $this->directly_involved[$index]['show_employee_dropdown'] = false;
 
         // Reset options setelah memilih
