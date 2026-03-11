@@ -113,16 +113,7 @@ class Create extends Component
         // ... rules lainnya
 
     ];
-    public function nextStep()
-    {
-        // Simpan ke session
-        session(['incident_data' => $this->all()]);
-        $this->currentStep++;
-    }
-    public function previousStep()
-    {
-        $this->currentStep--;
-    }
+
     // Search Location
     public function updatedSearchLocation()
     {
