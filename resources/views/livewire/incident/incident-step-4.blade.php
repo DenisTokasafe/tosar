@@ -1,96 +1,116 @@
-<div class="p-4 overflow-x-auto bg-white rounded-lg shadow-sm">
-    <table class="table w-full border border-collapse table-compact border-base-300">
-        <thead class="text-xs text-white uppercase bg-black">
-            <tr>
-                <th class="w-1/4 border border-base-300">Peran</th>
-                <th class="w-1/4 border border-base-300">Nama</th>
-                <th class="w-1/4 border border-base-300">Jabatan</th>
-                <th class="w-1/4 text-center border border-base-300">Dept/Perusahaan</th>
-            </tr>
-        </thead>
+<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+    <legend class="text-sm font-semibold card-title ">{{ __('Dokumentasi') }}</legend>
+    <div class="grid grid-cols-1 gap-4 mb-8 space-y-4 md:grid-cols-2 ">
+        <fieldset class="fieldset">
+            <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" title="Pilih Gambar"
+                keterangan="Pilih Bukti Visual: Foto" :file="$visual_evidence" />
+
+            <div wire:loading.remove wire:target="visual_evidence">
+                @if($visual_evidence)
+                    <blade
+                        if|%20(in_array(%24visual_evidence-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bjpg%26%2339%3B%2C%20%26%2339%3Bjpeg%26%2339%3B%2C%20%26%2339%3Bpng%26%2339%3B%5D))>
+                        {{-- Preview Gambar --}}
+                        <img src="{{ $visual_evidence->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded" />
+                    @else
+                        {{-- Fallback jika format lain --}}
+                        <p class="mt-2 text-sm text-gray-600">
+                            File: {{ $visual_evidence->getClientOriginalName() }}
+                        </p>
+                    @endif
+                @endif
+            </div>
+
+            <x-label-error :messages="$errors->get('visual_evidence')" />
+        </fieldset>
+        <fieldset class="fieldset">
+            <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" title="Pilih Dokumen"
+                keterangan="Pilih Dokumen Pendukung: Word, PDF" :file="$supporting_documents" />
+
+            <div wire:loading.remove wire:target="supporting_documents">
+                @if($supporting_documents)
+                    {{-- CEK DOKUMEN --}}
+                    <blade
+                        if|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bpdf%26%2339%3B%2C%20%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D))>
+                        <div class="flex items-center gap-2 mt-2">
+                            <blade
+                                if|%20(%24supporting_documents-%3EgetClientOriginalExtension()%20%3D%3D%20%26%2339%3Bpdf%26%2339%3B)>
+                                <x-icon.pdf class="w-8 h-8" />
+                                <span
+                                    class="text-sm text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                                <blade
+                                    elseif|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D)) />
+                                <x-icon.word class="w-8 h-8" />
+                                <span
+                                    class="text-sm text-blue-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                            @else
+                                {{-- Ikon generik --}}
+                                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                                </svg>
+                                <span
+                                    class="text-sm text-gray-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                            @endif
+                        </div> {{-- DIV PENUTUP DARI FLEX ITEM --}}
+
+                        {{-- FALLBACK JIKA BUKAN GAMBAR MAUPUN DOKUMEN DI ATAS --}}
+                    @else
+                        <p class="mt-2 text-sm text-gray-600">
+                            File: {{ $supporting_documents->getClientOriginalName() }}
+                        </p>
+                    @endif{{-- TUTUP if UTAMA --}}
+                @endif
+            </div> {{-- TUTUP wire:loading.remove --}}
+
+            <x-label-error :messages="$errors->get('supporting_documents')" />
+        </fieldset>
+    </div>
+</fieldset>
+<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+    <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Perbaikan') }}</legend>
+    <div class="flex items-center justify-between pb-2 border-b">
+        <h3 class="text-sm font-bold uppercase">{{ __('Rencana Perbaikan Jangka Panjang') }}
+        </h3>
+        <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs">
+            + {{ __('Tambah Rencana') }}
+        </button>
+    </div>
+    <x-form.text_area label="Tindakan Langsung" model="emergency_action"
+        placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...') }}"
+        disabled />
+    <table>
         <tbody>
-            {{-- SEKSI PEMIMPIN INVESTIGASI --}}
-            @foreach($pemimpin as $index => $item)
+            @foreach($corrective_actions as $index => $action)
                 <tr>
-                    <td class="font-bold border border-base-300 bg-base-100">
-                        @if($loop->first) Pemimpin Investigasi: @endif
+                    <td class="w-1/2 pr-4">
+                        <x-form.text_area label="Rencana Perbaikan Jangka Panjang"
+                            model="corrective_actions.{{ $index }}.action_description"
+                            placeholder="{{ __('Langkah agar tidak terulang...') }}" />
                     </td>
-                    <td class="p-1 border border-base-300">
-                        <x-form.searchable-select-advanced placeholder="Cari Pemimpin..." modelsearch="searchQuery"
-                            modelid="pemimpin.{{ $index }}.user_id" :options="$options"
-                            :showdropdown="$showDropdown && $activeType === 'pemimpin' && $activeIndex === $index"
-                            clickaction="selectUser('{{ $index }}', 'pemimpin')"
-                            {{-- Kita modif sedikit panggilannya --}}
-                            x-on:focus="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
+                    <td class="w-1/5 px-2">
+                        <x-form.searchable-select-advanced label="PIC" placeholder="Cari PIC..."
+                            modelsearch="corrective_actions.{{ $index }}.pic_name"
+                            modelid="corrective_actions.{{ $index }}.pic_id" :options="$involved_personnel_options"
+                            :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
+                            clickaction="selectPIC({{ $index }}, " />
                     </td>
-                    <td class="p-1 border border-base-300">
-                        <input type="text" wire:model="pemimpin.{{ $index }}.jabatan" class="w-full input input-xs"
-                            readonly>
+                    <td class="w-1/6 px-2">
+                        <x-form.tgl-waktu label="Batas Waktu Penyelesaian"
+                            model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d')" />
                     </td>
-                    <td class="flex items-center gap-1 p-1 border border-base-300">
-                        <input type="text" wire:model="pemimpin.{{ $index }}.dept" class="w-full input input-xs"
-                            readonly>
-                        <button wire:click="addRow('pemimpin')" class="btn btn-xs btn-ghost text-success">+</button>
-                        @if(count($pemimpin) > 1)
-                            <button wire:click="removeRow('pemimpin', {{ $index }})"
-                                class="btn btn-xs btn-ghost text-error">×</button>
+                    <td class="w-1/6 px-2">
+                        <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan"
+                            model="corrective_actions.{{ $index }}.actual_completion_date"
+                            :min-date="now()->format('Y-m-d')" />
+                    </td>
+                    <td class="w-1/12">
+                        @if(count($corrective_actions) > 1)
+                            <button type="button" wire:click="removeCorrectiveRow({{ $index }})"
+                                class="btn btn-ghost btn-xs text-error">✕</button>
                         @endif
                     </td>
                 </tr>
             @endforeach
-
-            {{-- SEKSI FACILITATOR --}}
-            @foreach($facilitator as $index => $item)
-                <tr>
-                    <td class="font-bold border border-base-300 bg-base-100">
-                        @if($loop->first) Facilitator: (Personil KPLH) @endif
-                    </td>
-                    <td class="p-1 border border-base-300">
-                        {{-- Panggil Component Searchable Select --}}
-                        {{-- Logikanya sama dengan Pemimpin di atas --}}
-                    </td>
-                    <td class="p-1 border border-base-300">
-                        <input type="text" wire:model="facilitator.{{ $index }}.jabatan" class="w-full input input-xs"
-                            readonly>
-                    </td>
-                    <td class="flex items-center gap-1 p-1 border border-base-300">
-                        <input type="text" wire:model="facilitator.{{ $index }}.dept" class="w-full input input-xs"
-                            readonly>
-                        <button wire:click="addRow('facilitator')" class="btn btn-xs btn-ghost text-success">+</button>
-                        @if(count($facilitator) > 1)
-                            <button wire:click="removeRow('facilitator', {{ $index }})"
-                                class="btn btn-xs btn-ghost text-error">×</button>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-
-            {{-- SEKSI TIM ANGGOTA --}}
-            <tr class="bg-base-200">
-                <td class="font-bold border border-base-300">Tim Anggota</td>
-                <td class="font-bold border border-base-300">Nama</td>
-                <td class="font-bold border border-base-300">Jabatan</td>
-                <td class="font-bold border border-base-300">Dept/Perusahaan</td>
-            </tr>
-            @foreach($anggota as $index => $item)
-                <tr>
-                    <td class="border border-base-300"></td>
-                    <td class="p-1 border border-base-300">
-                        {{-- Panggil Component Searchable Select --}}
-                    </td>
-                    <td class="p-1 border border-base-300">
-                        <input type="text" wire:model="anggota.{{ $index }}.jabatan" class="w-full input input-xs">
-                    </td>
-                    <td class="flex items-center gap-1 p-1 border border-base-300">
-                        <input type="text" wire:model="anggota.{{ $index }}.dept" class="w-full input input-xs">
-                        <button wire:click="addRow('anggota')" class="btn btn-xs btn-ghost text-success">+</button>
-                        @if(count($anggota) > 1)
-                            <button wire:click="removeRow('anggota', {{ $index }})"
-                                class="btn btn-xs btn-ghost text-error">×</button>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
+            <td></td>
         </tbody>
     </table>
-</div>
