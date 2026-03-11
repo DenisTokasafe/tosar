@@ -484,8 +484,10 @@ class Create extends Component
     }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-    public function updatedSearchQuery($value)
+    public function updatedSearchQuery($value,$index)
     {
+        $this->searchKorban[$index][''] = $value; // Update search query untuk index yang sesuai
+
         if (strlen($value) < 2) {
             $this->options = [];
             $this->showDropdownPartisipan = false; // Tutup jika search kosong
