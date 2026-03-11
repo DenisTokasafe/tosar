@@ -90,6 +90,7 @@ class Create extends Component
 
     // State untuk search (karena searchable-select butuh model binding)
     public $searchQuery = [];
+    public $searchQueryFacilitator = [];
     public $showDropdownPartisipan = [];
     public $options = [];
 
@@ -498,6 +499,22 @@ class Create extends Component
    public function updatedSearchQuery($value, $key)
 {
     // $key di sini akan berisi "0", "1", dst (karena modelsearch="searchQuery.{{ $index }}")
+    // Kita tidak perlu explode jika key-nya sudah benar
+
+    if (strlen($value) < 2) {
+        $this->options = [];
+        $this->showDropdownPartisipan[$key] = false;
+        return;
+    }
+
+    $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
+
+    // Set dropdown spesifik index tersebut jadi true
+    $this->showDropdownPartisipan[$key] = true;
+}
+   public function updatedSearchQueryFacilitator($value, $key)
+{
+    // $key di sini akan berisi "0", "1", dst (karena modelsearch="searchQueryFacilitator.{{ $index }}")
     // Kita tidak perlu explode jika key-nya sudah benar
 
     if (strlen($value) < 2) {

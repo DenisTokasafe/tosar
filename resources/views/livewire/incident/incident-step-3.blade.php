@@ -54,7 +54,7 @@
                     </td>
                     <td class="p-1 border border-base-300">
                         <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
-                            placeholder="Cari Facilitator..." modelsearch="searchQuery.{{ $index }}"
+                            placeholder="Cari Facilitator..." modelsearch="searchQueryFacilitator.{{ $index }}"
                             modelid="facilitator.{{ $index }}.user_id" :options="$options"
                             {{-- Cek spesifik untuk type facilitator dan index-nya --}}
                             :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'facilitator' && $activeIndex === $index"
