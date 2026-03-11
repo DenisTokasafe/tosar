@@ -22,7 +22,7 @@
             <x-form.label :label="$label" :required="$required" />
         @endif
 
-        <div class="relative" x-data="{ open: @entangle($attributes->wire('model') . '.live') }">
+        <div class="relative" x-data="{ open: @entangle($attributes->wire('model')) }">
             {{-- 1. Tambahkan x-ref="trigger" sebagai jangkar --}}
             <input x-ref="trigger" {{ $disabled ? 'disabled' : '' }}
                 type="text" wire:model.live.debounce.300ms="{{ $modelsearch }}" placeholder="{{ __($placeholder) }}"
