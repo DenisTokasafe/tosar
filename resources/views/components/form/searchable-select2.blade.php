@@ -54,8 +54,17 @@
                         {{-- Opsi List --}}
                         @if(count($options) > 0)
                             @foreach($options as $opt)
-                                <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
-                                    wire:key="opt-{{ $opt->id }}" x-on:click="open = false"
+                                @php
+                                    // Kita siapkan string aksinya di blok PHP agar Blade tidak error
+                                    // Ini akan menghasilkan string seperti: selectInvolvedPersonnel(1, 'Budi Utomo', 0)
+                                    $action = str_replace(
+                                    ['$id', '$name'],
+                                    [$opt->id, "'" . addslashes($opt->{$columnName}) . "'"],
+                                    $clickaction
+                                    );
+                                @endphp
+
+                                <li wire:click="{{ $action }}" wire:key="opt-{{ $opt->id }}" x-on:click="open = false"
                                     class="px-3 py-1.5 text-sm cursor-pointer hover:bg-base-200 transition-colors text-base-content">
                                     {{ $opt->{$columnName} }}
                                 </li>

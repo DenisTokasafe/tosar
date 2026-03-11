@@ -27,7 +27,7 @@
                     @foreach($directly_involved as $index => $person)
                         <tr wire:key="involved-{{ $index }}">
                             <td class="align-top">
-                                <x-form.searchable-select-advanced placeholder="Cari Nama..."
+                                <x-form.searchable-select2 placeholder="Cari Nama..."
                                     wire:key="employee_name-field-{{ $index }}-{{ $directly_involved[$index]['employee_name'] ?? 'new' }}"
                                     modelsearch="searchKorban.{{ $index }}"
                                     modelid="directly_involved.{{ $index }}.employee_name"
