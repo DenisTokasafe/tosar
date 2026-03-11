@@ -499,25 +499,27 @@ class Create extends Component
     }
 
     // Fungsi saat user memilih nama dari dropdown
-   public function selectUser($id, $index, $type)
-{
-    // Sekarang $id didapat dari VALUE_ID, $index dari {{ $index }}, dan $type dari 'pemimpin'
-    $user = User::find($id);
+    public function selectUser($id, $index, $type)
+    {
+        // Sekarang $id didapat dari VALUE_ID, $index dari {{ $index }}, dan $type dari 'pemimpin'
+        $user = User::find($id);
 
-    if ($user) {
-        $this->{$type}[$index] = [
-            'user_id' => $user->id,
-            'nama'    => $user->name,
-            'jabatan' => $user->position ?? '-', // pastikan nama field sesuai DB
-            'dept'    => $user->department_name ?? '-',
-        ];
+        if ($user) {
+            $this->{$type}[$index] = [
+                'user_id' => $user->id,
+                'nama'    => $user->name,
+                'jabatan' => $user->position ?? '-', // pastikan nama field sesuai DB
+                'dept'    => $user->department_name ?? '-',
+            ];
 
-        // Tutup dropdown dan bersihkan pencarian
-        $this->showDropdownPartisipan = false;
-        $this->searchQuery = '';
-        $this->options = [];
+            // Tutup dropdown dan bersihkan pencarian
+
+            $this->searchQuery = '';
+            $this->searchQuery[$index] =  $user->name;
+            $this->showDropdownPartisipan[$index] = false;
+            $this->options = [];
+        }
     }
-}
     public function resetSearch()
     {
         $this->searchQuery = '';
