@@ -484,37 +484,38 @@ class Create extends Component
     }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-  public function updatedSearchQuery($value)
-{
-    if (strlen($value) < 2) {
-        $this->options = [];
-        $this->showDropdownPartisipan = false; // Tutup jika search kosong
-        return;
+    public function updatedSearchQuery($value)
+    {
+        if (strlen($value) < 2) {
+            $this->options = [];
+            $this->showDropdownPartisipan = false; // Tutup jika search kosong
+            return;
+        }
+
+        $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
+
+        // Pastikan ini true agar teleport dropdown di blade merender isi
+        $this->showDropdownPartisipan = true;
     }
 
-    $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
-
-    // Pastikan ini true agar teleport dropdown di blade merender isi
-    $this->showDropdownPartisipan = true;
-}
-
     // Fungsi saat user memilih nama dari dropdown
-  public function selectUser($index, $type,$id)
-{
-    // Cari data user berdasarkan ID yang dipilih (biasanya dari state temporary/search)
-    // Misal Anda menyimpan ID yang dipilih di variabel temporary atau langsung kirim ID ke fungsi ini
+    public function selectUser($index, $type, $id)
+    {
+        // Cari data user berdasarkan ID yang dipilih (biasanya dari state temporary/search)
+        // Misal Anda menyimpan ID yang dipilih di variabel temporary atau langsung kirim ID ke fungsi ini
 
-    // Contoh jika fungsi menerima ID: public function selectUser($id, $index, $type)
-    $user = User::find($id);
+        // Contoh jika fungsi menerima ID: public function selectUser($id, $index, $type)
+        $user = User::find($id);
 
-    if($user) {
-        $this->{$type}[$index]['user_id'] = $user->id;
-        $this->{$type}[$index]['nama'] = $user->name;
-        $this->{$type}[$index]['dept'] = $user->department_name; //
+        if ($user) {
+            $this->{$type}[$index]['user_id'] = $user->id;
+            $this->{$type}[$index]['nama'] = $user->name;
+            $this->{$type}[$index]['dept'] = $user->department_name; //
 
-    $this->showDropdownPartisipan = false;
-    $this->reset('searchQuery', 'options');
-}
+            $this->showDropdownPartisipan = false;
+            $this->reset('searchQuery', 'options');
+        }
+    }
     public function resetSearch()
     {
         $this->searchQuery = '';
