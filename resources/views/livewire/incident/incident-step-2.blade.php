@@ -14,11 +14,11 @@
                     <tr class="bg-base-200">
                         <th class="w-1/4">Nama Personel/Korban</th>
                         <th class="w-32">NIK</th>
+                        <th>Dept/Divisi</th>
                         <th>Jabatan</th>
                         <th class="w-24">Roster</th>
                         <th class="w-24">Shift</th>
                         <th>Peran</th>
-                        <th>Dept/Divisi</th>
                         <th class="w-24">Exp (Thn)</th>
                         <th class="w-10"></th>
                     </tr>
@@ -33,11 +33,13 @@
                                     :options="$involved_personnel_options"
                                     :showdropdown="$show_employee_dropdown[$index] ?? false"
                                     clickaction="selectInvolvedPersonnel" />
-
-
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
+                                    :disabled="$person['employee_id'] ? true : false" />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
                                     :disabled="$person['employee_id'] ? true : false" />
                             </td>
                             <td class="align-top">
@@ -52,10 +54,6 @@
                             <td class="align-top">
                                 <x-form.select model="directly_involved.{{ $index }}.keterlibatan"
                                     :options="$this->keterlibatanOptions" />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
-                                    :disabled="$person['employee_id'] ? true : false" />
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.pengalaman_kerja" required />
