@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between pb-2 border-b">
             <h3 class="text-sm font-bold uppercase">{{ __('Pihak Terlibat Langsung') }}</h3>
             <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs">
-                + {{ __('+ Tambah Personel') }}
+                + {{ __('Tambah Personel') }}
             </button>
         </div>
         <div class="overflow-x-auto">
