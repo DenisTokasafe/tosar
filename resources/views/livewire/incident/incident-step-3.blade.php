@@ -21,10 +21,10 @@
                         <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
                             placeholder="Cari Pemimpin..." modelsearch="searchQuery.{{ $index }}"
                             modelid="pemimpin.{{ $index }}.user_id" :options="$options"
-                            :showdropdown="$showDropdownPartisipan && $activeType === 'pemimpin' && $activeIndex === $index"
-                            {{-- MODIFIKASI DISINI: Kita kirim index dan type sebagai string ke component --}}
+                            {{-- Perhatikan perubahan di bawah ini: tambahkan [$index] --}}
+                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'pemimpin' && $activeIndex === $index"
                             clickaction="selectUser(VALUE_ID, {{ $index }}, 'pemimpin')"
-                            x-on:focusin="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }}); $wire.set('showDropdownPartisipan', true)" />
+                            x-on:focusin="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
                     <td class="p-1 border border-base-300">
                         <input type="text" wire:model="pemimpin.{{ $index }}.jabatan" class="w-full input input-xs"
