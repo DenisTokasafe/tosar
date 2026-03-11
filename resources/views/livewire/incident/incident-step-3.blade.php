@@ -32,7 +32,7 @@
                             :disabled="$item['jabatan'] ? true : false" />
 
                     </td>
-                    <td class="flex items-center gap-1 p-1 border border-base-300">
+                    <td class="flex items-center gap-1 border border-base-300">
                         <x-form.input-text model="pemimpin.{{ $index }}.jabatan"
                             wire:key="jabatan-field-{{ $index }}-{{ $pemimpin[$index]['jabatan'] ?? 'new' }}" />
 
