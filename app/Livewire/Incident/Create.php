@@ -484,44 +484,47 @@ class Create extends Component
     }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-    public function updatedSearchQuery($value, $index)
-    {
-        $idx = explode('.', $index)[0];
+   public function updatedSearchQuery($value, $key)
+{
+    // $key di sini akan berisi "0", "1", dst (karena modelsearch="searchQuery.{{ $index }}")
+    // Kita tidak perlu explode jika key-nya sudah benar
 
-        if (strlen($value) < 2) {
-            $this->options = [];
-            $this->showDropdownPartisipan[$idx] = false; // Tutup jika search kosong
-            return;
-        }
-
-        $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
-
-        // Pastikan ini true agar teleport dropdown di blade merender isi
-        $this->showDropdownPartisipan[$idx] = true;
+    if (strlen($value) < 2) {
+        $this->options = [];
+        $this->showDropdownPartisipan[$key] = false;
+        return;
     }
 
-    // Fungsi saat user memilih nama dari dropdown
-    public function selectUser($id, $index, $type)
-    {
-        // Sekarang $id didapat dari VALUE_ID, $index dari {{ $index }}, dan $type dari 'pemimpin'
-        $user = User::find($id);
+    $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
 
-        if ($user) {
-            $this->{$type}[$index] = [
-                'user_id' => $user->id,
-                'nama'    => $user->name,
-                'jabatan' => $user->position ?? '-', // pastikan nama field sesuai DB
-                'dept'    => $user->department_name ?? '-',
-            ];
+    // Set dropdown spesifik index tersebut jadi true
+    $this->showDropdownPartisipan[$key] = true;
+}
 
-            // Tutup dropdown dan bersihkan pencarian
+public function selectUser($id, $index, $type)
+{
+    $user = User::find($id);
 
-            $this->searchQuery = '';
-            $this->searchQuery[$index] =  $user->name;
-            $this->showDropdownPartisipan[$index] = false;
-            $this->options = [];
-        }
+    if ($user) {
+        // 1. Isi data ke array tabel
+        $this->{$type}[$index] = [
+            'user_id' => $user->id,
+            'nama'    => $user->name,
+            'jabatan' => $user->position ?? '-',
+            'dept'    => $user->department_name ?? '-',
+        ];
+
+        // 2. Perbaikan Logika SearchQuery
+        // Jangan diisi string kosong dulu, langsung isi index-nya
+        $this->searchQuery[$index] = $user->name;
+
+        // 3. Tutup dropdown spesifik baris ini
+        $this->showDropdownPartisipan[$index] = false;
+
+        // 4. Bersihkan opsi pencarian global
+        $this->options = [];
     }
+}
     public function resetSearch()
     {
         $this->searchQuery = '';
