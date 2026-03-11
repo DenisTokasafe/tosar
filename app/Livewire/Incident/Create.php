@@ -486,18 +486,18 @@ class Create extends Component
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
     public function updatedSearchQuery($value,$index)
     {
-        $this->searchQuery[$index][''] = $value; // Update search query untuk index yang sesuai
+         $idx = explode('.', $index)[0];
 
         if (strlen($value) < 2) {
             $this->options = [];
-            $this->showDropdownPartisipan = false; // Tutup jika search kosong
+            $this->showDropdownPartisipan[$idx] = false; // Tutup jika search kosong
             return;
         }
 
         $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
 
         // Pastikan ini true agar teleport dropdown di blade merender isi
-        $this->showDropdownPartisipan = true;
+        $this->showDropdownPartisipan[$idx] = true;
     }
 
     // Fungsi saat user memilih nama dari dropdown
