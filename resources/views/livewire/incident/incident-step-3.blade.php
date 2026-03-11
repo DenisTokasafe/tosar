@@ -54,18 +54,27 @@
                     </td>
                     <td class="p-1 border border-base-300">
                         <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
-                            placeholder="Cari Facilitator..."
-                            {{-- ... props lainnya sama seperti di atas ... --}} />
+                            placeholder="Cari Facilitator..." modelsearch="searchQuery.{{ $index }}"
+                            modelid="facilitator.{{ $index }}.user_id" :options="$options"
+                            {{-- Cek spesifik untuk type facilitator dan index-nya --}}
+                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'facilitator' && $activeIndex === $index"
+                            {{-- Mengirimkan type 'facilitator' ke fungsi selectUser --}}
+                            clickaction="selectUser(VALUE_ID, {{ $index }}, 'facilitator')"
+                            {{-- Set state saat input fokus --}}
+                            x-on:focusin="$wire.set('activeType', 'facilitator'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
                     <td class="p-1 border border-base-300">
-                        <input type="text" wire:model="facilitator.{{ $index }}.jabatan" class="w-full input input-xs"
-                            readonly>
+                        <x-form.input-text model="facilitator.{{ $index }}.dept"
+                            wire:key="dept-facilitator-{{ $index }}-{{ $facilitator[$index]['dept'] ?? 'new' }}"
+                            :disabled="!empty($item['user_id'])" />
                     </td>
-                    <td class="flex items-center gap-1 p-1 border border-base-300">
-                        <input type="text" wire:model="facilitator.{{ $index }}.dept" class="w-full input input-xs"
-                            readonly>
+                    <td class="flex items-center gap-1 border border-base-300">
+                        <x-form.input-text model="facilitator.{{ $index }}.jabatan"
+                            wire:key="jabatan-facilitator-{{ $index }}-{{ $facilitator[$index]['jabatan'] ?? 'new' }}" />
+
                         <button type="button" wire:click="addRow('facilitator')"
                             class="btn btn-xs btn-ghost text-success">+</button>
+
                         @if(count($facilitator) > 1)
                             <button type="button" wire:click="removeRow('facilitator', {{ $index }})"
                                 class="btn btn-xs btn-ghost text-error">×</button>

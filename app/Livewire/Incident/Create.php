@@ -474,11 +474,25 @@ class Create extends Component
     $this->showDropdownPartisipan[$newIndex] = false;
 }
 
-    public function removeRow($type, $index)
-    {
-        unset($this->{$type}[$index]);
-        $this->{$type} = array_values($this->{$type}); // Reset index array
+   public function removeRow($type, $index)
+{
+    // Hapus data baris
+    unset($this->{$type}[$index]);
+    $this->{$type} = array_values($this->{$type}); // Reset index agar berurutan 0, 1, 2...
+
+    // Penting: Hapus juga state search dan dropdown terkait index tersebut
+    unset($this->searchQuery[$index]);
+    unset($this->showDropdownPartisipan[$index]);
+
+    // Reset index array search & dropdown agar sinkron dengan baris tabel
+    $this->searchQuery = array_values($this->searchQuery);
+    $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
+
+    // Jika setelah dihapus jadi kosong sama sekali (opsional, tergantung kebutuhan)
+    if (empty($this->{$type})) {
+        $this->addRow($type);
     }
+}
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
    public function updatedSearchQuery($value, $key)
