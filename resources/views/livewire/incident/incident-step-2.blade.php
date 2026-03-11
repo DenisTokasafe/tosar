@@ -51,7 +51,7 @@
                             </td>
                             <td class="align-top">
                                 <x-form.select model="directly_involved.{{ $index }}.keterlibatan"
-                                    :options="{{ $this->keterlibatanOptions }}">
+                                    :options="$this->keterlibatanOptions" />
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
