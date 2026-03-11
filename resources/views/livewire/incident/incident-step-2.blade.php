@@ -33,8 +33,7 @@
                                     :options="$involved_personnel_options"
                                     :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
                                     enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
-                                    {{-- Di sini letak perubahannya: panggil fungsi dengan parameter lengkap --}}
-                                    clickaction="selectInvolvedPersonnel({{ $index }}, option.id, option.name, option.employee_id, option.department_name)" />
+                                    clickaction="selectInvolvedPersonnel({{ $index }})" />
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
