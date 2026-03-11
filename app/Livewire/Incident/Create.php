@@ -51,7 +51,7 @@ class Create extends Component
     public $RiskAssessment;
 
     public $risk_consequence;
-
+    public $kondisi_tidak_aman, $tindakan_tidak_aman;
 
     public $selectedBodyPartCategory;
     // deptContractor
