@@ -27,12 +27,16 @@
                             x-on:focusin="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
                     <td class="p-1 border border-base-300">
-                        <input type="text" wire:model="pemimpin.{{ $index }}.jabatan" class="w-full input input-xs"
-                            readonly>
+
+                        <x-form.input-text model="pemimpin.{{ $index }}.jabatan"
+                            wire:key="jabatan-field-{{ $index }}-{{ $pemimpin[$index]['jabatan'] ?? 'new' }}"
+                            :disabled="$item['jabatan'] ? true : false" />
                     </td>
                     <td class="flex items-center gap-1 p-1 border border-base-300">
-                        <input type="text" wire:model="pemimpin.{{ $index }}.dept" class="w-full input input-xs"
-                            readonly>
+
+                        <x-form.input-text model="pemimpin.{{ $index }}.dept"
+                            wire:key="dept-field-{{ $index }}-{{ $pemimpin[$index]['dept'] ?? 'new' }}"
+                            :disabled="$item['jabatan'] ? true : false" />
                         <button type="button" wire:click="addRow('pemimpin')"
                             class="btn btn-xs btn-ghost text-success">+</button>
                         @if(count($pemimpin) > 1)
