@@ -4,8 +4,8 @@
             <tr>
                 <th class="w-1/4 border border-base-300">Peran</th>
                 <th class="w-1/4 border border-base-300">Nama</th>
-                <th class="w-1/4 border border-base-300">Jabatan</th>
-                <th class="w-1/4 text-center border border-base-300">Dept/Perusahaan</th>
+                <th class="w-1/4 border border-base-300">Dept/Perusahaan</th>
+                <th class="w-1/4 text-center border border-base-300">Jabatan</th>
             </tr>
         </thead>
         <tbody>
