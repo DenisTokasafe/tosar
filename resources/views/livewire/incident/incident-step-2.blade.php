@@ -2,9 +2,10 @@
     <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">
             {{ __('Personel Terlibat / Korban') }}</legend>
-        <div class="flex items-center justify-between pb-2 border-b">
-            <h3 class="text-sm font-bold uppercase">{{ __('Pihak Terlibat Langsung') }}</h3>
-            <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs">
+        <div class="grid justify-items-stretch">
+
+            <button type="button" wire:click="addDirectlyInvolvedRow"
+                class="btn btn-primary btn-xs justify-self-end-safe">
                 + {{ __('Tambah Personel') }}
             </button>
         </div>
