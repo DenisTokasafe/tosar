@@ -469,28 +469,38 @@ class Create extends Component
 
     public function addRow($type)
     {
+        // Tambah baris baru ke array utama
         $this->{$type}[] = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
-        // Inisialisasi search dan dropdown untuk index baru
+
+        // Dapatkan index terakhir
         $newIndex = count($this->{$type}) - 1;
-        $this->searchQuery[$newIndex] = '';
+
+        // Inisialisasi nested array untuk search agar sinkron dengan modelsearch="searchQuery.{{ $index }}.{{ $type }}"
+        $this->searchQuery[$newIndex][$type] = '';
+
+        // Inisialisasi status dropdown
         $this->showDropdownPartisipan[$newIndex] = false;
     }
 
     public function removeRow($type, $index)
     {
-        // Hapus data baris
+        // 1. Hapus data baris utama
         unset($this->{$type}[$index]);
-        $this->{$type} = array_values($this->{$type}); // Reset index agar berurutan 0, 1, 2...
+        $this->{$type} = array_values($this->{$type});
 
-        // Penting: Hapus juga state search dan dropdown terkait index tersebut
-        unset($this->searchQuery[$index]);
+        // 2. Hapus state search spesifik untuk peran tersebut di index tersebut
+        if (isset($this->searchQuery[$index][$type])) {
+            unset($this->searchQuery[$index][$type]);
+        }
+
+        // 3. Hapus status dropdown
         unset($this->showDropdownPartisipan[$index]);
 
-        // Reset index array search & dropdown agar sinkron dengan baris tabel
+        // 4. Re-index kembali agar urutan array searchQuery dan dropdown tetap sinkron dengan urutan baris di HTML
         $this->searchQuery = array_values($this->searchQuery);
         $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
 
-        // Jika setelah dihapus jadi kosong sama sekali (opsional, tergantung kebutuhan)
+        // 5. Jika baris habis, tambahkan satu baris kosong lagi
         if (empty($this->{$type})) {
             $this->addRow($type);
         }
