@@ -467,97 +467,81 @@ class Create extends Component
         }
     }
 
-    public function addRow($type) {
-    $this->{$type}[] = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
-    // Inisialisasi search dan dropdown untuk index baru
-    $newIndex = count($this->{$type}) - 1;
-    $this->searchQuery[$newIndex] = '';
-    $this->showDropdownPartisipan[$newIndex] = false;
-}
-
-   public function removeRow($type, $index)
-{
-    // Hapus data baris
-    unset($this->{$type}[$index]);
-    $this->{$type} = array_values($this->{$type}); // Reset index agar berurutan 0, 1, 2...
-
-    // Penting: Hapus juga state search dan dropdown terkait index tersebut
-    unset($this->searchQuery[$index]);
-    unset($this->showDropdownPartisipan[$index]);
-
-    // Reset index array search & dropdown agar sinkron dengan baris tabel
-    $this->searchQuery = array_values($this->searchQuery);
-    $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
-
-    // Jika setelah dihapus jadi kosong sama sekali (opsional, tergantung kebutuhan)
-    if (empty($this->{$type})) {
-        $this->addRow($type);
+    public function addRow($type)
+    {
+        $this->{$type}[] = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
+        // Inisialisasi search dan dropdown untuk index baru
+        $newIndex = count($this->{$type}) - 1;
+        $this->searchQuery[$newIndex] = '';
+        $this->showDropdownPartisipan[$newIndex] = false;
     }
-}
+
+    public function removeRow($type, $index)
+    {
+        // Hapus data baris
+        unset($this->{$type}[$index]);
+        $this->{$type} = array_values($this->{$type}); // Reset index agar berurutan 0, 1, 2...
+
+        // Penting: Hapus juga state search dan dropdown terkait index tersebut
+        unset($this->searchQuery[$index]);
+        unset($this->showDropdownPartisipan[$index]);
+
+        // Reset index array search & dropdown agar sinkron dengan baris tabel
+        $this->searchQuery = array_values($this->searchQuery);
+        $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
+
+        // Jika setelah dihapus jadi kosong sama sekali (opsional, tergantung kebutuhan)
+        if (empty($this->{$type})) {
+            $this->addRow($type);
+        }
+    }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-   public function updatedSearchQuery($value, $key)
-{
-    // $key di sini akan berisi "0", "1", dst (karena modelsearch="searchQuery.{{ $index }}")
-    // Kita tidak perlu explode jika key-nya sudah benar
+    public function updatedSearchQuery($value, $key)
+    {
+        // $key sekarang berisi "0.pemimpin", "1.facilitator", dst.
+        $parts = explode('.', $key);
+        $index = $parts[0]; // Mendapatkan angka index
 
-    if (strlen($value) < 2) {
-        $this->options = [];
-        $this->showDropdownPartisipan[$key] = false;
-        return;
+        if (strlen($value) < 2) {
+            $this->options = [];
+            $this->showDropdownPartisipan[$index] = false;
+            return;
+        }
+
+        $this->options = User::where('name', 'like', '%' . $value . '%')->limit(50)->get();
+
+        // Buka dropdown berdasarkan index barisnya
+        $this->showDropdownPartisipan[$index] = true;
     }
 
-    $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
+    public function selectUser($id, $index, $type)
+    {
+        $user = User::find($id);
 
-    // Set dropdown spesifik index tersebut jadi true
-    $this->showDropdownPartisipan[$key] = true;
-}
-   public function updatedSearchQueryFacilitator($value, $key)
-{
-    // $key di sini akan berisi "0", "1", dst (karena modelsearch="searchQueryFacilitator.{{ $index }}")
-    // Kita tidak perlu explode jika key-nya sudah benar
+        if ($user) {
+            // 1. Simpan ke array utama (pemimpin/facilitator/anggota)
+            $this->{$type}[$index] = [
+                'user_id' => $user->id,
+                'nama'    => $user->name,
+                'jabatan' => $user->position ?? '-',
+                'dept'    => $user->department_name ?? '-',
+            ];
 
-    if (strlen($value) < 2) {
-        $this->options = [];
-        $this->showDropdownPartisipan[$key] = false;
-        return;
+            // 2. Update searchQuery sesuai struktur nested: searchQuery.index.type
+            // Ini memastikan teks "Cari..." berubah jadi nama User setelah dipilih
+            $this->searchQuery[$index][$type] = $user->name;
+
+            // 3. Tutup dropdown dan bersihkan opsi
+            $this->showDropdownPartisipan[$index] = false;
+            $this->options = [];
+        }
     }
-
-    $this->options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
-
-    // Set dropdown spesifik index tersebut jadi true
-    $this->showDropdownPartisipan[$key] = true;
-}
-
-public function selectUser($id, $index, $type)
-{
-    $user = User::find($id);
-
-    if ($user) {
-        // 1. Isi data ke array tabel
-        $this->{$type}[$index] = [
-            'user_id' => $user->id,
-            'nama'    => $user->name,
-            'jabatan' => $user->position ?? '-',
-            'dept'    => $user->department_name ?? '-',
-        ];
-
-        // 2. Perbaikan Logika SearchQuery
-        // Jangan diisi string kosong dulu, langsung isi index-nya
-        $this->searchQuery[$index] = $user->name;
-
-        // 3. Tutup dropdown spesifik baris ini
-        $this->showDropdownPartisipan[$index] = false;
-
-        // 4. Bersihkan opsi pencarian global
-        $this->options = [];
-    }
-}
     public function resetSearch()
     {
-        $this->searchQuery = '';
+        $this->searchQuery = []; // Reset ke array kosong
         $this->options = [];
-        $this->showDropdownPartisipan = false;
+        $this->showDropdownPartisipan = []; // Reset ke array kosong
         $this->activeType = '';
         $this->activeIndex = null;
     }
