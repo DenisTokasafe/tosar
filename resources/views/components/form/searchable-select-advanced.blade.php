@@ -54,7 +54,7 @@
                         {{-- Opsi List --}}
                         @if(count($options) > 0)
                             @foreach($options as $opt)
-                                <li wire:click="{{ $clickaction }}{{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
+                                <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
                                     wire:key="opt-{{ $opt->id }}" x-on:click="open = false"
                                     class="px-3 py-1.5 text-sm cursor-pointer hover:bg-base-200 transition-colors text-base-content">
                                     {{ $opt->{$columnName} }}
