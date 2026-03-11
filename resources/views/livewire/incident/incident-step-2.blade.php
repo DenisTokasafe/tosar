@@ -32,7 +32,7 @@
                                     modelid="directly_involved.{{ $index }}.employee_name"
                                     :options="$involved_personnel_options"
                                     :showdropdown="$show_employee_dropdown[$index] ?? false"
-                                    clickaction="selectInvolvedPersonnel" />
+                                    clickaction="selectInvolvedPersonnel({{ $index }}, " />
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
