@@ -499,23 +499,25 @@ class Create extends Component
     }
 
     // Fungsi saat user memilih nama dari dropdown
-    public function selectUser($id,$index, $type)
-    {
-        // Cari data user berdasarkan ID yang dipilih (biasanya dari state temporary/search)
-        // Misal Anda menyimpan ID yang dipilih di variabel temporary atau langsung kirim ID ke fungsi ini
+   public function selectUser($id, $index, $type)
+{
+    // Sekarang $id didapat dari VALUE_ID, $index dari {{ $index }}, dan $type dari 'pemimpin'
+    $user = User::find($id);
 
-        // Contoh jika fungsi menerima ID: public function selectUser($id, $index, $type)
-        $user = User::find($id);
+    if ($user) {
+        $this->{$type}[$index] = [
+            'user_id' => $user->id,
+            'nama'    => $user->name,
+            'jabatan' => $user->position ?? '-', // pastikan nama field sesuai DB
+            'dept'    => $user->department_name ?? '-',
+        ];
 
-        if ($user) {
-            $this->{$type}[$index]['user_id'] = $user->id;
-            $this->{$type}[$index]['nama'] = $user->name;
-            $this->{$type}[$index]['dept'] = $user->department_name; //
-
-            $this->showDropdownPartisipan = false;
-            $this->reset('searchQuery', 'options');
-        }
+        // Tutup dropdown dan bersihkan pencarian
+        $this->showDropdownPartisipan = false;
+        $this->searchQuery = '';
+        $this->options = [];
     }
+}
     public function resetSearch()
     {
         $this->searchQuery = '';
