@@ -506,12 +506,12 @@ class Create extends Component
     }
 }
 
-public function selectInvolvedPersonnel($index, $id, $name, $employee_nik, $department_name)
+public function selectInvolvedPersonnel($index, $id, $name, $employee_id, $department_name)
 {
     // Isi data ke array baris yang bersangkutan
     $this->directly_involved[$index]['employee_id'] = $id;
     $this->directly_involved[$index]['employee_name'] = $name;
-    $this->directly_involved[$index]['employee_nik'] = $employee_nik;
+    $this->directly_involved[$index]['employee_nik'] = $employee_id;
     $this->directly_involved[$index]['dept_cont'] = $department_name;
 
     // Tutup dropdown dan reset opsi
