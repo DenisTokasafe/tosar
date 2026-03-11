@@ -446,8 +446,8 @@ class Create extends Component
         }
 
         // Cari data karyawan (Sesuaikan kolom database Anda)
-        $this->involved_personnel_options = Employee::where('name', 'like', '%' . $value . '%')
-            ->orWhere('nik', 'like', '%' . $value . '%')
+        $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')
+            ->orWhere('employee_id', 'like', '%' . $value . '%')
             ->limit(5)
             ->get();
 
