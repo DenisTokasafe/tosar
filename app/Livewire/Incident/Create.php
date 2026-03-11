@@ -24,7 +24,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-
 class Create extends Component
 {
     use WithFileUploads, WithPagination;
@@ -49,10 +48,8 @@ class Create extends Component
     public $contractor_id, $department_id, $likelihood_id, $consequence_id;
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
-
     public $risk_consequence;
-    public $kondisi_tidak_aman, $tindakan_tidak_aman;
-
+    public $kondisi_tidak_aman, $tindakan_tidak_aman,$penanggungJawab,$emergency_action,$damage_detail;
     public $selectedBodyPartCategory;
     // deptContractor
     public $search = '';

@@ -7,7 +7,6 @@
                     class="btn btn-primary btn-xs ">
                     + {{ __('Tambah Personel') }}
                 </button></div>
-
         </div>
         <div class="overflow-x-auto">
             <table class="table w-full border table-compact">
