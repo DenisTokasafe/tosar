@@ -3,11 +3,11 @@
         <legend class="text-sm font-semibold card-title ">
             {{ __('Personel Terlibat / Korban') }}</legend>
         <div class="grid justify-items-stretch">
+            <div class="justify-self-end-safe"> <button type="button" wire:click="addDirectlyInvolvedRow"
+                    class="btn btn-primary btn-xs ">
+                    + {{ __('Tambah Personel') }}
+                </button></div>
 
-            <button type="button" wire:click="addDirectlyInvolvedRow"
-                class="btn btn-primary btn-xs justify-self-end-safe">
-                + {{ __('Tambah Personel') }}
-            </button>
         </div>
         <div class="overflow-x-auto">
             <table class="table w-full border table-compact">
