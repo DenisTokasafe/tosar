@@ -319,6 +319,17 @@ class Create extends Component
         // Menggunakan str_contains atau strtolower untuk keamanan ekstra
         return $type && str_contains(strtolower($type->event_type_name), 'injury');
     }
+      #[Computed]
+    public function keterlibatanOptions()
+    {
+        return [
+            'saksi'         => 'Saksi',
+            'korban_cedera' => 'Korban Cedera',
+            'kontraktor'    => 'Kontraktor',
+            'operator'      => 'Operator',
+            'lainnya'       => 'Lainnya',
+        ];
+    }
     public function render()
     {
         return view('livewire.incident.create', [
@@ -333,7 +344,6 @@ class Create extends Component
             'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
-
     public function updatedSearchPelapor()
     {
         // Hindari reset total jika hanya ingin mengosongkan ID tapi tetap mau mencari
@@ -384,148 +394,91 @@ class Create extends Component
     {
         $this->pelapor_id = null;
     }
-    public function updatedSearchName()
+    // Involved Personnel
+
+    public function addDirectlyInvolvedRow()
     {
-        if (strlen($this->searchName) > 1) {
-            $this->involved_personnel_options = User::where('name', 'like', '%' . $this->searchName . '%')
-                ->orderBy('name')
-                ->limit(50)
-                ->get();
-
-            $this->showinvolvedPersonnelDropdown = true;
-        } else {
-            $this->involved_personnel_options = [];
-            $this->showinvolvedPersonnelDropdown = false;
-        }
-    }
-    // Di Blade, panggil dengan: wire:click="selectInvolvedPersonnel({{ $user->id }})"
-
-    public function enableInvolvedPersonnelManual()
-    {
-        if (!empty($this->searchName)) {
-            $this->selected_personnel[] = [
-                'id' => null,
-                'name' => $this->searchName,
-                'employee_id' => null,
-                'department_name' => null,
-                'is_manual' => true
-            ];
-
-            $this->searchName = ''; // Reset
-            $this->showinvolvedPersonnelDropdown = false;
-
-            $this->dispatch('alert', [
-                'text' => "Personel manual ditambahkan.",
-                'duration' => 3000,
-                'backgroundColor' => "background: linear-gradient(135deg, #ff9800, #f44336);",
-            ]);
-        }
-    }
-
-    public function removePersonnel($index)
-    {
-        unset($this->selected_personnel[$index]);
-        $this->selected_personnel = array_values($this->selected_personnel); // Re-index array
-    }
-
-    // fungsi untuk menambahkan baris tindakan perbaikan
-    public function addCorrectiveRow()
-    {
-        $this->corrective_actions[] = [
-            'plan' => '',
-            'pic_id' => null,
-            'pic_name' => '',
-            'due_date' => '',
-            'show_pic_dropdown' => false
+        $this->directly_involved[] = [
+            'employee_id'      => null,
+            'employee_name'    => '',
+            'employee_nik'     => '',
+            'dept_cont'        => '',
+            'jabatan'          => '',
+            'roster'           => '',
+            'sift'             => '',
+            'keterlibatan'     => '',
+            'pengalaman_kerja' => '',
         ];
+
+        // Inisialisasi state pencarian untuk baris baru
+        $newIndex = count($this->directly_involved) - 1;
+        $this->searchKorban[$newIndex] = '';
+        $this->show_employee_dropdown[$newIndex] = false;
     }
 
-    public function removeCorrectiveRow($index)
+    /**
+     * Menghapus baris berdasarkan index
+     */
+    public function removeDirectlyInvolvedRow($index)
     {
-        unset($this->corrective_actions[$index]);
-        $this->corrective_actions = array_values($this->corrective_actions);
+        unset($this->directly_involved[$index]);
+        unset($this->searchKorban[$index]);
+        unset($this->show_employee_dropdown[$index]);
+
+        // Re-index array agar index tetap berurutan (mencegah error di foreach)
+        $this->directly_involved = array_values($this->directly_involved);
+        $this->searchKorban = array_values($this->searchKorban);
+        $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
     }
-    public function updatedCorrectiveActions($value, $key)
+
+    /**
+     * Lifecycle hook: Terpicu otomatis saat searchKorban diupdate
+     */
+    public function updatedSearchKorban($value, $index)
     {
-        if (str_ends_with($key, '.pic_name')) {
-            $index = explode('.', $key)[0];
-            if (strlen($value) > 1) {
-                // Gunakan variabel options yang sudah ada atau buat baru
-                $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(5)->get();
-                $this->corrective_actions[$index]['show_pic_dropdown'] = true;
-            } else {
-                $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+        // Ambil hanya angka index dari string "searchKorban.0"
+        $realIndex = explode('.', $index)[0];
+
+        if (strlen($value) < 2) {
+            $this->involved_personnel_options = [];
+            $this->show_employee_dropdown[$realIndex] = false;
+            return;
+        }
+
+        // Cari data karyawan (Sesuaikan kolom database Anda)
+        $this->involved_personnel_options = Employee::where('name', 'like', '%' . $value . '%')
+            ->orWhere('nik', 'like', '%' . $value . '%')
+            ->limit(5)
+            ->get();
+
+        $this->show_employee_dropdown[$realIndex] = true;
+    }
+
+    /**
+     * Fungsi saat nama diklik dari dropdown
+     */
+    public function selectInvolvedPersonnel($id, $name)
+    {
+        // Cari baris mana yang sedang aktif mencari
+        // Kita bisa melacak index melalui loop atau state
+        foreach ($this->show_employee_dropdown as $index => $isVisible) {
+            if ($isVisible) {
+                $employee = User::find($id);
+
+                if ($employee) {
+                    // Isi data baris tersebut secara otomatis
+                    $this->directly_involved[$index]['employee_id']   = $employee->id;
+                    $this->directly_involved[$index]['employee_name'] = $employee->name;
+                    $this->directly_involved[$index]['employee_nik']  = $employee->employee_id;
+                    $this->directly_involved[$index]['dept_cont']     = $employee->department_name;
+
+                    // Reset pencarian
+                    $this->searchKorban[$index] = $employee->name;
+                    $this->show_employee_dropdown[$index] = false;
+                }
+                break;
             }
         }
     }
 
-    public function selectPIC($index, $id, $name)
-    {
-        $this->corrective_actions[$index]['pic_id'] = $id;
-        $this->corrective_actions[$index]['pic_name'] = $name;
-        $this->corrective_actions[$index]['show_pic_dropdown'] = false;
-    }
-    public function addDirectlyInvolvedRow()
-    {
-        $this->directly_involved[] = [
-            'employee_id' => '',
-            'employee_name' => '',
-            'employee_nik' => '', // Tambahkan ini
-            'jabatan' => '',
-            'roster' => '',
-            'sift' => '',
-            'keterlibatan' => '',
-            'dept_cont' => '',    // Tambahkan ini
-            'pengalaman_kerja' => '', // Tambahkan ini agar tidak error di view
-            'is_manual' => false,
-            'show_employee_dropdown' => false
-        ];
-    }
-    public function removeDirectlyInvolvedRow($index)
-    {
-        unset($this->directly_involved[$index]);
-        $this->directly_involved = array_values($this->directly_involved);
-    }
-    public function updatedSearchKorban($value, $key)
-    {
-
-        $index = explode('.', $key)[0];
-        if (strlen($value) > 1) {
-            $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(30)->get(['id', 'name', 'employee_id', 'department_name']); // Ambil kolom yang diperlukan saja
-            $this->show_employee_dropdown[$index] = true;
-        } else {
-            $this->show_employee_dropdown[$index] = false;
-        }
-    }
-    #[Computed]
-    public function keterlibatanOptions()
-    {
-        return [
-            'saksi'         => 'Saksi',
-            'korban_cedera' => 'Korban Cedera',
-            'kontraktor'    => 'Kontraktor',
-            'operator'      => 'Operator',
-            'lainnya'       => 'Lainnya',
-        ];
-    }
-
-    public function selectInvolvedPersonnel($id, $name,)
-    {
-        $index = collect($this->show_employee_dropdown)->search(true);
-        if ($index !== false) {
-            $this->directly_involved[$index]['employee_name'] = $name;
-            $Involved_Personnel = User::where('name', $name)->first();
-            $this->directly_involved[$index]['employee_id'] = $Involved_Personnel->id;
-            $this->directly_involved[$index]['employee_nik'] = $Involved_Personnel->employee_id;
-            $this->directly_involved[$index]['dept_cont'] = $Involved_Personnel->department_name;
-            $this->directly_involved[$index]['show_employee_dropdown'] = false;
-            // Reset options setelah memilih
-            $this->searchKorban[$index] = $name;
-
-            // 3. Tutup dropdown untuk baris tersebut
-            $this->show_employee_dropdown[$index] = false;
-            $this->involved_personnel_options = [];
-        }
-        // Jika dd(123) sudah muncul, berarti koneksi sudah aman
-    }
 }
