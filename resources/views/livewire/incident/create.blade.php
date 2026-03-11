@@ -13,7 +13,7 @@
         {{-- PROGRESS & STEPS VISUAL --}}
 
         {{-- STEP 1: Info Dasar --}}
-        <div class="mt-12 border collapse collapse-arrow bg-base-100 border-base-300">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="font-semibold collapse-title bg-base-300 text-base-content">
                 <span class="flex">
