@@ -95,9 +95,7 @@ class Create extends Component
         }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-        if (empty($this->corrective_actions)) {
-            $this->addCorrectiveRow();
-        }
+
         if (empty($this->directly_involved)) {
             $this->addDirectlyInvolvedRow();
         }
