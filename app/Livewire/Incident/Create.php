@@ -499,7 +499,7 @@ class Create extends Component
     }
 
     // Fungsi saat user memilih nama dari dropdown
-    public function selectUser($index, $type, $id)
+    public function selectUser($id,$index, $type)
     {
         // Cari data user berdasarkan ID yang dipilih (biasanya dari state temporary/search)
         // Misal Anda menyimpan ID yang dipilih di variabel temporary atau langsung kirim ID ke fungsi ini
