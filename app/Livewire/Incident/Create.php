@@ -24,6 +24,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+
 class Create extends Component
 {
     use WithFileUploads, WithPagination;
@@ -49,7 +50,7 @@ class Create extends Component
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
     public $risk_consequence;
-    public $kondisi_tidak_aman, $tindakan_tidak_aman,$penanggungJawab,$emergency_action,$damage_detail;
+    public $kondisi_tidak_aman, $tindakan_tidak_aman, $penanggungJawab, $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
     // deptContractor
     public $search = '';
@@ -81,6 +82,20 @@ class Create extends Component
     public array $searchKorban = []; // Menyimpan text pencarian per baris
     public array $show_employee_dropdown = []; // Menyimpan state open/close dropdown per baris
     public $involved_personnel_options = [];
+
+    // State untuk menyimpan baris data
+    public $pemimpin = [];
+    public $facilitator = [];
+    public $anggota = [];
+
+    // State untuk search (karena searchable-select butuh model binding)
+    public $searchQuery = '';
+    public $options = [];
+    public $showDropdownPartisipan = false;
+
+    // Penanda baris mana yang sedang aktif dicari
+    public $activeType = '';
+    public $activeIndex = null;
     public function mount()
     {
         if (Auth::check()) {
@@ -94,8 +109,11 @@ class Create extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
 
         if (empty($this->directly_involved)) {
-           $this->addDirectlyInvolvedRow();
+            $this->addDirectlyInvolvedRow();
         }
+        $this->addRow('pemimpin');
+        $this->addRow('facilitator');
+        $this->addRow('anggota');
     }
 
 
@@ -382,69 +400,126 @@ class Create extends Component
     }
     // Involved Personnel
 
-   public function addDirectlyInvolvedRow()
-{
-    $this->directly_involved[] = [
-        'employee_id' => null,
-        'employee_name' => '',
-        'employee_nik' => '',
-        'dept_cont' => '',
-        'jabatan' => '',
-        'roster' => '',
-        'sift' => '',
-        'keterlibatan' => '',
-        'pengalaman_kerja' => '',
-    ];
+    public function addDirectlyInvolvedRow()
+    {
+        $this->directly_involved[] = [
+            'employee_id' => null,
+            'employee_name' => '',
+            'employee_nik' => '',
+            'dept_cont' => '',
+            'jabatan' => '',
+            'roster' => '',
+            'sift' => '',
+            'keterlibatan' => '',
+            'pengalaman_kerja' => '',
+        ];
 
-    // Inisialisasi state pembantu untuk index baru
-    $newIndex = count($this->directly_involved) - 1;
-    $this->searchKorban[$newIndex] = '';
-    $this->show_employee_dropdown[$newIndex] = false;
-}
+        // Inisialisasi state pembantu untuk index baru
+        $newIndex = count($this->directly_involved) - 1;
+        $this->searchKorban[$newIndex] = '';
+        $this->show_employee_dropdown[$newIndex] = false;
+    }
 
-public function removeDirectlyInvolvedRow($index)
-{
-    unset($this->directly_involved[$index]);
-    unset($this->searchKorban[$index]);
-    unset($this->show_employee_dropdown[$index]);
+    public function removeDirectlyInvolvedRow($index)
+    {
+        unset($this->directly_involved[$index]);
+        unset($this->searchKorban[$index]);
+        unset($this->show_employee_dropdown[$index]);
 
-    // Reset index agar berurutan kembali (penting untuk kelancaran array PHP)
-    $this->directly_involved = array_values($this->directly_involved);
-    $this->searchKorban = array_values($this->searchKorban);
-    $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
-}
+        // Reset index agar berurutan kembali (penting untuk kelancaran array PHP)
+        $this->directly_involved = array_values($this->directly_involved);
+        $this->searchKorban = array_values($this->searchKorban);
+        $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
+    }
 
-// Fungsi pencarian otomatis saat user mengetik
-public function updatedSearchKorban($value, $index)
-{
-    // Ambil index dari string "searchKorban.0"
-    $idx = explode('.', $index)[0];
+    // Fungsi pencarian otomatis saat user mengetik
+    public function updatedSearchKorban($value, $index)
+    {
+        // Ambil index dari string "searchKorban.0"
+        $idx = explode('.', $index)[0];
 
-    if (strlen($value) >= 2) {
-        // Ganti dengan logic pencarian database Anda
-        $this->involved_personnel_options = User::where('name', 'like', "%{$value}%")
+        if (strlen($value) >= 2) {
+            // Ganti dengan logic pencarian database Anda
+            $this->involved_personnel_options = User::where('name', 'like', "%{$value}%")
+                ->limit(5)
+                ->get();
+            $this->show_employee_dropdown[$idx] = true;
+        } else {
+            $this->show_employee_dropdown[$idx] = false;
+        }
+    }
+
+    public function selectInvolvedPersonnel($id, $name, $index)
+    {
+        // Cari data lengkap employee
+        $employee = User::find($id);
+
+        if ($employee) {
+            $this->directly_involved[$index]['employee_id'] = $employee->id;
+            $this->directly_involved[$index]['employee_name'] = $employee->name;
+            $this->directly_involved[$index]['employee_nik'] = $employee->employee_id;
+            $this->directly_involved[$index]['dept_cont'] = $employee->department_name;
+
+            // Isi search input dengan nama yang dipilih agar dropdown tertutup/sinkron
+            $this->searchKorban[$index] = $name;
+            $this->show_employee_dropdown[$index] = false;
+        }
+    }
+
+    public function addRow($type)
+    {
+        $this->{$type}[] = [
+            'user_id' => null,
+            'nama' => '',
+            'jabatan' => '',
+            'dept' => '',
+            'is_manual' => false
+        ];
+    }
+
+    public function removeRow($type, $index)
+    {
+        unset($this->{$type}[$index]);
+        $this->{$type} = array_values($this->{$type}); // Reset index array
+    }
+
+    // Fungsi Pencarian (Dipicu oleh modelsearch di component)
+    public function updatedSearchQuery($value)
+    {
+        if (strlen($value) < 2) {
+            $this->options = [];
+            $this->showDropdownPartisipan = false;
+            return;
+        }
+
+        $this->options = User::where('name', 'like', '%' . $value . '%')
             ->limit(5)
             ->get();
-        $this->show_employee_dropdown[$idx] = true;
-    } else {
-        $this->show_employee_dropdown[$idx] = false;
+        $this->showDropdownPartisipan = true;
     }
-}
 
-public function selectInvolvedPersonnel($id, $name, $index)
-{
-    // Cari data lengkap employee
-    $employee = User::find($id);
-
-    if ($employee) {
-        $this->directly_involved[$index]['employee_id'] = $employee->id;
-        $this->directly_involved[$index]['employee_name'] = $employee->name;
-        $this->directly_involved[$index]['employee_nik'] = $employee->employee_id;
-        $this->directly_involved[$index]['dept_cont'] = $employee->department_name;
-
-        // Isi search input dengan nama yang dipilih agar dropdown tertutup/sinkron
-        $this->searchKorban[$index] = $name;
-        $this->show_employee_dropdown[$index] = false;
+    // Fungsi saat user memilih nama dari dropdown
+    public function selectUser($id, $name, $type, $index)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $this->{$type}[$index] = [
+                'user_id' => $user->id,
+                'nama' => $user->name,
+                'jabatan' => $user->position, // Sesuaikan field di DB anda
+                'dept' => $user->department, // Sesuaikan field di DB anda
+                'is_manual' => false
+            ];
+        }
+        $this->resetSearch();
     }
-}
+
+    public function resetSearch()
+    {
+        $this->searchQuery = '';
+        $this->options = [];
+        $this->showDropdownPartisipan = false;
+        $this->activeType = '';
+        $this->activeIndex = null;
+    }
 }

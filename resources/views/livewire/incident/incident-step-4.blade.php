@@ -1,0 +1,96 @@
+<div class="p-4 overflow-x-auto bg-white rounded-lg shadow-sm">
+    <table class="table w-full border border-collapse table-compact border-base-300">
+        <thead class="text-xs text-white uppercase bg-black">
+            <tr>
+                <th class="w-1/4 border border-base-300">Peran</th>
+                <th class="w-1/4 border border-base-300">Nama</th>
+                <th class="w-1/4 border border-base-300">Jabatan</th>
+                <th class="w-1/4 text-center border border-base-300">Dept/Perusahaan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{-- SEKSI PEMIMPIN INVESTIGASI --}}
+            @foreach($pemimpin as $index => $item)
+                <tr>
+                    <td class="font-bold border border-base-300 bg-base-100">
+                        @if($loop->first) Pemimpin Investigasi: @endif
+                    </td>
+                    <td class="p-1 border border-base-300">
+                        <x-form.searchable-select-advanced placeholder="Cari Pemimpin..." modelsearch="searchQuery"
+                            modelid="pemimpin.{{ $index }}.user_id" :options="$options"
+                            :showdropdown="$showDropdown && $activeType === 'pemimpin' && $activeIndex === $index"
+                            clickaction="selectUser('{{ $index }}', 'pemimpin')"
+                            {{-- Kita modif sedikit panggilannya --}}
+                            x-on:focus="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
+                    </td>
+                    <td class="p-1 border border-base-300">
+                        <input type="text" wire:model="pemimpin.{{ $index }}.jabatan" class="w-full input input-xs"
+                            readonly>
+                    </td>
+                    <td class="flex items-center gap-1 p-1 border border-base-300">
+                        <input type="text" wire:model="pemimpin.{{ $index }}.dept" class="w-full input input-xs"
+                            readonly>
+                        <button wire:click="addRow('pemimpin')" class="btn btn-xs btn-ghost text-success">+</button>
+                        @if(count($pemimpin) > 1)
+                            <button wire:click="removeRow('pemimpin', {{ $index }})"
+                                class="btn btn-xs btn-ghost text-error">×</button>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+
+            {{-- SEKSI FACILITATOR --}}
+            @foreach($facilitator as $index => $item)
+                <tr>
+                    <td class="font-bold border border-base-300 bg-base-100">
+                        @if($loop->first) Facilitator: (Personil KPLH) @endif
+                    </td>
+                    <td class="p-1 border border-base-300">
+                        {{-- Panggil Component Searchable Select --}}
+                        {{-- Logikanya sama dengan Pemimpin di atas --}}
+                    </td>
+                    <td class="p-1 border border-base-300">
+                        <input type="text" wire:model="facilitator.{{ $index }}.jabatan" class="w-full input input-xs"
+                            readonly>
+                    </td>
+                    <td class="flex items-center gap-1 p-1 border border-base-300">
+                        <input type="text" wire:model="facilitator.{{ $index }}.dept" class="w-full input input-xs"
+                            readonly>
+                        <button wire:click="addRow('facilitator')" class="btn btn-xs btn-ghost text-success">+</button>
+                        @if(count($facilitator) > 1)
+                            <button wire:click="removeRow('facilitator', {{ $index }})"
+                                class="btn btn-xs btn-ghost text-error">×</button>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+
+            {{-- SEKSI TIM ANGGOTA --}}
+            <tr class="bg-base-200">
+                <td class="font-bold border border-base-300">Tim Anggota</td>
+                <td class="font-bold border border-base-300">Nama</td>
+                <td class="font-bold border border-base-300">Jabatan</td>
+                <td class="font-bold border border-base-300">Dept/Perusahaan</td>
+            </tr>
+            @foreach($anggota as $index => $item)
+                <tr>
+                    <td class="border border-base-300"></td>
+                    <td class="p-1 border border-base-300">
+                        {{-- Panggil Component Searchable Select --}}
+                    </td>
+                    <td class="p-1 border border-base-300">
+                        <input type="text" wire:model="anggota.{{ $index }}.jabatan" class="w-full input input-xs">
+                    </td>
+                    <td class="flex items-center gap-1 p-1 border border-base-300">
+                        <input type="text" wire:model="anggota.{{ $index }}.dept" class="w-full input input-xs">
+                        <button wire:click="addRow('anggota')" class="btn btn-xs btn-ghost text-success">+</button>
+                        @if(count($anggota) > 1)
+                            <button wire:click="removeRow('anggota', {{ $index }})"
+                                class="btn btn-xs btn-ghost text-error">×</button>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
