@@ -445,28 +445,30 @@ class Create extends Component
     /**
      * Fungsi saat nama diklik dari dropdown
      */
-    public function selectInvolvedPersonnel($id, $name)
-    {
-        // Cari baris mana yang sedang aktif mencari
-        // Kita bisa melacak index melalui loop atau state
-        foreach ($this->show_employee_dropdown as $index => $isVisible) {
-            if ($isVisible) {
-                $employee = User::find($id);
+   /**
+ * Sekarang menerima 3 parameter: index baris, ID karyawan, dan Nama karyawan
+ */
+public function selectInvolvedPersonnel($index, $id, $name)
+{
+    // 1. Ambil data lengkap dari database
+    $employee = User::find($id);
 
-                if ($employee) {
-                    // Isi data baris tersebut secara otomatis
-                    $this->directly_involved[$index]['employee_id']   = $employee->id;
-                    $this->directly_involved[$index]['employee_name'] = $employee->name;
-                    $this->directly_involved[$index]['employee_nik']  = $employee->employee_id;
-                    $this->directly_involved[$index]['dept_cont']     = $employee->department_name;
+    if ($employee) {
+        // 2. Masukkan data ke array utama berdasarkan index yang tepat
+        $this->directly_involved[$index]['employee_id']   = $employee->id;
+        $this->directly_involved[$index]['employee_name'] = $employee->name;
+        $this->directly_involved[$index]['employee_nik']  = $employee->employee_id;
+        $this->directly_involved[$index]['dept_cont']     = $employee->department_name; // Sesuaikan field DB// Sesuaikan field DB
 
-                    // Reset pencarian
-                    $this->searchKorban[$index] = $employee->name;
-                    $this->show_employee_dropdown[$index] = false;
-                }
-                break;
-            }
-        }
+        // 3. Update input pencarian agar menampilkan nama yang dipilih
+        $this->searchKorban[$index] = $employee->name;
+
+        // 4. Tutup dropdown untuk baris ini
+        $this->show_employee_dropdown[$index] = false;
+
+        // 5. Bersihkan opsi pencarian agar tidak mengganggu baris lain
+        $this->involved_personnel_options = [];
     }
+}
 
 }
