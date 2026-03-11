@@ -28,7 +28,7 @@
                         <tr wire:key="involved-{{ $index }}">
                             <td class="align-top">
                                 <x-form.searchable-select-advanced placeholder="Cari Nama..."
-                                    modelsearch="searchKorban.{{ $index }}"
+                                    wire:key="employee-search-{{ $index }}" modelsearch="searchKorban.{{ $index }}"
                                     modelid="directly_involved.{{ $index }}.employee_name"
                                     :options="$involved_personnel_options"
                                     :showdropdown="$show_employee_dropdown[$index] ?? false"
