@@ -19,7 +19,7 @@
                     <td class="p-1 border border-base-300">
                         {{-- Contoh untuk Pemimpin --}}
                         <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
-                            placeholder="Cari Pemimpin..." modelsearch="searchQuery"
+                            placeholder="Cari Pemimpin..." modelsearch="searchQuery.{{ $index }}"
                             modelid="pemimpin.{{ $index }}.user_id" :options="$options"
                             :showdropdown="$showDropdownPartisipan && $activeType === 'pemimpin' && $activeIndex === $index"
                             {{-- MODIFIKASI DISINI: Kita kirim index dan type sebagai string ke component --}}
