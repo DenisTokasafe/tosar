@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html data-theme="{{ session('theme', 'tokasafe') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-theme="{{ session('theme', 'tokasafe') }}"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     {{-- @laravelPWA --}}
@@ -13,13 +14,14 @@
         <div class="flex items-center justify-between ">
             <!-- Logo -->
             @auth
-            <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
-            </a>
+                <a href="{{ route('dashboard') }}"
+                    class="flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+                    <x-app-logo />
+                </a>
             @else
-            <a href="{{ url('/') }}" class="flex items-center space-x-2 rtl:space-x-reverse">
-                <x-app-logo />
-            </a>
+                <a href="{{ url('/') }}" class="flex items-center space-x-2 rtl:space-x-reverse">
+                    <x-app-logo />
+                </a>
             @endauth
 
             <!-- Toggle button di lingkaran kuning -->
@@ -33,59 +35,61 @@
 
         {{-- Desktop User Menu: hanya tampil kalau user login --}}
         @auth
-        <div wire:ignore.self>
-            <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-                <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
-                    icon:trailing="chevrons-up-down" />
+            <div wire:ignore.self>
+                <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+                    <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
+                        icon:trailing="chevrons-up-down" />
 
-                <flux:menu class="w-[220px]">
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
-                                    <span
-                                        class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
-                                        {{ auth()->user()->initials() }}
+                    <flux:menu class="w-[220px]">
+                        <flux:menu.radio.group>
+                            <div class="p-0 text-sm font-normal">
+                                <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                    <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
+                                        <span
+                                            class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
+                                            {{ auth()->user()->initials() }}
+                                        </span>
                                     </span>
-                                </span>
 
-                                <div class="grid flex-1 text-sm leading-tight text-start">
-                                    <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
-                                    <span class="text-xs truncate">{{ auth()->user()->email }}</span>
+                                    <div class="grid flex-1 text-sm leading-tight text-start">
+                                        <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
+                                        <span class="text-xs truncate">{{ auth()->user()->email }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </flux:menu.radio.group>
+                        </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                        <flux:menu.separator />
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
-                    </flux:menu.radio.group>
+                        <flux:menu.radio.group>
+                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                                {{ __('Settings') }}
+                            </flux:menu.item>
+                        </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                        <flux:menu.separator />
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
-                            class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
+                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                            @csrf
+                            <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle"
+                                class="w-full">
+                                {{ __('Log Out') }}
+                            </flux:menu.item>
+                        </form>
+                    </flux:menu>
+                </flux:dropdown>
 
-        </div>
+            </div>
         @else
-        {{-- Desktop guest actions (login/register) --}}
-        <div class="items-center hidden gap-2 lg:flex">
-            <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
-            @endif
-        </div>
+            {{-- Desktop guest actions (login/register) --}}
+            <div class="items-center hidden gap-2 lg:flex">
+                <a href="{{ route('login') }}"
+                    class="btn btn-outline btn-xs">{{ __('Login') }}</a>
+                @if(Route::has('register'))
+                    <a href="{{ route('register') }}"
+                        class="btn btn-outline btn-xs">{{ __('Register') }}</a>
+                @endif
+            </div>
         @endauth
 
     </flux:sidebar>
@@ -134,145 +138,155 @@
 
         <livewire:language-switcher />
         @auth
-        <flux:dropdown position="top" align="end">
-            <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
+            <flux:dropdown position="top" align="end">
+                <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
 
-            <flux:menu>
-                <flux:menu.radio.group>
-                    <div class="p-0 text-sm font-normal">
-                        <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                            <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
-                                <span
-                                    class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
-                                    {{ auth()->user()->initials() }}
+                <flux:menu>
+                    <flux:menu.radio.group>
+                        <div class="p-0 text-sm font-normal">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
+                                    <span
+                                        class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
+                                        {{ auth()->user()->initials() }}
+                                    </span>
                                 </span>
-                            </span>
 
-                            <div class="grid flex-1 text-sm leading-tight text-start">
-                                <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
-                                <span class="text-xs truncate">{{ auth()->user()->email }}</span>
+                                <div class="grid flex-1 text-sm leading-tight text-start">
+                                    <span class="font-semibold truncate">{{ auth()->user()->name }}</span>
+                                    <span class="text-xs truncate">{{ auth()->user()->email }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </flux:menu.radio.group>
+                    </flux:menu.radio.group>
 
-                <flux:menu.separator />
+                    <flux:menu.separator />
 
-                <flux:menu.radio.group>
-                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}
-                    </flux:menu.item>
-                </flux:menu.radio.group>
+                    <flux:menu.radio.group>
+                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                            {{ __('Settings') }}
+                        </flux:menu.item>
+                    </flux:menu.radio.group>
 
-                <flux:menu.separator />
+                    <flux:menu.separator />
 
-                <form method="POST" action="{{ route('logout') }}" class="w-full">
-                    @csrf
-                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                        {{ __('Log Out') }}
-                    </flux:menu.item>
-                </form>
-            </flux:menu>
-        </flux:dropdown>
+                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                        @csrf
+                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
+                            {{ __('Log Out') }}
+                        </flux:menu.item>
+                    </form>
+                </flux:menu>
+            </flux:dropdown>
         @else
-        <div class="flex items-center gap-2 px-2">
-            <a href="{{ route('login') }}" class="btn btn-outline btn-xs">{{ __('Login') }}</a>
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="btn btn-outline btn-xs">{{ __('Register') }}</a>
-            @endif
-        </div>
+            <div class="flex items-center gap-2 px-2">
+                <a href="{{ route('login') }}"
+                    class="btn btn-outline btn-xs">{{ __('Login') }}</a>
+                @if(Route::has('register'))
+                    <a href="{{ route('register') }}"
+                        class="btn btn-outline btn-xs">{{ __('Register') }}</a>
+                @endif
+            </div>
         @endauth
     </flux:header>
 
     {{ $slot }}
     <livewire:theme-switcher />
     @fluxScripts
-    @livewireScripts
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('ckeditorHelper', (modelName) => {
-                let editorInstance = null;
-                let listeners = [];
+        @livewireScripts
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('ckeditorHelper', (modelName) => {
+                        let editorInstance = null;
+                        let listeners = [];
 
-                return {
-                    init() {
-                        // PENGAMAN 1: Jangan inisialisasi jika elemen sudah punya editor
-                        if (this.$refs.editorElement.querySelector('.ck-editor')) return;
+                        return {
+                            init() {
+                                // PENGAMAN 1: Jangan inisialisasi jika elemen sudah punya editor
+                                if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
-                        window.ClassicEditor
-                            .create(this.$refs.editorElement, {
-                                placeholder: '...',
-                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-                                removePlugins: ['ImageUpload', 'EasyImage']
-                            })
-                            .then(editor => {
-                                editorInstance = editor;
+                                window.ClassicEditor
+                                    .create(this.$refs.editorElement, {
+                                        placeholder: this.$refs.editorElement.getAttribute(
+                                            'data-placeholder') || 'Tulis sesuatu...',
+                                        toolbar: ['bold', 'italic', 'bulletedList', 'numberedList',
+                                            '|', 'undo', 'redo'
+                                        ],
+                                        removePlugins: ['ImageUpload', 'EasyImage']
+                                    })
+                                    .then(editor => {
+                                        editorInstance = editor;
 
-                                // Ambil data terakhir dari Livewire (agar teks tidak hilang saat balik step)
-                                const initialData = this.$wire.get(modelName) || '';
-                                editorInstance.setData(initialData);
+                                        // Ambil data terakhir dari Livewire (agar teks tidak hilang saat balik step)
+                                        const initialData = this.$wire.get(modelName) || '';
+                                        editorInstance.setData(initialData);
 
-                                // Sinkronisasi ke Livewire (setiap ada perubahan ketikan)
-                                editorInstance.model.document.on('change:data', () => {
-                                    const data = editorInstance.getData();
-                                    this.$wire.set(modelName, data);
+                                        // Sinkronisasi ke Livewire (setiap ada perubahan ketikan)
+                                        editorInstance.model.document.on('change:data', () => {
+                                            const data = editorInstance.getData();
+                                            this.$wire.set(modelName, data);
 
-                                    if (data.trim() !== '' && editorInstance.ui.view.editable.element) {
-                                        editorInstance.ui.view.editable.element.classList.remove('error');
+                                            if (data.trim() !== '' && editorInstance.ui.view
+                                                .editable.element) {
+                                                editorInstance.ui.view.editable.element
+                                                    .classList.remove('error');
+                                            }
+                                        });
+                                    })
+                                    .catch(error => console.error('CKEditor Error:', error));
+
+                                // --- Listeners (Event dari Livewire) ---
+                                listeners.push(Livewire.on('update-editor-data', (event) => {
+                                    const payload = Array.isArray(event) ? event[0] : event;
+                                    if (editorInstance && payload.name === modelName) {
+                                        editorInstance.setData(payload.value || '');
                                     }
+                                }));
+
+                                const applyError = () => {
+                                    if (editorInstance && editorInstance.getData().trim() === '') {
+                                        const el = editorInstance.ui.view.editable.element;
+                                        if (el) el.classList.add('error');
+                                    }
+                                };
+
+                                listeners.push(Livewire.on(`validate-${modelName}`, applyError));
+                                listeners.push(Livewire.on('validate-all-editors', applyError));
+
+                                listeners.push(Livewire.on('reset-all-editors', () => {
+                                    if (editorInstance) {
+                                        editorInstance.setData('');
+                                        const el = editorInstance.ui.view.editable.element;
+                                        if (el) el.classList.remove('error');
+                                    }
+                                }));
+                            },
+
+                            // PENGAMAN 2: Otomatis dipanggil Alpine saat User pindah Step
+                            destroy() {
+                                // Bersihkan memory dari listeners Livewire
+                                listeners.forEach(unsubscribe => {
+                                    if (typeof unsubscribe === 'function') unsubscribe();
+                                    else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe
+                                        .unsubscribe();
                                 });
-                            })
-                            .catch(error => console.error('CKEditor Error:', error));
+                                listeners = [];
 
-                        // --- Listeners (Event dari Livewire) ---
-                        listeners.push(Livewire.on('update-editor-data', (event) => {
-                            const payload = Array.isArray(event) ? event[0] : event;
-                            if (editorInstance && payload.name === modelName) {
-                                editorInstance.setData(payload.value || '');
+                                // Hancurkan instance CKEditor agar ID-nya bisa dipakai lagi saat balik ke Step 2
+                                if (editorInstance) {
+                                    editorInstance.destroy()
+                                        .then(() => {
+                                            editorInstance = null;
+                                        })
+                                        .catch(err => console.error('Destroy Error:', err));
+                                }
                             }
-                        }));
-
-                        const applyError = () => {
-                            if (editorInstance && editorInstance.getData().trim() === '') {
-                                const el = editorInstance.ui.view.editable.element;
-                                if (el) el.classList.add('error');
-                            }
-                        };
-
-                        listeners.push(Livewire.on(`validate-${modelName}`, applyError));
-                        listeners.push(Livewire.on('validate-all-editors', applyError));
-
-                        listeners.push(Livewire.on('reset-all-editors', () => {
-                            if (editorInstance) {
-                                editorInstance.setData('');
-                                const el = editorInstance.ui.view.editable.element;
-                                if (el) el.classList.remove('error');
-                            }
-                        }));
-                    },
-
-                    // PENGAMAN 2: Otomatis dipanggil Alpine saat User pindah Step
-                    destroy() {
-                        // Bersihkan memory dari listeners Livewire
-                        listeners.forEach(unsubscribe => {
-                            if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
-                        });
-                        listeners = [];
-
-                        // Hancurkan instance CKEditor agar ID-nya bisa dipakai lagi saat balik ke Step 2
-                        if (editorInstance) {
-                            editorInstance.destroy()
-                                .then(() => {
-                                    editorInstance = null;
-                                })
-                                .catch(err => console.error('Destroy Error:', err));
                         }
-                    }
-                }
-            });
-        });
-    </script>
-    @stack('scripts')
+                    });
+                });
+
+            </script>
+            @stack('scripts')
 </body>
 
 </html>

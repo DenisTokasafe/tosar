@@ -1,6 +1,7 @@
 <div class="grid grid-cols-1">
     <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-        <legend class="text-sm font-semibold card-title ">{{ __('Personel Terlibat / Korban') }}</legend>
+        <legend class="text-sm font-semibold card-title ">
+            {{ __('Personel Terlibat / Korban') }}</legend>
         <div class="flex items-center justify-between pb-2 border-b">
             <h3 class="text-sm font-bold uppercase">{{ __('Pihak Terlibat Langsung') }}</h3>
             <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs">
@@ -8,7 +9,7 @@
             </button>
         </div>
         <div class="overflow-x-auto">
-            <table class="table table-compact w-full border">
+            <table class="table w-full border table-compact">
                 <thead>
                     <tr class="bg-base-200">
                         <th class="w-1/4">Nama Personel/Korban</th>
@@ -23,71 +24,60 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($directly_involved as $index => $person)
-                    <tr wire:key="involved-{{ $index }}">
-                        <td class="align-top">
-                            <x-form.searchable-select-advanced
-                                placeholder="Cari Nama..."
-                                modelsearch="directly_involved.{{ $index }}.employee_name"
-                                modelid="directly_involved.{{ $index }}.employee_id"
-                                :options="$involved_personnel_options"
-                                :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
-                                enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
-                                clickaction="selectInvolvedPersonnel({{ $index }})" />
-                        </td>
+                    @foreach($directly_involved as $index => $person)
+                        <tr wire:key="involved-{{ $index }}">
+                            <td class="align-top">
+                                <x-form.searchable-select-advanced placeholder="Cari Nama..."
+                                    modelsearch="directly_involved.{{ $index }}.employee_name"
+                                    modelid="directly_involved.{{ $index }}.employee_id"
+                                    :options="$involved_personnel_options"
+                                    :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
+                                    enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
+                                    clickaction="selectInvolvedPersonnel({{ $index }})" />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
+                                    :disabled="$person['employee_id'] ? true : false" />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.jabatan" required />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.roster" required />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.sift" required />
+                            </td>
+                            <td class="align-top">
+                                <x-form.select model="directly_involved.{{ $index }}.keterlibatan">
+                                    <option value="" disabled selected>-- Pilih --</option>
+                                    <option value="saksi">Saksi</option>
+                                    <option value="korban_cedera">Korban Cedera</option>
+                                    <option value="kontraktor">Kontraktor</option>
+                                    <option value="operator">Operator</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </x-form.select>
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
+                                    :disabled="$person['employee_id'] ? true : false" />
+                            </td>
+                            <td class="align-top">
+                                <x-form.input-text model="directly_involved.{{ $index }}.pengalaman_kerja" required />
+                            </td>
 
-                        <td class="align-top">
-                            <x-form.input-text
-                                model="directly_involved.{{ $index }}.employee_nik"
-                                :disabled="$person['employee_id'] ? true : false" />
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.input-text model="directly_involved.{{ $index }}.jabatan" required />
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.input-text model="directly_involved.{{ $index }}.roster" required />
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.input-text model="directly_involved.{{ $index }}.sift" required />
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.select model="directly_involved.{{ $index }}.keterlibatan">
-                                <option value="" disabled selected>-- Pilih --</option>
-                                <option value="saksi">Saksi</option>
-                                <option value="korban_cedera">Korban Cedera</option>
-                                <option value="kontraktor">Kontraktor</option>
-                                <option value="operator">Operator</option>
-                                <option value="lainnya">Lainnya</option>
-                            </x-form.select>
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.input-text
-                                model="directly_involved.{{ $index }}.dept_cont"
-                                :disabled="$person['employee_id'] ? true : false" />
-                        </td>
-
-                        <td class="align-top">
-                            <x-form.input-text model="directly_involved.{{ $index }}.pengalaman_kerja" required />
-                        </td>
-
-                        <td class="align-top text-center">
-                            @if(count($directly_involved) > 1)
-                            <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})" class="btn btn-ghost btn-xs text-error">
-                                ✕
-                            </button>
-                            @endif
-                        </td>
-                    </tr>
+                            <td class="text-center align-top">
+                                @if(count($directly_involved) > 1)
+                                    <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})"
+                                        class="btn btn-ghost btn-xs text-error">
+                                        ✕
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-
-
     </fieldset>
 </div>
