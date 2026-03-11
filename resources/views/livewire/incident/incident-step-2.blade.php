@@ -28,12 +28,13 @@
                         <tr wire:key="involved-{{ $index }}">
                             <td class="align-top">
                                 <x-form.searchable-select-advanced placeholder="Cari Nama..."
-                                    modelsearch="directly_involved.{{ $index }}.employee_name"
-                                    modelid="directly_involved.{{ $index }}.employee_id"
+                                    modelsearch="searchKorban.{{ $index }}"
+                                    modelid="directly_involved.{{ $index }}.employee_name"
                                     :options="$involved_personnel_options"
-                                    :showdropdown="$directly_involved[$index]['show_employee_dropdown']"
-                                    enableManualAction="enableInvolvedPersonnelManual({{ $index }})"
-                                    clickaction="selectInvolvedPersonnel({{ $index }}, " />
+                                    :showdropdown="$show_employee_dropdown[$index] ?? false"
+                                    clickaction="selectInvolvedPersonnel" />
+
+
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
