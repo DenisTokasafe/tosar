@@ -17,7 +17,7 @@
                         @if($loop->first) Pemimpin Investigasi: @endif
                     </td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select-advanced wire:key="select-pemimpin-{{ $index }}"
+                        <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
                             placeholder="Cari Pemimpin..." modelsearch="searchQuery"
                             modelid="pemimpin.{{ $index }}.user_id" :options="$options"
                             :showdropdown="$showDropdownPartisipan && $activeType === 'pemimpin' && $activeIndex === $index"
@@ -48,7 +48,7 @@
                         @if($loop->first) Facilitator: (Personil KPLH) @endif
                     </td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select-advanced wire:key="select-facilitator-{{ $index }}"
+                        <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
                             placeholder="Cari Facilitator..."
                             {{-- ... props lainnya sama seperti di atas ... --}} />
                     </td>
@@ -80,7 +80,7 @@
                 <tr wire:key="row-anggota-{{ $index }}">
                     <td class="border border-base-300"></td>
                     <td class="p-1 border border-base-300">
-                        <x-form.searchable-select-advanced wire:key="select-anggota-{{ $index }}"
+                        <x-form.searchable-select2 wire:key="select-anggota-{{ $index }}"
                             {{-- ... props lainnya ... --}} />
                     </td>
                     <td class="p-1 border border-base-300">
