@@ -39,10 +39,12 @@
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
+                                    wire:key="nik-field-{{ $index }}-{{ $directly_involved[$index]['employee_id'] ?? 'new' }}"
                                     :disabled="$person['employee_id'] ? true : false" />
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
+                                    wire:key="dept_cont-field-{{ $index }}-{{ $directly_involved[$index]['dept_cont'] ?? 'new' }}"
                                     :disabled="$person['employee_id'] ? true : false" />
                             </td>
                             <td class="align-top">
