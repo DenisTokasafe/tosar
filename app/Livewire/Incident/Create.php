@@ -89,9 +89,9 @@ class Create extends Component
     public $anggota = [];
 
     // State untuk search (karena searchable-select butuh model binding)
-    public $searchQuery = '';
+    public $searchQuery = [];
+    public $showDropdownPartisipan = [];
     public $options = [];
-    public $showDropdownPartisipan = false;
 
     // Penanda baris mana yang sedang aktif dicari
     public $activeType = '';
@@ -484,9 +484,9 @@ class Create extends Component
     }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-    public function updatedSearchQuery($value,$index)
+    public function updatedSearchQuery($value, $index)
     {
-         $idx = explode('.', $index)[0];
+        $idx = explode('.', $index)[0];
 
         if (strlen($value) < 2) {
             $this->options = [];
