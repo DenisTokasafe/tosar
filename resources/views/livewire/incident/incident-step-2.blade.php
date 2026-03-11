@@ -50,14 +50,8 @@
                                 <x-form.input-text model="directly_involved.{{ $index }}.sift" required />
                             </td>
                             <td class="align-top">
-                                <x-form.select model="directly_involved.{{ $index }}.keterlibatan">
-                                    <option value="" disabled selected>-- Pilih --</option>
-                                    <option value="saksi">Saksi</option>
-                                    <option value="korban_cedera">Korban Cedera</option>
-                                    <option value="kontraktor">Kontraktor</option>
-                                    <option value="operator">Operator</option>
-                                    <option value="lainnya">Lainnya</option>
-                                </x-form.select>
+                                <x-form.select model="directly_involved.{{ $index }}.keterlibatan"
+                                    :options="{{ $this->keterlibatanOptions }}">
                             </td>
                             <td class="align-top">
                                 <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"

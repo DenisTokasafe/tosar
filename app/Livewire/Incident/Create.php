@@ -42,7 +42,7 @@ class Create extends Component
     public $keyWord = 'kta';
     public $locations = [];
     public $searchKorban = [];
-     public $show_employee_dropdown = [];
+    public $show_employee_dropdown = [];
     public $searchLocation = '';
     public $show_location = false;
     #[Url(as: 'step')]
@@ -489,35 +489,43 @@ class Create extends Component
     public function updatedSearchKorban($value, $key)
     {
 
-            $index = explode('.', $key)[0];
-            if (strlen($value) > 1) {
-                $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(30)->get(['id', 'name', 'employee_id', 'department_name']); // Ambil kolom yang diperlukan saja
-                $this->show_employee_dropdown[$index] = true;
-            } else {
-                $this->show_employee_dropdown[$index] = false;
-            }
-
+        $index = explode('.', $key)[0];
+        if (strlen($value) > 1) {
+            $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(30)->get(['id', 'name', 'employee_id', 'department_name']); // Ambil kolom yang diperlukan saja
+            $this->show_employee_dropdown[$index] = true;
+        } else {
+            $this->show_employee_dropdown[$index] = false;
+        }
+    }
+    #[Computed]
+    public function keterlibatanOptions()
+    {
+        return [
+            'saksi'         => 'Saksi',
+            'korban_cedera' => 'Korban Cedera',
+            'kontraktor'    => 'Kontraktor',
+            'operator'      => 'Operator',
+            'lainnya'       => 'Lainnya',
+        ];
     }
 
     public function selectInvolvedPersonnel($id, $name,)
     {
-          $index = collect($this->show_employee_dropdown)->search(true);
-          if ($index !== false) {
-              $this->directly_involved[$index]['employee_name'] = $name;
+        $index = collect($this->show_employee_dropdown)->search(true);
+        if ($index !== false) {
+            $this->directly_involved[$index]['employee_name'] = $name;
             $Involved_Personnel = User::where('name', $name)->first();
-              $this->directly_involved[$index]['employee_id'] = $Involved_Personnel->id;
-              $this->directly_involved[$index]['employee_nik'] = $Involved_Personnel->employee_id;
-              $this->directly_involved[$index]['dept_cont'] = $Involved_Personnel->department_name;
-              $this->directly_involved[$index]['show_employee_dropdown'] = false;
-              // Reset options setelah memilih
-              $this->searchKorban[$index] = $name;
+            $this->directly_involved[$index]['employee_id'] = $Involved_Personnel->id;
+            $this->directly_involved[$index]['employee_nik'] = $Involved_Personnel->employee_id;
+            $this->directly_involved[$index]['dept_cont'] = $Involved_Personnel->department_name;
+            $this->directly_involved[$index]['show_employee_dropdown'] = false;
+            // Reset options setelah memilih
+            $this->searchKorban[$index] = $name;
 
             // 3. Tutup dropdown untuk baris tersebut
             $this->show_employee_dropdown[$index] = false;
-              $this->involved_personnel_options = [];
-          }
+            $this->involved_personnel_options = [];
+        }
         // Jika dd(123) sudah muncul, berarti koneksi sudah aman
     }
-
-
 }
