@@ -34,7 +34,7 @@
                                     :options="$involved_personnel_options"
                                     :showdropdown="$show_employee_dropdown[$index] ?? false"
                                     {{-- Tambahkan index sebagai argumen ketiga --}}
-                                    clickaction="selectInvolvedPersonnel($id, $name, {{ $index }})" />
+                                    clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})" />
 
 
                             </td>
