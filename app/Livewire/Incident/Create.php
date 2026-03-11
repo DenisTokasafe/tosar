@@ -466,18 +466,17 @@ class Create extends Component
     public function addDirectlyInvolvedRow()
     {
         $this->directly_involved[] = [
-            'employee_id' => '',
-            'employee_name' => '',
-            'employee_nik' => '', // Tambahkan ini
-            'jabatan' => '',
-            'roster' => '',
-            'sift' => '',
-            'keterlibatan' => '',
-            'dept_cont' => '',    // Tambahkan ini
-            'pengalaman_kerja' => '', // Tambahkan ini agar tidak error di view
-            'is_manual' => false,
-            'show_employee_dropdown' => false
-        ];
+    'employee_id' => '',
+    'employee_name' => '',
+    'employee_nik' => '',
+    'dept_cont' => '',
+    'show_employee_dropdown' => false,
+    'jabatan' => '',
+    'roster' => '',
+    'sift' => '',
+    'keterlibatan' => '',
+    'pengalaman_kerja' => ''
+];
     }
     public function removeDirectlyInvolvedRow($index)
     {
@@ -485,27 +484,38 @@ class Create extends Component
         $this->directly_involved = array_values($this->directly_involved);
     }
     public function updatedDirectlyInvolved($value, $key)
-    {
-        if (str_ends_with($key, '.employee_name')) {
-            $index = explode('.', $key)[0];
-            if (strlen($value) > 1) {
-                $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')->limit(30)->get();
-                $this->directly_involved[$index]['show_employee_dropdown'] = true;
-            } else {
-                $this->directly_involved[$index]['show_employee_dropdown'] = false;
-            }
+{
+    // Cek apakah yang diupdate adalah field employee_name
+    if (str_ends_with($key, '.employee_name')) {
+        $index = explode('.', $key)[0];
+
+        // Bersihkan spasi
+        $searchTerm = trim($value);
+
+        if (strlen($searchTerm) > 1) {
+            // Ambil data user
+            $this->involved_personnel_options = User::where('name', 'like', '%' . $searchTerm . '%')
+                ->limit(15) // Limit 15 sudah cukup untuk UI agar tidak berat
+                ->get(['id', 'name', 'employee_id', 'department_name']); // Ambil kolom yang diperlukan saja
+
+            $this->directly_involved[$index]['show_employee_dropdown'] = true;
+        } else {
+            $this->involved_personnel_options = [];
+            $this->directly_involved[$index]['show_employee_dropdown'] = false;
         }
     }
-    public function selectInvolvedPersonnel($index, $id, $name, $employee_id, $department_name)
-    {
-        // Jika dd(123) sudah muncul, berarti koneksi sudah aman
-        $this->directly_involved[$index]['employee_id'] = $id;
-        $this->directly_involved[$index]['employee_name'] = $name;
-        $this->directly_involved[$index]['employee_nik'] = $employee_id;
-        $this->directly_involved[$index]['dept_cont'] = $department_name;
-        $this->directly_involved[$index]['show_employee_dropdown'] = false;
+}
 
-        // Reset options setelah memilih
-        $this->involved_personnel_options = [];
-    }
+public function selectInvolvedPersonnel($index, $id, $name, $employee_nik, $department_name)
+{
+    // Isi data ke array baris yang bersangkutan
+    $this->directly_involved[$index]['employee_id'] = $id;
+    $this->directly_involved[$index]['employee_name'] = $name;
+    $this->directly_involved[$index]['employee_nik'] = $employee_nik;
+    $this->directly_involved[$index]['dept_cont'] = $department_name;
+
+    // Tutup dropdown dan reset opsi
+    $this->directly_involved[$index]['show_employee_dropdown'] = false;
+    $this->involved_personnel_options = [];
+}
 }
