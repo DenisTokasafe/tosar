@@ -466,16 +466,13 @@ class Create extends Component
         }
     }
 
-    public function addRow($type)
-    {
-        $this->{$type}[] = [
-            'user_id' => null,
-            'nama' => '',
-            'jabatan' => '',
-            'dept' => '',
-            'is_manual' => false
-        ];
-    }
+    public function addRow($type) {
+    $this->{$type}[] = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
+    // Inisialisasi search dan dropdown untuk index baru
+    $newIndex = count($this->{$type}) - 1;
+    $this->searchQuery[$newIndex] = '';
+    $this->showDropdownPartisipan[$newIndex] = false;
+}
 
     public function removeRow($type, $index)
     {
