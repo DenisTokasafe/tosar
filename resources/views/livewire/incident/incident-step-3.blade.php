@@ -20,7 +20,7 @@
                         <x-form.searchable-select-advanced wire:key="select-pemimpin-{{ $index }}"
                             placeholder="Cari Pemimpin..." modelsearch="searchQuery"
                             modelid="pemimpin.{{ $index }}.user_id" :options="$options"
-                            :showdropdown="$showDropdown && $activeType === 'pemimpin' && $activeIndex === $index"
+                            :showdropdown="$showDropdownPartisipan && $activeType === 'pemimpin' && $activeIndex === $index"
                             clickaction="selectUser('{{ $index }}', 'pemimpin')"
                             x-on:focus="$wire.set('activeType', 'pemimpin'); $wire.set('activeIndex', {{ $index }})" />
                     </td>

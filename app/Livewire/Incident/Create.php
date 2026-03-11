@@ -493,7 +493,7 @@ class Create extends Component
         }
 
         $this->options = User::where('name', 'like', '%' . $value . '%')
-            ->limit(5)
+            ->limit(value: 5)
             ->get();
         $this->showDropdownPartisipan = true;
     }
