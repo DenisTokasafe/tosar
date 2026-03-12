@@ -34,14 +34,14 @@
                     <= $whyCount; $i++)
                         <div @class(['flex items-center', 'divide-x-3 divide-dashed divide-base-300 gap-4'=> $whyCount >= 1])>
 
-                        <x-form.text_area
+                        <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
                             label="Text area why {{ $i }}"
                             wire:model="timelines.{{ $index }}.why{{ $i }}"
                             placeholder="Jelaskan alasan ke-{{ $i }}..."
                             rows="2" />
                         @if($whyCount > 1)
                         <flux:tooltip content="hapus" position="top">
-                            <flux:button wire:click="removeWhyColumn"
+                            <flux:button wire:click="removeWhyColumn" wire:key="remove-why-{{ $index }}-{{ $i }}"
                                 size="xs" icon="trash" variant="danger">
                             </flux:button>
                         </flux:tooltip>
