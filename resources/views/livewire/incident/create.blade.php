@@ -16,29 +16,39 @@
         <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
-                <span class="flex">
-                    <h3>BAGIAN 1 </h3>- Detail Laporan
-                </span>
+
+                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-md">Detail Laporan</span></h3>
+
+
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-1')</div>
         </div>
         <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
-                <span class="flex">
-                    <h3>BAGIAN 2 </h3>- Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)
-                </span>
+
+                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-md">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
+
             </div>
             <div class="text-xs collapse-content">@include('livewire.incident.incident-step-2')</div>
         </div>
         <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
-                <span class="flex">
-                    <h3>BAGIAN 3 </h3>- Partisipan Investigasi
-                </span>
+
+                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-md">Partisipan Investigasi</span></h3>
+
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-3')</div>
+        </div>
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+            <input type="radio" name="my-accordion-2" />
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
+
+                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-md">PEEPO Investigation questions for identification of the incident factors</span></h3>
+
+            </div>
+            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-4')</div>
         </div>
         {{-- Navigasi Step --}}
         <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
