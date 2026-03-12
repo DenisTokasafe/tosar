@@ -51,10 +51,10 @@
     </div> {{-- Penutup Card Body --}}
 </div> {{-- Penutup Card --}}
 @endforeach
-
+<!--
 <div class="flex justify-center mt-4">
     <button type="button" wire:click="addRow('timelines')" class="btn btn-block btn-success btn-outline">
         + Tambah Baris Kronologi Baru
     </button>
-</div>
+</div> -->
 </div>
