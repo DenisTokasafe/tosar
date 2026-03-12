@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1">
+<div class="grid grid-cols-1 mt-4">
 
     <div class="grid justify-items-stretch">
         <div class="justify-self-end-safe"> <button type="button" wire:click="addDirectlyInvolvedRow"
