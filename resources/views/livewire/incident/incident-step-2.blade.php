@@ -11,7 +11,8 @@
             <thead>
                 <tr class="bg-gray-200 text-center text-base-content">
                     <th class="border border-base-300 py-4 text-sm font-bold w-1/4">Nama</th>
-                    <th class="border border-base-300 py-4 text-sm font-bold">ID# / Perusahaan</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">ID</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Dept. / Perusahaan</th>
                     <th class="border border-base-300 py-4 text-sm font-bold">Jabatan</th>
                     <th class="border border-base-300 py-4 text-sm font-bold">Roster</th>
                     <th class="border border-base-300 py-4 text-sm font-bold">Shift</th>
@@ -36,17 +37,18 @@
 
                     {{-- Kolom ID# / Perusahaan (Gabungan NIK & Dept) --}}
                     <td class="p-1 border border-base-300 align-top">
-                        <div class="flex flex-col gap-1">
-                            <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
-                                placeholder="NIK/ID#"
-                                wire:key="nik-field-{{ $index }}-{{ $directly_involved[$index]['employee_id'] ?? 'new' }}"
-                                :disabled="$person['employee_id'] ? true : false" />
 
-                            <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
-                                placeholder="Dept/Perusahaan"
-                                wire:key="dept_cont-field-{{ $index }}-{{ $directly_involved[$index]['dept_cont'] ?? 'new' }}"
-                                :disabled="$person['employee_id'] ? true : false" />
-                        </div>
+                        <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
+                            placeholder="NIK/ID#"
+                            wire:key="nik-field-{{ $index }}-{{ $directly_involved[$index]['employee_id'] ?? 'new' }}"
+                            :disabled="$person['employee_id'] ? true : false" />
+
+                    </td>
+                    <td>
+                        <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
+                            placeholder="Dept/Perusahaan"
+                            wire:key="dept_cont-field-{{ $index }}-{{ $directly_involved[$index]['dept_cont'] ?? 'new' }}"
+                            :disabled="$person['employee_id'] ? true : false" />
                     </td>
 
                     {{-- Kolom Jabatan --}}
