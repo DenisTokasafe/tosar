@@ -102,16 +102,13 @@
                             placeholder="Cari PIC..."
                             modelsearch="corrective_actions.{{ $index }}.pic_name"
                             modelid="corrective_actions.{{ $index }}.pic_id"
+
+                            {{-- Pastikan ini adalah variabel yang diupdate di fungsi updated() --}}
                             :options="$involved_personnel_options"
 
-                            {{-- Menggunakan state dinamis khusus untuk corrective_actions --}}
                             :showdropdown="($corrective_actions[$index]['show_pic_dropdown'] ?? false) && $activeType === 'pic' && $activeIndex === $index"
-
-                            {{-- Mengarahkan VALUE_ID ke fungsi selectPIC yang sudah kita buat --}}
-                            clickaction="selectPIC(VALUE_ID, {{ $index }}, 'pic')"
-
-                            {{-- Set active index dan type saat input difokuskan --}}
-                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }}); $wire.set('corrective_actions.{{ $index }}.show_pic_dropdown', true)" />
+                            clickaction="selectPIC(VALUE_ID, {{ $index }})"
+                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
                     <td class="w-1/6 text-xs">
                         <x-form.tgl-waktu

@@ -768,19 +768,24 @@ class Create extends Component
     }
     public function updated($propertyName)
     {
-        // Cek jika yang diupdate adalah pic_name di dalam array corrective_actions
         if (str_contains($propertyName, 'corrective_actions') && str_contains($propertyName, 'pic_name')) {
-
-            // Ambil indeks dari property name (misal: corrective_actions.0.pic_name)
             $parts = explode('.', $propertyName);
             $index = $parts[1];
+            $search = $this->corrective_actions[$index]['pic_name'];
 
-            // Jika input nama tidak kosong, tampilkan dropdown (logika pencarian Anda)
-            if (!empty($this->corrective_actions[$index]['pic_name'])) {
+            if (!empty($search) && strlen($search) >= 2) {
+                // Jalankan pencarian ke database
+                $this->involved_personnel_options = User::where('name', 'like', '%' . $search . '%')
+                    ->limit(80)
+                    ->get()
+                    ->mapWithKeys(function ($user) {
+                        return [$user->id => $user->name];
+                    })
+                    ->toArray();
+
                 $this->corrective_actions[$index]['show_pic_dropdown'] = true;
-
-                // Di sini Anda bisa memicu pencarian ke database jika diperlukan
-                // $this->searchPersonnel($this->corrective_actions[$index]['pic_name']);
+                $this->activeType = 'pic';
+                $this->activeIndex = $index;
             } else {
                 $this->corrective_actions[$index]['show_pic_dropdown'] = false;
             }
@@ -788,17 +793,21 @@ class Create extends Component
     }
     public function selectPIC($userId, $index)
     {
-        // Cari data user berdasarkan ID
-        $user = User::find($userId); // Sesuaikan dengan model User Anda
+        // Cari user yang dipilih
+        $user = User::find($userId);
 
         if ($user) {
+            // Update data di array corrective_actions
             $this->corrective_actions[$index]['pic_id'] = $user->id;
             $this->corrective_actions[$index]['pic_name'] = $user->name;
         }
 
-        // Tutup dropdown dan reset state aktif
+        // Tutup dropdown dan reset status aktif
         $this->corrective_actions[$index]['show_pic_dropdown'] = false;
         $this->activeType = '';
         $this->activeIndex = null;
+
+        // Kosongkan opsi pencarian agar tidak mengganggu baris lain
+        $this->involved_personnel_options = [];
     }
 }
