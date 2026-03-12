@@ -17,7 +17,7 @@
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
 
-                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-md">Detail Laporan</span></h3>
+                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-md badge-soft badge-info">Detail Laporan</span></h3>
 
 
             </div>
@@ -27,7 +27,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
 
-                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-md">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
+                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-md badge-soft badge-info">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
 
             </div>
             <div class="text-xs collapse-content">@include('livewire.incident.incident-step-2')</div>
@@ -36,7 +36,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
 
-                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-md">Partisipan Investigasi</span></h3>
+                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-md badge-soft badge-info">Partisipan Investigasi</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-3')</div>
@@ -45,7 +45,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
 
-                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-md">PEEPO Investigation questions for identification of the incident factors</span></h3>
+                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-md badge-soft badge-info">PEEPO Investigation questions for identification of the incident factors</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-4')</div>
