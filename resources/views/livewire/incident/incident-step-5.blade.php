@@ -32,7 +32,7 @@
             <div class="grid grid-cols-1 gap-4">
                 <div class="w-full form-control">
                     <label class="italic font-bold label text-md">Kronologi Kejadian & Tanggal</label>
-                    <x-form.text_area
+                    <x-form.text_area disabled
                         wire:model="timelines.{{ $index }}.kejadian"
                         placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                         rows="3" />
