@@ -108,6 +108,8 @@ class Create extends Component
 
     // Pastikan Anda menginisialisasi array penampung data di mount
     public $peepo = [];
+    public $timelines = [];
+    public $whyCount = 5; // Default 5, bisa diubah menjadi 6, 7, dst.
     public function mount()
     {
         if (Auth::check()) {
@@ -126,6 +128,8 @@ class Create extends Component
         $this->addRow('pemimpin');
         $this->addRow('facilitator');
         $this->addRow('anggota');
+        $this->addRow('timelines');
+
 
         foreach ($this->peepoFactors as $key => $label) {
             $this->peepo[$key] = [
@@ -498,6 +502,15 @@ class Create extends Component
 
         // Inisialisasi status dropdown
         $this->showDropdownPartisipan[$newIndex] = false;
+
+        if ($type === 'timelines') {
+            $newRow = ['kejadian' => ''];
+            // Buat key "why" secara dinamis sesuai jumlah $whyCount
+            for ($i = 1; $i <= $this->whyCount; $i++) {
+                $newRow["why{$i}"] = '';
+            }
+            $this->timelines[] = $newRow;
+        }
     }
 
     public function removeRow($type, $index)
