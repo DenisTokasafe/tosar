@@ -17,7 +17,7 @@
                 <img src="{{ $visual_evidence->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded shadow-sm" />
                 @else
                 {{-- Fallback jika format lain --}}
-                <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
+                <div class="flex items-center gap-2 p-2 mt-2 rounded bg-base-200">
                     <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -38,7 +38,7 @@
                 @if($supporting_documents)
                 @php $docExt = strtolower($supporting_documents->getClientOriginalExtension()); @endphp
 
-                <div class="flex items-center gap-2 mt-2 p-2 border border-dashed rounded border-base-300">
+                <div class="flex items-center gap-2 p-2 mt-2 border border-dashed rounded border-base-300">
                     @if($docExt == 'pdf')
                     <x-icon.pdf class="w-8 h-8" />
                     <span class="text-sm font-medium text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
@@ -63,7 +63,7 @@
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title ">{{ __('Tindakan Perbaikan') }}</legend>
 
-    <div class="flex items-center justify-between pb-2 border-b mb-4">
+    <div class="flex items-center justify-between pb-2 mb-4 border-b">
         <h3 class="text-sm font-bold uppercase">{{ __('Rencana Perbaikan Jangka Panjang') }}</h3>
         <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs">
             + {{ __('Tambah Rencana') }}
@@ -101,7 +101,7 @@
                             wire:key="select-pic-{{ $index }}"
                             placeholder="Cari PIC..."
                             {{-- Pastikan komponen Anda menggunakan wire:model.live di dalamnya --}}
-                            modelsearch="corrective_actions.{{ $index }}.pic_name"
+                            modelsearch="searchQuery.{{ $index }}.pic_name"
                             modelid="corrective_actions.{{ $index }}.pic_id"
                             :options="$involved_personnel_options"
 
@@ -109,6 +109,14 @@
                             :showdropdown="($corrective_actions[$index]['show_pic_dropdown'] ?? false) && $activeType === 'pic' && $activeIndex === $index"
 
                             clickaction="selectPIC(VALUE_ID, {{ $index }})"
+                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
+
+                        <x-form.searchable-select2 wire:key="select-pic-{{ $index }}"
+                            placeholder="Cari pic ..." modelsearch="searchQuery.{{ $index }}.pic_name"
+                            modelid="pic.{{ $index }}.pic_id" :options="$options"
+                            {{-- Perhatikan perubahan di bawah ini: tambahkan [$index] --}}
+                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'pic' && $activeIndex === $index"
+                            clickaction="selectUser(VALUE_ID, {{ $index }}, 'pic')"
                             x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
                     <td class="w-1/6 text-xs">
