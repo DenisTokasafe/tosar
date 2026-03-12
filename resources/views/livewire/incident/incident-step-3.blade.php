@@ -13,9 +13,11 @@
             @foreach($pemimpin as $index => $item)
             {{-- Tambahkan wire:key di tag TR --}}
             <tr wire:key="row-pemimpin-{{ $index }}">
-                <td class="font-bold border border-base-300 bg-base-100">
-                    @if($loop->first) Pemimpin Investigasi: @endif
+                @if($loop->first)
+                <td rowspan="{{ count($pemimpin) }}" class="font-bold border border-base-300 bg-base-100">
+                    Pemimpin Investigasi: (Personil KPLH)
                 </td>
+
                 <td class="p-1 border border-base-300">
                     {{-- Contoh untuk Pemimpin --}}
                     <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
@@ -49,9 +51,11 @@
             {{-- SEKSI FACILITATOR --}}
             @foreach($facilitator as $index => $item)
             <tr wire:key="row-facilitator-{{ $index }}">
-                <td class="font-bold border border-base-300 bg-base-100">
-                    @if($loop->first) Facilitator: (Personil KPLH) @endif
+                @if($loop->first)
+                <td rowspan="{{ count($facilitator) }}" class="font-bold border border-base-300 bg-base-100">
+                    Facilitator: (Personil KPLH)
                 </td>
+                @endif
                 <td class="p-1 border border-base-300">
                     <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
                         placeholder="Cari Facilitator..." modelsearch="searchQuery.{{ $index }}.facilitator"
@@ -86,7 +90,7 @@
             @foreach($anggota as $index => $item)
             <tr wire:key="row-anggota-{{ $index }}">
                 @if($loop->first)
-                <td rowspan="{{ count($anggota) }}" class="border border-base-300"> Tim Anggota</td>
+                <td rowspan="{{ count($anggota) }}" class="font-bold border border-base-300 bg-base-100"> Tim Anggota</td>
                 @endif
                 <td class="p-1 border border-base-300">
                     <x-form.searchable-select2
