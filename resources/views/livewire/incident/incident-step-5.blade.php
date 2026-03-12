@@ -29,10 +29,10 @@
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
                 {{-- Implementasi pada elemen grid --}}
-                <div class="grid {{ $this->gridClass }} gap-4 mt-2">
+                <div class="grid {{ $this->gridClass }} gap-4 mt-2 ">
                     @for($i = 1; $i
                     <= $whyCount; $i++)
-                        <div class="flex items-center ...">
+                        <div class="flex items-center gap-4">
 
                         <x-form.text_area
                             label="Text area why {{ $i }}"
@@ -40,11 +40,11 @@
                             placeholder="Jelaskan alasan ke-{{ $i }}..."
                             rows="2" />
                         @if($whyCount > 1)
-                        <button type="button"
-                            wire:click="removeWhyColumn"
-                            class="btn btn-sm btn-square btn-outline btn-error">
-                            <x-icon.delete" />
-                        </button>
+                        <flux:tooltip content="hapus" position="top">
+                            <flux:button wire:click="removeWhyColumn"
+                                size="xs" icon="trash" variant="danger">
+                            </flux:button>
+                        </flux:tooltip>
                         @endif
                 </div>
                 @endfor
