@@ -111,6 +111,7 @@ class Create extends Component
     public $timelines = [];
     public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
     public $unsafe_conditions = [];
+    public $unsafe_acts = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -131,6 +132,7 @@ class Create extends Component
         $this->addRow('anggota');
         $this->addRow('timelines');
         $this->addRow('unsafe_conditions');
+        $this->addRow('unsafe_acts');
 
 
         foreach ($this->peepoFactors as $key => $label) {
@@ -494,8 +496,9 @@ class Create extends Component
     public function addRow($type)
     {
         // 1. Tentukan struktur data berdasarkan tipe
-        if ($type === 'unsafe_conditions') {
-            $newData = ['item' => '', 'description' => ''];
+
+        if ($type === 'unsafe_conditions' || $type === 'unsafe_acts') {
+            $this->{$type}[] = ['item' => '', 'description' => ''];
         } elseif ($type === 'timelines') {
             // Timeline biasanya butuh struktur khusus (sesuai whyCount Anda)
             $newData = ['kegiatan' => '', 'tanggal' => ''];
@@ -660,6 +663,29 @@ class Create extends Component
             '1.1.12 Ventilasi' => '1.1.12 Ventilasi',
             '1.1.13 Kondisi lingkungan yang berbahaya' => '1.1.13 Kondisi lingkungan yang berbahaya',
             '1.1.14 Lainnya' => '1.1.14 Lainnya',
+        ];
+    }
+    #[Computed]
+    public function unsafeActOptions()
+    {
+        return [
+            '1.2.1 Mengoperasikan peralatan tanpa izin' => '1.2.1 Mengoperasikan peralatan tanpa izin',
+            '1.2.2 Gagal / lalai memperingatkan' => '1.2.2 Gagal / lalai memperingatkan',
+            '1.2.3 Gagal / lalai mengamankan' => '1.2.3 Gagal / lalai mengamankan',
+            '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai' => '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai',
+            '1.2.5 Membuat alat pengaman tidak berfungsi' => '1.2.5 Membuat alat pengaman tidak berfungsi',
+            '1.2.6 Memakai alat yang rusak' => '1.2.6 Memakai alat yang rusak',
+            '1.2.7 Gagal / lalai menggunakan APD yang semestinya' => '1.2.7 Gagal / lalai menggunakan APD yang semestinya',
+            '1.2.8 Pembebanan yang tidak sesuai' => '1.2.8 Pembebanan yang tidak sesuai',
+            '1.2.9 Salah meletakkan / memuat' => '1.2.9 Salah meletakkan / memuat',
+            '1.2.10 Pengangkatan yang tidak sesuai' => '1.2.10 Pengangkatan yang tidak sesuai',
+            '1.2.11 Berada di tempat / posisi yang terlarang' => '1.2.11 Berada di tempat / posisi yang terlarang',
+            '1.2.12 Memperbaiki peralatan yang bekerja / bergerak' => '1.2.12 Memperbaiki peralatan yang bekerja / bergerak',
+            '1.2.13 Bercanda berlebihan' => '1.2.13 Bercanda berlebihan',
+            '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang' => '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang',
+            '1.2.15 Memakai peralatan yang bukan semestinya' => '1.2.15 Memakai peralatan yang bukan semestinya',
+            '1.2.16 Gagal / lalai mengikuti prosedur' => '1.2.16 Gagal / lalai mengikuti prosedur',
+            '1.2.17 Lainnya' => '1.2.17 Lainnya',
         ];
     }
 }

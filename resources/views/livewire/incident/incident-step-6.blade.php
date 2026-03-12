@@ -1,16 +1,17 @@
 <div class="mt-6 overflow-x-auto">
     <table class="table w-full table-xs border border-collapse border-base-300">
         <thead>
-            {{-- Sub-Header Penyebab Langsung --}}
+            {{-- Sub-Header Utama Penyebab Langsung --}}
             <tr class="text-center bg-orange-100">
                 <th colspan="3" class="py-1 italic font-bold border text-base-content border-base-300">
                     PENYEBAB LANGSUNG
                 </th>
             </tr>
-            {{-- Header Kolom --}}
+
+            {{-- SEKSI 1: KONDISI TIDAK AMAN --}}
             <tr class="bg-gray-200 text-base-content">
-                <th class="w-1/2 px-4  font-bold border border-base-300">Kondisi Tidak Aman</th>
-                <th class="w-1/2 px-4  font-bold border border-base-300">Description</th>
+                <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Kondisi Tidak Aman</th>
+                <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Description</th>
                 <th class="w-10 border border-base-300"></th>
             </tr>
         </thead>
@@ -18,7 +19,6 @@
             @foreach($unsafe_conditions as $index => $row)
             <tr wire:key="unsafe-condition-{{ $index }}">
                 <td class="p-1 align-top border border-base-300">
-                    {{-- Menggunakan komponen select yang Anda berikan --}}
                     <x-form.select
                         model="unsafe_conditions.{{ $index }}.item"
                         :options="$this->unsafeConditionOptions"
@@ -31,21 +31,54 @@
                         rows="2" />
                 </td>
                 <td class="p-1 text-center align-middle border border-base-300">
-                    @if(count($unsafe_conditions) > 1)
                     <button type="button" wire:click="removeRow('unsafe_conditions', {{ $index }})"
                         class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
                 </td>
             </tr>
             @endforeach
+            <tr class="bg-base-200/50">
+                <td colspan="3" class="p-2 border border-base-300">
+                    <button type="button" wire:click="addRow('unsafe_conditions')" class="btn btn-xs btn-ghost text-primary font-bold">
+                        + TAMBAH KONDISI TIDAK AMAN
+                    </button>
+                </td>
+            </tr>
+
+            {{-- SEKSI 2: PERILAKU TIDAK AMAN --}}
+            <thead>
+                <tr class="bg-gray-200 text-base-content">
+                    <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Perilaku Tidak Aman</th>
+                    <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Description</th>
+                    <th class="w-10 border border-base-300"></th>
+                </tr>
+            </thead>
+            @foreach($unsafe_acts as $index => $row)
+            <tr wire:key="unsafe-act-{{ $index }}">
+                <td class="p-1 align-top border border-base-300">
+                    <x-form.select
+                        model="unsafe_acts.{{ $index }}.item"
+                        :options="$this->unsafeActOptions"
+                        placeholder="Choose an item." />
+                </td>
+                <td class="p-1 align-top border border-base-300">
+                    <x-form.text_area
+                        wire:model="unsafe_acts.{{ $index }}.description"
+                        placeholder="Tambahkan rincian deskripsi..."
+                        rows="2" />
+                </td>
+                <td class="p-1 text-center align-middle border border-base-300">
+                    <button type="button" wire:click="removeRow('unsafe_acts', {{ $index }})"
+                        class="btn btn-ghost btn-xs text-error">✕</button>
+                </td>
+            </tr>
+            @endforeach
+            <tr class="bg-base-200/50">
+                <td colspan="3" class="p-2 border border-base-300">
+                    <button type="button" wire:click="addRow('unsafe_acts')" class="btn btn-xs btn-ghost text-primary font-bold">
+                        + TAMBAH PERILAKU TIDAK AMAN
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
-
-    {{-- Tombol Tambah Baris --}}
-    <div class="mt-2">
-        <button type="button" wire:click="addRow('unsafe_conditions')"
-            class="btn btn-sm btn-outline btn-success">
-            + Tambah Kondisi Tidak Aman
-        </button>
-    </div>
 </div>
