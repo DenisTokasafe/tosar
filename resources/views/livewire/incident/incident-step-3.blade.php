@@ -85,7 +85,9 @@
             {{-- SEKSI TIM ANGGOTA --}}
             @foreach($anggota as $index => $item)
             <tr wire:key="row-anggota-{{ $index }}">
-                <td class="border border-base-300">@if($loop->first) Tim Anggota @endif</td>
+                @if($loop->first)
+                <td rowspan="{{ count($anggota) }}" class="border border-base-300"> Tim Anggota</td>
+                @endif
                 <td class="p-1 border border-base-300">
                     <x-form.searchable-select2
                         wire:key="select-anggota-{{ $index }}"
