@@ -100,13 +100,14 @@
                         <x-form.searchable-select2
                             wire:key="select-pic-{{ $index }}"
                             placeholder="Cari PIC..."
+                            {{-- Pastikan komponen Anda menggunakan wire:model.live di dalamnya --}}
                             modelsearch="corrective_actions.{{ $index }}.pic_name"
                             modelid="corrective_actions.{{ $index }}.pic_id"
-
-                            {{-- Pastikan ini adalah variabel yang diupdate di fungsi updated() --}}
                             :options="$involved_personnel_options"
 
+                            {{-- Logika Show Dropdown --}}
                             :showdropdown="($corrective_actions[$index]['show_pic_dropdown'] ?? false) && $activeType === 'pic' && $activeIndex === $index"
+
                             clickaction="selectPIC(VALUE_ID, {{ $index }})"
                             x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
                     </td>

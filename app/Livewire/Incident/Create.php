@@ -766,29 +766,34 @@ class Create extends Component
             $this->corrective_actions = array_values($this->corrective_actions);
         }
     }
-    public function updated($propertyName)
+    public function updatedCorrectiveActions($value, $key)
     {
-        if (str_contains($propertyName, 'corrective_actions') && str_contains($propertyName, 'pic_name')) {
-            $parts = explode('.', $propertyName);
-            $index = $parts[1];
-            $search = $this->corrective_actions[$index]['pic_name'];
+        // $key akan berisi seperti "0.pic_name" atau "1.pic_name"
+        $parts = explode('.', $key);
 
-            if (!empty($search) && strlen($search) >= 2) {
-                // Jalankan pencarian ke database
-                $this->involved_personnel_options = User::where('name', 'like', '%' . $search . '%')
-                    ->limit(80)
-                    ->get()
-                    ->mapWithKeys(function ($user) {
-                        return [$user->id => $user->name];
-                    })
-                    ->toArray();
+        // Pastikan kita hanya memproses jika yang diketik adalah kolom pic_name
+        if (count($parts) > 1 && $parts[1] === 'pic_name') {
+            $index = $parts[0]; // Mendapatkan angka index
 
-                $this->corrective_actions[$index]['show_pic_dropdown'] = true;
-                $this->activeType = 'pic';
-                $this->activeIndex = $index;
-            } else {
+            if (strlen($value) < 2) {
+                $this->involved_personnel_options = [];
                 $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+                return;
             }
+
+            // Jalankan pencarian
+            $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')
+                ->limit(10)
+                ->get()
+                ->mapWithKeys(function ($user) {
+                    return [$user->id => $user->name];
+                })
+                ->toArray();
+
+            // Aktifkan state dropdown dan set index aktif
+            $this->corrective_actions[$index]['show_pic_dropdown'] = true;
+            $this->activeIndex = (int)$index;
+            $this->activeType = 'pic';
         }
     }
     public function selectPIC($userId, $index)
