@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 mt-2 md:grid-cols-2 lg:grid-cols-3">
-                    @for($i = 0; $i <= $whyCount; $i++)
+                    @for($i = 1; $i <= $whyCount; $i++)
                         <div class="w-full form-control">
                         <label class="text-sm font-semibold label">Text area why {{ $i }}</label>
                         <x-form.text_area
