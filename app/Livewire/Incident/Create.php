@@ -509,7 +509,7 @@ class Create extends Component
             for ($i = 1; $i < $this->whyCount; $i++) {
                 $newRow["why{$i}"] = '';
             }
-            $this->timelines[] = $newRow;
+            // $this->timelines[] = $newRow;
         }
     }
     public function addWhyColumn()
