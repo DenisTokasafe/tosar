@@ -32,7 +32,7 @@
                 <div class="grid {{ $this->gridClass }} gap-4 mt-2 ">
                     @for($i = 1; $i
                     <= $whyCount; $i++)
-                        <div @class(['flex items-center', 'divide-dashed divide-base-300 gap-4'=> $whyCount >= 1])>
+                        <div @class(['flex items-center', 'divide-x-3 divide-dashed divide-base-300 gap-4'=> $whyCount >= 1])>
 
                         <x-form.text_area
                             label="Text area why {{ $i }}"
