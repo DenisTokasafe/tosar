@@ -29,11 +29,10 @@
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
                 {{-- Implementasi pada elemen grid --}}
-                <div class="grid {{ $this->gridClass }} gap-4 mt-2 ">
+                <div class="" @class(['grid {{ $this->gridClass }} gap-4 mt-2 ', ' divide-x-3 divide-dashed divide-base-300 '=> $whyCount > 1,])>
                     @for($i = 1; $i
                     <= $whyCount; $i++)
-                        <div @class(['flex items-center', 'divide-x-3 divide-dashed divide-base-300 gap-4'=> $i > 1,])>
-
+                        <div class="flex items-center gap-4">
                         <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
                             label="Text area why {{ $i }}"
                             wire:model="timelines.{{ $index }}.why{{ $i }}"
@@ -56,8 +55,8 @@
 @endforeach
 
 <!-- <div class="flex justify-center mt-4">
-        <button type="button" wire:click="addRow('timelines')" class="btn btn-block btn-success btn-outline">
-            + Tambah Baris Kronologi Baru
-        </button>
-    </div> -->
-</div>
+        <button type="button" wire:click="addRow(' timelines')" class="btn btn-block btn-success btn-outline">
+                    + Tambah Baris Kronologi Baru
+                    </button>
+                </div> -->
+            </div>
