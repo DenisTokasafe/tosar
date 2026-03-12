@@ -13,27 +13,27 @@
         {{-- PROGRESS & STEPS VISUAL --}}
 
         {{-- STEP 1: Info Dasar --}}
-        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" checked="checked" />
-            <div class="font-semibold collapse-title bg-base-300 text-base-content">
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
                 <span class="flex">
                     <h3>BAGIAN 1 </h3>- Detail Laporan
                 </span>
             </div>
             <div class="text-sm collapse-content"> @include('livewire.incident.incident-step-1')</div>
         </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-base-300 text-base-content">
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
                 <span class="flex">
                     <h3>BAGIAN 2 </h3>- Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)
                 </span>
             </div>
             <div class="text-sm collapse-content">@include('livewire.incident.incident-step-2')</div>
         </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-base-300 text-base-content">
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
                 <span class="flex">
                     <h3>BAGIAN 3 </h3>- Partisipan Investigasi
                 </span>
