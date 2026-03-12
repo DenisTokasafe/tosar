@@ -115,6 +115,7 @@ class Create extends Component
     public $personal_factors = [];
     public $job_factors = [];
     public $control_system_factors = [];
+
     public function mount()
     {
         if (Auth::check()) {
@@ -139,6 +140,7 @@ class Create extends Component
         $this->addRow('personal_factors');
         $this->addRow('job_factors');
         $this->addRow('control_system_factors');
+        $this->addCorrectiveRow();
 
         foreach ($this->peepoFactors as $key => $label) {
             $this->peepo[$key] = [
@@ -746,5 +748,52 @@ class Create extends Component
             '2.3.16 Sistem Manajemen' => '2.3.16 Sistem Manajemen',
             '2.3.17 Lainnya' => '2.3.17 Lainnya',
         ];
+    }
+    public function addCorrectiveRow()
+    {
+        $this->corrective_actions[] = [
+            'action_description' => '',
+            'pic_id' => null,
+            'pic_name' => '',
+            'due_date' => null,
+            'actual_completion_date' => null,
+            'show_pic_dropdown' => false, // State khusus untuk dropdown baris ini
+        ];
+    }
+    public function removeCorrectiveRow($index)
+    {
+        if (count($this->corrective_actions) > 1) {
+            unset($this->corrective_actions[$index]);
+            $this->corrective_actions = array_values($this->corrective_actions);
+        }
+    }
+    public function updated($propertyName)
+    {
+        // Cek jika yang diupdate adalah pic_name di dalam array corrective_actions
+        if (str_contains($propertyName, 'corrective_actions') && str_contains($propertyName, 'pic_name')) {
+
+            // Ambil indeks dari property name (misal: corrective_actions.0.pic_name)
+            $parts = explode('.', $propertyName);
+            $index = $parts[1];
+
+            // Jika input nama tidak kosong, tampilkan dropdown (logika pencarian Anda)
+            if (!empty($this->corrective_actions[$index]['pic_name'])) {
+                $this->corrective_actions[$index]['show_pic_dropdown'] = true;
+
+                // Di sini Anda bisa memicu pencarian ke database jika diperlukan
+                // $this->searchPersonnel($this->corrective_actions[$index]['pic_name']);
+            } else {
+                $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+            }
+        }
+    }
+    public function selectPIC($index, $userId, $userName)
+    {
+        // Set data PIC yang dipilih
+        $this->corrective_actions[$index]['pic_id'] = $userId;
+        $this->corrective_actions[$index]['pic_name'] = $userName;
+
+        // Tutup dropdown
+        $this->corrective_actions[$index]['show_pic_dropdown'] = false;
     }
 }
