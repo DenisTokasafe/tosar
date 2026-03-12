@@ -7,17 +7,17 @@
 
             <div wire:loading.remove wire:target="visual_evidence">
                 @if($visual_evidence)
-                    <blade
-                        if|%20(in_array(%24visual_evidence-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bjpg%26%2339%3B%2C%20%26%2339%3Bjpeg%26%2339%3B%2C%20%26%2339%3Bpng%26%2339%3B%5D))>
-                        {{-- Preview Gambar --}}
-                        <img src="{{ $visual_evidence->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded" />
+                <blade
+                    if|%20(in_array(%24visual_evidence-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bjpg%26%2339%3B%2C%20%26%2339%3Bjpeg%26%2339%3B%2C%20%26%2339%3Bpng%26%2339%3B%5D))>
+                    {{-- Preview Gambar --}}
+                    <img src="{{ $visual_evidence->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded" />
                     @else
-                        {{-- Fallback jika format lain --}}
-                        <p class="mt-2 text-sm text-gray-600">
-                            File: {{ $visual_evidence->getClientOriginalName() }}
-                        </p>
+                    {{-- Fallback jika format lain --}}
+                    <p class="mt-2 text-sm text-gray-600">
+                        File: {{ $visual_evidence->getClientOriginalName() }}
+                    </p>
                     @endif
-                @endif
+                    @endif
             </div>
 
             <x-label-error :messages="$errors->get('visual_evidence')" />
@@ -28,38 +28,38 @@
 
             <div wire:loading.remove wire:target="supporting_documents">
                 @if($supporting_documents)
-                    {{-- CEK DOKUMEN --}}
-                    <blade
-                        if|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bpdf%26%2339%3B%2C%20%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D))>
-                        <div class="flex items-center gap-2 mt-2">
+                {{-- CEK DOKUMEN --}}
+                <blade
+                    if|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bpdf%26%2339%3B%2C%20%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D))>
+                    <div class="flex items-center gap-2 mt-2">
+                        <blade
+                            if|%20(%24supporting_documents-%3EgetClientOriginalExtension()%20%3D%3D%20%26%2339%3Bpdf%26%2339%3B)>
+                            <x-icon.pdf class="w-8 h-8" />
+                            <span
+                                class="text-sm text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
                             <blade
-                                if|%20(%24supporting_documents-%3EgetClientOriginalExtension()%20%3D%3D%20%26%2339%3Bpdf%26%2339%3B)>
-                                <x-icon.pdf class="w-8 h-8" />
-                                <span
-                                    class="text-sm text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
-                                <blade
-                                    elseif|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D)) />
-                                <x-icon.word class="w-8 h-8" />
-                                <span
-                                    class="text-sm text-blue-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                                elseif|%20(in_array(%24supporting_documents-%3EgetClientOriginalExtension()%2C%20%5B%26%2339%3Bdoc%26%2339%3B%2C%20%26%2339%3Bdocx%26%2339%3B%5D)) />
+                            <x-icon.word class="w-8 h-8" />
+                            <span
+                                class="text-sm text-blue-600">{{ $supporting_documents->getClientOriginalName() }}</span>
                             @else
-                                {{-- Ikon generik --}}
-                                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                                </svg>
-                                <span
-                                    class="text-sm text-gray-600">{{ $supporting_documents->getClientOriginalName() }}</span>
+                            {{-- Ikon generik --}}
+                            <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                            </svg>
+                            <span
+                                class="text-sm text-gray-600">{{ $supporting_documents->getClientOriginalName() }}</span>
                             @endif
-                        </div> {{-- DIV PENUTUP DARI FLEX ITEM --}}
+                    </div> {{-- DIV PENUTUP DARI FLEX ITEM --}}
 
-                        {{-- FALLBACK JIKA BUKAN GAMBAR MAUPUN DOKUMEN DI ATAS --}}
+                    {{-- FALLBACK JIKA BUKAN GAMBAR MAUPUN DOKUMEN DI ATAS --}}
                     @else
-                        <p class="mt-2 text-sm text-gray-600">
-                            File: {{ $supporting_documents->getClientOriginalName() }}
-                        </p>
+                    <p class="mt-2 text-sm text-gray-600">
+                        File: {{ $supporting_documents->getClientOriginalName() }}
+                    </p>
                     @endif{{-- TUTUP if UTAMA --}}
-                @endif
+
             </div> {{-- TUTUP wire:loading.remove --}}
 
             <x-label-error :messages="$errors->get('supporting_documents')" />
@@ -81,35 +81,35 @@
     <table>
         <tbody>
             @foreach($corrective_actions as $index => $action)
-                <tr>
-                    <td class="w-1/2 pr-4">
-                        <x-form.text_area label="Rencana Perbaikan Jangka Panjang"
-                            model="corrective_actions.{{ $index }}.action_description"
-                            placeholder="{{ __('Langkah agar tidak terulang...') }}" />
-                    </td>
-                    <td class="w-1/5 px-2">
-                        <x-form.searchable-select-advanced label="PIC" placeholder="Cari PIC..."
-                            modelsearch="corrective_actions.{{ $index }}.pic_name"
-                            modelid="corrective_actions.{{ $index }}.pic_id" :options="$involved_personnel_options"
-                            :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
-                            clickaction="selectPIC({{ $index }}, " />
-                    </td>
-                    <td class="w-1/6 px-2">
-                        <x-form.tgl-waktu label="Batas Waktu Penyelesaian"
-                            model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d')" />
-                    </td>
-                    <td class="w-1/6 px-2">
-                        <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan"
-                            model="corrective_actions.{{ $index }}.actual_completion_date"
-                            :min-date="now()->format('Y-m-d')" />
-                    </td>
-                    <td class="w-1/12">
-                        @if(count($corrective_actions) > 1)
-                            <button type="button" wire:click="removeCorrectiveRow({{ $index }})"
-                                class="btn btn-ghost btn-xs text-error">✕</button>
-                        @endif
-                    </td>
-                </tr>
+            <tr>
+                <td class="w-1/2 pr-4">
+                    <x-form.text_area label="Rencana Perbaikan Jangka Panjang"
+                        model="corrective_actions.{{ $index }}.action_description"
+                        placeholder="{{ __('Langkah agar tidak terulang...') }}" />
+                </td>
+                <td class="w-1/5 px-2">
+                    <x-form.searchable-select-advanced label="PIC" placeholder="Cari PIC..."
+                        modelsearch="corrective_actions.{{ $index }}.pic_name"
+                        modelid="corrective_actions.{{ $index }}.pic_id" :options="$involved_personnel_options"
+                        :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
+                        clickaction="selectPIC({{ $index }}, " />
+                </td>
+                <td class="w-1/6 px-2">
+                    <x-form.tgl-waktu label="Batas Waktu Penyelesaian"
+                        model="corrective_actions.{{ $index }}.due_date" :min-date="now()->format('Y-m-d')" />
+                </td>
+                <td class="w-1/6 px-2">
+                    <x-form.tgl-waktu label="Tanggal Penyelesaian Tindakan"
+                        model="corrective_actions.{{ $index }}.actual_completion_date"
+                        :min-date="now()->format('Y-m-d')" />
+                </td>
+                <td class="w-1/12">
+                    @if(count($corrective_actions) > 1)
+                    <button type="button" wire:click="removeCorrectiveRow({{ $index }})"
+                        class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
+                </td>
+            </tr>
             @endforeach
             <td></td>
         </tbody>
