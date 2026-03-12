@@ -10,7 +10,7 @@
     <div class="border shadow-sm card bg-base-100 border-base-300" wire:key="timeline-card-{{ $index }}">
         <div class="p-4 card-body">
             <div class="flex items-start justify-between mb-4">
-                <span class="font-mono badge badge-ghost">Kronologi #{{ $index + 1 }}</span>
+                <span class="font-mono badge badge-ghost">Kronologi #{{ $index}}</span>
                 <button type="button" wire:click="removeRow('timelines', {{ $index }})" class="btn btn-xs btn-error btn-outline">
                     Hapus Baris
                 </button>
