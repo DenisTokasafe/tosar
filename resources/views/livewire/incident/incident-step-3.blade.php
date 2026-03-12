@@ -36,7 +36,7 @@
                 </td>
                 <td class="flex items-center gap-1 border border-base-300">
                     <x-form.input-text model="pemimpin.{{ $index }}.jabatan"
-                        wire:key="jabatan-field-{{ $index }}-{{ $pemimpin[$index]['jabatan'] ?? 'new' }}" />
+                        wire:key="jabatan-pemimpin-{{ $index }}" />
 
                     <button type="button" wire:click="addRow('pemimpin')"
                         class="btn btn-xs btn-ghost text-success">+</button>
@@ -74,7 +74,7 @@
                 </td>
                 <td class="flex items-center gap-1 border border-base-300">
                     <x-form.input-text model="facilitator.{{ $index }}.jabatan"
-                        wire:key="jabatan-facilitator-{{ $index }}-{{ $facilitator[$index]['jabatan'] ?? 'new' }}" />
+                        wire:key="jabatan-facilitator-{{ $index }}" />
 
                     <button type="button" wire:click="addRow('facilitator')"
                         class="btn btn-xs btn-ghost text-success">+</button>
@@ -116,7 +116,7 @@
                 <td class="flex items-center gap-1 p-1 border border-base-300">
                     <x-form.input-text
                         model="anggota.{{ $index }}.jabatan"
-                        wire:key="jabatan-anggota-{{ $index }}-{{ $anggota[$index]['jabatan'] ?? 'new' }}" />
+                        wire:key="jabatan-anggota-{{ $index }}" />
                     <button type="button" wire:click="addRow('anggota')"
                         class="btn btn-xs btn-ghost text-success">+</button>
 
