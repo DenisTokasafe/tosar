@@ -109,7 +109,7 @@ class Create extends Component
     // Pastikan Anda menginisialisasi array penampung data di mount
     public $peepo = [];
     public $timelines = [];
-    public $whyCount = 5; // Default 5, bisa diubah menjadi 6, 7, dst.
+    public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
     public function mount()
     {
         if (Auth::check()) {
@@ -510,6 +510,15 @@ class Create extends Component
                 $newRow["why{$i}"] = '';
             }
             $this->timelines[] = $newRow;
+        }
+    }
+    public function addWhyColumn()
+    {
+        $this->whyCount++;
+
+        // Inisialisasi key baru di setiap baris timeline agar tidak error
+        foreach ($this->timelines as $index => $line) {
+            $this->timelines[$index]["why{$this->whyCount}"] = '';
         }
     }
 
