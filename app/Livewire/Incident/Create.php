@@ -520,7 +520,7 @@ class Create extends Component
         $this->{$type}[] = $newData;
 
         // 3. Inisialisasi state pembantu untuk pencarian User
-        if (in_array($type, ['pemimpin', 'facilitator', 'anggota'])) {
+        if (in_array($type, ['pemimpin', 'facilitator', 'anggota',])) {
             $newIndex = count($this->{$type}) - 1;
             $this->searchQuery[$newIndex][$type] = '';
             $this->showDropdownPartisipan[$newIndex] = false;
@@ -634,8 +634,13 @@ class Create extends Component
             $this->{$type}[$index]['jabatan'] = $user->position ?? '';
             $this->{$type}[$index]['dept']    = $user->department_name ?? '';
 
+            $this->{$type}[$index]['pic_id'] = $user->id ?? '';
+            $this->{$type}[$index]['pic_name']    = $user->name ?? '';
+
+
             // Update teks di input pencarian
             $this->searchQuery[$index][$type] = $user->name;
+
 
             // Reset dropdown
             $this->showDropdownPartisipan[$index] = false;
