@@ -1,82 +1,90 @@
 <div class="grid grid-cols-1">
-    <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-        <legend class="text-sm font-semibold card-title ">
-            {{ __('Personel Terlibat / Korban') }}</legend>
-        <div class="grid justify-items-stretch">
-            <div class="justify-self-end-safe"> <button type="button" wire:click="addDirectlyInvolvedRow"
-                    class="btn btn-primary btn-xs ">
-                    + {{ __('Tambah Personel') }}
-                </button></div>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="table w-full border table-compact">
-                <thead>
-                    <tr class="bg-base-200">
-                        <th class="w-1/4">Nama Personel/Korban</th>
-                        <th class="w-32">NIK</th>
-                        <th>Dept/Divisi</th>
-                        <th>Jabatan</th>
-                        <th class="w-24">Roster</th>
-                        <th class="w-24">Shift</th>
-                        <th>Peran</th>
-                        <th class="w-24">Exp (Thn)</th>
-                        <th class="w-10"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($directly_involved as $index => $person)
-                        <tr wire:key="involved-{{ $index }}">
-                            <td class="align-top">
-                                <x-form.searchable-select2 placeholder="Cari Nama..."
-                                    wire:key="employee_name-field-{{ $index }}-{{ $directly_involved[$index]['employee_name'] ?? 'new' }}"
-                                    modelsearch="searchKorban.{{ $index }}"
-                                    modelid="directly_involved.{{ $index }}.employee_name"
-                                    :options="$involved_personnel_options"
-                                    :showdropdown="$show_employee_dropdown[$index] ?? false"
-                                    {{-- Tambahkan index sebagai argumen ketiga --}}
-                                    clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})" />
 
+    <div class="grid justify-items-stretch">
+        <div class="justify-self-end-safe"> <button type="button" wire:click="addDirectlyInvolvedRow"
+                class="btn btn-primary btn-xs ">
+                + {{ __('Tambah Personel') }}
+            </button></div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table w-full border border-base-300">
+            <thead>
+                <tr class="bg-gray-200 text-center text-base-content">
+                    <th class="border border-base-300 py-4 text-sm font-bold w-1/4">Nama</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">ID# / Perusahaan</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Jabatan</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Roster</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Shift</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Keterlibatan</th>
+                    <th class="border border-base-300 py-4 text-sm font-bold">Pengalaman (Tahun)</th>
+                    <th class="w-10 border border-base-300"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($directly_involved as $index => $person)
+                <tr wire:key="involved-{{ $index }}">
+                    {{-- Kolom Nama --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <x-form.searchable-select2 placeholder="Cari Nama..."
+                            wire:key="employee_name-field-{{ $index }}-{{ $directly_involved[$index]['employee_name'] ?? 'new' }}"
+                            modelsearch="searchKorban.{{ $index }}"
+                            modelid="directly_involved.{{ $index }}.employee_name"
+                            :options="$involved_personnel_options"
+                            :showdropdown="$show_employee_dropdown[$index] ?? false"
+                            clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})" />
+                    </td>
 
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
-                                    wire:key="nik-field-{{ $index }}-{{ $directly_involved[$index]['employee_id'] ?? 'new' }}"
-                                    :disabled="$person['employee_id'] ? true : false" />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
-                                    wire:key="dept_cont-field-{{ $index }}-{{ $directly_involved[$index]['dept_cont'] ?? 'new' }}"
-                                    :disabled="$person['employee_id'] ? true : false" />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.jabatan" required />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.roster" required />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.sift" required />
-                            </td>
-                            <td class="align-top">
-                                <x-form.select model="directly_involved.{{ $index }}.keterlibatan"
-                                    :options="$this->keterlibatanOptions" />
-                            </td>
-                            <td class="align-top">
-                                <x-form.input-text model="directly_involved.{{ $index }}.pengalaman_kerja" required />
-                            </td>
+                    {{-- Kolom ID# / Perusahaan (Gabungan NIK & Dept) --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <div class="flex flex-col gap-1">
+                            <x-form.input-text model="directly_involved.{{ $index }}.employee_nik"
+                                placeholder="NIK/ID#"
+                                wire:key="nik-field-{{ $index }}-{{ $directly_involved[$index]['employee_id'] ?? 'new' }}"
+                                :disabled="$person['employee_id'] ? true : false" />
 
-                            <td class="text-center align-top">
-                                @if(count($directly_involved) > 1)
-                                    <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})"
-                                        class="btn btn-ghost btn-xs text-error">
-                                        ✕
-                                    </button>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </fieldset>
+                            <x-form.input-text model="directly_involved.{{ $index }}.dept_cont"
+                                placeholder="Dept/Perusahaan"
+                                wire:key="dept_cont-field-{{ $index }}-{{ $directly_involved[$index]['dept_cont'] ?? 'new' }}"
+                                :disabled="$person['employee_id'] ? true : false" />
+                        </div>
+                    </td>
+
+                    {{-- Kolom Jabatan --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <x-form.input-text model="directly_involved.{{ $index }}.jabatan" required />
+                    </td>
+
+                    {{-- Kolom Roster --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <x-form.input-text model="directly_involved.{{ $index }}.roster" required />
+                    </td>
+
+                    {{-- Kolom Shift --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <x-form.input-text model="directly_involved.{{ $index }}.sift" required />
+                    </td>
+
+                    {{-- Kolom Keterlibatan --}}
+                    <td class="p-1 border border-base-300 align-top">
+                        <x-form.select model="directly_involved.{{ $index }}.keterlibatan"
+                            :options="$this->keterlibatanOptions" />
+                    </td>
+
+                    {{-- Kolom Pengalaman (Tahun) --}}
+                    <td class="p-1 border border-base-300 align-top text-center">
+                        <x-form.input-text model="directly_involved.{{ $index }}.pengalaman_kerja" required />
+                    </td>
+
+                    {{-- Kolom Aksi --}}
+                    <td class="p-1 border border-base-300 text-center align-middle">
+                        @if(count($directly_involved) > 1)
+                        <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})"
+                            class="btn btn-ghost btn-xs text-error">✕</button>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
