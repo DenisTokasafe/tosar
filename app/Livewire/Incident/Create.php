@@ -137,7 +137,6 @@ class Create extends Component
                 'deskripsi' => ''
             ];
         }
-        $this->addRow('timelines');
     }
 
 
