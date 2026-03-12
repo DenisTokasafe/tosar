@@ -32,7 +32,7 @@
                 <div class="grid {{ $this->gridClass }} gap-4 mt-2 ">
                     @for($i = 1; $i
                     <= $whyCount; $i++)
-                        <div @class(['flex items-center', 'divide-x-3 divide-dashed divide-base-300 gap-4'=> $whyCount >= 1])>
+                        <div @class(['flex items-center', 'divide-x-3 divide-dashed divide-base-300 gap-4'=> $i > 1,])>
 
                         <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
                             label="Text area why {{ $i }}"
@@ -40,8 +40,8 @@
                             placeholder="Jelaskan alasan ke-{{ $i }}..."
                             rows="2" />
                         @if($whyCount > 1)
-                        <flux:tooltip content="hapus" position="top">
-                            <flux:button wire:click="removeWhyColumn" wire:key="remove-why-{{ $index }}-{{ $i }}"
+                        <flux:tooltip content="hapus" position="top" wire:key="remove-why-{{ $index }}-{{ $i }}">
+                            <flux:button wire:click="removeWhyColumn"
                                 size="xs" icon="trash" variant="danger">
                             </flux:button>
                         </flux:tooltip>
