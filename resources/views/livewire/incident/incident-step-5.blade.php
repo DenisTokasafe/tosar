@@ -49,8 +49,8 @@
                         wire:model="timelines.{{ $index }}.why{{ $i }}"
                         placeholder="Jelaskan alasan ke-{{ $i }}..."
                         rows="2" />
+                    @endfor
                 </div>
-                @endfor
             </div>
         </div>
     </div>
