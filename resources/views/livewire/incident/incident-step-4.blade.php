@@ -1,11 +1,6 @@
 <div class="mt-4 overflow-x-auto">
-    <table class="table w-full border border-collapse border-base-300">
+    <table class="table table-xs w-full border border-collapse border-base-300">
         <thead>
-            <tr class="text-white bg-black">
-                <th colspan="3" class="px-4 py-2 font-bold text-left">
-                    PART 4: PEEPO Investigation questions for identification of the incident factors
-                </th>
-            </tr>
             <tr class="text-center bg-gray-200">
                 <th class="w-1/6 px-4 py-2 font-bold border border-base-300 text-base-content">Factors</th>
                 <th class="w-2/5 px-4 py-2 font-bold border border-base-300 text-base-content">Temuan</th>
