@@ -20,7 +20,7 @@
             <td class="p-1 border border-base-300">
                 {{-- Contoh untuk Pemimpin --}}
                 <x-form.searchable-select2 wire:key="select-pemimpin-{{ $index }}"
-                    placeholder="Cari Pemimpin {{ $index +1 }}.pemimpin"
+                    placeholder="Cari Pemimpin {{ $index+1 }}..." modelsearch="searchQuery.{{ $index }}.pemimpin"
                     modelid="pemimpin.{{ $index }}.user_id" :options="$options"
                     {{-- Perhatikan perubahan di bawah ini: tambahkan [$index] --}}
                     :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'pemimpin' && $activeIndex === $index"
@@ -57,7 +57,7 @@
             @endif
             <td class="p-1 border border-base-300">
                 <x-form.searchable-select2 wire:key="select-facilitator-{{ $index }}"
-                    placeholder="Cari Facilitator..." modelsearch="searchQuery.{{ $index }}.facilitator"
+                    placeholder="Cari Facilitator {{ $index+1 }}..." modelsearch="searchQuery.{{ $index }}.facilitator"
                     modelid="facilitator.{{ $index }}.user_id" :options="$options"
                     {{-- Cek spesifik untuk type facilitator dan index-nya --}}
                     :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'facilitator' && $activeIndex === $index"
@@ -94,7 +94,7 @@
             <td class="p-1 border border-base-300">
                 <x-form.searchable-select2
                     wire:key="select-anggota-{{ $index }}"
-                    placeholder="Cari Anggota..."
+                    placeholder="Cari Anggota {{ $index+1 }}..."
                     modelsearch="searchQuery.{{ $index }}.anggota"
                     modelid="anggota.{{ $index }}.user_id"
                     :options="$options"
