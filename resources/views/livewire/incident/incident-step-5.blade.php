@@ -41,7 +41,7 @@
 
 
                 {{-- Implementasi pada elemen grid --}}
-                <div class="grid {{ $$this->gridClass }} gap-4 mt-2">
+                <div class="grid {{ $this->gridClass }} gap-4 mt-2">
                     @for($i = 1; $i <= $whyCount; $i++)
                         <div class="form-control w-full">
                         <x-form.text_area
