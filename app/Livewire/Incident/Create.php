@@ -530,18 +530,20 @@ class Create extends Component
         $user = User::find($id);
 
         if ($user) {
-            // 1. Simpan ke array utama (pemimpin/facilitator/anggota)
-            $this->{$type}[$index] = [
-                'user_id' => $user->id,
-                'nama'    => $user->name,
-                'dept'    => $user->department_name ?? '-',
-            ];
+            // Ambil data lama agar tidak hilang jika tidak ingin dioverwrite total
+            // Atau langsung set seperti di bawah ini:
+            $this->{$type}[$index]['user_id'] = $user->id;
+            $this->{$type}[$index]['nama']    = $user->name;
 
-            // 2. Update searchQuery sesuai struktur nested: searchQuery.index.type
-            // Ini memastikan teks "Cari..." berubah jadi nama User setelah dipilih
+            // Hanya isi jabatan/dept otomatis jika Anda ingin (sebagai default),
+            // tapi karena user akan isi manual, kita berikan nilai dari DB sebagai saran awal saja.
+            $this->{$type}[$index]['jabatan'] = $user->position ?? '';
+            $this->{$type}[$index]['dept']    = $user->department_name ?? '';
+
+            // Update teks di input pencarian
             $this->searchQuery[$index][$type] = $user->name;
 
-            // 3. Tutup dropdown dan bersihkan opsi
+            // Reset dropdown
             $this->showDropdownPartisipan[$index] = false;
             $this->options = [];
         }
