@@ -493,20 +493,28 @@ class Create extends Component
 
     public function addRow($type)
     {
-        // Tambah baris baru ke array utama
-        $this->{$type}[] = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
-
-        // Dapatkan index terakhir
-        $newIndex = count($this->{$type}) - 1;
-
-        // Inisialisasi nested array untuk search agar sinkron dengan modelsearch="searchQuery.{{ $index }}.{{ $type }}"
-        $this->searchQuery[$newIndex][$type] = '';
-
-        // Inisialisasi status dropdown
-        $this->showDropdownPartisipan[$newIndex] = false;
-
+        // 1. Tentukan struktur data berdasarkan tipe
         if ($type === 'unsafe_conditions') {
-            $this->unsafe_conditions[] = ['item' => '', 'description' => ''];
+            $newData = ['item' => '', 'description' => ''];
+        } elseif ($type === 'timelines') {
+            // Timeline biasanya butuh struktur khusus (sesuai whyCount Anda)
+            $newData = ['kegiatan' => '', 'tanggal' => ''];
+            for ($i = 1; $i <= $this->whyCount; $i++) {
+                $newData["why{$i}"] = '';
+            }
+        } else {
+            // Default untuk partisipan (pemimpin, facilitator, anggota)
+            $newData = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
+        }
+
+        // 2. Masukkan ke array utama
+        $this->{$type}[] = $newData;
+
+        // 3. Inisialisasi state pembantu (hanya jika tipe tersebut butuh search/dropdown)
+        if (in_array($type, ['pemimpin', 'facilitator', 'anggota'])) {
+            $newIndex = count($this->{$type}) - 1;
+            $this->searchQuery[$newIndex][$type] = '';
+            $this->showDropdownPartisipan[$newIndex] = false;
         }
     }
     public function removeRow($type, $index)
