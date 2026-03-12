@@ -128,7 +128,6 @@ class Create extends Component
         $this->addRow('pemimpin');
         $this->addRow('facilitator');
         $this->addRow('anggota');
-        $this->addRow('timelines');
 
 
         foreach ($this->peepoFactors as $key => $label) {
@@ -502,15 +501,6 @@ class Create extends Component
 
         // Inisialisasi status dropdown
         $this->showDropdownPartisipan[$newIndex] = false;
-
-        if ($type === 'timelines') {
-            $newRow = ['kejadian' => ''];
-            // Buat key "why" secara dinamis sesuai jumlah $whyCount
-            for ($i = 1; $i < $this->whyCount; $i++) {
-                $newRow["why{$i}"] = '';
-            }
-            // $this->timelines[] = $newRow;
-        }
     }
     public function addWhyColumn()
     {
