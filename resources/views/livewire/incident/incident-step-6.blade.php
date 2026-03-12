@@ -31,8 +31,10 @@
                         rows="2" />
                 </td>
                 <td class="p-1 text-center align-middle border border-base-300">
+                    @if(count($unsafe_conditions) > 1)
                     <button type="button" wire:click="removeRow('unsafe_conditions', {{ $index }})"
                         class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -67,8 +69,10 @@
                         rows="2" />
                 </td>
                 <td class="p-1 text-center align-middle border border-base-300">
+                    @if(count($unsafe_acts) > 1)
                     <button type="button" wire:click="removeRow('unsafe_acts', {{ $index }})"
                         class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -96,7 +100,9 @@
                     <x-form.text_area wire:model="personal_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
+                    @if(count($personal_factors) > 1)
                     <button type="button" wire:click="removeRow('personal_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -120,7 +126,9 @@
                     <x-form.text_area wire:model="job_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
+                    @if(count($job_factors) > 1)
                     <button type="button" wire:click="removeRow('job_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -145,7 +153,9 @@
                     <x-form.text_area wire:model="control_system_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
+                    @if(count($control_system_factors) > 1)
                     <button type="button" wire:click="removeRow('control_system_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </td>
             </tr>
             @endforeach
