@@ -1,5 +1,5 @@
 <div class="p-4 overflow-x-auto bg-white rounded-lg shadow-sm">
-    <table class="table w-full border border-collapse table-compact border-base-300">
+    <table class="table w-full border table-xs border-collapse table-compact border-base-300">
         <thead class="text-xs text-white uppercase bg-black">
             <tr>
                 <th class="w-1/4 border border-base-300">Peran</th>
@@ -82,19 +82,10 @@
                 </td>
             </tr>
             @endforeach
-
             {{-- SEKSI TIM ANGGOTA --}}
-            {{-- SEKSI TIM ANGGOTA --}}
-            <tr class="bg-base-200">
-                <td class="font-bold border border-base-300">Tim Anggota</td>
-                <td class="font-bold border border-base-300">Nama</td>
-                <td class="font-bold border border-base-300">Dept/Perusahaan</td>
-                <td class="font-bold border border-base-300">Jabatan</td>
-            </tr>
-
             @foreach($anggota as $index => $item)
             <tr wire:key="row-anggota-{{ $index }}">
-                <td class="border border-base-300"></td>
+                <td class="border border-base-300">@if($loop->first) Tim Anggota @endif</td>
                 <td class="p-1 border border-base-300">
                     <x-form.searchable-select2
                         wire:key="select-anggota-{{ $index }}"
