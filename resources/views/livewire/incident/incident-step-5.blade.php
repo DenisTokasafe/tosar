@@ -38,22 +38,26 @@
                         rows="3" />
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 mt-2 md:grid-cols-2 lg:grid-cols-3">
-                    @for($i = 1; $i
-                    <= $whyCount; $i++)
 
-                        <x-form.text_area label="Text area why {{ $i }}"
-                        wire:model="timelines.{{ $index }}.why{{ $i }}"
-                        placeholder="Jelaskan alasan ke-{{ $i }}..."
-                        rows="2" />
-                    @endfor
+
+                {{-- Implementasi pada elemen grid --}}
+                <div class="grid {{ $$this->gridClass }} gap-4 mt-2">
+                    @for($i = 1; $i <= $whyCount; $i++)
+                        <div class="form-control w-full">
+                        <x-form.text_area
+                            label="Text area why {{ $i }}"
+                            wire:model="timelines.{{ $index }}.why{{ $i }}"
+                            placeholder="Jelaskan alasan ke-{{ $i }}..."
+                            rows="2" />
                 </div>
+                @endfor
             </div>
         </div>
     </div>
-    @endforeach
+</div>
+@endforeach
 
-    <!-- <div class="flex justify-center mt-4">
+<!-- <div class="flex justify-center mt-4">
         <button type="button" wire:click="addRow('timelines')" class="btn btn-block btn-success btn-outline">
             + Tambah Baris Kronologi Baru
         </button>

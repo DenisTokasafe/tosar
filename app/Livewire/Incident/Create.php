@@ -503,6 +503,19 @@ class Create extends Component
         // Inisialisasi status dropdown
         $this->showDropdownPartisipan[$newIndex] = false;
     }
+    #[Computed]
+    public function gridClass()
+    {
+        if ($this->whyCount == 2) {
+            return 'grid-cols-2';
+        }
+
+        if ($this->whyCount >= 3) {
+            return 'grid-cols-3';
+        }
+
+        return 'grid-cols-1';
+    }
     public function addWhyColumn()
     {
         $this->whyCount++;
