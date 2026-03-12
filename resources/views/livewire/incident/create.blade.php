@@ -20,7 +20,7 @@
                     <h3>BAGIAN 1 </h3>- Detail Laporan
                 </span>
             </div>
-            <div class="text-sm collapse-content"> @include('livewire.incident.incident-step-1')</div>
+            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-1')</div>
         </div>
         <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
@@ -29,7 +29,7 @@
                     <h3>BAGIAN 2 </h3>- Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)
                 </span>
             </div>
-            <div class="text-sm collapse-content">@include('livewire.incident.incident-step-2')</div>
+            <div class="text-xs collapse-content">@include('livewire.incident.incident-step-2')</div>
         </div>
         <div class="border collapse collapse-arrow bg-base-100 border-base-300">
             <input type="radio" name="my-accordion-2" />
@@ -38,7 +38,7 @@
                     <h3>BAGIAN 3 </h3>- Partisipan Investigasi
                 </span>
             </div>
-            <div class="text-sm collapse-content"> @include('livewire.incident.incident-step-3')</div>
+            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-3')</div>
         </div>
         {{-- Navigasi Step --}}
         <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
