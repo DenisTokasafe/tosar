@@ -534,7 +534,6 @@ class Create extends Component
             $this->{$type}[$index] = [
                 'user_id' => $user->id,
                 'nama'    => $user->name,
-                'jabatan' => $user->position ?? '-',
                 'dept'    => $user->department_name ?? '-',
             ];
 
