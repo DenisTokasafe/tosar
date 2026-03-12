@@ -2,9 +2,9 @@
     <table class="table table-xs w-full border border-collapse border-base-300">
         <thead>
             <tr class="text-center ">
-                <th class="w-1/6 px-4 py-2 font-bold border border-base-300 text-base-content">Factors</th>
-                <th class="w-2/5 px-4 py-2 font-bold border border-base-300 text-base-content">Temuan</th>
-                <th class="w-2/5 px-4 py-2 font-bold border border-base-300 text-base-content">Deskripsi</th>
+                <th class="w-1/6 px-4 font-bold border border-base-300 text-base-content">Factors</th>
+                <th class="w-2/5 px-4 font-bold border border-base-300 text-base-content">Temuan</th>
+                <th class="w-2/5 px-4 font-bold border border-base-300 text-base-content">Deskripsi</th>
             </tr>
         </thead>
         <tbody>
