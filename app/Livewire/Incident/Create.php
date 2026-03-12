@@ -97,6 +97,17 @@ class Create extends Component
     // Penanda baris mana yang sedang aktif dicari
     public $activeType = '';
     public $activeIndex = null;
+
+    public $peepoFactors = [
+        'orang' => 'Orang',
+        'peralatan' => 'Peralatan',
+        'lingkungan' => 'Lingkungan',
+        'prosedur' => 'Prosedur',
+        'organisasi' => 'Organisasi'
+    ];
+
+    // Pastikan Anda menginisialisasi array penampung data di mount
+    public $peepo = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -115,6 +126,13 @@ class Create extends Component
         $this->addRow('pemimpin');
         $this->addRow('facilitator');
         $this->addRow('anggota');
+
+        foreach ($this->peepoFactors as $key => $label) {
+            $this->peepo[$key] = [
+                'temuan' => '',
+                'deskripsi' => ''
+            ];
+        }
     }
 
 
