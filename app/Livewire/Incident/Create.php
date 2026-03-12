@@ -112,6 +112,9 @@ class Create extends Component
     public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
     public $unsafe_conditions = [];
     public $unsafe_acts = [];
+    public $personal_factors = [];
+    public $job_factors = [];
+    public $control_system_factors = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -133,7 +136,9 @@ class Create extends Component
         $this->addRow('timelines');
         $this->addRow('unsafe_conditions');
         $this->addRow('unsafe_acts');
-
+        $this->addRow('personal_factors');
+        $this->addRow('job_factors');
+        $this->addRow('control_system_factors');
 
         foreach ($this->peepoFactors as $key => $label) {
             $this->peepo[$key] = [
@@ -496,26 +501,24 @@ class Create extends Component
     public function addRow($type)
     {
         // 1. Tentukan struktur data berdasarkan tipe
-
-        if ($type === 'unsafe_conditions') {
-            $newData = ['item' => '', 'description' => ''];
-        } elseif ($type === 'unsafe_acts') {
+        // Tambahkan pengecekan untuk faktor pribadi, pekerjaan, dan sistem kontrol
+        if (in_array($type, ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'])) {
             $newData = ['item' => '', 'description' => ''];
         } elseif ($type === 'timelines') {
-            // Timeline biasanya butuh struktur khusus (sesuai whyCount Anda)
+            // Timeline dengan struktur khusus sesuai jumlah kolom "Why"
             $newData = ['kegiatan' => '', 'tanggal' => ''];
             for ($i = 1; $i <= $this->whyCount; $i++) {
                 $newData["why{$i}"] = '';
             }
         } else {
             // Default untuk partisipan (pemimpin, facilitator, anggota)
-            $newData = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'dept' => ''];
+            $newData = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'jabatan_detail' => '', 'dept' => ''];
         }
 
-        // 2. Masukkan ke array utama
+        // 2. Masukkan ke array utama secara dinamis
         $this->{$type}[] = $newData;
 
-        // 3. Inisialisasi state pembantu (hanya jika tipe tersebut butuh search/dropdown)
+        // 3. Inisialisasi state pembantu untuk pencarian User
         if (in_array($type, ['pemimpin', 'facilitator', 'anggota'])) {
             $newIndex = count($this->{$type}) - 1;
             $this->searchQuery[$newIndex][$type] = '';
@@ -688,6 +691,60 @@ class Create extends Component
             '1.2.15 Memakai peralatan yang bukan semestinya' => '1.2.15 Memakai peralatan yang bukan semestinya',
             '1.2.16 Gagal / lalai mengikuti prosedur' => '1.2.16 Gagal / lalai mengikuti prosedur',
             '1.2.17 Lainnya' => '1.2.17 Lainnya',
+        ];
+    }
+    #[Computed]
+    public function personalFactorOptions()
+    {
+        return [
+            '2.1.1 Tidak memadainya kemampuan fisik / fisiologis' => '2.1.1 Tidak memadainya kemampuan fisik / fisiologis',
+            '2.1.2 Keterbatasan mental / Kemampuan psikologi' => '2.1.2 Keterbatasan mental / Kemampuan psikologi',
+            '2.1.3 Tekanan Fisik atau fisiologis' => '2.1.3 Tekanan Fisik atau fisiologis',
+            '2.1.4 Mental atau Tekanan psikologis' => '2.1.4 Mental atau Tekanan psikologis',
+            '2.1.5 Kurangnya pengetahuan' => '2.1.5 Kurangnya pengetahuan',
+            '2.1.6 Kurangnya keahlian' => '2.1.6 Kurangnya keahlian',
+            '2.1.7 Salah Motivasi' => '2.1.7 Salah Motivasi',
+            '2.1.8 Lainnya' => '2.1.8 Lainnya',
+        ];
+    }
+
+    #[Computed]
+    public function jobFactorOptions()
+    {
+        return [
+            '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai' => '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai',
+            '2.2.2 Engineering yang tidak memadai' => '2.2.2 Engineering yang tidak memadai',
+            '2.2.3 Pembelian yang tidak memadai' => '2.2.3 Pembelian yang tidak memadai',
+            '2.2.4 Pemeliharaan yang tidak memadai' => '2.2.4 Pemeliharaan yang tidak memadai',
+            '2.2.5 Alat dan peralatan yang tidak memadai' => '2.2.5 Alat dan peralatan yang tidak memadai',
+            '2.2.6 Standar-standar kerja yang tidak memadai' => '2.2.6 Standar-standar kerja yang tidak memadai',
+            '2.2.7 Pemakaian yang berlebihan' => '2.2.7 Pemakaian yang berlebihan',
+            '2.2.8 Salah pakai atau penyalahgunaan' => '2.2.8 Salah pakai atau penyalahgunaan',
+            '2.2.9 Lainnya' => '2.2.9 Lainnya',
+        ];
+    }
+
+    #[Computed]
+    public function controlSystemOptions()
+    {
+        return [
+            '2.3.1 Perangkat Keras' => '2.3.1 Perangkat Keras',
+            '2.3.2 Pelatihan' => '2.3.2 Pelatihan',
+            '2.3.3 Organisasi' => '2.3.3 Organisasi',
+            '2.3.4 Komunikasi' => '2.3.4 Komunikasi',
+            '2.3.5 Sasaran tidak kompatibel' => '2.3.5 Sasaran tidak kompatibel',
+            '2.3.6 Prosedur' => '2.3.6 Prosedur',
+            '2.3.7 Manajemen Pemeliharaan' => '2.3.7 Manajemen Pemeliharaan',
+            '2.3.8 Disain' => '2.3.8 Disain',
+            '2.3.9 Manajemen Resiko' => '2.3.9 Manajemen Resiko',
+            '2.3.10 Manajemen Perubahan' => '2.3.10 Manajemen Perubahan',
+            '2.3.11 Manajemen Kontraktor' => '2.3.11 Manajemen Kontraktor',
+            '2.3.12 Budaya Organisasi' => '2.3.12 Budaya Organisasi',
+            '2.3.13 Pengaruh Peraturan' => '2.3.13 Pengaruh Peraturan',
+            '2.3.14 Pembelajaran Organisasi' => '2.3.14 Pembelajaran Organisasi',
+            '2.3.15 Manajemen Kendaraan' => '2.3.15 Manajemen Kendaraan',
+            '2.3.16 Sistem Manajemen' => '2.3.16 Sistem Manajemen',
+            '2.3.17 Lainnya' => '2.3.17 Lainnya',
         ];
     }
 }
