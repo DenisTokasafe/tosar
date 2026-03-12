@@ -520,22 +520,38 @@ class Create extends Component
     public function removeRow($type, $index)
     {
         // 1. Hapus data baris utama
-        unset($this->{$type}[$index]);
-        $this->{$type} = array_values($this->{$type});
-
-        // 2. Hapus state search spesifik untuk peran tersebut di index tersebut
-        if (isset($this->searchQuery[$index][$type])) {
-            unset($this->searchQuery[$index][$type]);
+        if (isset($this->{$type}[$index])) {
+            unset($this->{$type}[$index]);
+            $this->{$type} = array_values($this->{$type});
         }
 
-        // 3. Hapus status dropdown
-        unset($this->showDropdownPartisipan[$index]);
+        // 2. Sinkronisasi searchQuery dan Dropdown
+        // Kita tidak bisa hanya array_values secara global karena akan menggeser
+        // data tipe lain yang berada di indeks yang sama.
 
-        // 4. Re-index kembali agar urutan array searchQuery dan dropdown tetap sinkron dengan urutan baris di HTML
-        $this->searchQuery = array_values($this->searchQuery);
-        $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
+        // Cara terbaik: Hapus data indeks tersebut, lalu geser manual data di bawahnya
+        // khusus untuk tipe (key) yang sedang dihapus.
 
-        // 5. Jika baris habis, tambahkan satu baris kosong lagi
+        $totalRemaining = count($this->{$type});
+
+        for ($i = $index; $i <= $totalRemaining; $i++) {
+            // Geser searchQuery untuk tipe yang spesifik ini saja
+            if (isset($this->searchQuery[$i + 1][$type])) {
+                $this->searchQuery[$i][$type] = $this->searchQuery[$i + 1][$type];
+                unset($this->searchQuery[$i + 1][$type]);
+            } else {
+                unset($this->searchQuery[$i][$type]);
+            }
+
+            // Geser status dropdown
+            if (isset($this->showDropdownPartisipan[$i + 1])) {
+                $this->showDropdownPartisipan[$i] = $this->showDropdownPartisipan[$i + 1];
+            } else {
+                unset($this->showDropdownPartisipan[$i]);
+            }
+        }
+
+        // 3. Jika baris habis, tambahkan satu baris kosong lagi
         if (empty($this->{$type})) {
             $this->addRow($type);
         }
