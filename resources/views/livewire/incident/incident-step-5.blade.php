@@ -42,13 +42,13 @@
 
                 {{-- Implementasi pada elemen grid --}}
                 <div class="grid {{ $this->gridClass }} gap-4 mt-2">
-                    @for($i = 1; $i <= $whyCount; $i++)
-                        <div class="form-control w-full">
+                    @for($i = 1; $i
+                    <= $whyCount; $i++)
                         <x-form.text_area
-                            label="Text area why {{ $i }}"
-                            wire:model="timelines.{{ $index }}.why{{ $i }}"
-                            placeholder="Jelaskan alasan ke-{{ $i }}..."
-                            rows="2" />
+                        label="Text area why {{ $i }}"
+                        wire:model="timelines.{{ $index }}.why{{ $i }}"
+                        placeholder="Jelaskan alasan ke-{{ $i }}..."
+                        rows="2" />
                 </div>
                 @endfor
             </div>
