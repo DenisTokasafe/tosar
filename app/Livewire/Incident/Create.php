@@ -796,9 +796,9 @@ class Create extends Component
             $this->activeType = 'pic';
         }
     }
-    public function selectPIC($userId, $index)
+    public function selectPIC($id, $index)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if ($user) {
             $this->corrective_actions[$index]['pic_id'] = $user->id;
