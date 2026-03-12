@@ -7,7 +7,7 @@
             </button></div>
     </div>
     <div class="overflow-x-auto">
-        <table class="table w-full border border-base-300">
+        <table class="table table-xs w-full border border-base-300">
             <thead>
                 <tr class="bg-gray-200 text-center text-base-content">
                     <th class="border border-base-300 py-4 text-sm font-bold w-1/4">Nama</th>
