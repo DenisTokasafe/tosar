@@ -115,7 +115,6 @@ class Create extends Component
     public $personal_factors = [];
     public $job_factors = [];
     public $control_system_factors = [];
-
     public function mount()
     {
         if (Auth::check()) {
@@ -787,13 +786,19 @@ class Create extends Component
             }
         }
     }
-    public function selectPIC($index, $userId, $userName)
+    public function selectPIC($userId, $index)
     {
-        // Set data PIC yang dipilih
-        $this->corrective_actions[$index]['pic_id'] = $userId;
-        $this->corrective_actions[$index]['pic_name'] = $userName;
+        // Cari data user berdasarkan ID
+        $user = User::find($userId); // Sesuaikan dengan model User Anda
 
-        // Tutup dropdown
+        if ($user) {
+            $this->corrective_actions[$index]['pic_id'] = $user->id;
+            $this->corrective_actions[$index]['pic_name'] = $user->name;
+        }
+
+        // Tutup dropdown dan reset state aktif
         $this->corrective_actions[$index]['show_pic_dropdown'] = false;
+        $this->activeType = '';
+        $this->activeIndex = null;
     }
 }

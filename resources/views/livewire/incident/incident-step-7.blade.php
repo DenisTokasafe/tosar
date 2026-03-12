@@ -97,13 +97,21 @@
                             rows="2" />
                     </td>
                     <td class="w-1/4">
-                        <x-form.searchable-select-advanced
+                        <x-form.searchable-select2
+                            wire:key="select-pic-{{ $index }}"
                             placeholder="Cari PIC..."
                             modelsearch="corrective_actions.{{ $index }}.pic_name"
                             modelid="corrective_actions.{{ $index }}.pic_id"
                             :options="$involved_personnel_options"
-                            :showdropdown="$corrective_actions[$index]['show_pic_dropdown']"
-                            clickaction="selectPIC({{ $index }})" /> {{-- Perbaikan sintaks di sini --}}
+
+                            {{-- Menggunakan state dinamis khusus untuk corrective_actions --}}
+                            :showdropdown="($corrective_actions[$index]['show_pic_dropdown'] ?? false) && $activeType === 'pic' && $activeIndex === $index"
+
+                            {{-- Mengarahkan VALUE_ID ke fungsi selectPIC yang sudah kita buat --}}
+                            clickaction="selectPIC(VALUE_ID, {{ $index }}, 'pic')"
+
+                            {{-- Set active index dan type saat input difokuskan --}}
+                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }}); $wire.set('corrective_actions.{{ $index }}.show_pic_dropdown', true)" />
                     </td>
                     <td class="w-1/6 text-xs">
                         <x-form.tgl-waktu
