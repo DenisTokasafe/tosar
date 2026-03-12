@@ -506,7 +506,7 @@ class Create extends Component
         if ($type === 'timelines') {
             $newRow = ['kejadian' => ''];
             // Buat key "why" secara dinamis sesuai jumlah $whyCount
-            for ($i = 1; $i <= $this->whyCount; $i++) {
+            for ($i = 0; $i < $this->whyCount; $i++) {
                 $newRow["why{$i}"] = '';
             }
             $this->timelines[] = $newRow;
