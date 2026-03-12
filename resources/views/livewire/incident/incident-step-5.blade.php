@@ -3,13 +3,7 @@
 
         <div class="flex gap-2">
             {{-- Tombol Hapus Kolom (Hanya tampil jika > 1) --}}
-            @if($whyCount > 1)
-            <button type="button"
-                wire:click="removeWhyColumn"
-                class="btn btn-sm btn-outline btn-error">
-                - Hapus Kolom "Mengapa"
-            </button>
-            @endif
+
 
             <button type="button"
                 wire:click="addWhyColumn"
@@ -38,16 +32,26 @@
                 <div class="grid {{ $this->gridClass }} gap-4 mt-2">
                     @for($i = 1; $i
                     <= $whyCount; $i++)
+                        <div class="flex items-center ...">
+
                         <x-form.text_area
-                        label="Text area why {{ $i }}"
-                        wire:model="timelines.{{ $index }}.why{{ $i }}"
-                        placeholder="Jelaskan alasan ke-{{ $i }}..."
-                        rows="2" />
-                    @endfor
+                            label="Text area why {{ $i }}"
+                            wire:model="timelines.{{ $index }}.why{{ $i }}"
+                            placeholder="Jelaskan alasan ke-{{ $i }}..."
+                            rows="2" />
+                        @if($whyCount > 1)
+                        <button type="button"
+                            wire:click="removeWhyColumn"
+                            class="btn btn-sm btn-square btn-outline btn-error">
+                            <x-icon.delete" />
+                        </button>
+                        @endif
                 </div>
+                @endfor
             </div>
         </div>
     </div>
+</div>
 </div>
 @endforeach
 
