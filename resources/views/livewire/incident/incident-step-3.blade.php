@@ -88,8 +88,8 @@
             <tr class="bg-base-200">
                 <td class="font-bold border border-base-300">Tim Anggota</td>
                 <td class="font-bold border border-base-300">Nama</td>
-                <td class="font-bold border border-base-300">Jabatan</td>
                 <td class="font-bold border border-base-300">Dept/Perusahaan</td>
+                <td class="font-bold border border-base-300">Jabatan</td>
             </tr>
 
             @foreach($anggota as $index => $item)
@@ -113,14 +113,13 @@
                 </td>
                 <td class="p-1 border border-base-300">
                     <x-form.input-text
-                        model="anggota.{{ $index }}.jabatan"
-                        wire:key="jabatan-anggota-{{ $index }}-{{ $anggota[$index]['jabatan'] ?? 'new' }}" />
+                        model="anggota.{{ $index }}.dept"
+                        wire:key="dept-anggota-{{ $index }}-{{ $anggota[$index]['dept'] ?? 'new' }}" />
                 </td>
                 <td class="flex items-center gap-1 p-1 border border-base-300">
                     <x-form.input-text
-                        model="anggota.{{ $index }}.dept"
-                        wire:key="dept-anggota-{{ $index }}-{{ $anggota[$index]['dept'] ?? 'new' }}" />
-
+                        model="anggota.{{ $index }}.jabatan"
+                        wire:key="jabatan-anggota-{{ $index }}-{{ $anggota[$index]['jabatan'] ?? 'new' }}" />
                     <button type="button" wire:click="addRow('anggota')"
                         class="btn btn-xs btn-ghost text-success">+</button>
 
