@@ -13,7 +13,7 @@
         {{-- PROGRESS & STEPS VISUAL --}}
 
         {{-- STEP 1: Info Dasar --}}
-        <div class="border collapse collapse-arrow bg-base-300 border-base-100">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="font-semibold collapse-title bg-base-300 text-base-content">
                 <span class="flex">
@@ -22,7 +22,7 @@
             </div>
             <div class="text-sm collapse-content"> @include('livewire.incident.incident-step-1')</div>
         </div>
-        <div class="border collapse collapse-arrow bg-base-300 border-base-100">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-base-300 text-base-content">
                 <span class="flex">
@@ -31,7 +31,7 @@
             </div>
             <div class="text-sm collapse-content">@include('livewire.incident.incident-step-2')</div>
         </div>
-        <div class="border collapse collapse-arrow bg-base-300 border-base-100">
+        <div class="border collapse collapse-arrow bg-base-100 border-base-200">
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-base-300 text-base-content">
                 <span class="flex">
