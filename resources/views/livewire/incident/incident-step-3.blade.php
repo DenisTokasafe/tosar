@@ -1,4 +1,4 @@
-<table class="table w-full border border-collapse table-xs table-compact border-base-300">
+<table class="table w-full border border-collapse table-xs table-compact border-base-300 mt-4">
     <thead class="text-xs text-white uppercase bg-black">
         <tr>
             <th class="w-1/4 border border-base-300">Peran</th>
