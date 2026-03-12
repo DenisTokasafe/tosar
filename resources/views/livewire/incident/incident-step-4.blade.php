@@ -1,7 +1,7 @@
 <div class="mt-4 overflow-x-auto">
     <table class="table table-xs w-full border border-collapse border-base-300">
         <thead>
-            <tr class="text-center bg-gray-200">
+            <tr class="text-center ">
                 <th class="w-1/6 px-4 py-2 font-bold border border-base-300 text-base-content">Factors</th>
                 <th class="w-2/5 px-4 py-2 font-bold border border-base-300 text-base-content">Temuan</th>
                 <th class="w-2/5 px-4 py-2 font-bold border border-base-300 text-base-content">Deskripsi</th>
@@ -11,7 +11,7 @@
             {{-- Menggunakan properti dari controller --}}
             @foreach($peepoFactors as $key => $label)
             <tr>
-                <td class="px-4 font-bold align-middle bg-gray-100 border border-base-300 text-base-content">
+                <td class="px-4 font-bold align-middle  border border-base-300 text-base-content">
                     {{ $label }}
                 </td>
                 <td class="p-2 border border-base-300">
