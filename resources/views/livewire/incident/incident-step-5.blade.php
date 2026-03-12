@@ -29,10 +29,10 @@
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
                 {{-- Implementasi pada elemen grid --}}
-                <div class="grid {{ $this->gridClass }} gap-4 mt-2 ">
+                <div @class(['grid {{ $this->gridClass }} gap-4 mt-2'=>$whyCount===1,'divide-x-3 divide-solid'=> $whyCount > 1, 'divide-base-300' => $whyCount > 1])>
                     @for($i = 1; $i
                     <= $whyCount; $i++)
-                        <div @class(['flex items-center gap-4', 'divide-x-3 divide-dashed divide-base-300 '=> $i > 1,])>
+                        <div class="flex items-center gap-4">
 
                         <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
                             label="Text area why {{ $i }}"
