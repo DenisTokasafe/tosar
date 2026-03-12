@@ -1,5 +1,5 @@
 <div class="mt-6 overflow-x-auto">
-    <table class="table w-full border border-collapse border-base-300">
+    <table class="table w-full table-xs border border-collapse border-base-300">
         <thead>
             {{-- Sub-Header Penyebab Langsung --}}
             <tr class="text-center bg-orange-100">
@@ -9,8 +9,8 @@
             </tr>
             {{-- Header Kolom --}}
             <tr class="bg-gray-200 text-base-content">
-                <th class="w-1/2 px-4 py-2 font-bold border border-base-300">Kondisi Tidak Aman</th>
-                <th class="w-1/2 px-4 py-2 font-bold border border-base-300">Description</th>
+                <th class="w-1/2 px-4  font-bold border border-base-300">Kondisi Tidak Aman</th>
+                <th class="w-1/2 px-4  font-bold border border-base-300">Description</th>
                 <th class="w-10 border border-base-300"></th>
             </tr>
         </thead>

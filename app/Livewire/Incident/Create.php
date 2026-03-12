@@ -504,6 +504,33 @@ class Create extends Component
 
         // Inisialisasi status dropdown
         $this->showDropdownPartisipan[$newIndex] = false;
+
+        if ($type === 'unsafe_conditions') {
+            $this->unsafe_conditions[] = ['item' => '', 'description' => ''];
+        }
+    }
+    public function removeRow($type, $index)
+    {
+        // 1. Hapus data baris utama
+        unset($this->{$type}[$index]);
+        $this->{$type} = array_values($this->{$type});
+
+        // 2. Hapus state search spesifik untuk peran tersebut di index tersebut
+        if (isset($this->searchQuery[$index][$type])) {
+            unset($this->searchQuery[$index][$type]);
+        }
+
+        // 3. Hapus status dropdown
+        unset($this->showDropdownPartisipan[$index]);
+
+        // 4. Re-index kembali agar urutan array searchQuery dan dropdown tetap sinkron dengan urutan baris di HTML
+        $this->searchQuery = array_values($this->searchQuery);
+        $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
+
+        // 5. Jika baris habis, tambahkan satu baris kosong lagi
+        if (empty($this->{$type})) {
+            $this->addRow($type);
+        }
     }
     #[Computed]
     public function gridClass()
@@ -538,32 +565,7 @@ class Create extends Component
         }
     }
 
-    public function removeRow($type, $index)
-    {
-        // 1. Hapus data baris utama
-        unset($this->{$type}[$index]);
-        $this->{$type} = array_values($this->{$type});
 
-        // 2. Hapus state search spesifik untuk peran tersebut di index tersebut
-        if (isset($this->searchQuery[$index][$type])) {
-            unset($this->searchQuery[$index][$type]);
-        }
-
-        // 3. Hapus status dropdown
-        unset($this->showDropdownPartisipan[$index]);
-
-        // 4. Re-index kembali agar urutan array searchQuery dan dropdown tetap sinkron dengan urutan baris di HTML
-        $this->searchQuery = array_values($this->searchQuery);
-        $this->showDropdownPartisipan = array_values($this->showDropdownPartisipan);
-
-        // 5. Jika baris habis, tambahkan satu baris kosong lagi
-        if (empty($this->{$type})) {
-            $this->addRow($type);
-        }
-        if ($type === 'unsafe_conditions') {
-            $this->unsafe_conditions[] = ['item' => '', 'description' => ''];
-        }
-    }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
     public function updatedSearchQuery($value, $key)
