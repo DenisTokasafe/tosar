@@ -128,6 +128,7 @@ class Create extends Component
         $this->addRow('pemimpin');
         $this->addRow('facilitator');
         $this->addRow('anggota');
+        $this->addRow('timelines');
 
 
         foreach ($this->peepoFactors as $key => $label) {
