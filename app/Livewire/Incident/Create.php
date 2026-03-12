@@ -521,6 +521,16 @@ class Create extends Component
             $this->timelines[$index]["why{$this->whyCount}"] = '';
         }
     }
+    public function removeWhyColumn()
+    {
+        if ($this->whyCount > 1) {
+            // Hapus key "why" terakhir dari setiap baris timeline
+            foreach ($this->timelines as $index => $line) {
+                unset($this->timelines[$index]["why{$this->whyCount}"]);
+            }
+            $this->whyCount--;
+        }
+    }
 
     public function removeRow($type, $index)
     {

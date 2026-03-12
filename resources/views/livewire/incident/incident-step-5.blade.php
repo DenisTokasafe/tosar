@@ -1,9 +1,22 @@
 <div class="mt-4 ">
     <div class="flex items-center justify-between pb-2 border-b">
         <h2 class="text-lg font-bold">BAGIAN 5 – Time Line dan Analisis Informasi</h2>
-        <button type="button" wire:click="addWhyColumn" class="btn btn-sm btn-outline btn-primary">
-            + Tambah Kolom "Mengapa"
-        </button>
+        <div class="flex gap-2">
+            {{-- Tombol Hapus Kolom (Hanya tampil jika > 1) --}}
+            @if($whyCount > 1)
+            <button type="button"
+                wire:click="removeWhyColumn"
+                class="btn btn-sm btn-outline btn-error">
+                - Hapus Kolom "Mengapa"
+            </button>
+            @endif
+
+            <button type="button"
+                wire:click="addWhyColumn"
+                class="btn btn-sm btn-outline btn-primary">
+                + Tambah Kolom "Mengapa"
+            </button>
+        </div>
     </div>
 
     @foreach($timelines as $index => $line)
@@ -26,24 +39,23 @@
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 mt-2 md:grid-cols-2 lg:grid-cols-3">
-                    @for($i = 1; $i <= $whyCount; $i++)
-                        <div class="w-full form-control">
-                        <label class="text-sm font-semibold label">Text area why {{ $i }}</label>
-                        <x-form.text_area
-                            wire:model="timelines.{{ $index }}.why{{ $i }}"
-                            placeholder="Jelaskan alasan ke-{{ $i }}..."
-                            rows="2" />
+                    @for($i = 1; $i
+                    <= $whyCount; $i++)
+
+                        <x-form.text_area label="Text area why {{ $i }}"
+                        wire:model="timelines.{{ $index }}.why{{ $i }}"
+                        placeholder="Jelaskan alasan ke-{{ $i }}..."
+                        rows="2" />
+                    @endfor
                 </div>
-                @endfor
             </div>
         </div>
     </div>
-</div>
-@endforeach
+    @endforeach
 
-<div class="flex justify-center mt-4">
-    <button type="button" wire:click="addRow('timelines')" class="btn btn-block btn-success btn-outline">
-        + Tambah Baris Kronologi Baru
-    </button>
-</div>
+    <div class="flex justify-center mt-4">
+        <button type="button" wire:click="addRow('timelines')" class="btn btn-block btn-success btn-outline">
+            + Tambah Baris Kronologi Baru
+        </button>
+    </div>
 </div>
