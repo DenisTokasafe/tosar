@@ -110,6 +110,7 @@ class Create extends Component
     public $peepo = [];
     public $timelines = [];
     public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
+    public $unsafe_conditions = [];
     public function mount()
     {
         if (Auth::check()) {
@@ -129,6 +130,7 @@ class Create extends Component
         $this->addRow('facilitator');
         $this->addRow('anggota');
         $this->addRow('timelines');
+        $this->addRow('unsafe_conditions');
 
 
         foreach ($this->peepoFactors as $key => $label) {
@@ -558,6 +560,9 @@ class Create extends Component
         if (empty($this->{$type})) {
             $this->addRow($type);
         }
+        if ($type === 'unsafe_conditions') {
+            $this->unsafe_conditions[] = ['item' => '', 'description' => ''];
+        }
     }
 
     // Fungsi Pencarian (Dipicu oleh modelsearch di component)
@@ -609,5 +614,26 @@ class Create extends Component
         $this->showDropdownPartisipan = []; // Reset ke array kosong
         $this->activeType = '';
         $this->activeIndex = null;
+    }
+
+    // Data opsi sesuai gambar
+    public function getUnsafeConditionOptionsProperty()
+    {
+        return [
+            '1.1.1 Tidak memadainya pengamanan atau penghalang' => '1.1.1 Tidak memadainya pengamanan atau penghalang',
+            '1.1.2 Tidak memadainya atau tidak layaknya peralatan pencegah' => '1.1.2 Tidak memadainya atau tidak layaknya peralatan pencegah',
+            '1.1.3 Perkakas, peralatan atau bahan(material) yang rusak' => '1.1.3 Perkakas, peralatan atau bahan(material) yang rusak',
+            '1.1.4 Tempat kerja sangat terbatas' => '1.1.4 Tempat kerja sangat terbatas',
+            '1.1.5 Kurang memadainya Sistem peringatan' => '1.1.5 Kurang memadainya Sistem peringatan',
+            '1.1.6 Bahaya kebakaran dan ledakan' => '1.1.6 Bahaya kebakaran dan ledakan',
+            '1.1.7 Housekeeping jelek/berantakan' => '1.1.7 Housekeeping jelek/berantakan',
+            '1.1.8 Kebisingan' => '1.1.8 Kebisingan',
+            '1.1.9 Radiasi' => '1.1.9 Radiasi',
+            '1.1.10 Suhu yang ekstrim' => '1.1.10 Suhu yang ekstrim',
+            '1.1.11 Kurangnya penerangan / berlebihan' => '1.1.11 Kurangnya penerangan / berlebihan',
+            '1.1.12 Ventilasi' => '1.1.12 Ventilasi',
+            '1.1.13 Kondisi lingkungan yang berbahaya' => '1.1.13 Kondisi lingkungan yang berbahaya',
+            '1.1.14 Lainnya' => '1.1.14 Lainnya',
+        ];
     }
 }
