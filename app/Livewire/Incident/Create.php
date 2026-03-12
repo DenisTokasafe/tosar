@@ -798,21 +798,16 @@ class Create extends Component
     }
     public function selectPIC($userId, $index)
     {
-        // Cari user yang dipilih
         $user = User::find($userId);
 
         if ($user) {
-            // Update data di array corrective_actions
             $this->corrective_actions[$index]['pic_id'] = $user->id;
             $this->corrective_actions[$index]['pic_name'] = $user->name;
         }
 
-        // Tutup dropdown dan reset status aktif
+        // Reset State
         $this->corrective_actions[$index]['show_pic_dropdown'] = false;
-        $this->activeType = '';
-        $this->activeIndex = null;
-
-        // Kosongkan opsi pencarian agar tidak mengganggu baris lain
         $this->involved_personnel_options = [];
+        $this->activeType = '';
     }
 }
