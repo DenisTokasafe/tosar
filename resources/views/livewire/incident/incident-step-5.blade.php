@@ -29,34 +29,32 @@
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
                 {{-- Implementasi pada elemen grid --}}
-                <div class="" @class(['grid {{ $this->gridClass }} gap-4 mt-2 ', ' divide-x-3 divide-dashed divide-base-300 '=> $whyCount > 1,])>
-                    @for($i = 1; $i
-                    <= $whyCount; $i++)
+                <div @class(['grid {{ $this->gridClass }} gap-4 mt-2 ',' divide-x-3 divide-dashed divide-base-300 '=> $whyCount > 1,])>
+                    @for($i = 1; $i <= $whyCount; $i++)
                         <div class="flex items-center gap-4">
-                        <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
-                            label="Text area why {{ $i }}"
-                            wire:model="timelines.{{ $index }}.why{{ $i }}"
-                            placeholder="Jelaskan alasan ke-{{ $i }}..."
-                            rows="2" />
-                        @if($whyCount > 1)
-                        <flux:tooltip content="hapus" position="top" wire:key="remove-why-{{ $index }}-{{ $i }}">
-                            <flux:button wire:click="removeWhyColumn"
-                                size="xs" icon="trash" variant="danger">
-                            </flux:button>
-                        </flux:tooltip>
-                        @endif
+                            <x-form.text_area wire:key="why-{{ $index }}-{{ $i }}"
+                                label="Text area why {{ $i }}"
+                                wire:model="timelines.{{ $index }}.why{{ $i }}"
+                                placeholder="Jelaskan alasan ke-{{ $i }}..."
+                                rows="2" />
+                            @if($whyCount > 1)
+                            <flux:tooltip content="hapus" position="top" wire:key="remove-why-{{ $index }}-{{ $i }}">
+                                <flux:button wire:click="removeWhyColumn"
+                                    size="xs" icon="trash" variant="danger">
+                                </flux:button>
+                            </flux:tooltip>
+                            @endif
+                        </div>
+                    @endfor
                 </div>
-                @endfor
-            </div>
+             </div>
         </div>
     </div>
+    @endforeach
 </div>
-</div>
-@endforeach
-
 <!-- <div class="flex justify-center mt-4">
         <button type="button" wire:click="addRow(' timelines')" class="btn btn-block btn-success btn-outline">
                     + Tambah Baris Kronologi Baru
                     </button>
                 </div> -->
-            </div>
+                <!-- </div> -->
