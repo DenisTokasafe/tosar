@@ -1,5 +1,5 @@
 <div class="mt-4 overflow-x-auto">
-    <table class="table table-xs w-full border border-collapse border-base-300">
+    <table class="table w-full border border-collapse table-xs border-base-300">
         <thead>
             <tr class="text-center ">
                 <th class="w-1/6 px-4 font-bold border border-base-300 text-base-content">Factors</th>
@@ -11,20 +11,20 @@
             {{-- Menggunakan properti dari controller --}}
             @foreach($peepoFactors as $key => $label)
             <tr>
-                <td class="px-4 font-bold align-middle  border border-base-300 text-base-content">
+                <td class="px-4 font-bold align-middle border border-base-300 text-base-content">
                     {{ $label }}
                 </td>
                 <td class="p-2 border border-base-300">
                     <x-form.text_area
                         wire:model="peepo.{{ $key }}.temuan"
                         placeholder="Masukkan temuan untuk faktor {{ $label }}..."
-                        rows="3" />
+                        rows="2" />
                 </td>
                 <td class="p-2 border border-base-300">
                     <x-form.text_area
                         wire:model="peepo.{{ $key }}.deskripsi"
                         placeholder="Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya."
-                        rows="3"
+                        rows="2"
                         required />
                 </td>
             </tr>
