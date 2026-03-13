@@ -70,11 +70,6 @@
         </button>
     </div>
 
-    <div class="mb-4">
-        <x-form.text_area label="Tindakan Langsung (Emergency Action)" model="emergency_action"
-            placeholder="{{ __('Jelaskan tindakan segera...') }}"
-            readonly /> {{-- Gunakan readonly jika hanya tampil, disabled terkadang tidak mengirim data --}}
-    </div>
 
     <div class="overflow-x-auto">
         <table class="table w-full table-compact">
