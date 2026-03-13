@@ -322,10 +322,45 @@
     --noise: 1;
 }
 
+@plugin "daisyui/theme" {
+    name: "swimmingvoid";
+    default: false;
+    prefersdark: false;
+    color-scheme: "light";
+    --color-base-100: oklch(98% 0 0);
+    --color-base-200: oklch(97% 0 0);
+    --color-base-300: oklch(92% 0 0);
+    --color-base-content: oklch(20% 0 0);
+    --color-primary: oklch(68% 0.169 237.323);
+    --color-primary-content: oklch(97% 0.013 236.62);
+    --color-secondary: oklch(76% 0.188 70.08);
+    --color-secondary-content: oklch(98% 0.022 95.277);
+    --color-accent: oklch(60% 0.25 292.717);
+    --color-accent-content: oklch(96% 0.016 293.756);
+    --color-neutral: oklch(14% 0 0);
+    --color-neutral-content: oklch(98% 0 0);
+    --color-info: oklch(78% 0.154 211.53);
+    --color-info-content: oklch(30% 0.056 229.695);
+    --color-success: oklch(77% 0.152 181.912);
+    --color-success-content: oklch(27% 0.046 192.524);
+    --color-warning: oklch(79% 0.184 86.047);
+    --color-warning-content: oklch(28% 0.066 53.813);
+    --color-error: oklch(58% 0.253 17.585);
+    --color-error-content: oklch(96% 0.015 12.422);
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.25rem;
+    --size-selector: 0.21875rem;
+    --size-field: 0.25rem;
+    --border: 2px;
+    --depth: 1;
+    --noise: 1;
+}
+
 @plugin "daisyui" {
     themes:
         fancytide, mysteryriver, corporate, cookedzombie, vibebutnew, goldmine,
-        goldore-light, sentry-interlock, tokasafe;
+        goldore-light, sentry-interlock, tokasafe, swimmingvoid;
 }
 
 /* --- 4. TAILWIND THEME & VARIANTS --- */
