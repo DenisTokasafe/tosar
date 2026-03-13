@@ -81,6 +81,7 @@
             <thead>
                 <tr class="text-xs">
                     <th>Rencana Perbaikan</th>
+                    <th>Kontrol Hirarki</th>
                     <th>PIC</th>
                     <th>Batas Waktu</th>
                     <th>Tgl. Selesai</th>
@@ -94,6 +95,12 @@
                         <x-form.text_area
                             model="corrective_actions.{{ $index }}.action_description"
                             placeholder="{{ __('Langkah agar tidak terulang...') }}"
+                            rows="2" />
+                    </td>
+                    <td class="w-1/3">
+                        <x-form.text_area
+                            model="corrective_actions.{{ $index }}.control_hierarchy"
+                            placeholder="{{ __('Kontrol Hirarki...') }}"
                             rows="2" />
                     </td>
                     <td class="w-1/4">
