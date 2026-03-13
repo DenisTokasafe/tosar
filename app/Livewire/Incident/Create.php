@@ -115,6 +115,14 @@ class Create extends Component
     public $personal_factors = [];
     public $job_factors = [];
     public $control_system_factors = [];
+
+    // Data Utama
+
+    // State untuk Searchable Select di dalam baris
+    public $searchPetugas = [];         // Menampung input teks pencarian per index
+    public $showDropdownPetugas = [];   // Menampung status open/close per index
+    public $pelaporsAct = [];           // Hasil query pencarian (biasanya global atau di-filter)
+    public $manualActPelaporMode = false; // Jika mode manual global atau per baris
     public function mount()
     {
         if (Auth::check()) {
@@ -634,10 +642,6 @@ class Create extends Component
             $this->{$type}[$index]['jabatan'] = $user->position ?? '';
             $this->{$type}[$index]['dept']    = $user->department_name ?? '';
 
-            $this->{$type}[$index]['pic_id'] = $user->id ?? '';
-            $this->{$type}[$index]['pic_name']    = $user->name ?? '';
-
-
             // Update teks di input pencarian
             $this->searchQuery[$index][$type] = $user->name;
 
@@ -757,62 +761,66 @@ class Create extends Component
     {
         $this->corrective_actions[] = [
             'action_description' => '',
-            'pic_id' => null,
-            'pic_name' => '',
+            'inspector_id' => null, // ID dari DB
+            'inspector_name' => '', // Nama untuk ditampilkan
             'due_date' => null,
             'actual_completion_date' => null,
-            'show_pic_dropdown' => false, // State khusus untuk dropdown baris ini
         ];
+
+        // Inisialisasi state UI untuk baris baru
+        $index = count($this->corrective_actions) - 1;
+        $this->searchPetugas[$index] = '';
+        $this->showDropdownPetugas[$index] = false;
     }
+
+    /**
+     * Menghapus baris tertentu
+     */
     public function removeCorrectiveRow($index)
     {
-        if (count($this->corrective_actions) > 1) {
-            unset($this->corrective_actions[$index]);
-            $this->corrective_actions = array_values($this->corrective_actions);
-        }
+        unset($this->corrective_actions[$index]);
+        unset($this->searchPetugas[$index]);
+        unset($this->showDropdownPetugas[$index]);
+
+        // Reset array keys agar urutan index tetap konsisten (0, 1, 2...)
+        $this->corrective_actions = array_values($this->corrective_actions);
+        $this->searchPetugas = array_values($this->searchPetugas);
+        $this->showDropdownPetugas = array_values($this->showDropdownPetugas);
     }
-    public function updatedCorrectiveActions($value, $key)
+
+    /**
+     * Lifecycle Hook: Berjalan otomatis saat $searchPetugas diupdate
+     * Format: updatedFieldNameIndex
+     */
+    public function updatedSearchPetugas($value, $index)
     {
-        // $key akan berisi seperti "0.pic_name" atau "1.pic_name"
-        $parts = explode('.', $key);
-
-        // Pastikan kita hanya memproses jika yang diketik adalah kolom pic_name
-        if (count($parts) > 1 && $parts[1] === 'pic_name') {
-            $index = $parts[0]; // Mendapatkan angka index
-
-            if (strlen($value) < 2) {
-                $this->involved_personnel_options = [];
-                $this->corrective_actions[$index]['show_pic_dropdown'] = false;
-                return;
-            }
-
-            // Jalankan pencarian
-            $this->involved_personnel_options = User::where('name', 'like', '%' . $value . '%')
-                ->limit(10)
-                ->get()
-                ->mapWithKeys(function ($user) {
-                    return [$user->id => $user->name];
-                })
-                ->toArray();
-
-            // Aktifkan state dropdown dan set index aktif
-            $this->corrective_actions[$index]['show_pic_dropdown'] = true;
-            $this->activeIndex = (int)$index;
-            $this->activeType = 'pic';
+        if (strlen($value) < 2) {
+            $this->pelaporsAct = [];
+            $this->showDropdownPetugas[$index] = false;
+            return;
         }
+
+        // Query ke database (Sesuaikan dengan Model User/Karyawan Anda)
+        $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
+            ->limit(5)
+            ->get();
+
+        $this->showDropdownPetugas[$index] = true;
     }
-    public function selectPIC($id, $index)
+
+    /**
+     * Aksi saat user memilih nama dari dropdown
+     */
+    public function selectActPelapor($id, $name, $index)
     {
-        $user = User::find($id);
+        // Simpan data ke array corrective_actions sesuai index barisnya
+        $this->corrective_actions[$index]['inspector_id'] = $id;
+        $this->corrective_actions[$index]['inspector_name'] = $name;
 
-        if ($user) {
-            $this->corrective_actions[$index]['pic_id'] = $user->id;
-            $this->corrective_actions[$index]['pic_name'] = $user->name;
-        }
+        // Update input pencarian agar menampilkan nama yang dipilih
+        $this->searchPetugas[$index] = $name;
 
-        // Reset State
-        $this->corrective_actions[$index]['show_pic_dropdown'] = false;
-        $this->involved_personnel_options = [];
-        $this->activeType = '';
+        // Tutup dropdown
+        $this->showDropdownPetugas[$index] = false;
     }
 }

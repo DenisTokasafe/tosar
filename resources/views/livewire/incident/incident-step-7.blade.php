@@ -97,27 +97,12 @@
                             rows="2" />
                     </td>
                     <td class="w-1/4">
-                        <x-form.searchable-select2
-                            wire:key="select-pic-{{ $index }}"
-                            placeholder="Cari PIC..."
-                            {{-- Pastikan komponen Anda menggunakan wire:model.live di dalamnya --}}
-                            modelsearch="searchQuery.{{ $index }}.pic_name"
-                            modelid="corrective_actions.{{ $index }}.pic_id"
-                            :options="$involved_personnel_options"
-
-                            {{-- Logika Show Dropdown --}}
-                            :showdropdown="($corrective_actions[$index]['show_pic_dropdown'] ?? false) && $activeType === 'pic' && $activeIndex === $index"
-
-                            clickaction="selectPIC(VALUE_ID, {{ $index }})"
-                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
-
-                        <x-form.searchable-select2 wire:key="select-pic-{{ $index }}"
-                            placeholder="Cari pic ..." modelsearch="searchQuery.{{ $index }}.pic_name"
-                            modelid="pic.{{ $index }}.pic_id" :options="$options"
-                            {{-- Perhatikan perubahan di bawah ini: tambahkan [$index] --}}
-                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === 'pic' && $activeIndex === $index"
-                            clickaction="selectUser(VALUE_ID, {{ $index }}, 'pic')"
-                            x-on:focusin="$wire.set('activeType', 'pic'); $wire.set('activeIndex', {{ $index }})" />
+                        <x-form.searchable-select-advanced :disabled="$isDisabled"
+                            label="Petugas Inspeksi {{ $index + 1 }}"
+                            placeholder="Cari nama..."
+                            modelsearch="searchPetugas.{{ $index }}"
+                            modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
+                            :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                     </td>
                     <td class="w-1/6 text-xs">
                         <x-form.tgl-waktu
