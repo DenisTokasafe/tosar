@@ -975,7 +975,7 @@ class Create extends Component
 
         // 2. Logika Khusus KTT (Hanya jika Level Insiden 3, 4, atau 5)
         // Asumsi Anda memiliki properti $actual_level_id di component ini
-        if (in_array($this->actual_level_id, [3, 4, 5])) {
+        if (in_array($this->consequence_id, [3, 4, 5])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
