@@ -19,6 +19,7 @@ use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -960,50 +961,50 @@ class Create extends Component
     public function save()
     {
         try {
-        // 1. Definisikan Rules
-        $rules = [
-            // Validasi ID yang dipilih dari Select2
-            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            // 1. Definisikan Rules
+            $rules = [
+                // Validasi ID yang dipilih dari Select2
+                'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+                'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+                'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
 
-            // Validasi Komentar (CKEditor)
-            // Kita gunakan min:11 karena CKEditor biasanya membungkus teks dengan <p></p> (7 karakter)
-            'penerimaan_komentar_contractor'    => 'required|min:11',
-            'penerimaan_komentar_internal'      => 'required|min:11',
-            'penerimaan_komentar_ohs'           => 'required|min:11',
-        ];
+                // Validasi Komentar (CKEditor)
+                // Kita gunakan min:11 karena CKEditor biasanya membungkus teks dengan <p></p> (7 karakter)
+                'penerimaan_komentar_contractor'    => 'required|min:11',
+                'penerimaan_komentar_internal'      => 'required|min:11',
+                'penerimaan_komentar_ohs'           => 'required|min:11',
+            ];
 
-        // 2. Logika Khusus KTT (Hanya jika Level Insiden 3, 4, atau 5)
-        // Asumsi Anda memiliki properti $actual_level_id di component ini
-        if (in_array($this->consequence_id, [3, 4, 5])) {
-            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+            // 2. Logika Khusus KTT (Hanya jika Level Insiden 3, 4, atau 5)
+            // Asumsi Anda memiliki properti $actual_level_id di component ini
+            if (in_array($this->consequence_id, [3, 4, 5])) {
+                $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+                $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+            }
+
+            // 3. Jalankan Validasi dengan Custom Message (Opsional)
+            $this->validate($rules, [
+                'required' => 'Kolom :attribute wajib diisi.',
+                'exists' => 'Pilihan :attribute tidak valid.',
+                'min' => 'Kolom :attribute harus berisi setidaknya :min karakter.',
+            ]);
+
+            // 5. Reset Form atau Redirect (Opsional)
+            $this->reset([
+                'penerimaan_komentar_contractor_id',
+                'penerimaan_komentar_internal_id',
+                'penerimaan_komentar_ohs_id',
+                'penerimaan_komentar_ktt_id',
+                'penerimaan_komentar_contractor',
+                'penerimaan_komentar_internal',
+                'penerimaan_komentar_ohs',
+                'penerimaan_komentar_ktt',
+            ]);
+
+            session()->flash('success', 'Penerimaan komentar berhasil disimpan!');
+        } catch (ValidationException $e) {
+            $this->dispatch('validate-all-editors');
+            throw $e;
         }
-
-        // 3. Jalankan Validasi dengan Custom Message (Opsional)
-        $this->validate($rules, [
-            'required' => 'Kolom :attribute wajib diisi.',
-            'exists' => 'Pilihan :attribute tidak valid.',
-            'min' => 'Kolom :attribute harus berisi setidaknya :min karakter.',
-        ]);
-
-        // 5. Reset Form atau Redirect (Opsional)
-        $this->reset([
-            'penerimaan_komentar_contractor_id',
-            'penerimaan_komentar_internal_id',
-            'penerimaan_komentar_ohs_id',
-            'penerimaan_komentar_ktt_id',
-            'penerimaan_komentar_contractor',
-            'penerimaan_komentar_internal',
-            'penerimaan_komentar_ohs',
-            'penerimaan_komentar_ktt',
-        ]);
-
-        session()->flash('success', 'Penerimaan komentar berhasil disimpan!');
-    }
-    catch (Exception $e) {
-        $this->dispatch('validate-all-editors');
-        throw $e;
     }
 }
