@@ -220,7 +220,7 @@
                                     const data = editorInstance.getData();
                                     this.$wire.set(modelName, data);
 
-                                    // Hapus border merah segera saat user mulai mengetik isi
+                                    // LIVE CHECK: Hapus class error jika user mulai mengetik teks
                                     const plainText = data.replace(/<[^>]*>/g, '').trim();
                                     if (plainText !== '') {
                                         const el = editorInstance.ui.view.editable.element;
@@ -230,20 +230,26 @@
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- Fungsi Apply Error ---
+                        // --- IMPLEMENTASI APPLY ERROR ---
                         const applyError = () => {
                             if (editorInstance) {
-                                // Cek apakah benar-benar kosong (abaikan tag HTML kosong seperti <p></p>)
-                                const plainText = editorInstance.getData().replace(/<[^>]*>/g, '').trim();
+                                // Menghapus tag HTML untuk mengecek apakah benar-benar ada teks
+                                const data = editorInstance.getData().replace(/<[^>]*>/g, '').trim();
 
-                                if (plainText === '') {
+                                if (data === '') {
                                     const el = editorInstance.ui.view.editable.element;
-                                    if (el) el.classList.add('error');
+                                    if (el) {
+                                        el.classList.add('error');
+                                        // Opsional: scroll ke elemen yang error agar user tahu
+                                        el.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'center'
+                                        });
+                                    }
                                 }
                             }
                         };
 
-                        // --- Listeners ---
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const payload = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && payload.name === modelName) {
@@ -251,7 +257,7 @@
                             }
                         }));
 
-                        // Listener untuk validasi per field atau semua
+                        // Listeners untuk trigger error
                         listeners.push(Livewire.on(`validate-${modelName}`, applyError));
                         listeners.push(Livewire.on('validate-all-editors', applyError));
 

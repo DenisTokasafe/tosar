@@ -959,6 +959,7 @@ class Create extends Component
 
     public function save()
     {
+        try {
         // 1. Definisikan Rules
         $rules = [
             // Validasi ID yang dipilih dari Select2
@@ -1000,5 +1001,9 @@ class Create extends Component
         ]);
 
         session()->flash('success', 'Penerimaan komentar berhasil disimpan!');
+    }
+    catch (Exception $e) {
+        $this->dispatch('validate-all-editors');
+        throw $e;
     }
 }
