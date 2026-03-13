@@ -12,7 +12,7 @@
                 modelid="penerimaan_komentar_contractor_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarContractorDropdown"
-                clickaction="selectPenerimaanKomentarContractor"
+                clickaction="selectPenerimaanKomentarContractor(VALUE_ID, VALUE_NAME)"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_contractor'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
 
@@ -31,7 +31,7 @@
                 modelid="penerimaan_komentar_internal_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarInternalDropdown"
-                clickaction="selectPenerimaanKomentarInternal"
+                clickaction="selectPenerimaanKomentarInternal(VALUE_ID, VALUE_NAME)"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_internal'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
 
@@ -51,7 +51,7 @@
                 modelid="penerimaan_komentar_ohs_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarOhsDropdown"
-                clickaction="selectPenerimaanKomentarOhs"
+                clickaction="selectPenerimaanKomentarOhs(VALUE_ID, VALUE_NAME)"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ohs'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
 
@@ -70,7 +70,7 @@
                 modelid="penerimaan_komentar_ktt_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarKttDropdown"
-                clickaction="selectPenerimaanKomentarKtt"
+                clickaction="selectPenerimaanKomentarKtt(VALUE_ID, VALUE_NAME)"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ktt'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
     </fieldset>
