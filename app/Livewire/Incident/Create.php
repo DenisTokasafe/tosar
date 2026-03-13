@@ -906,9 +906,10 @@ class Create extends Component
     /**
      * Action: Pilih Pelapor Contractor
      */
-    public function selectPenerimaanKomentarContractor($id, $name)
+    public function selectPenerimaanKomentarContractor($name)
     {
-        $this->penerimaan_komentar_contractor_id = $id;
+        $user  = User::where('name', $name)->first();
+        $this->penerimaan_komentar_contractor_id = $user ? $user->id : null;
         $this->searchNamePenerimaan['kontraktor'] = $name;
         $this->resetDropdowns();
     }
