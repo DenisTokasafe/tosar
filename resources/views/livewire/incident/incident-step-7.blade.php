@@ -98,7 +98,6 @@
                     </td>
                     <td class="w-1/4">
                         <x-form.searchable-select-advanced
-                            label="Petugas Inspeksi {{ $index + 1 }}"
                             placeholder="Cari nama..."
                             modelsearch="searchPetugas.{{ $index }}"
                             modelid="corrective_actions.{{ $index }}.name" :options="$pelaporsAct"
