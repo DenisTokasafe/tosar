@@ -490,7 +490,16 @@ select:focus[data-flux-control] {
 
 /* State error khusus */
 .ck-editor__editable.error {
-    border: 2px solid var(--color-error) !important;
+    border: 1.5px solid var(--color-error) !important;
+    /* Memberikan efek bayangan merah halus agar identik dengan input DaisyUI saat error */
+    box-shadow: 0 0 0 1px var(--color-error) !important;
+}
+
+/* Memastikan transisi warna border halus */
+.ck.ck-editor__main > .ck-editor__editable {
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
 }
 
 .ck.ck-toolbar {

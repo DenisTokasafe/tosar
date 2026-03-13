@@ -202,40 +202,48 @@
 
                 return {
                     init() {
-                        // PENGAMAN 1: Jangan inisialisasi jika elemen sudah punya editor
                         if (this.$refs.editorElement.querySelector('.ck-editor')) return;
 
                         window.ClassicEditor
                             .create(this.$refs.editorElement, {
-                                placeholder: this.$refs.editorElement.getAttribute(
-                                    'data-placeholder') || 'Tulis sesuatu...',
-                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList',
-                                    '|', 'undo', 'redo'
-                                ],
+                                placeholder: this.$refs.editorElement.getAttribute('data-placeholder') || 'Tulis sesuatu...',
+                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
                                 removePlugins: ['ImageUpload', 'EasyImage']
                             })
                             .then(editor => {
                                 editorInstance = editor;
 
-                                // Ambil data terakhir dari Livewire (agar teks tidak hilang saat balik step)
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                // Sinkronisasi ke Livewire (setiap ada perubahan ketikan)
                                 editorInstance.model.document.on('change:data', () => {
                                     const data = editorInstance.getData();
                                     this.$wire.set(modelName, data);
 
-                                    if (data.trim() !== '' && editorInstance.ui.view
-                                        .editable.element) {
-                                        editorInstance.ui.view.editable.element
-                                            .classList.remove('error');
+                                    // Hapus border merah segera saat user mulai mengetik isi
+                                    const plainText = data.replace(/<[^>]*>/g, '').trim();
+                                    if (plainText !== '') {
+                                        const el = editorInstance.ui.view.editable.element;
+                                        if (el) el.classList.remove('error');
                                     }
                                 });
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- Listeners (Event dari Livewire) ---
+                        // --- Fungsi Apply Error ---
+                        const applyError = () => {
+                            if (editorInstance) {
+                                // Cek apakah benar-benar kosong (abaikan tag HTML kosong seperti <p></p>)
+                                const plainText = editorInstance.getData().replace(/<[^>]*>/g, '').trim();
+
+                                if (plainText === '') {
+                                    const el = editorInstance.ui.view.editable.element;
+                                    if (el) el.classList.add('error');
+                                }
+                            }
+                        };
+
+                        // --- Listeners ---
                         listeners.push(Livewire.on('update-editor-data', (event) => {
                             const payload = Array.isArray(event) ? event[0] : event;
                             if (editorInstance && payload.name === modelName) {
@@ -243,13 +251,7 @@
                             }
                         }));
 
-                        const applyError = () => {
-                            if (editorInstance && editorInstance.getData().trim() === '') {
-                                const el = editorInstance.ui.view.editable.element;
-                                if (el) el.classList.add('error');
-                            }
-                        };
-
+                        // Listener untuk validasi per field atau semua
                         listeners.push(Livewire.on(`validate-${modelName}`, applyError));
                         listeners.push(Livewire.on('validate-all-editors', applyError));
 
@@ -262,17 +264,13 @@
                         }));
                     },
 
-                    // PENGAMAN 2: Otomatis dipanggil Alpine saat User pindah Step
                     destroy() {
-                        // Bersihkan memory dari listeners Livewire
                         listeners.forEach(unsubscribe => {
                             if (typeof unsubscribe === 'function') unsubscribe();
-                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe
-                                .unsubscribe();
+                            else if (unsubscribe && unsubscribe.unsubscribe) unsubscribe.unsubscribe();
                         });
                         listeners = [];
 
-                        // Hancurkan instance CKEditor agar ID-nya bisa dipakai lagi saat balik ke Step 2
                         if (editorInstance) {
                             editorInstance.destroy()
                                 .then(() => {

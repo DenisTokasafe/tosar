@@ -1,5 +1,5 @@
 <div class="w-full">
-    <fieldset class="w-full mt-4 border fieldset bg-base-200 border-base-300 rounded-box">
+    <fieldset class="w-full p-4 mt-4 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar Project Manager: (Jika kontraktor)</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_contractor')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar Project Manager: (Jika kontraktor) ..."></div>
