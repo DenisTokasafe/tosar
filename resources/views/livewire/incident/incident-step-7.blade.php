@@ -101,7 +101,7 @@
                             label="Petugas Inspeksi {{ $index + 1 }}"
                             placeholder="Cari nama..."
                             modelsearch="searchPetugas.{{ $index }}"
-                            modelid="inspectors.{{ $index }}.name" :options="$pelaporsAct"
+                            modelid="corrective_actions.{{ $index }}.name" :options="$pelaporsAct"
                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                     </td>
                     <td class="w-1/6 text-xs">

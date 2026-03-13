@@ -761,16 +761,18 @@ class Create extends Component
     {
         $this->corrective_actions[] = [
             'action_description' => '',
-            'inspector_id' => null, // ID dari DB
-            'inspector_name' => '', // Nama untuk ditampilkan
+            'name' => '', // Sesuai modelid
             'due_date' => null,
             'actual_completion_date' => null,
+            'inspector_id' => null,
         ];
 
-        // Inisialisasi state UI untuk baris baru
         $index = count($this->corrective_actions) - 1;
+
+        // Inisialisasi pendukung UI
         $this->searchPetugas[$index] = '';
         $this->showDropdownPetugas[$index] = false;
+        $this->inspectors[$index] = [];
     }
 
     /**
@@ -792,35 +794,53 @@ class Create extends Component
      * Lifecycle Hook: Berjalan otomatis saat $searchPetugas diupdate
      * Format: updatedFieldNameIndex
      */
-    public function updatedSearchPetugas($value, $index)
+    public function updatedSearchPetugas($value, $key)
     {
-        if (strlen($value) < 2) {
-            $this->pelaporsAct = [];
+        // Livewire v4 mengirim key berupa index (misal: "0")
+        // Jika format modelsearch adalah searchPetugas.{{ $index }}
+        $index = explode('.', $key)[0];
+
+        if (strlen($value) > 1) {
+            $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
+                ->orderBy('name')
+                ->limit(20)
+                ->get();
+
+            // Pastikan hanya baris ini yang dropdown-nya terbuka
+            $this->showDropdownPetugas[$index] = true;
+        } else {
             $this->showDropdownPetugas[$index] = false;
-            return;
         }
-
-        // Query ke database (Sesuaikan dengan Model User/Karyawan Anda)
-        $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
-            ->limit(5)
-            ->get();
-
-        $this->showDropdownPetugas[$index] = true;
     }
 
-    /**
-     * Aksi saat user memilih nama dari dropdown
-     */
-    public function selectActPelapor($id, $name, $index)
+    public function selectActPelapor($id, $name)
     {
-        // Simpan data ke array corrective_actions sesuai index barisnya
-        $this->corrective_actions[$index]['inspector_id'] = $id;
-        $this->corrective_actions[$index]['inspector_name'] = $name;
+        // Cari index mana yang dropdown-nya sedang terbuka (true)
+        $index = collect($this->showDropdownPetugas)->search(true);
 
-        // Update input pencarian agar menampilkan nama yang dipilih
-        $this->searchPetugas[$index] = $name;
+        if ($index !== false) {
+            // 1. Simpan data ke array corrective_actions sesuai modelid di Blade
+            $this->corrective_actions[$index]['name'] = $name;
 
-        // Tutup dropdown
-        $this->showDropdownPetugas[$index] = false;
+            // Ambil detail tambahan dari database
+            $inspector = User::find($id);
+            if ($inspector) {
+                // Jika Anda punya array khusus inspectors untuk detail tambahan
+                $this->inspectors[$index] = [
+                    'name' => $inspector->name,
+                    'id_number' => $inspector->employee_id,
+                    'dept_con' => $inspector->department_name,
+                ];
+
+                // Simpan ID ke corrective_actions untuk foreign key database
+                $this->corrective_actions[$index]['inspector_id'] = $inspector->id;
+            }
+
+            // 2. Update search input (modelsearch) agar input field menampilkan nama pilihan
+            $this->searchPetugas[$index] = $name;
+
+            // 3. Tutup dropdown untuk baris tersebut
+            $this->showDropdownPetugas[$index] = false;
+        }
     }
 }
