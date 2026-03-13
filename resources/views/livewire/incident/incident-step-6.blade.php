@@ -1,5 +1,5 @@
-<div class="mt-6 overflow-x-auto">
-    <table class="table w-full table-xs border border-collapse border-base-300">
+<div class="mt-4 overflow-x-auto">
+    <table class="table w-full border border-collapse table-xs border-base-300">
         <thead>
             {{-- Sub-Header Utama Penyebab Langsung --}}
             <tr class="text-center bg-orange-100">
@@ -40,7 +40,7 @@
             @endforeach
             <tr class="bg-base-200/50">
                 <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('unsafe_conditions')" class="btn btn-xs btn-ghost text-primary font-bold">
+                    <button type="button" wire:click="addRow('unsafe_conditions')" class="font-bold btn btn-xs btn-ghost text-primary">
                         + TAMBAH KONDISI TIDAK AMAN
                     </button>
                 </td>
@@ -78,7 +78,7 @@
             @endforeach
             <tr class="bg-base-200/50">
                 <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('unsafe_acts')" class="btn btn-xs btn-ghost text-primary font-bold">
+                    <button type="button" wire:click="addRow('unsafe_acts')" class="font-bold btn btn-xs btn-ghost text-primary">
                         + TAMBAH PERILAKU TIDAK AMAN
                     </button>
                 </td>
@@ -88,7 +88,7 @@
             </tr>
             <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
                 <th class="px-4 py-1 font-bold border border-base-300">2.1 Faktor Pribadi</th>
-                <th class="px-4 py-1 font-bold border border-base-300 text-left">Description</th>
+                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
                 <th class="border border-base-300"></th>
             </tr>
             @foreach($personal_factors as $index => $row)
@@ -114,7 +114,7 @@
             {{-- 2.2 FAKTOR PEKERJAAN --}}
             <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
                 <th class="px-4 py-1 font-bold border border-base-300">2.2 Faktor Pekerjaan</th>
-                <th class="px-4 py-1 font-bold border border-base-300 text-left">Description</th>
+                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
                 <th class="border border-base-300"></th>
             </tr>
             @foreach($job_factors as $index => $row)
@@ -141,7 +141,7 @@
             {{-- 2.3 KELEMAHAN SISTEM KONTROL --}}
             <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
                 <th class="px-4 py-1 font-bold border border-base-300">2.3 Kelemahan Sistem Kontrol</th>
-                <th class="px-4 py-1 font-bold border border-base-300 text-left">Description</th>
+                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
                 <th class="border border-base-300"></th>
             </tr>
             @foreach($control_system_factors as $index => $row)

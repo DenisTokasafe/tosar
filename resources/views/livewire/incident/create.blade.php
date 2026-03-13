@@ -77,6 +77,15 @@
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-7')</div>
         </div>
+        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
+            <input type="radio" name="my-accordion-2" />
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
+
+                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-md badge-soft badge-info">Dokumentasi & Tindakan Perbaikan</span></h3>
+
+            </div>
+            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-8')</div>
+        </div>
         {{-- Navigasi Step --}}
         <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
             <button type="button" class="btn btn-xs btn-success" wire:click="submit">Submit</button>x`
