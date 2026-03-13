@@ -772,7 +772,7 @@ class Create extends Component
         // Inisialisasi pendukung UI
         $this->searchPetugas[$index] = '';
         $this->showDropdownPetugas[$index] = false;
-        $this->inspectors[$index] = [];
+        $this->corrective_actions[$index] = [];
     }
 
     /**
