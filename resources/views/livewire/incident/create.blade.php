@@ -81,7 +81,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-base-200 to-base-300 text-base-content">
 
-                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-md badge-soft badge-info">Dokumentasi & Tindakan Perbaikan</span></h3>
+                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-md badge-soft badge-info">Kunci Pembelajaran</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-8')</div>
