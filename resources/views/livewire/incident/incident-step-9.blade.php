@@ -57,24 +57,41 @@
 
 
     </fieldset>
-    @if(in_array($consequence_id, [3, 4, 5]))
-    <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
-        <legend class="fieldset-legend">Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)</legend>
+    @if(in_array((int)$consequence_id, [3, 4, 5]))
+    {{-- Menggunakan key yang unik berdasarkan level agar re-render sempurna --}}
+    <fieldset wire:key="fieldset-ktt-{{ $consequence_id }}"
+        class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
 
-        <div x-data="ckeditorHelper('penerimaan_komentar_ktt')" wire:ignore>
-            <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)..."></div>
+        <legend class="fieldset-legend">
+            Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)
+        </legend>
+
+        {{-- CKEditor dengan wire:ignore agar tidak tertimpa re-render Livewire --}}
+        <div x-data="ckeditorHelper('penerimaan_komentar_ktt')"
+            wire:ignore
+            wire:key="ckeditor-ktt-wrapper">
+            <div x-ref="editorElement"
+                data-placeholder="Masukkan Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)...">
+            </div>
         </div>
+
+        {{-- Pesan Error di bawah Editor --}}
         <x-label-error :messages="$errors->get('penerimaan_komentar_ktt')" />
 
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
-            <x-form.searchable-select2 wire:key="select-penerimaan-komentar-ktt"
-                placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.ktt"
+            {{-- Select2 Nama KTT --}}
+            <x-form.searchable-select2
+                wire:key="select-penerimaan-komentar-ktt-id"
+                placeholder="Cari Nama..."
+                modelsearch="searchNamePenerimaan.ktt"
                 modelid="penerimaan_komentar_ktt_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarKttDropdown"
                 clickaction="selectPenerimaanKomentarKtt(VALUE_ID, VALUE_NAME)"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ktt'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
+
+        <x-label-error :messages="$errors->get('penerimaan_komentar_ktt_id')" />
     </fieldset>
     @endif
 </div>
