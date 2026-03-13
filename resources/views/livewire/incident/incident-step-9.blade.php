@@ -1,5 +1,5 @@
 <div class="w-full">
-    <fieldset class="mt-4 border fieldset bg-base-200 border-base-300 rounded-box w-xs">
+    <fieldset class="w-full mt-4 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar Project Manager: (Jika kontraktor)</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_contractor')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar Project Manager: (Jika kontraktor) ..."></div>
@@ -18,7 +18,7 @@
 
 
     </fieldset>
-    <fieldset class="mt-2 border fieldset bg-base-200 border-base-300 rounded-box w-xs">
+    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar Project Manager</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_internal')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar Project Manager..."></div>
@@ -38,7 +38,7 @@
 
     </fieldset>
 
-    <fieldset class="mt-2 border fieldset bg-base-200 border-base-300 rounded-box w-xs">
+    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar OHS Dept Head</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_ohs')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar OHS Dept Head..."></div>
@@ -57,7 +57,7 @@
 
 
     </fieldset>
-    <fieldset class="mt-2 border fieldset bg-base-200 border-base-300 rounded-box w-xs">
+    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_ktt')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)..."></div>
