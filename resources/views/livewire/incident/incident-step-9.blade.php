@@ -10,7 +10,7 @@
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-contractor"
                 placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.kontraktor"
                 modelid="penerimaan_komentar_contractor_id"
-                :options="$pelapors"
+                :options="$this->pelapors"
                 :showdropdown="$showPenerimaanKomentarContractorDropdown"
                 clickaction="selectPenerimaanKomentarContractor"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_contractor'); $wire.set('activeIndexPenerimaan', 0)" />
@@ -29,7 +29,7 @@
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-internal"
                 placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.internal"
                 modelid="penerimaan_komentar_internal_id"
-                :options="$pelapors"
+                :options="$this->pelapors"
                 :showdropdown="$showPenerimaanKomentarInternalDropdown"
                 clickaction="selectPenerimaanKomentarInternal"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_internal'); $wire.set('activeIndexPenerimaan', 0)" />
@@ -49,7 +49,7 @@
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-ohs"
                 placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.ohs"
                 modelid="penerimaan_komentar_ohs_id"
-                :options="$pelapors"
+                :options="$this->pelapors"
                 :showdropdown="$showPenerimaanKomentarOhsDropdown"
                 clickaction="selectPenerimaanKomentarOhs"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ohs'); $wire.set('activeIndexPenerimaan', 0)" />
@@ -68,7 +68,7 @@
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-ktt"
                 placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.ktt"
                 modelid="penerimaan_komentar_ktt_id"
-                :options="$pelapors"
+                :options="$this->pelapors"
                 :showdropdown="$showPenerimaanKomentarKttDropdown"
                 clickaction="selectPenerimaanKomentarKtt"
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ktt'); $wire.set('activeIndexPenerimaan', 0)" />
