@@ -888,7 +888,7 @@ class Create extends Component
         }
 
         return User::where('name', 'like', '%' . $searchTerm . '%')
-            ->limit(5)
+            ->limit(80)
             ->get();
     }
 
@@ -954,5 +954,33 @@ class Create extends Component
         if ($key === 'internal') $this->showPenerimaanKomentarInternalDropdown = true;
         if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
+    }
+
+
+    public function save()
+    {
+        // 1. Definisikan Rules
+        $rules = [
+            // Validasi ID yang dipilih dari Select2
+            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+
+            // Validasi Komentar (CKEditor)
+            // Kita gunakan min:11 karena CKEditor biasanya membungkus teks dengan <p></p> (7 karakter)
+            'penerimaan_komentar_contractor'    => 'required|min:11',
+            'penerimaan_komentar_internal'      => 'required|min:11',
+            'penerimaan_komentar_ohs'           => 'required|min:11',
+        ];
+
+        // 2. Logika Khusus KTT (Hanya jika Level Insiden 3, 4, atau 5)
+        // Asumsi Anda memiliki properti $actual_level_id di component ini
+        if (in_array($this->consequence_id, [3, 4, 5])) {
+            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
+
+        // 3. Jalankan Validasi dengan Custom Message (Opsional)
+
     }
 }
