@@ -1,4 +1,4 @@
-<fieldset class="mt-4 fieldset lg:col-span-2">
+<fieldset class="mt-4 fieldset lg:col-span-2" wire:key="field-key-learniing">
     <x-form.label label="Kunci Pembelajaran" required />
     <div x-data="ckeditorHelper('key_learniing')" wire:ignore>
         <div x-ref="editorElement" data-placeholder="Masukkan kunci pembelajaran..."></div>
