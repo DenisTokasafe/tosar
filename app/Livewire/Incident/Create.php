@@ -874,7 +874,7 @@ class Create extends Component
         }
     }
 
-    public function getPelaporsProperty()
+    public function getPelaporsPenerimaanProperty()
     {
         // Mendeteksi field mana yang sedang diketik berdasarkan activeType
         $searchTerm = '';
