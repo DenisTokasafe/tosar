@@ -826,7 +826,7 @@ class Create extends Component
             $inspector = User::find($id);
             if ($inspector) {
                 // Jika Anda punya array khusus inspectors untuk detail tambahan
-                $this->inspectors[$index] = [
+                $this->corrective_actions[$index] = [
                     'name' => $inspector->name,
                     'id_number' => $inspector->employee_id,
                     'dept_con' => $inspector->department_name,
