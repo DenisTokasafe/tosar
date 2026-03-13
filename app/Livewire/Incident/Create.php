@@ -106,6 +106,7 @@ class Create extends Component
         'organisasi' => 'Organisasi'
     ];
 
+
     // Pastikan Anda menginisialisasi array penampung data di mount
     public $peepo = [];
     public $timelines = [];
@@ -123,6 +124,35 @@ class Create extends Component
     public $showDropdownPetugas = [];   // Menampung status open/close per index
     public $pelaporsAct = [];           // Hasil query pencarian (biasanya global atau di-filter)
     public $manualActPelaporMode = false; // Jika mode manual global atau per baris
+
+    // Properti untuk menyimpan ID terpilih
+    public $penerimaan_komentar_contractor_id;
+    public $penerimaan_komentar_internal_id;
+    public $penerimaan_komentar_ohs_id;
+    public $penerimaan_komentar_ktt_id;
+
+    // Properti untuk teks editor (CKEditor)
+    public $penerimaan_komentar_contractor;
+    public $penerimaan_komentar_internal;
+    public $penerimaan_komentar_ohs;
+    public $penerimaan_komentar_ktt;
+
+    public $searchNamePenerimaan = [
+        'kontraktor' => '',
+        'internal' => '',
+        'ohs' => '',
+        'ktt' => '',
+    ];
+
+    // State untuk menampilkan dropdown
+    public $showPenerimaanKomentarContractorDropdown = false;
+    public $showPenerimaanKomentarInternalDropdown = false;
+    public $showPenerimaanKomentarOhsDropdown = false;
+    public $showPenerimaanKomentarKttDropdown = false;
+
+    // State tambahan untuk tracking fokus (opsional, sesuai Blade kamu)
+    public $activeTypePenerimaan = '';
+    public $activeIndexPenerimaan = null;
     public function mount()
     {
         if (Auth::check()) {
@@ -842,5 +872,87 @@ class Create extends Component
             // 3. Tutup dropdown untuk baris tersebut
             $this->showDropdownPetugas[$index] = false;
         }
+    }
+
+    public function getPelaporsProperty()
+    {
+        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
+        $searchTerm = '';
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
+
+        if (strlen($searchTerm) < 2) {
+            return [];
+        }
+
+        return User::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(5)
+            ->get();
+    }
+
+    /**
+     * Helper Function untuk Reset Dropdown
+     */
+    private function resetDropdowns()
+    {
+        $this->showPenerimaanKomentarContractorDropdown = false;
+        $this->showPenerimaanKomentarInternalDropdown = false;
+        $this->showPenerimaanKomentarOhsDropdown = false;
+        $this->showPenerimaanKomentarKttDropdown = false;
+    }
+
+    /**
+     * Action: Pilih Pelapor Contractor
+     */
+    public function selectPenerimaanKomentarContractor($id, $name)
+    {
+        $this->penerimaan_komentar_contractor_id = $id;
+        $this->searchNamePenerimaan['kontraktor'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor Internal
+     */
+    public function selectPenerimaanKomentarInternal($id, $name)
+    {
+        $this->penerimaan_komentar_internal_id = $id;
+        $this->searchNamePenerimaan['internal'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor OHS
+     */
+    public function selectPenerimaanKomentarOhs($id, $name)
+    {
+        $this->penerimaan_komentar_ohs_id = $id;
+        $this->searchNamePenerimaan['ohs'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor KTT
+     */
+    public function selectPenerimaanKomentarKtt($id, $name)
+    {
+        $this->penerimaan_komentar_ktt_id = $id;
+        $this->searchNamePenerimaan['ktt'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Lifecycle: Monitor perubahan search input untuk memunculkan dropdown
+     */
+    public function updatedSearchNamePenerimaan($value, $key)
+    {
+        $this->resetDropdowns();
+
+        if ($key === 'kontraktor') $this->showPenerimaanKomentarContractorDropdown = true;
+        if ($key === 'internal') $this->showPenerimaanKomentarInternalDropdown = true;
+        if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
+        if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
 }
