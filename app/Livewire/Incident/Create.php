@@ -908,6 +908,7 @@ class Create extends Component
      */
     public function selectPenerimaanKomentarContractor($id, $name)
     {
+        dd($id, $name);
         $this->penerimaan_komentar_contractor_id = $id;
         $this->searchNamePenerimaan['kontraktor'] = $name;
         $this->resetDropdowns();
