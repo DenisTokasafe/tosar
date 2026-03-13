@@ -59,11 +59,12 @@
     </fieldset>
     <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)</legend>
+        @if(in_array($consequence_id, [3, 4, 5]))
         <div x-data="ckeditorHelper('penerimaan_komentar_ktt')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)..."></div>
         </div>
         <x-label-error :messages="$errors->get('penerimaan_komentar_ktt')" />
-
+        @endif
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-ktt"
                 placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.ktt"
