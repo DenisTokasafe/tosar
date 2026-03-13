@@ -908,7 +908,6 @@ class Create extends Component
      */
     public function selectPenerimaanKomentarContractor($id, $name)
     {
-        dd($id, $name);
         $this->penerimaan_komentar_contractor_id = $id;
         $this->searchNamePenerimaan['kontraktor'] = $name;
         $this->resetDropdowns();
@@ -976,12 +975,30 @@ class Create extends Component
 
         // 2. Logika Khusus KTT (Hanya jika Level Insiden 3, 4, atau 5)
         // Asumsi Anda memiliki properti $actual_level_id di component ini
-        if (in_array($this->consequence_id, [3, 4, 5])) {
+        if (in_array($this->actual_level_id, [3, 4, 5])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
 
         // 3. Jalankan Validasi dengan Custom Message (Opsional)
+        $this->validate($rules, [
+            'required' => 'Kolom :attribute wajib diisi.',
+            'exists' => 'Pilihan :attribute tidak valid.',
+            'min' => 'Kolom :attribute harus berisi setidaknya :min karakter.',
+        ]);
 
+        // 5. Reset Form atau Redirect (Opsional)
+        $this->reset([
+            'penerimaan_komentar_contractor_id',
+            'penerimaan_komentar_internal_id',
+            'penerimaan_komentar_ohs_id',
+            'penerimaan_komentar_ktt_id',
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt',
+        ]);
+
+        session()->flash('success', 'Penerimaan komentar berhasil disimpan!');
     }
 }
