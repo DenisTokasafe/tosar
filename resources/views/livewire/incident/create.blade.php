@@ -17,7 +17,7 @@
             <input type="radio" name="my-accordion-2" checked="checked" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-md badge-dash badge-success">Detail Laporan</span></h3>
+                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-md badge-dash badge-primary">Detail Laporan</span></h3>
 
 
             </div>
@@ -27,7 +27,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-md badge-dash badge-success">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
+                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-md badge-dash badge-primary">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
 
             </div>
             <div class="text-xs collapse-content">@include('livewire.incident.incident-step-2')</div>
@@ -36,7 +36,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-md badge-dash badge-success">Partisipan Investigasi</span></h3>
+                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-md badge-dash badge-primary">Partisipan Investigasi</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-3')</div>
@@ -45,7 +45,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-md badge-dash badge-success">PEEPO Investigation questions for identification of the incident factors</span></h3>
+                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-md badge-dash badge-primary">PEEPO Investigation questions for identification of the incident factors</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-4')</div>
@@ -54,7 +54,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 5 <span class="badge badge-md badge-dash badge-success">Time Line dan Analisis Informasi</span></h3>
+                <h3 class="text-base font-semibold">PART 5 <span class="badge badge-md badge-dash badge-primary">Time Line dan Analisis Informasi</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-5')</div>
@@ -63,7 +63,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 6 <span class="badge badge-md badge-dash badge-success">Investigasi Kecelakaan (Daftar Checklist Mengacu pada TT-MGT-LMS-025A)</span></h3>
+                <h3 class="text-base font-semibold">PART 6 <span class="badge badge-md badge-dash badge-primary">Investigasi Kecelakaan (Daftar Checklist Mengacu pada TT-MGT-LMS-025A)</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-6')</div>
@@ -72,7 +72,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 7 <span class="badge badge-md badge-dash badge-success">Dokumentasi & Tindakan Perbaikan</span></h3>
+                <h3 class="text-base font-semibold">PART 7 <span class="badge badge-md badge-dash badge-primary">Dokumentasi & Tindakan Perbaikan</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-7')</div>
@@ -81,7 +81,7 @@
             <input type="radio" name="my-accordion-2" />
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-md badge-dash badge-success">Kunci Pembelajaran</span></h3>
+                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-md badge-dash badge-primary">Kunci Pembelajaran</span></h3>
 
             </div>
             <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-8')</div>
