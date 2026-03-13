@@ -97,7 +97,7 @@
                             rows="2" />
                     </td>
                     <td class="w-1/4">
-                        <x-form.searchable-select-advanced :disabled="$isDisabled"
+                        <x-form.searchable-select-advanced
                             label="Petugas Inspeksi {{ $index + 1 }}"
                             placeholder="Cari nama..."
                             modelsearch="searchPetugas.{{ $index }}"
