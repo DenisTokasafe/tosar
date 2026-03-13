@@ -972,15 +972,7 @@ class Create extends Component
         if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
-    public function updatedConsequenceId($value)
-    {
-        // Reset komentar KTT jika consequence berubah ke nilai yang tidak memerlukan KTT
-        if (!in_array($value, [3, 4, 5])) {
-            $this->penerimaan_komentar_ktt_id = null;
-            $this->searchNamePenerimaan['ktt'] = '';
-            $this->penerimaan_komentar_ktt = '';
-        }
-    }
+
 
 
     public function save()
