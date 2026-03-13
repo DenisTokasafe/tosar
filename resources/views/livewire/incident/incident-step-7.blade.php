@@ -91,19 +91,19 @@
             <tbody>
                 @foreach($corrective_actions as $index => $action)
                 <tr wire:key="corrective-row-{{ $index }}">
-                    <td class="w-1/3">
+                    <td class="w-1/4">
                         <x-form.text_area
                             model="corrective_actions.{{ $index }}.action_description"
                             placeholder="{{ __('Langkah agar tidak terulang...') }}"
                             rows="2" />
                     </td>
-                    <td class="w-1/3">
+                    <td class="w-1/4">
                         <x-form.text_area
                             model="corrective_actions.{{ $index }}.control_hierarchy"
                             placeholder="{{ __('Kontrol Hirarki...') }}"
                             rows="2" />
                     </td>
-                    <td class="w-1/4">
+                    <td class="w-1/6">
                         <x-form.searchable-select-advanced
                             placeholder="Cari nama..."
                             modelsearch="searchPetugas.{{ $index }}"
