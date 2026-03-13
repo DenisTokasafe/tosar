@@ -18,7 +18,7 @@
 
 
     </fieldset>
-    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
+    <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar Project Manager</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_internal')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar Project Manager..."></div>
@@ -38,7 +38,7 @@
 
     </fieldset>
 
-    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
+    <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar OHS Dept Head</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_ohs')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar OHS Dept Head..."></div>
@@ -57,7 +57,7 @@
 
 
     </fieldset>
-    <fieldset class="w-full mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
+    <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)</legend>
         <div x-data="ckeditorHelper('penerimaan_komentar_ktt')" wire:ignore>
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar KTT: (Hanya untuk insiden dengan aktual Level 3,4,5)..."></div>
