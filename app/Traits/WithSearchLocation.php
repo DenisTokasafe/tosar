@@ -33,5 +33,6 @@ trait WithSearchLocation
         $this->location_id = $id;
         $this->searchLocation = $name;
         $this->show_location = false;
+        $this->validateOnly('location_id');
     }
 }
