@@ -233,7 +233,15 @@ class Create extends Component
         }
     }
 
-
+    public function updatedKeyWord($value)
+    {
+        // Bersihkan nilai yang tidak terpilih agar validasi required_without atau required_if tidak bentrok
+        if ($value === 'kta') {
+            $this->tindakan_tidak_aman = null;
+        } elseif ($value === 'tta') {
+            $this->kondisi_tidak_aman = null;
+        }
+    }
 
 
     // Search Location
