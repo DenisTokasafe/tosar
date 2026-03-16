@@ -1,5 +1,5 @@
 @props([
-'model' => null, // wire:model untuk radio button (misal: $deptCont)
+'deptCont' => null, // wire:model untuk radio button (misal: $deptCont)
 'model_dept' => 'department_id', // nama property untuk ID department
 'model_cont' => 'contractor_id', // nama property untuk ID contractor
 'departments' => [],
@@ -15,27 +15,27 @@
     <div class="flex items-center gap-4">
         {{-- Radio Department --}}
         <div class="flex items-center gap-1">
-            <input id="dept" value="dept" wire:model.live="model"
+            <input id="dept" value="dept" wire:model.live="deptCont"
                 class="peer/dept radio radio-xs radio-accent" type="radio" name="dept_cont_toggle" />
 
             <x-form.label for="dept" class="peer-checked/dept:text-accent text-[10px] cursor-pointer"
                 label="{{ $label_dept }}"
-                :required="$model === 'dept' && $required" />
+                :required="$deptCont === 'dept' && $required" />
         </div>
 
         {{-- Radio Company/Contractor --}}
         <div class="flex items-center gap-1">
-            <input id="cont" value="cont" wire:model.live="model"
+            <input id="cont" value="cont" wire:model.live="deptCont"
                 class="peer/cont radio radio-xs radio-primary" type="radio" name="dept_cont_toggle" />
 
             <x-form.label for="cont" class="peer-checked/cont:text-primary text-[10px] cursor-pointer"
                 label="{{ $label_contractor }}"
-                :required="$model === 'cont' && $required" />
+                :required="$deptCont === 'cont' && $required" />
         </div>
     </div>
 
     {{-- Dropdown Department --}}
-    <div wire:key="dropdown-dept-{{ $model_dept }}" class="{{ $model === 'dept' ? 'block' : 'hidden' }} mt-1.5">
+    <div wire:key="dropdown-dept-{{ $model_dept }}" class="{{ $deptCont === 'dept' ? 'block' : 'hidden' }} mt-1.5">
         <div class="{{ $errors->has($model_dept) ? 'rounded-lg ring-1 ring-rose-500 border-rose-500' : '' }}">
             <x-form.searchable-dropdown-without-label
                 modelsearch="search"
@@ -51,7 +51,7 @@
     </div>
 
     {{-- Dropdown Contractor --}}
-    <div wire:key="dropdown-cont-{{ $model_cont }}" class="{{ $model === 'cont' ? 'block' : 'hidden' }} mt-1.5">
+    <div wire:key="dropdown-cont-{{ $model_cont }}" class="{{ $deptCont === 'cont' ? 'block' : 'hidden' }} mt-1.5">
         <div class="{{ $errors->has($model_cont) ? 'rounded-lg ring-1 ring-rose-500 border-rose-500' : '' }}">
             <x-form.searchable-dropdown-without-label
                 modelsearch="searchContractor"

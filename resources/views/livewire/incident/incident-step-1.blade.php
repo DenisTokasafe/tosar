@@ -21,7 +21,7 @@
     <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
     @endif
     <x-form.department-contractor-selector
-        :model="$deptCont"
+        :dept-cont="$deptCont"
         :departments="$departments"
         :contractors="$contractors"
         model_dept="department_id"
