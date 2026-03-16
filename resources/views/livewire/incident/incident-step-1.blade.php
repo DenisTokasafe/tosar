@@ -4,7 +4,7 @@
     @if($this->hasSubTypes)
     <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
     @endif
-    <x-form.select-categroy-bahaya options_label="-- Pilih Kategori Insiden --" :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" />
+    <x-form.select-categroy-bahaya options_label="-- Pilih Kategori Insiden --" :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required="true" />
 </div>
 <div class="grid grid-cols-1 gap-2  mb-8 md:grid-cols-2 lg:grid-cols-3">
     <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
