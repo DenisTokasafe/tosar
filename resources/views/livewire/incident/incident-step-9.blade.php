@@ -91,7 +91,6 @@
                 x-on:focusin="$wire.set('activeTypePenerimaan', 'penerimaan_komentar_ktt'); $wire.set('activeIndexPenerimaan', 0)" />
         </div>
 
-        <x-label-error :messages="$errors->get('penerimaan_komentar_ktt_id')" />
     </fieldset>
     @endif
 </div>

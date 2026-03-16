@@ -189,17 +189,7 @@ class Create extends Component
     }
 
 
-    protected $rules = [
-        'event_type_id' => 'required|exists:event_types,id',
-        'event_sub_type_id' => 'required|exists:event_sub_types,id',
-        'description' => 'required|string',
-        'location' => 'required|string',
-        'date_time' => 'required|date',
-        'pelapor_id' => 'required|exists:users,id',
-        'manualPelaporName' => 'nullable|string|max:255',
-        // ... rules lainnya
 
-    ];
 
     // Search Location
     public function updatedSearchLocation()
@@ -973,31 +963,56 @@ class Create extends Component
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
 
+    protected function getValidationRules()
+    {
+        $rules = [
+            'event_type_id'     => 'required|exists:event_types,id',
+            'event_sub_type_id' => 'required|exists:event_sub_types,id',
+            'description'       => 'required|string',
+            'location'          => 'required|string',
+            'date_time'         => 'required|date',
+            'pelapor_id'        => 'required|exists:users,id',
+            'manualPelaporName' => 'nullable|string|max:255',
 
+            // Rules Penerimaan Komentar Standard
+            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            'penerimaan_komentar_contractor'    => 'required|min:11',
+            'penerimaan_komentar_internal'      => 'required|min:11',
+            'penerimaan_komentar_ohs'           => 'required|min:11',
+        ];
+
+        // Tambahkan aturan KTT jika level insiden 3, 4, atau 5
+        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Mendefinisikan pesan error kustom
+     */
+    protected function getValidationMessages()
+    {
+        return [
+            'required' => 'Kolom :attribute wajib diisi.',
+            'exists'   => 'Pilihan :attribute tidak valid.',
+            'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
+            'date'     => 'Format tanggal pada :attribute tidak valid.',
+        ];
+    }
 
     public function save()
     {
         try {
-            $rules = [
-                'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-                'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-                'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-                'penerimaan_komentar_contractor'    => 'required|min:11',
-                'penerimaan_komentar_internal'      => 'required|min:11',
-                'penerimaan_komentar_ohs'           => 'required|min:11',
-            ];
-
-            if (in_array($this->consequence_id, [3, 4, 5])) {
-                $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-                $rules['penerimaan_komentar_ktt']    = 'required|min:11';
-            }
-
-            $this->validate($rules, [
-                'required' => 'Kolom :attribute wajib diisi.',
-                'exists'   => 'Pilihan :attribute tidak valid.',
-                'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
-            ]);
-
+            // Jalankan validasi menggunakan fungsi yang telah dibuat
+            $this->validate(
+                $this->getValidationRules(),
+                $this->getValidationMessages()
+            );
             // ... proses save ke DB ...
             $this->reset([
                 'penerimaan_komentar_contractor_id',
@@ -1010,12 +1025,18 @@ class Create extends Component
                 'penerimaan_komentar_ktt',
             ]);
         } catch (ValidationException $e) {
-            // 1. Memicu border merah di semua CKEditor yang kosong
-            $this->dispatch('validate-all-editors');
-
             // 2. Jika kamu ingin lebih spesifik untuk KTT saja (opsional)
             if ($e->validator->errors()->has('penerimaan_komentar_ktt')) {
                 $this->dispatch('validate-penerimaan_komentar_ktt');
+            }
+            if ($e->validator->errors()->has('penerimaan_komentar_kontraktor')) {
+                $this->dispatch('validate-penerimaan_komentar_kontraktor');
+            }
+            if ($e->validator->errors()->has('penerimaan_komentar_internal')) {
+                $this->dispatch('validate-penerimaan_komentar_internal');
+            }
+            if ($e->validator->errors()->has('penerimaan_komentar_ohs')) {
+                $this->dispatch('validate-penerimaan_komentar_ohs');
             }
 
             throw $e;
