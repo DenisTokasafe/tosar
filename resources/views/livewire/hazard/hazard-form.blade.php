@@ -478,7 +478,8 @@
                 </flux:button>
             </div>
         </form>
-        <livewire:hazard.modal-action />
+        @include('livewire.hazard.modal-action')
+
     </x-manhours.layout>
 
 </section>
