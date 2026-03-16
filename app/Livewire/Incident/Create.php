@@ -399,6 +399,10 @@ class Create extends Component
 
     public function updatedSearch()
     {
+        if (strlen($this->department_id) == 0) {
+            $this->department_id = null;
+            $this->validateOnly('department_id');
+        }
         if (strlen($this->search) > 1) {
             $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
                 ->orderBy('department_name')
@@ -435,6 +439,10 @@ class Create extends Component
 
     public function updatedSearchContractor()
     {
+        if (strlen($this->searchContractor) == 0) {
+            $this->contractor_id = null;
+            $this->validateOnly('contractor_id');
+        }
         if (strlen($this->searchContractor) > 1) {
             $this->contractors = Contractor::query()
                 ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
