@@ -31,7 +31,7 @@
         </div>
     </div>
     {{-- Dropdown KTA --}}
-    <div wire:key="dropdown-kta-{{ $model_kta }}" class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mb-1.5">
+    <div wire:key="dropdown-kta-{{ $model_kta }}" class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mt-1">
         <select {{ $model_kta ? "wire:model.live=$model_kta" : '' }}
             class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0
             {{ $errors->has($model_kta) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '' }}">
@@ -45,7 +45,7 @@
     </div>
 
     {{-- Dropdown TTA --}}
-    <div wire:key="dropdown-tta-{{ $model_tta }}" class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} mb-1.5">
+    <div wire:key="dropdown-tta-{{ $model_tta }}" class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} mt-1">
         <select {{ $model_tta ? "wire:model.live=$model_tta" : '' }}
             class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0
             {{ $errors->has($model_tta) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '' }}">

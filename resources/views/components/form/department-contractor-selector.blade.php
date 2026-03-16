@@ -35,7 +35,7 @@
     </div>
 
     {{-- Dropdown Department --}}
-    <div wire:key="dropdown-dept-{{ $model_dept }}" class="{{ $deptCont === 'dept' ? 'block' : 'hidden' }} mt-1.5">
+    <div wire:key="dropdown-dept-{{ $model_dept }}" class="{{ $deptCont === 'dept' ? 'block' : 'hidden' }} mt-1">
         <div class="{{ $errors->has($model_dept) ? 'rounded-lg ring-1 ring-rose-500 border-rose-500' : '' }}">
             <x-form.searchable-dropdown-without-label
                 modelsearch="search"
@@ -51,7 +51,7 @@
     </div>
 
     {{-- Dropdown Contractor --}}
-    <div wire:key="dropdown-cont-{{ $model_cont }}" class="{{ $deptCont === 'cont' ? 'block' : 'hidden' }} mt-1.5">
+    <div wire:key="dropdown-cont-{{ $model_cont }}" class="{{ $deptCont === 'cont' ? 'block' : 'hidden' }} mt-1">
         <div class="{{ $errors->has($model_cont) ? 'rounded-lg ring-1 ring-rose-500 border-rose-500' : '' }}">
             <x-form.searchable-dropdown-without-label
                 modelsearch="searchContractor"
