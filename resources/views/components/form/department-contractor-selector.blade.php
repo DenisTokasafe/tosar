@@ -1,5 +1,7 @@
 @props([
 'model' => 'deptCont', // wire:model untuk radio button
+'model_dept'=> null,
+'model_cont'=> null,
 'departments' => [],
 'contractors' => [],
 'label_dept' => 'Departemen Terkait',
@@ -23,7 +25,7 @@
     <div class="hidden peer-checked/department:block mt-1.5">
         {{-- Department --}}
         <div class="relative ">
-            <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
+            <x-form.searchable-dropdown-without-label modelsearch="search" modelid="{{ $model_dept ?$model_dept : '' }}"
                 placeholder="Cari Departemen..." :options="$departments" :showdropdown="$showDropdown"
                 clickaction="selectDepartment" namedb="department_name" />
         </div>
@@ -32,7 +34,7 @@
         {{-- Contractor --}}
         <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
-                placeholder="Cari Kontraktor..." modelid="contractor_id" :options="$contractors"
+                placeholder="Cari Kontraktor..." modelid="{{ $model_cont ?$model_cont : '' }}" :options="$contractors"
                 :showdropdown="$showContractorDropdown" clickaction="selectContractor" namedb="contractor_name" />
         </div>
     </div>

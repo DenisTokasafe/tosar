@@ -970,10 +970,12 @@ class Create extends Component
         // 1. Rules Dasar yang selalu ada di setiap insiden
         $rules = [
             'event_type_id'     => 'required|exists:event_types,id',
+            'kondisi_tidak_aman'     => 'required_without:tindakan_tidak_aman',
+            'tindakan_tidak_aman'     => 'required_without:kondisi_tidak_aman',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description'       => 'required|string',
             'location_id'       => 'required|exists:locations,id',
-            'location_specific' => 'required|string',
+            'location_specific' => 'required_with:location_id|string',
             'date_time'         => 'required|date',
             'pelapor_id'        => 'required|exists:users,id',
             'manualPelaporName' => 'nullable|string|max:255',
@@ -991,7 +993,7 @@ class Create extends Component
         if ($this->isInjury()) {
             // Jika Injury: Kategori dan Detail Bagian Tubuh Wajib Diisi
             $rules['selectedBodyPartCategory'] = 'required';
-            $rules['selectedBodyPart']         = 'required|exists:body_parts,id';
+            $rules['selectedBodyPart'] = 'required_with:selectedBodyPartCategory|exists:body_parts,id';
         } else {
             // Jika Bukan Injury: Detail Kerusakan Alat/Lingkungan Wajib Diisi
             $rules['damage_detail'] = 'required|string|min:5';
