@@ -312,6 +312,7 @@
             </fieldset>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+                <legend class="text-sm font-semibold card-title "> {{ __('Tindakan Lanjutan') }}</legend>
                 <div class="flex gap-4">
                     <div class="flex items-center gap-2">
                         <input type="radio" name="action_trigger" value="open"
