@@ -30,17 +30,47 @@ use Livewire\WithPagination;
 class Create extends Component
 {
     use WithFileUploads, WithPagination;
-    public $event_type_id, $likelihoods = [], $consequences = [],
-        $event_sub_type_id,
-        $location_id,
+
+    #[Validate('required|exists:event_types,id')]
+    public $event_type_id;
+
+    #[Validate('required|exists:event_sub_types,id')]
+    public $event_sub_type_id;
+
+    #[Validate('required|string')]
+    public $description;
+
+    #[Validate('required|exists:locations,id')]
+    public $location_id;
+
+    #[Validate('required_with:location_id|string')]
+    public $location_specific;
+
+    #[Validate('required|date')]
+    public $date_time;
+
+    #[Validate('required|exists:users,id')]
+    public $pelapor_id;
+
+    // Rules Mutual Exclusion (Salah satu wajib)
+    #[Validate('nullable|required_without:tindakan_tidak_aman')]
+    public $kondisi_tidak_aman;
+
+    #[Validate('nullable|required_without:kondisi_tidak_aman')]
+    public $tindakan_tidak_aman;
+
+    #[Validate('nullable|required_without:contractor_id|exists:departments,id')]
+    public $department_id;
+
+    #[Validate('nullable|required_without:department_id|exists:contractors,id')]
+    public $contractor_id;
+
+    public $likelihoods = [], $consequences = [],
         $location_spesific,
         $documentation,
         $visual_evidence, $visual_evidence_path,
-        $supporting_documents, $supporting_documents_path,
-        $date_time;
+        $supporting_documents, $supporting_documents_path;
 
-    #[Url]
-    public $description;
 
     public $locations = [];
     public $searchLocation = '';
@@ -57,7 +87,6 @@ class Create extends Component
     public $selectedBodyPart;
     // deptContractor
     public $search = '';
-    public $location_specific;
     public $departments = [];
     public $showDropdown = false;
     public $searchContractor = '';
@@ -65,11 +94,11 @@ class Create extends Component
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
     #[Validate]
-    public $deptCont = 'department', $department_id, $contractor_id; // default ke department
+    public $deptCont = 'department'; // default ke department
     #[Validate]
-    public $keyWord = 'kta', $kondisi_tidak_aman, $tindakan_tidak_aman;
+    public $keyWord = 'kta';
     // Pelapor
-    public $pelapor_id, $searchPelapor = '';
+    public $searchPelapor = '';
     public $pelapors = [];
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
@@ -150,6 +179,15 @@ class Create extends Component
         'ohs' => '',
         'ktt' => '',
     ];
+    // Komentar Standard
+    #[Validate([
+        'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+        'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+        'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+        'penerimaan_komentar_contractor'    => 'required|min:11',
+        'penerimaan_komentar_internal'      => 'required|min:11',
+        'penerimaan_komentar_ohs'           => 'required|min:11',
+    ])]
 
     // State untuk menampilkan dropdown
     public $showPenerimaanKomentarContractorDropdown = false;
@@ -969,59 +1007,9 @@ class Create extends Component
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
 
-    protected function getValidationRules()
-    {
-        // 1. Rules Dasar yang selalu ada di setiap insiden
-        $rules = [
-            'event_type_id'     => 'required|exists:event_types,id',
-            'kondisi_tidak_aman'  => 'nullable|required_without:tindakan_tidak_aman',
-            'tindakan_tidak_aman' => 'nullable|required_without:kondisi_tidak_aman',
-
-            'department_id'       => 'nullable|required_without:contractor_id|exists:departments,id',
-            'contractor_id'       => 'nullable|required_without:department_id|exists:contractors,id',
-            'event_sub_type_id' => 'required|exists:event_sub_types,id',
-            'description'       => 'required|string',
-            'location_id'       => 'required|exists:locations,id',
-            'location_specific' => 'required_with:location_id|string',
-            'date_time'         => 'required|date',
-            'pelapor_id'        => 'required|exists:users,id',
-            'manualPelaporName' => 'nullable|string|max:255',
-
-            // Rules Penerimaan Komentar Standard (Internal, Contractor, OHS)
-            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-            'penerimaan_komentar_contractor'    => 'required|min:11',
-            'penerimaan_komentar_internal'      => 'required|min:11',
-            'penerimaan_komentar_ohs'           => 'required|min:11',
-        ];
-
-        // 2. Logika Kondisional: Injury vs Damage
-        if ($this->isInjury()) {
-            // Jika Injury: Kategori dan Detail Bagian Tubuh Wajib Diisi
-            $rules['selectedBodyPartCategory'] = 'required';
-            $rules['selectedBodyPart'] = 'required_with:selectedBodyPartCategory|exists:body_parts,id';
-        } else {
-            // Jika Bukan Injury: Detail Kerusakan Alat/Lingkungan Wajib Diisi
-            $rules['damage_detail'] = 'required|string|min:5';
-        }
-
-        // 3. Tambahkan aturan KTT jika level insiden 3, 4, atau 5
-        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
-            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Mendefinisikan pesan error kustom
-     */
-    protected function getValidationMessages()
+    protected function messages()
     {
         return [
-
             'required' => 'Kolom :attribute wajib diisi.',
             'exists'   => 'Pilihan :attribute tidak valid.',
             'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
@@ -1030,28 +1018,45 @@ class Create extends Component
             'tindakan_tidak_aman.required_without' => 'Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).',
             'department_id.required_without' => 'Pilih Department atau Kontraktor terkait.',
             'contractor_id.required_without' => 'Pilih Kontraktor atau Department terkait.',
+            // ... sisa pesan lainnya
         ];
     }
 
+    protected function validationAttributes()
+    {
+        return [
+            'penerimaan_komentar_ktt' => 'Komentar KTT',
+            'damage_detail' => 'Detail Kerusakan',
+            // ... sisa atribut lainnya
+        ];
+    }
+
+    /**
+     * Mendefinisikan pesan error kustom
+     */
+
     public function save()
     {
+        $this->validate();
+
+        // 2. Validasi tambahan secara dinamis
+        $dynamicRules = [];
+
+        if ($this->isInjury()) {
+            $dynamicRules['selectedBodyPartCategory'] = 'required';
+            $dynamicRules['selectedBodyPart'] = 'required_with:selectedBodyPartCategory|exists:body_parts,id';
+        } else {
+            $dynamicRules['damage_detail'] = 'required|string|min:5';
+        }
+
+        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+            $dynamicRules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $dynamicRules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
+
         try {
-            // Jalankan validasi menggunakan fungsi yang telah dibuat
-            $this->validate(
-                $this->getValidationRules(),
-                $this->getValidationMessages()
-            );
-            // ... proses save ke DB ...
-            $this->reset([
-                'penerimaan_komentar_contractor_id',
-                'penerimaan_komentar_internal_id',
-                'penerimaan_komentar_ohs_id',
-                'penerimaan_komentar_ktt_id',
-                'penerimaan_komentar_contractor',
-                'penerimaan_komentar_internal',
-                'penerimaan_komentar_ohs',
-                'penerimaan_komentar_ktt',
-            ]);
+            // Jalankan validasi dinamis dengan pesan kustom
+            $this->validate($dynamicRules, $this->getValidationMessages());
         } catch (ValidationException $e) {
             // 2. Jika kamu ingin lebih spesifik untuk KTT saja (opsional)
             if ($e->validator->errors()->has('penerimaan_komentar_ktt')) {
