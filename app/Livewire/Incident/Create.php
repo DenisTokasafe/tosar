@@ -61,7 +61,6 @@ class Create extends Component
 
     #[Validate('nullable|required_without:contractor_id|exists:departments,id')]
     public $department_id;
-
     #[Validate('nullable|required_without:department_id|exists:contractors,id')]
     public $contractor_id;
     #[Validate('required')]
