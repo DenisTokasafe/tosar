@@ -24,11 +24,11 @@
         :model="$deptCont"
         :departments="$departments"
         :contractors="$contractors"
-        model_dept="departement_id"
+        model_dept="department_id"
         model_cont="contractor_id"
         :showDropdown="$showDropdown"
         :showContractorDropdown="$showContractorDropdown"
-        required="true" />
+        :required="true" />
     <fieldset class="fieldset">
         <x-form.label label="PIC" required />
         <select wire:model.live="penanggungJawab"
