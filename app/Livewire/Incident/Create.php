@@ -64,7 +64,7 @@ class Create extends Component
     #[Validate('nullable|required_without:department_id|exists:contractors,id')]
     public $contractor_id;
     #[Validate('required')]
-    public $deptCont = 'department'; // default ke department
+    public $deptCont = 'dept'; // default ke department
     #[Validate('required')]
     public $keyWord = 'kta';
 
