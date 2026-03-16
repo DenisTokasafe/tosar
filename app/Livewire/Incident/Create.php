@@ -242,6 +242,15 @@ class Create extends Component
             $this->kondisi_tidak_aman = null;
         }
     }
+    public function updatedDeptCont($value)
+    {
+        // Bersihkan nilai yang tidak terpilih agar validasi required_without atau required_if tidak bentrok
+        if ($value === 'department') {
+            $this->contractor_id = null;
+        } elseif ($value === 'contractor') {
+            $this->department_id = null;
+        }
+    }
 
 
     // Search Location
