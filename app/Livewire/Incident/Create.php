@@ -248,7 +248,7 @@ class Create extends Component
         if ($value === 'department') {
             $this->contractor_id = null;
             $this->searchContractor = ''; // Opsional: bersihkan pencarian juga
-        } elseif ($value === 'kontraktor') { // Gunakan 'company' bukan 'contractor'
+        } elseif ($value === 'company') { // Gunakan 'company' bukan 'contractor'
             $this->department_id = null;
             $this->search = '';
         }
