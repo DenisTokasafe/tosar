@@ -74,8 +74,6 @@ class Create extends Component
         $documentation,
         $visual_evidence, $visual_evidence_path,
         $supporting_documents, $supporting_documents_path;
-
-
     public $locations = [];
     public $searchLocation = '';
     public $show_location = false;
@@ -89,15 +87,7 @@ class Create extends Component
     public  $penanggungJawab, $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
     public $selectedBodyPart;
-    // deptContractor
-    #[Validate('required')]
-    public $search = '';
-    public $departments = [];
-    public $showDropdown = false;
-    #[Validate('required')]
-    public $searchContractor = '';
-    public $contractors = [];
-    public $showContractorDropdown = false;
+
     public $penanggungJawabOptions = [];
 
     // Pelapor
