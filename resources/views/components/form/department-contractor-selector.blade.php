@@ -5,7 +5,8 @@
 'label_dept' => 'Departemen Terkait',
 'label_contractor' => 'Kontraktor Terkait',
 'showDropdown' => false, // status dropdown department
-'showContractorDropdown' => false, // status dropdown contractor
+'showContractorDropdown' => false,
+'required' => false, // status dropdown contractor
 ])
 
 
