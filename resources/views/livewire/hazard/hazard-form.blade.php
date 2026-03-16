@@ -312,137 +312,21 @@
             </fieldset>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-                <legend class="text-sm font-semibold card-title "> {{ __('Tindakan Lanjutan') }}</legend>
-                <!-- Deskripsi Tindakan -->
-                <fieldset class="fieldset md:col-span-1" wire:key="field-action">
-                    <x-form.label label="Deskripsi Tindakan" required />
-                    <div x-data="ckeditorHelper('action_description')" wire:ignore>
-                        <div x-ref="editorElement" data-placeholder="Masukkan deskripsi tindakan..."></div>
+                <div class="flex gap-4">
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="action_trigger" value="open"
+                            wire:model.live="showActionModal"
+                            class="radio radio-md bg-red-100 border-red-300 checked:bg-red-200 checked:text-red-600 checked:border-red-600" />
+                        <span>Buka Form Tindakan</span>
                     </div>
-                    <x-label-error :messages="$errors->get('action_description')" />
-                </fieldset>
-                <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
-                    <!-- Tanggal & Waktu -->
-                    <fieldset class="fieldset md:col-span-1">
-                        <x-form.label label="Batas Waktu Penyelesaian" />
-                        <div class="relative" wire:ignore x-data="{
-                            fp: null,
-                            initFlatpickr() {
-                                if (this.fp) this.fp.destroy();
-                                this.fp = flatpickr(this.$refs.tanggalInput2, {
-                                    disableMobile: true,
-                                    enableTime: false,
-                                    dateFormat: 'd-m-Y',
-                                    onChange: (dates, str) => $wire.set('action_due_date', str),
-                                });
-                            }
-                        }" x-init="initFlatpickr();
-                        Livewire.hook('message.processed', () => initFlatpickr());"
-                            x-ref="wrapper">
-                            <input name="action_due_date" type="text" x-ref="tanggalInput2"
-                                wire:model.live="action_due_date" placeholder="Pilih Tanggal"
-                                class="input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('action_due_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                                readonly />
-                        </div>
-                        <x-label-error :messages="$errors->get('action_due_date')" />
-                    </fieldset>
-                    <fieldset class="fieldset md:col-span-1">
-                        <x-form.label label="Tanggal Penyelesaian Tindakan" />
-                        <div class="relative" wire:ignore x-data="{
-                            fp: null,
-                            initFlatpickr() {
-                                if (this.fp) this.fp.destroy();
-                                this.fp = flatpickr(this.$refs.tanggalInput3, {
-                                    disableMobile: true,
-                                    enableTime: false,
-                                    dateFormat: 'd-m-Y',
-                                    onChange: (dates, str) => $wire.set('actual_close_date', str),
-                                });
-                            }
-                        }" x-init="initFlatpickr();
-                        Livewire.hook('message.processed', () => initFlatpickr());"
-                            x-ref="wrapper">
-                            <input name="actual_close_date" type="text" x-ref="tanggalInput3"
-                                wire:model.live="actual_close_date" placeholder="Pilih Tanggal"
-                                class="input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('actual_close_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                                readonly />
-                        </div>
-                        <x-label-error :messages="$errors->get('actual_close_date')" />
-                    </fieldset>
-                    <!-- Dilaporkan Oleh -->
-                    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-                        modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
-                        :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
-                        manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
-                        addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
+
+                    <div class="flex items-center gap-2">
+                        <input type="radio" name="action_trigger" value="close"
+                            wire:model.live="showActionModal"
+                            class="radio radio-md bg-blue-100 border-blue-300 checked:bg-blue-200 checked:text-blue-600 checked:border-blue-600" />
+                        <span>Tutup</span>
+                    </div>
                 </div>
-
-                <!-- Tombol Tambah -->
-                <div class="flex justify-end ">
-                    <flux:button size="xs" wire:click="addAction" icon:trailing="add-icon" variant="primary">
-                        {{ __('Tambah') }}
-                    </flux:button>
-                </div>
-                <!-- List Actions -->
-                <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>
-                <ul>
-                    @forelse ($actions as $index => $action)
-                    <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                        <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                            <div>
-                                <span class="font-semibold">{!! $action['description'] !!}</span>
-                            </div>
-                            <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                <span class="text-sm badge badge-primary badge-outline">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-clock-check-icon lucide-clock-check">
-                                        <path d="M12 6v6l4 2" />
-                                        <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                        <path d="m22 16-5.5 5.5L14 19" />
-                                    </svg>
-                                    {{ __('Batas Waktu:') }}
-                                    {{ $action['due_date'] ?? 'N/A' }}</span>
-                                <span class="text-sm badge badge-info badge-outline">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-clock-check-icon lucide-clock-check">
-                                        <path d="M12 6v6l4 2" />
-                                        <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                        <path d="m22 16-5.5 5.5L14 19" />
-                                    </svg>
-                                    {{ __('Tgl Selesai:') }}
-                                    {{ $action['close_date'] ?? 'N/A' }}</span>
-                                <span class="text-sm badge badge-success badge-outline">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-user-check-icon lucide-user-check">
-                                        <path d="m16 11 2 2 4-4" />
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                        <circle cx="9" cy="7" r="4" />
-                                    </svg>
-                                    {{ __('PIC') }}:
-                                    {{ optional(\App\Models\User::find($action['responsible_id']))->name ?? ('-' ?? 'N/A') }}</span>
-                                <div class="flex gap-2 mt-1 md:mt-0">
-
-                                    <flux:button variant="danger" size="xs"
-                                        wire:click="removeAction({{ $index }})"
-                                        wire:confirm="Yakin hapus tindakan ini?" icon="trash">
-                                    </flux:button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    @empty
-                    <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                        <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
-                    </li>
-                    @endforelse
-                </ul>
 
             </fieldset>
 
@@ -593,6 +477,68 @@
                 </flux:button>
             </div>
         </form>
+        <dialog id="action_modal" class="modal {{ $showActionModal === 'open' ? 'modal-open' : '' }}">
+            <div class="modal-box w-11/12 max-w-5xl">
+                <form method="dialog">
+                    <button wire:click="$set('showActionModal', 'close')" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+
+                <h3 class="font-bold text-lg mb-4">{{ __('Manajemen Tindakan Lanjutan') }}</h3>
+
+                <fieldset class="p-3 border rounded-xl border-base-300 bg-base-100">
+                    <fieldset class="fieldset md:col-span-1" wire:key="field-action">
+                        <x-form.label label="Deskripsi Tindakan" required />
+                        <div x-data="ckeditorHelper('action_description')" wire:ignore>
+                            <div x-ref="editorElement" data-placeholder="Masukkan deskripsi tindakan..."></div>
+                        </div>
+                        <x-label-error :messages="$errors->get('action_description')" />
+                    </fieldset>
+
+                    <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3 mt-4">
+                        <fieldset class="fieldset">
+                            <x-form.label label="Batas Waktu" />
+                            <input type="text" wire:model.live="action_due_date" class="input input-bordered input-xs w-full" placeholder="Pilih Tanggal" id="date1" />
+                        </fieldset>
+
+                        <fieldset class="fieldset">
+                            <x-form.label label="Tanggal Selesai" />
+                            <input type="text" wire:model.live="actual_close_date" class="input input-bordered input-xs w-full" placeholder="Pilih Tanggal" id="date2" />
+                        </fieldset>
+
+                        <x-form.searchable-select-advanced label="PIC / Penanggung Jawab" ... />
+                    </div>
+
+                    <div class="flex justify-end mt-4">
+                        <flux:button size="xs" wire:click="addAction" variant="primary">
+                            {{ __('Tambah ke Daftar') }}
+                        </flux:button>
+                    </div>
+
+                    <div class="my-4 divider text-xs">{{ __('Daftar Tindakan Terinput') }}</div>
+                    <div class="max-h-60 overflow-y-auto">
+                        <ul class="space-y-2">
+                            @forelse ($actions as $index => $action)
+                            <li class="p-2 border rounded-md bg-base-200 flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm font-medium">{!! $action['description'] !!}</p>
+                                    <p class="text-[10px] opacity-70">Due: {{ $action['due_date'] }} | PIC ID: {{ $action['responsible_id'] }}</p>
+                                </div>
+                                <flux:button variant="danger" size="xs" wire:click="removeAction({{ $index }})" icon="trash" />
+                            </li>
+                            @empty
+                            <li class="text-center py-4 text-gray-400 text-sm italic border-2 border-dashed rounded-lg">
+                                {{ __('Belum ada tindakan.') }}
+                            </li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </fieldset>
+
+                <div class="modal-action">
+                    <button wire:click="$set('showActionModal', 'close')" class="btn btn-primary btn-sm">Selesai & Tutup</button>
+                </div>
+            </div>
+        </dialog>
     </x-manhours.layout>
 
 </section>

@@ -103,6 +103,15 @@ class HazardForm extends Component
     public $actual_close_date;
     public $doc_deskripsi_path;
     public $doc_corrective_path;
+    public $showActionModal = 'close'; // default tertutup
+
+    // Fungsi untuk memastikan modal terbuka/tertutup dengan benar
+    public function updatedShowActionModal($value)
+    {
+        if ($value === 'open') {
+            // Bisa tambahkan logic reset form input disini jika perlu
+        }
+    }
     public function rules()
     {
         $baseRules = [
