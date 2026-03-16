@@ -10,24 +10,24 @@
 
 <fieldset {{ $attributes->merge(['class' => 'fieldset']) }}>
     <div class="flex items-center gap-4 ">
-        {{-- Radio Department --}}
+        {{-- Radio Kondisi Tidak Aman (KTA) --}}
         <div class="flex items-center gap-1">
-            <input id="department" value="department" wire:model.live="model"
-                class="peer/department radio radio-xs radio-accent" type="radio" name="{{ $model }}" />
+            <input id="kta" value="kta" wire:model.live="keyWord"
+                class="peer/kta radio radio-xs radio-accent" type="radio" name="keyWord" />
 
-            <x-form.label for="department" class="peer-checked/department:text-accent text-[10px] cursor-pointer"
-                label="{{ $label_dept }}"
-                :required="$model === 'department' && $required" />
+            <x-form.label for="kta" class="peer-checked/kta:text-accent text-[10px] cursor-pointer"
+                label="Kondisi Tidak Aman"
+                :required="$keyWord === 'kta' && $required" />
         </div>
 
-        {{-- Radio Company/Contractor --}}
+        {{-- Radio Tindakan Tidak Aman (TTA) --}}
         <div class="flex items-center gap-1">
-            <input id="company" value="company" wire:model.live="model"
-                class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
+            <input id="tta" value="tta" wire:model.live="keyWord"
+                class="peer/tta radio radio-xs radio-primary" type="radio" name="keyWord" />
 
-            <x-form.label for="company" class="peer-checked/company:text-primary text-[10px] cursor-pointer"
-                label="{{ $label_contractor }}"
-                :required="$model === 'company' && $required" />
+            <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px] cursor-pointer"
+                label="Tindakan Tidak Aman"
+                :required="$keyWord === 'tta' && $required" />
         </div>
     </div>
     {{-- Dropdown KTA --}}
