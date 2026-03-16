@@ -331,7 +331,24 @@
                         </label>
                     </div>
                 </div>
-
+                <div class="my-4 divider text-xs">{{ __('Daftar Tindakan Terinput') }}</div>
+                <div class="max-h-60 overflow-y-auto">
+                    <ul class="space-y-2">
+                        @forelse ($actions as $index => $action)
+                        <li class="p-2 border rounded-md bg-base-200 flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium">{!! $action['description'] !!}</p>
+                                <p class="text-[10px] opacity-70">Due: {{ $action['due_date'] }} | PIC ID: {{ $action['responsible_id'] }}</p>
+                            </div>
+                            <flux:button variant="danger" size="xs" wire:click="removeAction({{ $index }})" icon="trash" />
+                        </li>
+                        @empty
+                        <li class="text-center py-4 text-gray-400 text-sm italic border-2 border-dashed rounded-lg">
+                            {{ __('Belum ada tindakan.') }}
+                        </li>
+                        @endforelse
+                    </ul>
+                </div>
             </fieldset>
 
             <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
