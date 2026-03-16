@@ -14,9 +14,9 @@
 
 <fieldset>
     <input id="department" value="department" wire:model.live="model"
-        class="peer/department radio radio-xs radio-accent text-[10px]" type="radio" name="{{ $model }}"
+        class="peer/department radio radio-xs radio-accent " type="radio" name="{{ $model }}"
         checked />
-    <x-form.label for="department" class="peer-checked/department:text-accent "
+    <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
         label="{{ $label_dept }}" :required="$model === 'department' && $required" />
     <input id="company" value="company" wire:model.live="model"
         class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
