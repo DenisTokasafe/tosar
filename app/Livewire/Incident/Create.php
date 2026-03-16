@@ -426,6 +426,13 @@ class Create extends Component
             ->filter()
             ->toArray();
     }
+    public function updatedDepartmentId($value)
+    {
+        // Memaksa Livewire memvalidasi ulang department_id & contractor_id
+        // karena mereka saling bergantung (required_without)
+        $this->validateOnly('department_id');
+    }
+
     public function updatedSearchContractor()
     {
         if (strlen($this->searchContractor) > 1) {
@@ -454,6 +461,10 @@ class Create extends Component
             ->pluck('user')
             ->filter()
             ->toArray();
+    }
+    public function updatedContractorId()
+    {
+        $this->validateOnly('contractor_id');
     }
     #[Computed]
     public function isInjury()
