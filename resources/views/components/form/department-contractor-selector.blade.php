@@ -34,7 +34,7 @@
                 clickaction="selectDepartment" namedb="department_name" />
         </div>
     </div>
-    <div class="hidden peer-checked/company:block mt-1.5">
+    <div class="hidden peer-checked/kontraktor:block mt-1.5">
         {{-- Contractor --}}
         <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
