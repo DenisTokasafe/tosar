@@ -34,10 +34,10 @@ $isJsMethod = str_starts_with($attributes->whereStartsWith('wire:click')->first(
 $loading ??= $loading ?? ($isTypeSubmitAndNotDisabledOnRender || $attributes->whereStartsWith('wire:click')->isNotEmpty() && ! $isJsMethod);
 
 if ($loading && $type !== 'submit' && ! $isJsMethod) {
-    $attributes = $attributes->merge(['wire:loading.attr' => 'data-flux-loading']);
-    if (! $attributes->has('wire:target') && $target = $attributes->whereStartsWith('wire:click')->first()) {
-        $attributes = $attributes->merge(['wire:target' => $target], escape: false);
-    }
+$attributes = $attributes->merge(['wire:loading.attr' => 'data-flux-loading']);
+if (! $attributes->has('wire:target') && $target = $attributes->whereStartsWith('wire:click')->first()) {
+$attributes = $attributes->merge(['wire:target' => $target], escape: false);
+}
 }
 
 $classes = Flux::classes()
@@ -64,19 +64,21 @@ $classes = Flux::classes()
 /* --- IMPLEMENTASI WARNA TEMA TAMBANG --- */
 ->add(match ($variant) {
 'primary' => 'bg-[var(--color-primary)] hover:bg-[color-mix(in_oklab,var(--color-primary),black_7%)] shadow-[inset_0px_1px_rgba(255,255,255,0.2)]',
-'accent'  => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,var(--color-accent),black_7%)]',
-'filled'  => 'bg-[var(--color-base-300)] hover:bg-[var(--color-base-content)]/10',
+'accent' => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,var(--color-accent),black_7%)]',
+'filled' => 'bg-[var(--color-base-300)] hover:bg-[var(--color-base-content)]/10',
 'outline' => 'bg-transparent border border-[var(--color-base-300)] hover:bg-[var(--color-base-200)]',
-'danger'  => 'bg-[var(--color-error)] hover:bg-[color-mix(in_oklab,var(--color-error),black_7%)]',
-'ghost'   => 'bg-transparent hover:bg-[var(--color-base-content)]/5',
-'subtle'  => 'bg-[var(--color-warning)]/15 hover:bg-[var(--color-warning)]/25',
+'danger' => 'bg-[var(--color-error)] hover:bg-[color-mix(in_oklab,var(--color-error),black_7%)]',
+'ghost' => 'bg-transparent hover:bg-[var(--color-base-content)]/5',
+'subtle' => 'bg-[var(--color-warning)]/15 hover:bg-[var(--color-warning)]/25',
+'success' => 'bg-[var(--color-success)]/15 hover:bg-[var(--color-success)]/25',
 })
 ->add(match ($variant) {
 'primary' => 'text-[var(--color-primary-content)]',
-'accent'  => 'text-[var(--color-accent-content)]',
-'danger'  => 'text-[var(--color-error-content)]',
-'subtle'  => 'text-[var(--color-warning-content)]',
-default   => 'text-[var(--color-base-content)]',
+'accent' => 'text-[var(--color-accent-content)]',
+'danger' => 'text-[var(--color-error-content)]',
+'subtle' => 'text-[var(--color-warning-content)]',
+'success' => 'text-[var(--color-success-content)]',
+default => 'text-[var(--color-base-content)]',
 })
 ->add(match ($variant) {
 'outline' => 'border-[var(--color-base-300)] hover:border-[var(--color-base-content)]/20',
@@ -101,32 +103,32 @@ $attributes = $attributes->merge([
 <flux:with-tooltip :$attributes>
     <flux:button-or-link :$type :attributes="$attributes->class($classes)" data-flux-button>
         <?php if ($loading): ?>
-        <div class="absolute inset-0 flex items-center justify-center opacity-0" data-flux-loading-indicator>
-            <flux:icon icon="loading" :variant="$iconVariant" :class="$iconClasses" />
-        </div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0" data-flux-loading-indicator>
+                <flux:icon icon="loading" :variant="$iconVariant" :class="$iconClasses" />
+            </div>
         <?php endif; ?>
 
         <?php if (is_string($iconLeading) && $iconLeading !== ''): ?>
-        <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
+            <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
         <?php elseif ($iconLeading): ?>
-        {{ $iconLeading }}
+            {{ $iconLeading }}
         <?php endif; ?>
 
         <?php if ($loading && ! $slot->isEmpty()): ?>
-        <span>{{ $slot }}</span>
+            <span>{{ $slot }}</span>
         <?php else: ?>
-        {{ $slot }}
+            {{ $slot }}
         <?php endif; ?>
 
         <?php if ($kbd): ?>
-        <div class="text-[10px] opacity-60 border border-current/20 px-1 rounded-sm bg-[var(--color-base-200)]">{{ $kbd }}</div>
+            <div class="text-[10px] opacity-60 border border-current/20 px-1 rounded-sm bg-[var(--color-base-200)]">{{ $kbd }}</div>
         <?php endif; ?>
 
         <?php if (is_string($iconTrailing) && $iconTrailing !== ''): ?>
-        <?php $iconClasses->add($square ? '' : '-ms-1'); ?>
-        <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$iconClasses" />
+            <?php $iconClasses->add($square ? '' : '-ms-1'); ?>
+            <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$iconClasses" />
         <?php elseif ($iconTrailing): ?>
-        {{ $iconTrailing }}
+            {{ $iconTrailing }}
         <?php endif; ?>
     </flux:button-or-link>
 </flux:with-tooltip>
