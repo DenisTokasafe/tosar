@@ -64,7 +64,7 @@ class Create extends Component
     #[Validate('nullable|required_without:department_id|exists:contractors,id')]
     public $contractor_id;
     #[Validate('required')]
-    public $deptCont = 'company'; // default ke department
+    public $deptCont = 'department'; // default ke department
     #[Validate('required')]
     public $keyWord = 'kta';
 
@@ -243,11 +243,10 @@ class Create extends Component
     }
     public function updatedDeptCont($value)
     {
-        // Pastikan $value sesuai dengan atribut 'value' di HTML (department / company)
         if ($value === 'department') {
             $this->contractor_id = null;
-            $this->searchContractor = ''; // Opsional: bersihkan pencarian juga
-        } elseif ($value === 'company') { // Gunakan 'company' bukan 'contractor'
+            $this->searchContractor = '';
+        } else {
             $this->department_id = null;
             $this->search = '';
         }
