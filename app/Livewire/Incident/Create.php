@@ -401,7 +401,9 @@ class Create extends Component
     {
         if (strlen($this->search) < 1) {
             $this->department_id = null;
+            // Picu validasi keduanya agar error 'required_without' sinkron
             $this->validateOnly('department_id');
+            $this->validateOnly('contractor_id');
         } elseif (strlen($this->search) > 1) {
             $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
                 ->orderBy('department_name')
@@ -413,27 +415,29 @@ class Create extends Component
             $this->showDropdown = false;
         }
     }
+
     public function selectDepartment($id, $name)
     {
+        // 1. Reset field kontraktor
         $this->reset('searchContractor', 'contractor_id');
+
+        // 2. Set data departemen
         $this->department_id = $id;
         $this->search = $name;
         $this->showDropdown = false;
-        $this->validateOnly('department_id');
 
-        // Ambil user dari erm_assignments berdasarkan department_id
+        // 3. Validasi keduanya (agar error di contractor_id hilang karena dept_id sudah terisi)
+        $this->validateOnly('department_id');
+        $this->validateOnly('contractor_id');
+
+        // 4. Ambil penanggung jawab dengan struktur yang bersih
         $this->penanggungJawabOptions = ErmAssignment::where('department_id', $id)
-            ->with('user:id,name')   // pastikan relasi user() ada di model
+            ->with('user:id,name')
             ->get()
             ->pluck('user')
             ->filter()
+            ->values() // Reset index array
             ->toArray();
-    }
-    public function updatedDepartmentId($value)
-    {
-        // Memaksa Livewire memvalidasi ulang department_id & contractor_id
-        // karena mereka saling bergantung (required_without)
-        $this->validateOnly('department_id');
     }
 
     public function updatedSearchContractor()
@@ -441,9 +445,9 @@ class Create extends Component
         if (strlen($this->searchContractor) < 1) {
             $this->contractor_id = null;
             $this->validateOnly('contractor_id');
+            $this->validateOnly('department_id');
         } elseif (strlen($this->searchContractor) > 1) {
-            $this->contractors = Contractor::query()
-                ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
+            $this->contractors = Contractor::where('contractor_name', 'like', '%' . $this->searchContractor . '%')
                 ->orderBy('contractor_name')
                 ->limit(80)
                 ->get();
@@ -453,24 +457,24 @@ class Create extends Component
             $this->showContractorDropdown = false;
         }
     }
+
     public function selectContractor($id, $name)
     {
         $this->reset('search', 'department_id');
         $this->contractor_id = $id;
         $this->searchContractor = $name;
         $this->showContractorDropdown = false;
+
         $this->validateOnly('contractor_id');
-        // Ambil user dari erm_assignments berdasarkan contractor_id
+        $this->validateOnly('department_id');
+
         $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
             ->with('user:id,name')
             ->get()
             ->pluck('user')
             ->filter()
+            ->values()
             ->toArray();
-    }
-    public function updatedContractorId()
-    {
-        $this->validateOnly('contractor_id');
     }
     #[Computed]
     public function isInjury()
