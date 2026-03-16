@@ -61,31 +61,36 @@ $classes = Flux::classes()
 : Flux::applyInset($inset, top: '-mt-1', right: '-me-2', bottom: '-mb-1', left: '-ms-2'),
 } : '')
 
-/* --- IMPLEMENTASI WARNA TEMA TAMBANG --- */
+/* --- IMPLEMENTASI WARNA DAISYUI THEMES --- */
 ->add(match ($variant) {
-'primary' => 'bg-[var(--color-primary)] hover:bg-[color-mix(in_oklab,var(--color-primary),black_7%)] shadow-[inset_0px_1px_rgba(255,255,255,0.2)]',
-'accent' => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,var(--color-accent),black_7%)]',
+'primary' => 'bg-[var(--color-primary)] hover:bg-[color-mix(in_oklab,var(--color-primary),black_10%)]',
+'accent' => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,var(--color-accent),black_10%)]',
+'secondary' => 'bg-[var(--color-secondary)] hover:bg-[color-mix(in_oklab,var(--color-secondary),black_10%)]',
 'filled' => 'bg-[var(--color-base-300)] hover:bg-[var(--color-base-content)]/10',
 'outline' => 'bg-transparent border border-[var(--color-base-300)] hover:bg-[var(--color-base-200)]',
-'danger' => 'bg-[var(--color-error)] hover:bg-[color-mix(in_oklab,var(--color-error),black_7%)]',
-'ghost' => 'bg-transparent hover:bg-[var(--color-base-content)]/5',
-'subtle' => 'bg-[var(--color-warning)] hover:bg-[var(--color-warning)]/10',
-'success' => 'bg-[var(--color-success)] hover:bg-[var(--color-success)]/10',
+'danger' => 'bg-[var(--color-error)] hover:bg-[color-mix(in_oklab,var(--color-error),black_10%)]',
+'success' => 'bg-[var(--color-success)] hover:bg-[color-mix(in_oklab,var(--color-success),black_10%)]',
+'warning' => 'bg-[var(--color-warning)] hover:bg-[color-mix(in_oklab,var(--color-warning),black_10%)]',
+'info' => 'bg-[var(--color-info)] hover:bg-[color-mix(in_oklab,var(--color-info),black_10%)]',
+'ghost' => 'bg-transparent hover:bg-[var(--color-base-content)]/10',
+'subtle' => 'bg-[var(--color-primary)]/10 hover:bg-[var(--color-primary)]/20',
 })
 ->add(match ($variant) {
 'primary' => 'text-[var(--color-primary-content)]',
 'accent' => 'text-[var(--color-accent-content)]',
+'secondary' => 'text-[var(--color-secondary-content)]',
 'danger' => 'text-[var(--color-error-content)]',
-'subtle' => 'text-[var(--color-warning-content)]',
 'success' => 'text-[var(--color-success-content)]',
+'warning' => 'text-[var(--color-warning-content)]',
+'info' => 'text-[var(--color-info-content)]',
+'subtle' => 'text-[var(--color-primary)]',
 default => 'text-[var(--color-base-content)]',
 })
 ->add(match ($variant) {
-'outline' => 'border-[var(--color-base-300)] hover:border-[var(--color-base-content)]/20',
-'primary', 'accent', 'danger' => 'border border-black/10',
+'outline' => 'border-[var(--color-base-300)] hover:border-[var(--color-base-content)]/30',
+'primary', 'accent', 'secondary', 'danger', 'success', 'warning', 'info' => 'border border-black/5 shadow-sm',
 default => '',
 })
-/* --- END WARNA --- */
 
 ->add($loading ? [
 '*:transition-opacity',
