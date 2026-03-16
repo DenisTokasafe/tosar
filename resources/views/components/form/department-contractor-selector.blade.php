@@ -1,5 +1,5 @@
 @props([
-'model' => 'deptCont', // wire:model untuk radio button
+'model' => null, // wire:model untuk radio button
 'departments' => [],
 'contractors' => [],
 'label_dept' => 'Departemen Terkait',
