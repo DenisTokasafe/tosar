@@ -399,7 +399,7 @@ class Create extends Component
 
     public function updatedSearch()
     {
-        if (strlen($this->department_id) == 0) {
+        if (strlen($this->search) == 0) {
             $this->department_id = null;
             $this->validateOnly('department_id');
         }
