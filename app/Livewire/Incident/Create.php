@@ -40,18 +40,18 @@ class Create extends Component
 
     #[Url]
     public $description;
-    public $keyWord = 'kta';
+
     public $locations = [];
     public $searchLocation = '';
     public $show_location = false;
     #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
-    public $contractor_id, $department_id, $likelihood_id, $consequence_id;
+    public $likelihood_id, $consequence_id;
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
     public $risk_consequence;
-    public $kondisi_tidak_aman, $tindakan_tidak_aman, $penanggungJawab, $emergency_action, $damage_detail;
+    public  $penanggungJawab, $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
     public $selectedBodyPart;
     // deptContractor
@@ -63,7 +63,8 @@ class Create extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
-    public $deptCont = 'department'; // default ke department
+    public $deptCont = 'department', $department_id, $contractor_id; // default ke department
+    public $keyWord = 'kta', $kondisi_tidak_aman, $tindakan_tidak_aman;
     // Pelapor
     public $pelapor_id, $searchPelapor = '';
     public $pelapors = [];
@@ -970,8 +971,11 @@ class Create extends Component
         // 1. Rules Dasar yang selalu ada di setiap insiden
         $rules = [
             'event_type_id'     => 'required|exists:event_types,id',
-            'kondisi_tidak_aman'     => 'required_without:tindakan_tidak_aman',
-            'tindakan_tidak_aman'     => 'required_without:kondisi_tidak_aman',
+            'kondisi_tidak_aman'  => 'nullable|required_without:tindakan_tidak_aman',
+            'tindakan_tidak_aman' => 'nullable|required_without:kondisi_tidak_aman',
+
+            'department_id'       => 'nullable|required_without:contractor_id|exists:departments,id',
+            'contractor_id'       => 'nullable|required_without:department_id|exists:contractors,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description'       => 'required|string',
             'location_id'       => 'required|exists:locations,id',
@@ -1014,10 +1018,15 @@ class Create extends Component
     protected function getValidationMessages()
     {
         return [
+
             'required' => 'Kolom :attribute wajib diisi.',
             'exists'   => 'Pilihan :attribute tidak valid.',
             'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
             'date'     => 'Format tanggal pada :attribute tidak valid.',
+            'kondisi_tidak_aman.required_without' => 'Mohon isi Kondisi Tidak Aman atau Tindakan Tidak Aman (salah satu wajib).',
+            'tindakan_tidak_aman.required_without' => 'Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).',
+            'department_id.required_without' => 'Pilih Department atau Kontraktor terkait.',
+            'contractor_id.required_without' => 'Pilih Kontraktor atau Department terkait.',
         ];
     }
 

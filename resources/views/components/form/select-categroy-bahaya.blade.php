@@ -1,5 +1,6 @@
 @props([
 'keyWord' => null,
+'required' => false,
 'ktas' => [],
 'ttas' => [],
 'options_label' => '-- Pilih Kategori Bahaya --',
@@ -13,14 +14,14 @@
             <input id="kta" value="kta" wire:model.live="keyWord"
                 class="peer/kta radio radio-xs radio-accent" type="radio" name="keyWord" />
             <x-form.label for="kta" class="peer-checked/kta:text-accent text-[10px] cursor-pointer"
-                label="Kondisi Tidak Aman" required />
+                label="Kondisi Tidak Aman" :required="{{ !$model_tta ? '$required' : '' }}" />
         </div>
 
         <div class="flex items-center gap-1">
             <input id="tta" value="tta" wire:model.live="keyWord"
                 class="peer/tta radio radio-xs radio-primary" type="radio" name="keyWord" />
             <x-form.label for="tta" class="peer-checked/tta:text-primary text-[10px] cursor-pointer"
-                label="Tindakan Tidak Aman" required />
+                label="Tindakan Tidak Aman" :required="{{ !$model_kta ? '$required' : '' }}" />
         </div>
     </div>
 
