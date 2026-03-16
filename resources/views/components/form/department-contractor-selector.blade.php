@@ -1,5 +1,5 @@
 @props([
-'model' => 'null', // wire:model untuk radio button
+'model' => null, // wire:model untuk radio button
 'model_dept'=> null,
 'model_cont'=> null,
 'required' => false,
