@@ -27,10 +27,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use \App\Traits\WithDeptContSelection;
+use App\Traits\WithSearchLocation;
 
 class Create extends Component
 {
-    use WithFileUploads, WithPagination, WithDeptContSelection;
+    use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation;
 
     #[Validate('required|exists:event_types,id')]
     public $event_type_id;
@@ -74,9 +75,7 @@ class Create extends Component
         $documentation,
         $visual_evidence, $visual_evidence_path,
         $supporting_documents, $supporting_documents_path;
-    public $locations = [];
-    public $searchLocation = '';
-    public $show_location = false;
+
     #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
@@ -246,26 +245,7 @@ class Create extends Component
     }
 
 
-    // Search Location
-    public function updatedSearchLocation()
-    {
-        if (strlen($this->searchLocation) > 2) {
-            $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
-                ->orderBy('name')
-                ->limit(80)
-                ->get();
-            $this->show_location = true;
-        } else {
-            $this->locations = [];
-            $this->show_location = false;
-        }
-    }
-    public function selectLocation($id, $name)
-    {
-        $this->location_id = $id;
-        $this->searchLocation = $name;
-        $this->show_location = false;
-    }
+
 
     public function updatedVisualEvidence()
     {
