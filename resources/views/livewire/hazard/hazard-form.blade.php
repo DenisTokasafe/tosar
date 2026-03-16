@@ -495,17 +495,19 @@
                     </fieldset>
 
                     <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3 mt-4">
-                        <fieldset class="fieldset">
-                            <x-form.label label="Batas Waktu" />
-                            <input type="text" wire:model.live="action_due_date" class="input input-bordered input-xs w-full" placeholder="Pilih Tanggal" id="date1" />
-                        </fieldset>
 
-                        <fieldset class="fieldset">
-                            <x-form.label label="Tanggal Selesai" />
-                            <input type="text" wire:model.live="actual_close_date" class="input input-bordered input-xs w-full" placeholder="Pilih Tanggal" id="date2" />
-                        </fieldset>
+                        <x-form.tgl label="Batas Waktu" model="action_due_date" :required="true" placeholder="Pilih Tanggal" />
+                        <x-form.tgl label="Tanggal Selesai" model="actual_close_date" :required="true" placeholder="Pilih Tanggal" />
 
-                        <x-form.searchable-select-advanced label="PIC / Penanggung Jawab" ... />
+                        <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
+
+                            modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
+
+                            :options="$pelaporsAct" :showdropdown="$showActPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualActPelaporMode"
+
+                            manualModelName="manualActPelaporName" enableManualAction="enableManualActPelapor"
+
+                            addManualAction="addActPelaporManual" clickaction="selectActPelapor" />
                     </div>
 
                     <div class="flex justify-end mt-4">
