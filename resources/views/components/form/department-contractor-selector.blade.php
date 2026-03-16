@@ -11,7 +11,6 @@
 'showContractorDropdown' => false, // status dropdown contractor
 ])
 
-
 <fieldset>
     <!-- Departemen -->
     <input id="department" value="department" wire:model.live="deptCont"
