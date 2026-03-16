@@ -969,7 +969,7 @@ class Create extends Component
             'event_type_id'     => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description'       => 'required|string',
-            'location'          => 'required|string',
+            'location_id'          => 'required|exists:locations,id',
             'date_time'         => 'required|date',
             'pelapor_id'        => 'required|exists:users,id',
             'manualPelaporName' => 'nullable|string|max:255',
