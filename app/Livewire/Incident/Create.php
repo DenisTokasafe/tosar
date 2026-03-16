@@ -402,8 +402,7 @@ class Create extends Component
         if (strlen($this->search) < 1) {
             $this->department_id = null;
             $this->validateOnly('department_id');
-        }
-        if (strlen($this->search) > 1) {
+        } elseif (strlen($this->search) > 1) {
             $this->departments = Department::where('department_name', 'like', '%' . $this->search . '%')
                 ->orderBy('department_name')
                 ->limit(80)
@@ -442,8 +441,7 @@ class Create extends Component
         if (strlen($this->searchContractor) < 1) {
             $this->contractor_id = null;
             $this->validateOnly('contractor_id');
-        }
-        if (strlen($this->searchContractor) > 1) {
+        } elseif (strlen($this->searchContractor) > 1) {
             $this->contractors = Contractor::query()
                 ->where('contractor_name', 'like', '%' . $this->searchContractor . '%')
                 ->orderBy('contractor_name')
