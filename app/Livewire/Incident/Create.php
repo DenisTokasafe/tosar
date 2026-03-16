@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -63,7 +64,9 @@ class Create extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
+    #[Validate]
     public $deptCont = 'department', $department_id, $contractor_id; // default ke department
+    #[Validate]
     public $keyWord = 'kta', $kondisi_tidak_aman, $tindakan_tidak_aman;
     // Pelapor
     public $pelapor_id, $searchPelapor = '';
