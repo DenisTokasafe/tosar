@@ -59,9 +59,9 @@ class Create extends Component
     #[Validate('nullable|required_without:kondisi_tidak_aman')]
     public $tindakan_tidak_aman;
 
-    #[Validate('nullable|required_without:contractor_id')]
+    #[Validate('nullable|required_without:contractor_id|exists:departments,id')]
     public $department_id;
-    #[Validate('nullable|required_without:department_id')]
+    #[Validate('nullable|required_without:department_id|exists:contractors,id')]
     public $contractor_id;
     #[Validate('required')]
     public $deptCont = 'dept'; // default ke department
@@ -416,6 +416,7 @@ class Create extends Component
         $this->department_id = $id;
         $this->search = $name;
         $this->showDropdown = false;
+        $this->validateOnly('department_id');
 
         // Ambil user dari erm_assignments berdasarkan department_id
         $this->penanggungJawabOptions = ErmAssignment::where('department_id', $id)
@@ -445,6 +446,7 @@ class Create extends Component
         $this->contractor_id = $id;
         $this->searchContractor = $name;
         $this->showContractorDropdown = false;
+        $this->validateOnly('contractor_id');
         // Ambil user dari erm_assignments berdasarkan contractor_id
         $this->penanggungJawabOptions = ErmAssignment::where('contractor_id', $id)
             ->with('user:id,name')
