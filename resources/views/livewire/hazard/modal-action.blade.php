@@ -32,7 +32,7 @@
              </div>
 
              <div class="flex justify-end mt-4">
-                 <flux:button size="xs" wire:click="addAction" variant="primary">
+                 <flux:button size="xs" wire:click="addAction" variant="success">
                      {{ __('Tambah ke Daftar') }}
                  </flux:button>
              </div>
