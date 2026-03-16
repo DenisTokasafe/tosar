@@ -10,7 +10,7 @@
              <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                  <x-form.label label="Deskripsi Tindakan" required />
                  <div x-data="ckeditorHelper('action_description')" wire:ignore>
-                     <div x-ref="editorElement" data-placeholder="Masukkan deskripsi tindakan..."></div>
+                     <div x-ref="editorElement" data-placeholder="{{ __('Masukkan deskripsi tindakan...') }}"></div>
                  </div>
                  <x-label-error :messages="$errors->get('action_description')" />
              </fieldset>
