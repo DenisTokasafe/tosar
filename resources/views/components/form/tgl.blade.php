@@ -5,25 +5,23 @@
 'size' => 'input-xs',
 'required' => false,
 'disabled' => false,
-'dateFormat' => 'd F Y', // Format yang tampil ke user (altInput)
-'format' =>'Y-m-f'
+'dateFormat' => 'd F Y',
+'format' => 'Y-m-d' // Perbaikan typo f -> d
 ])
 
 <fieldset class="w-full fieldset">
-    {{-- Label dengan indikator required --}}
     @if ($label)
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- Wrapper Alpine.js untuk Flatpickr --}}
     <div wire:ignore x-data="{
         reportDate: @entangle($model),
         fp: null,
         init() {
-         static: true,
             this.fp = flatpickr(this.$refs.tanggalInput, {
                 disableMobile: true,
                 altInput: true,
+                static: true, // Dipindahkan ke sini
                 altFormat: '{{ $dateFormat }}',
                 dateFormat: '{{ $format }}',
                 defaultDate: this.reportDate,
@@ -33,17 +31,18 @@
             });
 
             this.$watch('reportDate', (newVal) => {
-                this.fp.setDate(newVal, false);
+                if (newVal !== this.fp.currentSelectedDateString) {
+                    this.fp.setDate(newVal, false);
+                }
             });
         }
     }">
-        {{-- Input Element --}}
         <input
             x-ref="tanggalInput"
             type="text"
             readonly
             {{ $disabled ? 'disabled' : '' }}
-            {{ $model ? "wire:model.live=$model" : '' }}
+            {{-- wire:model dihapus karena sudah dihandle @entangle --}}
             placeholder="{{ $placeholder ?: $label }}"
             {{ $attributes->merge([
                 'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
@@ -51,7 +50,6 @@
             ]) }} />
     </div>
 
-    {{-- Penanganan Error Otomatis --}}
     @if($model)
     @error($model)
     <x-label-error :messages="$errors->get($model)" />
