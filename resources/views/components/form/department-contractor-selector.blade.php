@@ -47,7 +47,7 @@
                 namedb="department_name" />
         </div>
         {{-- Menampilkan error untuk department_id --}}
-        <x-label-error :messages="$errors->get($model_dept)" />
+
     </div>
 
     {{-- Dropdown Contractor --}}
@@ -63,6 +63,6 @@
                 namedb="contractor_name" />
         </div>
         {{-- Menampilkan error untuk contractor_id --}}
-        <x-label-error :messages="$errors->get($model_cont)" />
     </div>
+
 </fieldset>
