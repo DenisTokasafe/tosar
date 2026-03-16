@@ -9,7 +9,7 @@
 'required' => false, // status dropdown contractor
 ])
 
-
+{{ $model }}
 <fieldset>
     <div class="flex items-center gap-4">
         {{-- Radio Department --}}
