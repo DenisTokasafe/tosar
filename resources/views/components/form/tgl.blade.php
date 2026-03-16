@@ -1,17 +1,18 @@
 @props([
-    'label' => null,
-    'placeholder' => 'Pilih Tanggal...',
-    'model' => null,
-    'size' => 'input-xs',
-    'required' => false,
-    'disabled' => false,
-    'dateFormat' => 'd F Y', // Format yang tampil ke user (altInput)
+'label' => null,
+'placeholder' => 'Pilih Tanggal...',
+'model' => null,
+'size' => 'input-xs',
+'required' => false,
+'disabled' => false,
+'dateFormat' => 'd F Y', // Format yang tampil ke user (altInput)
+'format' =>'Y-m-f'
 ])
 
 <fieldset class="w-full fieldset">
     {{-- Label dengan indikator required --}}
     @if ($label)
-        <x-form.label :label="$label" :required="$required" />
+    <x-form.label :label="$label" :required="$required" />
     @endif
 
     {{-- Wrapper Alpine.js untuk Flatpickr --}}
@@ -24,7 +25,7 @@
                 disableMobile: true,
                 altInput: true,
                 altFormat: '{{ $dateFormat }}',
-                dateFormat: 'Y-m-d',
+                dateFormat: '{{ $format }}',
                 defaultDate: this.reportDate,
                 onChange: (selectedDates, dateStr) => {
                     this.reportDate = dateStr;
@@ -47,14 +48,13 @@
             {{ $attributes->merge([
                 'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
                 ($errors->has($model) ? 'border-rose-500 focus:ring-rose-500 focus-within:border-rose-500' : '')
-            ]) }}
-        />
+            ]) }} />
     </div>
 
     {{-- Penanganan Error Otomatis --}}
     @if($model)
-        @error($model)
-            <x-label-error :messages="$errors->get($model)" />
-        @enderror
+    @error($model)
+    <x-label-error :messages="$errors->get($model)" />
+    @enderror
     @endif
 </fieldset>
