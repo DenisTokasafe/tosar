@@ -317,14 +317,14 @@
                     <div class="flex items-center gap-2">
                         <input type="radio" name="action_trigger" value="open"
                             wire:model.live="showActionModal"
-                            class="radio radio-md bg-red-100 border-red-300 checked:bg-red-200 checked:text-red-600 checked:border-red-600" />
+                            class="radio radio-md bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
                         <span>Buka Form Tindakan</span>
                     </div>
 
                     <div class="flex items-center gap-2">
                         <input type="radio" name="action_trigger" value="close"
                             wire:model.live="showActionModal"
-                            class="radio radio-md bg-blue-100 border-blue-300 checked:bg-blue-200 checked:text-blue-600 checked:border-blue-600" />
+                            class="radio radio-md bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
                         <span>Tutup</span>
                     </div>
                 </div>
