@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="hidden peer-checked/department:block mt-1.5">
+    <div wire:key="dropdown-department" class="{{ $model === 'department' ? 'block' : 'hidden' }} mb-1.5">
         {{-- Department --}}
         <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="search" modelid="department_id"
@@ -41,7 +41,7 @@
                 clickaction="selectDepartment" namedb="department_name" />
         </div>
     </div>
-    <div class="hidden peer-checked/company:block mt-1.5">
+    <div wire:key="dropdown-company" class="{{ $model === 'company' ? 'block' : 'hidden' }} mb-1.5">
         {{-- Contractor --}}
         <div class="relative ">
             <x-form.searchable-dropdown-without-label modelsearch="searchContractor"
