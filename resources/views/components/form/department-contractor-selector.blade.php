@@ -1,5 +1,5 @@
 @props([
-'model' => 'deptCont', // wire:model untuk radio button
+'model' => 'null', // wire:model untuk radio button
 'model_dept'=> null,
 'model_cont'=> null,
 'required' => false,
@@ -16,7 +16,7 @@
     <input id="department" value="department" wire:model.live="model"
         class="peer/department radio radio-xs radio-accent" type="radio" name="{{ $model }}"
         checked />
-    <x-form.label for="department" class="peer-checked/department:text-accent text-[10px]"
+    <x-form.label for="department" class="peer-checked/department:text-accent "
         label="{{ $label_dept }}" :required="$model === 'department' && $required" />
     <input id="company" value="company" wire:model.live="model"
         class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
