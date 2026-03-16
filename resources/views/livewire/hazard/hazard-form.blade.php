@@ -318,7 +318,7 @@
                         <label class="label">
                             <input type="radio" name="action_trigger" value="open"
                                 wire:model.live="showActionModal"
-                                class="radio radio-sm bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
+                                class="radio radio-xs bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
                             {{ __('Buka Form Tindakan') }}
                         </label>
                     </div>
@@ -326,7 +326,7 @@
                         <label class="label">
                             <input type="radio" name="action_trigger" value="close"
                                 wire:model.live="showActionModal"
-                                class="radio radio-sm bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
+                                class="radio radio-xs bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
                             {{ __('Closed') }}
                         </label>
                     </div>
