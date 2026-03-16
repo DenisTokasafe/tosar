@@ -29,6 +29,7 @@
         :showDropdown="$showDropdown"
         :showContractorDropdown="$showContractorDropdown"
         :required="true" />
+    {{ $deptCont }}
     <fieldset class="fieldset">
         <x-form.label label="PIC" required />
         <select wire:model.live="penanggungJawab"
