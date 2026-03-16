@@ -9,7 +9,7 @@ use App\Models\ErmAssignment;
 trait WithDeptContSelection
 {
     // Definisikan properti yang dibutuhkan
-    public $deptCont = 'dept';
+
     public $search = '';
     public $searchContractor = '';
     public $departments = [];
