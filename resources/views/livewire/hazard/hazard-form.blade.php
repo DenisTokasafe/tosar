@@ -71,7 +71,7 @@
                 <fieldset class="mb-4 fieldset lg:col-span-2">
                     <x-form.label label="Deskripsi" required />
                     <div x-data="ckeditorHelper('description')" wire:ignore>
-                        <div x-ref="editorElement" data-placeholder="Masukkan deskripsi..."></div>
+                        <div x-ref="editorElement" data-placeholder="{{ __('Masukkan deskripsi...') }}"></div>
                     </div>
                     <x-label-error :messages="$errors->get('description')" />
                 </fieldset>
@@ -122,7 +122,7 @@
                 <fieldset class="fieldset">
                     <x-form.label label="Lokasi Spesifik" required />
                     <input name="location_specific" type="text" wire:model.live="location_specific"
-                        placeholder="Masukkan detail lokasi spesifik..."
+                        placeholder="{{ __('Masukkan detail lokasi spesifik...') }}"
                         class=" input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('location_specific') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                     <x-label-error :messages="$errors->get('location_specific')" />
                 </fieldset>
@@ -222,7 +222,7 @@
 
                     <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                     <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
-                        <div x-ref="editorElement" data-placeholder="Masukkan kondisi atau tindakan yang sudah dilakukan..."></div>
+                        <div x-ref="editorElement" data-placeholder="{{ __('Masukkan kondisi atau tindakan yang sudah dilakukan...') }}"></div>
                     </div>
 
                     <x-label-error :messages="$errors->get('immediate_corrective_action')" />
