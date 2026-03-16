@@ -30,7 +30,7 @@ use \App\Traits\WithDeptContSelection;
 
 class Create extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithFileUploads, WithPagination, WithDeptContSelection;
 
     #[Validate('required|exists:event_types,id')]
     public $event_type_id;
