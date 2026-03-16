@@ -30,7 +30,6 @@
                 :required="$keyWord === 'tta' && $required" />
         </div>
     </div>
-
     {{-- Dropdown KTA --}}
     <div class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mb-1.5">
         <select {{ $model_kta ? "wire:model.live=$model_kta" : '' }}
