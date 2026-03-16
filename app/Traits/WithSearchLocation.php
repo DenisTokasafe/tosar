@@ -13,7 +13,11 @@ trait WithSearchLocation
     // Search Location
     public function updatedSearchLocation()
     {
-        if (strlen($this->searchLocation) > 2) {
+        if (strlen($this->searchLocation) < 1) {
+            $this->location_id = null;
+            // Picu validasi keduanya agar error 'required_without' sinkron
+            $this->validateOnly('location_id');
+        } elseif (strlen($this->searchLocation) > 2) {
             $this->locations = Location::where('name', 'like', '%' . $this->searchLocation . '%')
                 ->orderBy('name')
                 ->limit(80)
