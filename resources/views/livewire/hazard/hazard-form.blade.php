@@ -319,7 +319,7 @@
                             <input type="radio" name="action_trigger" value="open"
                                 wire:model.live="showActionModal"
                                 class="radio radio-md bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
-                            Buka Form Tindakan
+                            {{ __('Buka Form Tindakan') }}
                         </label>
                     </div>
                     <div class="flex items-center gap-2">
@@ -327,7 +327,7 @@
                             <input type="radio" name="action_trigger" value="close"
                                 wire:model.live="showActionModal"
                                 class="radio radio-md bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
-                            Tutup
+                            {{ __('Closed') }}
                         </label>
                     </div>
                 </div>
