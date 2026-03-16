@@ -53,8 +53,10 @@ class Create extends Component
     public $risk_consequence;
     public $kondisi_tidak_aman, $tindakan_tidak_aman, $penanggungJawab, $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
+    public $selectedBodyPart;
     // deptContractor
     public $search = '';
+    public $location_specific;
     public $departments = [];
     public $showDropdown = false;
     public $searchContractor = '';
@@ -965,16 +967,18 @@ class Create extends Component
 
     protected function getValidationRules()
     {
+        // 1. Rules Dasar yang selalu ada di setiap insiden
         $rules = [
             'event_type_id'     => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description'       => 'required|string',
-            'location_id'          => 'required|exists:locations,id',
+            'location_id'       => 'required|exists:locations,id',
+            'location_specific' => 'required|string',
             'date_time'         => 'required|date',
             'pelapor_id'        => 'required|exists:users,id',
             'manualPelaporName' => 'nullable|string|max:255',
 
-            // Rules Penerimaan Komentar Standard
+            // Rules Penerimaan Komentar Standard (Internal, Contractor, OHS)
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
             'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
@@ -983,7 +987,17 @@ class Create extends Component
             'penerimaan_komentar_ohs'           => 'required|min:11',
         ];
 
-        // Tambahkan aturan KTT jika level insiden 3, 4, atau 5
+        // 2. Logika Kondisional: Injury vs Damage
+        if ($this->isInjury()) {
+            // Jika Injury: Kategori dan Detail Bagian Tubuh Wajib Diisi
+            $rules['selectedBodyPartCategory'] = 'required';
+            $rules['selectedBodyPart']         = 'required|exists:body_parts,id';
+        } else {
+            // Jika Bukan Injury: Detail Kerusakan Alat/Lingkungan Wajib Diisi
+            $rules['damage_detail'] = 'required|string|min:5';
+        }
+
+        // 3. Tambahkan aturan KTT jika level insiden 3, 4, atau 5
         if (in_array((int)$this->consequence_id, [3, 4, 5])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
