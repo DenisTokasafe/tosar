@@ -13,16 +13,18 @@
 
 
 <fieldset>
-    <input id="department" value="department" wire:model.live="model"
-        class="peer/department radio radio-xs radio-accent" type="radio" name="{{ $model }}"
-        checked />
-    <x-form.label for="department" class="peer-checked/department:text-accent "
-        label="{{ $label_dept }}" :required="$model === 'department' && $required" />
-    <input id="company" value="company" wire:model.live="model"
-        class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
-    <x-form.label for="company" class="peer-checked/company:text-primary" label="{{ $label_contractor }}"
-        :required="$model === 'company' && $required" />
+    {{-- Bagian Department --}}
+    <input id="department" value="department" wire:model.live="model" ... />
+    <x-form.label for="department"
+        label="{{ $label_dept }}"
+        :required="$model === 'department' && $required" />
 
+    {{-- Bagian Contractor --}}
+    <input id="company" value="company" wire:model.live="model" ... />
+    <x-form.label for="company"
+        label="{{ $label_contractor }}"
+        {{-- Ubah 'contractor' menjadi 'company' agar sesuai dengan value="company" di atas --}}
+        :required="$model === 'company' && $required" />
     <div class="hidden peer-checked/department:block mt-1.5">
         {{-- Department --}}
         <div class="relative ">

@@ -244,11 +244,13 @@ class Create extends Component
     }
     public function updatedDeptCont($value)
     {
-        // Bersihkan nilai yang tidak terpilih agar validasi required_without atau required_if tidak bentrok
+        // Pastikan $value sesuai dengan atribut 'value' di HTML (department / company)
         if ($value === 'department') {
             $this->contractor_id = null;
-        } elseif ($value === 'contractor') {
+            $this->searchContractor = ''; // Opsional: bersihkan pencarian juga
+        } elseif ($value === 'company') { // Gunakan 'company' bukan 'contractor'
             $this->department_id = null;
+            $this->search = '';
         }
     }
 
