@@ -69,8 +69,8 @@ $classes = Flux::classes()
 'outline' => 'bg-transparent border border-[var(--color-base-300)] hover:bg-[var(--color-base-200)]',
 'danger' => 'bg-[var(--color-error)] hover:bg-[color-mix(in_oklab,var(--color-error),black_7%)]',
 'ghost' => 'bg-transparent hover:bg-[var(--color-base-content)]/5',
-'subtle' => 'bg-[var(--color-warning)]/15 hover:bg-[var(--color-warning)]/25',
-'success' => 'bg-[var(--color-success)]/15 hover:bg-[var(--color-success)]/25',
+'subtle' => 'bg-[var(--color-warning)] hover:bg-[var(--color-warning)]/10',
+'success' => 'bg-[var(--color-success)] hover:bg-[var(--color-success)]/10',
 })
 ->add(match ($variant) {
 'primary' => 'text-[var(--color-primary-content)]',
