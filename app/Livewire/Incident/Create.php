@@ -59,9 +59,9 @@ class Create extends Component
     #[Validate('nullable|required_without:kondisi_tidak_aman')]
     public $tindakan_tidak_aman;
 
-    #[Validate('nullable|required_without:contractor_id|exists:departments,id')]
+    #[Validate('nullable|required_without:contractor_id')]
     public $department_id;
-    #[Validate('nullable|required_without:department_id|exists:contractors,id')]
+    #[Validate('nullable|required_without:department_id')]
     public $contractor_id;
     #[Validate('required')]
     public $deptCont = 'dept'; // default ke department
