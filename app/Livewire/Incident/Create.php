@@ -89,9 +89,11 @@ class Create extends Component
     public $selectedBodyPartCategory;
     public $selectedBodyPart;
     // deptContractor
+    #[Validate('required')]
     public $search = '';
     public $departments = [];
     public $showDropdown = false;
+    #[Validate('required')]
     public $searchContractor = '';
     public $contractors = [];
     public $showContractorDropdown = false;
