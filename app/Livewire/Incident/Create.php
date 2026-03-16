@@ -64,6 +64,10 @@ class Create extends Component
 
     #[Validate('nullable|required_without:department_id|exists:contractors,id')]
     public $contractor_id;
+    #[Validate('required')]
+    public $deptCont = 'department'; // default ke department
+    #[Validate('required')]
+    public $keyWord = 'kta';
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
@@ -93,10 +97,7 @@ class Create extends Component
     public $contractors = [];
     public $showContractorDropdown = false;
     public $penanggungJawabOptions = [];
-    #[Validate]
-    public $deptCont = 'department'; // default ke department
-    #[Validate]
-    public $keyWord = 'kta';
+
     // Pelapor
     public $searchPelapor = '';
     public $pelapors = [];
