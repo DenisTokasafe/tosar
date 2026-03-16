@@ -315,17 +315,20 @@
                 <legend class="text-sm font-semibold card-title "> {{ __('Tindakan Lanjutan') }}</legend>
                 <div class="flex gap-4">
                     <div class="flex items-center gap-2">
-                        <input type="radio" name="action_trigger" value="open"
-                            wire:model.live="showActionModal"
-                            class="radio radio-md bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
-                        <span>Buka Form Tindakan</span>
+                        <label class="label">
+                            <input type="radio" name="action_trigger" value="open"
+                                wire:model.live="showActionModal"
+                                class="radio radio-md bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
+                            Buka Form Tindakan
+                        </label>
                     </div>
-
                     <div class="flex items-center gap-2">
-                        <input type="radio" name="action_trigger" value="close"
-                            wire:model.live="showActionModal"
-                            class="radio radio-md bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
-                        <span>Tutup</span>
+                        <label class="label">
+                            <input type="radio" name="action_trigger" value="close"
+                                wire:model.live="showActionModal"
+                                class="radio radio-md bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
+                            Tutup
+                        </label>
                     </div>
                 </div>
 
