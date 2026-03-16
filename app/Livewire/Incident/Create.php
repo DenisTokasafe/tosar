@@ -399,7 +399,7 @@ class Create extends Component
 
     public function updatedSearch()
     {
-        if (strlen($this->search) == 0) {
+        if (strlen($this->search) < 1) {
             $this->department_id = null;
             $this->validateOnly('department_id');
         }
@@ -439,7 +439,7 @@ class Create extends Component
 
     public function updatedSearchContractor()
     {
-        if (strlen($this->searchContractor) == 0) {
+        if (strlen($this->searchContractor) < 1) {
             $this->contractor_id = null;
             $this->validateOnly('contractor_id');
         }
