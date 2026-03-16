@@ -4,7 +4,14 @@
     @if($this->hasSubTypes)
     <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
     @endif
-    <x-form.select-categroy-bahaya options_label="-- Pilih Kategori Insiden --" :key-word="$keyWord" :ktas="$ktas" :ttas="$ttas" model_kta="kondisi_tidak_aman" model_tta="tindakan_tidak_aman" required="true" />
+    <x-form.select-categroy-bahaya
+        options_label="-- Pilih Kategori Insiden --"
+        :key-word="$keyWord"
+        :ktas="$ktas"
+        :ttas="$ttas"
+        model_kta="kondisi_tidak_aman"
+        model_tta="tindakan_tidak_aman"
+        required="true" />
 </div>
 <div class="grid grid-cols-1 gap-2  mb-8 md:grid-cols-2 lg:grid-cols-3">
     <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
@@ -13,7 +20,15 @@
     @if ($location_id)
     <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
     @endif
-    <x-form.department-contractor-selector :model="$deptCont" :departments="$departments" :contractors="$contractors" model_dept="departement_id" model_cont="contractor_id" :showDropdown="$showDropdown" :showContractorDropdown="$showContractorDropdown" required="true" />
+    <x-form.department-contractor-selector
+        :dep-cont="$deptCont"
+        :departments="$departments"
+        :contractors="$contractors"
+        model_dept="departement_id"
+        model_cont="contractor_id"
+        :showDropdown="$showDropdown"
+        :showContractorDropdown="$showContractorDropdown"
+        required="true" />
     <fieldset class="fieldset">
         <x-form.label label="PIC" required />
         <select wire:model.live="penanggungJawab"
