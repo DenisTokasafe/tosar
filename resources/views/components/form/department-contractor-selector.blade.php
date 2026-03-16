@@ -13,24 +13,27 @@
 
 
 <fieldset>
-    {{-- Radio Department --}}
-    <div class="flex items-center gap-1">
-        <input id="department" value="department" wire:model.live="model"
-            class="peer/department radio radio-xs radio-accent" type="radio" name="{{ $model }}" />
 
-        <x-form.label for="department" class="peer-checked/department:text-accent text-[10px] cursor-pointer"
-            label="{{ $label_dept }}"
-            :required="$model === 'department' && $required" />
-    </div>
+    <div class="flex items-center gap-4 ">
+        {{-- Radio Kondisi Tidak Aman (department) --}}
+        <div class="flex items-center gap-1">
+            <input id="department" value="department" wire:model.live="model"
+                class="peer/kta radio radio-xs radio-accent" type="radio" name="model" />
 
-    {{-- Radio Company/Contractor --}}
-    <div class="flex items-center gap-1">
-        <input id="company" value="company" wire:model.live="model"
-            class="peer/company radio radio-xs radio-primary" type="radio" name="{{ $model }}" />
+            <x-form.label for="department" class="peer-checked/department:text-accent text-[10px] cursor-pointer"
+                label="Kondisi Tidak Aman"
+                :required="$model === 'department' && $required" />
+        </div>
 
-        <x-form.label for="company" class="peer-checked/company:text-primary text-[10px] cursor-pointer"
-            label="{{ $label_contractor }}"
-            :required="$model === 'company' && $required" />
+        {{-- Radio Tindakan Tidak Aman (company) --}}
+        <div class="flex items-center gap-1">
+            <input id="company" value="company" wire:model.live="model"
+                class="peer/company radio radio-xs radio-primary" type="radio" name="model" />
+
+            <x-form.label for="company" class="peer-checked/company:text-primary text-[10px] cursor-pointer"
+                label="Tindakan Tidak Aman"
+                :required="$model === 'company' && $required" />
+        </div>
     </div>
 
     <div class="hidden peer-checked/department:block mt-1.5">
