@@ -179,6 +179,21 @@ class Create extends Component
             'directly_involved.*.sift'          => 'required',
             'directly_involved.*.keterlibatan'  => 'required',
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            // PART 3: Tim Investigasi
+            'pemimpin' => 'required|array|min:1',
+            'pemimpin.*.user_id' => 'required',
+            'pemimpin.*.dept'    => 'required|string',
+            'pemimpin.*.jabatan' => 'required|string',
+
+            'facilitator' => 'required|array|min:1',
+            'facilitator.*.user_id' => 'required',
+            'facilitator.*.dept'    => 'required|string',
+            'facilitator.*.jabatan' => 'required|string',
+
+            'anggota' => 'required|array|min:1',
+            'anggota.*.user_id' => 'required',
+            'anggota.*.dept'    => 'required|string',
+            'anggota.*.jabatan' => 'required|string',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -238,6 +253,18 @@ class Create extends Component
             'directly_involved.*.sift'          => __('Shift'),
             'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
             'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
+            // Part 3
+            'pemimpin.*.user_id' => __('Nama Pemimpin'),
+            'pemimpin.*.dept'    => __('Departemen Pemimpin'),
+            'pemimpin.*.jabatan' => __('Jabatan Pemimpin'),
+
+            'facilitator.*.user_id' => __('Nama Facilitator'),
+            'facilitator.*.dept'    => __('Departemen Facilitator'),
+            'facilitator.*.jabatan' => __('Jabatan Facilitator'),
+
+            'anggota.*.user_id' => __('Nama Anggota'),
+            'anggota.*.dept'    => __('Departemen Anggota'),
+            'anggota.*.jabatan' => __('Jabatan Anggota'),
             // Part 9
             'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
             'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
@@ -326,6 +353,22 @@ class Create extends Component
                     'directly_involved.*.sift',
                     'directly_involved.*.keterlibatan',
                     'directly_involved.*.pengalaman_kerja',
+                ];
+                break;
+            case 3:
+                $fields = [
+                    'pemimpin',
+                    'pemimpin.*.user_id',
+                    'pemimpin.*.dept',
+                    'pemimpin.*.jabatan',
+                    'facilitator',
+                    'facilitator.*.user_id',
+                    'facilitator.*.dept',
+                    'facilitator.*.jabatan',
+                    'anggota',
+                    'anggota.*.user_id',
+                    'anggota.*.dept',
+                    'anggota.*.jabatan',
                 ];
                 break;
 
@@ -780,23 +823,27 @@ class Create extends Component
         $user = User::find($id);
 
         if ($user) {
-            // Ambil data lama agar tidak hilang jika tidak ingin dioverwrite total
-            // Atau langsung set seperti di bawah ini:
+            // 1. Set data utama
             $this->{$type}[$index]['user_id'] = $user->id;
             $this->{$type}[$index]['nama']    = $user->name;
 
-            // Hanya isi jabatan/dept otomatis jika Anda ingin (sebagai default),
-            // tapi karena user akan isi manual, kita berikan nilai dari DB sebagai saran awal saja.
+            // 2. Set default Jabatan & Dept (Sangat membantu user agar tidak ketik manual)
             $this->{$type}[$index]['jabatan'] = $user->position ?? '';
             $this->{$type}[$index]['dept']    = $user->department_name ?? '';
 
-            // Update teks di input pencarian
+            // 3. Update teks input pencarian agar sinkron dengan pilihan
+            // Pastikan $this->searchQuery sudah didefinisikan sebagai array di awal
             $this->searchQuery[$index][$type] = $user->name;
 
-
-            // Reset dropdown
+            // 4. Reset state dropdown
             $this->showDropdownPartisipan[$index] = false;
             $this->options = [];
+
+            // 5. TRIGGER VALIDASI (PENTING)
+            // Menghapus pesan error merah segera setelah data terpilih
+            $this->validateOnly($type . '.' . $index . '.user_id');
+            $this->validateOnly($type . '.' . $index . '.dept');
+            $this->validateOnly($type . '.' . $index . '.jabatan');
         }
     }
     public function resetSearch()
