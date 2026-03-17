@@ -20,9 +20,12 @@
         {{ $model ? "wire:model.live=$model" : '' }}
         placeholder="{{ $placeholder ?: $label }}"
         {{ $attributes->merge([
-            'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300  " .
-            ($errors->has($model) ? 'ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '')
-        ]) }} />
+        'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size " .
+        ($errors->has($model)
+            ? 'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0' // Jika Error
+            : 'border-base-200' // Jika Normal
+        )
+    ]) }} />
 
     {{-- Penanganan Error Otomatis --}}
     @if($model)
