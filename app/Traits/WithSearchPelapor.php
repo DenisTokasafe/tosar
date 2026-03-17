@@ -21,17 +21,17 @@ trait WithSearchPelapor
      * Livewire Magic Method: Dijalankan otomatis saat komponen dimuat (mount).
      * Ini akan mengisi data pelapor secara otomatis jika user sudah login.
      */
-    // public function mountWithSearchPelapor()
-    // {
-    //     if (Auth::check()) {
-    //         // Mengisi ID Pelapor ke properti parent (jika ada)
-    //         if (property_exists($this, 'pelapor_id')) {
-    //             $this->pelapor_id = Auth::id();
-    //         }
-    //         // Mengisi Nama ke input search
-    //         $this->searchPelapor = Auth::user()->name;
-    //     }
-    // }
+    public function mountWithSearchPelapor()
+    {
+        if (Auth::check()) {
+            // Mengisi ID Pelapor ke properti parent (jika ada)
+            if (property_exists($this, 'pelapor_id')) {
+                $this->pelapor_id = Auth::id();
+            }
+            // Mengisi Nama ke input search
+            $this->searchPelapor = Auth::user()->name;
+        }
+    }
 
     /**
      * Menangani pencarian pelapor saat user mengetik.
@@ -41,6 +41,7 @@ trait WithSearchPelapor
         // Reset ID dan mode manual jika user mulai mengetik ulang
         if (property_exists($this, 'pelapor_id')) {
             $this->pelapor_id = null;
+            $this->validateOnly('pelapor_id');
         }
         $this->manualPelaporMode = false;
         $this->manualPelaporName = null;
