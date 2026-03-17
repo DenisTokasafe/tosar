@@ -194,6 +194,10 @@ class Create extends Component
             'anggota.*.user_id' => 'required',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
+            // PART 4: PEEPO Factors
+            'peepo' => 'required|array|min:5', // Pastikan semua kategori (P,E,E,P,O) ada
+            'peepo.*.temuan'    => 'required|string|min:3',
+            'peepo.*.deskripsi' => 'required|string|min:5',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -213,7 +217,7 @@ class Create extends Component
      */
     protected function validationAttributes()
     {
-        return [
+        $attributes = [
             // Part 1
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
@@ -274,6 +278,15 @@ class Create extends Component
             'penerimaan_komentar_ohs'           => __('Komentar OHS'),
             'penerimaan_komentar_ktt'           => __('Komentar KTT'),
         ];
+
+        // Tambahkan atribut dinamis untuk PEEPO
+        if (isset($this->peepoFactors)) {
+            foreach ($this->peepoFactors as $key => $label) {
+                $attributes["peepo.$key.temuan"]    = __('Temuan ') . $label;
+                $attributes["peepo.$key.deskripsi"] = __('Deskripsi ') . $label;
+            }
+        }
+        return $attributes;
     }
 
     public function updated($propertyName)
