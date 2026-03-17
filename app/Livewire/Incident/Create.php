@@ -34,40 +34,14 @@ class Create extends Component
 {
     use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation, WithSearchPelapor;
 
-    #[Validate('required|exists:event_types,id')]
-    public $event_type_id;
-
-    #[Validate('required|exists:event_sub_types,id')]
-    public $event_sub_type_id;
-
-    #[Validate('required|string')]
-    public $description;
-
-    #[Validate('required|exists:locations,id')]
-    public $location_id;
-
-    #[Validate('required_with:location_id|string')]
-    public $location_specific;
-
-    #[Validate('required|date')]
-    public $date_time;
-    #[Validate('required_without:manualPelaporName', as: 'Nama Pelapor')]
-    public $pelapor_id;
-    // Rules Mutual Exclusion (Salah satu wajib)
-    #[Validate('nullable|required_without:tindakan_tidak_aman')]
-    public $kondisi_tidak_aman;
-
-    #[Validate('nullable|required_without:kondisi_tidak_aman')]
-    public $tindakan_tidak_aman;
-
-    #[Validate('nullable|required_without:contractor_id|exists:departments,id')]
-    public $department_id;
-    #[Validate('nullable|required_without:department_id|exists:contractors,id')]
-    public $contractor_id;
-    #[Validate('required')]
-    public $deptCont = 'dept'; // default ke department
-    #[Validate('required')]
+    public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
+    public $date_time, $pelapor_id, $manualPelaporName;
+    public $kondisi_tidak_aman, $tindakan_tidak_aman;
+    public $department_id, $contractor_id;
+    public $deptCont = 'dept';
     public $keyWord = 'kta';
+    public $likelihood_id, $consequence_id, $emergency_action;
+    public $damage_detail, $selectedBodyPartCategory, $selectedBodyPart;
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
@@ -77,16 +51,13 @@ class Create extends Component
     #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
-    #[Validate('required')]
-    public $likelihood_id, $consequence_id;
+
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
     public $risk_consequence;
-    public  $emergency_action, $damage_detail;
-    public $selectedBodyPartCategory;
-    public $selectedBodyPart;
-    #[Validate('required')]
-    public $penanggungJawab;
+
+
+
     public $penanggungJawabOptions = [];
     // Involved Personnel
     public $involved_personnel_id, $searchName, $involved_personnel_name;
@@ -164,6 +135,50 @@ class Create extends Component
         'ohs' => '',
         'ktt' => '',
     ];
+
+    protected function rules()
+    {
+        return [
+            'event_type_id' => 'required|exists:event_types,id',
+            'event_sub_type_id' => 'required|exists:event_sub_types,id',
+            'description' => 'required|string',
+            'location_id' => 'required|exists:locations,id',
+            'location_specific' => 'required_with:location_id|string',
+            'date_time' => 'required|date',
+            'pelapor_id' => 'required_without:manualPelaporName',
+
+            // Mutual Exclusion KTA/TTA
+            'kondisi_tidak_aman' => 'nullable|required_without:tindakan_tidak_aman',
+            'tindakan_tidak_aman' => 'nullable|required_without:kondisi_tidak_aman',
+
+            // Mutual Exclusion Dept/Contractor
+            'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
+            'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
+
+            'deptCont' => 'required',
+            'keyWord' => 'required',
+            'likelihood_id' => 'required',
+            'consequence_id' => 'required',
+            'emergency_action' => 'required',
+
+            // LOGIKA KONDISIONAL BERDASARKAN isInjury
+            'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
+            'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
+            'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
+        ];
+    }
+    public function updated($propertyName)
+    {
+        // Setiap kali ada perubahan, validasi field tersebut
+        $this->validateOnly($propertyName);
+
+        // Jika tipe event berubah, validasi ulang field kondisional
+        if ($propertyName === 'event_type_id') {
+            $this->validateOnly('selectedBodyPartCategory');
+            $this->validateOnly('selectedBodyPart');
+            $this->validateOnly('damage_detail');
+        }
+    }
     // Komentar Standard
     #[Validate([
         'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
@@ -173,6 +188,14 @@ class Create extends Component
         'penerimaan_komentar_internal'      => 'required|min:11',
         'penerimaan_komentar_ohs'           => 'required|min:11',
     ])]
+
+    // Tambahkan custom attribute name agar pesan error lebih rapi
+    protected $validationAttributes = [
+        'pelapor_id' => 'Nama Pelapor',
+        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh',
+        'selectedBodyPart' => 'Detail Bagian Tubuh',
+        'damage_detail' => 'Detail Kerusakan',
+    ];
     protected function messages()
     {
         return [
