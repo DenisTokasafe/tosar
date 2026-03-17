@@ -77,13 +77,16 @@ class Create extends Component
     #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
+    #[Validate('required')]
     public $likelihood_id, $consequence_id;
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
     public $risk_consequence;
-    public  $penanggungJawab, $emergency_action, $damage_detail;
+    public  $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
     public $selectedBodyPart;
+    #[Validate('required')]
+    public $penanggungJawab;
     public $penanggungJawabOptions = [];
     // Involved Personnel
     public $involved_personnel_id, $searchName, $involved_personnel_name;
@@ -170,6 +173,29 @@ class Create extends Component
         'penerimaan_komentar_internal'      => 'required|min:11',
         'penerimaan_komentar_ohs'           => 'required|min:11',
     ])]
+    protected function messages()
+    {
+        return [
+            'required' => 'Kolom :attribute wajib diisi.',
+            'exists'   => 'Pilihan :attribute tidak valid.',
+            'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
+            'date'     => 'Format tanggal pada :attribute tidak valid.',
+            'kondisi_tidak_aman.required_without' => 'Mohon isi Kondisi Tidak Aman atau Tindakan Tidak Aman (salah satu wajib).',
+            'tindakan_tidak_aman.required_without' => 'Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).',
+            'department_id.required_without' => 'Pilih Department atau Kontraktor terkait.',
+            'contractor_id.required_without' => 'Pilih Kontraktor atau Department terkait.',
+            // ... sisa pesan lainnya
+        ];
+    }
+
+    protected function validationAttributes()
+    {
+        return [
+            'penerimaan_komentar_ktt' => 'Komentar KTT',
+            'damage_detail' => 'Detail Kerusakan',
+            // ... sisa atribut lainnya
+        ];
+    }
 
     // State untuk menampilkan dropdown
     public $showPenerimaanKomentarContractorDropdown = false;
@@ -881,29 +907,7 @@ class Create extends Component
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
 
-    protected function messages()
-    {
-        return [
-            'required' => 'Kolom :attribute wajib diisi.',
-            'exists'   => 'Pilihan :attribute tidak valid.',
-            'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
-            'date'     => 'Format tanggal pada :attribute tidak valid.',
-            'kondisi_tidak_aman.required_without' => 'Mohon isi Kondisi Tidak Aman atau Tindakan Tidak Aman (salah satu wajib).',
-            'tindakan_tidak_aman.required_without' => 'Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).',
-            'department_id.required_without' => 'Pilih Department atau Kontraktor terkait.',
-            'contractor_id.required_without' => 'Pilih Kontraktor atau Department terkait.',
-            // ... sisa pesan lainnya
-        ];
-    }
 
-    protected function validationAttributes()
-    {
-        return [
-            'penerimaan_komentar_ktt' => 'Komentar KTT',
-            'damage_detail' => 'Detail Kerusakan',
-            // ... sisa atribut lainnya
-        ];
-    }
 
     /**
      * Mendefinisikan pesan error kustom

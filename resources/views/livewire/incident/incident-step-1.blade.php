@@ -29,17 +29,16 @@
         :showDropdown="$showDropdown"
         :showContractorDropdown="$showContractorDropdown"
         :required="true" />
-    <fieldset class="fieldset">
-        <x-form.label label="PIC" required />
-        <select wire:model.live="penanggungJawab"
-            class="select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('penanggungJawab') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-            <option value="">{{__('-- Pilih --')}}</option>
-            @foreach ($penanggungJawabOptions as $pj)
-            <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
-            @endforeach
-        </select>
-        <x-label-error :messages="$errors->get('penanggungJawab')" />
-    </fieldset>
+
+    <x-form.select
+        label="PIC"
+        model="penanggungJawab"
+        :options="$penanggungJawabOptions"
+        optionValue="id"
+        optionLabel="name"
+        placeholder="-- Pilih Penanggung Jawab --"
+        required="true" />
+
 
     <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
         modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
