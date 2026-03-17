@@ -32,29 +32,21 @@
     </div>
     {{-- Dropdown KTA --}}
     <div wire:key="dropdown-kta-{{ $model_kta }}" class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mt-0.5">
-        <select {{ $model_kta ? "wire:model.live=$model_kta" : '' }}
-            class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0
-            {{ $errors->has($model_kta) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '' }}">
-            <option value="">{{__($options_label)}}</option>
-            @foreach ($ktas as $kta)
-            <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
-            @endforeach
-        </select>
-        {{-- Menampilkan error berdasarkan variabel model_kta --}}
-        <x-label-error :messages="$errors->get($model_kta)" />
+        <x-form.select
+            :model="$model_kta"
+            :options="$ktas"
+            optionValue="id"
+            optionLabel="name"
+            :placeholder="$options_label" />
     </div>
 
     {{-- Dropdown TTA --}}
     <div wire:key="dropdown-tta-{{ $model_tta }}" class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} mt-0.5">
-        <select {{ $model_tta ? "wire:model.live=$model_tta" : '' }}
-            class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0
-            {{ $errors->has($model_tta) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '' }}">
-            <option value="">{{__($options_label)}}</option>
-            @foreach ($ttas as $tta)
-            <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
-            @endforeach
-        </select>
-        {{-- Menampilkan error berdasarkan variabel model_tta --}}
-        <x-label-error :messages="$errors->get($model_tta)" />
-    </div>
+        <x-form.select
+            :model="$model_tta"
+            :options="$ttas"
+            optionValue="id"
+            optionLabel="name"
+            :placeholder="$options_label"
+            </div>
 </fieldset>
