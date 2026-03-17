@@ -27,13 +27,13 @@
                     </div>
 
                     <div class="pl-1">
-                        <p class="text-sm leading-relaxed text-base-content/80 whitespace-pre-line">
+                        <p class="text-sm leading-relaxed whitespace-pre-line text-base-content/80">
                             {{ $description ?: 'Deskripsi kejadian belum diisi pada Step 1.' }}
                         </p>
                     </div>
 
                     <div class="absolute top-2 right-2">
-                        <div class="badge badge-ghost badge-xs opacity-50 italic">Hanya Baca</div>
+                        <div class="italic opacity-50 badge badge-ghost badge-xs">Hanya Baca</div>
                     </div>
                 </div>
 
