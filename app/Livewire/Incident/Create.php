@@ -49,8 +49,7 @@ class Create extends Component
         $visual_evidence, $visual_evidence_path,
         $supporting_documents, $supporting_documents_path;
     #[Url(as: 'step')]
-    public $currentStep = 1;
-    public $totalSteps = 3;
+
 
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
@@ -161,6 +160,12 @@ class Create extends Component
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
+            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            'penerimaan_komentar_contractor'    => 'required|min:11',
+            'penerimaan_komentar_internal'      => 'required|min:11',
+            'penerimaan_komentar_ohs'           => 'required|min:11',
 
             // LOGIKA KONDISIONAL BERDASARKAN isInjury
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
@@ -168,14 +173,6 @@ class Create extends Component
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
     }
-    #[Validate([
-        'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-        'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-        'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-        'penerimaan_komentar_contractor'    => 'required|min:11',
-        'penerimaan_komentar_internal'      => 'required|min:11',
-        'penerimaan_komentar_ohs'           => 'required|min:11',
-    ])]
     /**
      * Mengembalikan atribut validasi yang sudah diterjemahkan.
      */
@@ -252,6 +249,20 @@ class Create extends Component
             'tindakan_tidak_aman.required_without'  => __('Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).'),
             'contractor_id.required_without'        => __('Pilih Kontraktor atau Department terkait.'),
         ];
+    }
+
+    public $currentStep = 1;
+    public $totalSteps = 9;
+
+    // Fungsi untuk pindah step
+    public function setStep($step)
+    {
+        // Sebelum pindah ke step berikutnya, validasi data step saat ini
+        if ($step > $this->currentStep) {
+            $this->validateCurrentStep();
+        }
+
+        $this->currentStep = $step;
     }
 
 
