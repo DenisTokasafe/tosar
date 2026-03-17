@@ -169,6 +169,17 @@ class Create extends Component
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
             // Part 2
+            // PART 2: Pihak Terlibat Langsung
+            'directly_involved' => 'required|array|min:1',
+            'directly_involved.*.employee_name' => 'required|string',
+            'directly_involved.*.employee_nik'  => 'required',
+            'directly_involved.*.dept_cont'     => 'required',
+            'directly_involved.*.jabatan'       => 'required',
+            'directly_involved.*.roster'        => 'required',
+            'directly_involved.*.sift'          => 'required',
+            'directly_involved.*.keterlibatan'  => 'required',
+            'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
             'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
@@ -188,7 +199,7 @@ class Create extends Component
     protected function validationAttributes()
     {
         return [
-            // Pelapor & Lokasi
+            // Part 1
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
@@ -218,8 +229,16 @@ class Create extends Component
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
             'selectedBodyPart'         => __('Detail Bagian Tubuh'),
             'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
-
-            // Komentar Penerimaan (Komentar yang tadi Anda tambahkan)
+            // PART 2 (Dynamic Label)
+            'directly_involved.*.employee_name' => __('Nama Personel'),
+            'directly_involved.*.employee_nik'  => __('NIK/ID'),
+            'directly_involved.*.dept_cont'     => __('Departemen/Perusahaan'),
+            'directly_involved.*.jabatan'       => __('Jabatan'),
+            'directly_involved.*.roster'        => __('Roster'),
+            'directly_involved.*.sift'          => __('Shift'),
+            'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
+            'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
+            // Part 9
             'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
             'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
             'penerimaan_komentar_ohs_id'        => __('Penanggung Jawab OHS'),
@@ -297,9 +316,18 @@ class Create extends Component
 
             case 2:
                 // Tambahkan field untuk Part 2 (Saksi, korban, dll)
-                $fields = ['nama_saksi', 'nama_korban'];
+                $fields = [
+                    'directly_involved',
+                    'directly_involved.*.employee_name',
+                    'directly_involved.*.employee_nik',
+                    'directly_involved.*.dept_cont',
+                    'directly_involved.*.jabatan',
+                    'directly_involved.*.roster',
+                    'directly_involved.*.sift',
+                    'directly_involved.*.keterlibatan',
+                    'directly_involved.*.pengalaman_kerja',
+                ];
                 break;
-
             case 9:
                 $fields = [
                     'penerimaan_komentar_contractor_id',
