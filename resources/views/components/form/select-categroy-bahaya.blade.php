@@ -31,7 +31,7 @@
         </div>
     </div>
     {{-- Dropdown KTA --}}
-    <div wire:key="dropdown-kta-{{ $model_kta }}" class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} mt-0.5">
+    <div wire:key="dropdown-kta-{{ $model_kta }}" class="{{ $keyWord === 'kta' ? 'block' : 'hidden' }} ">
         <x-form.select
             :model="$model_kta"
             :options="$ktas"
@@ -41,7 +41,7 @@
     </div>
 
     {{-- Dropdown TTA --}}
-    <div wire:key="dropdown-tta-{{ $model_tta }}" class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} mt-0.5">
+    <div wire:key="dropdown-tta-{{ $model_tta }}" class="{{ $keyWord === 'tta' ? 'block' : 'hidden' }} ">
         <x-form.select
             :model="$model_tta"
             :options="$ttas"
