@@ -15,7 +15,7 @@
 
     <select {{ $model ? "wire:model.live=$model" : '' }} {{ $attributes->merge([
         'class' => 'select select-xs select-bordered w-full focus:outline-none focus:border-info focus:ring-0 ' .
-        ($errors->has($model) ? 'border-rose-500 ring-1 ring-rose-500 focus:border-rose-500' : '')
+        ($errors->has($model) ? 'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0' : '')
     ]) }}>
         <option value="">{{ __($placeholder) }}</option>
 
