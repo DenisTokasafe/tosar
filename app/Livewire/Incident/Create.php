@@ -211,7 +211,6 @@ class Create extends Component
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // PART 5: Timeline & Why Analysis
             'timelines' => 'required|array|min:1',
-            'timelines.*.kejadian' => 'required|string|min:5',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -227,7 +226,7 @@ class Create extends Component
         ];
 
         // Tambahkan validasi dinamis berdasarkan jumlah whyCount yang sedang aktif
-        for ($i = 1; $i <= $this->whyCount; $i++) {
+        foreach (range(1, $this->whyCount) as $i) {
             $rules["timelines.*.why{$i}"] = 'required|string|min:3';
         }
 
@@ -307,10 +306,10 @@ class Create extends Component
         }
         foreach ($this->timelines as $index => $line) {
             $rowNum = $index + 1;
-            $attributes["timelines.{$index}.kejadian"] = "Kronologi Baris ke-{$rowNum}";
 
+            // Kita hanya memvalidasi input 'why' karena 'kejadian' sekarang bersifat statis
             for ($i = 1; $i <= $this->whyCount; $i++) {
-                $attributes["timelines.{$index}.why{$i}"] = "Alasan (Why {$i}) pada Baris ke-{$rowNum}";
+                $attributes["timelines.{$index}.why{$i}"] = "Analisis Mengapa (Why {$i}) pada Baris ke-{$rowNum}";
             }
         }
         return $attributes;
