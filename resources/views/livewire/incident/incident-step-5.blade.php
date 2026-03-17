@@ -17,7 +17,7 @@
                 <x-form.text_area
                     disabled
                     label="Kronologi Kejadian & Tanggal"
-                    wire:model="timelines.{{ $index }}.kejadian"
+                    wire:model="description"
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
 
