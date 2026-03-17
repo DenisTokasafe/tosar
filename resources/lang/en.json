@@ -289,6 +289,16 @@
     "PIC / Penanggung Jawab": "PIC / Person in Charge",
     "Kemungkinan (Likelihood)": "Likelihood",
     "Konsekuensi (Consequence)": "Consequence",
-    "Detail Kerusakan Alat / Lingkungan": "Equipment / Environmental Damage Details"
+    "Detail Kerusakan Alat / Lingkungan": "Equipment / Environmental Damage Details",
+
+    ":attribute wajib diisi.": "The :attribute field is required.",
+    "Pilihan :attribute tidak valid.": "The selected :attribute is invalid.",
+    ":attribute minimal harus :min karakter.": "The :attribute must be at least :min characters.",
+    "Format tanggal :attribute tidak sesuai.": "The :attribute does not match the date format.",
+
+    "Mohon isi Kondisi atau Tindakan Tidak Aman.": "Please fill in either Unsafe Condition or Unsafe Action.",
+    "Silakan pilih Departemen atau Kontraktor.": "Please select either a Department or a Contractor.",
+    "Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).": "Please fill in Unsafe Action or Unsafe Condition (one is required).",
+    "Pilih Kontraktor atau Department terkait.": "Select the relevant Contractor or Department."
 
 }
