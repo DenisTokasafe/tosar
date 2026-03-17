@@ -23,13 +23,13 @@
                 </td>
                 <td class="p-2 border border-base-300">
                     <x-form.text_area
-                        wire:model.blur="peepo.{{ $key }}.temuan"
+                        model="peepo.{{ $key }}.temuan"
                         placeholder="Masukkan temuan untuk faktor {{ $label }}..."
                         rows="2" />
                 </td>
                 <td class="p-2 border border-base-300">
                     <x-form.text_area
-                        wire:model.blur="peepo.{{ $key }}.deskripsi"
+                        model="peepo.{{ $key }}.deskripsi"
                         placeholder="Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya."
                         rows="2"
                         required />
