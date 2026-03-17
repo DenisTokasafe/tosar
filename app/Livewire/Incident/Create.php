@@ -37,7 +37,7 @@ class Create extends Component
     public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
     public $date_time, $pelapor_id, $manualPelaporName;
     public $kondisi_tidak_aman, $tindakan_tidak_aman;
-    public $department_id, $contractor_id;
+    public $department_id, $contractor_id, $penanggungJawab;
     public $deptCont = 'dept';
     public $keyWord = 'kta';
     public $likelihood_id, $consequence_id, $emergency_action;
@@ -160,6 +160,7 @@ class Create extends Component
             'likelihood_id' => 'required',
             'consequence_id' => 'required',
             'emergency_action' => 'required',
+            'penanggungJawab' => 'required',
 
             // LOGIKA KONDISIONAL BERDASARKAN isInjury
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
@@ -179,6 +180,38 @@ class Create extends Component
             $this->validateOnly('damage_detail');
         }
     }
+    protected $validationAttributes = [
+        // Pelapor & Lokasi (Reporter & Location)
+        'pelapor_id' => 'Nama Pelapor (Reporter Name)',
+        'manualPelaporName' => 'Nama Pelapor Manual (Manual Reporter Name)',
+        'event_type_id' => 'Tipe Kejadian (Event Type)',
+        'event_sub_type_id' => 'Sub Tipe Kejadian (Event Sub-Type)',
+        'description' => 'Deskripsi Kejadian (Event Description)',
+        'location_id' => 'Lokasi Utama (Primary Location)',
+        'location_specific' => 'Detail Lokasi Spesifik (Specific Location Detail)',
+        'date_time' => 'Tanggal & Waktu (Date & Time)',
+
+        // Bahaya & Kategori (Hazards & Categories)
+        'kondisi_tidak_aman' => 'Kategori Kondisi Tidak Aman (Unsafe Condition Category)',
+        'tindakan_tidak_aman' => 'Kategori Tindakan Tidak Aman (Unsafe Act Category)',
+        'keyWord' => 'Jenis Bahaya (Hazard Type)',
+
+        // Organisasi (Organization)
+        'department_id' => 'Departemen (Department)',
+        'contractor_id' => 'Perusahaan Kontraktor (Contractor Company)',
+        'deptCont' => 'Pihak Terlibat (Involved Party)',
+        'penanggungJawab' => 'PIC / Penanggung Jawab (Person In Charge)',
+
+        // Risiko & Tindakan (Risk & Actions)
+        'likelihood_id' => 'Kemungkinan (Likelihood)',
+        'consequence_id' => 'Konsekuensi (Consequence)',
+        'emergency_action' => 'Tindakan Darurat (Emergency Action)',
+
+        // Kondisional Injury / Damage (Conditional)
+        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh (Body Part Category)',
+        'selectedBodyPart' => 'Detail Bagian Tubuh (Body Part Detail)',
+        'damage_detail' => 'Detail Kerusakan Alat / Lingkungan (Equipment / Environmental Damage Detail)',
+    ];
     // Komentar Standard
     #[Validate([
         'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
@@ -190,12 +223,7 @@ class Create extends Component
     ])]
 
     // Tambahkan custom attribute name agar pesan error lebih rapi
-    protected $validationAttributes = [
-        'pelapor_id' => 'Nama Pelapor',
-        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh',
-        'selectedBodyPart' => 'Detail Bagian Tubuh',
-        'damage_detail' => 'Detail Kerusakan',
-    ];
+
     protected function messages()
     {
         return [
