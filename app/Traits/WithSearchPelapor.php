@@ -41,11 +41,10 @@ trait WithSearchPelapor
         // Reset ID dan mode manual jika user mulai mengetik ulang
         if (property_exists($this, 'pelapor_id')) {
             $this->pelapor_id = null;
-        }
-        $this->manualPelaporMode = false;
-        $this->manualPelaporName = null;
 
-        if (strlen($this->searchPelapor) > 1) {
+            $this->manualPelaporMode = false;
+            $this->manualPelaporName = null;
+        } elseif (strlen($this->searchPelapor) > 1) {
             $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
                 ->orderBy('name')
                 ->limit(50)
