@@ -14,7 +14,8 @@ trait WithSearchPelapor
     public $manualPelaporMode = false;
     public $manualPelaporName;
 
-    public function mountWithWithSearchPelapor()
+
+    public function updatedSearchPelapor()
     {
         if (Auth::check()) {
             // Mengakses $this->pelapor_id yang didefinisikan di Parent
@@ -23,9 +24,6 @@ trait WithSearchPelapor
             }
             $this->searchPelapor = Auth::user()->name;
         }
-    }
-    public function updatedSearchPelapor()
-    {
         // Hindari reset total jika hanya ingin mengosongkan ID tapi tetap mau mencari
         $this->pelapor_id = null;
         $this->manualPelaporMode = false;
