@@ -26,7 +26,7 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest">Referensi Kronologi & Tanggal (Step 1)</span>
                     </div>
 
-                    <div class="pl-1">
+                    <div class="">
                         <p class="text-sm leading-relaxed whitespace-pre-line text-base-content/80">
                             {{ $description ?: 'Deskripsi kejadian belum diisi pada Step 1.' }}
                         </p>
