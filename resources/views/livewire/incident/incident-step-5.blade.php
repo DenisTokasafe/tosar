@@ -3,10 +3,12 @@
     <div class="flex items-center justify-between pb-2 border-b">
         <h2 class="text-lg font-bold uppercase text-primary">BAGIAN 5 – Time Line dan Analisis Informasi</h2>
         <div class="flex gap-2">
-            <button type="button" wire:click="addWhyColumn" class="btn btn-sm btn-outline btn-primary">
-                <x-heroicon-o-plus class="w-4 h-4" />
-                Tambah Kolom "Mengapa"
-            </button>
+
+            <flux:tooltip content=" Tambah Kolom " Mengapa" position="top">
+                <flux:button wire:click="addWhyColumn"
+                    size="xs" icon="add-icon" variant="outline" color="primary">
+                </flux:button>
+            </flux:tooltip>
         </div>
     </div>
 
