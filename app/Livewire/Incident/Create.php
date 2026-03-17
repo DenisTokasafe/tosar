@@ -233,19 +233,7 @@ class Create extends Component
             $this->validateOnly('damage_detail');
         }
         // 3. Logika Dispatch untuk Komentar Penerimaan
-        $komentarFields = [
-            'penerimaan_komentar_contractor',
-            'penerimaan_komentar_internal',
-            'penerimaan_komentar_ohs',
-            'penerimaan_komentar_ktt'
-        ];
 
-        if (in_array($propertyName, $komentarFields)) {
-            // Dispatch event sesuai dengan nama property yang sedang diubah
-            // Contoh: jika yang diubah 'penerimaan_komentar_internal',
-            // maka dispatch 'validate-penerimaan_komentar_internal'
-            $this->dispatch('validate-' . $propertyName);
-        }
     }
 
     // Komentar Standard
@@ -999,6 +987,18 @@ class Create extends Component
 
     public function save()
     {
+        $komentarFields = [
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ];
+
+        foreach ($komentarFields as $field) {
+            // Kita gunakan loop karena di fungsi save kita ingin
+            // menembakkan event untuk SEMUA field komentar sekaligus
+            $this->dispatch('validate-' . $field);
+        }
         $this->validate();
 
         // 2. Validasi tambahan secara dinamis
