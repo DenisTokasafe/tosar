@@ -8,7 +8,7 @@
 'placeholder' => '-- Pilih --'
 ])
 
-<fieldset class="fieldset p-0"> {{-- Tambahkan p-0 agar tidak merusak spacing --}}
+<fieldset class="fieldset "> {{-- Tambahkan p-0 agar tidak merusak spacing --}}
     @if($label)
     <x-form.label :label="$label" :required="$required" />
     @endif
