@@ -17,7 +17,7 @@
                 <x-form.text_area
                     disabled
                     label="Kronologi Kejadian & Tanggal"
-                    wire:model="description"
+                    model="description"
                     placeholder="Contoh: 10:00 WITA - Unit LV menabrak tanggul karena jalan licin"
                     rows="3" />
 
@@ -32,7 +32,7 @@
                             <x-form.text_area
                                 wire:key="why-input-{{ $index }}-{{ $i }}"
                                 label="Text area why {{ $i }}"
-                                wire:model="timelines.{{ $index }}.why{{ $i }}"
+                                model="timelines.{{ $index }}.why{{ $i }}"
                                 placeholder="Jelaskan alasan ke-{{ $i }}..."
                                 rows="2" />
                         </div>
