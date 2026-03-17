@@ -48,7 +48,7 @@
                             <x-form.text_area
                                 wire:key="why-input-{{ $index }}-{{ $i }}"
                                 label="Analisis Mengapa (Why {{ $i }})"
-                                wire:model.blur="timelines.{{ $index }}.why{{ $i }}"
+                                model="timelines.{{ $index }}.why{{ $i }}"
                                 placeholder="Jelaskan alasan ke-{{ $i }}..."
                                 rows="2" />
                         </div>

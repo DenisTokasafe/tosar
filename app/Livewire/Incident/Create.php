@@ -211,6 +211,26 @@ class Create extends Component
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // PART 5: Timeline & Why Analysis
             'timelines' => 'required|array|min:1',
+            // Part 6
+            // Validasi Kondisi Tidak Aman
+            'unsafe_conditions.*.item' => 'required',
+            'unsafe_conditions.*.description' => 'required|string|min:5',
+
+            // Validasi Perilaku Tidak Aman
+            'unsafe_acts.*.item' => 'required',
+            'unsafe_acts.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pribadi
+            'personal_factors.*.item' => 'required',
+            'personal_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pekerjaan
+            'job_factors.*.item' => 'required',
+            'job_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Kelemahan Sistem Kontrol
+            'control_system_factors.*.item' => 'required',
+            'control_system_factors.*.description' => 'required|string|min:5',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -311,6 +331,42 @@ class Create extends Component
             for ($i = 1; $i <= $this->whyCount; $i++) {
                 $attributes["timelines.{$index}.why{$i}"] = "Analisis Mengapa (Why {$i}) pada Baris ke-{$rowNum}";
             }
+        }
+        // SEKSI 1: PENYEBAB LANGSUNG
+        // Validasi Kondisi Tidak Aman
+        foreach ($this->unsafe_conditions as $index => $row) {
+            $rowNum = $index + 1;
+            $attributes["unsafe_conditions.{$index}.item"]        = __('Item Kondisi Tidak Aman Baris ke-') . $rowNum;
+            $attributes["unsafe_conditions.{$index}.description"] = __('Deskripsi Kondisi Tidak Aman Baris ke-') . $rowNum;
+        }
+
+        // Validasi Perilaku Tidak Aman
+        foreach ($this->unsafe_acts as $index => $row) {
+            $rowNum = $index + 1;
+            $attributes["unsafe_acts.{$index}.item"]        = __('Item Perilaku Tidak Aman Baris ke-') . $rowNum;
+            $attributes["unsafe_acts.{$index}.description"] = __('Deskripsi Perilaku Tidak Aman Baris ke-') . $rowNum;
+        }
+
+        // SEKSI 2: PENYEBAB DASAR
+        // Validasi Faktor Pribadi
+        foreach ($this->personal_factors as $index => $row) {
+            $rowNum = $index + 1;
+            $attributes["personal_factors.{$index}.item"]        = __('Item Faktor Pribadi Baris ke-') . $rowNum;
+            $attributes["personal_factors.{$index}.description"] = __('Deskripsi Faktor Pribadi Baris ke-') . $rowNum;
+        }
+
+        // Validasi Faktor Pekerjaan
+        foreach ($this->job_factors as $index => $row) {
+            $rowNum = $index + 1;
+            $attributes["job_factors.{$index}.item"]        = __('Item Faktor Pekerjaan Baris ke-') . $rowNum;
+            $attributes["job_factors.{$index}.description"] = __('Deskripsi Faktor Pekerjaan Baris ke-') . $rowNum;
+        }
+
+        // Validasi Kelemahan Sistem Kontrol
+        foreach ($this->control_system_factors as $index => $row) {
+            $rowNum = $index + 1;
+            $attributes["control_system_factors.{$index}.item"]        = __('Item Sistem Kontrol Baris ke-') . $rowNum;
+            $attributes["control_system_factors.{$index}.description"] = __('Deskripsi Sistem Kontrol Baris ke-') . $rowNum;
         }
         return $attributes;
     }

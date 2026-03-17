@@ -97,7 +97,7 @@
                     <x-form.select model="personal_factors.{{ $index }}.item" :options="$this->personalFactorOptions" placeholder="Choose..." />
                 </td>
                 <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area wire:model="personal_factors.{{ $index }}.description" rows="2" />
+                    <x-form.text_area model="personal_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
                     @if(count($personal_factors) > 1)
@@ -123,7 +123,7 @@
                     <x-form.select model="job_factors.{{ $index }}.item" :options="$this->jobFactorOptions" placeholder="Choose..." />
                 </td>
                 <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area wire:model="job_factors.{{ $index }}.description" rows="2" />
+                    <x-form.text_area model="job_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
                     @if(count($job_factors) > 1)
@@ -150,7 +150,7 @@
                     <x-form.select model="control_system_factors.{{ $index }}.item" :options="$this->controlSystemOptions" placeholder="Choose..." />
                 </td>
                 <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area wire:model="control_system_factors.{{ $index }}.description" rows="2" />
+                    <x-form.text_area model="control_system_factors.{{ $index }}.description" rows="2" />
                 </td>
                 <td class="p-1 text-center border border-base-300">
                     @if(count($control_system_factors) > 1)
