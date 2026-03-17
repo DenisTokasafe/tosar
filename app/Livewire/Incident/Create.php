@@ -168,38 +168,6 @@ class Create extends Component
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
     }
-    protected $validationAttributes = [
-        // Pelapor & Lokasi (Reporter & Location)
-        'pelapor_id' => 'Nama Pelapor (Reporter Name)',
-        'manualPelaporName' => 'Nama Pelapor Manual (Manual Reporter Name)',
-        'event_type_id' => 'Tipe Kejadian (Event Type)',
-        'event_sub_type_id' => 'Sub Tipe Kejadian (Event Sub-Type)',
-        'description' => 'Deskripsi Kejadian (Event Description)',
-        'location_id' => 'Lokasi Utama (Primary Location)',
-        'location_specific' => 'Detail Lokasi Spesifik (Specific Location Detail)',
-        'date_time' => 'Tanggal & Waktu (Date & Time)',
-
-        // Bahaya & Kategori (Hazards & Categories)
-        'kondisi_tidak_aman' => 'Kategori Kondisi Tidak Aman (Unsafe Condition Category)',
-        'tindakan_tidak_aman' => 'Kategori Tindakan Tidak Aman (Unsafe Act Category)',
-        'keyWord' => 'Jenis Bahaya (Hazard Type)',
-
-        // Organisasi (Organization)
-        'department_id' => 'Departemen (Department)',
-        'contractor_id' => 'Perusahaan Kontraktor (Contractor Company)',
-        'deptCont' => 'Pihak Terlibat (Involved Party)',
-        'penanggungJawab' => 'PIC / Penanggung Jawab (Person In Charge)',
-
-        // Risiko & Tindakan (Risk & Actions)
-        'likelihood_id' => 'Kemungkinan (Likelihood)',
-        'consequence_id' => 'Konsekuensi (Consequence)',
-        'emergency_action' => 'Tindakan Darurat (Emergency Action)',
-
-        // Kondisional Injury / Damage (Conditional)
-        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh (Body Part Category)',
-        'selectedBodyPart' => 'Detail Bagian Tubuh (Body Part Detail)',
-        'damage_detail' => 'Detail Kerusakan Alat / Lingkungan (Equipment / Environmental Damage Detail)',
-    ];
     #[Validate([
         'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
         'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -208,6 +176,39 @@ class Create extends Component
         'penerimaan_komentar_internal'      => 'required|min:11',
         'penerimaan_komentar_ohs'           => 'required|min:11',
     ])]
+    protected $validationAttributes = [
+        // Pelapor & Lokasi
+        'pelapor_id' => 'Nama Pelapor',
+        'manualPelaporName' => 'Nama Pelapor Manual',
+        'event_type_id' => 'Tipe Kejadian',
+        'event_sub_type_id' => 'Sub Tipe Kejadian',
+        'description' => 'Deskripsi Kejadian',
+        'location_id' => 'Lokasi Utama',
+        'location_specific' => 'Detail Lokasi Spesifik',
+        'date_time' => 'Tanggal dan Waktu',
+
+        // KTA & TTA
+        'kondisi_tidak_aman' => 'Kategori Kondisi Tidak Aman',
+        'tindakan_tidak_aman' => 'Kategori Tindakan Tidak Aman',
+        'keyWord' => 'Jenis Bahaya',
+
+        // Organisasi
+        'department_id' => 'Departemen',
+        'contractor_id' => 'Perusahaan Kontraktor',
+        'deptCont' => 'Pihak Terlibat',
+        'penanggungJawab' => 'PIC / Penanggung Jawab',
+
+        // Risiko & Tindakan
+        'likelihood_id' => 'Kemungkinan (Likelihood)',
+        'consequence_id' => 'Konsekuensi (Consequence)',
+        'emergency_action' => 'Tindakan Darurat',
+
+        // Kondisional Injury / Damage
+        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh',
+        'selectedBodyPart' => 'Detail Bagian Tubuh',
+        'damage_detail' => 'Detail Kerusakan Alat / Lingkungan',
+    ];
+
     public function updated($propertyName)
     {
         // Setiap kali ada perubahan, validasi field tersebut
