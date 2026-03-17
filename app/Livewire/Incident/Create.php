@@ -144,7 +144,7 @@ class Create extends Component
 
     protected function rules()
     {
-        return [
+        $rules = [
             // PART 1
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
@@ -209,6 +209,9 @@ class Create extends Component
 
             'peepo.organisasi.temuan'   => 'required|string|min:3',
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
+            // PART 5: Timeline & Why Analysis
+            'timelines' => 'required|array|min:1',
+            'timelines.*.kejadian' => 'required|string|min:5',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -222,6 +225,13 @@ class Create extends Component
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
+
+        // Tambahkan validasi dinamis berdasarkan jumlah whyCount yang sedang aktif
+        for ($i = 1; $i <= $this->whyCount; $i++) {
+            $rules["timelines.*.why{$i}"] = 'required|string|min:3';
+        }
+
+        return $rules;
     }
     /**
      * Mengembalikan atribut validasi yang sudah diterjemahkan.
@@ -294,6 +304,14 @@ class Create extends Component
         foreach ($this->peepoFactors as $key => $label) {
             $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
             $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
+        }
+        foreach ($this->timelines as $index => $line) {
+            $rowNum = $index + 1;
+            $attributes["timelines.{$index}.kejadian"] = "Kronologi Baris ke-{$rowNum}";
+
+            for ($i = 1; $i <= $this->whyCount; $i++) {
+                $attributes["timelines.{$index}.why{$i}"] = "Alasan (Why {$i}) pada Baris ke-{$rowNum}";
+            }
         }
         return $attributes;
     }
@@ -398,6 +416,14 @@ class Create extends Component
                 foreach (array_keys($this->peepoFactors) as $key) {
                     $fields[] = "peepo.$key.temuan";
                     $fields[] = "peepo.$key.deskripsi";
+                }
+                break;
+            case 5:
+                $fields = ['timelines.*.kejadian'];
+
+                // Daftarkan semua kolom why yang aktif ke dalam daftar field yang divalidasi
+                for ($i = 1; $i <= $this->whyCount; $i++) {
+                    $fields[] = "timelines.*.why{$i}";
                 }
                 break;
             case 9:
