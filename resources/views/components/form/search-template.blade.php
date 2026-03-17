@@ -16,7 +16,9 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div class="relative" x-data="{ open: @entangle($attributes->wire('model') . '.live') }">
+    {{-- Gunakan state Alpine murni untuk buka/tutup dropdown agar tidak mengganggu state validasi Livewire --}}
+    <div class="relative" x-data="{ open: false }">
+
         {{-- Input Search --}}
         <input
             x-ref="trigger"
@@ -24,24 +26,30 @@
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
+
+            {{-- Kontrol dropdown via Alpine --}}
             x-on:focus="open = true"
             x-on:keydown.escape="open = false"
+            x-on:click.away="open = false"
+
+            {{-- Gunakan ternary untuk memastikan border merah tetap ada meskipun re-render --}}
             {{ $attributes->merge([
                 'class' => 'input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs ' .
                     ($disabled ? 'bg-base-200 opacity-70 ' : '') .
-                    ($errors->has($modelid) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : ''),
+                    ($errors->has($modelid)
+                        ? 'border-rose-500 ring-1 ring-rose-500 focus:border-rose-500 focus:ring-rose-500'
+                        : 'border-gray-300'),
             ]) }} />
 
-        {{-- Dropdown Teleport (Z-index dinaikkan agar di depan modal) --}}
+        {{-- Dropdown Teleport --}}
         @if (!$disabled && $showdropdown)
         <template x-teleport="body">
             <ul
                 x-show="open"
-                wire:ignore.self {{-- KRUSIAL: Agar list tidak hilang saat Livewire update data --}}
+                wire:ignore.self
                 x-anchor.bottom-start.offset.4="$refs.trigger"
                 x-on:click.outside="open = false"
                 :style="{ width: $refs.trigger.offsetWidth + 'px' }"
-                {{-- z-[99999] untuk memastikan berada di atas modal --}}
                 class="fixed z-[99999] overflow-auto border rounded-md shadow-2xl bg-base-100 border-base-300 max-h-60">
                 {{-- Spinner Loading --}}
                 <div wire:loading wire:target="{{ $modelsearch }}"
@@ -53,14 +61,13 @@
                 @if (count($options) > 0)
                 @foreach ($options as $opt)
                 <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$namedb}) }}')"
-                    wire:key="opt-modal-{{ $opt->id }}"
+                    wire:key="opt-{{ $modelid }}-{{ $opt->id }}"
                     x-on:click="open = false"
                     class="px-3 py-2 text-sm transition-colors border-b cursor-pointer hover:bg-base-200 text-base-content border-base-200 last:border-0">
                     {{ $opt->{$namedb} }}
                 </li>
                 @endforeach
                 @else
-                {{-- Pesan data kosong (Hanya muncul jika tidak sedang loading) --}}
                 <li wire:loading.remove wire:target="{{ $modelsearch }}"
                     class="px-3 py-2 text-sm italic text-warning bg-base-100">
                     {{ __('Data tidak ditemukan') }}
