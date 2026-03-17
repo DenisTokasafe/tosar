@@ -168,18 +168,6 @@ class Create extends Component
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
     }
-    public function updated($propertyName)
-    {
-        // Setiap kali ada perubahan, validasi field tersebut
-        $this->validateOnly($propertyName);
-
-        // Jika tipe event berubah, validasi ulang field kondisional
-        if ($propertyName === 'event_type_id') {
-            $this->validateOnly('selectedBodyPartCategory');
-            $this->validateOnly('selectedBodyPart');
-            $this->validateOnly('damage_detail');
-        }
-    }
     protected $validationAttributes = [
         // Pelapor & Lokasi (Reporter & Location)
         'pelapor_id' => 'Nama Pelapor (Reporter Name)',
@@ -212,7 +200,6 @@ class Create extends Component
         'selectedBodyPart' => 'Detail Bagian Tubuh (Body Part Detail)',
         'damage_detail' => 'Detail Kerusakan Alat / Lingkungan (Equipment / Environmental Damage Detail)',
     ];
-    // Komentar Standard
     #[Validate([
         'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
         'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -221,6 +208,21 @@ class Create extends Component
         'penerimaan_komentar_internal'      => 'required|min:11',
         'penerimaan_komentar_ohs'           => 'required|min:11',
     ])]
+    public function updated($propertyName)
+    {
+        // Setiap kali ada perubahan, validasi field tersebut
+        $this->validateOnly($propertyName);
+
+        // Jika tipe event berubah, validasi ulang field kondisional
+        if ($propertyName === 'event_type_id') {
+            $this->validateOnly('selectedBodyPartCategory');
+            $this->validateOnly('selectedBodyPart');
+            $this->validateOnly('damage_detail');
+        }
+    }
+
+    // Komentar Standard
+
 
     // Tambahkan custom attribute name agar pesan error lebih rapi
 
