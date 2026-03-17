@@ -272,5 +272,23 @@
     "Narasi detail mengenai urutan kejadian (5W+1H)": "Detailed narrative of the sequence of events (5W+1H)",
     "Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.": "Example: Who was involved, What happened, Where, When, Why, and How it unfolded.",
     "Tindakan Darurat": "Emergency Actions Taken",
-    "Jelaskan tindakan segera yang dilakukan setelah kejadian...": "Describe immediate actions taken after the incident..."
+    "Jelaskan tindakan segera yang dilakukan setelah kejadian...": "Describe immediate actions taken after the incident...",
+    "Nama Pelapor": "Reporter Name",
+    "Nama Pelapor Manual": "Manual Reporter Name",
+    "Tipe Kejadian": "Event Type",
+    "Sub Tipe Kejadian": "Event Sub-Type",
+    "Deskripsi Kejadian": "Incident Description",
+    "Lokasi Utama": "Main Location",
+    "Detail Lokasi Spesifik": "Specific Location Details",
+    "Tanggal dan Waktu": "Date and Time",
+    "Kategori Kondisi Tidak Aman": "Unsafe Condition Category",
+    "Kategori Tindakan Tidak Aman": "Unsafe Action Category",
+    "Departemen": "Department",
+    "Perusahaan Kontraktor": "Contractor Company",
+    "Pihak Terlibat": "Involved Parties",
+    "PIC / Penanggung Jawab": "PIC / Person in Charge",
+    "Kemungkinan (Likelihood)": "Likelihood",
+    "Konsekuensi (Consequence)": "Consequence",
+    "Detail Kerusakan Alat / Lingkungan": "Equipment / Environmental Damage Details"
+
 }
