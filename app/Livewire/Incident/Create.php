@@ -51,10 +51,8 @@ class Create extends Component
 
     #[Validate('required|date')]
     public $date_time;
-
-    #[Validate('required|exists:users,id')]
+    #[Validate('required_without:manualPelaporName|exists:users,id')]
     public $pelapor_id;
-
     // Rules Mutual Exclusion (Salah satu wajib)
     #[Validate('nullable|required_without:tindakan_tidak_aman')]
     public $kondisi_tidak_aman;
