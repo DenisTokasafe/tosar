@@ -232,6 +232,20 @@ class Create extends Component
             $this->validateOnly('selectedBodyPart');
             $this->validateOnly('damage_detail');
         }
+        // 3. Logika Dispatch untuk Komentar Penerimaan
+        $komentarFields = [
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ];
+
+        if (in_array($propertyName, $komentarFields)) {
+            // Dispatch event sesuai dengan nama property yang sedang diubah
+            // Contoh: jika yang diubah 'penerimaan_komentar_internal',
+            // maka dispatch 'validate-penerimaan_komentar_internal'
+            $this->dispatch('validate-' . $propertyName);
+        }
     }
 
     // Komentar Standard
