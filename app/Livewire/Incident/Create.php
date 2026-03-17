@@ -176,38 +176,53 @@ class Create extends Component
         'penerimaan_komentar_internal'      => 'required|min:11',
         'penerimaan_komentar_ohs'           => 'required|min:11',
     ])]
-    protected $validationAttributes = [
-        // Pelapor & Lokasi
-        'pelapor_id' => 'Nama Pelapor',
-        'manualPelaporName' => 'Nama Pelapor Manual',
-        'event_type_id' => 'Tipe Kejadian',
-        'event_sub_type_id' => 'Sub Tipe Kejadian',
-        'description' => 'Deskripsi Kejadian',
-        'location_id' => 'Lokasi Utama',
-        'location_specific' => 'Detail Lokasi Spesifik',
-        'date_time' => 'Tanggal dan Waktu',
+    /**
+     * Mengembalikan atribut validasi yang sudah diterjemahkan.
+     */
+    protected function validationAttributes()
+    {
+        return [
+            // Pelapor & Lokasi
+            'pelapor_id'        => __('Nama Pelapor'),
+            'manualPelaporName' => __('Nama Pelapor Manual'),
+            'event_type_id'     => __('Tipe Kejadian'),
+            'event_sub_type_id' => __('Sub Tipe Kejadian'),
+            'description'       => __('Deskripsi Kejadian'),
+            'location_id'       => __('Lokasi Utama'),
+            'location_specific' => __('Detail Lokasi Spesifik'),
+            'date_time'         => __('Tanggal dan Waktu'),
 
-        // KTA & TTA
-        'kondisi_tidak_aman' => 'Kategori Kondisi Tidak Aman',
-        'tindakan_tidak_aman' => 'Kategori Tindakan Tidak Aman',
-        'keyWord' => 'Jenis Bahaya',
+            // KTA & TTA
+            'kondisi_tidak_aman'  => __('Kategori Kondisi Tidak Aman'),
+            'tindakan_tidak_aman' => __('Kategori Tindakan Tidak Aman'),
+            'keyWord'             => __('Jenis Bahaya'),
 
-        // Organisasi
-        'department_id' => 'Departemen',
-        'contractor_id' => 'Perusahaan Kontraktor',
-        'deptCont' => 'Pihak Terlibat',
-        'penanggungJawab' => 'PIC / Penanggung Jawab',
+            // Organisasi
+            'department_id'   => __('Departemen'),
+            'contractor_id'   => __('Perusahaan Kontraktor'),
+            'deptCont'        => __('Pihak Terlibat'),
+            'penanggungJawab' => __('PIC / Penanggung Jawab'),
 
-        // Risiko & Tindakan
-        'likelihood_id' => 'Kemungkinan (Likelihood)',
-        'consequence_id' => 'Konsekuensi (Consequence)',
-        'emergency_action' => 'Tindakan Darurat',
+            // Risiko & Tindakan
+            'likelihood_id'    => __('Kemungkinan (Likelihood)'),
+            'consequence_id'   => __('Konsekuensi (Consequence)'),
+            'emergency_action' => __('Tindakan Darurat'),
 
-        // Kondisional Injury / Damage
-        'selectedBodyPartCategory' => 'Kategori Bagian Tubuh',
-        'selectedBodyPart' => 'Detail Bagian Tubuh',
-        'damage_detail' => 'Detail Kerusakan Alat / Lingkungan',
-    ];
+            // Kondisional Injury / Damage
+            'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
+            'selectedBodyPart'         => __('Detail Bagian Tubuh'),
+            'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
+
+            // Komentar Penerimaan (Komentar yang tadi Anda tambahkan)
+            'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
+            'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
+            'penerimaan_komentar_ohs_id'        => __('Penanggung Jawab OHS'),
+            'penerimaan_komentar_contractor'    => __('Komentar Kontraktor'),
+            'penerimaan_komentar_internal'      => __('Komentar Internal'),
+            'penerimaan_komentar_ohs'           => __('Komentar OHS'),
+            'penerimaan_komentar_ktt'           => __('Komentar KTT'),
+        ];
+    }
 
     public function updated($propertyName)
     {
@@ -223,33 +238,23 @@ class Create extends Component
     }
 
     // Komentar Standard
-
-
-    // Tambahkan custom attribute name agar pesan error lebih rapi
-
     protected function messages()
     {
         return [
-            'required' => 'Kolom :attribute wajib diisi.',
-            'exists'   => 'Pilihan :attribute tidak valid.',
-            'min'      => 'Kolom :attribute harus berisi setidaknya :min karakter.',
-            'date'     => 'Format tanggal pada :attribute tidak valid.',
-            'kondisi_tidak_aman.required_without' => 'Mohon isi Kondisi Tidak Aman atau Tindakan Tidak Aman (salah satu wajib).',
-            'tindakan_tidak_aman.required_without' => 'Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).',
-            'department_id.required_without' => 'Pilih Department atau Kontraktor terkait.',
-            'contractor_id.required_without' => 'Pilih Kontraktor atau Department terkait.',
-            // ... sisa pesan lainnya
+            'required' => __(':attribute wajib diisi.'),
+            'exists'   => __('Pilihan :attribute tidak valid.'),
+            'min'      => __(':attribute minimal harus :min karakter.'),
+            'date'     => __('Format tanggal :attribute tidak sesuai.'),
+
+            // Pesan Custom untuk SENTRY
+            'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
+            'department_id.required_without'        => __('Silakan pilih Departemen atau Kontraktor.'),
+            'tindakan_tidak_aman.required_without'  => __('Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).'),
+            'contractor_id.required_without'        => __('Pilih Kontraktor atau Department terkait.'),
         ];
     }
 
-    protected function validationAttributes()
-    {
-        return [
-            'penerimaan_komentar_ktt' => 'Komentar KTT',
-            'damage_detail' => 'Detail Kerusakan',
-            // ... sisa atribut lainnya
-        ];
-    }
+
 
     // State untuk menampilkan dropdown
     public $showPenerimaanKomentarContractorDropdown = false;
