@@ -20,10 +20,10 @@
         {{ $model ? "wire:model.live=$model" : '' }}
         placeholder="{{ $placeholder ?: $label }}"
         {{ $attributes->merge([
-        'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size " .
+        'class' => "input  w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size " .
         ($errors->has($model)
-            ? 'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0' // Jika Error
-            : 'border-base-300' // Jika Normal
+            ? 'input-bordered border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0' // Jika Error
+            : 'input-bordered' // Jika Normal
         )
     ]) }} />
 
