@@ -194,10 +194,21 @@ class Create extends Component
             'anggota.*.user_id' => 'required',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
-            // PART 4: PEEPO Factors
-            'peepo' => 'required|array|min:5', // Pastikan semua kategori (P,E,E,P,O) ada
-            'peepo.*.temuan'    => 'required|string|min:3',
-            'peepo.*.deskripsi' => 'required|string|min:5',
+            // PART 4: PEEPO (Analisis Faktor)
+            'peepo.orang.temuan'      => 'required|string|min:3',
+            'peepo.orang.deskripsi'   => 'required|string|min:5',
+
+            'peepo.peralatan.temuan'    => 'required|string|min:3',
+            'peepo.peralatan.deskripsi' => 'required|string|min:5',
+
+            'peepo.lingkungan.temuan'   => 'required|string|min:3',
+            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+
+            'peepo.prosedur.temuan'     => 'required|string|min:3',
+            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+
+            'peepo.organisasi.temuan'   => 'required|string|min:3',
+            'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -280,11 +291,9 @@ class Create extends Component
         ];
 
         // Tambahkan atribut dinamis untuk PEEPO
-        if (isset($this->peepoFactors)) {
-            foreach ($this->peepoFactors as $key => $label) {
-                $attributes["peepo.$key.temuan"]    = __('Temuan ') . $label;
-                $attributes["peepo.$key.deskripsi"] = __('Deskripsi ') . $label;
-            }
+        foreach ($this->peepoFactors as $key => $label) {
+            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
+            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
         }
         return $attributes;
     }
@@ -384,7 +393,13 @@ class Create extends Component
                     'anggota.*.jabatan',
                 ];
                 break;
-
+            case 4:
+                $fields = [];
+                foreach (array_keys($this->peepoFactors) as $key) {
+                    $fields[] = "peepo.$key.temuan";
+                    $fields[] = "peepo.$key.deskripsi";
+                }
+                break;
             case 9:
                 $fields = [
                     'penerimaan_komentar_contractor_id',

@@ -12,7 +12,14 @@
             @foreach($peepoFactors as $key => $label)
             <tr>
                 <td class="px-4 font-bold align-middle border border-base-300 text-base-content">
-                    {{ $label }}
+                    <div class="flex flex-col gap-1">
+                        {{ $label }}
+                        @if(!empty($peepo[$key]['temuan']) && !empty($peepo[$key]['deskripsi']))
+                        <span class="badge badge-success badge-xs">Lengkap</span>
+                        @else
+                        <span class="badge badge-ghost badge-xs text-gray-400">Belum Lengkap</span>
+                        @endif
+                    </div>
                 </td>
                 <td class="p-2 border border-base-300">
                     <x-form.text_area
