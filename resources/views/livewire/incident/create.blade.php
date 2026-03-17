@@ -16,7 +16,11 @@
         @for ($i = 1; $i <= 9; $i++)
             <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
             {{-- Kita binding wire:model ke currentStep --}}
-            <input type="radio" name="my-accordion-2" wire:model.live="currentStep" value="{{ $i }}" />
+            {{-- Ubah wire:model.live menjadi wire:click --}}
+            <input type="radio" name="my-accordion-2"
+                wire:click="goToStep({{ $i }})"
+                value="{{ $i }}"
+                {{ $currentStep == $i ? 'checked' : '' }} />
 
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
                 <h3 class="text-base font-semibold">PART {{ $i }}</h3>
@@ -42,5 +46,16 @@
             </div>
 
     </x-incident.layout>
+
+    @push('scripts')
+    <script>
+        window.addEventListener('scroll-to-top', event => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+    @endpush
 
 </section>

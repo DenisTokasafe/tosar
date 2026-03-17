@@ -281,7 +281,7 @@ class Create extends Component
         ];
     }
 
-    public $currentStep;
+    public $currentStep = 1; // Pastikan dimulai dari 1
     public $totalSteps = 9;
 
     public function validateCurrentStep()
@@ -342,17 +342,22 @@ class Create extends Component
         }
 
         if (!empty($fields)) {
-            // AMBIL array rules dari method rules()
             $allRules = $this->rules();
-
-            // Filter rules hanya untuk field di step ini
             $stepRules = array_intersect_key($allRules, array_flip($fields));
 
-            // JALANKAN validasi dengan parameter array rules tersebut
-            $this->validate($stepRules);
+            // Masukkan $this->messages() agar pesan error bahasa Indonesia muncul
+            $this->validate($stepRules, $this->messages(), $this->validationAttributes());
         }
     }
+    public function goToStep($step)
+    {
+        // Jika user mencoba lompat ke step di depannya, validasi dulu step sekarang
+        if ($step > $this->currentStep) {
+            $this->validateCurrentStep();
+        }
 
+        $this->currentStep = $step;
+    }
     // Fungsi untuk pindah step
     public function nextStep()
     {
@@ -360,6 +365,7 @@ class Create extends Component
 
         if ($this->currentStep < $this->totalSteps) {
             $this->currentStep++;
+            $this->dispatch('scroll-to-top');
         }
     }
 
