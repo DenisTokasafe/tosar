@@ -46,9 +46,9 @@
             {{ $model ? "wire:model.live=$model" : '' }}
             placeholder="{{ $placeholder ?: $label }}"
             {{ $attributes->merge([
-                'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300 rounded " .
-                ($errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '')
-            ]) }} />
+            'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300  " .
+            ($errors->has($model) ? 'focus:ring-rose-500  focus-within:outline-none focus-within:border-rose-500  focus-within:ring-0' : '')
+        ]) }} />
     </div>
 
     {{-- Penanganan Error Otomatis --}}
