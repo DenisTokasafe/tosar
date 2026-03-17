@@ -28,10 +28,11 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use \App\Traits\WithDeptContSelection;
 use App\Traits\WithSearchLocation;
+use App\Traits\WithSearchPelapor;
 
 class Create extends Component
 {
-    use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation;
+    use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation, WithSearchPelapor;
 
     #[Validate('required|exists:event_types,id')]
     public $event_type_id;
@@ -75,7 +76,6 @@ class Create extends Component
         $documentation,
         $visual_evidence, $visual_evidence_path,
         $supporting_documents, $supporting_documents_path;
-
     #[Url(as: 'step')]
     public $currentStep = 1;
     public $totalSteps = 3;
@@ -86,15 +86,7 @@ class Create extends Component
     public  $penanggungJawab, $emergency_action, $damage_detail;
     public $selectedBodyPartCategory;
     public $selectedBodyPart;
-
     public $penanggungJawabOptions = [];
-
-    // Pelapor
-    public $searchPelapor = '';
-    public $pelapors = [];
-    public $showPelaporDropdown = false;
-    public $manualPelaporMode = false;
-    public $manualPelaporName;
     // Involved Personnel
     public $involved_personnel_id, $searchName, $involved_personnel_name;
     public $showinvolvedPersonnelDropdown = false;
@@ -192,10 +184,7 @@ class Create extends Component
     public $activeIndexPenerimaan = null;
     public function mount()
     {
-        if (Auth::check()) {
-            $this->pelapor_id = Auth::id();
-            $this->searchPelapor = Auth::user()->name;
-        }
+
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
@@ -406,56 +395,7 @@ class Create extends Component
             'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
-    public function updatedSearchPelapor()
-    {
-        // Hindari reset total jika hanya ingin mengosongkan ID tapi tetap mau mencari
-        $this->pelapor_id = null;
-        $this->manualPelaporMode = false;
-        $this->manualPelaporName = null;
 
-        if (strlen($this->searchPelapor) > 1) {
-            $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
-                ->orderBy('name')
-                ->limit(50)
-                ->get();
-
-            $this->showPelaporDropdown = true;
-
-            // Dispatch event untuk memberitahu Alpine agar re-calculate posisi dropdown
-        } else {
-            $this->pelapors = [];
-            $this->showPelaporDropdown = false;
-        }
-    }
-    public function selectPelapor($id, $name)
-    {
-        $this->pelapor_id = $id;
-        $this->searchPelapor = $name;
-        $this->showPelaporDropdown = false;
-        $this->manualPelaporMode = false;
-    }
-    public function enableManualPelapor()
-    {
-        $this->manualPelaporMode = true;
-        $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
-        $this->showPelaporDropdown = false;
-        $this->pelapor_id = null;
-        $this->dispatch(
-            'alert',
-            [
-                'text' => "nama sudah di tambahkan!!!",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-            ]
-        );
-    }
-    public function updatedManualPelaporName($value)
-    {
-        $this->pelapor_id = null;
-    }
     // Involved Personnel
 
     public function addDirectlyInvolvedRow()
