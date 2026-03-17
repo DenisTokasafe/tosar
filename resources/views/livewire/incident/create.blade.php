@@ -13,92 +13,33 @@
         {{-- PROGRESS & STEPS VISUAL --}}
 
         {{-- STEP 1: Info Dasar --}}
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" checked="checked" />
+        @for ($i = 1; $i <= 9; $i++)
+            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
+            {{-- Kita binding wire:model ke currentStep --}}
+            <input type="radio" name="my-accordion-2" wire:model.live="currentStep" value="{{ $i }}" />
+
             <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 1 <span class="badge badge-sm badge-soft badge-info">Detail Laporan</span></h3>
-
-
+                <h3 class="text-base font-semibold">PART {{ $i }}</h3>
             </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-1')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
 
-                <h3 class="text-base font-semibold">PART 2 <span class="badge badge-sm badge-soft badge-info">Pihak Terlibat Langsung (Saksi, korban cedera, kontraktor, operator, dll.)</span></h3>
+            <div class="text-xs collapse-content">
+                @include('livewire.incident.incident-step-' . $i)
 
+                {{-- Tombol Navigasi --}}
+                @if ($i < 9)
+                    <div class="flex justify-end mt-4">
+                    <button wire:click="nextStep" class="btn btn-primary btn-xs">
+                        Lanjut ke Part {{ $i + 1 }}
+                    </button>
             </div>
-            <div class="text-xs collapse-content">@include('livewire.incident.incident-step-2')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 3 <span class="badge badge-sm badge-soft badge-info">Partisipan Investigasi</span></h3>
-
+            @endif
             </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-3')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 4 <span class="badge badge-sm badge-soft badge-info">PEEPO Investigation questions for identification of the incident factors</span></h3>
-
             </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-4')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 5 <span class="badge badge-sm badge-soft badge-info">Time Line dan Analisis Informasi</span></h3>
-
+            @endfor
+            {{-- Navigasi Step --}}
+            <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
+                <button type="button" class="btn btn-xs btn-success" wire:click="save">Submit</button>
             </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-5')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 6 <span class="badge badge-sm badge-soft badge-info">Investigasi Kecelakaan (Daftar Checklist Mengacu pada TT-MGT-LMS-025A)</span></h3>
-
-            </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-6')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 7 <span class="badge badge-sm badge-soft badge-info">Dokumentasi & Tindakan Perbaikan</span></h3>
-
-            </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-7')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 8 <span class="badge badge-sm badge-soft badge-info">Kunci Pembelajaran</span></h3>
-
-            </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-8')</div>
-        </div>
-        <div class="border collapse collapse-arrow bg-base-100 border-base-300">
-            <input type="radio" name="my-accordion-2" />
-            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-
-                <h3 class="text-base font-semibold">PART 9 <span class="badge badge-sm badge-soft badge-info">Penerimaan & Komentar Peninjauan Investigasi</span></h3>
-
-            </div>
-            <div class="text-xs collapse-content"> @include('livewire.incident.incident-step-9')</div>
-        </div>
-        {{-- Navigasi Step --}}
-        <div class="flex justify-end gap-2 p-2 md:mt-4 bg-base-100">
-            <button type="button" class="btn btn-xs btn-success" wire:click="save">Submit</button>
-        </div>
 
     </x-incident.layout>
 

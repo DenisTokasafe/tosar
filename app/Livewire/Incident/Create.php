@@ -96,7 +96,14 @@ class Create extends Component
         'prosedur' => 'Prosedur',
         'organisasi' => 'Organisasi'
     ];
+    public $showPenerimaanKomentarContractorDropdown = false;
+    public $showPenerimaanKomentarInternalDropdown = false;
+    public $showPenerimaanKomentarOhsDropdown = false;
+    public $showPenerimaanKomentarKttDropdown = false;
 
+    // State tambahan untuk tracking fokus (opsional, sesuai Blade kamu)
+    public $activeTypePenerimaan = '';
+    public $activeIndexPenerimaan = null;
 
     // Pastikan Anda menginisialisasi array penampung data di mount
     public $peepo = [];
@@ -138,6 +145,7 @@ class Create extends Component
     protected function rules()
     {
         return [
+            // PART 1
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description' => 'required|string',
@@ -160,6 +168,7 @@ class Create extends Component
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
+            // Part 2
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
             'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
@@ -256,6 +265,62 @@ class Create extends Component
     public $currentStep = 1;
     public $totalSteps = 9;
 
+    public function validateCurrentStep()
+    {
+        $fields = [];
+
+        switch ($this->currentStep) {
+            case 1:
+                $fields = [
+                    'event_type_id',
+                    'event_sub_type_id',
+                    'description',
+                    'location_id',
+                    'location_specific',
+                    'date_time',
+                    'pelapor_id',
+                    'kondisi_tidak_aman',
+                    'tindakan_tidak_aman',
+                    'department_id',
+                    'contractor_id',
+                    'deptCont',
+                    'keyWord',
+                    'likelihood_id',
+                    'consequence_id',
+                    'emergency_action',
+                    'penanggungJawab',
+                    'selectedBodyPartCategory',
+                    'selectedBodyPart',
+                    'damage_detail'
+                ];
+                break;
+
+            case 2:
+                // Tambahkan field untuk Part 2 (Saksi, korban, dll)
+                $fields = ['nama_saksi', 'nama_korban'];
+                break;
+
+            case 9:
+                $fields = [
+                    'penerimaan_komentar_contractor_id',
+                    'penerimaan_komentar_internal_id',
+                    'penerimaan_komentar_ohs_id',
+                    'penerimaan_komentar_contractor',
+                    'penerimaan_komentar_internal',
+                    'penerimaan_komentar_ohs'
+                ];
+                break;
+        }
+
+        if (!empty($fields)) {
+            // Kita hanya memvalidasi rules yang berhubungan dengan field di step ini
+            $allRules = $this->rules();
+            $stepRules = array_intersect_key($allRules, array_flip($fields));
+
+            $this->validate($stepRules);
+        }
+    }
+
     // Fungsi untuk pindah step
     public function setStep($step)
     {
@@ -266,18 +331,19 @@ class Create extends Component
 
         $this->currentStep = $step;
     }
+    public function nextStep()
+    {
+        $this->validateCurrentStep();
+
+        if ($this->currentStep < $this->totalSteps) {
+            $this->currentStep++;
+        }
+    }
 
 
 
     // State untuk menampilkan dropdown
-    public $showPenerimaanKomentarContractorDropdown = false;
-    public $showPenerimaanKomentarInternalDropdown = false;
-    public $showPenerimaanKomentarOhsDropdown = false;
-    public $showPenerimaanKomentarKttDropdown = false;
 
-    // State tambahan untuk tracking fokus (opsional, sesuai Blade kamu)
-    public $activeTypePenerimaan = '';
-    public $activeIndexPenerimaan = null;
     public function mount()
     {
 
