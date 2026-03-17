@@ -14,7 +14,7 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
     <div
-        class="{{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 rounded' : 'ring-base-300 focus:ring-base-300 focus:border-base-300 rounded' }}">
+        class="{{ $errors->has($model) ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500 ' : '' }}">
         {{-- Wrapper Alpine.js untuk Flatpickr --}}
         <div wire:ignore x-data="{
         reportDate: @entangle($model),
