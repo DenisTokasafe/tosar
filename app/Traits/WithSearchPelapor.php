@@ -7,25 +7,41 @@ use Illuminate\Support\Facades\Auth;
 
 trait WithSearchPelapor
 {
-    // Pelapor
+    /**
+     * Properti yang dibutuhkan oleh Trait
+     * Variabel ini akan otomatis tersedia di Class yang menggunakan Trait ini.
+     */
     public $searchPelapor = '';
     public $pelapors = [];
     public $showPelaporDropdown = false;
     public $manualPelaporMode = false;
     public $manualPelaporName;
 
-
-    public function updatedSearchPelapor()
+    /**
+     * Livewire Magic Method: Dijalankan otomatis saat komponen dimuat (mount).
+     * Ini akan mengisi data pelapor secara otomatis jika user sudah login.
+     */
+    public function mountWithSearchPelapor()
     {
         if (Auth::check()) {
-            // Mengakses $this->pelapor_id yang didefinisikan di Parent
+            // Mengisi ID Pelapor ke properti parent (jika ada)
             if (property_exists($this, 'pelapor_id')) {
                 $this->pelapor_id = Auth::id();
             }
+            // Mengisi Nama ke input search
             $this->searchPelapor = Auth::user()->name;
         }
-        // Hindari reset total jika hanya ingin mengosongkan ID tapi tetap mau mencari
-        $this->pelapor_id = null;
+    }
+
+    /**
+     * Menangani pencarian pelapor saat user mengetik.
+     */
+    public function updatedSearchPelapor()
+    {
+        // Reset ID dan mode manual jika user mulai mengetik ulang
+        if (property_exists($this, 'pelapor_id')) {
+            $this->pelapor_id = null;
+        }
         $this->manualPelaporMode = false;
         $this->manualPelaporName = null;
 
@@ -36,40 +52,57 @@ trait WithSearchPelapor
                 ->get();
 
             $this->showPelaporDropdown = true;
-
-            // Dispatch event untuk memberitahu Alpine agar re-calculate posisi dropdown
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
         }
     }
+
+    /**
+     * Menangani pemilihan pelapor dari dropdown hasil pencarian.
+     */
     public function selectPelapor($id, $name)
     {
-        $this->pelapor_id = $id;
+        if (property_exists($this, 'pelapor_id')) {
+            $this->pelapor_id = $id;
+        }
         $this->searchPelapor = $name;
         $this->showPelaporDropdown = false;
         $this->manualPelaporMode = false;
+
+        // Picu validasi jika diperlukan
+        if (method_exists($this, 'validateOnly')) {
+            $this->validateOnly('pelapor_id');
+        }
     }
+
+    /**
+     * Mengaktifkan mode manual jika nama tidak ditemukan di database.
+     */
     public function enableManualPelapor()
     {
         $this->manualPelaporMode = true;
-        $this->manualPelaporName = $this->searchPelapor; // isi default sama dengan isi search
+        $this->manualPelaporName = $this->searchPelapor;
         $this->showPelaporDropdown = false;
-        $this->pelapor_id = null;
-        $this->dispatch(
-            'alert',
-            [
-                'text' => "nama sudah di tambahkan!!!",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-            ]
-        );
+
+        if (property_exists($this, 'pelapor_id')) {
+            $this->pelapor_id = null;
+        }
+
+        $this->dispatch('alert', [
+            'text' => "Nama '" . $this->manualPelaporName . "' ditambahkan secara manual!",
+            'duration' => 5000,
+            'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+        ]);
     }
+
+    /**
+     * Memastikan pelapor_id tetap null jika user mengedit nama manual.
+     */
     public function updatedManualPelaporName($value)
     {
-        $this->pelapor_id = null;
+        if (property_exists($this, 'pelapor_id')) {
+            $this->pelapor_id = null;
+        }
     }
 }
