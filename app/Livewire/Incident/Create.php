@@ -281,7 +281,7 @@ class Create extends Component
         ];
     }
 
-    public $currentStep = 1;
+    public $currentStep;
     public $totalSteps = 9;
 
     public function validateCurrentStep()
@@ -328,6 +328,7 @@ class Create extends Component
                     'directly_involved.*.pengalaman_kerja',
                 ];
                 break;
+
             case 9:
                 $fields = [
                     'penerimaan_komentar_contractor_id',
@@ -341,24 +342,18 @@ class Create extends Component
         }
 
         if (!empty($fields)) {
-            // Kita hanya memvalidasi rules yang berhubungan dengan field di step ini
+            // AMBIL array rules dari method rules()
             $allRules = $this->rules();
+
+            // Filter rules hanya untuk field di step ini
             $stepRules = array_intersect_key($allRules, array_flip($fields));
 
+            // JALANKAN validasi dengan parameter array rules tersebut
             $this->validate($stepRules);
         }
     }
 
     // Fungsi untuk pindah step
-    public function setStep($step)
-    {
-        // Sebelum pindah ke step berikutnya, validasi data step saat ini
-        if ($step > $this->currentStep) {
-            $this->validateCurrentStep();
-        }
-
-        $this->currentStep = $step;
-    }
     public function nextStep()
     {
         $this->validateCurrentStep();
