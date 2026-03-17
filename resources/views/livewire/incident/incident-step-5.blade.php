@@ -4,7 +4,7 @@
         <h2 class="text-lg font-bold uppercase text-primary">BAGIAN 5 – Time Line dan Analisis Informasi</h2>
         <div class="flex gap-2">
 
-            <flux:tooltip content=" Tambah Kolom " Mengapa" position="top">
+            <flux:tooltip content=" Tambah Kolom Mengapa" position="top">
                 <flux:button wire:click="addWhyColumn"
                     size="xs" icon="add-icon" variant="outline" color="primary">
                 </flux:button>
@@ -26,7 +26,7 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest">Referensi Kronologi & Tanggal (Step 1)</span>
                     </div>
 
-                    <div class="">
+                    <div class="pl-1">
                         <p class="text-sm leading-relaxed whitespace-pre-line text-base-content/80">
                             {{ $description ?: 'Deskripsi kejadian belum diisi pada Step 1.' }}
                         </p>
