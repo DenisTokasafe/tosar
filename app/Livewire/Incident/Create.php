@@ -534,6 +534,10 @@ class Create extends Component
 
     public function mount()
     {
+        if (empty($this->directly_involved)) {
+
+            $this->addDirectlyInvolvedRow();
+        }
         $this->addRow('pemimpin');
 
         $this->addRow('facilitator');
