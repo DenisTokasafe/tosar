@@ -237,8 +237,8 @@ class Create extends Component
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
             // Part 7
-            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'supporting_documents.*' => 'mimes:pdf,doc,docx,|max:5120', // Max 5MB per dokumen
+            'visual_evidence.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'supporting_documents.*' => 'required|mimes:pdf,doc,docx,|max:5120', // Max 5MB per dokumen
             // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
