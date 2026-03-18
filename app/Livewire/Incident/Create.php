@@ -454,6 +454,22 @@ class Create extends Component
                     $fields[] = "timelines.*.why{$i}";
                 }
                 break;
+            case 6:
+                // INI YANG PENTING:
+                // Anda harus memvalidasi array dinamis menggunakan dot notation
+                $this->validate([
+                    'unsafe_conditions.*.item'        => 'required',
+                    'unsafe_conditions.*.description' => 'required|string|min:5',
+                    'unsafe_acts.*.item'              => 'required',
+                    'unsafe_acts.*.description'       => 'required|string|min:5',
+                    'personal_factors.*.item'         => 'required',
+                    'personal_factors.*.description'  => 'required|string|min:5',
+                    'job_factors.*.item'              => 'required',
+                    'job_factors.*.description'       => 'required|string|min:5',
+                    'control_system_factors.*.item'   => 'required',
+                    'control_system_factors.*.description' => 'required|string|min:5',
+                ]);
+                break;
             case 9:
                 $fields = [
                     'penerimaan_komentar_contractor_id',
