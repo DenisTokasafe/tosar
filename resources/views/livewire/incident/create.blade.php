@@ -25,10 +25,11 @@
             3. hover:shadow-2xl: Memberikan bayangan sangat tegas saat menonjol keluar.
             4. hover:z-10 relative: Memastikan kartu yang menonjol berada di atas kartu lain (z-index).
         --}}
-            class="mb-3 border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl
+            class=" border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl
                relative z-0
                transition-all duration-300 ease-in-out
-               hover:-translate-x-4 hover:shadow-2xl hover:z-10 hover:border-info
+               hover:-translate-x-4 hover:shadow-2xl hover:z-10 hover:border-transparent
+            hover:[border-image:linear-gradient(to_right,oklab(var(--success)),oklab(var(--info)))_1]
                {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
             {{-- Input Radio DaisyUI --}}
             <input type="radio" name="my-accordion-2"
