@@ -26,7 +26,7 @@
                 </td>
                 <td class="p-1 align-top border border-base-300">
                     <x-form.text_area
-                        wire:model="unsafe_conditions.{{ $index }}.description"
+                        model="unsafe_conditions.{{ $index }}.description"
                         placeholder="Tambahkan rincian deskripsi..."
                         rows="2" />
                 </td>
@@ -64,7 +64,7 @@
                 </td>
                 <td class="p-1 align-top border border-base-300">
                     <x-form.text_area
-                        wire:model="unsafe_acts.{{ $index }}.description"
+                        model="unsafe_acts.{{ $index }}.description"
                         placeholder="Tambahkan rincian deskripsi..."
                         rows="2" />
                 </td>
