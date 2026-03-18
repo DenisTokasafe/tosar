@@ -45,9 +45,7 @@ class Create extends Component
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
-        $documentation,
-        $visual_evidence_path,
-        $supporting_documents_path;
+        $documentation;
     #[Url(as: 'step')]
 
 
@@ -83,6 +81,8 @@ class Create extends Component
     public $searchQuery = [];
     public $searchQueryFacilitator = [];
     public $showDropdownPartisipan = [];
+    public $visual_evidence_paths = []; // Ubah dari string ke array
+    public $supporting_documents_paths = []; // Ubah dari string ke array
     public $options = [];
 
     // Penanda baris mana yang sedang aktif dicari
@@ -236,6 +236,12 @@ class Create extends Component
             // Part 7
             'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             'supporting_documents.*' => 'mimes:pdf,doc,docx,|max:5120', // Max 5MB per dokumen
+            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
+            'corrective_actions.*.action_description' => 'required|string|min:10',
+            'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
+            'corrective_actions.*.name' => 'required', // PIC ID/Name
+            'corrective_actions.*.due_date' => 'required|date|after_or_equal:today',
+            'corrective_actions.*.actual_completion_date' => 'nullable|date',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -314,6 +320,20 @@ class Create extends Component
             'anggota.*.user_id' => __('Nama Anggota'),
             'anggota.*.dept'    => __('Departemen Anggota'),
             'anggota.*.jabatan' => __('Jabatan Anggota'),
+            // Part 7
+            // Validasi Dokumen Pendukung (Multiple)
+            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
+            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
+
+            // Validasi Bukti Visual (Multiple Image)
+            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
+            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
+            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
+            // Tindakan Perbaikan (Corrective Actions)
+            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
+            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
+            'corrective_actions.*.name.required'               => __('PIC wajib dipilih.'),
+            'corrective_actions.*.due_date.required'           => __('Batas waktu wajib diisi.'),
             // Part 9
             'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
             'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
@@ -322,6 +342,7 @@ class Create extends Component
             'penerimaan_komentar_internal'      => __('Komentar Internal'),
             'penerimaan_komentar_ohs'           => __('Komentar OHS'),
             'penerimaan_komentar_ktt'           => __('Komentar KTT'),
+
         ];
 
         // Tambahkan atribut dinamis untuk PEEPO
@@ -372,14 +393,7 @@ class Create extends Component
             'exists'   => __('Pilihan :attribute tidak valid.'),
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
-            // Validasi Dokumen Pendukung (Multiple)
-            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
-            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
 
-            // Validasi Bukti Visual (Multiple Image)
-            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
-            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
-            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
 
             // Pesan Custom untuk SENTRY
             'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
@@ -482,6 +496,23 @@ class Create extends Component
                     'control_system_factors.*.item'   => 'required',
                     'control_system_factors.*.description' => 'required|string|min:5',
                 ]);
+                break;
+            case 7:
+                $fields = [
+                    // Dokumentasi
+                    'visual_evidence',
+                    'visual_evidence.*',
+                    'supporting_documents',
+                    'supporting_documents.*',
+
+                    // Tabel Tindakan Perbaikan
+                    'corrective_actions',
+                    'corrective_actions.*.action_description',
+                    'corrective_actions.*.control_hierarchy',
+                    'corrective_actions.*.name',
+                    'corrective_actions.*.due_date',
+                    'corrective_actions.*.actual_completion_date',
+                ];
                 break;
             case 9:
                 $fields = [
@@ -626,19 +657,29 @@ class Create extends Component
         $this->validate([
             'visual_evidence.*' => [
                 'required',
-                'max:10240', // Maksimal 10MB
+                'max:10240', // 10MB
                 'mimes:jpg,jpeg,png,webp,avif,heic'
             ],
         ]);
 
-        // Hapus file lama jika user mengganti gambar sebelum submit
-        if ($this->visual_evidence_path) {
-            FileHelper::deleteFile($this->visual_evidence_path);
+        // Hapus file-file lama (opsional, tergantung keinginan jika user ganti semua)
+        foreach ($this->visual_evidence_paths as $oldPath) {
+            FileHelper::deleteFile($oldPath);
         }
 
-        // Langsung kompres dan simpan path-nya
-        $this->visual_evidence_path = FileHelper::compressAndStore($this->visual_evidence, 'incident/visual_evidence/documentation');
+        // Reset array path
+        $this->visual_evidence_paths = [];
+
+        // Looping setiap file yang diupload
+        foreach ($this->visual_evidence as $file) {
+            // Simpan setiap file ke array paths
+            $this->visual_evidence_paths[] = FileHelper::compressAndStore(
+                $file,
+                'incident/visual_evidence/documentation'
+            );
+        }
     }
+
     public function updatedSupportingDocuments()
     {
         $this->validate([
@@ -646,20 +687,25 @@ class Create extends Component
                 'required',
                 'file',
                 'mimes:pdf,doc,docx',
-                'max:10240', // Maksimal 10MB total
+                'max:10240',
             ],
         ]);
 
         // Hapus file lama jika ada
-        if ($this->supporting_documents_path) {
-            FileHelper::deleteFile($this->supporting_documents_path);
+        foreach ($this->supporting_documents_paths as $oldPath) {
+            FileHelper::deleteFile($oldPath);
         }
 
-        // Simpan file
-        $this->supporting_documents_path = FileHelper::compressAndStore(
-            $this->supporting_documents,
-            'incident/supporting_documents/documentation'
-        );
+        $this->supporting_documents_paths = [];
+
+        foreach ($this->supporting_documents as $file) {
+            // Karena FileHelper::compressAndStore sudah menangani non-gambar (file asli),
+            // kita bisa menggunakannya untuk PDF/Word juga
+            $this->supporting_documents_paths[] = FileHelper::compressAndStore(
+                $file,
+                'incident/supporting_documents/documentation'
+            );
+        }
     }
 
     public function edit($likelihoodId, $consequenceId)
