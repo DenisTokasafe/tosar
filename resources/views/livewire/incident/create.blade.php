@@ -14,49 +14,40 @@
 
         {{-- STEP 1: Info Dasar --}}
         @for ($i = 1; $i <= 9; $i++)
-            <div
-            wire:key="step-container-{{ $i }}"
-            class="mb-2 border collapse collapse-arrow bg-base-100 border-base-300 transition-all duration-300 ease-in-out hover:border-info hover:shadow-md rounded-xl {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
+            <div class="border collapse collapse-arrow bg-base-100 border-base-300 {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
+            {{-- Kita binding wire:model ke currentStep --}}
+            {{-- Ubah wire:model.live menjadi wire:click --}}
             <input type="radio" name="my-accordion-2"
                 wire:click="goToStep({{ $i }})"
                 value="{{ $i }}"
                 {{ $currentStep == $i ? 'checked' : '' }} />
 
-            <div @class([ 'font-semibold collapse-title transition-colors duration-300' , 'bg-linear-to-r from-success/20 to-info/20 text-info-content'=> $currentStep == $i,
-                'bg-base-200 text-base-content' => $currentStep != $i
-                ])>
-                <div class="flex items-center gap-3">
-                    <span class="flex items-center justify-center w-6 h-6 text-xs text-white rounded-full bg-info">
-                        {{ $i }}
-                    </span>
-                    <h3 class="text-sm font-bold tracking-wide uppercase">PART {{ $i }}</h3>
-                </div>
+            <div class="font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
+                <h3 class="text-base font-semibold">PART {{ $i }}</h3>
             </div>
 
-            <div class="transition-all duration-500 collapse-content">
-                <div class="pt-4 text-xs">
-                    @include('livewire.incident.incident-step-' . $i)
+            <div class="text-xs collapse-content">
+                @include('livewire.incident.incident-step-' . $i)
 
-                    {{-- Navigasi di dalam --}}
-                    <div class="flex justify-end pt-4 mt-6 border-t border-base-200">
-                        @if ($i < 9)
-                            <button wire:click="nextStep" wire:loading.attr="disabled" class="transition-transform shadow-sm btn btn-primary btn-xs sm:btn-sm hover:scale-105">
-                            Lanjut ke Part {{ $i + 1 }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                            </button>
-                            @else
-                            <button type="button" class="transition-all shadow-lg btn btn-sm btn-success hover:scale-105" wire:click="save" wire:loading.attr="disabled">
-                                <span wire:loading.remove wire:target="save">🚀 Kirim Laporan</span>
-                                <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
-                            </button>
-                            @endif
-                    </div>
+                {{-- Tombol Navigasi --}}
+                <div class="flex justify-end mt-4">
+                    @if ($i < 9)
+                        <button wire:click="nextStep" class="btn btn-primary btn-xs">
+                        Lanjut ke Part {{ $i + 1 }}
+                        </button>
+                        @else
+
+                        {{-- Tombol Submit muncul KHUSUS di dalam Part 9 --}}
+                        <button type="button" class="btn btn-xs btn-success" wire:click="save">
+                            Submit Laporan
+                        </button>
+                        @endif
                 </div>
             </div>
             </div>
             @endfor
+            {{-- Navigasi Step --}}
+
 
     </x-incident.layout>
 
