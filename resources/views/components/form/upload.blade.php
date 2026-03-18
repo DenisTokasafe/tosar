@@ -7,11 +7,12 @@
 'keterangan' => 'Tidak ada file yang dipilih',
 'optional' => true,
 'disabled' => false,
+'required' => false,
 'multiple' => false, // Tambahkan prop multiple
 ])
 
 <div class="flex flex-col gap-1">
-    <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" />
+    <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" :required="$required" />
 
     <label for="{{ $disabled ? '' : $id }}"
         @class([ 'flex items-center gap-2 border rounded border-info' , 'cursor-pointer hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden'=> !$disabled,

@@ -435,9 +435,10 @@ class Create extends Component
             'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
             'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
 
-            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
-            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, PNG, atau WEBP.'),
-            'visual_evidence.*.max'   => __('Ukuran setiap gambar maksimal adalah 2MB.'),
+            'visual_evidence.required' => __('Bukti visual wajib dilampirkan.'),
+            'visual_evidence.*.image'  => __('File harus berupa gambar (JPG, PNG, WebP).'),
+            'visual_evidence.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
+            'visual_evidence.*.max'    => __('Ukuran foto maksimal 2MB.'),
 
             // --- PART 7: TINDAKAN PERBAIKAN ---
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
