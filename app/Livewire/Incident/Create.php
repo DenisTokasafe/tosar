@@ -237,8 +237,13 @@ class Create extends Component
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
             // Part 7
-            'visual_evidence.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'supporting_documents.*' => 'required|mimes:pdf,doc,docx,|max:5120', // Max 5MB per dokumen
+            'visual_evidence' => 'required|array|min:1',
+
+            // Validasi tiap file di dalam array (Ukuran dan Tipe)
+            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
+
+            'supporting_documents' => 'required|array|min:1',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
             // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
@@ -549,19 +554,16 @@ class Create extends Component
                 break;
             case 7:
                 $fields = [
-                    // Dokumentasi
-                    'visual_evidence',
-                    'visual_evidence.*',
+                    'visual_evidence',    // Untuk cek array keseluruhan
+                    'visual_evidence.*',  // UNTUK CEK TIAP FILE (Ini yang sering hilang)
                     'supporting_documents',
                     'supporting_documents.*',
 
                     // Tabel Tindakan Perbaikan
-                    'corrective_actions',
                     'corrective_actions.*.action_description',
                     'corrective_actions.*.control_hierarchy',
                     'corrective_actions.*.name',
                     'corrective_actions.*.due_date',
-                    'corrective_actions.*.actual_completion_date',
                 ];
                 break;
             case 8:
