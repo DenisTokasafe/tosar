@@ -500,33 +500,42 @@ class Create extends Component
 
     public function mount()
     {
-
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
+
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
 
-        if (empty($this->directly_involved)) {
-            $this->addDirectlyInvolvedRow();
+        // Gunakan pola ini untuk SEMUA array dinamis agar tidak menimpa data yang sudah ada
+        if (empty($this->unsafe_conditions)) {
+            $this->unsafe_conditions = [['item' => '', 'description' => '']];
         }
-        $this->addRow('pemimpin');
-        $this->addRow('facilitator');
-        $this->addRow('anggota');
-        $this->addRow('timelines');
-        $this->addRow('unsafe_conditions');
-        $this->addRow('unsafe_acts');
-        $this->addRow('personal_factors');
-        $this->addRow('job_factors');
-        $this->addRow('control_system_factors');
-        $this->addCorrectiveRow();
 
-        foreach ($this->peepoFactors as $key => $label) {
-            $this->peepo[$key] = [
-                'temuan' => '',
-                'deskripsi' => ''
-            ];
+        if (empty($this->unsafe_acts)) {
+            $this->unsafe_acts = [['item' => '', 'description' => '']];
         }
+
+        if (empty($this->personal_factors)) {
+            $this->personal_factors = [['item' => '', 'description' => '']];
+        }
+
+        if (empty($this->job_factors)) {
+            $this->job_factors = [['item' => '', 'description' => '']];
+        }
+
+        if (empty($this->control_system_factors)) {
+            $this->control_system_factors = [['item' => '', 'description' => '']];
+        }
+
+        // PEEPO juga perlu dicek agar tidak ter-reset jika sudah ada isinya
+        foreach ($this->peepoFactors as $key => $label) {
+            if (!isset($this->peepo[$key])) {
+                $this->peepo[$key] = ['temuan' => '', 'deskripsi' => ''];
+            }
+        }
+
+        // Lanjutkan untuk array lainnya (pemimpin, anggota, dll) dengan pola empty() yang sama
     }
 
     public function updatedKeyWord($value)
