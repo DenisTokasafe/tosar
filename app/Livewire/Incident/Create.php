@@ -385,23 +385,33 @@ class Create extends Component
     protected function messages()
     {
         return [
+            // Pesan Standar
             'required' => __(':attribute wajib diisi.'),
             'exists'   => __('Pilihan :attribute tidak valid.'),
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
+            'after_or_equal' => __(':attribute tidak boleh tanggal lampau.'),
+
+            // --- PART 7: DOKUMENTASI ---
             'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
-            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
+            'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
 
-            // Validasi Bukti Visual (Multiple Image)
             'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
-            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
-            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
+            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, PNG, atau WEBP.'),
+            'visual_evidence.*.max'   => __('Ukuran setiap gambar maksimal adalah 2MB.'),
 
-            // Pesan Custom untuk SENTRY
-            'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
-            'department_id.required_without'        => __('Silakan pilih Departemen atau Kontraktor.'),
-            'tindakan_tidak_aman.required_without'  => __('Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman (salah satu wajib).'),
-            'contractor_id.required_without'        => __('Pilih Kontraktor atau Department terkait.'),
+            // --- PART 7: TINDAKAN PERBAIKAN ---
+            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
+            'corrective_actions.*.action_description.min'      => __('Deskripsi rencana perbaikan terlalu singkat.'),
+            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
+            'corrective_actions.*.name.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
+            'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+
+            // --- PESAN KHUSUS LOGIKA SENTRY ---
+            'kondisi_tidak_aman.required_without'  => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
+            'tindakan_tidak_aman.required_without' => __('Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman.'),
+            'department_id.required_without'       => __('Silakan pilih Departemen atau Kontraktor.'),
+            'contractor_id.required_without'       => __('Pilih Kontraktor atau Department terkait.'),
         ];
     }
 
