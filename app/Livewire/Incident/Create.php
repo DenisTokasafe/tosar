@@ -271,6 +271,12 @@ class Create extends Component
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
 
+        // Tambahkan Logika KTT di sini agar terbaca secara global
+        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
+
         // Tambahkan validasi dinamis berdasarkan jumlah whyCount yang sedang aktif
         foreach (range(1, $this->whyCount) as $i) {
             $rules["timelines.*.why{$i}"] = 'required|string|min:3';
@@ -1413,6 +1419,31 @@ class Create extends Component
 
     public function save()
     {
+        try {
+            // 1. Jalankan Validasi Global
+            // Livewire otomatis mengambil array dari fungsi rules()
+            // dan pesan dari fungsi messages() yang sudah Anda buat.
+            $this->validate();
+
+            // 2. Jika validasi lolos, lanjutkan proses penyimpanan ke Database
+            // Contoh:
+            // $this->storeToDatabase();
+
+            session()->flash('message', 'Data SENTRY berhasil disimpan.');
+        } catch (ValidationException $e) {
+            // 3. Jika gagal, tembakkan event untuk menandai field komentar yang error di UI
+            $this->dispatchValidationEvents($e->validator->errors());
+
+            // Lempar kembali error agar Livewire menampilkan pesan error di Blade
+            throw $e;
+        }
+    }
+
+    /**
+     * Helper untuk menembakkan event validasi ke frontend
+     */
+    protected function dispatchValidationEvents($errors)
+    {
         $komentarFields = [
             'penerimaan_komentar_contractor',
             'penerimaan_komentar_internal',
@@ -1421,46 +1452,9 @@ class Create extends Component
         ];
 
         foreach ($komentarFields as $field) {
-            // Kita gunakan loop karena di fungsi save kita ingin
-            // menembakkan event untuk SEMUA field komentar sekaligus
-            $this->dispatch('validate-' . $field);
-        }
-        $this->validate();
-
-        // 2. Validasi tambahan secara dinamis
-        $dynamicRules = [];
-
-        if ($this->isInjury()) {
-            $dynamicRules['selectedBodyPartCategory'] = 'required';
-            $dynamicRules['selectedBodyPart'] = 'required_with:selectedBodyPartCategory|exists:body_parts,id';
-        } else {
-            $dynamicRules['damage_detail'] = 'required|string|min:5';
-        }
-
-        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
-            $dynamicRules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-            $dynamicRules['penerimaan_komentar_ktt']    = 'required|min:11';
-        }
-
-        try {
-            // Jalankan validasi dinamis dengan pesan kustom
-            $this->validate($dynamicRules, $this->getValidationMessages());
-        } catch (ValidationException $e) {
-            // 2. Jika kamu ingin lebih spesifik untuk KTT saja (opsional)
-            if ($e->validator->errors()->has('penerimaan_komentar_ktt')) {
-                $this->dispatch('validate-penerimaan_komentar_ktt');
+            if ($errors->has($field)) {
+                $this->dispatch('validate-' . $field);
             }
-            if ($e->validator->errors()->has('penerimaan_komentar_kontraktor')) {
-                $this->dispatch('validate-penerimaan_komentar_kontraktor');
-            }
-            if ($e->validator->errors()->has('penerimaan_komentar_internal')) {
-                $this->dispatch('validate-penerimaan_komentar_internal');
-            }
-            if ($e->validator->errors()->has('penerimaan_komentar_ohs')) {
-                $this->dispatch('validate-penerimaan_komentar_ohs');
-            }
-
-            throw $e;
         }
     }
 }
