@@ -76,37 +76,61 @@
     {{-- VIEW MOBILE: Tampil di HP (Card Mode) --}}
     <div class="grid grid-cols-1 gap-4 md:hidden">
         @foreach($corrective_actions as $index => $action)
-        <div wire:key="mobile-row-{{ $index }}" class="relative p-4 border rounded-xl bg-base-50">
+        {{-- Key Utama untuk baris --}}
+        <div wire:key="corrective-row-{{ $index }}-{{ count($corrective_actions) }}" class="relative p-4 border rounded-xl bg-base-50">
+
             @if(count($corrective_actions) > 1)
             <button type="button" wire:click="removeCorrectiveRow({{ $index }})"
                 class="absolute top-2 right-2 btn btn-circle btn-ghost btn-xs text-error">✕</button>
             @endif
 
             <div class="flex flex-col gap-3 mt-2">
-                <x-form.text_area label="Rencana Perbaikan" model="corrective_actions.{{ $index }}.action_description" rows="2" />
-
-                <div class="grid grid-cols-2 gap-2">
-                    <x-form.select label="Kontrol Hirarki" model="corrective_actions.{{ $index }}.control_hierarchy"
-                        :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]" />
-
-                    <x-form.tgl-waktu label="Deadline" model="corrective_actions.{{ $index }}.due_date" />
+                {{-- Tambahkan wire:key di tiap komponen input agar state teks & select tidak hilang --}}
+                <div wire:key="field-desc-{{ $index }}">
+                    <x-form.text_area label="Rencana Perbaikan"
+                        model="corrective_actions.{{ $index }}.action_description" rows="2" />
                 </div>
 
-                <x-form.searchable-select-advanced label="Person In Charge (PIC)" modelsearch="searchPetugas.{{ $index }}"
-                    modelid="corrective_actions.{{ $index }}.name" :options="$pelaporsAct"
-                    :showdropdown="$showDropdownPetugas[$index] ?? false" clickaction="selectActPelapor" />
+                <div class="grid grid-cols-2 gap-2">
+                    <div wire:key="field-hierarchy-{{ $index }}">
+                        <x-form.select label="Kontrol Hirarki"
+                            model="corrective_actions.{{ $index }}.control_hierarchy"
+                            :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]" />
+                    </div>
 
-                <div class="p-3 border rounded-lg bg-white/50">
-                    <x-form.tgl-waktu label="Tanggal Realisasi Selesai" model="corrective_actions.{{ $index }}.actual_completion_date" />
+                    <div wire:key="field-deadline-{{ $index }}">
+                        <x-form.tgl-waktu label="Deadline"
+                            model="corrective_actions.{{ $index }}.due_date" />
+                    </div>
+                </div>
+
+                {{-- PIC Searchable Select (Sangat Krusial memiliki wire:key) --}}
+                <div wire:key="field-pic-search-{{ $index }}">
+                    <x-form.searchable-select-advanced
+                        label="Person In Charge (PIC)"
+                        modelsearch="searchPetugas.{{ $index }}"
+                        modelid="corrective_actions.{{ $index }}.name"
+                        :options="$pelaporsAct"
+                        :showdropdown="$showDropdownPetugas[$index] ?? false"
+                        clickaction="selectActPelapor" />
+                </div>
+
+                <div class="p-3 border rounded-lg bg-white/50" wire:key="realization-box-{{ $index }}">
+                    <x-form.tgl-waktu label="Tanggal Realisasi Selesai"
+                        model="corrective_actions.{{ $index }}.actual_completion_date" />
 
                     {{-- Mobile Status Indicators --}}
                     <div class="flex flex-wrap items-center gap-2 mt-2">
                         @if(!empty($action['due_date']) && !empty($action['actual_completion_date']))
-                        @php $isOverdue = \Carbon\Carbon::parse($action['actual_completion_date'])->greaterThan(\Carbon\Carbon::parse($action['due_date'])); @endphp
+                        @php
+                        $isOverdue = \Carbon\Carbon::parse($action['actual_completion_date'])
+                        ->greaterThan(\Carbon\Carbon::parse($action['due_date']));
+                        @endphp
                         <span class="badge {{ $isOverdue ? 'badge-error' : 'badge-success' }} badge-sm font-bold">
                             {{ $isOverdue ? 'OVERDUE' : 'ON TIME' }}
                         </span>
                         @endif
+
                         @if(!empty($action['actual_completion_date']))
                         <span class="font-bold badge badge-info badge-outline badge-sm">100% DONE</span>
                         @endif
