@@ -122,14 +122,47 @@
                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                     </td>
                     <td class="w-1/6 text-xs">
-                        <x-form.tgl-waktu
+                        <x-form.tgl
                             model="corrective_actions.{{ $index }}.due_date"
                             :min-date="now()->format('Y-m-d')" />
                     </td>
                     <td class="w-1/6 text-xs">
-                        <x-form.tgl-waktu
+                        <x-form.tgl
                             model="corrective_actions.{{ $index }}.actual_completion_date"
-                            :min-date="now()->format('Y-m-d')" />
+                            :min-date="$corrective_actions[$index]['due_date'] ?? now()->format('Y-m-d')" />
+
+                        {{-- Visual Indicator Keterlambatan --}}
+                        @if(!empty($action['due_date']) && !empty($action['actual_completion_date']))
+                        @php
+                        $actual = \Carbon\Carbon::parse($action['actual_completion_date']);
+                        $due = \Carbon\Carbon::parse($action['due_date']);
+                        @endphp
+
+                        @if($actual->greaterThan($due))
+                        <div class="mt-1 font-bold text-[10px] text-error flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ __('Terlambat (Overdue)') }}
+                        </div>
+                        @else
+                        <div class="mt-1 font-bold text-[10px] text-success flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {{ __('Tepat Waktu') }}
+                        </div>
+                        @endif
+                        @endif
+
+                        {{-- Auto-Status Badge --}}
+                        @if(!empty($action['actual_completion_date']))
+                        <div class="mt-1">
+                            <span class="badge badge-success badge-outline text-[9px] py-0 h-4 px-1">
+                                {{ __('100% Selesai') }}
+                            </span>
+                        </div>
+                        @endif
                     </td>
                     <td class="w-auto">
                         @if(count($corrective_actions) > 1)

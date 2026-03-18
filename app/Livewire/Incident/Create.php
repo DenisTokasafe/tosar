@@ -243,7 +243,12 @@ class Create extends Component
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
             'corrective_actions.*.name' => 'required', // PIC ID/Name
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            'corrective_actions.*.actual_completion_date' => 'nullable|date|after_or_equal:due_date',
+            'corrective_actions.*.actual_completion_date' => [
+                'nullable',
+                'date',
+                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
+                'after_or_equal:corrective_actions.*.due_date'
+            ],
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -370,17 +375,40 @@ class Create extends Component
 
     public function updated($propertyName)
     {
-        // Setiap kali ada perubahan, validasi field tersebut
-        $this->validateOnly($propertyName);
+        // 1. Logika Auto-Status & Refresh untuk Corrective Actions
+        if (str_contains($propertyName, 'corrective_actions')) {
+            // Tangkap index array dari propertyName (format: corrective_actions.0.actual_completion_date)
+            $parts = explode('.', $propertyName);
 
-        // Jika tipe event berubah, validasi ulang field kondisional
+            if (isset($parts[1]) && isset($parts[2])) {
+                $index = $parts[1];
+                $field = $parts[2];
+
+                // Jika yang diubah adalah tanggal selesai, update progress & status otomatis
+                if ($field === 'actual_completion_date') {
+                    if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
+                        $this->corrective_actions[$index]['status'] = 'Selesai';
+                        $this->corrective_actions[$index]['progress'] = 100;
+                    } else {
+                        $this->corrective_actions[$index]['status'] = 'Belum Selesai';
+                        $this->corrective_actions[$index]['progress'] = 0;
+                    }
+                }
+            }
+
+            // Paksa render ulang agar indikator visual muncul
+            $this->dispatch('refresh-component');
+        }
+
+        // 2. Validasi field kondisional jika tipe event berubah
         if ($propertyName === 'event_type_id') {
             $this->validateOnly('selectedBodyPartCategory');
             $this->validateOnly('selectedBodyPart');
             $this->validateOnly('damage_detail');
         }
-        // 3. Logika Dispatch untuk Komentar Penerimaan
 
+        // 3. Jalankan validasi standar untuk field yang sedang diubah
+        $this->validateOnly($propertyName);
     }
 
     // Komentar Standard
