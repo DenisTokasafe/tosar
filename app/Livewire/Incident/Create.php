@@ -234,8 +234,8 @@ class Create extends Component
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
             // Part 7
-            'visual_evidence.*' => 'image|max:2048', // Max 2MB per foto
-            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120', // Max 5MB per dokumen
+            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx,|max:5120', // Max 5MB per dokumen
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',

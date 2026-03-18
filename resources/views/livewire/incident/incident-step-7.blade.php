@@ -12,8 +12,25 @@
                 @if($visual_evidence)
                 @foreach($visual_evidence as $index => $image)
                 <div class="relative group">
+                    @php
+                    // Ambil ekstensi file secara aman
+                    $extension = strtolower($image->getClientOriginalExtension());
+                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                    @endphp
+
+                    @if($isImage)
+                    {{-- Hanya panggil temporaryUrl jika file adalah gambar --}}
                     <img src="{{ $image->temporaryUrl() }}" class="object-cover w-24 h-24 border rounded shadow-sm" />
-                    {{-- Opsional: Tombol hapus jika salah pilih --}}
+                    @else
+                    {{-- Tampilkan icon dokumen jika bukan gambar --}}
+                    <div class="flex flex-col items-center justify-center w-24 h-24 border rounded bg-base-200">
+                        <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" />
+                        </svg>
+                        <span class="text-[10px] px-1 truncate w-full text-center">{{ $image->getClientOriginalName() }}</span>
+                    </div>
+                    @endif
+
                     <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
                         class="absolute flex items-center justify-center w-5 h-5 text-white rounded-full -top-2 -right-2 bg-error">✕</button>
                 </div>
