@@ -242,8 +242,8 @@ class Create extends Component
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
             'corrective_actions.*.name' => 'required', // PIC ID/Name
-            'corrective_actions.*.due_date' => 'required|date|after_or_equal:today',
-            'corrective_actions.*.actual_completion_date' => 'nullable|date',
+            'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
+            'corrective_actions.*.actual_completion_date' => 'nullable|date|after_or_equal:due_date',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -329,7 +329,9 @@ class Create extends Component
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
             'corrective_actions.*.name.required'               => __('PIC wajib dipilih.'),
-            'corrective_actions.*.due_date.required'           => __('Batas waktu wajib diisi.'),
+            'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
+            'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
+
             // Part 9
             'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
             'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
@@ -406,6 +408,7 @@ class Create extends Component
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
             'corrective_actions.*.name.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
             'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+            'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
 
             // --- PESAN KHUSUS LOGIKA SENTRY ---
             'kondisi_tidak_aman.required_without'  => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),

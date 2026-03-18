@@ -32,7 +32,7 @@
                     @endif
 
                     <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
-                        class="absolute flex items-center justify-center w-5 h-5 text-white rounded-full -top-2 -right-2 bg-error">✕</button>
+                        class="absolute flex items-center justify-center w-5 h-5 rounded-full text-error -top-2 -right-2 bg-error">✕</button>
                 </div>
                 @endforeach
                 @endif
