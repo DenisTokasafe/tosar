@@ -372,12 +372,14 @@ class Create extends Component
             'exists'   => __('Pilihan :attribute tidak valid.'),
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
-            'supporting_documents.*.mimes' => 'Hanya file PDF dan Word yang diperbolehkan.',
-            'supporting_documents.*.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
+            // Validasi Dokumen Pendukung (Multiple)
+            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
+            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
 
-            'visual_evidence.*.image' => 'Salah satu file bukti visual bukan gambar yang valid.',
-            'visual_evidence.*.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
-            'visual_evidence.*.max' => 'Ukuran gambar maksimal adalah 2MB.',
+            // Validasi Bukti Visual (Multiple Image)
+            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
+            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
+            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
 
             // Pesan Custom untuk SENTRY
             'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
