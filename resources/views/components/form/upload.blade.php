@@ -52,7 +52,7 @@
         {{-- Gabungkan semua atribut sekaligus --}}
         {{ $attributes->merge([
         'accept' => '*',
-        'wire:model' => $model,
+        'wire:model.live' => $model,
         'multiple' => $multiple,
         'disabled' => $disabled
     ])->whereDoesntStartWith('wire:model') }}
