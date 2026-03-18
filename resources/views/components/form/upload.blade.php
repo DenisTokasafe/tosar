@@ -6,11 +6,11 @@
 'title' => 'Pilih file atau gambar',
 'keterangan' => 'Tidak ada file yang dipilih',
 'optional' => true,
-'disabled' => false
+'disabled' => false,
+'multiple' => false, // Tambahkan prop multiple
 ])
 
 <div class="flex flex-col gap-1">
-    {{-- Label menggunakan helper __() dan memisahkan string (optional) agar fleksibel --}}
     <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" />
 
     <label for="{{ $disabled ? '' : $id }}"
@@ -32,9 +32,11 @@
             </span>
         </span>
 
-        {{-- File Name State --}}
+        {{-- File Name State (Logic Updated for Multiple) --}}
         <span wire:loading.remove wire:target="{{ $model }}" class="px-2 text-xs text-gray-500 truncate">
-            @if ($file && is_object($file))
+            @if ($multiple && is_array($file) && count($file) > 0)
+            {{ count($file) }} {{ __('file terpilih') }}
+            @elseif (!$multiple && $file && is_object($file))
             {{ $file->getClientOriginalName() }}
             @elseif ($file && is_string($file))
             {{ basename($file) }}
@@ -50,9 +52,10 @@
         {{ $attributes->whereDoesntStartWith('wire:model') }}
         wire:model="{{ $model }}"
         class="hidden"
+        @if($multiple) multiple @endif {{-- Pastikan tag multiple muncul di HTML --}}
         @disabled($disabled) />
 
-    @error($model)
+    @error($model . '.*') {{-- Tambahkan .* untuk menangkap error pada tiap file --}}
     <span class="mt-1 text-xs text-error">{{ $message }}</span>
     @enderror
 </div>
