@@ -49,11 +49,19 @@
     <input
         type="file"
         id="{{ $id }}"
-        {{ $attributes->whereDoesntStartWith('wire:model') }}
+        {{-- Gabungkan semua atribut sekaligus --}}
+        {{ $attributes->merge([
+        'accept' => '*',
+        'wire:model' => $model,
+        'multiple' => $multiple,
+        'disabled' => $disabled
+    ])->whereDoesntStartWith('wire:model') }}
+        {{-- ^ Note: Kita tetap memisahkan wire:model jika Anda ingin kontrol manual via prop $model --}}
+
+        {{-- Karena kita pakai wire:model="{{ $model }}" secara eksplisit di bawah,
+        kita harus membuang wire:model dari $attributes agar tidak double --}}
         wire:model="{{ $model }}"
-        class="hidden"
-        @if($multiple) multiple @endif {{-- Pastikan tag multiple muncul di HTML --}}
-        @disabled($disabled) />
+        class="hidden" />
 
     @error($model . '.*') {{-- Tambahkan .* untuk menangkap error pada tiap file --}}
     <span class="mt-1 text-xs text-error">{{ $message }}</span>

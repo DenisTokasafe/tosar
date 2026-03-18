@@ -372,6 +372,8 @@ class Create extends Component
             'exists'   => __('Pilihan :attribute tidak valid.'),
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
+            'supporting_documents.*.mimes' => 'Hanya file PDF dan Word yang diperbolehkan.',
+            'supporting_documents.*.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
 
             // Pesan Custom untuk SENTRY
             'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
@@ -523,6 +525,7 @@ class Create extends Component
         }
     }
 
+
     // State untuk menampilkan dropdown
 
     public function mount()
@@ -591,7 +594,7 @@ class Create extends Component
     public function updatedVisualEvidence()
     {
         $this->validate([
-            'visual_evidence' => [
+            'visual_evidence.*' => [
                 'required',
                 'max:10240', // Maksimal 10MB
                 'mimes:jpg,jpeg,png,webp,avif,heic'
@@ -609,10 +612,10 @@ class Create extends Component
     public function updatedSupportingDocuments()
     {
         $this->validate([
-            'supporting_documents' => [
+            'supporting_documents.*' => [
                 'required',
                 'file',
-                'mimes:pdf,doc,docx,xls,xlsx,txt',
+                'mimes:pdf,doc,docx',
                 'max:10240', // Maksimal 10MB total
             ],
         ]);
