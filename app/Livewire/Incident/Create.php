@@ -755,10 +755,10 @@ class Create extends Component
         try {
             // 1. Validasi setiap dokumen (PDF, DOC, DOCX, XLS, XLSX)
             $this->validateOnly('supporting_documents.*', [
-                'supporting_documents.*' => 'file|mimes:pdf,doc,docx,xls,xlsx|max:5120', // Max 5MB per file
+                'supporting_documents.*' => 'file|mimes:pdf,doc,docx|max:5120', // Max 5MB per file
             ], [
                 'supporting_documents.*.file'  => 'Input harus berupa file valid.',
-                'supporting_documents.*.mimes' => 'Format file harus PDF, Word, atau Excel.',
+                'supporting_documents.*.mimes' => 'Format file harus PDF, Word',
                 'supporting_documents.*.max'   => 'Ukuran file dokumen maksimal 5MB.',
             ]);
 
