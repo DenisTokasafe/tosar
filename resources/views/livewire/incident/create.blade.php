@@ -26,7 +26,9 @@
             4. hover:z-10 relative: Memastikan kartu yang menonjol berada di atas kartu lain (z-index).
         --}}
             class="mb-3 border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl
-               relative  hover:border-info
+               relative z-0
+               transition-all duration-300 ease-in-out
+               hover:-translate-x-4 hover:shadow-2xl hover:z-10 hover:border-info
                {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
             {{-- Input Radio DaisyUI --}}
             <input type="radio" name="my-accordion-2"
@@ -35,7 +37,7 @@
                 {{ $currentStep == $i ? 'checked' : '' }} />
 
             {{-- Judul (Title) dengan Background Gradient --}}
-            <div class="z-0 flex items-center justify-between font-semibold transition-all duration-300 ease-in-out collapse-title bg-linear-to-r/oklab from-success to-info text-base-content hover:-translate-x-4 hover:shadow-2xl hover:z-10">
+            <div class="flex items-center justify-between font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
                 <h3 class="text-sm font-bold tracking-wide uppercase">PART {{ $i }}</h3>
             </div>
 
