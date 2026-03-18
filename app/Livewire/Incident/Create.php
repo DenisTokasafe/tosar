@@ -1429,7 +1429,14 @@ class Create extends Component
             // Contoh:
             // $this->storeToDatabase();
 
-            session()->flash('message', 'Data SENTRY berhasil disimpan.');
+            $this->dispatch('alert', [
+                'text' => "Laporan berhasil dikirim!",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+            ]);
         } catch (ValidationException $e) {
             // 3. Jika gagal, tembakkan event untuk menandai field komentar yang error di UI
             $this->dispatchValidationEvents($e->validator->errors());
