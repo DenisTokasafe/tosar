@@ -19,25 +19,26 @@
             <div wire:loading.remove wire:target="visual_evidence" class="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
                 @if($visual_evidence)
                 @foreach($visual_evidence as $index => $image)
-                <div class="relative aspect-square group">
-                    @php
-                    $extension = strtolower($image->getClientOriginalExtension());
-                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                    @endphp
+                @php
+                // Cek apakah file ini memiliki error validasi
+                $hasError = $errors->has("visual_evidence.$index");
+                @endphp
 
-                    @if($isImage)
-                    <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border rounded-lg shadow-sm" />
-                    @else
-                    <div class="flex flex-col items-center justify-center w-full h-full border rounded-lg bg-base-200">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" />
+                <div class="relative aspect-square group {{ $hasError ? 'ring-2 ring-error rounded-lg' : '' }}">
+                    @if($hasError)
+                    {{-- Tampilan jika file error --}}
+                    <div class="flex flex-col items-center justify-center w-full h-full border rounded-lg bg-error/10 border-error text-error">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        <span class="text-[8px] px-1 truncate w-full text-center">{{ $image->getClientOriginalName() }}</span>
+                        <span class="text-[8px] font-bold">FORMAT SALAH</span>
                     </div>
+                    @else
+                    {{-- Preview Gambar Normal Anda --}}
+                    <img src="{{ $image->temporaryUrl() }}" ... />
                     @endif
 
-                    <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
-                        class="absolute flex items-center justify-center w-6 h-6 font-bold text-white rounded-full shadow-md -top-2 -right-2 bg-error">✕</button>
+                    <button wire:click="removeFile('visual_evidence', {{ $index }})" ...>✕</button>
                 </div>
                 @endforeach
                 @endif

@@ -22,7 +22,7 @@
 
         <span @class([ 'btn btn-xs' , 'btn-info'=> !$disabled,
             'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled,
-            'btn-disabled bg-error text-error-component border-none' => $errors->has($model)
+            'btn-disabled bg-error text-error-content border-none' => $errors->has($model)
             ])>
             {{ __($title) }}
         </span>
