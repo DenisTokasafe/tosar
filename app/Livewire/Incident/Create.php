@@ -534,6 +534,26 @@ class Create extends Component
 
     public function mount()
     {
+        $this->addRow('pemimpin');
+
+        $this->addRow('facilitator');
+
+        $this->addRow('anggota');
+
+        $this->addRow('timelines');
+
+        $this->addRow('unsafe_conditions');
+
+        $this->addRow('unsafe_acts');
+
+        $this->addRow('personal_factors');
+
+        $this->addRow('job_factors');
+
+        $this->addRow('control_system_factors');
+
+        $this->addCorrectiveRow();
+
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
