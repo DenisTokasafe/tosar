@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('action_incidents', function (Blueprint $table) {
+        Schema::create('incident_attachments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
-            $table->text('action_plan');
-            $table->foreignId('pic_id')->constrained('users'); // Penanggung jawab
-            $table->date('due_date');
-            $table->dateTime('completed_at')->nullable();
+            $table->foreignId('incident_report_id')->constrained()->onDelete('cascade');
+            $table->string('file_path');
+            $table->string('file_name');
+            $table->string('file_type'); // visual / document
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('action_incidents');
+        Schema::dropIfExists('incident_attachments');
     }
 };

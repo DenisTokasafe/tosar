@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incident_body_parts', function (Blueprint $table) {
+        Schema::create('timeline_analyses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('incident_id')->constrained()->cascadeOnDelete();
-            // Gunakan foreignId yang merujuk ke tabel master body_parts
-            $table->foreignId('body_part_id')->constrained('body_parts')->cascadeOnDelete();
+            $table->foreignId('incident_report_id')->constrained()->onDelete('cascade');
+            $table->json('analysis_steps'); // Menyimpan array why1, why2, dsb
+            $table->integer('why_count_used');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('incident_body_parts');
+        Schema::dropIfExists('timeline_analyses');
     }
 };

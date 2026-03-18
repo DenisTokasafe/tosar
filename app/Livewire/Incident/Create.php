@@ -36,7 +36,6 @@ class Create extends Component
 
     public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
     public $date_time, $pelapor_id, $manualPelaporName;
-    public $kondisi_tidak_aman, $tindakan_tidak_aman;
     public $department_id, $contractor_id, $penanggungJawab;
     public $deptCont = 'dept';
     public $keyWord = 'kta';
@@ -159,9 +158,7 @@ class Create extends Component
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
 
-            // Mutual Exclusion KTA/TTA
-            'kondisi_tidak_aman' => 'nullable|required_without:tindakan_tidak_aman',
-            'tindakan_tidak_aman' => 'nullable|required_without:kondisi_tidak_aman',
+
 
             // Mutual Exclusion Dept/Contractor
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
@@ -301,8 +298,7 @@ class Create extends Component
             'date_time'         => __('Tanggal dan Waktu'),
 
             // KTA & TTA
-            'kondisi_tidak_aman'  => __('Kategori Kondisi Tidak Aman'),
-            'tindakan_tidak_aman' => __('Kategori Tindakan Tidak Aman'),
+
             'keyWord'             => __('Jenis Bahaya'),
 
             // Organisasi
@@ -458,8 +454,7 @@ class Create extends Component
             'key_learning.min' => __('Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).'),
 
             // --- PESAN KHUSUS LOGIKA SENTRY ---
-            'kondisi_tidak_aman.required_without'  => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
-            'tindakan_tidak_aman.required_without' => __('Mohon isi Tindakan Tidak Aman atau Kondisi Tidak Aman.'),
+
             'department_id.required_without'       => __('Silakan pilih Departemen atau Kontraktor.'),
             'contractor_id.required_without'       => __('Pilih Kontraktor atau Department terkait.'),
         ];
@@ -482,8 +477,7 @@ class Create extends Component
                     'location_specific',
                     'date_time',
                     'pelapor_id',
-                    'kondisi_tidak_aman',
-                    'tindakan_tidak_aman',
+
                     'department_id',
                     'contractor_id',
                     'deptCont',
@@ -694,15 +688,7 @@ class Create extends Component
         // Lanjutkan untuk array lainnya (pemimpin, anggota, dll) dengan pola empty() yang sama
     }
 
-    public function updatedKeyWord($value)
-    {
-        // Bersihkan nilai yang tidak terpilih agar validasi required_without atau required_if tidak bentrok
-        if ($value === 'kta') {
-            $this->tindakan_tidak_aman = null;
-        } elseif ($value === 'tta') {
-            $this->kondisi_tidak_aman = null;
-        }
-    }
+
     public function updatedDeptCont($value)
     {
         if ($value === 'department') {
@@ -1417,6 +1403,24 @@ class Create extends Component
      * Mendefinisikan pesan error kustom
      */
 
+    /**
+     * Helper untuk menembakkan event validasi ke frontend
+     */
+    protected function dispatchValidationEvents($errors)
+    {
+        $komentarFields = [
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ];
+
+        foreach ($komentarFields as $field) {
+            if ($errors->has($field)) {
+                $this->dispatch('validate-' . $field);
+            }
+        }
+    }
     public function save()
     {
         try {
@@ -1446,22 +1450,154 @@ class Create extends Component
         }
     }
 
-    /**
-     * Helper untuk menembakkan event validasi ke frontend
-     */
-    protected function dispatchValidationEvents($errors)
-    {
-        $komentarFields = [
-            'penerimaan_komentar_contractor',
-            'penerimaan_komentar_internal',
-            'penerimaan_komentar_ohs',
-            'penerimaan_komentar_ktt'
-        ];
 
-        foreach ($komentarFields as $field) {
-            if ($errors->has($field)) {
-                $this->dispatch('validate-' . $field);
-            }
-        }
+    protected function prepareArrayData()
+    {
+        return [
+            // KELOMPOK 1: INFORMASI DASAR (Header)
+            'header' => [
+                'event_type_id'     => $this->event_type_id,
+                'event_sub_type_id' => $this->event_sub_type_id,
+                'date_time'         => $this->date_time,
+                'location_id'       => $this->location_id,
+                'location_specific' => $this->location_specific,
+                'department_id'     => $this->department_id,
+                'contractor_id'     => $this->contractor_id,
+                'penanggung_jawab'  => $this->penanggungJawab,
+                'pelapor_id'        => $this->pelapor_id,
+                'manual_pelapor'    => $this->manualPelaporName,
+                'description'       => $this->description, // 5W+1H
+                'emergency_action'  => $this->emergency_action,
+                // DATA DARI PART 8 (Key Learning)
+                'key_learning'  => $this->key_learning,
+                // PART 9: KOMENTAR & APPROVAL
+                'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
+                'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
+
+                'pm_internal_comment'   => $this->penerimaan_komentar_internal,
+                'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
+
+                'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
+                'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
+
+                // Logika kondisional KTT (Hanya Level 3, 4, 5)
+                'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
+                    ? $this->penerimaan_komentar_ktt : null,
+                'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
+                    ? $this->penerimaan_komentar_ktt_id : null,
+            ],
+
+            // KELOMPOK 2: RISK MATRIX INTEGRATION
+            'risk_assessment' => [
+                'likelihood_id'  => $this->likelihood_id,
+                'consequence_id' => $this->consequence_id,
+                // Data tambahan dari model RiskAssessment yang tampil di UI
+                'rating_name'    => $this->RiskAssessment?->name,
+                'deadline'       => $this->RiskAssessment?->notes,
+            ],
+
+            // KELOMPOK 3: KATEGORI BAHAYA & DAMPAK (Injury vs Damage)
+            'impact_details' => [
+                // Logika isInjury
+                'is_injury'     => $this->isInjury,
+                'injury_data'   => $this->isInjury ? [
+                    'category' => $this->selectedBodyPartCategory,
+                    'part_id'  => $this->selectedBodyPart,
+                ] : null,
+
+                'damage_data'   => !$this->isInjury ? [
+                    'detail'   => $this->damage_detail,
+                ] : null,
+            ],
+
+            // KELOMPOK PART 2: PERSONEL TERLIBAT LANGSUNG
+            'pihak_terlibat' => collect($this->directly_involved)->map(function ($person, $index) {
+                return [
+                    'employee_id'      => $person['employee_id'] ?? null, // ID dari DB jika ada
+                    'employee_name'    => $person['employee_name'],
+                    'employee_nik'     => $person['employee_nik'],
+                    'dept_cont'        => $person['dept_cont'],
+                    'jabatan'          => $person['jabatan'],
+                    'roster'           => $person['roster'],
+                    'shift'            => $person['sift'], // Sesuaikan typo 'sift' dari model Anda
+                    'keterlibatan'     => $person['keterlibatan'],
+                    'pengalaman_kerja' => $person['pengalaman_kerja'],
+                ];
+            })->toArray(),
+
+            // KELOMPOK PART 3: TIM INVESTIGASI
+            'tim_investigasi' => collect()
+                ->concat(collect($this->pemimpin)->map(fn($item) => array_merge($item, ['role' => 'Pemimpin'])))
+                ->concat(collect($this->facilitator)->map(fn($item) => array_merge($item, ['role' => 'Facilitator'])))
+                ->concat(collect($this->anggota)->map(fn($item) => array_merge($item, ['role' => 'Anggota'])))
+                ->map(function ($member) {
+                    return [
+                        'user_id' => $member['user_id'],
+                        'dept'    => $member['dept'],
+                        'jabatan' => $member['jabatan'],
+                        'role'    => $member['role'],
+                    ];
+                })->toArray(),
+
+            // KELOMPOK PART 4: ANALISIS PEEPO
+            'analisis_peepo' => collect($this->peepoFactors)->map(function ($label, $key) {
+                return [
+                    'factor_name' => $label, // e.g., People, Equipment
+                    'factor_key'  => $key,   // e.g., P, E, E, P, O
+                    'temuan'      => $this->peepo[$key]['temuan'] ?? null,
+                    'deskripsi'   => $this->peepo[$key]['deskripsi'] ?? null,
+                ];
+            })->values()->toArray(),
+
+            // KELOMPOK PART 5: TIMELINE & 5-WHYS ANALYSIS
+            'analysis_timeline' => collect($this->timelines)->map(function ($line, $index) {
+                // Mengumpulkan data why1, why2, dst. berdasarkan $whyCount yang aktif
+                $whys = [];
+                for ($i = 1; $i <= $this->whyCount; $i++) {
+                    $whys["why$i"] = $line["why$i"] ?? null;
+                }
+
+                return [
+                    'original_description' => $this->description, // Referensi dari Part 1
+                    'analysis_steps'       => $whys, // Disimpan sebagai array/JSON
+                    'why_count_used'       => $this->whyCount,
+                ];
+            })->toArray(),
+
+            // KELOMPOK PART 6: ANALISIS PENYEBAB (SCAT)
+            'penyebab_insiden' => [
+                // 1. PENYEBAB LANGSUNG
+                'langsung' => [
+                    'kondisi_tidak_aman' => $this->unsafe_conditions,
+                    'perilaku_tidak_aman' => $this->unsafe_acts,
+                ],
+
+                // 2. PENYEBAB DASAR
+                'dasar' => [
+                    'faktor_pribadi'   => $this->personal_factors,
+                    'faktor_pekerjaan' => $this->job_factors,
+                    'sistem_kontrol'   => $this->control_system_factors,
+                ],
+            ],
+
+            // KELOMPOK PART 7: DOKUMENTASI & TINDAKAN PERBAIKAN
+            'dokumentasi' => [
+                'visual_evidence'      => $this->visual_evidence, // Pastikan diproses dengan store() nanti
+                'supporting_documents' => $this->supporting_documents,
+            ],
+
+            'tindakan_perbaikan' => collect($this->corrective_actions)->map(function ($action) {
+                return [
+                    'description'     => $action['action_description'],
+                    'hierarchy'       => $action['control_hierarchy'],
+                    'pic_user_id'     => $action['name'], // ID dari searchable select
+                    'due_date'        => $action['due_date'],
+                    'completion_date' => $action['actual_completion_date'] ?? null,
+                    'status'          => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
+                ];
+            })->toArray(),
+
+
+        ];
     }
 }

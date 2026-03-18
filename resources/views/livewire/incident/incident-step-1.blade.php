@@ -1,19 +1,12 @@
-<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-3'=> $this->hasSubTypes,
+<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-1'=> $this->hasSubTypes,
     'md:grid-cols-2' => !$this->hasSubTypes,])>
     <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
     @if($this->hasSubTypes)
     <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
     @endif
-    <x-form.select-categroy-bahaya
-        options_label="-- Pilih Kategori Insiden --"
-        :key-word="$keyWord"
-        :ktas="$ktas"
-        :ttas="$ttas"
-        model_kta="kondisi_tidak_aman"
-        model_tta="tindakan_tidak_aman"
-        required="true" />
+
 </div>
-<div class="grid grid-cols-1 gap-2  mb-8 md:grid-cols-2 lg:grid-cols-3">
+<div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
     <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
     <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
     {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
