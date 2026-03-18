@@ -1232,20 +1232,25 @@ class Create extends Component
     }
     public function addCorrectiveRow()
     {
+        // 1. Definisikan struktur array dengan lengkap
         $this->corrective_actions[] = [
             'action_description' => '',
-            'name' => '', // Sesuai modelid
+            'control_hierarchy' => '', // Tambahkan ini agar select tidak error
+            'name' => '',
             'due_date' => null,
             'actual_completion_date' => null,
             'inspector_id' => null,
+            'id_number' => '', // Tambahkan jika digunakan di selectActPelapor
+            'dept_con' => '',  // Tambahkan jika digunakan di selectActPelapor
         ];
 
         $index = count($this->corrective_actions) - 1;
 
-        // Inisialisasi pendukung UI
+        // 2. Inisialisasi pendukung UI
         $this->searchPetugas[$index] = '';
         $this->showDropdownPetugas[$index] = false;
-        $this->corrective_actions[$index] = [];
+
+        // JANGAN tambahkan $this->corrective_actions[$index] = []; di sini
     }
 
     /**
@@ -1292,27 +1297,28 @@ class Create extends Component
         $index = collect($this->showDropdownPetugas)->search(true);
 
         if ($index !== false) {
-            // 1. Simpan data ke array corrective_actions sesuai modelid di Blade
-            $this->corrective_actions[$index]['name'] = $name;
-
-            // Ambil detail tambahan dari database
             $inspector = User::find($id);
-            if ($inspector) {
-                // Jika Anda punya array khusus inspectors untuk detail tambahan
-                $this->corrective_actions[$index] = [
-                    'name' => $inspector->name,
-                    'id_number' => $inspector->employee_id,
-                    'dept_con' => $inspector->department_name,
-                ];
 
-                // Simpan ID ke corrective_actions untuk foreign key database
+            if ($inspector) {
+                // CARA TERBAIK: Update key spesifik tanpa menghapus data lama (action_description, dll)
+                $this->corrective_actions[$index]['name'] = $inspector->name;
+                $this->corrective_actions[$index]['id_number'] = $inspector->employee_id;
+                $this->corrective_actions[$index]['dept_con'] = $inspector->department_name;
                 $this->corrective_actions[$index]['inspector_id'] = $inspector->id;
+
+                // Atau jika ingin menggunakan array_merge:
+                // $this->corrective_actions[$index] = array_merge($this->corrective_actions[$index], [
+                //     'name' => $inspector->name,
+                //     'inspector_id' => $inspector->id,
+                //     'id_number' => $inspector->employee_id,
+                //     'dept_con' => $inspector->department_name,
+                // ]);
             }
 
-            // 2. Update search input (modelsearch) agar input field menampilkan nama pilihan
+            // Update search input agar input field menampilkan nama pilihan
             $this->searchPetugas[$index] = $name;
 
-            // 3. Tutup dropdown untuk baris tersebut
+            // Tutup dropdown
             $this->showDropdownPetugas[$index] = false;
         }
     }
