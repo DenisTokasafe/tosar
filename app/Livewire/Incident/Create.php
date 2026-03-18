@@ -138,6 +138,7 @@ class Create extends Component
     public $penerimaan_komentar_internal;
     public $penerimaan_komentar_ohs;
     public $penerimaan_komentar_ktt;
+    public $key_learning;
 
     public $searchNamePenerimaan = [
         'kontraktor' => '',
@@ -249,6 +250,8 @@ class Create extends Component
                 // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
                 'after_or_equal:corrective_actions.*.due_date'
             ],
+            // Part 8
+            'key_learning' => 'required|string|min:10',
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -437,6 +440,9 @@ class Create extends Component
             'corrective_actions.*.name.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
             'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
             'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+            // Part 8
+            'key_learning.required' => __('Kunci pembelajaran wajib diisi sebagai bahan evaluasi.'),
+            'key_learning.min' => __('Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).'),
 
             // --- PESAN KHUSUS LOGIKA SENTRY ---
             'kondisi_tidak_aman.required_without'  => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
@@ -556,6 +562,12 @@ class Create extends Component
                     'corrective_actions.*.due_date',
                     'corrective_actions.*.actual_completion_date',
                 ];
+                break;
+            case 8:
+                $fields = [
+                    'key_learning'
+                ];
+                $this->dispatch('validate-key_learning');
                 break;
             case 9:
                 $fields = [
