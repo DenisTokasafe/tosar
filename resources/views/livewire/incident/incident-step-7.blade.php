@@ -34,7 +34,6 @@
                 @endforeach
                 @endif
             </div>
-            <x-label-error :messages="$errors->get('visual_evidence.*')" />
         </div>
 
         {{-- Dokumen Pendukung --}}
@@ -58,7 +57,6 @@
                 @endforeach
                 @endif
             </div>
-            <x-label-error :messages="$errors->get('supporting_documents.*')" />
         </div>
     </div>
 </fieldset>

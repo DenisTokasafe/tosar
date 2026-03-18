@@ -332,7 +332,8 @@ class Create extends Component
             'anggota.*.jabatan' => __('Jabatan Anggota'),
             // Part 7
             // Validasi Dokumen Pendukung (Multiple)
-
+            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
             // Tindakan Perbaikan (Corrective Actions)
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),

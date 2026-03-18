@@ -49,18 +49,14 @@
     <input
         type="file"
         id="{{ $id }}"
-        {{-- Gabungkan semua atribut sekaligus --}}
+        wire:model="{{ $model }}"
+
         {{ $attributes->merge([
         'accept' => '*',
-        'wire:model.live' => $model,
         'multiple' => $multiple,
         'disabled' => $disabled
-    ])->whereDoesntStartWith('wire:model') }}
-        {{-- ^ Note: Kita tetap memisahkan wire:model jika Anda ingin kontrol manual via prop $model --}}
+    ])->except(['wire:model', 'wire:model.live', 'wire:model.blur']) }}
 
-        {{-- Karena kita pakai wire:model="{{ $model }}" secara eksplisit di bawah,
-        kita harus membuang wire:model dari $attributes agar tidak double --}}
-        wire:model="{{ $model }}"
         class="hidden" />
 
     @error($model . '.*')
