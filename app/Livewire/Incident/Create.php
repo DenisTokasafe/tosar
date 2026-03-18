@@ -713,22 +713,40 @@ class Create extends Component
 
     public function updatedVisualEvidence()
     {
+        try {
+            // 1. Validasi setiap file di dalam array secara real-time
+            $this->validateOnly('visual_evidence.*', [
+                'visual_evidence.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            ], [
+                'visual_evidence.*.image' => 'File harus berupa gambar.',
+                'visual_evidence.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
+                'visual_evidence.*.max'   => 'Ukuran foto maksimal 2MB.',
+            ]);
 
-        // Hapus file-file lama (opsional, tergantung keinginan jika user ganti semua)
-        foreach ($this->visual_evidence_paths as $oldPath) {
-            FileHelper::deleteFile($oldPath);
-        }
+            // 2. Jika validasi lolos, bersihkan file lama dari storage (jika ada)
+            if (!empty($this->visual_evidence_paths)) {
+                foreach ($this->visual_evidence_paths as $oldPath) {
+                    FileHelper::deleteFile($oldPath);
+                }
+            }
 
-        // Reset array path
-        $this->visual_evidence_paths = [];
+            // 3. Reset array path untuk data baru
+            $this->visual_evidence_paths = [];
 
-        // Looping setiap file yang diupload
-        foreach ($this->visual_evidence as $file) {
-            // Simpan setiap file ke array paths
-            $this->visual_evidence_paths[] = FileHelper::compressAndStore(
-                $file,
-                'incident/visual_evidence/documentation'
-            );
+            // 4. Looping dan simpan (Compress) hanya jika file valid
+            foreach ($this->visual_evidence as $file) {
+                $this->visual_evidence_paths[] = FileHelper::compressAndStore(
+                    $file,
+                    'incident/visual_evidence/documentation'
+                );
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 5. AUTO-CLEAR: Jika ada file yang salah format (seperti PDF),
+            // kita reset array-nya agar preview file yang salah hilang dari UI.
+            $this->visual_evidence = [];
+
+            // Lempar kembali error agar muncul di komponen x-form.upload
+            throw $e;
         }
     }
 

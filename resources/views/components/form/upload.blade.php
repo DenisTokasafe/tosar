@@ -17,12 +17,12 @@
     <label for="{{ $disabled ? '' : $id }}"
         @class([ 'flex items-center gap-2 border rounded border-info' , 'cursor-pointer hover:ring-1 hover:border-info hover:ring-info hover:outline-hidden'=> !$disabled,
         'cursor-not-allowed bg-gray-100 opacity-60 border-gray-300' => $disabled,
-        'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0'=>$errors->has($model)
+        'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0'=>$errors->has($model) || $errors->has($model . '.*')
         ])>
 
         <span @class([ 'btn btn-xs' , 'btn-info'=> !$disabled,
             'btn-disabled bg-gray-300 text-gray-500 border-none' => $disabled,
-            'btn-disabled bg-error text-error-content border-none' => $errors->has($model)
+            'btn-disabled bg-error text-error-content border-none' => $errors->has($model)|| $errors->has($model . '.*')
             ])>
             {{ __($title) }}
         </span>
