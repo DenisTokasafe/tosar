@@ -324,13 +324,7 @@ class Create extends Component
             'anggota.*.jabatan' => __('Jabatan Anggota'),
             // Part 7
             // Validasi Dokumen Pendukung (Multiple)
-            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
-            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
 
-            // Validasi Bukti Visual (Multiple Image)
-            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
-            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
-            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
             // Tindakan Perbaikan (Corrective Actions)
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
@@ -395,7 +389,13 @@ class Create extends Component
             'exists'   => __('Pilihan :attribute tidak valid.'),
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
+            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
+            'supporting_documents.*.max'   => __('Ukuran file tidak boleh lebih dari 5MB.'),
 
+            // Validasi Bukti Visual (Multiple Image)
+            'visual_evidence.*.image' => __('Salah satu file bukti visual bukan gambar yang valid.'),
+            'visual_evidence.*.mimes' => __('Format gambar harus JPG, JPEG, atau PNG.'),
+            'visual_evidence.*.max'   => __('Ukuran gambar maksimal adalah 2MB.'),
 
             // Pesan Custom untuk SENTRY
             'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
