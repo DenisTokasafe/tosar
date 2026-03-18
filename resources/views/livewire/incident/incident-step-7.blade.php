@@ -122,12 +122,12 @@
                             :showdropdown="$showDropdownPetugas[$index] ?? false" :manualMode="$manualActPelaporMode" clickaction="selectActPelapor" />
                     </td>
                     <td class="w-1/6 text-xs">
-                        <x-form.tgl
+                        <x-form.tgl-waktu
                             model="corrective_actions.{{ $index }}.due_date"
                             :min-date="now()->format('Y-m-d')" />
                     </td>
                     <td class="w-1/6 text-xs">
-                        <x-form.tgl
+                        <x-form.tgl-waktu
                             model="corrective_actions.{{ $index }}.actual_completion_date"
                             :min-date="$corrective_actions[$index]['due_date'] ?? now()->format('Y-m-d')" />
 
