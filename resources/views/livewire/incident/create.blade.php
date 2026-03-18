@@ -17,54 +17,52 @@
             {{-- Container Utama Collapse --}}
             <div
             wire:key="step-container-{{ $i }}"
-            {{--
-            Penjelasan Class Efek (Gambar 2):
-            1. transition-all duration-300 ease-in-out: Agar gerakan halus saat mouse masuk/keluar.
-            2. hover:-translate-x-4: (Geser Kiri) Saat di-hover, elemen bergeser 1rem (16px) ke kiri.
-               Ganti ke 'hover:scale-105' jika ingin efek membesar, bukan bergeser.
-            3. hover:shadow-2xl: Memberikan bayangan sangat tegas saat menonjol keluar.
-            4. hover:z-10 relative: Memastikan kartu yang menonjol berada di atas kartu lain (z-index).
-        --}}
-            class="mb-3 border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl
-               relative z-0
-               transition-all duration-300 ease-in-out
-               -translate-x-4 shadow-2xl z-10 border-info
-               {{ $currentStep < $i ? 'opacity-60 pointer-events-none ' : '' }}">
-            {{-- Input Radio DaisyUI --}}
-            <input type="radio" name="my-accordion-2"
-                wire:click="goToStep({{ $i }})"
-                value="{{ $i }}"
-                {{ $currentStep == $i ? 'checked' : '' }} />
+            @class([
+            // Class Dasar 'mb-3 border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl relative transition-all duration-500 ease-in-out group' ,
 
-            {{-- Judul (Title) dengan Background Gradient --}}
-            <div class="flex items-center justify-between font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-                <h3 class="text-sm font-bold tracking-wide uppercase">PART {{ $i }}</h3>
-            </div>
+            // EFEK SHIFT LEFT SAAT FOCUS (Aktif Hanya Jika Step ini Terbuka)
+            // Menggunakan focus-within agar kartu tetap bergeser selama user berinteraksi di dalamnya 'z-10 border-info shadow-md focus-within:-translate-x-6 focus-within:shadow-2xl'=> $currentStep == $i,
 
-            {{-- Konten --}}
-            <div class="text-xs collapse-content bg-base-100">
-                <div class="pt-4">
-                    @include('livewire.incident.incident-step-' . $i)
+            // Status untuk Part yang Terkunci atau Belum Sampai
+            'z-0 opacity-60 pointer-events-none' => $currentStep < $i, 'z-0 opacity-90'=> $currentStep > $i,
+                ])
+                >
+                {{-- Input Radio DaisyUI --}}
+                <input type="radio" name="my-accordion-2"
+                    class="focus:outline-none" {{-- Menghilangkan ring biru default browser --}}
+                    wire:click="goToStep({{ $i }})"
+                    value="{{ $i }}"
+                    {{ $currentStep == $i ? 'checked' : '' }} />
 
-                    {{-- Navigasi Tombol --}}
-                    <div class="flex justify-end pt-4 mt-4 border-t border-base-200">
-                        @if ($i < 9)
-                            <button wire:click="nextStep" class="transition-transform btn btn-primary btn-xs hover:scale-110">
-                            Lanjut ke Part {{ $i + 1 }}
-                            </button>
-                            @else
-                            {{-- Tombol Submit di Part 9 --}}
-                            <button type="button" class="transition-transform btn btn-xs btn-success hover:scale-110" wire:click="save">
-                                Submit Laporan SENTRY
-                            </button>
-                            @endif
+                {{-- Judul (Title) dengan Background Gradient --}}
+                <div @class([ 'flex items-center justify-between font-semibold collapse-title transition-all duration-300' , 'bg-linear-to-r/oklab from-success to-info text-white'=> $currentStep == $i,
+                    'bg-base-200 text-base-content' => $currentStep != $i,
+                    ])>
+                    <h3 class="text-sm font-bold tracking-wide uppercase">PART {{ $i }}</h3>
+                </div>
+
+                {{-- Konten --}}
+                <div class="text-xs collapse-content bg-base-100">
+                    <div class="pt-4">
+                        @include('livewire.incident.incident-step-' . $i)
+
+                        {{-- Navigasi Tombol --}}
+                        <div class="flex justify-end pt-4 mt-4 border-t border-base-200">
+                            @if ($i < 9)
+                                <button wire:click="nextStep" class="transition-transform btn btn-primary btn-xs hover:scale-110">
+                                Lanjut ke Part {{ $i + 1 }}
+                                </button>
+                                @else
+                                {{-- Tombol Submit di Part 9 --}}
+                                <button type="button" class="transition-transform btn btn-xs btn-success hover:scale-110" wire:click="save">
+                                    Submit Laporan SENTRY
+                                </button>
+                                @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-            </div>
-            @endfor
-            {{-- Navigasi Step --}}
-
+                </div>
+                @endfor
 
     </x-incident.layout>
 
