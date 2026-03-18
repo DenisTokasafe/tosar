@@ -29,7 +29,7 @@
                relative z-0
                transition-all duration-300 ease-in-out
                hover:-translate-x-4 hover:shadow-2xl hover:z-10 hover:border-info
-               {{ $currentStep < $i ? 'opacity-60  transition-all duration-300 ease-in-out
+               {{ $currentStep < $i ? 'opacity-60 pointer-events-none transition-all duration-300 ease-in-out
                hover:-translate-x-4 hover:shadow-2xl' : '' }}">
             {{-- Input Radio DaisyUI --}}
             <input type="radio" name="my-accordion-2"
