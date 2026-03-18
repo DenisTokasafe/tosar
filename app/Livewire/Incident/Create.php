@@ -46,8 +46,8 @@ class Create extends Component
     public $likelihoods = [], $consequences = [],
         $location_spesific,
         $documentation,
-        $visual_evidence, $visual_evidence_path,
-        $supporting_documents, $supporting_documents_path;
+        $visual_evidence_path,
+        $supporting_documents_path;
     #[Url(as: 'step')]
 
 
@@ -120,7 +120,9 @@ class Create extends Component
     // State untuk Searchable Select di dalam baris
     public $searchPetugas = [];         // Menampung input teks pencarian per index
     public $showDropdownPetugas = [];   // Menampung status open/close per index
-    public $pelaporsAct = [];           // Hasil query pencarian (biasanya global atau di-filter)
+    public $pelaporsAct = [];
+    public $visual_evidence = [];
+    public $supporting_documents = [];      // Hasil query pencarian (biasanya global atau di-filter)
     public $manualActPelaporMode = false; // Jika mode manual global atau per baris
 
     // Properti untuk menyimpan ID terpilih
@@ -231,6 +233,9 @@ class Create extends Component
             // Validasi Kelemahan Sistem Kontrol
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
+            // Part 7
+            'visual_evidence.*' => 'image|max:2048', // Max 2MB per foto
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120', // Max 5MB per dokumen
             // Part 9
             'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -510,7 +515,13 @@ class Create extends Component
         }
     }
 
-
+    public function removeFile($property, $index)
+    {
+        if (isset($this->{$property}[$index])) {
+            unset($this->{$property}[$index]);
+            $this->{$property} = array_values($this->{$property}); // Reset index array
+        }
+    }
 
     // State untuk menampilkan dropdown
 

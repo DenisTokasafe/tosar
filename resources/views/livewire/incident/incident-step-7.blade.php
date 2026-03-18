@@ -6,55 +6,48 @@
         {{-- Bukti Visual --}}
         <fieldset class="fieldset">
             <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" title="Pilih Gambar"
-                keterangan="Pilih Bukti Visual: Foto" :file="$visual_evidence" />
+                keterangan="Bisa pilih lebih dari 1 foto (JPG, PNG)" :file="$visual_evidence" multiple /> {{-- Tambah multiple --}}
 
-            <div wire:loading.remove wire:target="visual_evidence">
+            <div wire:loading.remove wire:target="visual_evidence" class="flex flex-wrap gap-2 mt-2">
                 @if($visual_evidence)
-                @php $extension = strtolower($visual_evidence->getClientOriginalExtension()); @endphp
-
-                @if(in_array($extension, ['jpg', 'jpeg', 'png']))
-                {{-- Preview Gambar --}}
-                <img src="{{ $visual_evidence->temporaryUrl() }}" class="w-40 h-auto mt-2 border rounded shadow-sm" />
-                @else
-                {{-- Fallback jika format lain --}}
-                <div class="flex items-center gap-2 p-2 mt-2 rounded bg-base-200">
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span class="text-sm">File: {{ $visual_evidence->getClientOriginalName() }}</span>
+                @foreach($visual_evidence as $index => $image)
+                <div class="relative group">
+                    <img src="{{ $image->temporaryUrl() }}" class="object-cover w-24 h-24 border rounded shadow-sm" />
+                    {{-- Opsional: Tombol hapus jika salah pilih --}}
+                    <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
+                        class="absolute flex items-center justify-center w-5 h-5 text-white rounded-full -top-2 -right-2 bg-error">✕</button>
                 </div>
-                @endif
+                @endforeach
                 @endif
             </div>
-            <x-label-error :messages="$errors->get('visual_evidence')" />
+            <x-label-error :messages="$errors->get('visual_evidence.*')" />
         </fieldset>
 
         {{-- Dokumen Pendukung --}}
         <fieldset class="fieldset">
             <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" title="Pilih Dokumen"
-                keterangan="Pilih Dokumen Pendukung: Word, PDF" :file="$supporting_documents" />
+                keterangan="Bisa pilih lebih dari 1 dokumen (PDF, Word)" :file="$supporting_documents" multiple />
 
-            <div wire:loading.remove wire:target="supporting_documents">
+            <div wire:loading.remove wire:target="supporting_documents" class="mt-2 space-y-2">
                 @if($supporting_documents)
-                @php $docExt = strtolower($supporting_documents->getClientOriginalExtension()); @endphp
-
-                <div class="flex items-center gap-2 p-2 mt-2 border border-dashed rounded border-base-300">
-                    @if($docExt == 'pdf')
-                    <x-icon.pdf class="w-8 h-8" />
-                    <span class="text-sm font-medium text-red-600">{{ $supporting_documents->getClientOriginalName() }}</span>
-                    @elseif(in_array($docExt, ['doc', 'docx']))
-                    <x-icon.word class="w-8 h-8" />
-                    <span class="text-sm font-medium text-blue-600">{{ $supporting_documents->getClientOriginalName() }}</span>
-                    @else
-                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
-                    </svg>
-                    <span class="text-sm text-gray-600">{{ $supporting_documents->getClientOriginalName() }}</span>
-                    @endif
+                @foreach($supporting_documents as $index => $doc)
+                @php $docExt = strtolower($doc->getClientOriginalExtension()); @endphp
+                <div class="flex items-center justify-between p-2 border border-dashed rounded border-base-300">
+                    <div class="flex items-center gap-2">
+                        @if($docExt == 'pdf') <x-icon.pdf class="w-6 h-6" />
+                        @elseif(in_array($docExt, ['doc', 'docx'])) <x-icon.word class="w-6 h-6" />
+                        @else <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h4v12H6z" />
+                        </svg>
+                        @endif
+                        <span class="w-40 text-xs font-medium truncate">{{ $doc->getClientOriginalName() }}</span>
+                    </div>
+                    <button type="button" wire:click="removeFile('supporting_documents', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
                 </div>
+                @endforeach
                 @endif
             </div>
-            <x-label-error :messages="$errors->get('supporting_documents')" />
+            <x-label-error :messages="$errors->get('supporting_documents.*')" />
         </fieldset>
     </div>
 </fieldset>
@@ -93,10 +86,16 @@
                             rows="2" />
                     </td>
                     <td class="w-1/4">
-                        <x-form.text_area
+                        <x-form.select
                             model="corrective_actions.{{ $index }}.control_hierarchy"
-                            placeholder="{{ __('Kontrol Hirarki...') }}"
-                            rows="2" />
+                            :options="[
+                                        ['id' => 'Eliminasi', 'name' => 'Eliminasi'],
+                                        ['id' => 'Substitusi', 'name' => 'Substitusi'],
+                                        ['id' => 'Engineering', 'name' => 'Rekayasa Teknik'],
+                                        ['id' => 'Administrasi', 'name' => 'Administrasi'],
+                                        ['id' => 'APD', 'name' => 'APD'],
+                                    ]"
+                            placeholder="Pilih Hirarki..." />
                     </td>
                     <td class="w-1/6">
                         <x-form.searchable-select-advanced
