@@ -40,7 +40,7 @@
 
     <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="fieldset-legend">Penerimaan & Komentar OHS Dept Head</legend>
-        <div x-data="ckeditorHelper('penerimaan_komentar_ohs')" wire:ignore>
+        <div x-data="ckeditorHelper('penerimaan_komentar_ohs')" wire:ignore wire:key="select-penerimaan-ohs">
             <div x-ref="editorElement" data-placeholder="Masukkan Penerimaan & Komentar OHS Dept Head..."></div>
         </div>
         <x-label-error :messages="$errors->get('penerimaan_komentar_ohs')" />
