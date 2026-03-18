@@ -332,41 +332,14 @@ class Create extends Component
                 $attributes["timelines.{$index}.why{$i}"] = "Analisis Mengapa (Why {$i}) pada Baris ke-{$rowNum}";
             }
         }
-        // SEKSI 1: PENYEBAB LANGSUNG
-        // Validasi Kondisi Tidak Aman
-        foreach ($this->unsafe_conditions as $index => $row) {
-            $rowNum = $index + 1;
-            $attributes["unsafe_conditions.{$index}.item"]        = __('Item Kondisi Tidak Aman Baris ke-') . $rowNum;
-            $attributes["unsafe_conditions.{$index}.description"] = __('Deskripsi Kondisi Tidak Aman Baris ke-') . $rowNum;
-        }
-
-        // Validasi Perilaku Tidak Aman
-        foreach ($this->unsafe_acts as $index => $row) {
-            $rowNum = $index + 1;
-            $attributes["unsafe_acts.{$index}.item"]        = __('Item Perilaku Tidak Aman Baris ke-') . $rowNum;
-            $attributes["unsafe_acts.{$index}.description"] = __('Deskripsi Perilaku Tidak Aman Baris ke-') . $rowNum;
-        }
-
-        // SEKSI 2: PENYEBAB DASAR
-        // Validasi Faktor Pribadi
-        foreach ($this->personal_factors as $index => $row) {
-            $rowNum = $index + 1;
-            $attributes["personal_factors.{$index}.item"]        = __('Item Faktor Pribadi Baris ke-') . $rowNum;
-            $attributes["personal_factors.{$index}.description"] = __('Deskripsi Faktor Pribadi Baris ke-') . $rowNum;
-        }
-
-        // Validasi Faktor Pekerjaan
-        foreach ($this->job_factors as $index => $row) {
-            $rowNum = $index + 1;
-            $attributes["job_factors.{$index}.item"]        = __('Item Faktor Pekerjaan Baris ke-') . $rowNum;
-            $attributes["job_factors.{$index}.description"] = __('Deskripsi Faktor Pekerjaan Baris ke-') . $rowNum;
-        }
-
-        // Validasi Kelemahan Sistem Kontrol
-        foreach ($this->control_system_factors as $index => $row) {
-            $rowNum = $index + 1;
-            $attributes["control_system_factors.{$index}.item"]        = __('Item Sistem Kontrol Baris ke-') . $rowNum;
-            $attributes["control_system_factors.{$index}.description"] = __('Deskripsi Sistem Kontrol Baris ke-') . $rowNum;
+        // Loop untuk membuat label yang dinamis dan user-friendly
+        foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
+            foreach ($this->$key as $index => $row) {
+                $rowNum = $index + 1;
+                $label = str_replace('_', ' ', ucwords($key, '_'));
+                $attributes["$key.$index.item"] = __("$label Baris $rowNum");
+                $attributes["$key.$index.description"] = __("Deskripsi $label Baris $rowNum");
+            }
         }
         return $attributes;
     }
