@@ -752,22 +752,40 @@ class Create extends Component
 
     public function updatedSupportingDocuments()
     {
+        try {
+            // 1. Validasi setiap dokumen (PDF, DOC, DOCX, XLS, XLSX)
+            $this->validateOnly('supporting_documents.*', [
+                'supporting_documents.*' => 'file|mimes:pdf,doc,docx,xls,xlsx|max:5120', // Max 5MB per file
+            ], [
+                'supporting_documents.*.file'  => 'Input harus berupa file valid.',
+                'supporting_documents.*.mimes' => 'Format file harus PDF, Word, atau Excel.',
+                'supporting_documents.*.max'   => 'Ukuran file dokumen maksimal 5MB.',
+            ]);
 
+            // 2. Bersihkan file lama dari storage jika validasi berhasil
+            if (!empty($this->supporting_documents_paths)) {
+                foreach ($this->supporting_documents_paths as $oldPath) {
+                    FileHelper::deleteFile($oldPath);
+                }
+            }
 
-        // Hapus file lama jika ada
-        foreach ($this->supporting_documents_paths as $oldPath) {
-            FileHelper::deleteFile($oldPath);
-        }
+            // 3. Reset array path
+            $this->supporting_documents_paths = [];
 
-        $this->supporting_documents_paths = [];
+            // 4. Proses penyimpanan file baru
+            foreach ($this->supporting_documents as $file) {
+                // FileHelper::compressAndStore akan menyimpan file asli jika bukan gambar
+                $this->supporting_documents_paths[] = FileHelper::compressAndStore(
+                    $file,
+                    'incident/supporting_documents/documentation'
+                );
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 5. AUTO-CLEAR: Jika ada file yang tidak sesuai format (misal user upload .exe atau .zip)
+            // Kita reset agar state di UI kembali bersih
+            $this->supporting_documents = [];
 
-        foreach ($this->supporting_documents as $file) {
-            // Karena FileHelper::compressAndStore sudah menangani non-gambar (file asli),
-            // kita bisa menggunakannya untuk PDF/Word juga
-            $this->supporting_documents_paths[] = FileHelper::compressAndStore(
-                $file,
-                'incident/supporting_documents/documentation'
-            );
+            throw $e;
         }
     }
 
