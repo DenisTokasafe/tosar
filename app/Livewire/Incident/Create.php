@@ -45,7 +45,9 @@ class Create extends Component
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
-        $documentation;
+        $documentation,
+        $visual_evidence_path,
+        $supporting_documents_path;
     #[Url(as: 'step')]
 
 
