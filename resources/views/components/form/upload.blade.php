@@ -63,7 +63,16 @@
         wire:model="{{ $model }}"
         class="hidden" />
 
-    @error($model . '.*') {{-- Tambahkan .* untuk menangkap error pada tiap file --}}
-    <span class="mt-1 text-xs text-error">{{ $message }}</span>
+    @error($model . '.*')
+    <span class="mt-1 text-[10px] text-error font-medium italic">
+        * {{ $message }}
+    </span>
+    @enderror
+
+    {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
+    @error($model)
+    <span class="mt-1 text-[10px] text-error font-medium italic">
+        * {{ $message }}
+    </span>
     @enderror
 </div>

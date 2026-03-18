@@ -375,6 +375,10 @@ class Create extends Component
             'supporting_documents.*.mimes' => 'Hanya file PDF dan Word yang diperbolehkan.',
             'supporting_documents.*.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
 
+            'visual_evidence.*.image' => 'Salah satu file bukti visual bukan gambar yang valid.',
+            'visual_evidence.*.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
+            'visual_evidence.*.max' => 'Ukuran gambar maksimal adalah 2MB.',
+
             // Pesan Custom untuk SENTRY
             'kondisi_tidak_aman.required_without'   => __('Mohon isi Kondisi atau Tindakan Tidak Aman.'),
             'department_id.required_without'        => __('Silakan pilih Departemen atau Kontraktor.'),
