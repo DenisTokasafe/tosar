@@ -656,13 +656,6 @@ class Create extends Component
 
     public function updatedVisualEvidence()
     {
-        $this->validate([
-            'visual_evidence.*' => [
-                'required',
-                'max:10240', // 10MB
-                'mimes:jpg,jpeg,png,webp,avif,heic'
-            ],
-        ]);
 
         // Hapus file-file lama (opsional, tergantung keinginan jika user ganti semua)
         foreach ($this->visual_evidence_paths as $oldPath) {
@@ -684,14 +677,7 @@ class Create extends Component
 
     public function updatedSupportingDocuments()
     {
-        $this->validate([
-            'supporting_documents.*' => [
-                'required',
-                'file',
-                'mimes:pdf,doc,docx',
-                'max:10240',
-            ],
-        ]);
+
 
         // Hapus file lama jika ada
         foreach ($this->supporting_documents_paths as $oldPath) {
