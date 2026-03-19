@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use \App\Traits\WithDeptContSelection;
 use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
@@ -18,7 +19,11 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
+use App\Traits\WithSearchLocation;
+use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -26,9 +31,6 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use \App\Traits\WithDeptContSelection;
-use App\Traits\WithSearchLocation;
-use App\Traits\WithSearchPelapor;
 
 class Create extends Component
 {
@@ -1423,30 +1425,85 @@ class Create extends Component
     }
     public function save()
     {
+        // 1. Jalankan Validasi Global
+        $this->validate();
+
         try {
-            // 1. Jalankan Validasi Global
-            // Livewire otomatis mengambil array dari fungsi rules()
-            // dan pesan dari fungsi messages() yang sudah Anda buat.
-            $this->validate();
+            $result = DB::transaction(function () {
+                $data = $this->prepareArrayData();
 
-            // 2. Jika validasi lolos, lanjutkan proses penyimpanan ke Database
-            // Contoh:
-            // $this->storeToDatabase();
+                // A. Simpan Header Utama (Incident Report)
+                $report = \App\Models\IncidentReport::create($data['header']);
 
+                // B. Simpan Detail Dampak (Injury vs Damage) - model IncidentImpact
+                $report->impact()->create([
+                    'is_injury'    => $data['impact_details']['is_injury'],
+                    'body_part_id' => $data['impact_details']['is_injury'] ? $data['impact_details']['injury_data']['part_id'] : null,
+                    'damage_detail' => !$data['impact_details']['is_injury'] ? $data['impact_details']['damage_data']['detail'] : null,
+                ]);
+
+                // C. Simpan Personel Terlibat (Part 2) - model InvolvedPerson
+                $report->involvedPersons()->createMany($data['pihak_terlibat']);
+
+                // D. Simpan Tim Investigasi (Part 3) - model InvestigationTeam
+                $report->investigationTeams()->createMany($data['tim_investigasi']);
+
+                // E. Simpan Analisis PEEPO (Part 4) - model PeepoAnalysis
+                $report->peepoAnalyses()->createMany($data['analisis_peepo']);
+
+                // F. Simpan Timeline & 5-Whys (Part 5) - model TimelineAnalysis
+                $report->timelines()->createMany($data['analysis_timeline']);
+
+                // G. Simpan Tindakan Perbaikan (Part 7) - model CorrectiveAction
+                $report->correctiveActions()->createMany($data['tindakan_perbaikan']);
+
+                // H. Proses Upload Dokumentasi (Part 7) - model IncidentAttachment
+                // Dokumentasi Visual (Foto/Gambar)
+                if ($this->visual_evidence) {
+                    foreach ($this->visual_evidence as $file) {
+                        $path = $file->store('incident/visuals', 'public');
+                        $report->attachments()->create([
+                            'file_path' => $path,
+                            'file_name' => $file->getClientOriginalName(),
+                            'file_type' => 'visual'
+                        ]);
+                    }
+                }
+
+                // Dokumen Pendukung (PDF/Doc)
+                if ($this->supporting_documents) {
+                    foreach ($this->supporting_documents as $doc) {
+                        $path = $doc->store('incident/documents', 'public');
+                        $report->attachments()->create([
+                            'file_path' => $path,
+                            'file_name' => $doc->getClientOriginalName(),
+                            'file_type' => 'document'
+                        ]);
+                    }
+                }
+
+                return $report;
+            });
+
+            // 3. Feedback Berhasil
             $this->dispatch('alert', [
-                'text' => "Laporan berhasil dikirim!",
+                'text' => "Laporan " . $result->report_number . " berhasil dikirim!",
                 'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
+                'destination' => '/incident/show/' . $result->id, // Arahkan ke detail laporan
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-        } catch (ValidationException $e) {
-            // 3. Jika gagal, tembakkan event untuk menandai field komentar yang error di UI
+        } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
-
-            // Lempar kembali error agar Livewire menampilkan pesan error di Blade
             throw $e;
+        } catch (\Exception $e) {
+            // Log error untuk mempermudah debugging sistem SENTRY
+            Log::error('Gagal menyimpan Incident Report: ' . $e->getMessage());
+
+            $this->dispatch('alert', [
+                'text' => "Gagal menyimpan laporan. Silakan periksa koneksi atau hubungi tim IT.",
+                'duration' => 7000,
+                'backgroundColor' => "background: #f44336;",
+            ]);
         }
     }
 
@@ -1473,20 +1530,16 @@ class Create extends Component
                 // PART 9: KOMENTAR & APPROVAL
                 'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
                 'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
-
                 'pm_internal_comment'   => $this->penerimaan_komentar_internal,
                 'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
-
                 'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
                 'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
-
                 // Logika kondisional KTT (Hanya Level 3, 4, 5)
                 'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
                     ? $this->penerimaan_komentar_ktt : null,
                 'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
                     ? $this->penerimaan_komentar_ktt_id : null,
             ],
-
             // KELOMPOK 2: RISK MATRIX INTEGRATION
             'risk_assessment' => [
                 'likelihood_id'  => $this->likelihood_id,
@@ -1495,7 +1548,6 @@ class Create extends Component
                 'rating_name'    => $this->RiskAssessment?->name,
                 'deadline'       => $this->RiskAssessment?->notes,
             ],
-
             // KELOMPOK 3: KATEGORI BAHAYA & DAMPAK (Injury vs Damage)
             'impact_details' => [
                 // Logika isInjury
@@ -1504,12 +1556,10 @@ class Create extends Component
                     'category' => $this->selectedBodyPartCategory,
                     'part_id'  => $this->selectedBodyPart,
                 ] : null,
-
                 'damage_data'   => !$this->isInjury ? [
                     'detail'   => $this->damage_detail,
                 ] : null,
             ],
-
             // KELOMPOK PART 2: PERSONEL TERLIBAT LANGSUNG
             'pihak_terlibat' => collect($this->directly_involved)->map(function ($person, $index) {
                 return [
@@ -1524,7 +1574,6 @@ class Create extends Component
                     'pengalaman_kerja' => $person['pengalaman_kerja'],
                 ];
             })->toArray(),
-
             // KELOMPOK PART 3: TIM INVESTIGASI
             'tim_investigasi' => collect()
                 ->concat(collect($this->pemimpin)->map(fn($item) => array_merge($item, ['role' => 'Pemimpin'])))
@@ -1538,7 +1587,6 @@ class Create extends Component
                         'role'    => $member['role'],
                     ];
                 })->toArray(),
-
             // KELOMPOK PART 4: ANALISIS PEEPO
             'analisis_peepo' => collect($this->peepoFactors)->map(function ($label, $key) {
                 return [
@@ -1548,7 +1596,6 @@ class Create extends Component
                     'deskripsi'   => $this->peepo[$key]['deskripsi'] ?? null,
                 ];
             })->values()->toArray(),
-
             // KELOMPOK PART 5: TIMELINE & 5-WHYS ANALYSIS
             'analysis_timeline' => collect($this->timelines)->map(function ($line, $index) {
                 // Mengumpulkan data why1, why2, dst. berdasarkan $whyCount yang aktif
@@ -1556,14 +1603,12 @@ class Create extends Component
                 for ($i = 1; $i <= $this->whyCount; $i++) {
                     $whys["why$i"] = $line["why$i"] ?? null;
                 }
-
                 return [
                     'original_description' => $this->description, // Referensi dari Part 1
                     'analysis_steps'       => $whys, // Disimpan sebagai array/JSON
                     'why_count_used'       => $this->whyCount,
                 ];
             })->toArray(),
-
             // KELOMPOK PART 6: ANALISIS PENYEBAB (SCAT)
             'penyebab_insiden' => [
                 // 1. PENYEBAB LANGSUNG
@@ -1571,7 +1616,6 @@ class Create extends Component
                     'kondisi_tidak_aman' => $this->unsafe_conditions,
                     'perilaku_tidak_aman' => $this->unsafe_acts,
                 ],
-
                 // 2. PENYEBAB DASAR
                 'dasar' => [
                     'faktor_pribadi'   => $this->personal_factors,
@@ -1579,13 +1623,11 @@ class Create extends Component
                     'sistem_kontrol'   => $this->control_system_factors,
                 ],
             ],
-
             // KELOMPOK PART 7: DOKUMENTASI & TINDAKAN PERBAIKAN
             'dokumentasi' => [
                 'visual_evidence'      => $this->visual_evidence, // Pastikan diproses dengan store() nanti
                 'supporting_documents' => $this->supporting_documents,
             ],
-
             'tindakan_perbaikan' => collect($this->corrective_actions)->map(function ($action) {
                 return [
                     'description'     => $action['action_description'],
