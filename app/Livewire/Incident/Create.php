@@ -390,14 +390,12 @@ class Create extends Component
     {
         // 1. Logika Auto-Status & Refresh untuk Corrective Actions
         if (str_contains($propertyName, 'corrective_actions')) {
-            // Tangkap index array dari propertyName (format: corrective_actions.0.actual_completion_date)
             $parts = explode('.', $propertyName);
 
             if (isset($parts[1]) && isset($parts[2])) {
                 $index = $parts[1];
                 $field = $parts[2];
 
-                // Jika yang diubah adalah tanggal selesai, update progress & status otomatis
                 if ($field === 'actual_completion_date') {
                     if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
                         $this->corrective_actions[$index]['status'] = 'Selesai';
@@ -408,8 +406,6 @@ class Create extends Component
                     }
                 }
             }
-
-            // Paksa render ulang agar indikator visual muncul
             $this->dispatch('refresh-component');
         }
 
@@ -422,6 +418,11 @@ class Create extends Component
 
         // 3. Jalankan validasi standar untuk field yang sedang diubah
         $this->validateOnly($propertyName);
+
+        /** * TAMBAHAN: FITUR ANTI-REFRESH
+         * Simpan seluruh state form ke session setiap kali ada perubahan.
+         */
+        session()->put('incident_form_data', $this->all());
     }
 
     // Komentar Standard
@@ -628,66 +629,41 @@ class Create extends Component
 
     public function mount()
     {
-        if (empty($this->directly_involved)) {
-
-            $this->addDirectlyInvolvedRow();
-        }
-        $this->addRow('pemimpin');
-
-        $this->addRow('facilitator');
-
-        $this->addRow('anggota');
-
-        $this->addRow('timelines');
-
-        $this->addRow('unsafe_conditions');
-
-        $this->addRow('unsafe_acts');
-
-        $this->addRow('personal_factors');
-
-        $this->addRow('job_factors');
-
-        $this->addRow('control_system_factors');
-
-        $this->addCorrectiveRow();
-
-        if (session()->has('incident_data')) {
-            $this->fill(session('incident_data'));
-        }
-
+        // 1. Inisialisasi Data Master (Dropdown)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
 
-        // Gunakan pola ini untuk SEMUA array dinamis agar tidak menimpa data yang sudah ada
-        if (empty($this->unsafe_conditions)) {
-            $this->unsafe_conditions = [['item' => '', 'description' => '']];
-        }
+        // 2. Set Struktur Default (Hanya jika properti masih kosong)
+        // Ini memastikan form punya minimal 1 baris saat pertama kali dibuka
+        if (empty($this->directly_involved)) $this->addDirectlyInvolvedRow();
 
-        if (empty($this->unsafe_acts)) {
-            $this->unsafe_acts = [['item' => '', 'description' => '']];
-        }
+        // Gunakan array_filter atau empty check untuk array dinamis lainnya
+        if (empty($this->pemimpin)) $this->addRow('pemimpin');
+        if (empty($this->facilitator)) $this->addRow('facilitator');
+        if (empty($this->anggota)) $this->addRow('anggota');
+        if (empty($this->timelines)) $this->addRow('timelines');
 
-        if (empty($this->personal_factors)) {
-            $this->personal_factors = [['item' => '', 'description' => '']];
-        }
+        // SCAT Factors
+        if (empty($this->unsafe_conditions)) $this->unsafe_conditions = [['item' => '', 'description' => '']];
+        if (empty($this->unsafe_acts)) $this->unsafe_acts = [['item' => '', 'description' => '']];
+        if (empty($this->personal_factors)) $this->personal_factors = [['item' => '', 'description' => '']];
+        if (empty($this->job_factors)) $this->job_factors = [['item' => '', 'description' => '']];
+        if (empty($this->control_system_factors)) $this->control_system_factors = [['item' => '', 'description' => '']];
 
-        if (empty($this->job_factors)) {
-            $this->job_factors = [['item' => '', 'description' => '']];
-        }
+        if (empty($this->corrective_actions)) $this->addCorrectiveRow();
 
-        if (empty($this->control_system_factors)) {
-            $this->control_system_factors = [['item' => '', 'description' => '']];
-        }
-
-        // PEEPO juga perlu dicek agar tidak ter-reset jika sudah ada isinya
+        // PEEPO inisialisasi
         foreach ($this->peepoFactors as $key => $label) {
             if (!isset($this->peepo[$key])) {
                 $this->peepo[$key] = ['temuan' => '', 'deskripsi' => ''];
             }
         }
 
-        // Lanjutkan untuk array lainnya (pemimpin, anggota, dll) dengan pola empty() yang sama
+        // 3. TERAKHIR: Timpa dengan data Session (Anti-Refresh)
+        // Jika ada data di session, fungsi fill() akan menimpa inisialisasi di atas
+        if (session()->has('incident_data')) {
+            $this->fill(session('incident_data'));
+        }
     }
 
 
