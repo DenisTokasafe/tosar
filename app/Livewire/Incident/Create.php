@@ -657,7 +657,7 @@ class Create extends Component
             session(['incident_data' => $this->all()]);
 
             // 5. Opsional: Trigger validasi untuk baris tersebut
-            $this->validateOnly("directly_involved.$index.*");
+
         }
     }
 
