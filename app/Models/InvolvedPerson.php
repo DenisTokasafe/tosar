@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InvolvedPerson extends Model
 {
+
     protected $guarded = ['id'];
+    protected $table = 'involved_persons';
 
     public function incidentReport(): BelongsTo
     {
