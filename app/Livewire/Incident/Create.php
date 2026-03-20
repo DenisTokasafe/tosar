@@ -1522,14 +1522,15 @@ class Create extends Component
             $this->dispatchValidationEvents($e->validator->errors());
             throw $e;
         } catch (\Exception $e) {
-            // Log error untuk mempermudah debugging sistem SENTRY
-            Log::error('Gagal menyimpan Incident Report: ' . $e->getMessage());
+            // Kita gabungkan pesan custom dengan pesan error sistem ($e->getMessage())
+            $errorMessage = "Gagal menyimpan laporan: " . $e->getMessage();
 
-            $this->dispatch('alert', [
-                'text' => "Gagal menyimpan laporan. Silakan periksa koneksi atau hubungi tim IT.",
-                'duration' => 7000,
-                'backgroundColor' => "background: #f44336;",
-            ]);
+            $this->dispatch(
+                'alert',
+                text: $errorMessage,
+                duration: 7000,
+                backgroundColor: "background: #f44336;"
+            );
         }
     }
 
