@@ -27,13 +27,6 @@ return new class extends Migration
             $table->string('manual_pelapor')->nullable();
             $table->text('description'); // 5W1H
             $table->text('emergency_action')->nullable();
-
-            // Part 2: Risk Assessment
-            // Risk matrix
-            $table->foreignId('consequence_id')->nullable()->constrained('risk_consequences')->nullOnDelete();
-            $table->foreignId('likelihood_id')->nullable()->constrained('likelihoods')->nullOnDelete();
-            $table->string('risk_level')->nullable(); // Low, Moderate, High, Extreme
-
             // Part 8: Key Learning
             $table->text('key_learning')->nullable();
 
