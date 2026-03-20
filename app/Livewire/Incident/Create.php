@@ -637,7 +637,7 @@ class Create extends Component
     {
         // 1. Cari data karyawan di database
         // Sesuaikan model 'Employee' dengan model yang Anda gunakan
-        $employee = User::find($id);
+        $employee = User::whereId($id)->first();
 
         if ($employee) {
             // 2. Isi data ke array directly_involved berdasarkan index-nya
