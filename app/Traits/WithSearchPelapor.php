@@ -32,21 +32,6 @@ trait WithSearchPelapor
             $this->searchPelapor = Auth::user()->name;
         }
     }
-    // Tambahkan fungsi ini di dalam trait WithSearchPelapor
-    public function syncPelaporName()
-    {
-        if (property_exists($this, 'pelapor_id') && $this->pelapor_id) {
-            $user = User::find($this->pelapor_id);
-            if ($user) {
-                $this->searchPelapor = $user->name;
-                $this->manualPelaporMode = false;
-            }
-        } elseif ($this->manualPelaporName) {
-            // Jika ternyata yang tersimpan adalah nama manual (bukan ID)
-            $this->searchPelapor = $this->manualPelaporName;
-            $this->manualPelaporMode = true;
-        }
-    }
 
     /**
      * Menangani pencarian pelapor saat user mengetik.
@@ -121,6 +106,4 @@ trait WithSearchPelapor
             $this->pelapor_id = null;
         }
     }
-    // Tambahkan fungsi ini di dalam trait WithSearchPelapor
-
 }
