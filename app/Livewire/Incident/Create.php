@@ -688,7 +688,7 @@ class Create extends Component
         // B. Sinkronisasi Pelapor
         if ($this->pelapor_id) {
             $pelapor = User::find($this->pelapor_id);
-            $this->searchName = $pelapor ? $pelapor->name : '';
+            $this->searchPelapor = $pelapor ? $pelapor->name : '';
         }
 
         // C. Sinkronisasi Korban (Array/Directly Involved)
