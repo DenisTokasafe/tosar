@@ -13,54 +13,63 @@
         {{-- PROGRESS & STEPS VISUAL --}}
 
         {{-- STEP 1: Info Dasar --}}
+        {{-- STEP 1 - 9: Iterasi Collapse --}}
         @for ($i = 1; $i <= 9; $i++)
-            {{-- Container Utama Collapse --}}
+            @php
+            // Cek apakah ada error di dalam Part ini
+            $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
+            @endphp
+
             <div
-            wire:key="step-container-{{ $i }}"
-            {{--
-            Penjelasan Class Efek (Gambar 2):
-            1. transition-all duration-300 ease-in-out: Agar gerakan halus saat mouse masuk/keluar.
-            2. hover:-translate-x-4: (Geser Kiri) Saat di-hover, elemen bergeser 1rem (16px) ke kiri.
-               Ganti ke 'hover:scale-105' jika ingin efek membesar, bukan bergeser.
-            3. hover:shadow-2xl: Memberikan bayangan sangat tegas saat menonjol keluar.
-            4. hover:z-10 relative: Memastikan kartu yang menonjol berada di atas kartu lain (z-index).
-        --}}
-            class=" border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl
-               relative z-0
-               transition-all duration-300 ease-in-out
-               hover:-translate-x-4 hover:shadow-2xl hover:z-10 hover:border-info
+                wire:key="step-container-{{ $i }}"
+                class="border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl relative z-0 transition-all duration-300 ease-in-out
+               hover:-translate-x-4 hover:shadow-2xl hover:z-10
+               {{ $hasErrorInStep ? 'border-error shadow-md' : 'hover:border-info' }}
                {{ $currentStep < $i ? 'opacity-60 pointer-events-none' : '' }}">
-            {{-- Input Radio DaisyUI --}}
-            <input type="radio" name="my-accordion-2"
-                wire:click="goToStep({{ $i }})"
-                value="{{ $i }}"
-                {{ $currentStep == $i ? 'checked' : '' }} />
 
-            {{-- Judul (Title) dengan Background Gradient --}}
-            <div class="flex items-center justify-between font-semibold collapse-title bg-linear-to-r/oklab from-success to-info text-base-content">
-                <h3 class="text-sm font-bold tracking-wide uppercase">PART {{ $i }}</h3>
-            </div>
+                <input type="radio" name="my-accordion-2" wire:click="goToStep({{ $i }})" value="{{ $i }}" {{ $currentStep == $i ? 'checked' : '' }} />
 
-            {{-- Konten --}}
-            <div class="text-xs collapse-content bg-base-100">
-                <div class="pt-4">
-                    @include('livewire.incident.incident-step-' . $i)
+                {{-- HEADER COLLAPSE --}}
+                <div class="flex items-center justify-between font-semibold collapse-title
+            {{ $hasErrorInStep
+                ? 'bg-error text-error-content animate-pulse'
+                : ($currentStep == $i ? 'bg-linear-to-r from-success to-info text-white' : 'bg-base-200 text-base-content')
+            }}">
 
-                    {{-- Navigasi Tombol --}}
-                    <div class="flex justify-end pt-4 mt-4 border-t border-base-200">
-                        @if ($i < 9)
-                            <button wire:click="nextStep" class="transition-transform btn btn-primary btn-xs hover:scale-110">
-                            Lanjut ke Part {{ $i + 1 }}
-                            </button>
-                            @else
-                            {{-- Tombol Submit di Part 9 --}}
-                            <button type="button" class="transition-transform btn btn-xs btn-success hover:scale-110" wire:click="save">
-                                Submit Laporan SENTRY
-                            </button>
-                            @endif
+                    <h3 class="flex items-center gap-2 text-sm font-bold tracking-wide uppercase">
+                        <span>PART {{ $i }}</span>
+                        @if($hasErrorInStep)
+                        <span class="text-white border-none badge badge-sm badge-ghost bg-white/20">⚠️ ERROR</span>
+                        @endif
+                    </h3>
+                </div>
+
+                {{-- KONTEN --}}
+                <div class="text-xs collapse-content bg-base-100">
+                    <div class="pt-4">
+                        {{-- Tampilkan Pesan Error Global Per Step jika ada --}}
+                        @if($hasErrorInStep)
+                        <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
+                            <strong>Perhatian:</strong> Beberapa kolom wajib di Part ini belum terisi dengan benar.
+                        </div>
+                        @endif
+
+                        @include('livewire.incident.incident-step-' . $i)
+
+                        {{-- NAVIGASI TOMBOL --}}
+                        <div class="flex justify-end pt-4 mt-4 border-t border-base-200">
+                            @if ($i < 9)
+                                <button wire:click="nextStep" class="transition-transform btn btn-primary btn-xs hover:scale-110">
+                                Lanjut ke Part {{ $i + 1 }}
+                                </button>
+                                @else
+                                <button type="button" class="transition-transform shadow-lg btn btn-xs btn-success hover:scale-110" wire:click="save">
+                                    Submit Laporan SENTRY
+                                </button>
+                                @endif
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
             @endfor
 

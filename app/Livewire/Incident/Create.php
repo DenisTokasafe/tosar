@@ -1528,6 +1528,8 @@ class Create extends Component
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
+            $firstErrorField = collect($e->validator->errors()->keys())->first();
+            $this->goToStepByField($firstErrorField);
             throw $e;
         } catch (\Exception $e) {
             // Log error untuk mempermudah debugging sistem SENTRY
@@ -1696,5 +1698,136 @@ class Create extends Component
 
 
         ];
+    }
+    private function goToStepByField($field)
+    {
+        // Mapping field ke Part/Step yang sesuai
+        // Sesuaikan dengan name field yang ada di Part 1 - 9 Anda
+        if (in_array($field, [
+            // 1. Tipe & Jenis
+            'event_type_id',
+            'event_sub_type_id',
+
+            // 2. Waktu & Lokasi
+            'date_time',
+            'location_id',
+            'location_specific',
+
+            // 3. Organisasi & PIC
+            'department_id',
+            'contractor_id',
+            'penanggungJawab',
+            'pelapor_id',
+            'manualPelaporName',
+
+            // 4. Integrasi Risk Matrix
+            'consequence_id',
+            'likelihood_id',
+
+            // 5. Narasi & Tindakan Segera
+            'description',
+            'emergency_action',
+
+            // 6. Dampak (Injury vs Damage)
+            'selectedBodyPartCategory',
+            'selectedBodyPart',
+            'damage_detail'
+        ])) {
+            $this->currentStep = 1;
+        } elseif (str_starts_with($field, 'directly_involved')) {
+            $this->currentStep = 2;
+        } elseif (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) {
+            $this->currentStep = 3;
+        } elseif (str_starts_with($field, 'peepo')) {
+            $this->currentStep = 4;
+        } elseif (str_starts_with($field, 'timelines')) {
+            $this->currentStep = 5;
+        } elseif (collect([
+            'unsafe',
+            'personal_factors',
+            'job_factors',
+            'control_system_factors'
+        ])->some(fn($p) => str_starts_with($field, $p))) {
+            $this->currentStep = 6;
+        } elseif (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) {
+            $this->currentStep = 7;
+        } elseif ($field === 'key_learning') {
+            $this->currentStep = 8;
+        } elseif (str_starts_with($field, 'penerimaan_komentar')) {
+            $this->currentStep = 9;
+        }
+
+        // Scroll ke atas agar user sadar ada yang error
+        $this->dispatch('scroll-to-top');
+    }
+    /**
+     * Memeriksa apakah suatu field error berada di step tertentu.
+     * Digunakan untuk indikator error di UI (Tab/Collapse).
+     */
+    public function isFieldInStep($step, $errorFields)
+    {
+        // Ambil semua key field yang sedang error
+        $fields = array_keys($errorFields);
+
+        foreach ($fields as $field) {
+            switch ($step) {
+                case 1:
+                    $step1Fields = [
+                        'event_type_id',
+                        'event_sub_type_id',
+                        'date_time',
+                        'location_id',
+                        'location_specific',
+                        'department_id',
+                        'contractor_id',
+                        'penanggungJawab',
+                        'pelapor_id',
+                        'manualPelaporName',
+                        'consequence_id',
+                        'likelihood_id',
+                        'description',
+                        'emergency_action',
+                        'selectedBodyPartCategory',
+                        'selectedBodyPart',
+                        'damage_detail'
+                    ];
+                    if (in_array($field, $step1Fields)) return true;
+                    break;
+
+                case 2:
+                    if (str_starts_with($field, 'directly_involved')) return true;
+                    break;
+
+                case 3:
+                    if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
+
+                case 4:
+                    if (str_starts_with($field, 'peepo')) return true;
+                    break;
+
+                case 5:
+                    if (str_starts_with($field, 'timelines')) return true;
+                    break;
+
+                case 6:
+                    if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
+
+                case 7:
+                    if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
+
+                case 8:
+                    if ($field === 'key_learning') return true;
+                    break;
+
+                case 9:
+                    if (str_starts_with($field, 'penerimaan_komentar')) return true;
+                    break;
+            }
+        }
+
+        return false;
     }
 }
