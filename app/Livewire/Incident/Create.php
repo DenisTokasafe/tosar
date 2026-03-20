@@ -10,6 +10,7 @@ use App\Models\Department;
 use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\IncidentReport;
 use App\Models\Likelihood;
 use App\Models\Location;
 use App\Models\RiskAssessment;
@@ -1458,7 +1459,7 @@ class Create extends Component
                 $data = $this->prepareArrayData();
 
                 // A. Simpan Header Utama (Incident Report)
-                $report = \App\Models\IncidentReport::create($data['header']);
+                $report = IncidentReport::create($data['header']);
 
                 // B. Simpan Detail Dampak (Injury vs Damage) - model IncidentImpact
                 $report->impact()->create([
