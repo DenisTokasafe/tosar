@@ -29,6 +29,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Persist;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
@@ -36,13 +37,7 @@ class Create extends Component
 {
     use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation, WithSearchPelapor;
 
-    public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
-    public $date_time, $pelapor_id, $manualPelaporName;
-    public $department_id, $contractor_id, $penanggungJawab;
-    public $deptCont = 'dept';
-    public $keyWord = 'kta';
-    public $likelihood_id, $consequence_id, $emergency_action;
-    public $damage_detail, $selectedBodyPartCategory, $selectedBodyPart;
+
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
@@ -56,7 +51,72 @@ class Create extends Component
     public $RiskAssessment;
     public $risk_consequence;
 
+    #[Persist]
+    public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
+    #[Persist]
+    public $date_time, $pelapor_id, $manualPelaporName;
+    #[Persist]
+    public $department_id, $contractor_id, $penanggungJawab;
+    #[Persist]
+    public $deptCont = 'dept';
+    #[Persist]
+    public $keyWord = 'kta';
+    #[Persist]
+    public $likelihood_id, $consequence_id, $emergency_action;
+    #[Persist]
+    public $damage_detail, $selectedBodyPartCategory, $selectedBodyPart;
 
+    #[Persist]
+    public array $directly_involved = []; // Part 2
+
+    #[Persist]
+    public $pemimpin = [];   // Part 3
+    #[Persist]
+    public $facilitator = [];
+    #[Persist]
+    public $anggota = [];
+
+    #[Persist]
+    public $peepo = [];      // Part 4
+
+    #[Persist]
+    public $timelines = [];  // Part 5
+    #[Persist]
+    public $whyCount = 1;
+
+    #[Persist]
+    public $unsafe_conditions = []; // Part 6
+    #[Persist]
+    public $unsafe_acts = [];
+    #[Persist]
+    public $personal_factors = [];
+    #[Persist]
+    public $job_factors = [];
+    #[Persist]
+    public $control_system_factors = [];
+
+    #[Persist]
+    public $corrective_actions = []; // Part 7
+
+    #[Persist]
+    public $key_learning; // Part 8
+
+    #[Persist]
+    public $penerimaan_komentar_contractor_id; // Part 9
+    #[Persist]
+    public $penerimaan_komentar_internal_id;
+    #[Persist]
+    public $penerimaan_komentar_ohs_id;
+    #[Persist]
+    public $penerimaan_komentar_ktt_id;
+    #[Persist]
+    public $penerimaan_komentar_contractor;
+    #[Persist]
+    public $penerimaan_komentar_internal;
+    #[Persist]
+    public $penerimaan_komentar_ohs;
+    #[Persist]
+    public $penerimaan_komentar_ktt;
 
     public $penanggungJawabOptions = [];
     // Involved Personnel
@@ -69,16 +129,12 @@ class Create extends Component
     public $showBodyPart = false;
     public $body_part_id;
     public $body_part_name;
-    public $corrective_actions = [];
-    public array $directly_involved = [];
+
     public array $searchKorban = []; // Menyimpan text pencarian per baris
     public array $show_employee_dropdown = []; // Menyimpan state open/close dropdown per baris
     public $involved_personnel_options = [];
 
     // State untuk menyimpan baris data
-    public $pemimpin = [];
-    public $facilitator = [];
-    public $anggota = [];
 
     // State untuk search (karena searchable-select butuh model binding)
     public $searchQuery = [];
@@ -109,14 +165,7 @@ class Create extends Component
     public $activeIndexPenerimaan = null;
 
     // Pastikan Anda menginisialisasi array penampung data di mount
-    public $peepo = [];
-    public $timelines = [];
-    public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
-    public $unsafe_conditions = [];
-    public $unsafe_acts = [];
-    public $personal_factors = [];
-    public $job_factors = [];
-    public $control_system_factors = [];
+
 
     // Data Utama
 
@@ -129,17 +178,7 @@ class Create extends Component
     public $manualActPelaporMode = false; // Jika mode manual global atau per baris
 
     // Properti untuk menyimpan ID terpilih
-    public $penerimaan_komentar_contractor_id;
-    public $penerimaan_komentar_internal_id;
-    public $penerimaan_komentar_ohs_id;
-    public $penerimaan_komentar_ktt_id;
 
-    // Properti untuk teks editor (CKEditor)
-    public $penerimaan_komentar_contractor;
-    public $penerimaan_komentar_internal;
-    public $penerimaan_komentar_ohs;
-    public $penerimaan_komentar_ktt;
-    public $key_learning;
 
     public $searchNamePenerimaan = [
         'kontraktor' => '',
