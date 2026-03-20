@@ -671,7 +671,9 @@ class Create extends Component
         // 1. Load data referensi statis (Paling aman ditaruh di atas)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-
+        if (empty($this->timelines)) {
+            $this->timelines = [['why1' => '']]; // Minimal ada 1 data awal
+        }
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
         if (session()->has('incident_data')) {
             $data = session('incident_data');
