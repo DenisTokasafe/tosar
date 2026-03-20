@@ -632,7 +632,33 @@ class Create extends Component
             $this->{$property} = array_values($this->{$property}); // Reset index array
         }
     }
+    public function selectInvolvedPersonnel($id, $name, $index)
+    {
+        // 1. Cari data karyawan di database
+        // Sesuaikan model 'Employee' dengan model yang Anda gunakan
+        $employee = User::find($id);
 
+        if ($employee) {
+            // 2. Isi data ke array directly_involved berdasarkan index-nya
+            $this->directly_involved[$index]['employee_name'] = $employee->name;
+            $this->directly_involved[$index]['employee_id']   = $employee->id; // Untuk tracking ID
+            $this->directly_involved[$index]['employee_nik']  = $employee->nik;
+
+            // Asumsi relasi department atau kolom string dept
+            $this->directly_involved[$index]['dept_cont']     = $employee->department?->name ?? $employee->company_name;
+            $this->directly_involved[$index]['jabatan']       = $employee->position;
+
+            // 3. Reset dropdown search untuk baris ini
+            $this->show_employee_dropdown[$index] = false;
+            $this->searchKorban[$index] = $employee->name;
+
+            // 4. PENTING: Simpan perubahan ke session agar tidak hilang saat refresh
+            session(['incident_data' => $this->all()]);
+
+            // 5. Opsional: Trigger validasi untuk baris tersebut
+            $this->validateOnly("directly_involved.$index.*");
+        }
+    }
 
     // State untuk menampilkan dropdown
 
@@ -943,22 +969,7 @@ class Create extends Component
         }
     }
 
-    public function selectInvolvedPersonnel($id, $name, $index)
-    {
-        // Cari data lengkap employee
-        $employee = User::find($id);
 
-        if ($employee) {
-            $this->directly_involved[$index]['employee_id'] = $employee->id;
-            $this->directly_involved[$index]['employee_name'] = $employee->name;
-            $this->directly_involved[$index]['employee_nik'] = $employee->employee_id;
-            $this->directly_involved[$index]['dept_cont'] = $employee->department_name;
-
-            // Isi search input dengan nama yang dipilih agar dropdown tertutup/sinkron
-            $this->searchKorban[$index] = $name;
-            $this->show_employee_dropdown[$index] = false;
-        }
-    }
 
     public function addRow($type)
     {
