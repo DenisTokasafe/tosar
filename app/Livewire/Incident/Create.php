@@ -45,7 +45,7 @@ class Create extends Component
         $documentation,
         $visual_evidence_path,
         $supporting_documents_path;
-    #[Url(as: 'step')]
+
 
 
     public $selectedLikelihoodId, $selectedConsequenceId;
@@ -666,7 +666,64 @@ class Create extends Component
     }
 
 
-    // State untuk menampilkan dropdown
+    public function saveDraft()
+    {
+        // Mengambil hanya properti yang relevan dengan data laporan
+        $payload = $this->only([
+            'event_type_id',
+            'event_sub_type_id',
+            'description',
+            'location_id',
+            'location_specific',
+            'date_time',
+            'pelapor_id',
+            'manualPelaporName',
+            'department_id',
+            'search',
+            'searchContractor',
+            'searchLocation',
+            'searchPelapor',
+            'contractor_id',
+            'penanggungJawab',
+            'deptCont',
+            'keyWord',
+            'likelihood_id',
+            'consequence_id',
+            'emergency_action',
+            'damage_detail',
+            'selectedBodyPartCategory',
+            'selectedBodyPart',
+            'directly_involved',
+            'pemimpin',
+            'facilitator',
+            'anggota',
+            'peepo',
+            'timelines',
+            'whyCount',
+            'unsafe_conditions',
+            'unsafe_acts',
+            'personal_factors',
+            'job_factors',
+            'control_system_factors',
+            'corrective_actions',
+            'key_learning',
+            'penerimaan_komentar_contractor_id',
+            'penerimaan_komentar_internal_id',
+            'penerimaan_komentar_ohs_id',
+            'penerimaan_komentar_ktt_id',
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ]);
+
+        // Simpan ke database menggunakan Model Draft
+        IncidentDraft::updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['payload' => $payload]
+        );
+    }
+
 
     public function mount()
     {
@@ -711,59 +768,6 @@ class Create extends Component
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
-    }
-    public function saveDraft()
-    {
-        // Mengambil hanya properti yang relevan dengan data laporan
-        $payload = $this->only([
-            'event_type_id',
-            'event_sub_type_id',
-            'description',
-            'location_id',
-            'location_specific',
-            'date_time',
-            'pelapor_id',
-            'manualPelaporName',
-            'department_id',
-            'contractor_id',
-            'penanggungJawab',
-            'deptCont',
-            'keyWord',
-            'likelihood_id',
-            'consequence_id',
-            'emergency_action',
-            'damage_detail',
-            'selectedBodyPartCategory',
-            'selectedBodyPart',
-            'directly_involved',
-            'pemimpin',
-            'facilitator',
-            'anggota',
-            'peepo',
-            'timelines',
-            'whyCount',
-            'unsafe_conditions',
-            'unsafe_acts',
-            'personal_factors',
-            'job_factors',
-            'control_system_factors',
-            'corrective_actions',
-            'key_learning',
-            'penerimaan_komentar_contractor_id',
-            'penerimaan_komentar_internal_id',
-            'penerimaan_komentar_ohs_id',
-            'penerimaan_komentar_ktt_id',
-            'penerimaan_komentar_contractor',
-            'penerimaan_komentar_internal',
-            'penerimaan_komentar_ohs',
-            'penerimaan_komentar_ktt'
-        ]);
-
-        // Simpan ke database menggunakan Model Draft
-        IncidentDraft::updateOrCreate(
-            ['user_id' => auth()->id()],
-            ['payload' => $payload]
-        );
     }
 
     public function updatedDeptCont($value)
