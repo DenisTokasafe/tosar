@@ -672,7 +672,11 @@ class Create extends Component
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         if (empty($this->timelines)) {
-            $this->timelines = [['why1' => '']]; // Minimal ada 1 data awal
+            $this->timelines = [
+                [
+                    'why1' => '', // Inisialisasi Why pertama
+                ]
+            ];
         }
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
         if (session()->has('incident_data')) {
