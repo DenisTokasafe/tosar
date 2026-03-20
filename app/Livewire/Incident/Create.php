@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use \App\Traits\WithDeptContSelection;
 use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
@@ -9,6 +10,7 @@ use App\Models\Department;
 use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\IncidentDraft;
 use App\Models\Likelihood;
 use App\Models\Location;
 use App\Models\RiskAssessment;
@@ -18,6 +20,8 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
+use App\Traits\WithSearchLocation;
+use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
@@ -26,9 +30,6 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use \App\Traits\WithDeptContSelection;
-use App\Traits\WithSearchLocation;
-use App\Traits\WithSearchPelapor;
 
 class Create extends Component
 {
