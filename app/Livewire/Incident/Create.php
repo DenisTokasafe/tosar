@@ -955,6 +955,12 @@ class Create extends Component
         $this->searchKorban = array_values($this->searchKorban);
         $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
     }
+    protected function saveToSession()
+    {
+        $data = $this->all();
+        unset($data['visual_evidence'], $data['supporting_documents']); // Buang file
+        session(['incident_data' => $data]);
+    }
 
     // Fungsi pencarian otomatis saat user mengetik
     public function updatedSearchKorban($value, $index)
