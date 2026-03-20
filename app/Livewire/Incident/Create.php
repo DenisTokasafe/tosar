@@ -673,7 +673,13 @@ class Create extends Component
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
-
+        // Inisialisasi jika session kosong
+        $roles = ['pemimpin', 'facilitator', 'anggota'];
+        foreach ($roles as $role) {
+            if (empty($this->{$role})) {
+                $this->addRow($role);
+            }
+        }
         // 3. INISIALISASI DEFAULT (Hanya jika data masih kosong / belum ada di session)
 
         // Inisialisasi Pihak Terlibat
@@ -1000,7 +1006,7 @@ class Create extends Component
             $this->searchQuery[$newIndex][$type] = '';
             $this->showDropdownPartisipan[$newIndex] = false;
         }
-        session(['incident_data' => $this->all()]);
+        $this->saveToSession();
     }
     public function removeRow($type, $index)
     {
@@ -1040,7 +1046,7 @@ class Create extends Component
         if (empty($this->{$type})) {
             $this->addRow($type);
         }
-        session(['incident_data' => $this->all()]);
+        $this->saveToSession();
     }
     #[Computed]
     public function gridClass()
@@ -1122,6 +1128,8 @@ class Create extends Component
             $this->validateOnly($type . '.' . $index . '.user_id');
             $this->validateOnly($type . '.' . $index . '.dept');
             $this->validateOnly($type . '.' . $index . '.jabatan');
+            // SIMPAN KE SESSION
+            $this->saveToSession();
         }
     }
     public function resetSearch()
