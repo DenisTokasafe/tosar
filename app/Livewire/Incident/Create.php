@@ -637,16 +637,16 @@ class Create extends Component
     {
         // 1. Cari data karyawan di database
         // Sesuaikan model 'Employee' dengan model yang Anda gunakan
-        $employee = User::whereId($id)->first();
+        $employee = User::find($id);
 
         if ($employee) {
             // 2. Isi data ke array directly_involved berdasarkan index-nya
             $this->directly_involved[$index]['employee_name'] = $employee->name;
             $this->directly_involved[$index]['employee_id']   = $employee->id; // Untuk tracking ID
-            $this->directly_involved[$index]['employee_nik']  = $employee->nik;
+            $this->directly_involved[$index]['employee_nik']  = $employee->employee_id;
 
             // Asumsi relasi department atau kolom string dept
-            $this->directly_involved[$index]['dept_cont']     = $employee->department?->name ?? $employee->company_name;
+            $this->directly_involved[$index]['dept_cont']     = $employee->department_name ?? '';
             $this->directly_involved[$index]['jabatan']       = $employee->position;
 
             // 3. Reset dropdown search untuk baris ini
@@ -657,7 +657,7 @@ class Create extends Component
             session(['incident_data' => $this->all()]);
 
             // 5. Opsional: Trigger validasi untuk baris tersebut
-
+            $this->validateOnly("directly_involved.$index.*");
         }
     }
 
