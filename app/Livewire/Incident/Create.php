@@ -10,6 +10,7 @@ use App\Models\Department;
 use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\IncidentDraft;
 use App\Models\Likelihood;
 use App\Models\Location;
 use App\Models\RiskAssessment;
@@ -462,6 +463,7 @@ class Create extends Component
          * Simpan seluruh state form ke session setiap kali ada perubahan.
          */
         session()->put('incident_form_data', $this->all());
+        $this->saveDraft();
     }
 
     // Komentar Standard
@@ -668,6 +670,12 @@ class Create extends Component
 
     public function mount()
     {
+        $draft = IncidentDraft::where('user_id', auth()->id())->first();
+
+        if ($draft && $draft->payload) {
+            // Method fill() akan mencocokkan key di payload dengan nama properti secara otomatis
+            $this->fill($draft->payload);
+        }
         // 1. Inisialisasi Data Master (Dropdown)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
@@ -704,7 +712,59 @@ class Create extends Component
             $this->fill(session('incident_data'));
         }
     }
+    public function saveDraft()
+    {
+        // Mengambil hanya properti yang relevan dengan data laporan
+        $payload = $this->only([
+            'event_type_id',
+            'event_sub_type_id',
+            'description',
+            'location_id',
+            'location_specific',
+            'date_time',
+            'pelapor_id',
+            'manualPelaporName',
+            'department_id',
+            'contractor_id',
+            'penanggungJawab',
+            'deptCont',
+            'keyWord',
+            'likelihood_id',
+            'consequence_id',
+            'emergency_action',
+            'damage_detail',
+            'selectedBodyPartCategory',
+            'selectedBodyPart',
+            'directly_involved',
+            'pemimpin',
+            'facilitator',
+            'anggota',
+            'peepo',
+            'timelines',
+            'whyCount',
+            'unsafe_conditions',
+            'unsafe_acts',
+            'personal_factors',
+            'job_factors',
+            'control_system_factors',
+            'corrective_actions',
+            'key_learning',
+            'penerimaan_komentar_contractor_id',
+            'penerimaan_komentar_internal_id',
+            'penerimaan_komentar_ohs_id',
+            'penerimaan_komentar_ktt_id',
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ]);
 
+        // Simpan ke database menggunakan Model Draft
+        IncidentDraft::updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['payload' => $payload]
+        );
+    }
 
     public function updatedDeptCont($value)
     {
@@ -1507,7 +1567,9 @@ class Create extends Component
                 'destination' => '/incident/show/' . $result->id, // Arahkan ke detail laporan
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-            $this->dispatch('clear-draft');
+            IncidentDraft::where('user_id', auth()->id())->delete();
+            // Clear persist jika menggunakan #[Persist]
+            $this->reset();
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
             throw $e;
