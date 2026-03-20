@@ -11,6 +11,15 @@ trait WithSearchLocation
     public $searchLocation = '';
     public $show_location = false;
     // Search Location
+    public function syncLocationName()
+    {
+        if (property_exists($this, 'location_id') && $this->location_id) {
+            $location = Location::find($this->location_id);
+            if ($location) {
+                $this->searchLocation = $location->name;
+            }
+        }
+    }
     public function updatedSearchLocation()
     {
         if (strlen($this->searchLocation) < 1) {

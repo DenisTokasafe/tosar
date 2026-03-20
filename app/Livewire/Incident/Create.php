@@ -725,9 +725,14 @@ class Create extends Component
             $this->searchQuery['contractor'] = Contractor::find($this->contractor_id)?->name;
         }
 
-        // 2. Pelapor (Employee)
-        if ($this->pelapor_id) {
-            $this->searchName = User::find($this->pelapor_id)?->name;
+        // Dari WithSearchPelapor
+        if (method_exists($this, 'syncPelaporName')) {
+            $this->syncPelaporName();
+        }
+
+        // Dari WithSearchLocation
+        if (method_exists($this, 'syncLocationName')) {
+            $this->syncLocationName();
         }
 
         // 3. Investigasi (Pemimpin, Facilitator, Anggota)
