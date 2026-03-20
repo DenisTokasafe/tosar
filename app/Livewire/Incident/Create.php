@@ -1453,6 +1453,9 @@ class Create extends Component
     {
         // 1. Jalankan Validasi Global
         $this->validate();
+        $lastReport = IncidentReport::latest()->first();
+        $nextId = $lastReport ? $lastReport->id + 1 : 1;
+        $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
         try {
             $result = DB::transaction(function () {
@@ -1537,9 +1540,14 @@ class Create extends Component
 
     protected function prepareArrayData()
     {
+        // Logika Generate Report Number
+        $lastReport = IncidentReport::latest()->first();
+        $nextId = $lastReport ? $lastReport->id + 1 : 1;
+        $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
         return [
             // KELOMPOK 1: INFORMASI DASAR (Header)
             'header' => [
+                'report_number'     => $reportNumber, // <--- TAMBAHKAN INI
                 'event_type_id'     => $this->event_type_id,
                 'event_sub_type_id' => $this->event_sub_type_id,
                 'date_time'         => $this->date_time,
