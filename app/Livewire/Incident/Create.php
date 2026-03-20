@@ -674,7 +674,9 @@ class Create extends Component
         if (empty($this->timelines)) {
             $this->timelines = [
                 [
-                    'why1' => '', // Inisialisasi Why pertama
+                    'why1' => '', // Minimal ada key why1
+                    'why2' => '',
+                    'why3' => '',
                 ]
             ];
         }
