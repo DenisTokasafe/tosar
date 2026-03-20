@@ -423,7 +423,7 @@ class Create extends Component
     protected function saveToSession()
     {
         $data = $this->all();
-
+        $data['whyCount'] = $this->whyCount;
         // Hapus file dan properti yang tidak bisa diserialisasi
         unset(
             $data['visual_evidence'],
@@ -673,6 +673,7 @@ class Create extends Component
         if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
+        $this->whyCount = $data['whyCount'] ?? 1;
         // Inisialisasi jika session kosong
         $roles = ['pemimpin', 'facilitator', 'anggota'];
         foreach ($roles as $role) {
@@ -1069,6 +1070,7 @@ class Create extends Component
         foreach ($this->timelines as $index => $line) {
             $this->timelines[$index]["why{$this->whyCount}"] = '';
         }
+        $this->saveToSession();
     }
     public function removeWhyColumn()
     {
@@ -1078,6 +1080,7 @@ class Create extends Component
                 unset($this->timelines[$index]["why{$this->whyCount}"]);
             }
             $this->whyCount--;
+            $this->saveToSession();
         }
     }
 
