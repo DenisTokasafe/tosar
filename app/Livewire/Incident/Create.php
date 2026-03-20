@@ -1682,7 +1682,7 @@ class Create extends Component
                 return [
                     'action_description'     => $action['action_description'],
                     'hierarchy'       => $action['control_hierarchy'],
-                    'pic_user_id'     => $action['name'], // ID dari searchable select
+                    'pic_user_id'     => $action['inspector_id'], // ID dari searchable select
                     'due_date'        => $action['due_date'],
                     'completion_date' => $action['actual_completion_date'] ?? null,
                     'status'          => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
