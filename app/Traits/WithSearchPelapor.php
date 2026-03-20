@@ -106,4 +106,6 @@ trait WithSearchPelapor
             $this->pelapor_id = null;
         }
     }
+    // Tambahkan fungsi ini di dalam trait WithSearchPelapor
+
 }

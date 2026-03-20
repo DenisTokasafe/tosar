@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use \App\Traits\WithDeptContSelection;
 use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
@@ -9,6 +10,7 @@ use App\Models\Department;
 use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\IncidentDraft;
 use App\Models\Likelihood;
 use App\Models\Location;
 use App\Models\RiskAssessment;
@@ -18,6 +20,8 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
+use App\Traits\WithSearchLocation;
+use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
@@ -26,9 +30,6 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use \App\Traits\WithDeptContSelection;
-use App\Traits\WithSearchLocation;
-use App\Traits\WithSearchPelapor;
 
 class Create extends Component
 {
@@ -420,6 +421,11 @@ class Create extends Component
 
         // 3. Jalankan validasi standar untuk field yang sedang diubah
         $this->validateOnly($propertyName);
+        // Simpan draft secara silent (Auto-save) setiap ada perubahan
+        // Pastikan tidak sedang mengupload file agar tidak berat
+        if (!str_contains($propertyName, 'visual_evidence') && !str_contains($propertyName, 'supporting_documents')) {
+            $this->saveDraft();
+        }
     }
 
     // Komentar Standard
@@ -593,24 +599,83 @@ class Create extends Component
             $this->validate($stepRules, $this->messages(), $this->validationAttributes());
         }
     }
-    public function goToStep($step)
-    {
-        // Jika user mencoba lompat ke step di depannya, validasi dulu step sekarang
-        if ($step > $this->currentStep) {
-            $this->validateCurrentStep();
-        }
-
-        $this->currentStep = $step;
-    }
-    // Fungsi untuk pindah step
     public function nextStep()
     {
         $this->validateCurrentStep();
+
+        // Simpan draft setelah validasi step berhasil
+        $this->saveDraft();
 
         if ($this->currentStep < $this->totalSteps) {
             $this->currentStep++;
             $this->dispatch('scroll-to-top');
         }
+    }
+
+    public function goToStep($step)
+    {
+        if ($step > $this->currentStep) {
+            $this->validateCurrentStep();
+        }
+
+        // Simpan draft saat pindah step (baik maju maupun mundur)
+        $this->saveDraft();
+
+        $this->currentStep = $step;
+    }
+    public function saveDraft()
+    {
+        // Ambil hanya field yang relevan (data input), hindari objek file (visual_evidence/supporting_documents)
+        // agar tidak terjadi error "Serialization of TemporaryUploadedFile"
+        $payload = $this->only([
+            'event_type_id',
+            'event_sub_type_id',
+            'description',
+            'location_id',
+            'location_specific',
+            'date_time',
+            'pelapor_id',
+            'manualPelaporName',
+            'department_id',
+            'contractor_id',
+            'deptCont',
+            'keyWord',
+            'likelihood_id',
+            'consequence_id',
+            'emergency_action',
+            'penanggungJawab',
+            'selectedBodyPartCategory',
+            'selectedBodyPart',
+            'damage_detail',
+            'directly_involved',
+            'pemimpin',
+            'facilitator',
+            'anggota',
+            'peepo',
+            'timelines',
+            'whyCount',
+            'unsafe_conditions',
+            'unsafe_acts',
+            'personal_factors',
+            'job_factors',
+            'control_system_factors',
+            'corrective_actions',
+            'key_learning',
+            'penerimaan_komentar_contractor_id',
+            'penerimaan_komentar_internal_id',
+            'penerimaan_komentar_ohs_id',
+            'penerimaan_komentar_ktt_id',
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt',
+            'currentStep' // Simpan juga step terakhir agar user kembali ke halaman yang sama
+        ]);
+
+        IncidentDraft::updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['payload' => $payload]
+        );
     }
 
     public function removeFile($property, $index)
@@ -626,68 +691,92 @@ class Create extends Component
 
     public function mount()
     {
-        if (empty($this->directly_involved)) {
+        // A. PRIORITAS UTAMA: Load data dari Draft Database atau Session
+        $draft = IncidentDraft::where('user_id', auth()->id())->first();
 
-            $this->addDirectlyInvolvedRow();
-        }
-        $this->addRow('pemimpin');
-
-        $this->addRow('facilitator');
-
-        $this->addRow('anggota');
-
-        $this->addRow('timelines');
-
-        $this->addRow('unsafe_conditions');
-
-        $this->addRow('unsafe_acts');
-
-        $this->addRow('personal_factors');
-
-        $this->addRow('job_factors');
-
-        $this->addRow('control_system_factors');
-
-        $this->addCorrectiveRow();
-
-        if (session()->has('incident_data')) {
+        if ($draft && $draft->payload) {
+            $this->fill($draft->payload);
+            // 3. Sinkronkan Nama Lokasi (Jika Anda punya properti $searchLocation)
+            if ($this->location_id) {
+                $location = Location::find($this->location_id);
+                $this->searchLocation = $location ? $location->name : '';
+            }
+        } elseif (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
 
+        // B. MAPPING NAMA (Cara ke-2): Mengubah ID dari draft menjadi Nama untuk UI
+        $this->loadRelatedNames();
+
+        // C. INISIALISASI BARIS DEFAULT: Hanya tambah baris jika data kosong
+        $this->ensureDefaultRows();
+
+        // D. DATA STATIS
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-
-        // Gunakan pola ini untuk SEMUA array dinamis agar tidak menimpa data yang sudah ada
-        if (empty($this->unsafe_conditions)) {
-            $this->unsafe_conditions = [['item' => '', 'description' => '']];
+    }
+    protected function loadRelatedNames()
+    {
+        // 1. Departemen / Kontraktor
+        if ($this->department_id) {
+            $this->searchQuery['department'] = Department::find($this->department_id)?->name;
+        }
+        if ($this->contractor_id) {
+            $this->searchQuery['contractor'] = Contractor::find($this->contractor_id)?->name;
         }
 
-        if (empty($this->unsafe_acts)) {
-            $this->unsafe_acts = [['item' => '', 'description' => '']];
+        // 2. Pelapor (Employee)
+        if ($this->pelapor_id) {
+            $this->searchName = User::find($this->pelapor_id)?->name;
         }
 
-        if (empty($this->personal_factors)) {
-            $this->personal_factors = [['item' => '', 'description' => '']];
+        // 3. Investigasi (Pemimpin, Facilitator, Anggota)
+        $investigationTeams = ['pemimpin', 'facilitator', 'anggota'];
+        foreach ($investigationTeams as $team) {
+            if (!empty($this->{$team})) {
+                foreach ($this->{$team} as $index => $row) {
+                    if (!empty($row['user_id'])) {
+                        $this->searchQuery[$team][$index] = User::find($row['user_id'])?->name;
+                    }
+                }
+            }
         }
 
-        if (empty($this->job_factors)) {
-            $this->job_factors = [['item' => '', 'description' => '']];
+        // 4. Pihak Terlibat Langsung (Korban/Saksi)
+        if (!empty($this->directly_involved)) {
+            foreach ($this->directly_involved as $index => $row) {
+                if (!empty($row['employee_nik'])) {
+                    // Contoh jika Anda punya properti searchKorban[$index]
+                    $this->searchKorban[$index] = User::where('nik', $row['employee_nik'])->first()?->name;
+                }
+            }
+        }
+    }
+    protected function ensureDefaultRows()
+    {
+        // Tambah 1 baris jika array masih kosong setelah load draf
+        if (empty($this->directly_involved)) $this->addDirectlyInvolvedRow();
+        if (empty($this->pemimpin)) $this->addRow('pemimpin');
+        if (empty($this->facilitator)) $this->addRow('facilitator');
+        if (empty($this->anggota)) $this->addRow('anggota');
+        if (empty($this->timelines)) $this->addRow('timelines');
+        if (empty($this->corrective_actions)) $this->addCorrectiveRow();
+
+        // Faktor Analisis (Unsafe Conditions, dll)
+        $factors = ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'];
+        foreach ($factors as $key) {
+            if (empty($this->{$key})) {
+                $this->{$key} = [['item' => '', 'description' => '']];
+            }
         }
 
-        if (empty($this->control_system_factors)) {
-            $this->control_system_factors = [['item' => '', 'description' => '']];
-        }
-
-        // PEEPO juga perlu dicek agar tidak ter-reset jika sudah ada isinya
+        // PEEPO
         foreach ($this->peepoFactors as $key => $label) {
             if (!isset($this->peepo[$key])) {
                 $this->peepo[$key] = ['temuan' => '', 'deskripsi' => ''];
             }
         }
-
-        // Lanjutkan untuk array lainnya (pemimpin, anggota, dll) dengan pola empty() yang sama
     }
-
 
     public function updatedDeptCont($value)
     {
