@@ -1515,6 +1515,10 @@ class Create extends Component
                 return $report;
             });
 
+            // === HAPUS SESSION DI SINI ===
+            // Karena data sudah masuk DB, kita tidak butuh draft lagi
+            session()->forget('incident_data');
+
             // 3. Feedback Berhasil
             $this->dispatch('alert', [
                 'text' => "Laporan " . $result->report_number . " berhasil dikirim!",
