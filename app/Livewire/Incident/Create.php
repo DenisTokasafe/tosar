@@ -1680,7 +1680,7 @@ class Create extends Component
 
             'tindakan_perbaikan' => collect($this->corrective_actions)->map(function ($action) {
                 return [
-                    'description'     => $action['action_description'],
+                    'action_description'     => $action['action_description'],
                     'hierarchy'       => $action['control_hierarchy'],
                     'pic_user_id'     => $action['name'], // ID dari searchable select
                     'due_date'        => $action['due_date'],
