@@ -997,6 +997,7 @@ class Create extends Component
             $this->searchQuery[$newIndex][$type] = '';
             $this->showDropdownPartisipan[$newIndex] = false;
         }
+        session(['incident_data' => $this->all()]);
     }
     public function removeRow($type, $index)
     {
@@ -1036,6 +1037,7 @@ class Create extends Component
         if (empty($this->{$type})) {
             $this->addRow($type);
         }
+        session(['incident_data' => $this->all()]);
     }
     #[Computed]
     public function gridClass()
