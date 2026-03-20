@@ -386,7 +386,18 @@ class Create extends Component
 
     public function updated($propertyName)
     {
-        session(['incident_data' => $this->all()]);
+        $data = $this->all();
+
+        // Hapus properti file agar tidak menyebabkan error serialisasi
+        unset(
+            $data['visual_evidence'],
+            $data['supporting_documents'],
+            $data['visual_evidence_paths'],
+            $data['supporting_documents_paths']
+        );
+
+        // Simpan data yang sudah difilter ke session
+        session()->put('incident_data_draft', $data);
         // 1. Logika Auto-Status & Refresh untuk Corrective Actions
         if (str_contains($propertyName, 'corrective_actions')) {
             // Tangkap index array dari propertyName (format: corrective_actions.0.actual_completion_date)
