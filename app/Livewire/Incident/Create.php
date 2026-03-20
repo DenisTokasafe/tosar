@@ -111,7 +111,7 @@ class Create extends Component
 
     // Pastikan Anda menginisialisasi array penampung data di mount
     public $peepo = [];
-    public $timelines = [];
+    public $why_analysis = [];
     public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
     public $unsafe_conditions = [];
     public $unsafe_acts = [];
@@ -671,14 +671,8 @@ class Create extends Component
         // 1. Load data referensi statis (Paling aman ditaruh di atas)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-        if (empty($this->timelines)) {
-            $this->timelines = [
-                [
-                    'why1' => '', // Minimal ada key why1
-                    'why2' => '',
-                    'why3' => '',
-                ]
-            ];
+        if (empty($this->why_analysis)) {
+            $this->why_analysis = ['why1' => ''];
         }
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
         if (session()->has('incident_data')) {
@@ -1069,36 +1063,27 @@ class Create extends Component
     #[Computed]
     public function gridClass()
     {
-        if ($this->whyCount == 2) {
-            return 'grid-cols-2';
-        }
-
-        if ($this->whyCount >= 3) {
-            return 'grid-cols-3';
-        }
-
-        return 'grid-cols-1';
+        return match (true) {
+            $this->whyCount == 2 => 'grid-cols-2',
+            $this->whyCount >= 3 => 'grid-cols-3',
+            default => 'grid-cols-1',
+        };
     }
     public function addWhyColumn()
     {
         $this->whyCount++;
 
         // Inisialisasi key baru di setiap baris timeline agar tidak error
-        foreach ($this->timelines as $index => $line) {
-            $this->timelines[$index]["why{$this->whyCount}"] = '';
-        }
+        $this->why_analysis['why' . $this->whyCount] = '';
         $this->saveToSession();
     }
     public function removeWhyColumn()
     {
         if ($this->whyCount > 1) {
-            // Hapus key "why" terakhir dari setiap baris timeline
-            foreach ($this->timelines as $index => $line) {
-                unset($this->timelines[$index]["why{$this->whyCount}"]);
-            }
+            unset($this->why_analysis['why' . $this->whyCount]);
             $this->whyCount--;
-            $this->saveToSession();
         }
+        $this->saveToSession();
     }
 
 
@@ -1490,7 +1475,7 @@ class Create extends Component
                 $report->peepoAnalyses()->createMany($data['analisis_peepo']);
 
                 // F. Simpan Timeline & 5-Whys (Part 5) - model TimelineAnalysis
-                $report->timelines()->createMany($data['analysis_timeline']);
+                $report->timelines()->create($this->why_analysis);
 
                 // G. Simpan Tindakan Perbaikan (Part 7) - model CorrectiveAction
                 $report->correctiveActions()->createMany($data['tindakan_perbaikan']);
