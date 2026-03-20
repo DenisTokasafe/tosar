@@ -386,55 +386,53 @@ class Create extends Component
 
     public function updated($propertyName)
     {
-        $data = $this->all();
-
-        // Hapus properti file agar tidak menyebabkan error serialisasi
-        unset(
-            $data['visual_evidence'],
-            $data['supporting_documents'],
-            $data['visual_evidence_paths'],
-            $data['supporting_documents_paths']
-        );
-        if (str_contains($propertyName, 'directly_involved')) {
-            session(['incident_data' => $data]);
-        }
-        // Simpan data yang sudah difilter ke session
-        session()->put('incident_data', $data);
-        // 1. Logika Auto-Status & Refresh untuk Corrective Actions
+        // 1. Logika Bisnis: Update otomatis Status/Progress
+        // Jalankan ini DI AWAL agar perubahan properti langsung tercermin di class
         if (str_contains($propertyName, 'corrective_actions')) {
-            // Tangkap index array dari propertyName (format: corrective_actions.0.actual_completion_date)
             $parts = explode('.', $propertyName);
 
-            if (isset($parts[1]) && isset($parts[2])) {
+            if (isset($parts[1]) && isset($parts[2]) && $parts[2] === 'actual_completion_date') {
                 $index = $parts[1];
-                $field = $parts[2];
 
-                // Jika yang diubah adalah tanggal selesai, update progress & status otomatis
-                if ($field === 'actual_completion_date') {
-                    if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
-                        $this->corrective_actions[$index]['status'] = 'Selesai';
-                        $this->corrective_actions[$index]['progress'] = 100;
-                    } else {
-                        $this->corrective_actions[$index]['status'] = 'Belum Selesai';
-                        $this->corrective_actions[$index]['progress'] = 0;
-                    }
+                if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
+                    $this->corrective_actions[$index]['status'] = 'Selesai';
+                    $this->corrective_actions[$index]['progress'] = 100;
+                } else {
+                    $this->corrective_actions[$index]['status'] = 'Belum Selesai';
+                    $this->corrective_actions[$index]['progress'] = 0;
                 }
-                // Update session lagi setelah perubahan otomatis di atas
-                session(['incident_data' => $data]);
+                $this->dispatch('refresh-component');
             }
-            // Paksa render ulang agar indikator visual muncul
-            $this->dispatch('refresh-component');
         }
 
-        // 2. Validasi field kondisional jika tipe event berubah
+        // 2. Simpan ke Session
+        // Gunakan fungsi helper saveToSession yang sudah Anda buat agar kode tidak duplikat
+        $this->saveToSession();
+
+        // 3. Validasi Kondisional
         if ($propertyName === 'event_type_id') {
             $this->validateOnly('selectedBodyPartCategory');
             $this->validateOnly('selectedBodyPart');
             $this->validateOnly('damage_detail');
         }
 
-        // 3. Jalankan validasi standar untuk field yang sedang diubah
+        // 4. Validasi Standar (Real-time feedback)
         $this->validateOnly($propertyName);
+    }
+
+    protected function saveToSession()
+    {
+        $data = $this->all();
+
+        // Hapus file dan properti yang tidak bisa diserialisasi
+        unset(
+            $data['visual_evidence'],
+            $data['supporting_documents'],
+            $data['visual_evidence_paths'],
+            $data['supporting_documents_paths']
+        );
+
+        session()->put('incident_data', $data);
     }
 
     // Komentar Standard
@@ -955,12 +953,7 @@ class Create extends Component
         $this->searchKorban = array_values($this->searchKorban);
         $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
     }
-    protected function saveToSession()
-    {
-        $data = $this->all();
-        unset($data['visual_evidence'], $data['supporting_documents']); // Buang file
-        session(['incident_data' => $data]);
-    }
+
 
     // Fungsi pencarian otomatis saat user mengetik
     public function updatedSearchKorban($value, $index)
