@@ -1468,6 +1468,7 @@ class Create extends Component
                 'destination' => '/incident/show/' . $result->id, // Arahkan ke detail laporan
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
+            $this->dispatch('clear-draft');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
             throw $e;
