@@ -1463,6 +1463,7 @@ class Create extends Component
 
                 // A. Simpan Header Utama (Incident Report)
                 $report = IncidentReport::create($data['header']);
+                $report->risk()->create($data['risk_assessment']);
 
                 // B. Simpan Detail Dampak (Injury vs Damage) - model IncidentImpact
                 $report->impact()->create([

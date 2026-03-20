@@ -136,4 +136,9 @@ class IncidentReport extends Model
     {
         return $this->hasMany(IncidentAttachment::class);
     }
+    public function risk()
+    {
+        // HasOne karena 1 laporan hanya punya 1 penilaian risiko
+        return $this->hasOne(IncidentRisk::class, 'incident_report_id');
+    }
 }
