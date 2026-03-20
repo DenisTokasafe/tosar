@@ -18,11 +18,6 @@ trait WithDeptContSelection
     public $showContractorDropdown = false;
 
     // Masukkan fungsi-fungsi Anda di bawah sini
-    public function mountWithDeptContSelection()
-    {
-        $this->updatedSearch();
-        $this->updatedSearchContractor();
-    }
     public function updatedSearch()
     {
         if (strlen($this->search) < 1) {

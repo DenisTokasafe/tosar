@@ -46,7 +46,7 @@
 <link href="/pwa/icons/ios/512.png" sizes="512x512" rel="apple-touch-startup-image">
 <link href="/pwa/icons/ios/256.png" sizes="256x256" rel="apple-touch-startup-image">
 <link href="/pwa/icons/ios/192.png" sizes="192x192" rel="apple-touch-startup-image">
-<script defer src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.bunny.net">
 @stack('styles')
 {{-- @stack('dropdowns') --}}
