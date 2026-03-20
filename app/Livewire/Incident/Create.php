@@ -395,9 +395,11 @@ class Create extends Component
             $data['visual_evidence_paths'],
             $data['supporting_documents_paths']
         );
-
+        if (str_contains($propertyName, 'directly_involved')) {
+            session(['incident_data' => $data]);
+        }
         // Simpan data yang sudah difilter ke session
-        session()->put('incident_data_draft', $data);
+        session()->put('incident_data', $data);
         // 1. Logika Auto-Status & Refresh untuk Corrective Actions
         if (str_contains($propertyName, 'corrective_actions')) {
             // Tangkap index array dari propertyName (format: corrective_actions.0.actual_completion_date)
@@ -417,8 +419,9 @@ class Create extends Component
                         $this->corrective_actions[$index]['progress'] = 0;
                     }
                 }
+                // Update session lagi setelah perubahan otomatis di atas
+                session(['incident_data' => $data]);
             }
-
             // Paksa render ulang agar indikator visual muncul
             $this->dispatch('refresh-component');
         }
@@ -938,6 +941,7 @@ class Create extends Component
         $newIndex = count($this->directly_involved) - 1;
         $this->searchKorban[$newIndex] = '';
         $this->show_employee_dropdown[$newIndex] = false;
+        $this->saveToSession();
     }
 
     public function removeDirectlyInvolvedRow($index)
