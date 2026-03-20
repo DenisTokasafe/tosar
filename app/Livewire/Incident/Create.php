@@ -671,9 +671,12 @@ class Create extends Component
 
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
         if (session()->has('incident_data')) {
-            $this->fill(session('incident_data'));
+            $data = session('incident_data');
+            $this->fill($data);
+
+            // Pastikan whyCount ikut terisi dari session
+            $this->whyCount = $data['whyCount'] ?? 1;
         }
-        $this->whyCount = $data['whyCount'] ?? 1;
         // Inisialisasi jika session kosong
         $roles = ['pemimpin', 'facilitator', 'anggota'];
         foreach ($roles as $role) {
