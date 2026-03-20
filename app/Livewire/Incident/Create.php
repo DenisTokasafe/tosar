@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Incident;
 
-use \App\Traits\WithDeptContSelection;
 use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
@@ -10,7 +9,6 @@ use App\Models\Department;
 use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
-use App\Models\IncidentDraft;
 use App\Models\Likelihood;
 use App\Models\Location;
 use App\Models\RiskAssessment;
@@ -20,8 +18,6 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
-use App\Traits\WithSearchLocation;
-use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
@@ -30,6 +26,9 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use \App\Traits\WithDeptContSelection;
+use App\Traits\WithSearchLocation;
+use App\Traits\WithSearchPelapor;
 
 class Create extends Component
 {
@@ -627,99 +626,66 @@ class Create extends Component
 
     public function mount()
     {
-        // 1. PRIORITAS UTAMA: Ambil data dari Draft Database (atau Session)
-        $draft = IncidentDraft::where('user_id', auth()->id())->first();
+        if (empty($this->directly_involved)) {
 
-        if ($draft && $draft->payload) {
-            $this->fill($draft->payload);
-        } elseif (session()->has('incident_data')) {
+            $this->addDirectlyInvolvedRow();
+        }
+        $this->addRow('pemimpin');
+
+        $this->addRow('facilitator');
+
+        $this->addRow('anggota');
+
+        $this->addRow('timelines');
+
+        $this->addRow('unsafe_conditions');
+
+        $this->addRow('unsafe_acts');
+
+        $this->addRow('personal_factors');
+
+        $this->addRow('job_factors');
+
+        $this->addRow('control_system_factors');
+
+        $this->addCorrectiveRow();
+
+        if (session()->has('incident_data')) {
             $this->fill(session('incident_data'));
         }
 
-        // 2. SINKRONISASI Tampilan (Cara ke-2: Helper Mapping Nama)
-        // Jalankan ini SETELAH fill agar ID yang dari draft diubah jadi Nama untuk UI
-        $this->loadRelatedNames();
-
-        // 3. DEFAULT ROWS: Tambahkan baris kosong HANYA jika data masih kosong (First Time Load)
-        $this->ensureDefaultRows();
-
-        // 4. LOAD STATIC DATA
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-    }
 
-    /**
-     * Memastikan setiap array minimal punya 1 baris input jika tidak ada data dari draft
-     */
-    private function ensureDefaultRows()
-    {
-        if (empty($this->directly_involved)) $this->addDirectlyInvolvedRow();
-        if (empty($this->pemimpin)) $this->addRow('pemimpin');
-        if (empty($this->facilitator)) $this->addRow('facilitator');
-        if (empty($this->anggota)) $this->addRow('anggota');
-        if (empty($this->timelines)) $this->addRow('timelines');
-        if (empty($this->corrective_actions)) $this->addCorrectiveRow();
-
-        // Faktor-faktor analisis
-        $factors = ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'];
-        foreach ($factors as $factor) {
-            if (empty($this->{$factor})) {
-                $this->{$factor} = [['item' => '', 'description' => '']];
-            }
+        // Gunakan pola ini untuk SEMUA array dinamis agar tidak menimpa data yang sudah ada
+        if (empty($this->unsafe_conditions)) {
+            $this->unsafe_conditions = [['item' => '', 'description' => '']];
         }
 
-        // PEEPO
+        if (empty($this->unsafe_acts)) {
+            $this->unsafe_acts = [['item' => '', 'description' => '']];
+        }
+
+        if (empty($this->personal_factors)) {
+            $this->personal_factors = [['item' => '', 'description' => '']];
+        }
+
+        if (empty($this->job_factors)) {
+            $this->job_factors = [['item' => '', 'description' => '']];
+        }
+
+        if (empty($this->control_system_factors)) {
+            $this->control_system_factors = [['item' => '', 'description' => '']];
+        }
+
+        // PEEPO juga perlu dicek agar tidak ter-reset jika sudah ada isinya
         foreach ($this->peepoFactors as $key => $label) {
             if (!isset($this->peepo[$key])) {
                 $this->peepo[$key] = ['temuan' => '', 'deskripsi' => ''];
             }
         }
-    }
 
-    public function loadRelatedNames()
-    {
-        // A. Sinkronisasi Departemen
-        if ($this->department_id) {
-            $dept = Department::find($this->department_id);
-            // Asumsikan properti search Anda namanya $searchDepartment
-            $this->search = $dept ? $dept->department_name : '';
-        }
-
-        // B. Sinkronisasi Pelapor
-        if ($this->pelapor_id) {
-            $pelapor = User::find($this->pelapor_id);
-            $this->searchPelapor = $pelapor ? $pelapor->name : '';
-        }
-
-        // C. Sinkronisasi Korban (Array/Directly Involved)
-        // Jika directly_involved berisi NIK atau ID, kita loop untuk isi searchKorban[]
-        if (!empty($this->directly_involved)) {
-            foreach ($this->directly_involved as $index => $item) {
-                if (!empty($item['employee_nik'])) {
-                    $emp = User::where('nik', $item['employee_nik'])->first();
-                    $this->searchKorban[$index] = $emp ? $emp->name : '';
-                }
-            }
-        }
-
-        // D. Sinkronisasi Tim Investigasi (Pemimpin/Facilitator/Anggota)
-        $this->loadTeamNames('pemimpin');
-        $this->loadTeamNames('facilitator');
-        $this->loadTeamNames('anggota');
-    }
-
-    // Helper tambahan khusus untuk array tim agar kode tidak duplikat
-    private function loadTeamNames($type)
-    {
-        if (!empty($this->{$type})) {
-            foreach ($this->{$type} as $index => $person) {
-                if (!empty($person['user_id'])) {
-                    $user = User::find($person['user_id']);
-                    // Sesuaikan dengan nama properti search Anda (misal $searchQuery['pemimpin'][0])
-                    $this->searchQuery[$type][$index] = $user ? $user->name : '';
-                }
-            }
-        }
+        // Lanjutkan untuk array lainnya (pemimpin, anggota, dll) dengan pola empty() yang sama
     }
 
 
