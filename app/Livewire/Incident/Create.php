@@ -730,8 +730,22 @@ class Create extends Component
         $draft = IncidentDraft::where('user_id', auth()->id())->first();
 
         if ($draft && $draft->payload) {
-            // Method fill() akan mencocokkan key di payload dengan nama properti secara otomatis
             $this->fill($draft->payload);
+
+            // Menangani properti Search/Nama berdasarkan ID dari draft
+            if ($this->department_id) {
+                $this->search = Department::find($this->department_id)?->department_name;
+            }
+            if ($this->department_id) {
+                $this->searchContractor = Contractor::find($this->department_id)?->contractor_name;
+            }
+
+            if ($this->pelapor_id) {
+                $this->searchPetugas = User::find($this->pelapor_id)?->name;
+            }
+
+            // Contoh untuk data array (Involved Personnel)
+            // Jika Anda butuh mapping nama untuk tiap baris di array
         }
         // 1. Inisialisasi Data Master (Dropdown)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
