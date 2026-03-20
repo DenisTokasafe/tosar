@@ -92,12 +92,9 @@
                 @endif
                 @endif
             </fieldset>
-
-
         </div>
         {{-- Kolom Risk Matrix --}}
         <div class="flex-none overflow-x-auto ">
-
             <table class="table table-xs w-60">
                 <thead>
                     <tr class="text-center text-[9px]">
