@@ -38,7 +38,6 @@ class Update extends Component
     public $date_time;
     public $location_id;
     public $location_specific;
-    public $searchLocation; // Untuk input search
     public $show_location = false; // Toggle dropdown lokasi
 
     // --- PART 1: DEPT & PIC ---
