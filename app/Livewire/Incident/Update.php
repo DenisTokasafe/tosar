@@ -176,7 +176,15 @@ class Update extends Component
             $this->damage_detail = $report->impact->damage_detail;
         }
     }
+    public function getHasSubTypesProperty()
+    {
+        if (!$this->event_type_id) {
+            return false;
+        }
 
+        // Cek apakah ada anak (sub-tipe) untuk tipe yang dipilih
+        return EventSubType::where('event_type_id', $this->event_type_id)->exists();
+    }
     public function edit($likelihoodId, $consequenceId)
     {
         $this->likelihood_id = $likelihoodId;
