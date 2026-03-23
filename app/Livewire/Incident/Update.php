@@ -140,8 +140,28 @@ class Update extends Component
         $this->date_time = $report->date_time->format('Y-m-d\TH:i');
         $this->location_id = $report->location_id;
         $this->location_specific = $report->location_specific;
-        $this->department_id = $report->department_id;
-        $this->contractor_id = $report->contractor_id;
+
+        if ($report->department_id) {
+            $this->department_id = $report->department_id;
+            $this->deptCont = 'department'; // Jika Anda pakai toggle selector
+
+            // Ambil nama untuk ditampilkan di input search
+            $this->search = $report->department?->department_name;
+
+            // Load awal opsi penanggung jawab (Reuse logic dari Trait)
+            $this->loadInitialPenanggungJawab('department', $report->department_id);
+        }
+        // 2. Cek apakah ini laporan Contractor
+        elseif ($report->contractor_id) {
+            $this->contractor_id = $report->contractor_id;
+            $this->deptCont = 'contractor';
+
+            // Ambil nama untuk ditampilkan di input search
+            $this->searchContractor = $report->contractor?->contractor_name;
+
+            // Load awal opsi penanggung jawab
+            $this->loadInitialPenanggungJawab('contractor', $report->contractor_id);
+        }
         if ($this->department_id) {
             $this->deptCont = 'dept';
         } else {
