@@ -297,6 +297,20 @@ class Update extends Component
             $this->dispatch('scroll-to-top');
         }
     }
+    /**
+     * Berpindah antar step/part secara langsung
+     */
+    public function goToStep($step)
+    {
+        // Opsional: Validasi minimal sebelum pindah (jika diperlukan)
+        // $this->validateOnlyStep($this->currentStep);
+
+        $this->currentStep = $step;
+
+        // Kirim event ke browser untuk scroll ke atas agar user tidak bingung
+        // saat konten di bawah berubah
+        $this->dispatch('scroll-to-top');
+    }
 
     protected function validateOnlyStep($step)
     {
