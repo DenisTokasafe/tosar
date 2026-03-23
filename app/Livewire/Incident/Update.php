@@ -286,4 +286,129 @@ class Update extends Component
             'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
+    public function nextStep()
+    {
+        // Validasi hanya field yang ada di step saat ini (misal Step 1)
+        $this->validateOnlyStep($this->currentStep);
+
+        if ($this->currentStep < 9) {
+            $this->currentStep++;
+            // Kirim event ke browser untuk scroll ke atas jika perlu
+            $this->dispatch('scroll-to-top');
+        }
+    }
+
+    protected function validateOnlyStep($step)
+    {
+        // 1. Definisikan Base Rules (Rules yang bersifat kondisional)
+        $isInjuryRules = $this->isInjury
+            ? ['selectedBodyPartCategory' => 'required', 'selectedBodyPart' => 'required']
+            : ['damage_detail' => 'required|string'];
+
+        $kttRules = in_array((int)$this->consequence_id, [3, 4, 5])
+            ? ['penerimaan_komentar_ktt_id' => 'required|exists:users,id', 'penerimaan_komentar_ktt' => 'required|min:11']
+            : [];
+
+        // 2. Pemetaan Rules per Step
+        $stepRules = [
+            1 => array_merge([
+                'event_type_id' => 'required|exists:event_types,id',
+                'event_sub_type_id' => 'required|exists:event_sub_types,id',
+                'description' => 'required|string',
+                'location_id' => 'required|exists:locations,id',
+                'location_specific' => 'required_with:location_id|string',
+                'date_time' => 'required|date',
+                'pelapor_id' => 'required_without:manualPelaporName',
+                'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
+                'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
+                'deptCont' => 'required',
+                'likelihood_id' => 'required',
+                'consequence_id' => 'required',
+                'emergency_action' => 'required',
+                'penanggungJawab' => 'required',
+            ], $isInjuryRules),
+
+            2 => [
+                'directly_involved' => 'required|array|min:1',
+                'directly_involved.*.employee_name' => 'required|string',
+                'directly_involved.*.employee_nik'  => 'required',
+                'directly_involved.*.dept_cont'     => 'required',
+                'directly_involved.*.jabatan'       => 'required',
+                'directly_involved.*.roster'        => 'required',
+                'directly_involved.*.sift'          => 'required',
+                'directly_involved.*.keterlibatan'  => 'required',
+                'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            ],
+
+            3 => [
+                'pemimpin' => 'required|array|min:1',
+                'pemimpin.*.user_id' => 'required',
+                'pemimpin.*.dept'    => 'required|string',
+                'pemimpin.*.jabatan' => 'required|string',
+                'facilitator' => 'required|array|min:1',
+                'facilitator.*.user_id' => 'required',
+                'anggota' => 'required|array|min:1',
+            ],
+
+            4 => [
+                'peepo.orang.temuan'      => 'required|string|min:3',
+                'peepo.orang.deskripsi'   => 'required|string|min:5',
+                'peepo.peralatan.temuan'    => 'required|string|min:3',
+                'peepo.peralatan.deskripsi' => 'required|string|min:5',
+                'peepo.lingkungan.temuan'   => 'required|string|min:3',
+                'peepo.prosedur.temuan'     => 'required|string|min:3',
+                'peepo.organisasi.temuan'   => 'required|string|min:3',
+            ],
+
+            5 => $this->getWhyAnalysisRules(), // Helper untuk dynamic why
+
+            6 => [
+                'unsafe_conditions.*.item' => 'required',
+                'unsafe_conditions.*.description' => 'required|string|min:5',
+                'unsafe_acts.*.item' => 'required',
+                'personal_factors.*.item' => 'required',
+                'job_factors.*.item' => 'required',
+                'control_system_factors.*.item' => 'required',
+            ],
+
+            7 => [
+                'visual_evidence' => 'required|array|min:1',
+                'visual_evidence.*' => 'image|max:2048',
+                'supporting_documents' => 'required|array|min:1',
+                'corrective_actions.*.action_description' => 'required|string|min:10',
+                'corrective_actions.*.pic_user_id'         => 'required|exists:users,id',
+                'corrective_actions.*.due_date'           => 'required|date|after_or_equal:date_time',
+            ],
+
+            8 => [
+                'key_learning' => 'required|string|min:10',
+            ],
+
+            9 => array_merge([
+                'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+                'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+                'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+                'penerimaan_komentar_contractor'    => 'required|min:11',
+                'penerimaan_komentar_internal'      => 'required|min:11',
+                'penerimaan_komentar_ohs'           => 'required|min:11',
+            ], $kttRules),
+        ];
+
+        // 3. Jalankan Validasi
+        if (isset($stepRules[$step])) {
+            return $this->validate($stepRules[$step]);
+        }
+    }
+
+    /**
+     * Helper untuk dynamic why analysis rules
+     */
+    protected function getWhyAnalysisRules()
+    {
+        $rules = ['why_analysis' => 'required|array'];
+        foreach (range(1, $this->whyCount ?? 5) as $i) {
+            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
+        }
+        return $rules;
+    }
 }
