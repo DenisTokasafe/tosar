@@ -251,7 +251,20 @@ class Update extends Component
 
         return $rules;
     }
+    protected function saveToSession()
+    {
+        $data = $this->all();
+        $data['whyCount'] = $this->whyCount;
+        // Hapus file dan properti yang tidak bisa diserialisasi
+        unset(
+            $data['visual_evidence'],
+            $data['supporting_documents'],
+            $data['visual_evidence_paths'],
+            $data['supporting_documents_paths']
+        );
 
+        session()->put('incident_data', $data);
+    }
     public function mount($id)
     {
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
