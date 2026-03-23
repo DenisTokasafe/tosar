@@ -99,6 +99,14 @@ class Update extends Component
     public $activeType = null;
     public $activeIndex = null;
     public $options = []; // Hasil pencarian User
+    public $peepo = [];
+    public $peepoFactors = [
+        'orang' => 'Orang',
+        'peralatan' => 'Peralatan',
+        'lingkungan' => 'Lingkungan',
+        'prosedur' => 'Prosedur',
+        'organisasi' => 'Organisasi'
+    ];
 
     #[Computed]
     public function isInjury()
@@ -178,21 +186,21 @@ class Update extends Component
             'anggota.*.user_id' => 'required',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
-            // // PART 4: PEEPO (Analisis Faktor)
-            // 'peepo.orang.temuan'      => 'required|string|min:3',
-            // 'peepo.orang.deskripsi'   => 'required|string|min:5',
+            // PART 4: PEEPO (Analisis Faktor)
+            'peepo.orang.temuan'      => 'required|string|min:3',
+            'peepo.orang.deskripsi'   => 'required|string|min:5',
 
-            // 'peepo.peralatan.temuan'    => 'required|string|min:3',
-            // 'peepo.peralatan.deskripsi' => 'required|string|min:5',
+            'peepo.peralatan.temuan'    => 'required|string|min:3',
+            'peepo.peralatan.deskripsi' => 'required|string|min:5',
 
-            // 'peepo.lingkungan.temuan'   => 'required|string|min:3',
-            // 'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+            'peepo.lingkungan.temuan'   => 'required|string|min:3',
+            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
 
-            // 'peepo.prosedur.temuan'     => 'required|string|min:3',
-            // 'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+            'peepo.prosedur.temuan'     => 'required|string|min:3',
+            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
 
-            // 'peepo.organisasi.temuan'   => 'required|string|min:3',
-            // 'peepo.organisasi.deskripsi' => 'required|string|min:5',
+            'peepo.organisasi.temuan'   => 'required|string|min:3',
+            'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // // PART 5: Timeline & Why Analysis
             // 'why_analysis' => 'required|array',
             // // Part 6
@@ -409,6 +417,17 @@ class Update extends Component
                 }
             } else {
                 $this->addRow($role);
+            }
+
+            // PART 4: Load PEEPO
+            foreach ($this->peepoFactors as $key => $label) {
+                // Cari berdasarkan factor_key (orang, peralatan, dll)
+                $data = $report->peepoAnalyses->where('factor_key', $key)->first();
+
+                $this->peepo[$key] = [
+                    'temuan'    => $data->temuan ?? '',
+                    'deskripsi' => $data->deskripsi ?? '',
+                ];
             }
         }
     }
@@ -819,15 +838,15 @@ class Update extends Component
                 'anggota.*.jabatan' => $allRules['anggota.*.jabatan'],
             ],
 
-            // 4 => [
-            //     'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
-            //     'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
-            //     'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
-            //     'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
-            //     'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
-            //     'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
-            //     'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
-            // ],
+            4 => [
+                'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
+                'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
+                'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
+                'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
+                'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
+                'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
+                'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
+            ],
 
             // 5 => $this->getWhyAnalysisRules(),
 
@@ -919,9 +938,9 @@ class Update extends Component
                     if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
                     break;
 
-                    // case 4:
-                    //     if (str_starts_with($field, 'peepo')) return true;
-                    //     break;
+                case 4:
+                    if (str_starts_with($field, 'peepo')) return true;
+                    break;
 
                     // case 5:
                     //     if (str_starts_with($field, 'timelines')) return true;
@@ -1022,6 +1041,17 @@ class Update extends Component
                     ]);
                 }
             }
+        }
+        // Di dalam fungsi update()
+        foreach ($this->peepo as $key => $value) {
+            $report->peepoAnalyses()->updateOrCreate(
+                ['factor_key' => $key], // Match berdasarkan key (orang, peralatan, dll)
+                [
+                    'factor_name' => $this->peepoFactors[$key], // Nama lengkap untuk display
+                    'temuan'      => $value['temuan'],
+                    'deskripsi'   => $value['deskripsi'],
+                ]
+            );
         }
 
         // 4. Navigasi atau Notifikasi
