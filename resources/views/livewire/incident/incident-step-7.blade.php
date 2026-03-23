@@ -109,7 +109,7 @@
                     <x-form.searchable-select-advanced
                         label="Person In Charge (PIC)"
                         modelsearch="searchPetugas.{{ $index }}"
-                        modelid="corrective_actions.{{ $index }}.name"
+                        modelid="corrective_actions.{{ $index }}.pic_user_id"
                         :options="$pelaporsAct"
                         :showdropdown="$showDropdownPetugas[$index] ?? false"
                         clickaction="selectActPelapor" />
