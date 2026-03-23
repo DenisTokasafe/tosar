@@ -215,7 +215,7 @@ class Create extends Component
             'peepo.organisasi.temuan'   => 'required|string|min:3',
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // PART 5: Timeline & Why Analysis
-            'timelines' => 'required|array|min:1',
+            'why_analysis' => 'required|array',
             // Part 6
             // Validasi Kondisi Tidak Aman
             'unsafe_conditions.*.item' => 'required',
@@ -247,7 +247,7 @@ class Create extends Component
             // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            'corrective_actions.*.name' => 'required', // PIC ID/Name
+            'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
             'corrective_actions.*.actual_completion_date' => [
                 'nullable',
@@ -340,6 +340,8 @@ class Create extends Component
             'anggota.*.user_id' => __('Nama Anggota'),
             'anggota.*.dept'    => __('Departemen Anggota'),
             'anggota.*.jabatan' => __('Jabatan Anggota'),
+            // Part 5: Atribut Dinamis untuk Why
+            'why_analysis' => __('Analisis Mengapa'),
             // Part 7
             // Validasi Dokumen Pendukung (Multiple)
             'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
