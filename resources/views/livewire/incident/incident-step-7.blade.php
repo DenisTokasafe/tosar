@@ -166,7 +166,7 @@
                     </td>
                     <td class="w-1/5 align-top">
                         <x-form.searchable-select-advanced modelsearch="searchPetugas.{{ $index }}"
-                            modelid="corrective_actions.{{ $index }}.name" :options="$pelaporsAct"
+                            modelid="corrective_actions.{{ $index }}.pic_user_id" :options="$pelaporsAct"
                             :showdropdown="$showDropdownPetugas[$index] ?? false" clickaction="selectActPelapor" />
                     </td>
                     <td class="align-top">
