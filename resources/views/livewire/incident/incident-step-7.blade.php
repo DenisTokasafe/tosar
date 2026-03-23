@@ -156,7 +156,7 @@
             </thead>
             <tbody class="text-xs">
                 @foreach($corrective_actions as $index => $action)
-                <tr wire:key="desktop-row-{{ $index }}" class="hover:bg-base-50">
+                <tr wire:key="corrective-desktop-{{ $index }}-{{ count($corrective_actions) }}" class="hover:bg-base-50">
                     <td class="w-1/4 align-top">
                         <x-form.text_area model="corrective_actions.{{ $index }}.action_description" rows="2" />
                     </td>
