@@ -170,7 +170,7 @@ class Update extends Component
         if ($this->isInjury) {
             $this->selectedBodyPart = $impact?->body_part_id;
             // Gunakan find untuk mendapatkan kategori agar select category otomatis terpilih (selected)
-            $bodyPart = \App\Models\BodyPart::find($this->selectedBodyPart);
+            $bodyPart = BodyPart::find($this->selectedBodyPart);
             $this->selectedBodyPartCategory = $bodyPart?->category;
 
             // Pastikan damage_detail kosong jika ini adalah cidera
@@ -191,7 +191,7 @@ class Update extends Component
         // 2. Tentukan logic isInjury berdasarkan Tipe Insiden (Event Type)
         // Asumsi: ID atau Nama tertentu menentukan apakah ini cidera manusia
         // Anda bisa menyesuaikan ID di bawah sesuai database SENTRY Anda
-        $eventType = \App\Models\EventType::find($value);
+        $eventType = EventType::find($value);
 
         if ($eventType) {
             // Contoh logic: Jika nama tipe mengandung kata 'Cidera' atau 'Injury'
