@@ -518,6 +518,16 @@ class Update extends Component
         // Cocokkan kolom 'severity' di Matrix dengan 'name' di RiskAssessment
         $this->RiskAssessment = RiskAssessment::where('name', $cell->severity)->first();
     }
+    public function keterlibatanOptions()
+    {
+        return [
+            'saksi'         => 'Saksi',
+            'korban_cedera' => 'Korban Cedera',
+            'kontraktor'    => 'Kontraktor',
+            'operator'      => 'Operator',
+            'lainnya'       => 'Lainnya',
+        ];
+    }
     public function render()
     {
         return view('livewire.incident.update', [
