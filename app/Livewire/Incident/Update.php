@@ -106,6 +106,145 @@ class Update extends Component
             ->get();
     }
 
+    public function rules()
+    {
+        $rules = [
+            // PART 1
+            'event_type_id' => 'required|exists:event_types,id',
+            'event_sub_type_id' => 'required|exists:event_sub_types,id',
+            'description' => 'required|string',
+            'location_id' => 'required|exists:locations,id',
+            'location_specific' => 'required_with:location_id|string',
+            'date_time' => 'required|date',
+            'pelapor_id' => 'required_without:manualPelaporName',
+
+
+
+            // Mutual Exclusion Dept/Contractor
+            'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
+            'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
+
+            'deptCont' => 'required',
+            'keyWord' => 'required',
+            'likelihood_id' => 'required',
+            'consequence_id' => 'required',
+            'emergency_action' => 'required',
+            'penanggungJawab' => 'required',
+            // Part 2
+            // PART 2: Pihak Terlibat Langsung
+            'directly_involved' => 'required|array|min:1',
+            'directly_involved.*.employee_name' => 'required|string',
+            'directly_involved.*.employee_nik'  => 'required',
+            'directly_involved.*.dept_cont'     => 'required',
+            'directly_involved.*.jabatan'       => 'required',
+            'directly_involved.*.roster'        => 'required',
+            'directly_involved.*.sift'          => 'required',
+            'directly_involved.*.keterlibatan'  => 'required',
+            'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            // PART 3: Tim Investigasi
+            'pemimpin' => 'required|array|min:1',
+            'pemimpin.*.user_id' => 'required',
+            'pemimpin.*.dept'    => 'required|string',
+            'pemimpin.*.jabatan' => 'required|string',
+
+            'facilitator' => 'required|array|min:1',
+            'facilitator.*.user_id' => 'required',
+            'facilitator.*.dept'    => 'required|string',
+            'facilitator.*.jabatan' => 'required|string',
+
+            'anggota' => 'required|array|min:1',
+            'anggota.*.user_id' => 'required',
+            'anggota.*.dept'    => 'required|string',
+            'anggota.*.jabatan' => 'required|string',
+            // PART 4: PEEPO (Analisis Faktor)
+            'peepo.orang.temuan'      => 'required|string|min:3',
+            'peepo.orang.deskripsi'   => 'required|string|min:5',
+
+            'peepo.peralatan.temuan'    => 'required|string|min:3',
+            'peepo.peralatan.deskripsi' => 'required|string|min:5',
+
+            'peepo.lingkungan.temuan'   => 'required|string|min:3',
+            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+
+            'peepo.prosedur.temuan'     => 'required|string|min:3',
+            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+
+            'peepo.organisasi.temuan'   => 'required|string|min:3',
+            'peepo.organisasi.deskripsi' => 'required|string|min:5',
+            // PART 5: Timeline & Why Analysis
+            'why_analysis' => 'required|array',
+            // Part 6
+            // Validasi Kondisi Tidak Aman
+            'unsafe_conditions.*.item' => 'required',
+            'unsafe_conditions.*.description' => 'required|string|min:5',
+
+            // Validasi Perilaku Tidak Aman
+            'unsafe_acts.*.item' => 'required',
+            'unsafe_acts.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pribadi
+            'personal_factors.*.item' => 'required',
+            'personal_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pekerjaan
+            'job_factors.*.item' => 'required',
+            'job_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Kelemahan Sistem Kontrol
+            'control_system_factors.*.item' => 'required',
+            'control_system_factors.*.description' => 'required|string|min:5',
+            // Part 7
+            'visual_evidence' => 'required|array|min:1',
+
+            // Validasi tiap file di dalam array (Ukuran dan Tipe)
+            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
+
+            'supporting_documents' => 'required|array|min:1',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
+            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
+            'corrective_actions.*.action_description' => 'required|string|min:10',
+            'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
+            'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
+            'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
+            'corrective_actions.*.actual_completion_date' => [
+                'nullable',
+                'date',
+                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
+                'after_or_equal:corrective_actions.*.due_date'
+            ],
+            // Part 8
+            'key_learning' => 'required|string|min:10',
+            // Part 9
+            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            'penerimaan_komentar_contractor'    => 'required|min:11',
+            'penerimaan_komentar_internal'      => 'required|min:11',
+            'penerimaan_komentar_ohs'           => 'required|min:11',
+
+            // LOGIKA KONDISIONAL BERDASARKAN isInjury
+            'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
+            'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
+            'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
+        ];
+
+        // Tambahkan Logika KTT di sini agar terbaca secara global
+        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
+
+
+        // PERBAIKAN DI SINI:
+        // Gunakan $rules, bukan $attributes.
+        // Dan pastikan key-nya sesuai dengan data binding Anda.
+        foreach (range(1, $this->whyCount) as $i) {
+            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
+        }
+
+        return $rules;
+    }
+
     public function mount($id)
     {
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
@@ -314,101 +453,112 @@ class Update extends Component
 
     protected function validateOnlyStep($step)
     {
-        // 1. Definisikan Base Rules (Rules yang bersifat kondisional)
+        // 1. Ambil semua rules utama dari method rules() sebagai referensi
+        $allRules = $this->rules();
+
+        // 2. Definisikan Base Rules kondisional (untuk digunakan di array_merge)
         $isInjuryRules = $this->isInjury
-            ? ['selectedBodyPartCategory' => 'required', 'selectedBodyPart' => 'required']
-            : ['damage_detail' => 'required|string'];
+            ? [
+                'selectedBodyPartCategory' => $allRules['selectedBodyPartCategory'],
+                'selectedBodyPart' => $allRules['selectedBodyPart']
+            ]
+            : [
+                'damage_detail' => $allRules['damage_detail']
+            ];
 
         $kttRules = in_array((int)$this->consequence_id, [3, 4, 5])
-            ? ['penerimaan_komentar_ktt_id' => 'required|exists:users,id', 'penerimaan_komentar_ktt' => 'required|min:11']
+            ? [
+                'penerimaan_komentar_ktt_id' => $allRules['penerimaan_komentar_ktt_id'],
+                'penerimaan_komentar_ktt' => $allRules['penerimaan_komentar_ktt']
+            ]
             : [];
 
-        // 2. Pemetaan Rules per Step
+        // 3. Pemetaan Rules per Step
         $stepRules = [
             1 => array_merge([
-                'event_type_id' => 'required|exists:event_types,id',
-                'event_sub_type_id' => 'required|exists:event_sub_types,id',
-                'description' => 'required|string',
-                'location_id' => 'required|exists:locations,id',
-                'location_specific' => 'required_with:location_id|string',
-                'date_time' => 'required|date',
-                'pelapor_id' => 'required_without:manualPelaporName',
-                'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
-                'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
-                'deptCont' => 'required',
-                'likelihood_id' => 'required',
-                'consequence_id' => 'required',
-                'emergency_action' => 'required',
-                'penanggungJawab' => 'required',
+                'event_type_id'      => $allRules['event_type_id'],
+                'event_sub_type_id'  => $allRules['event_sub_type_id'],
+                'description'        => $allRules['description'],
+                'location_id'        => $allRules['location_id'],
+                'location_specific'  => $allRules['location_specific'],
+                'date_time'          => $allRules['date_time'],
+                'pelapor_id'         => $allRules['pelapor_id'],
+                'department_id'      => $allRules['department_id'],
+                'contractor_id'      => $allRules['contractor_id'],
+                'deptCont'           => $allRules['deptCont'],
+                'likelihood_id'      => $allRules['likelihood_id'],
+                'consequence_id'     => $allRules['consequence_id'],
+                'emergency_action'   => $allRules['emergency_action'],
+                'penanggungJawab'    => $allRules['penanggungJawab'],
             ], $isInjuryRules),
 
             2 => [
-                'directly_involved' => 'required|array|min:1',
-                'directly_involved.*.employee_name' => 'required|string',
-                'directly_involved.*.employee_nik'  => 'required',
-                'directly_involved.*.dept_cont'     => 'required',
-                'directly_involved.*.jabatan'       => 'required',
-                'directly_involved.*.roster'        => 'required',
-                'directly_involved.*.sift'          => 'required',
-                'directly_involved.*.keterlibatan'  => 'required',
-                'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+                'directly_involved' => $allRules['directly_involved'],
+                'directly_involved.*.employee_name' => $allRules['directly_involved.*.employee_name'],
+                'directly_involved.*.employee_nik'  => $allRules['directly_involved.*.employee_nik'],
+                'directly_involved.*.dept_cont'     => $allRules['directly_involved.*.dept_cont'],
+                'directly_involved.*.jabatan'       => $allRules['directly_involved.*.jabatan'],
+                'directly_involved.*.roster'        => $allRules['directly_involved.*.roster'],
+                'directly_involved.*.sift'          => $allRules['directly_involved.*.sift'],
+                'directly_involved.*.keterlibatan'  => $allRules['directly_involved.*.keterlibatan'],
+                'directly_involved.*.pengalaman_kerja' => $allRules['directly_involved.*.pengalaman_kerja'],
             ],
 
             3 => [
-                'pemimpin' => 'required|array|min:1',
-                'pemimpin.*.user_id' => 'required',
-                'pemimpin.*.dept'    => 'required|string',
-                'pemimpin.*.jabatan' => 'required|string',
-                'facilitator' => 'required|array|min:1',
-                'facilitator.*.user_id' => 'required',
-                'anggota' => 'required|array|min:1',
+                'pemimpin' => $allRules['pemimpin'],
+                'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
+                'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
+                'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
+                'facilitator' => $allRules['facilitator'],
+                'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
+                'anggota' => $allRules['anggota'],
             ],
 
             4 => [
-                'peepo.orang.temuan'      => 'required|string|min:3',
-                'peepo.orang.deskripsi'   => 'required|string|min:5',
-                'peepo.peralatan.temuan'    => 'required|string|min:3',
-                'peepo.peralatan.deskripsi' => 'required|string|min:5',
-                'peepo.lingkungan.temuan'   => 'required|string|min:3',
-                'peepo.prosedur.temuan'     => 'required|string|min:3',
-                'peepo.organisasi.temuan'   => 'required|string|min:3',
+                'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
+                'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
+                'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
+                'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
+                'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
+                'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
+                'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
             ],
 
-            5 => $this->getWhyAnalysisRules(), // Helper untuk dynamic why
+            5 => $this->getWhyAnalysisRules(),
 
             6 => [
-                'unsafe_conditions.*.item' => 'required',
-                'unsafe_conditions.*.description' => 'required|string|min:5',
-                'unsafe_acts.*.item' => 'required',
-                'personal_factors.*.item' => 'required',
-                'job_factors.*.item' => 'required',
-                'control_system_factors.*.item' => 'required',
+                'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
+                'unsafe_conditions.*.description' => $allRules['unsafe_conditions.*.description'],
+                'unsafe_acts.*.item' => $allRules['unsafe_acts.*.item'],
+                'personal_factors.*.item' => $allRules['personal_factors.*.item'],
+                'job_factors.*.item' => $allRules['job_factors.*.item'],
+                'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
             ],
 
             7 => [
-                'visual_evidence' => 'required|array|min:1',
-                'visual_evidence.*' => 'image|max:2048',
-                'supporting_documents' => 'required|array|min:1',
-                'corrective_actions.*.action_description' => 'required|string|min:10',
-                'corrective_actions.*.pic_user_id'         => 'required|exists:users,id',
-                'corrective_actions.*.due_date'           => 'required|date|after_or_equal:date_time',
+                'visual_evidence' => $allRules['visual_evidence'],
+                'visual_evidence.*' => $allRules['visual_evidence.*'],
+                'supporting_documents' => $allRules['supporting_documents'],
+                'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
+                'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
+                'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
             ],
 
             8 => [
-                'key_learning' => 'required|string|min:10',
+                'key_learning' => $allRules['key_learning'],
             ],
 
             9 => array_merge([
-                'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-                'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-                'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-                'penerimaan_komentar_contractor'    => 'required|min:11',
-                'penerimaan_komentar_internal'      => 'required|min:11',
-                'penerimaan_komentar_ohs'           => 'required|min:11',
+                'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
+                'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
+                'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
+                'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
+                'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
+                'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
             ], $kttRules),
         ];
 
-        // 3. Jalankan Validasi
+        // 4. Jalankan Validasi berdasarkan step saat ini
         if (isset($stepRules[$step])) {
             return $this->validate($stepRules[$step]);
         }
