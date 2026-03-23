@@ -69,8 +69,6 @@ class Update extends Component
     public $departments = [];
     public $contractors = [];
     public $penanggungJawabOptions = [];
-    public $consequencess = []; // Sesuai nama di blade anda
-    public $likelihoodss = [];  // Sesuai nama di blade anda
     public $consequences = [];  // Untuk header table matrix
     public $likelihoods = [];   // Untuk row table matrix
 
