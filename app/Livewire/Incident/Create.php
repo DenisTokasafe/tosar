@@ -579,7 +579,7 @@ class Create extends Component
                     'corrective_actions.*.pic_user_id',
                     'corrective_actions.*.due_date',
                     // Tambahkan ini jika Anda mewajibkan tanggal selesai diisi di Step 7
-                    'corrective_actions.*.actual_completion_date',
+                    // 'corrective_actions.*.actual_completion_date',
                 ];
                 break;
             case 8:
