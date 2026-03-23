@@ -129,6 +129,8 @@ class Update extends Component
     }
     public function mount($id)
     {
+        $this->likelihoods = Likelihood::orderByDesc('level')->get();
+        $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
         $report = IncidentReport::with(['risk', 'impact'])->findOrFail($id);
 
