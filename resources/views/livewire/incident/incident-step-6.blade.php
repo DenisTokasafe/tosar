@@ -33,9 +33,9 @@
                 </div>
 
                 <div class="space-y-4">
-                    @foreach($$sub['key'] as $index => $row)
+                    @foreach($sub['key'] as $index => $row)
                     <div class="relative p-3 rounded-lg bg-base-200/40 border border-base-200" wire:key="mob-{{ $sub['key'] }}-{{ $index }}">
-                        @if(count($$sub['key']) > 1)
+                        @if(count($sub['key']) > 1)
                         <button type="button" wire:click="removeRow('{{ $sub['key'] }}', {{ $index }})"
                             class="absolute -top-2 -right-2 btn btn-error btn-xs btn-circle text-white shadow-md">✕</button>
                         @endif
@@ -67,7 +67,7 @@
                     <th class="w-2/3 px-4 py-2 font-bold border-b border-base-300 text-[10px]">Description</th>
                     <th class="w-10 border-b border-base-300"></th>
                 </tr>
-                @foreach($$sub['key'] as $index => $row)
+                @foreach($sub['key'] as $index => $row)
                 <tr wire:key="dt-{{ $sub['key'] }}-{{ $index }}" class="hover:bg-base-200/30">
                     <td class="p-1 align-top border-r border-b border-base-300">
                         <x-form.select model="{{ $sub['key'] }}.{{ $index }}.item" :options="$sub['options']" placeholder="Pilih..." />
@@ -76,7 +76,7 @@
                         <x-form.text_area model="{{ $sub['key'] }}.{{ $index }}.description" rows="2" />
                     </td>
                     <td class="p-1 text-center align-middle border-l border-b border-base-300">
-                        @if(count($$sub['key']) > 1)
+                        @if(count($sub['key']) > 1)
                         <button type="button" wire:click="removeRow('{{ $sub['key'] }}', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
                         @endif
                     </td>
