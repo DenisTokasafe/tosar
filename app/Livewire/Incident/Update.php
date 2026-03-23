@@ -131,117 +131,118 @@ class Update extends Component
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
-            // Part 2
-            // PART 2: Pihak Terlibat Langsung
-            'directly_involved' => 'required|array|min:1',
-            'directly_involved.*.employee_name' => 'required|string',
-            'directly_involved.*.employee_nik'  => 'required',
-            'directly_involved.*.dept_cont'     => 'required',
-            'directly_involved.*.jabatan'       => 'required',
-            'directly_involved.*.roster'        => 'required',
-            'directly_involved.*.sift'          => 'required',
-            'directly_involved.*.keterlibatan'  => 'required',
-            'directly_involved.*.pengalaman_kerja' => 'required|numeric',
-            // PART 3: Tim Investigasi
-            'pemimpin' => 'required|array|min:1',
-            'pemimpin.*.user_id' => 'required',
-            'pemimpin.*.dept'    => 'required|string',
-            'pemimpin.*.jabatan' => 'required|string',
-
-            'facilitator' => 'required|array|min:1',
-            'facilitator.*.user_id' => 'required',
-            'facilitator.*.dept'    => 'required|string',
-            'facilitator.*.jabatan' => 'required|string',
-
-            'anggota' => 'required|array|min:1',
-            'anggota.*.user_id' => 'required',
-            'anggota.*.dept'    => 'required|string',
-            'anggota.*.jabatan' => 'required|string',
-            // PART 4: PEEPO (Analisis Faktor)
-            'peepo.orang.temuan'      => 'required|string|min:3',
-            'peepo.orang.deskripsi'   => 'required|string|min:5',
-
-            'peepo.peralatan.temuan'    => 'required|string|min:3',
-            'peepo.peralatan.deskripsi' => 'required|string|min:5',
-
-            'peepo.lingkungan.temuan'   => 'required|string|min:3',
-            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
-
-            'peepo.prosedur.temuan'     => 'required|string|min:3',
-            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
-
-            'peepo.organisasi.temuan'   => 'required|string|min:3',
-            'peepo.organisasi.deskripsi' => 'required|string|min:5',
-            // PART 5: Timeline & Why Analysis
-            'why_analysis' => 'required|array',
-            // Part 6
-            // Validasi Kondisi Tidak Aman
-            'unsafe_conditions.*.item' => 'required',
-            'unsafe_conditions.*.description' => 'required|string|min:5',
-
-            // Validasi Perilaku Tidak Aman
-            'unsafe_acts.*.item' => 'required',
-            'unsafe_acts.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pribadi
-            'personal_factors.*.item' => 'required',
-            'personal_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pekerjaan
-            'job_factors.*.item' => 'required',
-            'job_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Kelemahan Sistem Kontrol
-            'control_system_factors.*.item' => 'required',
-            'control_system_factors.*.description' => 'required|string|min:5',
-            // Part 7
-            'visual_evidence' => 'required|array|min:1',
-
-            // Validasi tiap file di dalam array (Ukuran dan Tipe)
-            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
-
-            'supporting_documents' => 'required|array|min:1',
-            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
-            'corrective_actions.*.action_description' => 'required|string|min:10',
-            'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
-            'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            'corrective_actions.*.actual_completion_date' => [
-                'nullable',
-                'date',
-                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
-                'after_or_equal:corrective_actions.*.due_date'
-            ],
-            // Part 8
-            'key_learning' => 'required|string|min:10',
-            // Part 9
-            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-            'penerimaan_komentar_contractor'    => 'required|min:11',
-            'penerimaan_komentar_internal'      => 'required|min:11',
-            'penerimaan_komentar_ohs'           => 'required|min:11',
-
             // LOGIKA KONDISIONAL BERDASARKAN isInjury
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
+            // // Part 2
+            // // PART 2: Pihak Terlibat Langsung
+            // 'directly_involved' => 'required|array|min:1',
+            // 'directly_involved.*.employee_name' => 'required|string',
+            // 'directly_involved.*.employee_nik'  => 'required',
+            // 'directly_involved.*.dept_cont'     => 'required',
+            // 'directly_involved.*.jabatan'       => 'required',
+            // 'directly_involved.*.roster'        => 'required',
+            // 'directly_involved.*.sift'          => 'required',
+            // 'directly_involved.*.keterlibatan'  => 'required',
+            // 'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            // // PART 3: Tim Investigasi
+            // 'pemimpin' => 'required|array|min:1',
+            // 'pemimpin.*.user_id' => 'required',
+            // 'pemimpin.*.dept'    => 'required|string',
+            // 'pemimpin.*.jabatan' => 'required|string',
+
+            // 'facilitator' => 'required|array|min:1',
+            // 'facilitator.*.user_id' => 'required',
+            // 'facilitator.*.dept'    => 'required|string',
+            // 'facilitator.*.jabatan' => 'required|string',
+
+            // 'anggota' => 'required|array|min:1',
+            // 'anggota.*.user_id' => 'required',
+            // 'anggota.*.dept'    => 'required|string',
+            // 'anggota.*.jabatan' => 'required|string',
+            // // PART 4: PEEPO (Analisis Faktor)
+            // 'peepo.orang.temuan'      => 'required|string|min:3',
+            // 'peepo.orang.deskripsi'   => 'required|string|min:5',
+
+            // 'peepo.peralatan.temuan'    => 'required|string|min:3',
+            // 'peepo.peralatan.deskripsi' => 'required|string|min:5',
+
+            // 'peepo.lingkungan.temuan'   => 'required|string|min:3',
+            // 'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+
+            // 'peepo.prosedur.temuan'     => 'required|string|min:3',
+            // 'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+
+            // 'peepo.organisasi.temuan'   => 'required|string|min:3',
+            // 'peepo.organisasi.deskripsi' => 'required|string|min:5',
+            // // PART 5: Timeline & Why Analysis
+            // 'why_analysis' => 'required|array',
+            // // Part 6
+            // // Validasi Kondisi Tidak Aman
+            // 'unsafe_conditions.*.item' => 'required',
+            // 'unsafe_conditions.*.description' => 'required|string|min:5',
+
+            // // Validasi Perilaku Tidak Aman
+            // 'unsafe_acts.*.item' => 'required',
+            // 'unsafe_acts.*.description' => 'required|string|min:5',
+
+            // // Validasi Faktor Pribadi
+            // 'personal_factors.*.item' => 'required',
+            // 'personal_factors.*.description' => 'required|string|min:5',
+
+            // // Validasi Faktor Pekerjaan
+            // 'job_factors.*.item' => 'required',
+            // 'job_factors.*.description' => 'required|string|min:5',
+
+            // // Validasi Kelemahan Sistem Kontrol
+            // 'control_system_factors.*.item' => 'required',
+            // 'control_system_factors.*.description' => 'required|string|min:5',
+            // // Part 7
+            // 'visual_evidence' => 'required|array|min:1',
+
+            // // Validasi tiap file di dalam array (Ukuran dan Tipe)
+            // 'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
+
+            // 'supporting_documents' => 'required|array|min:1',
+            // 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
+            // // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
+            // 'corrective_actions.*.action_description' => 'required|string|min:10',
+            // 'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
+            // 'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
+            // 'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
+            // 'corrective_actions.*.actual_completion_date' => [
+            //     'nullable',
+            //     'date',
+            //     // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
+            //     'after_or_equal:corrective_actions.*.due_date'
+            // ],
+            // // Part 8
+            // 'key_learning' => 'required|string|min:10',
+            // // Part 9
+            // 'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            // 'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            // 'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            // 'penerimaan_komentar_contractor'    => 'required|min:11',
+            // 'penerimaan_komentar_internal'      => 'required|min:11',
+            // 'penerimaan_komentar_ohs'           => 'required|min:11',
+
+
         ];
 
-        // Tambahkan Logika KTT di sini agar terbaca secara global
-        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
-            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
-        }
+        // // Tambahkan Logika KTT di sini agar terbaca secara global
+        // if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+        //     $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+        //     $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        // }
 
 
-        // PERBAIKAN DI SINI:
-        // Gunakan $rules, bukan $attributes.
-        // Dan pastikan key-nya sesuai dengan data binding Anda.
-        foreach (range(1, $this->whyCount) as $i) {
-            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
-        }
+        // // PERBAIKAN DI SINI:
+        // // Gunakan $rules, bukan $attributes.
+        // // Dan pastikan key-nya sesuai dengan data binding Anda.
+        // foreach (range(1, $this->whyCount) as $i) {
+        //     $rules["why_analysis.why{$i}"] = 'required|string|min:3';
+        // }
 
         return $rules;
     }
