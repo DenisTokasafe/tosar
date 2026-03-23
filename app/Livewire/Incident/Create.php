@@ -567,16 +567,19 @@ class Create extends Component
                 break;
             case 7:
                 $fields = [
-                    'visual_evidence',    // Untuk cek array keseluruhan
-                    'visual_evidence.*',  // UNTUK CEK TIAP FILE (Ini yang sering hilang)
+                    'visual_evidence',
+                    'visual_evidence.*',
                     'supporting_documents',
                     'supporting_documents.*',
 
                     // Tabel Tindakan Perbaikan
                     'corrective_actions.*.action_description',
                     'corrective_actions.*.control_hierarchy',
-                    'corrective_actions.*.name',
+                    // REVISI: Samakan dengan properti yang menyimpan ID User (bukan Nama)
+                    'corrective_actions.*.pic_user_id',
                     'corrective_actions.*.due_date',
+                    // Tambahkan ini jika Anda mewajibkan tanggal selesai diisi di Step 7
+                    'corrective_actions.*.actual_completion_date',
                 ];
                 break;
             case 8:
