@@ -1320,7 +1320,7 @@ class Create extends Component
                 $this->corrective_actions[$index]['name'] = $inspector->name;
                 $this->corrective_actions[$index]['id_number'] = $inspector->employee_id;
                 $this->corrective_actions[$index]['dept_con'] = $inspector->department_name;
-                $this->corrective_actions[$index]['inspector_id'] = $inspector->id;
+                $this->corrective_actions[$index]['pic_user_id'] = $inspector->id;
 
                 // Atau jika ingin menggunakan array_merge:
                 // $this->corrective_actions[$index] = array_merge($this->corrective_actions[$index], [
