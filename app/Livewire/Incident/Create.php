@@ -541,11 +541,12 @@ class Create extends Component
                 }
                 break;
             case 5:
-                $fields = ['timelines.*.kejadian'];
+                // Hapus 'timelines.*.kejadian' karena kita tidak pakai baris timeline lagi
+                $fields = [];
 
-                // Daftarkan semua kolom why yang aktif ke dalam daftar field yang divalidasi
+                // Daftarkan semua kolom why yang aktif di dalam properti why_analysis
                 for ($i = 1; $i <= $this->whyCount; $i++) {
-                    $fields[] = "timelines.*.why{$i}";
+                    $fields[] = "why_analysis.why{$i}";
                 }
                 break;
             case 6:
