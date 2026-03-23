@@ -1,142 +1,109 @@
-<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
-    'md:grid-cols-1' => !$this->hasSubTypes,])>
+{{-- Part 1: Tipe & Jenis Insiden --}}
+<div @class([ 'grid gap-4 mb-4' , 'grid-cols-1 md:grid-cols-2'=> $this->hasSubTypes,
+    'grid-cols-1' => !$this->hasSubTypes
+    ])>
     <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
+
     @if($this->hasSubTypes)
     <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
     @endif
-
 </div>
-<div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
+
+{{-- Part 2: Grid Utama (Responsive: Mobile 1, Tab 2, Desktop 3) --}}
+<div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-3">
     <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
+
     <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
-    {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
+
     @if ($location_id)
-    <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
+    <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Detail lokasi..." required />
     @endif
+
     <x-form.department-contractor-selector
-        :dept-cont="$deptCont"
-        :departments="$departments"
-        :contractors="$contractors"
-        model_dept="department_id"
-        model_cont="contractor_id"
-        :showDropdown="$showDropdown"
-        :showContractorDropdown="$showContractorDropdown"
+        :dept-cont="$deptCont" :departments="$departments" :contractors="$contractors"
+        model_dept="department_id" model_cont="contractor_id"
+        :showDropdown="$showDropdown" :showContractorDropdown="$showContractorDropdown"
         :required="true" />
 
-    <x-form.select
-        label="PIC"
-        model="penanggungJawab"
-        :options="$penanggungJawabOptions"
-        optionValue="id"
-        optionLabel="name"
-        placeholder="-- Pilih Penanggung Jawab --"
-        required="true" />
+    <x-form.select label="PIC" model="penanggungJawab" :options="$penanggungJawabOptions" optionValue="id" optionLabel="name" placeholder="-- Pilih PIC --" required="true" />
 
-
-    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama Pelapor..."
-        modelsearch="searchPelapor" modelid="pelapor_id" {{-- ID asli di DB --}} :options="$pelapors"
-        :showdropdown="$showPelaporDropdown" {{-- Logic Manual --}} :manualMode="$manualPelaporMode"
+    <x-form.searchable-select-advanced label="Dilaporkan Oleh" placeholder="Cari Nama..."
+        modelsearch="searchPelapor" modelid="pelapor_id" :options="$pelapors"
+        :showdropdown="$showPelaporDropdown" :manualMode="$manualPelaporMode"
         manualModelName="manualPelaporName" enableManualAction="enableManualPelapor"
         addManualAction="addPelaporManual" clickaction="selectPelapor" />
 </div>
-<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
-    <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
-        {{-- Kolom Likelihood & Consequence --}}
-        <div class="space-y-4 md:grow">
+
+{{-- Part 3: Risk Matrix --}}
+<fieldset class="p-4 my-6 border shadow-md border-base-300 rounded-xl bg-base-100">
+    <legend class="px-2 text-sm font-bold uppercase tracking-widest text-primary">{{ __('Integrasi Risk Matrix') }}</legend>
+
+    <div class="flex flex-col gap-6 lg:flex-row">
+        <div class="flex-1 space-y-4">
             {{-- Consequence --}}
-            <fieldset class="fieldset ">
+            <div class="form-control">
                 <x-form.label label="Consequence" required />
-                <select wire:model.live="consequence_id"
-                    class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('consequence_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                <select wire:model.live="consequence_id" @class([ 'select select-sm select-bordered w-full focus:ring-1 focus:ring-info' , 'select-error'=> $errors->has('consequence_id')
+                    ])>
                     <option value="">{{__('-- Pilih --')}}</option>
                     @foreach ($consequencess as $cons)
                     <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
                     @endforeach
                 </select>
-                <x-label-error :messages="$errors->get('consequence_id')" />
+                @if ($consequence_id && $selectedConsequence = $consequencess->firstWhere('id', $consequence_id))
+                <div class="p-3 mt-2 text-xs italic border-l-4 rounded bg-base-200 border-info">{{ __($selectedConsequence->description) }}</div>
+                @endif
+            </div>
 
-                @if ($consequence_id)
-                @php
-                $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                @endphp
-                @if ($selectedConsequence)
-                <div
-                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                    {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                </div>
-                @endif
-                @endif
-            </fieldset>
             {{-- Likelihood --}}
-            <fieldset class="fieldset ">
+            <div class="form-control">
                 <x-form.label label="Likelihood" required />
-                <select wire:model.live="likelihood_id"
-                    class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('likelihood_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
+                <select wire:model.live="likelihood_id" @class([ 'select select-sm select-bordered w-full focus:ring-1 focus:ring-info' , 'select-error'=> $errors->has('likelihood_id')
+                    ])>
                     <option value="">{{__('-- Pilih --')}}</option>
                     @foreach ($likelihoodss as $like)
                     <option value="{{ $like->id }}">{{ __($like->name) }}</option>
                     @endforeach
                 </select>
-                <x-label-error :messages="$errors->get('likelihood_id')" />
-
-                @if ($likelihood_id)
-                @php
-                $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
-                @endphp
-                @if ($selectedLikelihood)
-                <div
-                    class="h-20 p-2 mt-1 overflow-y-auto text-sm text-gray-600 border rounded bg-gray-50">
-                    {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
-                </div>
+                @if ($likelihood_id && $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id))
+                <div class="p-3 mt-2 text-xs italic border-l-4 rounded bg-base-200 border-info">{{ __($selectedLikelihood->description) }}</div>
                 @endif
-                @endif
-            </fieldset>
+            </div>
         </div>
-        {{-- Kolom Risk Matrix --}}
-        <div class="flex-none overflow-x-auto ">
-            <table class="table table-xs w-60">
+
+        {{-- Table Matrix (Scrollable di HP) --}}
+        <div class="w-full overflow-x-auto lg:w-auto">
+            <table class="table table-xs table-fixed border-separate border-spacing-px bg-base-300 rounded-lg overflow-hidden min-w-[300px]">
                 <thead>
-                    <tr class="text-center text-[9px]">
-                        <td class=" border-1">{{ __('Level') }}</td>
-                        <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
-                        <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
-                        <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
-                        <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
-                        <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
-                    </tr>
-                    <tr class="text-center text-[9px]">
-                        <th class="border-1">Likelihood ↓ / Consequence →</th>
+                    <tr class="text-center text-[10px] bg-base-100">
+                        <th class="bg-base-200 w-20">Matrix</th>
                         @foreach ($consequences as $c)
-                        <th class="rotate_text border-1">{{ __($c->name) }}</th>
+                        <th class="p-1 truncate">{{ __($c->name) }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($likelihoods as $l)
-                    <tr class="w-32 text-xs text-center">
-
-                        <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+                    <tr class="text-center bg-base-100">
+                        <td class="font-bold bg-base-200 text-[10px] p-1">{{ __($l->name) }}</td>
                         @foreach ($consequences as $c)
                         @php
-                        $cell =
-                        App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                        ->where('risk_consequence_id', $c->id)
-                        ->first() ?? null;
-                        $score = $l->level * $c->level;
+                        $cell = App\Models\RiskMatrixCell::where('likelihood_id', $l->id)->where('risk_consequence_id', $c->id)->first();
                         $severity = $cell?->severity ?? '';
                         $color = match ($severity) {
                         'Rendah' => 'bg-emerald-500',
-                        'Sedang' => 'bg-yellow-500',
+                        'Sedang' => 'bg-yellow-400',
                         'Tinggi' => 'bg-orange-500',
-                        'Ekstrem' => 'bg-rose-500',
-                        default => 'bg-gray-100',
+                        'Ekstrem' => 'bg-rose-600',
+                        default => 'bg-gray-200',
                         };
+                        $isActive = ($likelihood_id == $l->id && $consequence_id == $c->id);
                         @endphp
-                        <td
-                            class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
-                            <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
+                        <td @class(['p-1', 'ring-2 ring-primary ring-inset z-10'=> $isActive])>
+                            <button wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                class="w-8 h-8 rounded flex items-center justify-center text-[10px] font-bold text-white transition-transform active:scale-90 {{ $color }}">
+                                {{ Str::upper(substr(__($severity), 0, 1)) }}
+                            </button>
                         </td>
                         @endforeach
                     </tr>
@@ -145,66 +112,26 @@
             </table>
         </div>
     </div>
+</fieldset>
 
-    @if ($RiskAssessment != null)
-    <table class="table mt-4 table-xs table-zebra">
-
-        <tr>
-            <th class="w-40 text-xs border-base-300">Potential Risk Rating</th>
-            <td class="pl-2 text-xs border-base-300">
-                {{ $RiskAssessment->name }}
-            </td>
-        </tr>
-        <tr>
-            <th class="w-40 text-xs border-base-300">Notify</th>
-            <td class="pl-2 text-xs border-base-300">
-                {{ $RiskAssessment->reporting_obligation }}
-            </td>
-        </tr>
-        <tr>
-            <th class="w-40 text-xs border-base-300">Deadline</th>
-            <td class="pl-2 text-xs border-base-300">{{ $RiskAssessment->notes }}</td>
-        </tr>
-        <tr>
-            <th class="w-40 text-xs border-base-300">Coordinator</th>
-            <td class="pl-2 text-xs border-base-300">
-                {{ $RiskAssessment->coordinator }}
-            </td>
-        </tr>
-    </table>
+{{-- Part 4: Injury / Damage --}}
+<div class="mt-6">
+    @if($this->isInjury)
+    <fieldset class="p-4 border shadow-md border-base-300 rounded-xl bg-base-100">
+        <legend class="px-2 text-sm font-bold uppercase tracking-widest text-primary">{{ __('Bagian Tubuh Terluka') }}</legend>
+        <div @class([ 'grid gap-4' , 'grid-cols-1 md:grid-cols-2'=> $selectedBodyPartCategory,
+            'grid-cols-1' => !$selectedBodyPartCategory
+            ])>
+            <x-form.select label="Kategori" model="selectedBodyPartCategory" :options="$this->existingCategory" option-value="category" option-label="category" required />
+            @if ($selectedBodyPartCategory)
+            <x-form.select label="Detail" model="selectedBodyPart" :options="$detailsBodyPart" option-label="display_name" required />
+            @endif
+        </div>
+    </fieldset>
+    @else
+    <fieldset class="p-4 border shadow-md border-base-300 rounded-xl bg-base-100">
+        <legend class="px-2 text-sm font-bold uppercase tracking-widest text-primary">{{ __('Dampak Lingkungan / Alat') }}</legend>
+        <x-form.text_area label="Detail Kerusakan" model="damage_detail" rows="3" required />
+    </fieldset>
     @endif
-</fieldset>
-<x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
-<x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera yang dilakukan setelah kejadian...')}}" required />
-@if($this->isInjury)
-<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
-    <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory,
-        'md:grid-cols-1' => !$selectedBodyPartCategory,
-        ])>
-        <x-form.select
-            label="Kategori Bagian Tubuh"
-            model="selectedBodyPartCategory"
-            :options="$this->existingCategory"
-            option-value="category"
-            option-label="category"
-            placeholder="-- {{__('Pilih Kategori Bagian Tubuh')}} --"
-            required />
-
-        @if ($selectedBodyPartCategory)
-        <x-form.select
-            label="Detail Bagian Tubuh"
-            model="selectedBodyPart"
-            :options="$detailsBodyPart"
-            option-label="display_name"
-            placeholder="-- {{__('Pilih Detail Bagian Tubuh')}} --"
-            required />
-        @endif
-    </div>
-</fieldset>
-@else
-<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
-    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" model="damage_detail" placeholder="{{ __('Jelaskan kerusakan alat atau dampak lingkungan...')}}" required />
-</fieldset>
-@endif
+</div>
