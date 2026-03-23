@@ -114,6 +114,10 @@ class Update extends Component
             ->select('*', DB::raw("name as display_name"))
             ->get();
     }
+    public function updatedEventTypeId($id)
+    {
+        $this->isInjury();
+    }
     #[Computed]
     public function isInjury()
     {
