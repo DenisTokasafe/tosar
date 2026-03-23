@@ -63,7 +63,7 @@
 
                         {{-- REUSE: Menggunakan partial yang sama dengan Create --}}
                         {{-- Pastikan file partial Anda tidak mengandung logic 'currentStep' yang memblokir input --}}
-                        @include('livewire.incident.step_detail.incident-step-' . $i)
+                        @include('livewire.incident.step_edit.incident-step-' . $i)
 
                         {{-- NAVIGASI TOMBOL KHUSUS EDIT --}}
                         <div class="flex justify-between pt-4 mt-4 border-t border-base-200">
