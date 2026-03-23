@@ -671,6 +671,9 @@ class Create extends Component
         // 1. Load data referensi statis (Paling aman ditaruh di atas)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
+        // REVISI: Pastikan whyCount memiliki nilai minimal 1 sejak awal
+        $this->whyCount = 1;
+
         if (empty($this->why_analysis)) {
             $this->why_analysis = ['why1' => ''];
         }
