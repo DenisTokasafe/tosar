@@ -149,7 +149,7 @@ class Create extends Component
         'ktt' => '',
     ];
 
-    protected function rules()
+    public function rules()
     {
         $rules = [
             // PART 1
@@ -434,7 +434,7 @@ class Create extends Component
     }
 
     // Komentar Standard
-    public function messages()
+    protected function messages()
     {
         return [
             // Pesan Standar
