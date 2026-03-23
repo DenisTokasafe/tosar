@@ -37,16 +37,13 @@ class Update extends Component
     public $event_sub_type_id;
     public $date_time;
     public $location_id;
-    public $location_specific;
-    public $searchLocation; // Untuk input search
-    public $show_location = false; // Toggle dropdown lokasi
+
 
     // --- PART 1: DEPT & PIC ---
     public $deptCont = 'department'; // Default selector
     public $department_id;
     public $contractor_id;
-    public $showDropdown = false;
-    public $showContractorDropdown = false;
+
     public $penanggungJawab; // User ID untuk PIC
 
     // --- PART 1: PELAPOR (ADVANCED SEARCH) ---
