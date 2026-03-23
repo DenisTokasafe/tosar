@@ -1560,7 +1560,7 @@ class Create extends Component
                 'location_specific' => $this->location_specific,
                 'department_id'     => $this->department_id,
                 'contractor_id'     => $this->contractor_id,
-                'penanggung_jawab'  => $this->penanggungJawab,
+                'penanggungJawab'  => $this->penanggungJawab,
                 'pelapor_id'        => $this->pelapor_id,
                 'manual_pelapor'    => $this->manualPelaporName,
                 'description'       => $this->description, // 5W+1H
