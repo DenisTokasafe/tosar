@@ -390,10 +390,10 @@ class Update extends Component
 
         // PART 3: Load Tim Investigasi
         $teams = $report->investigationTeams;
-        dd($teams);
 
         foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
             $filtered = $teams->where('role', $role);
+            dd($filtered);
 
             if ($filtered->count() > 0) {
                 foreach ($filtered as $index => $team) {
