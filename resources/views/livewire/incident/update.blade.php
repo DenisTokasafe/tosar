@@ -23,7 +23,7 @@
 
     <x-incident.layout>
         {{-- Iterasi Collapse (Samakan dengan Create agar UI Konsisten) --}}
-        @for ($i = 1; $i <= 9; $i++)
+        @for ($i = 1; $i <= 1; $i++)
             @php
             $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
             @endphp
