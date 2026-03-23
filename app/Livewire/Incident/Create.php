@@ -1449,9 +1449,6 @@ class Create extends Component
     {
         // 1. Jalankan Validasi Global
         $this->validate();
-        $lastReport = IncidentReport::latest()->first();
-        $nextId = $lastReport ? $lastReport->id + 1 : 1;
-        $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
         try {
             $result = DB::transaction(function () {
@@ -1518,6 +1515,7 @@ class Create extends Component
             // === HAPUS SESSION DI SINI ===
             // Karena data sudah masuk DB, kita tidak butuh draft lagi
             session()->forget('incident_data');
+            $this->reset();
 
             // 3. Feedback Berhasil
             $this->dispatch('alert', [
