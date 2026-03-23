@@ -3,7 +3,7 @@
 
     {{-- Breadcrumb khusus Edit --}}
     <div class="flex justify-start mb-2" wire:ignore>
-        {{ Breadcrumbs::render('incident-edit', $incidentId) }}
+        {{ Breadcrumbs::render('incident-detail', $incidentId) }}
     </div>
 
     {{-- Header dengan Nomor Laporan --}}
