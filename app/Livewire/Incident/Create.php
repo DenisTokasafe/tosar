@@ -550,20 +550,18 @@ class Create extends Component
                 }
                 break;
             case 6:
-                // INI YANG PENTING:
-                // Anda harus memvalidasi array dinamis menggunakan dot notation
-                $this->validate([
-                    'unsafe_conditions.*.item'        => 'required',
-                    'unsafe_conditions.*.description' => 'required|string|min:5',
-                    'unsafe_acts.*.item'              => 'required',
-                    'unsafe_acts.*.description'       => 'required|string|min:5',
-                    'personal_factors.*.item'         => 'required',
-                    'personal_factors.*.description'  => 'required|string|min:5',
-                    'job_factors.*.item'              => 'required',
-                    'job_factors.*.description'       => 'required|string|min:5',
-                    'control_system_factors.*.item'   => 'required',
-                    'control_system_factors.*.description' => 'required|string|min:5',
-                ]);
+                $fields = [
+                    'unsafe_conditions.*.item',
+                    'unsafe_conditions.*.description',
+                    'unsafe_acts.*.item',
+                    'unsafe_acts.*.description',
+                    'personal_factors.*.item',
+                    'personal_factors.*.description',
+                    'job_factors.*.item',
+                    'job_factors.*.description',
+                    'control_system_factors.*.item',
+                    'control_system_factors.*.description',
+                ];
                 break;
             case 7:
                 $fields = [
@@ -601,10 +599,13 @@ class Create extends Component
         }
 
         if (!empty($fields)) {
+            // Pastikan rules() adalah PUBLIC
             $allRules = $this->rules();
+
+            // Filter rules hanya untuk field yang ada di step aktif
             $stepRules = array_intersect_key($allRules, array_flip($fields));
 
-            // Masukkan $this->messages() agar pesan error bahasa Indonesia muncul
+            // Validasi dengan atribut dan pesan custom
             $this->validate($stepRules, $this->messages(), $this->validationAttributes());
         }
     }
