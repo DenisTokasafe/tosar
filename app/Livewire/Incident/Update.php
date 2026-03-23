@@ -363,7 +363,7 @@ class Update extends Component
                     'dept_cont' => $person->dept_cont,
                     'jabatan' => $person->jabatan,
                     'roster' => $person->roster,
-                    'sift' => $person->sift,
+                    'sift' => $person->shift,
                     'keterlibatan' => $person->keterlibatan,
                     'pengalaman_kerja' => $person->pengalaman_kerja,
                 ];
