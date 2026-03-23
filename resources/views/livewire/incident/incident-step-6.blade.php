@@ -1,171 +1,97 @@
-<div class="mt-4 overflow-x-auto">
-    <table class="table w-full border border-collapse table-xs border-base-300">
-        <thead>
-            {{-- Sub-Header Utama Penyebab Langsung --}}
-            <tr class="text-center bg-orange-100">
-                <th colspan="3" class="py-1 italic font-bold border text-base-content border-base-300">
-                    PENYEBAB LANGSUNG
-                </th>
-            </tr>
+<div class="mt-4">
+    <h2 class="mb-4 text-lg font-bold uppercase text-primary border-b-2 border-primary/20 pb-1">
+        BAGIAN 6 – ANALISIS PENYEBAB (CAUSATION)
+    </h2>
 
-            {{-- SEKSI 1: KONDISI TIDAK AMAN --}}
-            <tr class="bg-gray-200 text-base-content">
-                <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Kondisi Tidak Aman</th>
-                <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Description</th>
-                <th class="w-10 border border-base-300"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($unsafe_conditions as $index => $row)
-            <tr wire:key="unsafe-condition-{{ $index }}">
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.select
-                        model="unsafe_conditions.{{ $index }}.item"
-                        :options="$this->unsafeConditionOptions"
-                        placeholder="Choose an item." />
-                </td>
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area
-                        model="unsafe_conditions.{{ $index }}.description"
-                        placeholder="Tambahkan rincian deskripsi..."
-                        rows="2" />
-                </td>
-                <td class="p-1 text-center align-middle border border-base-300">
-                    @if(count($unsafe_conditions) > 1)
-                    <button type="button" wire:click="removeRow('unsafe_conditions', {{ $index }})"
-                        class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
-                </td>
-            </tr>
+    {{-- TAMPILAN MOBILE (Android/Smartphone) --}}
+    <div class="space-y-6 md:hidden">
+        @php
+        $sections = [
+        ['title' => 'PENYEBAB LANGSUNG', 'bg' => 'bg-orange-50', 'text' => 'text-orange-700', 'subs' => [
+        ['key' => 'unsafe_conditions', 'label' => 'Kondisi Tidak Aman', 'options' => $this->unsafeConditionOptions],
+        ['key' => 'unsafe_acts', 'label' => 'Perilaku Tidak Aman', 'options' => $this->unsafeActOptions],
+        ]],
+        ['title' => 'PENYEBAB DASAR', 'bg' => 'bg-blue-50', 'text' => 'text-blue-700', 'subs' => [
+        ['key' => 'personal_factors', 'label' => '2.1 Faktor Pribadi', 'options' => $this->personalFactorOptions],
+        ['key' => 'job_factors', 'label' => '2.2 Faktor Pekerjaan', 'options' => $this->jobFactorOptions],
+        ['key' => 'control_system_factors', 'label' => '2.3 Kelemahan Sistem Kontrol', 'options' => $this->controlSystemOptions],
+        ]]
+        ];
+        @endphp
+
+        @foreach($sections as $sec)
+        <div class="space-y-3">
+            <div class="{{ $sec['bg'] }} {{ $sec['text'] }} p-2 rounded-lg text-center font-bold italic text-sm border border-current/20">
+                {{ $sec['title'] }}
+            </div>
+
+            @foreach($sec['subs'] as $sub)
+            <div class="p-3 border rounded-xl bg-base-100 border-base-300 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="font-bold text-xs uppercase opacity-70 tracking-tighter">{{ $sub['label'] }}</h4>
+                    <button type="button" wire:click="addRow('{{ $sub['key'] }}')" class="btn btn-primary btn-xs btn-circle">+</button>
+                </div>
+
+                <div class="space-y-4">
+                    @foreach($$sub['key'] as $index => $row)
+                    <div class="relative p-3 rounded-lg bg-base-200/40 border border-base-200" wire:key="mob-{{ $sub['key'] }}-{{ $index }}">
+                        @if(count($$sub['key']) > 1)
+                        <button type="button" wire:click="removeRow('{{ $sub['key'] }}', {{ $index }})"
+                            class="absolute -top-2 -right-2 btn btn-error btn-xs btn-circle text-white shadow-md">✕</button>
+                        @endif
+
+                        <div class="space-y-2">
+                            <x-form.select label="Kategori" model="{{ $sub['key'] }}.{{ $index }}.item" :options="$sub['options']" />
+                            <x-form.text_area label="Deskripsi Detail" model="{{ $sub['key'] }}.{{ $index }}.description" rows="2" />
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
             @endforeach
-            <tr class="bg-base-200/50">
-                <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('unsafe_conditions')" class="font-bold btn btn-xs btn-ghost text-primary">
-                        + TAMBAH KONDISI TIDAK AMAN
-                    </button>
-                </td>
-            </tr>
+        </div>
+        @endforeach
+    </div>
 
-            {{-- SEKSI 2: PERILAKU TIDAK AMAN --}}
-            <thead>
-                <tr class="bg-gray-200 text-base-content">
-                    <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Perilaku Tidak Aman</th>
-                    <th class="w-1/2 px-4 py-2 font-bold border border-base-300 uppercase text-[10px]">Description</th>
-                    <th class="w-10 border border-base-300"></th>
+    {{-- TAMPILAN TABLET & DESKTOP --}}
+    <div class="hidden md:block overflow-hidden border rounded-xl border-base-300 bg-base-100">
+        <table class="table w-full border-collapse table-xs">
+            <tbody>
+                @foreach($sections as $sec)
+                <tr class="{{ $sec['bg'] }} {{ $sec['text'] }} text-center">
+                    <th colspan="3" class="py-2 italic font-extrabold border-b border-base-300">{{ $sec['title'] }}</th>
                 </tr>
-            </thead>
-            @foreach($unsafe_acts as $index => $row)
-            <tr wire:key="unsafe-act-{{ $index }}">
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.select
-                        model="unsafe_acts.{{ $index }}.item"
-                        :options="$this->unsafeActOptions"
-                        placeholder="Choose an item." />
-                </td>
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area
-                        model="unsafe_acts.{{ $index }}.description"
-                        placeholder="Tambahkan rincian deskripsi..."
-                        rows="2" />
-                </td>
-                <td class="p-1 text-center align-middle border border-base-300">
-                    @if(count($unsafe_acts) > 1)
-                    <button type="button" wire:click="removeRow('unsafe_acts', {{ $index }})"
-                        class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            <tr class="bg-base-200/50">
-                <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('unsafe_acts')" class="font-bold btn btn-xs btn-ghost text-primary">
-                        + TAMBAH PERILAKU TIDAK AMAN
-                    </button>
-                </td>
-            </tr>
-            <tr class="text-center bg-orange-100">
-                <th colspan="3" class="py-1 italic font-bold border text-base-content border-base-300">PENYEBAB DASAR</th>
-            </tr>
-            <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
-                <th class="px-4 py-1 font-bold border border-base-300">2.1 Faktor Pribadi</th>
-                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
-                <th class="border border-base-300"></th>
-            </tr>
-            @foreach($personal_factors as $index => $row)
-            <tr wire:key="personal-{{ $index }}">
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.select model="personal_factors.{{ $index }}.item" :options="$this->personalFactorOptions" placeholder="Choose..." />
-                </td>
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area model="personal_factors.{{ $index }}.description" rows="2" />
-                </td>
-                <td class="p-1 text-center border border-base-300">
-                    @if(count($personal_factors) > 1)
-                    <button type="button" wire:click="removeRow('personal_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            <tr class="bg-base-200/50">
-                <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('personal_factors')" class="btn btn-xs btn-outline btn-primary">+ Faktor Pribadi</button>
-                </td>
-            </tr>
-            {{-- 2.2 FAKTOR PEKERJAAN --}}
-            <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
-                <th class="px-4 py-1 font-bold border border-base-300">2.2 Faktor Pekerjaan</th>
-                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
-                <th class="border border-base-300"></th>
-            </tr>
-            @foreach($job_factors as $index => $row)
-            <tr wire:key="job-{{ $index }}">
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.select model="job_factors.{{ $index }}.item" :options="$this->jobFactorOptions" placeholder="Choose..." />
-                </td>
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area model="job_factors.{{ $index }}.description" rows="2" />
-                </td>
-                <td class="p-1 text-center border border-base-300">
-                    @if(count($job_factors) > 1)
-                    <button type="button" wire:click="removeRow('job_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            <tr class="bg-base-200/50">
-                <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('job_factors')" class="btn btn-xs btn-outline btn-primary">+ Faktor Pekerjaan</button>
-                </td>
-            </tr>
-
-            {{-- 2.3 KELEMAHAN SISTEM KONTROL --}}
-            <tr class="bg-gray-200 text-base-content uppercase text-[10px]">
-                <th class="px-4 py-1 font-bold border border-base-300">2.3 Kelemahan Sistem Kontrol</th>
-                <th class="px-4 py-1 font-bold text-left border border-base-300">Description</th>
-                <th class="border border-base-300"></th>
-            </tr>
-            @foreach($control_system_factors as $index => $row)
-            <tr wire:key="control-{{ $index }}">
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.select model="control_system_factors.{{ $index }}.item" :options="$this->controlSystemOptions" placeholder="Choose..." />
-                </td>
-                <td class="p-1 align-top border border-base-300">
-                    <x-form.text_area model="control_system_factors.{{ $index }}.description" rows="2" />
-                </td>
-                <td class="p-1 text-center border border-base-300">
-                    @if(count($control_system_factors) > 1)
-                    <button type="button" wire:click="removeRow('control_system_factors', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            <tr class="bg-base-200/50">
-                <td colspan="3" class="p-2 border border-base-300">
-                    <button type="button" wire:click="addRow('control_system_factors')" class="btn btn-xs btn-outline btn-primary">+ Sistem Kontrol</button>
-                </td>
-            </tr>
-        </tbody>
-
-    </table>
-
+                @foreach($sec['subs'] as $sub)
+                <tr class="bg-gray-100 text-base-content uppercase">
+                    <th class="w-1/3 px-4 py-2 font-bold border-r border-b border-base-300 text-[10px]">{{ $sub['label'] }}</th>
+                    <th class="w-2/3 px-4 py-2 font-bold border-b border-base-300 text-[10px]">Description</th>
+                    <th class="w-10 border-b border-base-300"></th>
+                </tr>
+                @foreach($$sub['key'] as $index => $row)
+                <tr wire:key="dt-{{ $sub['key'] }}-{{ $index }}" class="hover:bg-base-200/30">
+                    <td class="p-1 align-top border-r border-b border-base-300">
+                        <x-form.select model="{{ $sub['key'] }}.{{ $index }}.item" :options="$sub['options']" placeholder="Pilih..." />
+                    </td>
+                    <td class="p-1 align-top border-b border-base-300">
+                        <x-form.text_area model="{{ $sub['key'] }}.{{ $index }}.description" rows="2" />
+                    </td>
+                    <td class="p-1 text-center align-middle border-l border-b border-base-300">
+                        @if(count($$sub['key']) > 1)
+                        <button type="button" wire:click="removeRow('{{ $sub['key'] }}', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                <tr class="border-b border-base-300">
+                    <td colspan="3" class="p-2 bg-base-50">
+                        <button type="button" wire:click="addRow('{{ $sub['key'] }}')" class="btn btn-xs btn-ghost text-primary font-bold">
+                            + Tambah {{ $sub['label'] }}
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
