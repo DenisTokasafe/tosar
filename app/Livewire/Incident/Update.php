@@ -784,13 +784,14 @@ class Update extends Component
             ],
 
             3 => [
-                'pemimpin' => $allRules['pemimpin'],
+                // Pastikan key 'facilitator' dan 'anggota' ada di method rules()
+                'pemimpin'           => $allRules['pemimpin'],
                 'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
                 'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
                 'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
-                'facilitator' => $allRules['facilitator'],
+                'facilitator'        => $allRules['facilitator'],
                 'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
-                'anggota' => $allRules['anggota'],
+                'anggota'            => $allRules['anggota'],
             ],
 
             // 4 => [
