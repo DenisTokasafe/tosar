@@ -68,7 +68,6 @@ class Update extends Component
 
     // --- KOLEKSI DATA (FOR DROPDOWNS) ---
     // Properti ini biasanya diisi di mount() atau menggunakan Computed Properties
-    public $eventTypes = [];
     public $locations = [];
     public $departments = [];
     public $contractors = [];
