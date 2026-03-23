@@ -136,7 +136,11 @@ class Update extends Component
         $this->event_type_id = $report->event_type_id;
         $this->event_sub_type_id = $report->event_sub_type_id;
         $this->date_time = $report->date_time->format('Y-m-d\TH:i');
-        $this->location_id = $report->location_id;
+        if ($report->location_id) {
+            $this->location_id = $report->location_id;
+            $this->searchLocation = $report->location?->name; // Asumsi relasi 'reporter'
+        }
+
         $this->location_specific = $report->location_specific;
 
         if ($report->department_id) {
