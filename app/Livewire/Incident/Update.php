@@ -212,6 +212,37 @@ class Update extends Component
         // Opsional: Scroll ke atas agar user tahu konten sudah berubah
         $this->dispatch('scroll-to-top');
     }
+    // Di dalam class Update extends Component
+
+    /**
+     * Hook yang dipanggil otomatis saat $likelihood_id berubah
+     */
+    public function updatedLikelihoodId($value)
+    {
+        $this->updateRiskAssessment();
+    }
+
+    /**
+     * Hook yang dipanggil otomatis saat $consequence_id berubah
+     */
+    public function updatedConsequenceId($value)
+    {
+        $this->updateRiskAssessment();
+    }
+
+    /**
+     * Logic untuk mencari data Risk Matrix berdasarkan koordinat L & C
+     */
+    protected function updateRiskAssessment()
+    {
+        if ($this->likelihood_id && $this->consequence_id) {
+            $this->RiskAssessment = \App\Models\RiskMatrixCell::where('likelihood_id', $this->likelihood_id)
+                ->where('risk_consequence_id', $this->consequence_id)
+                ->first();
+        } else {
+            $this->RiskAssessment = null;
+        }
+    }
     public function render()
     {
         return view('livewire.incident.update');
