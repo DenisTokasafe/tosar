@@ -138,7 +138,7 @@
                         @endphp
                         <td class=" cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
                             <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
+                                class="btn btn-square btn-xs {{ $color }}">
                                 {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
                                 {{ Str::upper(substr(__( $severity ), 0, 1)) }}
                             </span>
