@@ -97,6 +97,25 @@ trait WithDeptContSelection
             ->values()
             ->toArray();
     }
+    // Tambahkan di dalam file WithDeptContSelection.php
 
+    public function loadInitialPenanggungJawab($type, $id)
+    {
+        if (!$id) return;
+
+        $query = ErmAssignment::query()->with('user:id,name');
+
+        if ($type === 'department') {
+            $query->where('department_id', $id);
+        } else {
+            $query->where('contractor_id', $id);
+        }
+
+        $this->penanggungJawabOptions = $query->get()
+            ->pluck('user')
+            ->filter()
+            ->values()
+            ->toArray();
+    }
     // ... dan seterusnya
 }
