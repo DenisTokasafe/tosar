@@ -577,4 +577,71 @@ class Update extends Component
         }
         return $rules;
     }
+
+    public function isFieldInStep($step, $errorFields)
+    {
+        // Ambil semua key field yang sedang error
+        $fields = array_keys($errorFields);
+
+        foreach ($fields as $field) {
+            switch ($step) {
+                case 1:
+                    $step1Fields = [
+                        'event_type_id',
+                        'event_sub_type_id',
+                        'date_time',
+                        'location_id',
+                        'location_specific',
+                        'department_id',
+                        'contractor_id',
+                        'penanggungJawab',
+                        'pelapor_id',
+                        'manualPelaporName',
+                        'consequence_id',
+                        'likelihood_id',
+                        'description',
+                        'emergency_action',
+                        'selectedBodyPartCategory',
+                        'selectedBodyPart',
+                        'damage_detail'
+                    ];
+                    if (in_array($field, $step1Fields)) return true;
+                    break;
+
+                    // case 2:
+                    //     if (str_starts_with($field, 'directly_involved')) return true;
+                    //     break;
+
+                    // case 3:
+                    //     if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    //     break;
+
+                    // case 4:
+                    //     if (str_starts_with($field, 'peepo')) return true;
+                    //     break;
+
+                    // case 5:
+                    //     if (str_starts_with($field, 'timelines')) return true;
+                    //     break;
+
+                    // case 6:
+                    //     if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    //     break;
+
+                    // case 7:
+                    //     if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    //     break;
+
+                    // case 8:
+                    //     if ($field === 'key_learning') return true;
+                    //     break;
+
+                    // case 9:
+                    //     if (str_starts_with($field, 'penerimaan_komentar')) return true;
+                    //     break;
+            }
+        }
+
+        return false;
+    }
 }
