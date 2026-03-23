@@ -3,8 +3,16 @@
 namespace App\Livewire\Incident;
 
 use App\Models\BodyPart;
+use App\Models\Contractor;
+use App\Models\Department;
 use App\Models\EventSubType;
+use App\Models\EventType;
 use App\Models\IncidentReport;
+use App\Models\Likelihood;
+use App\Models\RiskConsequence;
+use App\Models\RiskMatrixCell;
+use App\Models\UnsafeAct;
+use App\Models\UnsafeCondition;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -245,6 +253,16 @@ class Update extends Component
     }
     public function render()
     {
-        return view('livewire.incident.update');
+        return view('livewire.incident.update', [
+            'Department'   => Department::all(),
+            'Contractors'  => Contractor::all(),
+            'likelihoodss' => Likelihood::orderByDesc('level')->get(),
+            'consequencess' => RiskConsequence::orderBy('level')->get(),
+            'eventTypes' => EventType::onlyIncidents()->get(),
+            'eventSubTypes' => EventSubType::where('event_type_id', $this->event_type_id)->get(),
+            'ktas' => UnsafeCondition::latest()->get(),
+            'ttas' => UnsafeAct::latest()->get(),
+            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
+        ]);
     }
 }
