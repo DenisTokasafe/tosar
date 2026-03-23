@@ -114,6 +114,18 @@ class Update extends Component
             ->select('*', DB::raw("name as display_name"))
             ->get();
     }
+    #[Computed]
+    public function isInjury()
+    {
+        if (!$this->event_type_id) {
+            return false;
+        }
+
+        $type = EventType::find($this->event_type_id);
+
+        // Menggunakan str_contains atau strtolower untuk keamanan ekstra
+        return $type && str_contains(strtolower($type->event_type_name), 'injury');
+    }
 
     /**
      * Logic pencarian pelapor (Simple search)
