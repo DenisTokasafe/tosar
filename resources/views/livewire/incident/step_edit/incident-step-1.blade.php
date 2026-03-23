@@ -98,33 +98,36 @@
             <table class="table table-xs w-60">
                 <thead>
                     <tr class="text-center text-[9px]">
+                        {{-- Menterjemahkan Header Statis --}}
                         <td class=" border-1">{{ __('Level') }}</td>
-                        <td class="text-white rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
-                        <td class="text-white bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
-                        <td class="text-white bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
-                        <td class="text-white rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
-                        <td class="text-black bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
+                        <td class="rotate_text border-1 bg-emerald-500">{{ __('Rendah') }}</td>
+                        <td class="bg-yellow-500 rotate_text border-1">{{ __('Sedang') }}</td>
+                        <td class="bg-orange-500 rotate_text border-1">{{ __('Tinggi') }}</td>
+                        <td class="rotate_text border-1 bg-rose-500">{{ __('Ekstrem') }}</td>
+                        <td class="bg-gray-100 rotate_text border-1">{{ __('Ditutup') }}</td>
                     </tr>
                     <tr class="text-center text-[9px]">
                         <th class="border-1">Likelihood ↓ / Consequence →</th>
                         @foreach ($consequences as $c)
+                        {{-- Menterjemahkan Nama Konsekuensi dari DB --}}
                         <th class="rotate_text border-1">{{ __($c->name) }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($likelihoods as $l)
-                    <tr class="w-32 text-xs text-center">
-
+                    <tr class="text-center text-[9px]">
+                        {{-- Menterjemahkan Nama Likelihood dari DB --}}
                         <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+
                         @foreach ($consequences as $c)
                         @php
-                        $cell =
-                        App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                        $cell = App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
                         ->where('risk_consequence_id', $c->id)
                         ->first() ?? null;
-                        $score = $l->level * $c->level;
+
                         $severity = $cell?->severity ?? '';
+
                         $color = match ($severity) {
                         'Rendah' => 'bg-emerald-500',
                         'Sedang' => 'bg-yellow-500',
@@ -133,10 +136,12 @@
                         default => 'bg-gray-100',
                         };
                         @endphp
-                        <td
-                            class="border cursor-pointer   @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
+                        <td class=" cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
                             <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                class="btn btn-square btn-xs   {{ $color }}">{{ Str::upper(substr(__($severity), 0, 1)) }}</span>
+                                class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
+                                {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
+                                {{ Str::upper(substr(__( $severity ), 0, 1)) }}
+                            </span>
                         </td>
                         @endforeach
                     </tr>
