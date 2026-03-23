@@ -20,6 +20,11 @@ trait WithDeptContSelection
     // Masukkan fungsi-fungsi Anda di bawah sini
     public function updatedSearch()
     {
+        if ($this->department_id != null) {
+            $this->search = Department::whereId($this->department_id)->first()->department_name;
+        } else {
+            $this->searchContractor = Department::whereId($this->contractor_id)->first()->contractor_name;
+        }
         if (strlen($this->search) < 1) {
             $this->department_id = null;
             // Picu validasi keduanya agar error 'required_without' sinkron
