@@ -88,6 +88,18 @@ class Update extends Component
     public $show_employee_dropdown = []; // Status dropdown per baris
     public $involved_personnel_options = []; // Hasil pencarian DB
 
+    // Data Tim Investigasi
+    public $pemimpin = [];
+    public $facilitator = [];
+    public $anggota = [];
+
+    // State untuk Pencarian/Dropdown
+    public $searchQuery = []; // Struktur: [$index][$type] => 'string'
+    public $showDropdownPartisipan = [];
+    public $activeType = null;
+    public $activeIndex = null;
+    public $options = []; // Hasil pencarian User
+
     #[Computed]
     public function isInjury()
     {
@@ -140,17 +152,17 @@ class Update extends Component
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
-            // // Part 2
-            // // PART 2: Pihak Terlibat Langsung
-            // 'directly_involved' => 'required|array|min:1',
-            // 'directly_involved.*.employee_name' => 'required|string',
-            // 'directly_involved.*.employee_nik'  => 'required',
-            // 'directly_involved.*.dept_cont'     => 'required',
-            // 'directly_involved.*.jabatan'       => 'required',
-            // 'directly_involved.*.roster'        => 'required',
-            // 'directly_involved.*.sift'          => 'required',
-            // 'directly_involved.*.keterlibatan'  => 'required',
-            // 'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+            // Part 2
+            // PART 2: Pihak Terlibat Langsung
+            'directly_involved' => 'required|array|min:1',
+            'directly_involved.*.employee_name' => 'required|string',
+            'directly_involved.*.employee_nik'  => 'required',
+            'directly_involved.*.dept_cont'     => 'required',
+            'directly_involved.*.jabatan'       => 'required',
+            'directly_involved.*.roster'        => 'required',
+            'directly_involved.*.sift'          => 'required',
+            'directly_involved.*.keterlibatan'  => 'required',
+            'directly_involved.*.pengalaman_kerja' => 'required|numeric',
             // // PART 3: Tim Investigasi
             // 'pemimpin' => 'required|array|min:1',
             // 'pemimpin.*.user_id' => 'required',
@@ -375,6 +387,28 @@ class Update extends Component
             // Jika data kosong, berikan 1 baris kosong default
             $this->addDirectlyInvolvedRow();
         }
+
+        // PART 3: Load Tim Investigasi
+        $teams = $report->investigationTeams;
+
+        foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+            $filtered = $teams->where('role', $role);
+
+            if ($filtered->count() > 0) {
+                foreach ($filtered as $index => $team) {
+                    $this->{$role}[] = [
+                        'user_id' => $team->user_id,
+                        'dept'    => $team->dept,
+                        'jabatan' => $team->jabatan,
+                    ];
+                    // Isi search query agar nama muncul di input
+                    $this->searchQuery[$index][$role] = $team->user->name ?? '';
+                }
+            } else {
+                // Default 1 baris kosong jika data role tersebut tidak ada
+                $this->addRow($role);
+            }
+        }
     }
 
     public function addDirectlyInvolvedRow()
@@ -454,6 +488,116 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
+
+
+    public function addRow($type)
+    {
+        // 1. Tentukan struktur data berdasarkan tipe
+        // Tambahkan pengecekan untuk faktor pribadi, pekerjaan, dan sistem kontrol
+        if (in_array($type, ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'])) {
+            $newData = ['item' => '', 'description' => ''];
+        } elseif ($type === 'timelines') {
+            // Timeline dengan struktur khusus sesuai jumlah kolom "Why"
+            $newData = ['kegiatan' => '', 'tanggal' => ''];
+            for ($i = 1; $i <= $this->whyCount; $i++) {
+                $newData["why{$i}"] = '';
+            }
+        } else {
+            // Default untuk partisipan (pemimpin, facilitator, anggota)
+            $newData = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'jabatan_detail' => '', 'dept' => ''];
+        }
+
+        // 2. Masukkan ke array utama secara dinamis
+        $this->{$type}[] = $newData;
+
+        // 3. Inisialisasi state pembantu untuk pencarian User
+        if (in_array($type, ['pemimpin', 'facilitator', 'anggota',])) {
+            $newIndex = count($this->{$type}) - 1;
+            $this->searchQuery[$newIndex][$type] = '';
+            $this->showDropdownPartisipan[$newIndex] = false;
+        }
+        $this->saveToSession();
+    }
+    public function removeRow($type, $index)
+    {
+        // 1. Hapus data baris utama
+        if (isset($this->{$type}[$index])) {
+            unset($this->{$type}[$index]);
+            $this->{$type} = array_values($this->{$type});
+        }
+
+        // 2. Sinkronisasi searchQuery dan Dropdown
+        // Kita tidak bisa hanya array_values secara global karena akan menggeser
+        // data tipe lain yang berada di indeks yang sama.
+
+        // Cara terbaik: Hapus data indeks tersebut, lalu geser manual data di bawahnya
+        // khusus untuk tipe (key) yang sedang dihapus.
+
+        $totalRemaining = count($this->{$type});
+
+        for ($i = $index; $i <= $totalRemaining; $i++) {
+            // Geser searchQuery untuk tipe yang spesifik ini saja
+            if (isset($this->searchQuery[$i + 1][$type])) {
+                $this->searchQuery[$i][$type] = $this->searchQuery[$i + 1][$type];
+                unset($this->searchQuery[$i + 1][$type]);
+            } else {
+                unset($this->searchQuery[$i][$type]);
+            }
+
+            // Geser status dropdown
+            if (isset($this->showDropdownPartisipan[$i + 1])) {
+                $this->showDropdownPartisipan[$i] = $this->showDropdownPartisipan[$i + 1];
+            } else {
+                unset($this->showDropdownPartisipan[$i]);
+            }
+        }
+
+        // 3. Jika baris habis, tambahkan satu baris kosong lagi
+        if (empty($this->{$type})) {
+            $this->addRow($type);
+        }
+        $this->saveToSession();
+    }
+
+    public function selectUser($id, $index, $type)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            // 1. Set data utama
+            $this->{$type}[$index]['user_id'] = $user->id;
+            $this->{$type}[$index]['nama']    = $user->name;
+
+            // 2. Set default Jabatan & Dept (Sangat membantu user agar tidak ketik manual)
+            $this->{$type}[$index]['jabatan'] = $user->position ?? '';
+            $this->{$type}[$index]['dept']    = $user->department_name ?? '';
+
+            // 3. Update teks input pencarian agar sinkron dengan pilihan
+            // Pastikan $this->searchQuery sudah didefinisikan sebagai array di awal
+            $this->searchQuery[$index][$type] = $user->name;
+
+            // 4. Reset state dropdown
+            $this->showDropdownPartisipan[$index] = false;
+            $this->options = [];
+
+            // 5. TRIGGER VALIDASI (PENTING)
+            // Menghapus pesan error merah segera setelah data terpilih
+            $this->validateOnly($type . '.' . $index . '.user_id');
+            $this->validateOnly($type . '.' . $index . '.dept');
+            $this->validateOnly($type . '.' . $index . '.jabatan');
+            // SIMPAN KE SESSION
+            $this->saveToSession();
+        }
+    }
+    public function resetSearch()
+    {
+        $this->searchQuery = []; // Reset ke array kosong
+        $this->options = [];
+        $this->showDropdownPartisipan = []; // Reset ke array kosong
+        $this->activeType = '';
+        $this->activeIndex = null;
+    }
+
     public function updatedEventTypeId($value)
     {
         // 1. Reset sub-type setiap kali tipe utama berubah
@@ -479,6 +623,8 @@ class Update extends Component
             }
         }
     }
+
+
     public function updatedSelectedBodyPartCategory()
     {
         // Reset detail bagian tubuh jika kategorinya diganti
@@ -830,6 +976,24 @@ class Update extends Component
                 'keterlibatan'     => $person['keterlibatan'],
                 'pengalaman_kerja' => $person['pengalaman_kerja'],
             ]);
+        }
+        // --- STEP 3: Sinkronisasi Tim Investigasi ---
+        // Hapus data tim lama
+        $report->investigationTeams()->delete();
+
+        // Loop melalui 3 kategori tim
+        foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+            foreach ($this->{$role} as $member) {
+                // Hanya simpan jika user_id atau jabatan tidak kosong
+                if (!empty($member['user_id']) || !empty($member['jabatan'])) {
+                    $report->investigationTeams()->create([
+                        'user_id' => $member['user_id'],
+                        'role'    => $role,
+                        'dept'    => $member['dept'],
+                        'jabatan' => $member['jabatan'],
+                    ]);
+                }
+            }
         }
 
         // 4. Navigasi atau Notifikasi
