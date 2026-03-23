@@ -434,7 +434,7 @@ class Create extends Component
     }
 
     // Komentar Standard
-    protected function messages()
+    public function messages()
     {
         return [
             // Pesan Standar
