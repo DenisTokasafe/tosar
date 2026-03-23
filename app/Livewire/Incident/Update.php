@@ -161,6 +161,7 @@ class Update extends Component
             $this->likelihood_id = $report->risk->likelihood_id;
             // Trigger update UI Risk Assessment
             $this->updatedLikelihoodId($this->likelihood_id);
+            $this->updatedConsequenceId($this->consequence_id);
         }
 
         // --- IMPACT (Injury vs Damage) ---
@@ -172,11 +173,6 @@ class Update extends Component
             $this->selectedBodyPartCategory = $bodyPart?->category;
         } else {
             $this->damage_detail = $report->impact->damage_detail;
-        }
-        if (!empty($this->likelihood_id) && !empty($this->consequence_id)) {
-            $id_table = RiskMatrixCell::where('likelihood_id', $this->likelihood_id)->where('risk_consequence_id', $this->consequence_id)->first()->id;
-            $risk_assessment_id = RiskAssessmentMatrix::where('risk_matrix_cell_id', $id_table)->first()->risk_assessment_id;
-            $this->RiskAssessment = RiskAssessment::whereId($risk_assessment_id)->first();
         }
     }
 
