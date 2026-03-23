@@ -83,6 +83,11 @@ class Update extends Component
     public $why_analysis = [];
     public $whyCount = 1;
 
+    public $directly_involved = []; // Menampung data baris personel
+    public $searchKorban = [];      // Menampung input pencarian per baris
+    public $show_employee_dropdown = []; // Status dropdown per baris
+    public $involved_personnel_options = []; // Hasil pencarian DB
+
     #[Computed]
     public function isInjury()
     {
@@ -332,6 +337,108 @@ class Update extends Component
             // Pastikan data cidera kosong jika ini adalah kerusakan alat/lingkungan
             $this->selectedBodyPart = null;
             $this->selectedBodyPartCategory = null;
+        }
+
+        // PART 2: Load data personel terlibat
+        if ($report->involvedPersons->count() > 0) {
+            foreach ($report->involvedPersons as $person) {
+                $this->directly_involved[] = [
+                    'id' => $person->id, // Simpan ID untuk keperluan update nanti
+                    'employee_id' => $person->employee_id,
+                    'employee_name' => $person->employee_name,
+                    'employee_nik' => $person->employee_nik,
+                    'dept_cont' => $person->dept_cont,
+                    'jabatan' => $person->jabatan,
+                    'roster' => $person->roster,
+                    'sift' => $person->sift,
+                    'keterlibatan' => $person->keterlibatan,
+                    'pengalaman_kerja' => $person->pengalaman_kerja,
+                ];
+
+                // Isi search input dengan nama yang sudah ada
+                $this->searchKorban[] = $person->employee_name;
+            }
+        } else {
+            // Jika data kosong, berikan 1 baris kosong default
+            $this->addDirectlyInvolvedRow();
+        }
+    }
+
+    public function addDirectlyInvolvedRow()
+    {
+        $this->directly_involved[] = [
+            'employee_id' => null,
+            'employee_name' => '',
+            'employee_nik' => '',
+            'dept_cont' => '',
+            'jabatan' => '',
+            'roster' => '',
+            'sift' => '',
+            'keterlibatan' => '',
+            'pengalaman_kerja' => '',
+        ];
+
+        // Inisialisasi state pembantu untuk index baru
+        $newIndex = count($this->directly_involved) - 1;
+        $this->searchKorban[$newIndex] = '';
+        $this->show_employee_dropdown[$newIndex] = false;
+        $this->saveToSession();
+    }
+
+    public function removeDirectlyInvolvedRow($index)
+    {
+        unset($this->directly_involved[$index]);
+        unset($this->searchKorban[$index]);
+        unset($this->show_employee_dropdown[$index]);
+
+        // Reset index agar berurutan kembali (penting untuk kelancaran array PHP)
+        $this->directly_involved = array_values($this->directly_involved);
+        $this->searchKorban = array_values($this->searchKorban);
+        $this->show_employee_dropdown = array_values($this->show_employee_dropdown);
+    }
+
+
+    // Fungsi pencarian otomatis saat user mengetik
+    public function updatedSearchKorban($value, $index)
+    {
+        // Ambil index dari string "searchKorban.0"
+        $idx = explode('.', $index)[0];
+
+        if (strlen($value) >= 2) {
+            // Ganti dengan logic pencarian database Anda
+            $this->involved_personnel_options = User::where('name', 'like', "%{$value}%")
+                ->limit(5)
+                ->get();
+            $this->show_employee_dropdown[$idx] = true;
+        } else {
+            $this->show_employee_dropdown[$idx] = false;
+        }
+    }
+    public function selectInvolvedPersonnel($id, $name, $index)
+    {
+        // 1. Cari data karyawan di database
+        // Sesuaikan model 'Employee' dengan model yang Anda gunakan
+        $employee = User::find($id);
+
+        if ($employee) {
+            // 2. Isi data ke array directly_involved berdasarkan index-nya
+            $this->directly_involved[$index]['employee_name'] = $employee->name;
+            $this->directly_involved[$index]['employee_id']   = $employee->id; // Untuk tracking ID
+            $this->directly_involved[$index]['employee_nik']  = $employee->employee_id;
+
+            // Asumsi relasi department atau kolom string dept
+            $this->directly_involved[$index]['dept_cont']     = $employee->department_name ?? '';
+            $this->directly_involved[$index]['jabatan']       = $employee->position;
+
+            // 3. Reset dropdown search untuk baris ini
+            $this->show_employee_dropdown[$index] = false;
+            $this->searchKorban[$index] = $employee->name;
+
+            // 4. PENTING: Simpan perubahan ke session agar tidak hilang saat refresh
+            session(['incident_data' => $this->all()]);
+
+            // 5. Opsional: Trigger validasi untuk baris tersebut
+            $this->validateOnly("directly_involved.$index.*");
         }
     }
     public function updatedEventTypeId($value)
@@ -641,5 +748,76 @@ class Update extends Component
         }
 
         return false;
+    }
+    public function update()
+    {
+        // 1. Validasi berdasarkan Step yang sedang aktif
+        $this->validateOnlyStep($this->currentStep);
+
+        $report = IncidentReport::findOrFail($this->incidentId);
+
+        // 2. Update data utama (Step 1: Incident Details)
+        $report->update([
+            // Identitas & Waktu
+            'event_type_id'     => $this->event_type_id,
+            'event_sub_type_id' => $this->event_sub_type_id,
+            'description'       => $this->description,
+            'date_time'         => $this->date_time,
+
+            // Lokasi
+            'location_id'       => $this->location_id,
+            'location_specific' => $this->location_specific,
+
+            // Pelapor (Handle Manual Mode dari Trait)
+            'pelapor_id'          => $this->pelapor_id,
+            'manual_pelapor_name' => $this->manualPelaporName,
+
+            // Organisasi (Mutual Exclusion Dept/Cont)
+            'department_id' => $this->deptCont === 'department' ? $this->department_id : null,
+            'contractor_id' => $this->deptCont === 'contractor' ? $this->contractor_id : null,
+
+            // Risk Assessment
+            'likelihood_id'  => $this->likelihood_id,
+            'consequence_id' => $this->consequence_id,
+
+            // Tindakan & Penanggung Jawab
+            'emergency_action' => $this->emergency_action,
+            'penanggung_jawab' => $this->penanggungJawab, // Pastikan nama kolom di DB sesuai
+
+            // Logika Kondisional isInjury
+            'body_part_category' => $this->isInjury ? $this->selectedBodyPartCategory : null,
+            'body_part'          => $this->isInjury ? $this->selectedBodyPart : null,
+            'damage_detail'      => !$this->isInjury ? $this->damage_detail : null,
+        ]);
+
+        // 3. Update Part 2 (Involved Personnel)
+        // Menggunakan metode delete-then-insert untuk sinkronisasi array
+        $report->involvedPersons()->delete();
+
+        foreach ($this->directly_involved as $person) {
+            $report->involvedPersons()->create([
+                'employee_id'      => $person['employee_id'] ?? null,
+                'employee_name'    => $person['employee_name'],
+                'employee_nik'     => $person['employee_nik'],
+                'dept_cont'        => $person['dept_cont'],
+                'jabatan'          => $person['jabatan'],
+                'roster'           => $person['roster'],
+                'sift'             => $person['sift'] ?? $person['shift'] ?? null, // Proteksi typo 'sift'
+                'keterlibatan'     => $person['keterlibatan'],
+                'pengalaman_kerja' => $person['pengalaman_kerja'],
+            ]);
+        }
+
+        // 4. Navigasi atau Notifikasi
+        if ($this->currentStep < 9) {
+            $this->currentStep++;
+            $this->dispatch('alert', [
+                'text' => "Data Step {$this->currentStep} berhasil disimpan.",
+                'type' => 'success'
+            ]);
+        } else {
+            return redirect()->route('incident.index')
+                ->with('success', 'Laporan insiden berhasil diperbarui secara keseluruhan.');
+        }
     }
 }
