@@ -80,44 +80,7 @@ class Update extends Component
      * Computed Property untuk Sub-Tipe Insiden
      * Otomatis update saat event_type_id berubah
      */
-    #[Computed]
-    public function eventSubTypes()
-    {
-        return EventSubType::where('event_type_id', $this->event_type_id)->get();
-    }
 
-    /**
-     * Cek apakah tipe insiden yang dipilih memiliki sub-tipe
-     */
-    #[Computed]
-    public function hasSubTypes()
-    {
-        return $this->eventSubTypes->isNotEmpty();
-    }
-
-    /**
-     * Koleksi kategori bagian tubuh
-     */
-    #[Computed]
-    public function existingCategory()
-    {
-        return BodyPart::select('category')->distinct()->get();
-    }
-
-    /**
-     * Detail bagian tubuh berdasarkan kategori yang dipilih
-     */
-    #[Computed]
-    public function detailsBodyPart()
-    {
-        return BodyPart::where('category', $this->selectedBodyPartCategory)
-            ->select('*', DB::raw("name as display_name"))
-            ->get();
-    }
-    public function updatedEventTypeId($id)
-    {
-        $this->isInjury();
-    }
     #[Computed]
     public function isInjury()
     {
@@ -131,18 +94,6 @@ class Update extends Component
         return $type && str_contains(strtolower($type->event_type_name), 'injury');
     }
 
-    /**
-     * Logic pencarian pelapor (Simple search)
-     */
-    #[Computed]
-    public function pelapors()
-    {
-        if (strlen($this->searchPelapor) < 2) return [];
-
-        return User::where('name', 'like', '%' . $this->searchPelapor . '%')
-            ->limit(5)
-            ->get();
-    }
     public function mount($id)
     {
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
@@ -204,76 +155,27 @@ class Update extends Component
         if ($report->risk) {
             $this->consequence_id = $report->risk->consequence_id;
             $this->likelihood_id = $report->risk->likelihood_id;
-            // Trigger update UI Risk Assessment
-            $this->updatedLikelihoodId($this->likelihood_id);
-            $this->updatedConsequenceId($this->consequence_id);
+
+            // Set visual state untuk tabel matrix di blade
+            $this->selectedLikelihoodId = $this->likelihood_id;
+            $this->selectedConsequenceId = $this->consequence_id;
+
+            // Cukup panggil fungsi load sekali
+            $this->loadRiskAssessment();
         }
 
-        // --- IMPACT (Injury vs Damage) ---
-        $this->isInjury = $report->impact->is_injury;
+        // --- IMPACT ---
+        // Gunakan null-safe operator (?) untuk menghindari error jika impact kosong
+        $this->isInjury = $report->impact?->is_injury ?? false;
+
         if ($this->isInjury) {
             $this->selectedBodyPart = $report->impact->body_part_id;
-            // Ambil kategori berdasarkan part yang terpilih
             $bodyPart = BodyPart::find($this->selectedBodyPart);
             $this->selectedBodyPartCategory = $bodyPart?->category;
         } else {
             $this->damage_detail = $report->impact->damage_detail;
         }
     }
-
-    /**
-     * Memeriksa apakah ada error validasi di Part/Step tertentu
-     */
-    public function isFieldInStep($step, $errors)
-    {
-        $fieldsPerStep = [
-            1 => [
-                'event_type_id',
-                'event_sub_type_id',
-                'date_time',
-                'location_id',
-                'location_specific',
-                'department_id',
-                'penanggungJawab',
-                'description',
-                'emergency_action',
-                'consequence_id',
-                'likelihood_id'
-            ],
-            2 => ['directly_involved', 'witnesses'], // Contoh untuk Part 2
-            // ... tambahkan pemetaan field untuk part 3 sampai 9 di sini
-        ];
-
-        if (!isset($fieldsPerStep[$step])) return false;
-
-        // Ambil semua key error (misal: 'event_type_id', 'directly_involved.0.name')
-        $errorKeys = array_keys($errors);
-
-        foreach ($errorKeys as $key) {
-            // Cek apakah key error ada di dalam daftar field step ini
-            // Menggunakan Str::is untuk menangani error array seperti 'directly_involved.*'
-            foreach ($fieldsPerStep[$step] as $field) {
-                if (\Illuminate\Support\Str::is($field . '*', $key)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-    public function goToStep($step)
-    {
-        // Di mode Edit, kita izinkan lompat tanpa validasi step sebelumnya
-        $this->currentStep = $step;
-
-        // Opsional: Scroll ke atas agar user tahu konten sudah berubah
-        $this->dispatch('scroll-to-top');
-    }
-    // Di dalam class Update extends Component
-
-    /**
-     * Hook yang dipanggil otomatis saat $likelihood_id berubah
-     */
 
     public function edit($likelihoodId, $consequenceId)
     {
@@ -285,12 +187,10 @@ class Update extends Component
 
         $this->loadRiskAssessment();
     }
-
     public function updatedConsequenceId()
     {
         $this->loadRiskAssessment();
     }
-
     public function updatedLikelihoodId()
     {
         $this->loadRiskAssessment();
@@ -302,20 +202,18 @@ class Update extends Component
             return;
         }
 
+        // Ambil data severity dari tabel risk_matrix
         $cell = RiskMatrixCell::where('likelihood_id', $this->likelihood_id)
             ->where('risk_consequence_id', $this->consequence_id)
             ->first();
 
-        if (!$cell) {
+        if (!$cell || !$cell->severity) {
             $this->RiskAssessment = null;
             return;
         }
 
-        $matrix = RiskAssessmentMatrix::where('risk_matrix_cell_id', $cell->id)->first();
-
-        $this->RiskAssessment = $matrix
-            ? RiskAssessment::find($matrix->risk_assessment_id)
-            : null;
+        // Cocokkan kolom 'severity' di Matrix dengan 'name' di RiskAssessment
+        $this->RiskAssessment = RiskAssessment::where('name', $cell->severity)->first();
     }
     public function render()
     {
