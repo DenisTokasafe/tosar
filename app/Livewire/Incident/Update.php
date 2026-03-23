@@ -391,22 +391,23 @@ class Update extends Component
         // PART 3: Load Tim Investigasi
         $teams = $report->investigationTeams;
 
-        foreach (['Pemimpin', 'Facilitator', 'Anggota'] as $role) {
-            $filtered = $teams->where('role', $role);
+        foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+            // Menggunakan filter agar bisa bekerja seperti "LIKE" dan Case-Insensitive
+            $filtered = $teams->filter(function ($item) use ($role) {
+                // stripos mengembalikan posisi angka jika ditemukan, atau false jika tidak
+                return stripos($item->role, $role) !== false;
+            });
 
-
-            if ($filtered->count() > 0) {
-                foreach ($filtered as $index => $team) {
+            if ($filtered->isNotEmpty()) {
+                foreach ($filtered->values() as $index => $team) {
                     $this->{$role}[] = [
                         'user_id' => $team->user_id,
                         'dept'    => $team->dept,
                         'jabatan' => $team->jabatan,
                     ];
-                    // Isi search query agar nama muncul di input
                     $this->searchQuery[$index][$role] = $team->user->name ?? '';
                 }
             } else {
-                // Default 1 baris kosong jika data role tersebut tidak ada
                 $this->addRow($role);
             }
         }
@@ -512,7 +513,7 @@ class Update extends Component
         $this->{$type}[] = $newData;
 
         // 3. Inisialisasi state pembantu untuk pencarian User
-        if (in_array($type, ['Pemimpin', 'Facilitator', 'Anggota',])) {
+        if (in_array($type, ['pemimpin', 'facilitator', 'anggota',])) {
             $newIndex = count($this->{$type}) - 1;
             $this->searchQuery[$newIndex][$type] = '';
             $this->showDropdownPartisipan[$newIndex] = false;
