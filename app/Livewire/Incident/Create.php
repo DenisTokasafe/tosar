@@ -352,7 +352,7 @@ class Create extends Component
             // Tindakan Perbaikan (Corrective Actions)
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
-            'corrective_actions.*.name.required'               => __('PIC wajib dipilih.'),
+            'corrective_actions.*.pic_user_id.required'               => __('PIC wajib dipilih.'),
             'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
             'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
 
@@ -460,7 +460,7 @@ class Create extends Component
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.action_description.min'      => __('Deskripsi rencana perbaikan terlalu singkat.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
-            'corrective_actions.*.name.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
+            'corrective_actions.*.pic_user_id.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
             'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
             'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
             // Part 8
@@ -1252,7 +1252,7 @@ class Create extends Component
         $this->corrective_actions[] = [
             'action_description' => '',
             'control_hierarchy' => '', // Tambahkan ini agar select tidak error
-            'name' => '',
+            'pic_user_id' => '',
             'due_date' => null,
             'actual_completion_date' => null,
             'inspector_id' => null,
