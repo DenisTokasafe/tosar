@@ -63,21 +63,22 @@ trait WithSearchPelapor
      */
     public function updatedSearchPelapor()
     {
-        // Reset ID dan mode manual jika user mulai mengetik ulang
-        if (property_exists($this, 'pelapor_id')) {
-            $this->pelapor_id = null;
-            $this->validateOnly('pelapor_id');
-        }
+        // 1. Reset data lama
+        $this->pelapor_id = null;
         $this->manualPelaporMode = false;
         $this->manualPelaporName = null;
+
+        // HAPUS baris $this->validateOnly('pelapor_id') di sini
+        // agar tidak memicu error saat user baru mulai mengetik.
 
         if (strlen($this->searchPelapor) > 1) {
             $this->pelapors = User::where('name', 'like', '%' . $this->searchPelapor . '%')
                 ->orderBy('name')
-                ->limit(50)
+                ->limit(10) // Batasi agar respons cepat
                 ->get();
 
-            $this->showPelaporDropdown = true;
+            // 2. Tampilkan dropdown hanya jika ada hasil
+            $this->showPelaporDropdown = $this->pelapors->isNotEmpty();
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
