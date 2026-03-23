@@ -14,12 +14,14 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
+use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use WithSearchPelapor;
     // Di dalam class IncidentEdit extends Component
     // --- IDENTITAS & STATE ---
     public $incidentId;
