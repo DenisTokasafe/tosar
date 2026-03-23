@@ -277,9 +277,12 @@ class Create extends Component
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
 
-        // Tambahkan validasi dinamis berdasarkan jumlah whyCount yang sedang aktif
+
+        // PERBAIKAN DI SINI:
+        // Gunakan $rules, bukan $attributes.
+        // Dan pastikan key-nya sesuai dengan data binding Anda.
         foreach (range(1, $this->whyCount) as $i) {
-            $attributes["why_analysis.why{$i}"] = __("Analisis Mengapa ke-$i");
+            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
         }
 
         return $rules;
@@ -671,9 +674,6 @@ class Create extends Component
         // 1. Load data referensi statis (Paling aman ditaruh di atas)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-        // REVISI: Pastikan whyCount memiliki nilai minimal 1 sejak awal
-        $this->whyCount = 1;
-
         if (empty($this->why_analysis)) {
             $this->why_analysis = ['why1' => ''];
         }
