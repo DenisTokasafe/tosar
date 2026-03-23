@@ -296,13 +296,11 @@ class Update extends Component
         $this->emergency_action = $report->emergency_action;
 
         // --- PELAPOR ---
-        if ($report->pelapor_id) {
-            $this->pelapor_id = $report->pelapor_id;
-            $this->searchPelapor = $report->reporter?->name; // Asumsi relasi 'reporter'
-        } else {
-            $this->manualPelaporMode = true;
-            $this->manualPelaporName = $report->manual_pelapor;
-        }
+        // Ambil data pelapor dari database laporan
+        $this->loadInitialPelapor(
+            $report->pelapor_id,
+            $report->manual_pelapor_name // Sesuaikan dengan nama kolom di tabel Anda
+        );
 
         // --- RISK MATRIX ---
         if ($report->risk) {
