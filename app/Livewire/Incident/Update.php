@@ -48,7 +48,7 @@ class Update extends Component
     public $contractor_id;
 
     public $penanggungJawab; // User ID untuk PIC
-
+    public $penanggungJawabOptions = [];
     // --- PART 1: PELAPOR (ADVANCED SEARCH) ---
     public $pelapor_id;
 
