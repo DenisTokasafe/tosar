@@ -44,6 +44,7 @@ use App\Livewire\Hazard\HazardForm;
 use App\Livewire\Hazard\HazardReportPanel;
 use App\Livewire\Incident\Create as IncidentCreate;
 use App\Livewire\Incident\Index as IncidentIndex;
+use App\Livewire\Incident\Update as IncidentUpdate;
 use App\Livewire\Inspection\FireInspection;
 use App\Livewire\Inspection\FireInspectionEdit;
 use App\Livewire\Inspection\FireInspectionList;
@@ -94,6 +95,7 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('hazard/{hazard}', HazardDetail::class)->name('hazard-detail');
     Route::get('incident', IncidentIndex::class)->name('incident');
     Route::get('incident/create', IncidentCreate::class)->name('incident-create');
+    Route::get('incident/detail/{id}', IncidentUpdate::class)->name('incident-detail');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');

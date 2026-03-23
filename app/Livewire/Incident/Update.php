@@ -1,0 +1,170 @@
+<?php
+
+namespace App\Livewire\Incident;
+
+use App\Models\BodyPart;
+use App\Models\EventSubType;
+use App\Models\IncidentReport;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
+
+class Update extends Component
+{
+    // Di dalam class IncidentEdit extends Component
+    // --- IDENTITAS & STATE ---
+    public $incidentId;
+    public $report_number; // Untuk ditampilkan di header
+    public $currentStep = 1;
+
+    // --- PART 1: DATA DASAR & LOKASI ---
+    public $event_type_id;
+    public $event_sub_type_id;
+    public $date_time;
+    public $location_id;
+    public $location_specific;
+    public $searchLocation; // Untuk input search
+    public $show_location = false; // Toggle dropdown lokasi
+
+    // --- PART 1: DEPT & PIC ---
+    public $deptCont = 'department'; // Default selector
+    public $department_id;
+    public $contractor_id;
+    public $showDropdown = false;
+    public $showContractorDropdown = false;
+    public $penanggungJawab; // User ID untuk PIC
+
+    // --- PART 1: PELAPOR (ADVANCED SEARCH) ---
+    public $pelapor_id;
+    public $searchPelapor;
+    public $showPelaporDropdown = false;
+    public $manualPelaporMode = false;
+    public $manualPelaporName;
+
+    // --- PART 1: RISK MATRIX ---
+    public $consequence_id;
+    public $likelihood_id;
+    public $RiskAssessment = null; // Menyimpan objek RiskMatrixCell yang terpilih
+
+    // --- PART 1: NARASI & IMPACT ---
+    public $description;
+    public $emergency_action;
+    public $isInjury = false; // Toggle status Cedera Manusia vs Kerusakan Alat
+    public $selectedBodyPartCategory;
+    public $selectedBodyPart;
+    public $damage_detail;
+
+    // --- KOLEKSI DATA (FOR DROPDOWNS) ---
+    // Properti ini biasanya diisi di mount() atau menggunakan Computed Properties
+    public $eventTypes = [];
+    public $locations = [];
+    public $departments = [];
+    public $contractors = [];
+    public $penanggungJawabOptions = [];
+    public $consequencess = []; // Sesuai nama di blade anda
+    public $likelihoodss = [];  // Sesuai nama di blade anda
+    public $consequences = [];  // Untuk header table matrix
+    public $likelihoods = [];   // Untuk row table matrix
+
+    /**
+     * Computed Property untuk Sub-Tipe Insiden
+     * Otomatis update saat event_type_id berubah
+     */
+    #[Computed]
+    public function eventSubTypes()
+    {
+        return EventSubType::where('event_type_id', $this->event_type_id)->get();
+    }
+
+    /**
+     * Cek apakah tipe insiden yang dipilih memiliki sub-tipe
+     */
+    #[Computed]
+    public function hasSubTypes()
+    {
+        return $this->eventSubTypes->isNotEmpty();
+    }
+
+    /**
+     * Koleksi kategori bagian tubuh
+     */
+    #[Computed]
+    public function existingCategory()
+    {
+        return BodyPart::select('category')->distinct()->get();
+    }
+
+    /**
+     * Detail bagian tubuh berdasarkan kategori yang dipilih
+     */
+    #[Computed]
+    public function detailsBodyPart()
+    {
+        return BodyPart::where('category', $this->selectedBodyPartCategory)
+            ->select('*', DB::raw("name as display_name"))
+            ->get();
+    }
+
+    /**
+     * Logic pencarian pelapor (Simple search)
+     */
+    #[Computed]
+    public function pelapors()
+    {
+        if (strlen($this->searchPelapor) < 2) return [];
+
+        return User::where('name', 'like', '%' . $this->searchPelapor . '%')
+            ->limit(5)
+            ->get();
+    }
+    public function mount($id)
+    {
+        $this->incidentId = $id;
+        $report = IncidentReport::with(['risk', 'impact'])->findOrFail($id);
+
+        // --- DATA DASAR ---
+        $this->event_type_id = $report->event_type_id;
+        $this->event_sub_type_id = $report->event_sub_type_id;
+        $this->date_time = $report->date_time->format('Y-m-d\TH:i');
+        $this->location_id = $report->location_id;
+        $this->location_specific = $report->location_specific;
+        $this->department_id = $report->department_id;
+        $this->contractor_id = $report->contractor_id;
+        $this->penanggungJawab = $report->penanggung_jawab;
+        $this->description = $report->description;
+        $this->emergency_action = $report->emergency_action;
+
+        // --- PELAPOR ---
+        if ($report->pelapor_id) {
+            $this->pelapor_id = $report->pelapor_id;
+            $this->searchPelapor = $report->reporter?->name; // Asumsi relasi 'reporter'
+        } else {
+            $this->manualPelaporMode = true;
+            $this->manualPelaporName = $report->manual_pelapor;
+        }
+
+        // --- RISK MATRIX ---
+        if ($report->risk) {
+            $this->consequence_id = $report->risk->consequence_id;
+            $this->likelihood_id = $report->risk->likelihood_id;
+            // Trigger update UI Risk Assessment
+            $this->updatedLikelihoodId($this->likelihood_id);
+        }
+
+        // --- IMPACT (Injury vs Damage) ---
+        $this->isInjury = $report->impact->is_injury;
+        if ($this->isInjury) {
+            $this->selectedBodyPart = $report->impact->body_part_id;
+            // Ambil kategori berdasarkan part yang terpilih
+            $bodyPart = BodyPart::find($this->selectedBodyPart);
+            $this->selectedBodyPartCategory = $bodyPart?->category;
+        } else {
+            $this->damage_detail = $report->impact->damage_detail;
+        }
+    }
+    public function render()
+    {
+        return view('livewire.incident.update');
+    }
+}

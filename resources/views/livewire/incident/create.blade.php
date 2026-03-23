@@ -54,7 +54,7 @@
                         </div>
                         @endif
 
-                        @include('livewire.incident.incident-step-' . $i)
+                        @include('livewire.incident.step_create.incident-step-' . $i)
 
                         {{-- NAVIGASI TOMBOL --}}
                         <div class="flex justify-end pt-4 mt-4 border-t border-base-200">

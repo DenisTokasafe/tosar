@@ -34,7 +34,7 @@ Breadcrumbs::for('hazard-detail', function (Trail $trail, $hazard) {
     }
 
     if ($hazard) {
-        $title = "Detail #{$hazard->no_referensi }";
+        $title = "Detail #{$hazard->no_referensi}";
         $url = route('hazard-detail', $hazard);
     } else {
         // fallback bila model tidak ditemukan (mis. saat generate dipanggil sebelum load)
@@ -81,7 +81,11 @@ Breadcrumbs::for('incident', function ($trail) {
 });
 
 //Incident > Create Incident
-Breadcrumbs::for('incident-create', function ($trail) {
+Breadcrumbs::for('incident-create', function ($trail,) {
     $trail->parent('incident');
     $trail->push('Create Incident', route('incident-create'));
+});
+Breadcrumbs::for('incident-detail', function ($trail, $id) {
+    $trail->parent('incident');
+    $trail->push('Detail Incident', route('incident-detail', $id));
 });
