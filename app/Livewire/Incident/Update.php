@@ -518,6 +518,7 @@ class Update extends Component
         // Cocokkan kolom 'severity' di Matrix dengan 'name' di RiskAssessment
         $this->RiskAssessment = RiskAssessment::where('name', $cell->severity)->first();
     }
+    #[Computed]
     public function keterlibatanOptions()
     {
         return [
