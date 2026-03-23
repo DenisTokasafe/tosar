@@ -163,6 +163,55 @@ class Update extends Component
             $this->damage_detail = $report->impact->damage_detail;
         }
     }
+
+    /**
+     * Memeriksa apakah ada error validasi di Part/Step tertentu
+     */
+    public function isFieldInStep($step, $errors)
+    {
+        $fieldsPerStep = [
+            1 => [
+                'event_type_id',
+                'event_sub_type_id',
+                'date_time',
+                'location_id',
+                'location_specific',
+                'department_id',
+                'penanggungJawab',
+                'description',
+                'emergency_action',
+                'consequence_id',
+                'likelihood_id'
+            ],
+            2 => ['directly_involved', 'witnesses'], // Contoh untuk Part 2
+            // ... tambahkan pemetaan field untuk part 3 sampai 9 di sini
+        ];
+
+        if (!isset($fieldsPerStep[$step])) return false;
+
+        // Ambil semua key error (misal: 'event_type_id', 'directly_involved.0.name')
+        $errorKeys = array_keys($errors);
+
+        foreach ($errorKeys as $key) {
+            // Cek apakah key error ada di dalam daftar field step ini
+            // Menggunakan Str::is untuk menangani error array seperti 'directly_involved.*'
+            foreach ($fieldsPerStep[$step] as $field) {
+                if (\Illuminate\Support\Str::is($field . '*', $key)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    public function goToStep($step)
+    {
+        // Di mode Edit, kita izinkan lompat tanpa validasi step sebelumnya
+        $this->currentStep = $step;
+
+        // Opsional: Scroll ke atas agar user tahu konten sudah berubah
+        $this->dispatch('scroll-to-top');
+    }
     public function render()
     {
         return view('livewire.incident.update');
