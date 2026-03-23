@@ -512,7 +512,7 @@ class Update extends Component
         $this->{$type}[] = $newData;
 
         // 3. Inisialisasi state pembantu untuk pencarian User
-        if (in_array($type, ['pemimpin', 'facilitator', 'anggota',])) {
+        if (in_array($type, ['Pemimpin', 'Facilitator', 'Anggota',])) {
             $newIndex = count($this->{$type}) - 1;
             $this->searchQuery[$newIndex][$type] = '';
             $this->showDropdownPartisipan[$newIndex] = false;
