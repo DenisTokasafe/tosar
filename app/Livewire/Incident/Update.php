@@ -93,6 +93,18 @@ class Update extends Component
         // Menggunakan str_contains atau strtolower untuk keamanan ekstra
         return $type && str_contains(strtolower($type->event_type_name), 'injury');
     }
+    public function getExistingCategoryProperty()
+    {
+        // Definisikan urutan kategori secara manual
+        $order = "'Kepala', 'Tubuh Atas', 'Batang Tubuh', 'Tubuh Bawah', 'Lainnya'";
+
+        return BodyPart::query()
+            ->select('category')
+            ->distinct()
+            ->whereNotNull('category')
+            ->orderByRaw("FIELD(category, $order)")
+            ->get();
+    }
 
     public function mount($id)
     {
