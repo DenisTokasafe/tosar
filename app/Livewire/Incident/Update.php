@@ -80,6 +80,8 @@ class Update extends Component
      * Computed Property untuk Sub-Tipe Insiden
      * Otomatis update saat event_type_id berubah
      */
+    public $why_analysis = [];
+    public $whyCount = 1;
 
     #[Computed]
     public function isInjury()
