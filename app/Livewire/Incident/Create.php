@@ -279,7 +279,7 @@ class Create extends Component
 
         // Tambahkan validasi dinamis berdasarkan jumlah whyCount yang sedang aktif
         foreach (range(1, $this->whyCount) as $i) {
-            $rules["timelines.*.why{$i}"] = 'required|string|min:3';
+            $attributes["why_analysis.why{$i}"] = __("Analisis Mengapa ke-$i");
         }
 
         return $rules;
