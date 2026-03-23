@@ -1478,7 +1478,11 @@ class Create extends Component
                 $report->peepoAnalyses()->createMany($data['analisis_peepo']);
 
                 // F. Simpan Timeline & 5-Whys (Part 5) - model TimelineAnalysis
-                $report->timelines()->create($this->why_analysis);
+                $report->timelines()->create([
+                    'original_description' => $data['analysis_timeline']['original_description'],
+                    'why_count_used'       => $data['analysis_timeline']['why_count_used'],
+                    'analysis_steps'       => $data['analysis_timeline']['analysis_steps'], // Ini mapping yang benar
+                ]);
 
                 // G. Simpan Tindakan Perbaikan (Part 7) - model CorrectiveAction
                 $report->correctiveActions()->createMany($data['tindakan_perbaikan']);
