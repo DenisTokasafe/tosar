@@ -78,7 +78,7 @@ trait WithSearchPelapor
                 ->get();
 
             // 2. Tampilkan dropdown hanya jika ada hasil
-            $this->showPelaporDropdown = $this->pelapors->isNotEmpty();
+            $this->showPelaporDropdown = !empty($this->pelapors);
         } else {
             $this->pelapors = [];
             $this->showPelaporDropdown = false;
