@@ -169,15 +169,15 @@ class Update extends Component
             'pemimpin.*.dept'    => 'required|string',
             'pemimpin.*.jabatan' => 'required|string',
 
-            // 'facilitator' => 'required|array|min:1',
-            // 'facilitator.*.user_id' => 'required',
-            // 'facilitator.*.dept'    => 'required|string',
-            // 'facilitator.*.jabatan' => 'required|string',
+            'facilitator' => 'required|array|min:1',
+            'facilitator.*.user_id' => 'required',
+            'facilitator.*.dept'    => 'required|string',
+            'facilitator.*.jabatan' => 'required|string',
 
-            // 'anggota' => 'required|array|min:1',
-            // 'anggota.*.user_id' => 'required',
-            // 'anggota.*.dept'    => 'required|string',
-            // 'anggota.*.jabatan' => 'required|string',
+            'anggota' => 'required|array|min:1',
+            'anggota.*.user_id' => 'required',
+            'anggota.*.dept'    => 'required|string',
+            'anggota.*.jabatan' => 'required|string',
             // // PART 4: PEEPO (Analisis Faktor)
             // 'peepo.orang.temuan'      => 'required|string|min:3',
             // 'peepo.orang.deskripsi'   => 'required|string|min:5',
@@ -784,14 +784,23 @@ class Update extends Component
             ],
 
             3 => [
-                // Pastikan key 'facilitator' dan 'anggota' ada di method rules()
+                // Pemimpin Investigasi
                 'pemimpin'           => $allRules['pemimpin'],
                 'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
                 'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
                 'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
-                'facilitator'        => $allRules['facilitator'],
+
+                // Facilitator (KPLH)
+                'facilitator'           => $allRules['facilitator'],
                 'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
-                'anggota'            => $allRules['anggota'],
+                'facilitator.*.dept'    => $allRules['facilitator.*.dept'],
+                'facilitator.*.jabatan' => $allRules['facilitator.*.jabatan'],
+
+                // Tim Anggota
+                'anggota'           => $allRules['anggota'],
+                'anggota.*.user_id' => $allRules['anggota.*.user_id'],
+                'anggota.*.dept'    => $allRules['anggota.*.dept'],
+                'anggota.*.jabatan' => $allRules['anggota.*.jabatan'],
             ],
 
             // 4 => [
