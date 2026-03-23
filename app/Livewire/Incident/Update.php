@@ -492,70 +492,70 @@ class Update extends Component
                 'penanggungJawab'    => $allRules['penanggungJawab'],
             ], $isInjuryRules),
 
-            2 => [
-                'directly_involved' => $allRules['directly_involved'],
-                'directly_involved.*.employee_name' => $allRules['directly_involved.*.employee_name'],
-                'directly_involved.*.employee_nik'  => $allRules['directly_involved.*.employee_nik'],
-                'directly_involved.*.dept_cont'     => $allRules['directly_involved.*.dept_cont'],
-                'directly_involved.*.jabatan'       => $allRules['directly_involved.*.jabatan'],
-                'directly_involved.*.roster'        => $allRules['directly_involved.*.roster'],
-                'directly_involved.*.sift'          => $allRules['directly_involved.*.sift'],
-                'directly_involved.*.keterlibatan'  => $allRules['directly_involved.*.keterlibatan'],
-                'directly_involved.*.pengalaman_kerja' => $allRules['directly_involved.*.pengalaman_kerja'],
-            ],
+            // 2 => [
+            //     'directly_involved' => $allRules['directly_involved'],
+            //     'directly_involved.*.employee_name' => $allRules['directly_involved.*.employee_name'],
+            //     'directly_involved.*.employee_nik'  => $allRules['directly_involved.*.employee_nik'],
+            //     'directly_involved.*.dept_cont'     => $allRules['directly_involved.*.dept_cont'],
+            //     'directly_involved.*.jabatan'       => $allRules['directly_involved.*.jabatan'],
+            //     'directly_involved.*.roster'        => $allRules['directly_involved.*.roster'],
+            //     'directly_involved.*.sift'          => $allRules['directly_involved.*.sift'],
+            //     'directly_involved.*.keterlibatan'  => $allRules['directly_involved.*.keterlibatan'],
+            //     'directly_involved.*.pengalaman_kerja' => $allRules['directly_involved.*.pengalaman_kerja'],
+            // ],
 
-            3 => [
-                'pemimpin' => $allRules['pemimpin'],
-                'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
-                'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
-                'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
-                'facilitator' => $allRules['facilitator'],
-                'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
-                'anggota' => $allRules['anggota'],
-            ],
+            // 3 => [
+            //     'pemimpin' => $allRules['pemimpin'],
+            //     'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
+            //     'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
+            //     'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
+            //     'facilitator' => $allRules['facilitator'],
+            //     'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
+            //     'anggota' => $allRules['anggota'],
+            // ],
 
-            4 => [
-                'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
-                'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
-                'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
-                'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
-                'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
-                'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
-                'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
-            ],
+            // 4 => [
+            //     'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
+            //     'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
+            //     'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
+            //     'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
+            //     'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
+            //     'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
+            //     'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
+            // ],
 
-            5 => $this->getWhyAnalysisRules(),
+            // 5 => $this->getWhyAnalysisRules(),
 
-            6 => [
-                'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
-                'unsafe_conditions.*.description' => $allRules['unsafe_conditions.*.description'],
-                'unsafe_acts.*.item' => $allRules['unsafe_acts.*.item'],
-                'personal_factors.*.item' => $allRules['personal_factors.*.item'],
-                'job_factors.*.item' => $allRules['job_factors.*.item'],
-                'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
-            ],
+            // 6 => [
+            //     'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
+            //     'unsafe_conditions.*.description' => $allRules['unsafe_conditions.*.description'],
+            //     'unsafe_acts.*.item' => $allRules['unsafe_acts.*.item'],
+            //     'personal_factors.*.item' => $allRules['personal_factors.*.item'],
+            //     'job_factors.*.item' => $allRules['job_factors.*.item'],
+            //     'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
+            // ],
 
-            7 => [
-                'visual_evidence' => $allRules['visual_evidence'],
-                'visual_evidence.*' => $allRules['visual_evidence.*'],
-                'supporting_documents' => $allRules['supporting_documents'],
-                'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
-                'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
-                'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
-            ],
+            // 7 => [
+            //     'visual_evidence' => $allRules['visual_evidence'],
+            //     'visual_evidence.*' => $allRules['visual_evidence.*'],
+            //     'supporting_documents' => $allRules['supporting_documents'],
+            //     'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
+            //     'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
+            //     'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
+            // ],
 
-            8 => [
-                'key_learning' => $allRules['key_learning'],
-            ],
+            // 8 => [
+            //     'key_learning' => $allRules['key_learning'],
+            // ],
 
-            9 => array_merge([
-                'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
-                'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
-                'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
-                'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
-                'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
-                'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
-            ], $kttRules),
+            // 9 => array_merge([
+            //     'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
+            //     'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
+            //     'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
+            //     'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
+            //     'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
+            //     'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
+            // ], $kttRules),
         ];
 
         // 4. Jalankan Validasi berdasarkan step saat ini
