@@ -1634,20 +1634,14 @@ class Create extends Component
                 ];
             })->values()->toArray(),
 
-            // KELOMPOK PART 5: TIMELINE & 5-WHYS ANALYSIS
-            'analysis_timeline' => collect($this->timelines)->map(function ($line, $index) {
-                // Mengumpulkan data why1, why2, dst. berdasarkan $whyCount yang aktif
-                $whys = [];
-                for ($i = 1; $i <= $this->whyCount; $i++) {
-                    $whys["why$i"] = $line["why$i"] ?? null;
-                }
 
-                return [
-                    'original_description' => $this->description, // Referensi dari Part 1
-                    'analysis_steps'       => $whys, // Disimpan sebagai array/JSON
-                    'why_count_used'       => $this->whyCount,
-                ];
-            })->toArray(),
+            // KELOMPOK PART 5: 5-WHYS ANALYSIS (Single Row)
+            'analysis_timeline' => [
+                'original_description' => $this->description,
+                'why_count_used'       => $this->whyCount,
+                // Menggabungkan semua why1, why2... ke dalam satu array/JSON
+                'analysis_steps'       => $this->why_analysis,
+            ],
 
             // KELOMPOK PART 6: ANALISIS PENYEBAB (SCAT)
             'penyebab_insiden' => [
