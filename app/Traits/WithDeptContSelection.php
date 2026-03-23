@@ -23,7 +23,7 @@ trait WithDeptContSelection
         if ($this->department_id != null) {
             $this->search = Department::whereId($this->department_id)->first()->department_name;
         } else {
-            $this->searchContractor = Department::whereId($this->contractor_id)->first()->contractor_name;
+            $this->searchContractor = Contractor::whereId($this->contractor_id)->first()->contractor_name;
         }
         if (strlen($this->search) < 1) {
             $this->department_id = null;
