@@ -9,6 +9,8 @@ use App\Models\EventSubType;
 use App\Models\EventType;
 use App\Models\IncidentReport;
 use App\Models\Likelihood;
+use App\Models\RiskAssessment;
+use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
 use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
@@ -37,6 +39,7 @@ class Update extends Component
     public $event_sub_type_id;
     public $date_time;
     public $location_id;
+    public $location_specific;
 
 
     // --- PART 1: DEPT & PIC ---
@@ -53,6 +56,8 @@ class Update extends Component
     public $consequence_id;
     public $likelihood_id;
     public $RiskAssessment = null; // Menyimpan objek RiskMatrixCell yang terpilih
+    public $selectedLikelihoodId, $selectedConsequenceId;
+    public $risk_consequence;
 
     // --- PART 1: NARASI & IMPACT ---
     public $description;
@@ -71,7 +76,8 @@ class Update extends Component
     public $penanggungJawabOptions = [];
     public $consequences = [];  // Untuk header table matrix
     public $likelihoods = [];   // Untuk row table matrix
-
+    public $penerimaan_komentar_ktt_id;
+    public $penerimaan_komentar_ktt;
     /**
      * Computed Property untuk Sub-Tipe Insiden
      * Otomatis update saat event_type_id berubah
@@ -222,17 +228,64 @@ class Update extends Component
     /**
      * Hook yang dipanggil otomatis saat $likelihood_id berubah
      */
-    public function updatedLikelihoodId($value)
+
+    public function edit($likelihoodId, $consequenceId)
     {
-        $this->updateRiskAssessment();
+        $this->likelihood_id = $likelihoodId;
+        $this->consequence_id = $consequenceId;
+
+        $this->selectedLikelihoodId = $likelihoodId;
+        $this->selectedConsequenceId = $consequenceId;
+
+        $this->loadRiskAssessment();
     }
 
-    /**
-     * Hook yang dipanggil otomatis saat $consequence_id berubah
-     */
-    public function updatedConsequenceId($value)
+    public function updatedConsequenceId()
     {
-        $this->updateRiskAssessment();
+        $this->loadRiskAssessment();
+        if (!in_array($this->consequence_id, [3, 4, 5])) {
+            $this->penerimaan_komentar_ktt_id = null;
+            $this->penerimaan_komentar_ktt = '';
+
+            // Pastikan array searchName dibersihkan agar UI Select2 sinkron
+            if (isset($this->searchNamePenerimaan['ktt'])) {
+                $this->searchNamePenerimaan['ktt'] = '';
+            }
+
+            // Beritahu JS untuk menghancurkan instance editor (opsional tapi bagus untuk memori)
+            $this->dispatch('reset-all-editors');
+        } else {
+            // Jika berubah ke 3, 4, atau 5, beri sinyal kecil untuk re-init jika diperlukan
+            // Livewire v4 biasanya menangani ini lewat x-data init, tapi dispatch membantu jika ada delay render
+            $this->dispatch('refresh-ktt-editor');
+        }
+    }
+
+    public function updatedLikelihoodId()
+    {
+        $this->loadRiskAssessment();
+    }
+    protected function loadRiskAssessment(): void
+    {
+        if (!$this->likelihood_id || !$this->consequence_id) {
+            $this->RiskAssessment = null;
+            return;
+        }
+
+        $cell = RiskMatrixCell::where('likelihood_id', $this->likelihood_id)
+            ->where('risk_consequence_id', $this->consequence_id)
+            ->first();
+
+        if (!$cell) {
+            $this->RiskAssessment = null;
+            return;
+        }
+
+        $matrix = RiskAssessmentMatrix::where('risk_matrix_cell_id', $cell->id)->first();
+
+        $this->RiskAssessment = $matrix
+            ? RiskAssessment::find($matrix->risk_assessment_id)
+            : null;
     }
 
     /**

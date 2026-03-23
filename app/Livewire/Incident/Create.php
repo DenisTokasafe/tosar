@@ -134,12 +134,12 @@ class Create extends Component
     public $penerimaan_komentar_internal_id;
     public $penerimaan_komentar_ohs_id;
     public $penerimaan_komentar_ktt_id;
+    public $penerimaan_komentar_ktt;
 
     // Properti untuk teks editor (CKEditor)
     public $penerimaan_komentar_contractor;
     public $penerimaan_komentar_internal;
     public $penerimaan_komentar_ohs;
-    public $penerimaan_komentar_ktt;
     public $key_learning;
 
     public $searchNamePenerimaan = [
