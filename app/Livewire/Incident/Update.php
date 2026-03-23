@@ -164,17 +164,54 @@ class Update extends Component
             $this->loadRiskAssessment();
         }
 
-        // --- IMPACT ---
-        // Gunakan null-safe operator (?) untuk menghindari error jika impact kosong
-        $this->isInjury = $report->impact?->is_injury ?? false;
+        $impact = $report->impact;
+        $this->isInjury = $impact?->is_injury ?? false;
 
         if ($this->isInjury) {
-            $this->selectedBodyPart = $report->impact->body_part_id;
-            $bodyPart = BodyPart::find($this->selectedBodyPart);
+            $this->selectedBodyPart = $impact?->body_part_id;
+            // Gunakan find untuk mendapatkan kategori agar select category otomatis terpilih (selected)
+            $bodyPart = \App\Models\BodyPart::find($this->selectedBodyPart);
             $this->selectedBodyPartCategory = $bodyPart?->category;
+
+            // Pastikan damage_detail kosong jika ini adalah cidera
+            $this->damage_detail = null;
         } else {
-            $this->damage_detail = $report->impact->damage_detail;
+            $this->damage_detail = $impact?->damage_detail;
+
+            // Pastikan data cidera kosong jika ini adalah kerusakan alat/lingkungan
+            $this->selectedBodyPart = null;
+            $this->selectedBodyPartCategory = null;
         }
+    }
+    public function updatedEventTypeId($value)
+    {
+        // 1. Reset sub-type setiap kali tipe utama berubah
+        $this->event_sub_type_id = null;
+
+        // 2. Tentukan logic isInjury berdasarkan Tipe Insiden (Event Type)
+        // Asumsi: ID atau Nama tertentu menentukan apakah ini cidera manusia
+        // Anda bisa menyesuaikan ID di bawah sesuai database SENTRY Anda
+        $eventType = \App\Models\EventType::find($value);
+
+        if ($eventType) {
+            // Contoh logic: Jika nama tipe mengandung kata 'Cidera' atau 'Injury'
+            if (
+                str_contains(strtolower($eventType->event_type_name), 'injury') ||
+                str_contains(strtolower($eventType->event_type_name), 'cidera')
+            ) {
+                $this->isInjury = true;
+                $this->damage_detail = null; // Reset detail kerusakan alat
+            } else {
+                $this->isInjury = false;
+                $this->selectedBodyPart = null; // Reset data cidera
+                $this->selectedBodyPartCategory = null;
+            }
+        }
+    }
+    public function updatedSelectedBodyPartCategory()
+    {
+        // Reset detail bagian tubuh jika kategorinya diganti
+        $this->selectedBodyPart = null;
     }
     public function getHasSubTypesProperty()
     {
