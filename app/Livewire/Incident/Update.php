@@ -201,8 +201,8 @@ class Update extends Component
 
             'peepo.organisasi.temuan'   => 'required|string|min:3',
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
-            // // PART 5: Timeline & Why Analysis
-            // 'why_analysis' => 'required|array',
+            // PART 5: Timeline & Why Analysis
+            'why_analysis' => 'required|array',
             // // Part 6
             // // Validasi Kondisi Tidak Aman
             // 'unsafe_conditions.*.item' => 'required',
@@ -265,9 +265,9 @@ class Update extends Component
         // // PERBAIKAN DI SINI:
         // // Gunakan $rules, bukan $attributes.
         // // Dan pastikan key-nya sesuai dengan data binding Anda.
-        // foreach (range(1, $this->whyCount) as $i) {
-        //     $rules["why_analysis.why{$i}"] = 'required|string|min:3';
-        // }
+        foreach (range(1, $this->whyCount) as $i) {
+            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
+        }
 
         return $rules;
     }
@@ -430,6 +430,42 @@ class Update extends Component
                 ];
             }
         }
+
+        $analysis = $report->timelineAnalysis;
+
+        if ($analysis && is_array($analysis->analysis_steps)) {
+            $this->why_analysis = $analysis->analysis_steps;
+            $this->whyCount = count($this->why_analysis) ?: 1;
+        } else {
+            $this->why_analysis = ['why1' => ''];
+            $this->whyCount = 1;
+        }
+    }
+
+    #[Computed]
+    public function gridClass()
+    {
+        return match (true) {
+            $this->whyCount == 2 => 'grid-cols-2',
+            $this->whyCount >= 3 => 'grid-cols-3',
+            default => 'grid-cols-1',
+        };
+    }
+    public function addWhyColumn()
+    {
+        $this->whyCount++;
+
+        // Inisialisasi key baru di setiap baris timeline agar tidak error
+        $this->why_analysis['why' . $this->whyCount] = '';
+        $this->saveToSession();
+    }
+    public function removeWhyColumn()
+    {
+        if ($this->whyCount > 1) {
+            unset($this->why_analysis['why' . $this->whyCount]);
+            $this->whyCount--;
+        }
+        $this->saveToSession();
     }
 
     public function addDirectlyInvolvedRow()
@@ -848,7 +884,7 @@ class Update extends Component
                 'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
             ],
 
-            // 5 => $this->getWhyAnalysisRules(),
+            5 => $this->getWhyAnalysisRules(),
 
             // 6 => [
             //     'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
@@ -942,9 +978,9 @@ class Update extends Component
                     if (str_starts_with($field, 'peepo')) return true;
                     break;
 
-                    // case 5:
-                    //     if (str_starts_with($field, 'timelines')) return true;
-                    //     break;
+                case 5:
+                    if (str_starts_with($field, 'timelines')) return true;
+                    break;
 
                     // case 6:
                     //     if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
@@ -1053,6 +1089,12 @@ class Update extends Component
                 ]
             );
         }
+        $report->timelineAnalysis()->updateOrCreate(
+            ['incident_report_id' => $report->id],
+            [
+                'analysis_steps' => $this->why_analysis, // Otomatis jadi JSON oleh Eloquent
+            ]
+        );
 
         // 4. Navigasi atau Notifikasi
         if ($this->currentStep < 9) {
