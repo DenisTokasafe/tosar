@@ -165,7 +165,7 @@ class Update extends Component
         } else {
             $this->deptCont = 'cont';
         }
-        $this->penanggungJawab = $report->penanggung_jawab;
+        $this->penanggungJawab = $report->penanggungJawab;
         $this->description = $report->description;
         $this->emergency_action = $report->emergency_action;
 
