@@ -14,14 +14,18 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
+use App\Traits\WithDeptContSelection;
+use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Update extends Component
 {
-    use WithSearchPelapor;
+    use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation, WithSearchPelapor;
     // Di dalam class IncidentEdit extends Component
     // --- IDENTITAS & STATE ---
     public $incidentId;
