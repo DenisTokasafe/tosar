@@ -367,14 +367,7 @@ class Create extends Component
             $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
             $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
         }
-        foreach ($this->timelines as $index => $line) {
-            $rowNum = $index + 1;
 
-            // Kita hanya memvalidasi input 'why' karena 'kejadian' sekarang bersifat statis
-            for ($i = 1; $i <= $this->whyCount; $i++) {
-                $attributes["timelines.{$index}.why{$i}"] = "Analisis Mengapa (Why {$i}) pada Baris ke-{$rowNum}";
-            }
-        }
         // Loop untuk membuat label yang dinamis dan user-friendly
         foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
             foreach ($this->$key as $index => $row) {
