@@ -43,7 +43,7 @@ class Update extends Component
 
 
     // --- PART 1: DEPT & PIC ---
-    public $deptCont = 'department'; // Default selector
+    public $deptCont = 'dept'; // Default selector
     public $department_id;
     public $contractor_id;
 
@@ -142,6 +142,11 @@ class Update extends Component
         $this->location_specific = $report->location_specific;
         $this->department_id = $report->department_id;
         $this->contractor_id = $report->contractor_id;
+        if ($this->department_id) {
+            $this->deptCont = 'dept';
+        } else {
+            $this->deptCont = 'cont';
+        }
         $this->penanggungJawab = $report->penanggung_jawab;
         $this->description = $report->description;
         $this->emergency_action = $report->emergency_action;

@@ -159,6 +159,7 @@ class HazardDetail extends Component
     public $edit_action_responsible_id;
     public $edit_searchResponsibility;
     public $audit_name;
+
     // Untuk menampilkan daftar ActionHazard terkait hazard
     public $actionHazards = [];
 
@@ -967,32 +968,31 @@ class HazardDetail extends Component
                 ]
             );
         }
-        if($this->moderator_comment) {
+        if ($this->moderator_comment) {
             // Kirim notifikasi ke erm dan penanggung jawab yang terlibat jika ada komentar moderator
-             $assignedErmIds = [];
-        if ($this->assignTo1 || $this->assignTo2)
-            {
-            // ID ERM yang baru ditugaskan
-            $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
-            $this->hazard->assignedErms()->sync($assignIds);
-            $assignedErmIds = $assignIds; // Simpan ID untuk notifikasi
+            $assignedErmIds = [];
+            if ($this->assignTo1 || $this->assignTo2) {
+                // ID ERM yang baru ditugaskan
+                $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
+                $this->hazard->assignedErms()->sync($assignIds);
+                $assignedErmIds = $assignIds; // Simpan ID untuk notifikasi
 
-            foreach ($assignedErmIds as $userId) {
-                MailHelper::sendToUserId(
-                    $userId,
-                    'Komentar Moderator pada Laporan Hazard',
-                    'emails.notification', // Gunakan template notifikasi yang sama
-                    [
-                        'subject'        => 'Komentar Moderator: ' . $hazard->no_referensi,
-                        'title'          => 'Komentar Baru dari Moderator',
-                        'messageText'    =>  "Moderator telah menambahkan komentar pada laporan hazard ini:\n\n\"{$this->moderator_comment}\"\n\nSilakan tinjau komentar tersebut dan lakukan tindakan yang diperlukan.",
-                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
-                        'actionUrl'      => route('hazard-detail', $hazard->id)
-                    ]
-                );
+                foreach ($assignedErmIds as $userId) {
+                    MailHelper::sendToUserId(
+                        $userId,
+                        'Komentar Moderator pada Laporan Hazard',
+                        'emails.notification', // Gunakan template notifikasi yang sama
+                        [
+                            'subject'        => 'Komentar Moderator: ' . $hazard->no_referensi,
+                            'title'          => 'Komentar Baru dari Moderator',
+                            'messageText'    =>  "Moderator telah menambahkan komentar pada laporan hazard ini:\n\n\"{$this->moderator_comment}\"\n\nSilakan tinjau komentar tersebut dan lakukan tindakan yang diperlukan.",
+                            'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                            'actionUrl'      => route('hazard-detail', $hazard->id)
+                        ]
+                    );
+                }
             }
-        }
-           MailHelper::sendToUserId(
+            MailHelper::sendToUserId(
                 $penanggungJawab,
                 'Komentar Moderator pada Laporan Hazard',
                 'emails.notification',
