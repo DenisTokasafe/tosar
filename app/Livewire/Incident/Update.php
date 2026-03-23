@@ -163,11 +163,11 @@ class Update extends Component
             'directly_involved.*.sift'          => 'required',
             'directly_involved.*.keterlibatan'  => 'required',
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
-            // // PART 3: Tim Investigasi
-            // 'pemimpin' => 'required|array|min:1',
-            // 'pemimpin.*.user_id' => 'required',
-            // 'pemimpin.*.dept'    => 'required|string',
-            // 'pemimpin.*.jabatan' => 'required|string',
+            // PART 3: Tim Investigasi
+            'pemimpin' => 'required|array|min:1',
+            'pemimpin.*.user_id' => 'required',
+            'pemimpin.*.dept'    => 'required|string',
+            'pemimpin.*.jabatan' => 'required|string',
 
             // 'facilitator' => 'required|array|min:1',
             // 'facilitator.*.user_id' => 'required',
@@ -769,27 +769,27 @@ class Update extends Component
                 'penanggungJawab'    => $allRules['penanggungJawab'],
             ], $isInjuryRules),
 
-            // 2 => [
-            //     'directly_involved' => $allRules['directly_involved'],
-            //     'directly_involved.*.employee_name' => $allRules['directly_involved.*.employee_name'],
-            //     'directly_involved.*.employee_nik'  => $allRules['directly_involved.*.employee_nik'],
-            //     'directly_involved.*.dept_cont'     => $allRules['directly_involved.*.dept_cont'],
-            //     'directly_involved.*.jabatan'       => $allRules['directly_involved.*.jabatan'],
-            //     'directly_involved.*.roster'        => $allRules['directly_involved.*.roster'],
-            //     'directly_involved.*.sift'          => $allRules['directly_involved.*.sift'],
-            //     'directly_involved.*.keterlibatan'  => $allRules['directly_involved.*.keterlibatan'],
-            //     'directly_involved.*.pengalaman_kerja' => $allRules['directly_involved.*.pengalaman_kerja'],
-            // ],
+            2 => [
+                'directly_involved' => $allRules['directly_involved'],
+                'directly_involved.*.employee_name' => $allRules['directly_involved.*.employee_name'],
+                'directly_involved.*.employee_nik'  => $allRules['directly_involved.*.employee_nik'],
+                'directly_involved.*.dept_cont'     => $allRules['directly_involved.*.dept_cont'],
+                'directly_involved.*.jabatan'       => $allRules['directly_involved.*.jabatan'],
+                'directly_involved.*.roster'        => $allRules['directly_involved.*.roster'],
+                'directly_involved.*.sift'          => $allRules['directly_involved.*.sift'],
+                'directly_involved.*.keterlibatan'  => $allRules['directly_involved.*.keterlibatan'],
+                'directly_involved.*.pengalaman_kerja' => $allRules['directly_involved.*.pengalaman_kerja'],
+            ],
 
-            // 3 => [
-            //     'pemimpin' => $allRules['pemimpin'],
-            //     'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
-            //     'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
-            //     'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
-            //     'facilitator' => $allRules['facilitator'],
-            //     'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
-            //     'anggota' => $allRules['anggota'],
-            // ],
+            3 => [
+                'pemimpin' => $allRules['pemimpin'],
+                'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
+                'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
+                'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
+                'facilitator' => $allRules['facilitator'],
+                'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
+                'anggota' => $allRules['anggota'],
+            ],
 
             // 4 => [
             //     'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
@@ -883,13 +883,13 @@ class Update extends Component
                     if (in_array($field, $step1Fields)) return true;
                     break;
 
-                    // case 2:
-                    //     if (str_starts_with($field, 'directly_involved')) return true;
-                    //     break;
+                case 2:
+                    if (str_starts_with($field, 'directly_involved')) return true;
+                    break;
 
-                    // case 3:
-                    //     if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    //     break;
+                case 3:
+                    if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
 
                     // case 4:
                     //     if (str_starts_with($field, 'peepo')) return true;
