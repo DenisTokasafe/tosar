@@ -127,7 +127,6 @@ class Update extends Component
             'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
 
             'deptCont' => 'required',
-            'keyWord' => 'required',
             'likelihood_id' => 'required',
             'consequence_id' => 'required',
             'emergency_action' => 'required',
