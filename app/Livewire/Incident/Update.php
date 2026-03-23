@@ -391,7 +391,7 @@ class Update extends Component
         // PART 3: Load Tim Investigasi
         $teams = $report->investigationTeams;
 
-        foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+        foreach (['Pemimpin', 'Facilitator', 'Anggota'] as $role) {
             $filtered = $teams->where('role', $role);
             dd($filtered);
 
