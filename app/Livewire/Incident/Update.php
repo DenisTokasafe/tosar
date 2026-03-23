@@ -38,6 +38,7 @@ class Update extends Component
     public $date_time;
     public $location_id;
     public $location_specific;
+    public $searchLocation; // Untuk input search
     public $show_location = false; // Toggle dropdown lokasi
 
     // --- PART 1: DEPT & PIC ---
@@ -50,10 +51,6 @@ class Update extends Component
 
     // --- PART 1: PELAPOR (ADVANCED SEARCH) ---
     public $pelapor_id;
-    public $searchPelapor;
-    public $showPelaporDropdown = false;
-    public $manualPelaporMode = false;
-    public $manualPelaporName;
 
     // --- PART 1: RISK MATRIX ---
     public $consequence_id;
