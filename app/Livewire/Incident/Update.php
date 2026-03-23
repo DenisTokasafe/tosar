@@ -560,7 +560,23 @@ class Update extends Component
         }
         $this->saveToSession();
     }
+    public function updatedSearchQuery($value, $key)
+    {
+        // $key sekarang berisi "0.pemimpin", "1.facilitator", dst.
+        $parts = explode('.', $key);
+        $index = $parts[0]; // Mendapatkan angka index
 
+        if (strlen($value) < 2) {
+            $this->options = [];
+            $this->showDropdownPartisipan[$index] = false;
+            return;
+        }
+
+        $this->options = User::where('name', 'like', '%' . $value . '%')->limit(50)->get();
+
+        // Buka dropdown berdasarkan index barisnya
+        $this->showDropdownPartisipan[$index] = true;
+    }
     public function selectUser($id, $index, $type)
     {
         $user = User::find($id);
