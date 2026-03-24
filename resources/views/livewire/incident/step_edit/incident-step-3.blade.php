@@ -1,5 +1,5 @@
 <div class="mt-6">
-    <h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-primary">{{ __('Tim Investigasi') }}</h3>
+
 
     {{-- TAMPILAN MOBILE (Android/iPhone) --}}
     <div class="space-y-6 md:hidden">
