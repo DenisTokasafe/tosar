@@ -74,8 +74,7 @@ class Update extends Component
     public $penanggungJawabOptions = [];
     public $consequences = [];  // Untuk header table matrix
     public $likelihoods = [];   // Untuk row table matrix
-    public $penerimaan_komentar_ktt_id;
-    public $penerimaan_komentar_ktt;
+
     /**
      * Computed Property untuk Sub-Tipe Insiden
      * Otomatis update saat event_type_id berubah
@@ -107,14 +106,39 @@ class Update extends Component
         'prosedur' => 'Prosedur',
         'organisasi' => 'Organisasi'
     ];
+    public $existing_visual_evidence = [];
+    public $existing_supporting_documents = [];
 
     public $unsafe_conditions = [];
     public $unsafe_acts = [];
     public $personal_factors = [];
     public $job_factors = [];
     public $control_system_factors = [];
+    // Di bagian atas Class
+    public $visual_evidence = [];
+    public $supporting_documents = [];
+    public $corrective_actions = [];
+    public $searchPetugas = [];
+    public $showDropdownPetugas = [];
+    public $pelaporsAct = [];
+    public $showPenerimaanKomentarContractorDropdown = false;
+    public $showPenerimaanKomentarInternalDropdown = false;
+    public $showPenerimaanKomentarOhsDropdown = false;
+    public $showPenerimaanKomentarKttDropdown = false;
+    public $penerimaan_komentar_contractor_id;
+    public $penerimaan_komentar_internal_id;
+    public $penerimaan_komentar_ohs_id;
+    public $penerimaan_komentar_ktt_id;
+    public $penerimaan_komentar_ktt;
+
+    // Properti untuk teks editor (CKEditor)
+    public $penerimaan_komentar_contractor;
+    public $penerimaan_komentar_internal;
+    public $penerimaan_komentar_ohs;
+    public $key_learning;
 
     #[Computed]
+
     public function isInjury()
     {
         if (!$this->event_type_id) {
@@ -273,6 +297,100 @@ class Update extends Component
 
         return $rules;
     }
+    protected function validationAttributes()
+    {
+        $attributes = [
+            // Part 1
+            'pelapor_id'        => __('Nama Pelapor'),
+            'manualPelaporName' => __('Nama Pelapor Manual'),
+            'event_type_id'     => __('Tipe Kejadian'),
+            'event_sub_type_id' => __('Sub Tipe Kejadian'),
+            'description'       => __('Deskripsi Kejadian'),
+            'location_id'       => __('Lokasi Utama'),
+            'location_specific' => __('Detail Lokasi Spesifik'),
+            'date_time'         => __('Tanggal dan Waktu'),
+
+            // KTA & TTA
+
+            'keyWord'             => __('Jenis Bahaya'),
+
+            // Organisasi
+            'department_id'   => __('Departemen'),
+            'contractor_id'   => __('Perusahaan Kontraktor'),
+            'deptCont'        => __('Pihak Terlibat'),
+            'penanggungJawab' => __('PIC / Penanggung Jawab'),
+
+            // Risiko & Tindakan
+            'likelihood_id'    => __('Kemungkinan (Likelihood)'),
+            'consequence_id'   => __('Konsekuensi (Consequence)'),
+            'emergency_action' => __('Tindakan Darurat'),
+
+            // Kondisional Injury / Damage
+            'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
+            'selectedBodyPart'         => __('Detail Bagian Tubuh'),
+            'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
+            // PART 2 (Dynamic Label)
+            'directly_involved.*.employee_name' => __('Nama Personel'),
+            'directly_involved.*.employee_nik'  => __('NIK/ID'),
+            'directly_involved.*.dept_cont'     => __('Departemen/Perusahaan'),
+            'directly_involved.*.jabatan'       => __('Jabatan'),
+            'directly_involved.*.roster'        => __('Roster'),
+            'directly_involved.*.sift'          => __('Shift'),
+            'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
+            'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
+            // Part 3
+            'pemimpin.*.user_id' => __('Nama Pemimpin'),
+            'pemimpin.*.dept'    => __('Departemen Pemimpin'),
+            'pemimpin.*.jabatan' => __('Jabatan Pemimpin'),
+
+            'facilitator.*.user_id' => __('Nama Facilitator'),
+            'facilitator.*.dept'    => __('Departemen Facilitator'),
+            'facilitator.*.jabatan' => __('Jabatan Facilitator'),
+
+            'anggota.*.user_id' => __('Nama Anggota'),
+            'anggota.*.dept'    => __('Departemen Anggota'),
+            'anggota.*.jabatan' => __('Jabatan Anggota'),
+            // Part 5: Atribut Dinamis untuk Why
+            'why_analysis' => __('Analisis Mengapa'),
+            // Part 7
+            // Validasi Dokumen Pendukung (Multiple)
+            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
+            // Tindakan Perbaikan (Corrective Actions)
+            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
+            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
+            'corrective_actions.*.pic_user_id.required'               => __('PIC wajib dipilih.'),
+            'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
+            'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
+
+            // Part 9
+            'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
+            'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
+            'penerimaan_komentar_ohs_id'        => __('Penanggung Jawab OHS'),
+            'penerimaan_komentar_contractor'    => __('Komentar Kontraktor'),
+            'penerimaan_komentar_internal'      => __('Komentar Internal'),
+            'penerimaan_komentar_ohs'           => __('Komentar OHS'),
+            'penerimaan_komentar_ktt'           => __('Komentar KTT'),
+
+        ];
+
+        // Tambahkan atribut dinamis untuk PEEPO
+        foreach ($this->peepoFactors as $key => $label) {
+            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
+            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
+        }
+
+        // Loop untuk membuat label yang dinamis dan user-friendly
+        foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
+            foreach ($this->$key as $index => $row) {
+                $rowNum = $index + 1;
+                $label = str_replace('_', ' ', ucwords($key, '_'));
+                $attributes["$key.$index.item"] = __("$label Baris $rowNum");
+                $attributes["$key.$index.description"] = __("Deskripsi $label Baris $rowNum");
+            }
+        }
+        return $attributes;
+    }
     public function updated($propertyName)
     {
         // 1. Logika Bisnis: Update otomatis Status/Progress
@@ -308,6 +426,42 @@ class Update extends Component
         // 4. Validasi Standar (Real-time feedback)
         $this->validateOnly($propertyName);
     }
+    protected function messages()
+    {
+        return [
+            // Pesan Standar
+            'required' => __(':attribute wajib diisi.'),
+            'exists'   => __('Pilihan :attribute tidak valid.'),
+            'min'      => __(':attribute minimal harus :min karakter.'),
+            'date'     => __('Format tanggal :attribute tidak sesuai.'),
+            'after_or_equal' => __(':attribute tidak boleh tanggal lampau.'),
+
+            // --- PART 7: DOKUMENTASI ---
+            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
+            'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
+
+            'visual_evidence.required' => __('Bukti visual wajib dilampirkan.'),
+            'visual_evidence.*.image'  => __('File harus berupa gambar (JPG, PNG, WebP).'),
+            'visual_evidence.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
+            'visual_evidence.*.max'    => __('Ukuran foto maksimal 2MB.'),
+
+            // --- PART 7: TINDAKAN PERBAIKAN ---
+            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
+            'corrective_actions.*.action_description.min'      => __('Deskripsi rencana perbaikan terlalu singkat.'),
+            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
+            'corrective_actions.*.pic_user_id.required'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
+            'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+            'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+            // Part 8
+            'key_learning.required' => __('Kunci pembelajaran wajib diisi sebagai bahan evaluasi.'),
+            'key_learning.min' => __('Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).'),
+
+            // --- PESAN KHUSUS LOGIKA SENTRY ---
+
+            'department_id.required_without'       => __('Silakan pilih Departemen atau Kontraktor.'),
+            'contractor_id.required_without'       => __('Pilih Kontraktor atau Department terkait.'),
+        ];
+    }
     protected function saveToSession()
     {
         $data = $this->all();
@@ -329,6 +483,7 @@ class Update extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
         $report = IncidentReport::with(['risk', 'impact'])->findOrFail($id);
+
 
         // --- DATA DASAR ---
         $this->event_type_id = $report->event_type_id;
@@ -508,6 +663,203 @@ class Update extends Component
         } else {
             $this->why_analysis = ['why1' => ''];
             $this->whyCount = 1;
+        }
+
+        $allFiles = $report->attachments; // Ganti 'files' sesuai nama relasi di Model IncidentReport
+
+        $this->existing_visual_evidence = $allFiles->where('file_type', 'visual');
+        $this->existing_supporting_documents = $allFiles->where('file_type', 'document');
+        // Load Tindakan Perbaikan
+        $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
+            // Inisialisasi search field untuk tiap baris PIC
+            $this->searchPetugas[$index] = $action->picUser->name ?? '';
+            return [
+                'id' => $action->id, // Penting untuk update
+                'action_description' => $action->action_description,
+                'control_hierarchy' => $action->control_hierarchy,
+                'pic_user_id' => $action->pic_user_id,
+                'due_date' => $action->due_date,
+                'actual_completion_date' => $action->actual_completion_date,
+            ];
+        })->toArray();
+
+        // Jika data kosong, beri 1 baris default
+        if (empty($this->corrective_actions)) {
+            $this->addCorrectiveRow();
+        }
+    }
+    public function addCorrectiveRow()
+    {
+        $this->corrective_actions[] = [
+            'action_description' => '',
+            'control_hierarchy' => '',
+            'pic_user_id' => '',
+            'due_date' => '',
+            'actual_completion_date' => null,
+        ];
+    }
+
+    public function removeCorrectiveRow($index)
+    {
+        unset($this->corrective_actions[$index]);
+        $this->corrective_actions = array_values($this->corrective_actions);
+        $this->searchPetugas = array_values($this->searchPetugas);
+    }
+    public function updatedSearchPetugas($value, $key)
+    {
+        // Livewire v4 mengirim key berupa index (misal: "0")
+        // Jika format modelsearch adalah searchPetugas.{{ $index }}
+        $index = explode('.', $key)[0];
+
+        if (strlen($value) > 1) {
+            $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
+                ->orderBy('name')
+                ->limit(20)
+                ->get();
+
+            // Pastikan hanya baris ini yang dropdown-nya terbuka
+            $this->showDropdownPetugas[$index] = true;
+        } else {
+            $this->showDropdownPetugas[$index] = false;
+        }
+    }
+
+    public function selectActPelapor($id, $name)
+    {
+        // Cari index mana yang dropdown-nya sedang terbuka (true)
+        $index = collect($this->showDropdownPetugas)->search(true);
+
+        if ($index !== false) {
+            $inspector = User::find($id);
+
+            if ($inspector) {
+                // CARA TERBAIK: Update key spesifik tanpa menghapus data lama (action_description, dll)
+                $this->corrective_actions[$index]['name'] = $inspector->name;
+                $this->corrective_actions[$index]['id_number'] = $inspector->employee_id;
+                $this->corrective_actions[$index]['dept_con'] = $inspector->department_name;
+                $this->corrective_actions[$index]['pic_user_id'] = $inspector->id;
+
+                // Atau jika ingin menggunakan array_merge:
+                // $this->corrective_actions[$index] = array_merge($this->corrective_actions[$index], [
+                //     'name' => $inspector->name,
+                //     'inspector_id' => $inspector->id,
+                //     'id_number' => $inspector->employee_id,
+                //     'dept_con' => $inspector->department_name,
+                // ]);
+            }
+
+            // Update search input agar input field menampilkan nama pilihan
+            $this->searchPetugas[$index] = $name;
+
+            // Tutup dropdown
+            $this->showDropdownPetugas[$index] = false;
+        }
+    }
+
+    public function getPelaporsPenerimaanProperty()
+    {
+        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
+        $searchTerm = '';
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
+
+        if (strlen($searchTerm) < 2) {
+            return [];
+        }
+
+        return User::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(80)
+            ->get();
+    }
+
+    /**
+     * Helper Function untuk Reset Dropdown
+     */
+    private function resetDropdowns()
+    {
+        $this->showPenerimaanKomentarContractorDropdown = false;
+        $this->showPenerimaanKomentarInternalDropdown = false;
+        $this->showPenerimaanKomentarOhsDropdown = false;
+        $this->showPenerimaanKomentarKttDropdown = false;
+    }
+
+    /**
+     * Action: Pilih Pelapor Contractor
+     */
+    public function selectPenerimaanKomentarContractor($id, $name)
+    {
+        $this->penerimaan_komentar_contractor_id = $id;
+        $this->searchNamePenerimaan['kontraktor'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor Internal
+     */
+    public function selectPenerimaanKomentarInternal($id, $name)
+    {
+        $this->penerimaan_komentar_internal_id = $id;
+        $this->searchNamePenerimaan['internal'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor OHS
+     */
+    public function selectPenerimaanKomentarOhs($id, $name)
+    {
+        $this->penerimaan_komentar_ohs_id = $id;
+        $this->searchNamePenerimaan['ohs'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Action: Pilih Pelapor KTT
+     */
+    public function selectPenerimaanKomentarKtt($id, $name)
+    {
+        $this->penerimaan_komentar_ktt_id = $id;
+        $this->searchNamePenerimaan['ktt'] = $name;
+        $this->resetDropdowns();
+    }
+
+    /**
+     * Lifecycle: Monitor perubahan search input untuk memunculkan dropdown
+     */
+    public function updatedSearchNamePenerimaan($value, $key)
+    {
+        $this->resetDropdowns();
+
+        if ($key === 'kontraktor') $this->showPenerimaanKomentarContractorDropdown = true;
+        if ($key === 'internal') $this->showPenerimaanKomentarInternalDropdown = true;
+        if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
+        if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
+    }
+
+
+
+    /**
+     * Mendefinisikan pesan error kustom
+     */
+
+    /**
+     * Helper untuk menembakkan event validasi ke frontend
+     */
+    protected function dispatchValidationEvents($errors)
+    {
+        $komentarFields = [
+            'penerimaan_komentar_contractor',
+            'penerimaan_komentar_internal',
+            'penerimaan_komentar_ohs',
+            'penerimaan_komentar_ktt'
+        ];
+
+        foreach ($komentarFields as $field) {
+            if ($errors->has($field)) {
+                $this->dispatch('validate-' . $field);
+            }
         }
     }
 
@@ -1061,14 +1413,14 @@ class Update extends Component
                 'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
             ],
 
-            // 7 => [
-            //     'visual_evidence' => $allRules['visual_evidence'],
-            //     'visual_evidence.*' => $allRules['visual_evidence.*'],
-            //     'supporting_documents' => $allRules['supporting_documents'],
-            //     'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
-            //     'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
-            //     'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
-            // ],
+            7 => [
+                'visual_evidence' => $allRules['visual_evidence'],
+                'visual_evidence.*' => $allRules['visual_evidence.*'],
+                'supporting_documents' => $allRules['supporting_documents'],
+                'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
+                'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
+                'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
+            ],
 
             // 8 => [
             //     'key_learning' => $allRules['key_learning'],
@@ -1152,9 +1504,9 @@ class Update extends Component
                     if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
                     break;
 
-                    // case 7:
-                    //     if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    //     break;
+                case 7:
+                    if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
 
                     // case 8:
                     //     if ($field === 'key_learning') return true;
