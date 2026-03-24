@@ -272,7 +272,7 @@ class Update extends Component
                 'after_or_equal:corrective_actions.*.due_date'
             ],
             // // Part 8
-            // 'key_learning' => 'required|string|min:10',
+            'key_learning' => 'required|string|min:10',
             // // Part 9
             // 'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
             // 'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
@@ -492,6 +492,8 @@ class Update extends Component
         $this->event_type_id = $report->event_type_id;
         $this->event_sub_type_id = $report->event_sub_type_id;
         $this->date_time = $report->date_time->format('Y-m-d\TH:i');
+        $this->key_learning = $report->key_learning;
+
         if ($report->location_id) {
             $this->location_id = $report->location_id;
             $this->searchLocation = $report->location?->name; // Asumsi relasi 'reporter'
@@ -686,6 +688,26 @@ class Update extends Component
             ];
         })->toArray();
 
+        // --- MOUNT PART 9 ---
+        $this->penerimaan_komentar_contractor_id = $report->penerimaan_komentar_contractor_id;
+        $this->penerimaan_komentar_contractor    = $report->penerimaan_komentar_contractor;
+        // Set search term agar nama muncul di input select saat load
+        $this->searchNamePenerimaan['kontraktor'] = $report->contractorManager?->name;
+
+        $this->penerimaan_komentar_internal_id   = $report->penerimaan_komentar_internal_id;
+        $this->penerimaan_komentar_internal      = $report->penerimaan_komentar_internal;
+        $this->searchNamePenerimaan['internal']  = $report->internalManager?->name;
+
+        $this->penerimaan_komentar_ohs_id        = $report->penerimaan_komentar_ohs_id;
+        $this->penerimaan_komentar_ohs           = $report->penerimaan_komentar_ohs;
+        $this->searchNamePenerimaan['ohs']       = $report->ohsManager?->name;
+
+        if (in_array((int)$report->consequence_id, [3, 4, 5])) {
+            $this->penerimaan_komentar_ktt_id    = $report->penerimaan_komentar_ktt_id;
+            $this->penerimaan_komentar_ktt       = $report->penerimaan_komentar_ktt;
+            $this->searchNamePenerimaan['ktt']   = $report->kttManager?->name;
+        }
+
         // Jika data kosong, beri 1 baris default
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
@@ -837,23 +859,7 @@ class Update extends Component
         }
     }
 
-    public function getPelaporsPenerimaanProperty()
-    {
-        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
-        $searchTerm = '';
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
 
-        if (strlen($searchTerm) < 2) {
-            return [];
-        }
-
-        return User::where('name', 'like', '%' . $searchTerm . '%')
-            ->limit(80)
-            ->get();
-    }
 
     /**
      * Helper Function untuk Reset Dropdown
@@ -919,7 +925,23 @@ class Update extends Component
         if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
     }
 
+    public function getPelaporsPenerimaanProperty()
+    {
+        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
+        $searchTerm = '';
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
+        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
 
+        if (strlen($searchTerm) < 2) {
+            return [];
+        }
+
+        return User::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(80)
+            ->get();
+    }
 
     /**
      * Mendefinisikan pesan error kustom
@@ -1511,18 +1533,18 @@ class Update extends Component
                 'corrective_actions.*.actual_completion_date' => 'nullable|date',
             ],
 
-            // 8 => [
-            //     'key_learning' => $allRules['key_learning'],
-            // ],
+            8 => [
+                'key_learning' => $allRules['key_learning'],
+            ],
 
-            // 9 => array_merge([
-            //     'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
-            //     'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
-            //     'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
-            //     'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
-            //     'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
-            //     'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
-            // ], $kttRules),
+            9 => array_merge([
+                'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
+                'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
+                'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
+                'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
+                'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
+                'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
+            ], $kttRules),
         ];
 
         // 4. Jalankan Validasi berdasarkan step saat ini
@@ -1597,13 +1619,13 @@ class Update extends Component
                     if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
                     break;
 
-                    // case 8:
-                    //     if ($field === 'key_learning') return true;
-                    //     break;
+                case 8:
+                    if ($field === 'key_learning') return true;
+                    break;
 
-                    // case 9:
-                    //     if (str_starts_with($field, 'penerimaan_komentar')) return true;
-                    //     break;
+                case 9:
+                    if (str_starts_with($field, 'penerimaan_komentar')) return true;
+                    break;
             }
         }
 
@@ -1647,6 +1669,22 @@ class Update extends Component
                         'sistem_kontrol'   => $this->control_system_factors,
                     ],
                 ],
+                'key_learning'  => $this->key_learning,
+                // PART 9: KOMENTAR & APPROVAL
+                'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
+                'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
+
+                'pm_internal_comment'   => $this->penerimaan_komentar_internal,
+                'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
+
+                'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
+                'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
+
+                // Logika kondisional KTT (Hanya Level 3, 4, 5)
+                'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
+                    ? $this->penerimaan_komentar_ktt : null,
+                'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
+                    ? $this->penerimaan_komentar_ktt_id : null,
             ]);
 
             // 3. Update Part 2 (Involved Personnel)
@@ -1745,7 +1783,7 @@ class Update extends Component
         });
 
         // 7. Navigasi atau Notifikasi
-        if ($this->currentStep < 7) {
+        if ($this->currentStep < 9) {
             $this->currentStep++;
             $this->dispatch('alert', [
                 'text' => "Data Step berhasil disimpan.",
