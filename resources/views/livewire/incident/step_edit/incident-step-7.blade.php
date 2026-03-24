@@ -27,10 +27,12 @@
                 {{-- DATA TEMPORARY (NEW UPLOAD) --}}
                 @if($visual_evidence)
                 @foreach($visual_evidence as $index => $image)
-                <div class="relative aspect-square">
-                    <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 border-primary rounded-lg shadow-md" />
-                    <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
-                        class="absolute -top-1 -right-1 btn btn-circle btn-primary btn-xs scale-75">✕</button>
+                <div class="avatar">
+                    <div class="w-40 rounded relative">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 border-primary rounded-lg shadow-md" />
+                        <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
+                            class="absolute -top-1 -right-1 btn btn-circle btn-primary btn-xs scale-75">✕</button>
+                    </div>
                 </div>
                 @endforeach
                 @endif

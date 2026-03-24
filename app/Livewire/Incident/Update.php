@@ -672,11 +672,11 @@ class Update extends Component
         // Load Tindakan Perbaikan
         $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
             // Inisialisasi search field untuk tiap baris PIC
-            $this->searchPetugas[$index] = $action->picUser->name ?? '';
+            $this->searchPetugas[$index] = $action->pic->name ?? '';
             return [
                 'id' => $action->id, // Penting untuk update
                 'action_description' => $action->action_description,
-                'control_hierarchy' => $action->control_hierarchy,
+                'control_hierarchy' => $action->hierarchy,
                 'pic_user_id' => $action->pic_user_id,
                 'due_date' => $action->due_date,
                 'actual_completion_date' => $action->actual_completion_date,
