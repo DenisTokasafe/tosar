@@ -11,17 +11,16 @@
             <div class="grid grid-cols-3 gap-2 mt-3">
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
-                <div class="relative aspect-square group">
-                    <div class="avatar">
-                        <div class="w-40 rounded">
-                            <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+
+                <div class="avatar">
+                    <div class="w-40 rounded relative">
+                        <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+                            <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                         </div>
+                        <button type="button" wire:click="deleteMedia({{ $media->file_path }})" wire:confirm="Hapus foto permanen?"
+                            class="absolute -top-1 -right-1 btn btn-circle btn-error btn-xs scale-75">✕</button>
                     </div>
-                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
-                        <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
-                    </div>
-                    <button type="button" wire:click="deleteMedia({{ $media->file_path }})" wire:confirm="Hapus foto permanen?"
-                        class="absolute -top-1 -right-1 btn btn-circle btn-error btn-xs scale-75">✕</button>
                 </div>
                 @endforeach
 
