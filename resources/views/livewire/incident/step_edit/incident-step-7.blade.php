@@ -12,7 +12,11 @@
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
                 <div class="relative aspect-square group">
-                    <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+                    <div class="avatar">
+                        <div class="w-48 rounded">
+                            <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+                        </div>
+                    </div>
                     <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
                         <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                     </div>
