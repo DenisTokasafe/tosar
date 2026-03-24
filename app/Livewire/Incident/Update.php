@@ -1232,7 +1232,7 @@ class Update extends Component
                 'dept_cont'        => $person['dept_cont'],
                 'jabatan'          => $person['jabatan'],
                 'roster'           => $person['roster'],
-                'shift'             => $person['sift'] ?? $person['shift'] ?? null, // Proteksi typo 'sift'
+                'shift'             => $person['sift'] ?? $person['sift'] ?? null, // Proteksi typo 'sift'
                 'keterlibatan'     => $person['keterlibatan'],
                 'pengalaman_kerja' => $person['pengalaman_kerja'],
             ]);
