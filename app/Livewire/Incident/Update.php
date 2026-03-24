@@ -154,7 +154,6 @@ class Update extends Component
             'department_id' => $this->deptCont === 'dept' ? 'required|exists:departments,id' : 'nullable',
             'contractor_id' => $this->deptCont === 'cont' ? 'required|exists:contractors,id' : 'nullable',
 
-            'deptCont' => 'required',
             'likelihood_id' => 'required',
             'consequence_id' => 'required',
             'emergency_action' => 'required',
