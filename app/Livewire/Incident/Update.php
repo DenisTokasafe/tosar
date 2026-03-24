@@ -277,6 +277,41 @@ class Update extends Component
 
         return $rules;
     }
+    public function updated($propertyName)
+    {
+        // 1. Logika Bisnis: Update otomatis Status/Progress
+        // Jalankan ini DI AWAL agar perubahan properti langsung tercermin di class
+        if (str_contains($propertyName, 'corrective_actions')) {
+            $parts = explode('.', $propertyName);
+
+            if (isset($parts[1]) && isset($parts[2]) && $parts[2] === 'actual_completion_date') {
+                $index = $parts[1];
+
+                if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
+                    $this->corrective_actions[$index]['status'] = 'Selesai';
+                    $this->corrective_actions[$index]['progress'] = 100;
+                } else {
+                    $this->corrective_actions[$index]['status'] = 'Belum Selesai';
+                    $this->corrective_actions[$index]['progress'] = 0;
+                }
+                $this->dispatch('refresh-component');
+            }
+        }
+
+        // 2. Simpan ke Session
+        // Gunakan fungsi helper saveToSession yang sudah Anda buat agar kode tidak duplikat
+        $this->saveToSession();
+
+        // 3. Validasi Kondisional
+        if ($propertyName === 'event_type_id') {
+            $this->validateOnly('selectedBodyPartCategory');
+            $this->validateOnly('selectedBodyPart');
+            $this->validateOnly('damage_detail');
+        }
+
+        // 4. Validasi Standar (Real-time feedback)
+        $this->validateOnly($propertyName);
+    }
     protected function saveToSession()
     {
         $data = $this->all();
