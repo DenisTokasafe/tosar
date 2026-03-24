@@ -107,6 +107,12 @@ class Update extends Component
         'prosedur' => 'Prosedur',
         'organisasi' => 'Organisasi'
     ];
+    public $searchNamePenerimaan = [
+        'kontraktor' => '',
+        'internal' => '',
+        'ohs' => '',
+        'ktt' => '',
+    ];
     public $existing_visual_evidence = [];
     public $existing_supporting_documents = [];
 
@@ -692,20 +698,20 @@ class Update extends Component
         $this->penerimaan_komentar_contractor_id = $report->penerimaan_komentar_contractor_id;
         $this->penerimaan_komentar_contractor    = $report->penerimaan_komentar_contractor;
         // Set search term agar nama muncul di input select saat load
-        $this->searchNamePenerimaan['kontraktor'] = $report->contractorManager?->name;
+        $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
 
         $this->penerimaan_komentar_internal_id   = $report->penerimaan_komentar_internal_id;
         $this->penerimaan_komentar_internal      = $report->penerimaan_komentar_internal;
-        $this->searchNamePenerimaan['internal']  = $report->internalManager?->name;
+        $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
 
         $this->penerimaan_komentar_ohs_id        = $report->penerimaan_komentar_ohs_id;
         $this->penerimaan_komentar_ohs           = $report->penerimaan_komentar_ohs;
-        $this->searchNamePenerimaan['ohs']       = $report->ohsManager?->name;
+        $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
 
         if (in_array((int)$report->consequence_id, [3, 4, 5])) {
             $this->penerimaan_komentar_ktt_id    = $report->penerimaan_komentar_ktt_id;
             $this->penerimaan_komentar_ktt       = $report->penerimaan_komentar_ktt;
-            $this->searchNamePenerimaan['ktt']   = $report->kttManager?->name;
+            $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
         }
 
         // Jika data kosong, beri 1 baris default
