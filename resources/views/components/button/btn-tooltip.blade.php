@@ -1,31 +1,31 @@
 @props([
-    'modalId' => null,
-    'wireClick' => null,
-    'tooltip' => 'Tambah Data',
-    'color' => 'primary',
-    'icon' => 'add',
-    'href' => null // Tambahkan prop href
+'modalId' => null,
+'wireClick' => null,
+'tooltip' => 'Tambah Data',
+'color' => 'primary',
+'icon' => 'add',
+'href' => null // Tambahkan prop href
 ])
 
 @php
-    $colorClass = match($color) {
-        'secondary' => 'btn-secondary',
-        'accent'    => 'btn-accent',
-        'info'      => 'btn-info',
-        'success'   => 'btn-success',
-        'warning'   => 'btn-warning',
-        'error'     => 'btn-error',
-        'default'   => '',
-        default     => 'btn-primary',
-    };
+$colorClass = match($color) {
+'secondary' => 'btn-secondary',
+'accent' => 'btn-accent',
+'info' => 'btn-info',
+'success' => 'btn-success',
+'warning' => 'btn-warning',
+'error' => 'btn-error',
+'default' => '',
+default => 'btn-primary',
+};
 
-    $tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
+$tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
 
-    // Logika menentukan tag yang digunakan
-    $tag = $href ? 'a' : 'button';
+// Logika menentukan tag yang digunakan
+$tag = $href ? 'a' : 'button';
 @endphp
 
-<div {{ $attributes->merge(['class' => 'tooltip']) }} data-tip="{{ $tooltip }}">
+<div {{ $attributes->merge(['class' => 'tooltip {{ $tooltipColor }}']) }} data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
     <div class="z-[9999] tooltip-content {{ $tooltipColor }}">
         <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
@@ -33,16 +33,15 @@
 
     <{{ $tag }}
         @if($href)
-            href="{{ $href }}"
+        href="{{ $href }}"
         @else
-            type="button"
-            onclick="{{ $modalId }}.showModal()"
+        type="button"
+        onclick="{{ $modalId }}.showModal()"
         @endif
 
         @if($wireClick) wire:click="{{ $wireClick }}" @endif
 
-        {{ $attributes->class(['btn btn-square btn-xs ', $colorClass]) }}
-    >
+        {{ $attributes->class(['btn btn-square btn-xs ', $colorClass]) }}>
         <x-dynamic-component :component="'icon.' . $icon" class="w-4 h-4" />
     </{{ $tag }}>
 </div>
