@@ -46,25 +46,29 @@
     <div class="hidden md:block overflow-x-auto border rounded-xl border-base-300 bg-base-100">
         <table class="table w-full border-collapse table-sm">
             <thead>
-                <tr class="bg-base-300  text-base-content text-xs uppercase">
-                    <th class=" w-1/3 border-r border-base-300">Peran</th>
-                    <th class="w-1/3 border-r border-base-300">Nama</th>
-                    <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
-                    <th class="w-1/4 border-base-300">Jabatan</th>
-                    <th class="border-base-300">Aksi</th>
+                <tr class="bg-base-300 text-base-content text-xs uppercase">
+                    {{-- Pembagian lebar yang lebih seimbang --}}
+                    <th class="w-[20%] border-r border-base-300 text-center">Peran</th>
+                    <th class="w-[30%] border-r border-base-300">Nama</th>
+                    <th class="w-[20%] border-r border-base-300">Dept/Perusahaan</th>
+                    <th class="w-[20%] border-r border-base-300">Jabatan</th>
+                    <th class="w-[10%] text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
                 @foreach(['pemimpin' => 'Pemimpin Investigasi (KPLH)', 'facilitator' => 'Facilitator (KPLH)', 'anggota' => 'Tim Anggota'] as $type => $label)
                 @foreach($$type as $index => $item)
                 <tr wire:key="row-dt-{{ $type }}-{{ $index }}" class="hover:bg-base-200/50">
+
+                    {{-- Logika Rowspan untuk Peran --}}
                     @if($loop->first)
-                    <td rowspan="{{ count($$type) }}" class="font-bold border-r border-b border-base-300 bg-base-200/30 align-top pt-4 text-center">
+                    <td rowspan="{{ count($$type) }}" class="font-bold border-r border-b border-base-300 bg-base-200/30 align-middle text-center px-2 py-4 leading-tight">
                         {{ $label }}
                     </td>
                     @endif
 
-                    <td class="p-2 border-r border-b border-base-300">
+                    {{-- Kolom Nama dengan Searchable Select --}}
+                    <td class="p-1 border-r border-b border-base-300">
                         <x-form.searchable-select2
                             wire:key="sel-dt-{{ $type }}-{{ $index }}"
                             placeholder="Cari Nama..."
@@ -75,17 +79,36 @@
                             clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
                             x-on:focusin="$wire.set('activeType', '{{ $type }}'); $wire.set('activeIndex', {{ $index }})" />
                     </td>
-                    <td class="p-2 border-r border-b border-base-300">
-                        <x-form.input-text model="{{ $type }}.{{ $index }}.dept" :disabled="!empty($item['user_id'])" />
+
+                    {{-- Kolom Dept --}}
+                    <td class="p-1 border-r border-b border-base-300">
+                        <x-form.input-text model="{{ $type }}.{{ $index }}.dept" :disabled="!empty($item['user_id'])" class="input-xs" />
                     </td>
-                    <td class="p-2 border-b border-base-300">
-                        <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
+
+                    {{-- Kolom Jabatan --}}
+                    <td class="p-1 border-r border-b border-base-300">
+                        <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" class="input-xs" />
                     </td>
-                    <td class="p-2 border-b border-base-300">
-                        <div class="flex ">
-                            <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success">+</button>
+
+                    {{-- Kolom Aksi --}}
+                    <td class="p-1 border-b border-base-300 align-middle">
+                        <div class="flex justify-center gap-1">
+                            <button type="button"
+                                wire:click="addRow('{{ $type }}')"
+                                class="btn btn-square btn-xs btn-success text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+
                             @if(count($$type) > 1)
-                            <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  ">×</button>
+                            <button type="button"
+                                wire:click="removeRow('{{ $type }}', {{ $index }})"
+                                class="btn btn-square btn-xs btn-error text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                             @endif
                         </div>
                     </td>
