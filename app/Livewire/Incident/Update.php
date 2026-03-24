@@ -150,12 +150,9 @@ class Update extends Component
             'location_specific' => 'required_with:location_id|string',
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
-
-
-
-            // Mutual Exclusion Dept/Contractor
-            'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
-            'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
+            'deptCont' => 'required|in:dept,cont',
+            'department_id' => $this->deptCont === 'dept' ? 'required|exists:departments,id' : 'nullable',
+            'contractor_id' => $this->deptCont === 'cont' ? 'required|exists:contractors,id' : 'nullable',
 
             'deptCont' => 'required',
             'likelihood_id' => 'required',
@@ -1195,9 +1192,8 @@ class Update extends Component
             'pelapor_id'          => $this->pelapor_id,
             'manual_pelapor_name' => $this->manualPelaporName,
 
-            // Organisasi (Mutual Exclusion Dept/Cont)
-            'department_id' => $this->deptCont === 'dept' ? $this->department_id : null,
-            'contractor_id' => $this->deptCont === 'cont' ? $this->contractor_id : null,
+            'department_id' => ($this->deptCont === 'dept') ? $this->department_id : null,
+            'contractor_id' => ($this->deptCont === 'cont') ? $this->contractor_id : null,
 
             // Risk Assessment
             'likelihood_id'  => $this->likelihood_id,
