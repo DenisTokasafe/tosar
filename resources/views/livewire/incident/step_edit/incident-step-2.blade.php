@@ -2,13 +2,8 @@
     {{-- Header & Tombol Tambah --}}
     <div class="flex items-center justify-between mb-4">
 
-        <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs sm:btn-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            {{ __('Tambah') }}
-        </button>
-        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="top md:left" />
+
+        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="top md:right" />
     </div>
 
     {{-- TAMPILAN MOBILE (Hanya muncul di layar < 768px) --}}
