@@ -7,7 +7,7 @@
     </div>
 
     {{-- Header dengan Nomor Laporan --}}
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between  gap-2">
         <div>
             <flux:heading level="1" class="mb-1 capitalize">
                 {{ __('Update Laporan Insiden') }}
