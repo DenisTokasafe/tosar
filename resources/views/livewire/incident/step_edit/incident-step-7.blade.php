@@ -1,80 +1,6 @@
 {{-- SECTION DOKUMENTASI --}}
 <fieldset class="p-3 mt-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title">{{ __('Dokumentasi') }}</legend>
-    <div class="grid grid-cols-1 gap-6 mb-4 md:grid-cols-2">
-
-        {{-- Bukti Visual --}}
-        <div class="space-y-2">
-            <x-form.upload label="Lampirkan Bukti Visual" model="visual_evidence" title="Pilih Gambar" required
-                keterangan="Bisa pilih > 1 foto (JPG, PNG)" :file="$visual_evidence" multiple />
-            {{-- TAMPILKAN PESAN ERROR DI SINI --}}
-
-            <div wire:loading.remove wire:target="visual_evidence" class="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
-                @if($visual_evidence)
-                @foreach($visual_evidence as $index => $image)
-                <div class="relative aspect-square group">
-                    @php
-                    $extension = strtolower($image->getClientOriginalExtension());
-                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                    @endphp
-
-                    @if($isImage)
-                    <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border rounded-lg shadow-sm" />
-                    @else
-                    <div class="flex flex-col items-center justify-center w-full h-full border rounded-lg bg-base-200">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" />
-                        </svg>
-                        <span class="text-[8px] px-1 truncate w-full text-center">{{ $image->getClientOriginalName() }}</span>
-                    </div>
-                    @endif
-
-                    <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
-                        class="absolute flex items-center justify-center w-6 h-6 font-bold text-white rounded-full shadow-md -top-2 -right-2 bg-error">✕</button>
-                </div>
-                @endforeach
-                @endif
-            </div>
-        </div>
-
-        {{-- Dokumen Pendukung --}}
-        <div class="space-y-2">
-            <x-form.upload label="Lampirkan Dokumen Pendukung" model="supporting_documents" title="Pilih Dokumen" required
-                keterangan="PDF atau Word" :file="$supporting_documents" multiple />
-
-            <div wire:loading.remove wire:target="supporting_documents" class="space-y-2">
-                @if($supporting_documents)
-                @foreach($supporting_documents as $index => $doc)
-                @php $docExt = strtolower($doc->getClientOriginalExtension()); @endphp
-                <div class="flex items-center justify-between p-2 border border-dashed rounded-lg bg-base-50 border-base-300">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        @if($docExt == 'pdf') <x-icon.pdf class="flex-shrink-0 w-5 h-5" />
-                        @elseif(in_array($docExt, ['doc', 'docx'])) <x-icon.word class="flex-shrink-0 w-5 h-5" />
-                        @else <x-icon.document class="flex-shrink-0 w-5 h-5" /> @endif
-                        <span class="text-xs font-medium truncate">{{ $doc->getClientOriginalName() }}</span>
-                    </div>
-                    <button type="button" wire:click="removeFile('supporting_documents', {{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
-                </div>
-                @endforeach
-                @endif
-            </div>
-        </div>
-    </div>
-</fieldset>
-
-{{-- SECTION TINDAKAN PERBAIKAN --}}
-<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title">{{ __('Tindakan Perbaikan') }}</legend>
-
-    <div class="flex items-center justify-between pb-2 mb-4 border-b">
-        <h3 class="text-xs font-bold uppercase md:text-sm text-primary">{{ __('Rencana Perbaikan Jangka Panjang') }}</h3>
-        <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs sm:btn-sm">
-            + {{ __('Tambah') }}
-        </button>
-    </div>
-
-    {{-- VIEW MOBILE: Tampil di HP (Card Mode) --}}
-    {{-- SECTION DOKUMENTASI (EXISTING & TEMPORARY) --}}
     <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2">
 
         {{-- 1. VISUAL EVIDENCE --}}
@@ -176,6 +102,20 @@
             </div>
         </div>
     </div>
+</fieldset>
+
+{{-- SECTION TINDAKAN PERBAIKAN --}}
+<fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
+    <legend class="text-sm font-semibold card-title">{{ __('Tindakan Perbaikan') }}</legend>
+
+    <div class="flex items-center justify-between pb-2 mb-4 border-b">
+        <h3 class="text-xs font-bold uppercase md:text-sm text-primary">{{ __('Rencana Perbaikan Jangka Panjang') }}</h3>
+        <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs sm:btn-sm">
+            + {{ __('Tambah') }}
+        </button>
+    </div>
+
+
 
     {{-- VIEW DESKTOP: Tampil di Tablet/Laptop (Table Mode) --}}
     <div class="hidden overflow-x-auto md:block">
