@@ -431,7 +431,7 @@ class Update extends Component
             }
         }
 
-        $analysis = $report->timelineAnalysis;
+        $analysis = $report->timelines;
 
         if ($analysis && is_array($analysis->analysis_steps)) {
             $this->why_analysis = $analysis->analysis_steps;
