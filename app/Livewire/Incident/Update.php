@@ -765,7 +765,7 @@ class Update extends Component
         $file->delete();
 
         // 3. Refresh data existing agar UI terupdate
-        $report = IncidentReport::with('files')->find($this->incidentId);
+        $report = IncidentReport::with('attachments')->find($this->incidentId);
         $this->existing_supporting_documents = $report->files->where('file_type', 'document');
         $this->existing_visual_evidence = $report->files->where('file_type', 'visual');
 
