@@ -115,7 +115,7 @@
 
     <div class="flex items-center justify-between pb-2 mb-4 border-b">
 
-        <x-button.btn-tooltip color="error" icon="add" wireClick="addCorrectiveRow" tooltip="Tambah" position="top md:left" />
+        <x-button.btn-tooltip color="primary" icon="add" wireClick="addCorrectiveRow" tooltip="Tambah" position="top md:right" />
     </div>
 
 
