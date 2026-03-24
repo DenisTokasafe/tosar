@@ -1,6 +1,4 @@
 <div class="mt-4">
-    <h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-primary">{{ __('Analisis Faktor PEEPO') }}</h3>
-
     {{-- TAMPILAN MOBILE (Android/Smartphone) --}}
     <div class="space-y-4 md:hidden">
         @foreach($peepoFactors as $key => $label)

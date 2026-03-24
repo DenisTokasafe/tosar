@@ -1,8 +1,4 @@
 <div class="mt-4">
-    <h2 class="mb-4 text-lg font-bold uppercase text-primary border-b-2 border-primary/20 pb-1">
-        BAGIAN 6 – ANALISIS PENYEBAB (CAUSATION)
-    </h2>
-
     {{-- TAMPILAN MOBILE (Android/Smartphone) --}}
     <div class="space-y-6 md:hidden">
         @php
@@ -88,7 +84,7 @@
                 @endforeach
                 <tr class="border-b border-base-300">
                     <td colspan="3" class="p-2 bg-base-200/20">
-                        <button type="button" wire:click="addRow('{{ $sub['key'] }}')" class="btn btn-xs btn-ghost text-primary font-bold">
+                        <button type="button" wire:click="addRow('{{ $sub['key'] }}')" class="btn btn-xs btn-info font-bold">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
                             </svg>
