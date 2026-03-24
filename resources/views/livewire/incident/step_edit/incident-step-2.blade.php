@@ -111,7 +111,7 @@
 
                     <td class="p-1 text-center align-middle">
                         @if(count($directly_involved) > 1)
-                        <x-button.btn-tooltip color="error" icon="delete" wireClick="removeDirectlyInvolvedRow({{ $index }})" tooltip="Hapus Data" position="right" />
+                        <x-button.btn-tooltip color="error" icon="delete" wireClick="removeDirectlyInvolvedRow({{ $index }})" tooltip="Hapus Data" position="left" />
                         @endif
                     </td>
                 </tr>

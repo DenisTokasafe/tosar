@@ -21,18 +21,26 @@ default => 'btn-primary',
 };
 
 $tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
-$positionClass = match($position) {
-'bottom' => 'tooltip-bottom',
-'left' => 'tooltip-left',
-'right' => 'tooltip-right',
-default => 'tooltip-top', // Default tetap top
-};
+/**
+* Logika Responsif Tooltip Position
+* Kita memecah string position (misal: "top md:right") menjadi array class DaisyUI
+*/
+$positions = explode(' ', $position);
+$responsivePositionClasses = collect($positions)->map(function($pos) {
+// Cek jika ada prefix (sm:, md:, lg:)
+if (str_contains($pos, ':')) {
+[$breakpoint, $actualPos] = explode(':', $pos);
+return $breakpoint . ':tooltip-' . $actualPos;
+}
+return 'tooltip-' . $pos;
+})->implode(' ');
 // Logika menentukan tag yang digunakan
 $tag = $href ? 'a' : 'button';
 @endphp
 
 {{-- Gabungkan class tooltip, warna, dan posisi di sini --}}
-<div {{ $attributes->merge(['class' => 'tooltip ' . $tooltipColor . ' ' . $positionClass]) }} data-tip="{{ $tooltip }}">
+<div {{ $attributes->merge(['class' => "tooltip $tooltipColor $responsivePositionClasses"]) }}
+    data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
     <div class="z-[9999] tooltip-content ">
         <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
