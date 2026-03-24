@@ -18,7 +18,7 @@
                         <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
                             <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                         </div>
-                        <button type="button" wire:click="deleteMedia({{ $media->file_path }})" wire:confirm="Hapus foto permanen?"
+                        <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Hapus foto permanen?"
                             class="absolute -top-1 -right-1 btn btn-circle btn-error btn-xs scale-75">✕</button>
                     </div>
                 </div>
