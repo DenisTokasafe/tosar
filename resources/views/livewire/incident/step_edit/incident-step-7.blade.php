@@ -111,13 +111,11 @@
 
 {{-- SECTION TINDAKAN PERBAIKAN --}}
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title">{{ __('Tindakan Perbaikan') }}</legend>
+    <legend class="text-sm font-semibold card-title">{{ __('Rencana Perbaikan Jangka Panjang') }}</legend>
 
     <div class="flex items-center justify-between pb-2 mb-4 border-b">
-        <h3 class="text-xs font-bold uppercase md:text-sm text-primary">{{ __('Rencana Perbaikan Jangka Panjang') }}</h3>
-        <button type="button" wire:click="addCorrectiveRow" class="btn btn-primary btn-xs sm:btn-sm">
-            + {{ __('Tambah') }}
-        </button>
+
+        <x-button.btn-tooltip color="error" icon="add" wireClick="addCorrectiveRow" tooltip="Tambah" position="top md:left" />
     </div>
 
 
