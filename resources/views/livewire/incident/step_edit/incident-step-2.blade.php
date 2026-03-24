@@ -1,7 +1,7 @@
 <div class="mt-4">
     {{-- Header & Tombol Tambah --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-sm font-bold uppercase lg:text-base text-primary">{{ __('Personel Terlibat Langsung') }}</h3>
+
         <button type="button" wire:click="addDirectlyInvolvedRow" class="btn btn-primary btn-xs sm:btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -18,6 +18,7 @@
             @if(count($directly_involved) > 1)
             <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})"
                 class="absolute btn btn-circle btn-ghost btn-xs text-error right-2 top-2">✕</button>
+
             @endif
 
             <div class="grid grid-cols-1 gap-3">
@@ -109,7 +110,7 @@
 
                     <td class="p-1 text-center align-middle">
                         @if(count($directly_involved) > 1)
-                        <button type="button" wire:click="removeDirectlyInvolvedRow({{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
+                        <x-button.btn-tooltip color="error" icon="delete" wireClick="removeDirectlyInvolvedRow({{ $index }})" tooltip="Hapus Data" />
                         @endif
                     </td>
                 </tr>
