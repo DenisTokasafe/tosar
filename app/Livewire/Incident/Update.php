@@ -493,7 +493,7 @@ class Update extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
         $report = IncidentReport::with(['risk', 'impact'])->findOrFail($id);
-
+        $this->report_number = $report->report_number;
 
         // --- DATA DASAR ---
         $this->event_type_id = $report->event_type_id;
