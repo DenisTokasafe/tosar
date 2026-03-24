@@ -1,7 +1,7 @@
 <div class="mt-4">
     {{-- Header & Tombol Tambah --}}
-    <div class="flex items-center justify-between mb-4 pr-20">
-        <x-button.btn-tooltip color=" primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="top sm:right" />
+    <div class="flex items-center justify-between mb-4 ">
+        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="right sm:right" />
     </div>
 
     {{-- TAMPILAN MOBILE (Hanya muncul di layar < 768px) --}}
