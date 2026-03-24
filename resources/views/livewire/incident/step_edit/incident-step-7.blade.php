@@ -26,7 +26,7 @@
                 {{-- DATA TEMPORARY (NEW UPLOAD) --}}
                 @if($visual_evidence)
                 @foreach($visual_evidence as $index => $image)
-                <div class="relative aspect-square group avatar">
+                <div class="relative  group avatar">
                     <div class="w-40 rounded">
                         <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 border-primary rounded-lg shadow-md" />
                         <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
