@@ -696,22 +696,22 @@ class Update extends Component
         })->toArray();
 
         // --- MOUNT PART 9 ---
-        $this->penerimaan_komentar_contractor_id = $report->penerimaan_komentar_contractor_id;
-        $this->penerimaan_komentar_contractor    = $report->penerimaan_komentar_contractor;
+        $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
+        $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
         // Set search term agar nama muncul di input select saat load
         $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
 
-        $this->penerimaan_komentar_internal_id   = $report->penerimaan_komentar_internal_id;
-        $this->penerimaan_komentar_internal      = $report->penerimaan_komentar_internal;
+        $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
+        $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
         $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
 
-        $this->penerimaan_komentar_ohs_id        = $report->penerimaan_komentar_ohs_id;
-        $this->penerimaan_komentar_ohs           = $report->penerimaan_komentar_ohs;
+        $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
+        $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
         $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
 
         if (in_array((int)$report->consequence_id, [3, 4, 5])) {
-            $this->penerimaan_komentar_ktt_id    = $report->penerimaan_komentar_ktt_id;
-            $this->penerimaan_komentar_ktt       = $report->penerimaan_komentar_ktt;
+            $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
+            $this->penerimaan_komentar_ktt       = $report->ktt_comment;
             $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
         }
 
