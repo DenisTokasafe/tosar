@@ -293,19 +293,7 @@ class Update extends Component
     }
     public function mount($id)
     {
-        $categories = [
-            'unsafe_conditions',
-            'unsafe_acts',
-            'personal_factors',
-            'job_factors',
-            'control_system_factors'
-        ];
 
-        foreach ($categories as $category) {
-            if (empty($this->{$category})) {
-                $this->addRow($category);
-            }
-        }
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
@@ -454,7 +442,7 @@ class Update extends Component
         $analysis = $report->timelines()->first();
 
         // Atau jika relasi di model IncidentReport sudah benar (HasOne), cukup:
-        // $analysis = $report->timeline;
+        // A. Ambil data dari JSON SCAT (jika sudah pernah disimpan)
         $scat = $report->scat_analysis;
 
         if ($scat) {
@@ -466,6 +454,22 @@ class Update extends Component
             $this->job_factors       = $scat['dasar']['faktor_pekerjaan'] ?? [];
             $this->control_system_factors = $scat['dasar']['sistem_kontrol'] ?? [];
         }
+        // B. Proteksi Form Kosong
+        $categories = [
+            'unsafe_conditions',
+            'unsafe_acts',
+            'personal_factors',
+            'job_factors',
+            'control_system_factors'
+        ];
+
+        foreach ($categories as $category) {
+            // Jika tidak ada data dari DB, tambahkan 1 baris kosong default
+            if (empty($this->{$category})) {
+                $this->addRow($category);
+            }
+        }
+        // $analysis = $report->timeline;
 
         if ($analysis && is_array($analysis->analysis_steps)) {
             $this->why_analysis = $analysis->analysis_steps;
