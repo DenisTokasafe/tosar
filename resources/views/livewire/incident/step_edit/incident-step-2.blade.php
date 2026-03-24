@@ -8,7 +8,7 @@
             </svg>
             {{ __('Tambah') }}
         </button>
-        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="left" />
+        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="top md:left" />
     </div>
 
     {{-- TAMPILAN MOBILE (Hanya muncul di layar < 768px) --}}
@@ -111,7 +111,7 @@
 
                     <td class="p-1 text-center align-middle">
                         @if(count($directly_involved) > 1)
-                        <x-button.btn-tooltip color="error" icon="delete" wireClick="removeDirectlyInvolvedRow({{ $index }})" tooltip="Hapus Data" position="left" />
+                        <x-button.btn-tooltip color="error" icon="delete" wireClick="removeDirectlyInvolvedRow({{ $index }})" tooltip="Hapus Data" position="top md:left" />
                         @endif
                     </td>
                 </tr>
