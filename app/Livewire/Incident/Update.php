@@ -1196,8 +1196,8 @@ class Update extends Component
             'manual_pelapor_name' => $this->manualPelaporName,
 
             // Organisasi (Mutual Exclusion Dept/Cont)
-            'department_id' => $this->deptCont === 'department' ? $this->department_id : null,
-            'contractor_id' => $this->deptCont === 'contractor' ? $this->contractor_id : null,
+            'department_id' => $this->deptCont === 'dept' ? $this->department_id : null,
+            'contractor_id' => $this->deptCont === 'cont' ? $this->contractor_id : null,
 
             // Risk Assessment
             'likelihood_id'  => $this->likelihood_id,
@@ -1237,7 +1237,7 @@ class Update extends Component
                 'dept_cont'        => $person['dept_cont'],
                 'jabatan'          => $person['jabatan'],
                 'roster'           => $person['roster'],
-                'sift'             => $person['sift'] ?? $person['shift'] ?? null, // Proteksi typo 'sift'
+                'shift'             => $person['sift'] ?? $person['shift'] ?? null, // Proteksi typo 'sift'
                 'keterlibatan'     => $person['keterlibatan'],
                 'pengalaman_kerja' => $person['pengalaman_kerja'],
             ]);

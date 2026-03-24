@@ -42,7 +42,7 @@
 
                 <div class="grid grid-cols-3 gap-2">
                     <x-form.input-text label="Roster" model="directly_involved.{{ $index }}.roster" />
-                    <x-form.input-text label="Shift" model="directly_involved.{{ $index }}.sift" />
+                    <x-form.input-text label="Sift" model="directly_involved.{{ $index }}.sift" />
                     <x-form.input-text label="Exp (Thn)" model="directly_involved.{{ $index }}.pengalaman_kerja" />
                 </div>
 
