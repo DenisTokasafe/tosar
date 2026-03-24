@@ -17,6 +17,7 @@ class IncidentReport extends Model
 
     // Casting tipe data agar otomatis menjadi objek Carbon atau tipe yang sesuai
     protected $casts = [
+        'scat_analysis' => 'array',
         'date_time' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

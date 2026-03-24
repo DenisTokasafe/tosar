@@ -1455,7 +1455,11 @@ class Create extends Component
                 $data = $this->prepareArrayData();
 
                 // A. Simpan Header Utama (Incident Report)
-                $report = IncidentReport::create($data['header']);
+                $report = IncidentReport::create(array_merge(
+                    $data['header'],
+                    ['scat_analysis' => $data['penyebab_insiden']] // Simpan data SCAT di sini
+                ));
+
                 $report->risk()->create($data['risk_assessment']);
 
                 // B. Simpan Detail Dampak (Injury vs Damage) - model IncidentImpact
