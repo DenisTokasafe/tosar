@@ -46,7 +46,7 @@
     <div class="hidden md:block overflow-x-auto border rounded-xl border-base-300 bg-base-100">
         <table class="table w-full border-collapse table-sm">
             <thead>
-                <tr class="bg-base-300 text-white text-xs uppercase">
+                <tr class="bg-base-300  text-base-content text-xs uppercase">
                     <th class="border-r border-base-300">Peran</th>
                     <th class="border-r border-base-300">Nama</th>
                     <th class="border-r border-base-300">Dept/Perusahaan</th>
