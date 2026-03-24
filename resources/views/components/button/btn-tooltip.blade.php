@@ -4,7 +4,8 @@
 'tooltip' => 'Tambah Data',
 'color' => 'primary',
 'icon' => 'add',
-'href' => null // Tambahkan prop href
+'href' => null, // Tambahkan prop href
+'position' => 'top' // Default posisi di atas
 ])
 
 @php
@@ -20,12 +21,18 @@ default => 'btn-primary',
 };
 
 $tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
-
+$positionClass = match($position) {
+'bottom' => 'tooltip-bottom',
+'left' => 'tooltip-left',
+'right' => 'tooltip-right',
+default => 'tooltip-top', // Default tetap top
+};
 // Logika menentukan tag yang digunakan
 $tag = $href ? 'a' : 'button';
 @endphp
 
-<div {{ $attributes->merge(['class' => 'tooltip ' . $tooltipColor]) }} data-tip="{{ $tooltip }}">
+{{-- Gabungkan class tooltip, warna, dan posisi di sini --}}
+<div {{ $attributes->merge(['class' => 'tooltip ' . $tooltipColor . ' ' . $positionClass]) }} data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
     <div class="z-[9999] tooltip-content ">
         <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
