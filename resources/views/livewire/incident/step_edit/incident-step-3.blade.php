@@ -47,10 +47,10 @@
         <table class="table w-full border-collapse table-sm">
             <thead>
                 <tr class="bg-base-300  text-base-content text-xs uppercase">
-                    <th class="border-r border-base-300">Peran</th>
-                    <th class="border-r border-base-300">Nama</th>
-                    <th class="border-r border-base-300">Dept/Perusahaan</th>
-                    <th class="border-base-300">Jabatan & Aksi</th>
+                    <th class=" w-1/3 border-r border-base-300">Peran</th>
+                    <th class="w-1/3 border-r border-base-300">Nama</th>
+                    <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
+                    <th class="w-1/3 border-base-300">Jabatan & Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
