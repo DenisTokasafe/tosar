@@ -273,13 +273,13 @@ class Update extends Component
             ],
             // // Part 8
             'key_learning' => 'required|string|min:10',
-            // // Part 9
-            // 'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-            // 'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-            // 'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-            // 'penerimaan_komentar_contractor'    => 'required|min:11',
-            // 'penerimaan_komentar_internal'      => 'required|min:11',
-            // 'penerimaan_komentar_ohs'           => 'required|min:11',
+            // Part 9
+            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
+            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
+            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
+            'penerimaan_komentar_contractor'    => 'required|min:11',
+            'penerimaan_komentar_internal'      => 'required|min:11',
+            'penerimaan_komentar_ohs'           => 'required|min:11',
 
 
         ];
