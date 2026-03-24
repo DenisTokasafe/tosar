@@ -8,6 +8,7 @@
             </svg>
             {{ __('Tambah') }}
         </button>
+        <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" />
     </div>
 
     {{-- TAMPILAN MOBILE (Hanya muncul di layar < 768px) --}}
