@@ -50,7 +50,8 @@
                     <th class=" w-1/3 border-r border-base-300">Peran</th>
                     <th class="w-1/3 border-r border-base-300">Nama</th>
                     <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
-                    <th class="w-1/3 border-base-300">Jabatan & Aksi</th>
+                    <th class="w-1/4 border-base-300">Jabatan</th>
+                    <th class="w-1/6 border-base-300">Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
@@ -78,16 +79,14 @@
                         <x-form.input-text model="{{ $type }}.{{ $index }}.dept" :disabled="!empty($item['user_id'])" />
                     </td>
                     <td class="p-2 border-b border-base-300">
-                        <div class="flex items-center gap-2">
-                            <div class="flex-grow">
-                                <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
-                            </div>
-                            <div class="flex gap-1">
-                                <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success">+</button>
-                                @if(count($$type) > 1)
-                                <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  ">×</button>
-                                @endif
-                            </div>
+                        <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
+                    </td>
+                    <td class="p-2 border-b border-base-300">
+                        <div class="flex gap-1">
+                            <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success">+</button>
+                            @if(count($$type) > 1)
+                            <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  ">×</button>
+                            @endif
                         </div>
                     </td>
                 </tr>
