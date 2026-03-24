@@ -113,6 +113,7 @@ class Update extends Component
         'ohs' => '',
         'ktt' => '',
     ];
+    public $activeTypePenerimaan = '';
     public $existing_visual_evidence = [];
     public $existing_supporting_documents = [];
 
