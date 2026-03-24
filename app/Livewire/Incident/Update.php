@@ -1093,7 +1093,7 @@ class Update extends Component
                 ]
             );
         }
-        $report->timelineAnalysis()->updateOrCreate(
+        $report->timelines()->updateOrCreate(
             ['incident_report_id' => $report->id],
             [
                 'analysis_steps' => $this->why_analysis, // Otomatis jadi JSON oleh Eloquent
