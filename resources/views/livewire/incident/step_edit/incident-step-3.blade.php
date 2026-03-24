@@ -93,22 +93,12 @@
                     {{-- Kolom Aksi --}}
                     <td class="p-1 border-b border-base-300 align-middle">
                         <div class="flex justify-center gap-1">
-                            <button type="button"
-                                wire:click="addRow('{{ $type }}')"
-                                class="btn btn-square btn-xs btn-success text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
+
+                            <x-button.btn-tooltip color="primary" icon="add" wireClick="addRow('{{ $type }}')" tooltip="Tambah Data" />
 
                             @if(count($$type) > 1)
-                            <button type="button"
-                                wire:click="removeRow('{{ $type }}', {{ $index }})"
-                                class="btn btn-square btn-xs btn-error text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                            <x-button.btn-tooltip color="error" icon="add" wireClick="removeRow('{{ $type }}', {{ $index }})" tooltip="Hapus Data" />
+
                             @endif
                         </div>
                     </td>
