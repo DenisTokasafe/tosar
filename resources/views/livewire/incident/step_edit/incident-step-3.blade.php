@@ -52,7 +52,7 @@
                     <th class="w-1/4 border-r border-base-300">Peran</th>
                     <th class="w-1/4 border-r border-base-300">Nama</th>
                     <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
-                    <th class="w-1/4 border-base-300">Jabatan & Aksi</th>
+                    <th class=" border-base-300">Jabatan & Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
