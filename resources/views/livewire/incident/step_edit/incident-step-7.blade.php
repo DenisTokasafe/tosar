@@ -11,7 +11,7 @@
             <div class="grid grid-cols-3 gap-2 mt-3">
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
-                <div class="relative aspect-square group avatar">
+                <div class="relative  group avatar">
                     <div class="w-40 rounded">
                         <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
                     </div>
