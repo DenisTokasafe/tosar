@@ -782,7 +782,7 @@ class Update extends Component
         $this->existing_supporting_documents = $report->attachments->where('file_type', 'document');
         $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual');
 
-        $this->dispatch('alert', ['type' => 'success', 'message' => 'Dokumen berhasil dihapus.']);
+        $this->dispatch('alert', ['type' => 'success', 'text' => 'Dokumen berhasil dihapus.']);
     }
     public function removeFile($property, $index)
     {
