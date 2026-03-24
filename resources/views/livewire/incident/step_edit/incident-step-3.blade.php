@@ -82,7 +82,7 @@
                         <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
                     </td>
                     <td class="p-2 border-b border-base-300">
-                        <div class="flex gap-1">
+                        <div class="flex ">
                             <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success">+</button>
                             @if(count($$type) > 1)
                             <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  ">×</button>
