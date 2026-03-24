@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
@@ -117,6 +118,8 @@ class Update extends Component
     // Di bagian atas Class
     public $visual_evidence = [];
     public $supporting_documents = [];
+    public $visual_evidence_paths = []; // Ubah dari string ke array
+    public $supporting_documents_paths = [];
     public $corrective_actions = [];
     public $searchPetugas = [];
     public $showDropdownPetugas = [];
@@ -686,6 +689,84 @@ class Update extends Component
         // Jika data kosong, beri 1 baris default
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
+        }
+    }
+
+    public function updatedVisualEvidence()
+    {
+        try {
+            // 1. Validasi setiap file di dalam array secara real-time
+            $this->validateOnly('visual_evidence.*', [
+                'visual_evidence.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            ], [
+                'visual_evidence.*.image' => 'File harus berupa gambar.',
+                'visual_evidence.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
+                'visual_evidence.*.max'   => 'Ukuran foto maksimal 2MB.',
+            ]);
+
+            // 2. Jika validasi lolos, bersihkan file lama dari storage (jika ada)
+            if (!empty($this->visual_evidence_paths)) {
+                foreach ($this->visual_evidence_paths as $oldPath) {
+                    FileHelper::deleteFile($oldPath);
+                }
+            }
+
+            // 3. Reset array path untuk data baru
+            $this->visual_evidence_paths = [];
+
+            // 4. Looping dan simpan (Compress) hanya jika file valid
+            foreach ($this->visual_evidence as $file) {
+                $this->visual_evidence_paths[] = FileHelper::compressAndStore(
+                    $file,
+                    'incident/visual_evidence/documentation'
+                );
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 5. AUTO-CLEAR: Jika ada file yang salah format (seperti PDF),
+            // kita reset array-nya agar preview file yang salah hilang dari UI.
+            $this->visual_evidence = [];
+
+            // Lempar kembali error agar muncul di komponen x-form.upload
+            throw $e;
+        }
+    }
+
+    public function updatedSupportingDocuments()
+    {
+        try {
+            // 1. Validasi setiap dokumen (PDF, DOC, DOCX, XLS, XLSX)
+            $this->validateOnly('supporting_documents.*', [
+                'supporting_documents.*' => 'file|mimes:pdf,doc,docx|max:5120', // Max 5MB per file
+            ], [
+                'supporting_documents.*.file'  => 'Input harus berupa file valid.',
+                'supporting_documents.*.mimes' => 'Format file harus PDF, Word',
+                'supporting_documents.*.max'   => 'Ukuran file dokumen maksimal 5MB.',
+            ]);
+
+            // 2. Bersihkan file lama dari storage jika validasi berhasil
+            if (!empty($this->supporting_documents_paths)) {
+                foreach ($this->supporting_documents_paths as $oldPath) {
+                    FileHelper::deleteFile($oldPath);
+                }
+            }
+
+            // 3. Reset array path
+            $this->supporting_documents_paths = [];
+
+            // 4. Proses penyimpanan file baru
+            foreach ($this->supporting_documents as $file) {
+                // FileHelper::compressAndStore akan menyimpan file asli jika bukan gambar
+                $this->supporting_documents_paths[] = FileHelper::compressAndStore(
+                    $file,
+                    'incident/supporting_documents/documentation'
+                );
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 5. AUTO-CLEAR: Jika ada file yang tidak sesuai format (misal user upload .exe atau .zip)
+            // Kita reset agar state di UI kembali bersih
+            $this->supporting_documents = [];
+
+            throw $e;
         }
     }
     public function addCorrectiveRow()
@@ -1414,12 +1495,20 @@ class Update extends Component
             ],
 
             7 => [
-                'visual_evidence' => $allRules['visual_evidence'],
-                'visual_evidence.*' => $allRules['visual_evidence.*'],
-                'supporting_documents' => $allRules['supporting_documents'],
+                // Jika sudah ada file di database, visual_evidence baru harusnya nullable
+                'visual_evidence' => empty($this->existing_visual_evidence) ? 'required' : 'nullable',
+                'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
+
+                'supporting_documents' => 'nullable', // Dokumen pendukung biasanya opsional
+                'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
+
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
                 'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
-                'corrective_actions.*.due_date'           => $allRules['corrective_actions.*.due_date'],
+                'corrective_actions.*.due_date'            => $allRules['corrective_actions.*.due_date'],
+
+                // Tambahkan validasi untuk hirarki kontrol dan tgl realisasi jika perlu
+                'corrective_actions.*.control_hierarchy'   => 'required',
+                'corrective_actions.*.actual_completion_date' => 'nullable|date',
             ],
 
             // 8 => [
@@ -1626,7 +1715,7 @@ class Update extends Component
         );
 
         // 4. Navigasi atau Notifikasi
-        if ($this->currentStep < 6) {
+        if ($this->currentStep < 7) {
             $this->currentStep++;
             $this->dispatch('alert', [
                 'text' => "Data Step {$this->currentStep} berhasil disimpan.",
