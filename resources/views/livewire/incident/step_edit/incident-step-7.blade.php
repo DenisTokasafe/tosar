@@ -47,7 +47,7 @@
             <div class="mt-3 space-y-2">
                 {{-- 1. DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_supporting_documents as $doc)
-                <div class="flex items-center justify-between p-2 border rounded-lg bg-blue-50 border-blue-100 group">
+                <div class="flex items-center justify-between p-2 border rounded-lg bg-base-300 border-base-100 group">
                     <div class="flex items-center gap-2 overflow-hidden">
                         {{-- Deteksi Icon berdasarkan Nama File --}}
                         @php
