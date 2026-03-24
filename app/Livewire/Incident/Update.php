@@ -494,7 +494,20 @@ class Update extends Component
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
-        $report = IncidentReport::with(['risk', 'impact'])->findOrFail($id);
+        $report = IncidentReport::with([
+            'risk',
+            'impact',
+            'involvedPersons',
+            'investigationTeams.user',
+            'peepoAnalyses',
+            'attachments',
+            'correctiveActions.pic',
+            // Tambahkan ini untuk Part 9:
+            'pmContractor',
+            'pmInternal',
+            'ohsHead',
+            'ktt'
+        ])->findOrFail($id);
         $this->report_number = $report->report_number;
 
         // --- DATA DASAR ---
@@ -766,8 +779,8 @@ class Update extends Component
 
         // 3. Refresh data existing agar UI terupdate
         $report = IncidentReport::with('attachments')->find($this->incidentId);
-        $this->existing_supporting_documents = $report->files->where('file_type', 'document');
-        $this->existing_visual_evidence = $report->files->where('file_type', 'visual');
+        $this->existing_supporting_documents = $report->attachments->where('file_type', 'document');
+        $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual');
 
         $this->dispatch('alert', ['type' => 'success', 'message' => 'Dokumen berhasil dihapus.']);
     }
