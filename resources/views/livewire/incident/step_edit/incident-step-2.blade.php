@@ -1,8 +1,6 @@
 <div class="mt-4">
     {{-- Header & Tombol Tambah --}}
     <div class="flex items-center justify-between mb-4">
-
-
         <x-button.btn-tooltip color="primary" icon="add" wireClick="addDirectlyInvolvedRow" tooltip="Tambah Data" position="top md:right" />
     </div>
 
