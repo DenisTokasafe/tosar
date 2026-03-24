@@ -51,7 +51,7 @@
                     <th class="w-1/3 border-r border-base-300">Nama</th>
                     <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
                     <th class="w-1/4 border-base-300">Jabatan</th>
-                    <th class="w-1/6 border-base-300">Aksi</th>
+                    <th class="border-base-300">Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
