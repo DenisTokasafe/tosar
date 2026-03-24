@@ -252,25 +252,25 @@ class Update extends Component
             // Validasi Kelemahan Sistem Kontrol
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
-            // // Part 7
-            // 'visual_evidence' => 'required|array|min:1',
+            // Part 7
+            'visual_evidence' => 'required|array|min:1',
 
-            // // Validasi tiap file di dalam array (Ukuran dan Tipe)
-            // 'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
+            // Validasi tiap file di dalam array (Ukuran dan Tipe)
+            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
 
-            // 'supporting_documents' => 'required|array|min:1',
-            // 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
-            // 'corrective_actions.*.action_description' => 'required|string|min:10',
-            // 'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            // 'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
-            // 'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            // 'corrective_actions.*.actual_completion_date' => [
-            //     'nullable',
-            //     'date',
-            //     // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
-            //     'after_or_equal:corrective_actions.*.due_date'
-            // ],
+            'supporting_documents' => 'required|array|min:1',
+            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
+            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
+            'corrective_actions.*.action_description' => 'required|string|min:10',
+            'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
+            'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
+            'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
+            'corrective_actions.*.actual_completion_date' => [
+                'nullable',
+                'date',
+                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
+                'after_or_equal:corrective_actions.*.due_date'
+            ],
             // // Part 8
             // 'key_learning' => 'required|string|min:10',
             // // Part 9
