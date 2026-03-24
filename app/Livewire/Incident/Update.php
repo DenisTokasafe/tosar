@@ -108,6 +108,12 @@ class Update extends Component
         'organisasi' => 'Organisasi'
     ];
 
+    public $unsafe_conditions = [];
+    public $unsafe_acts = [];
+    public $personal_factors = [];
+    public $job_factors = [];
+    public $control_system_factors = [];
+
     #[Computed]
     public function isInjury()
     {
@@ -203,26 +209,26 @@ class Update extends Component
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
             // PART 5: Timeline & Why Analysis
             'why_analysis' => 'required|array',
-            // // Part 6
-            // // Validasi Kondisi Tidak Aman
-            // 'unsafe_conditions.*.item' => 'required',
-            // 'unsafe_conditions.*.description' => 'required|string|min:5',
+            // Part 6
+            // Validasi Kondisi Tidak Aman
+            'unsafe_conditions.*.item' => 'required',
+            'unsafe_conditions.*.description' => 'required|string|min:5',
 
-            // // Validasi Perilaku Tidak Aman
-            // 'unsafe_acts.*.item' => 'required',
-            // 'unsafe_acts.*.description' => 'required|string|min:5',
+            // Validasi Perilaku Tidak Aman
+            'unsafe_acts.*.item' => 'required',
+            'unsafe_acts.*.description' => 'required|string|min:5',
 
-            // // Validasi Faktor Pribadi
-            // 'personal_factors.*.item' => 'required',
-            // 'personal_factors.*.description' => 'required|string|min:5',
+            // Validasi Faktor Pribadi
+            'personal_factors.*.item' => 'required',
+            'personal_factors.*.description' => 'required|string|min:5',
 
-            // // Validasi Faktor Pekerjaan
-            // 'job_factors.*.item' => 'required',
-            // 'job_factors.*.description' => 'required|string|min:5',
+            // Validasi Faktor Pekerjaan
+            'job_factors.*.item' => 'required',
+            'job_factors.*.description' => 'required|string|min:5',
 
-            // // Validasi Kelemahan Sistem Kontrol
-            // 'control_system_factors.*.item' => 'required',
-            // 'control_system_factors.*.description' => 'required|string|min:5',
+            // Validasi Kelemahan Sistem Kontrol
+            'control_system_factors.*.item' => 'required',
+            'control_system_factors.*.description' => 'required|string|min:5',
             // // Part 7
             // 'visual_evidence' => 'required|array|min:1',
 
@@ -436,6 +442,17 @@ class Update extends Component
 
         // Atau jika relasi di model IncidentReport sudah benar (HasOne), cukup:
         // $analysis = $report->timeline;
+        $scat = $report->scat_analysis;
+
+        if ($scat) {
+            // Pastikan mapping sesuai dengan struktur di prepareArrayData
+            $this->unsafe_conditions = $scat['langsung']['kondisi_tidak_aman'] ?? [];
+            $this->unsafe_acts       = $scat['langsung']['perilaku_tidak_aman'] ?? [];
+
+            $this->personal_factors  = $scat['dasar']['faktor_pribadi'] ?? [];
+            $this->job_factors       = $scat['dasar']['faktor_pekerjaan'] ?? [];
+            $this->control_system_factors = $scat['dasar']['sistem_kontrol'] ?? [];
+        }
 
         if ($analysis && is_array($analysis->analysis_steps)) {
             $this->why_analysis = $analysis->analysis_steps;
@@ -890,14 +907,14 @@ class Update extends Component
 
             5 => $this->getWhyAnalysisRules(),
 
-            // 6 => [
-            //     'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
-            //     'unsafe_conditions.*.description' => $allRules['unsafe_conditions.*.description'],
-            //     'unsafe_acts.*.item' => $allRules['unsafe_acts.*.item'],
-            //     'personal_factors.*.item' => $allRules['personal_factors.*.item'],
-            //     'job_factors.*.item' => $allRules['job_factors.*.item'],
-            //     'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
-            // ],
+            6 => [
+                'unsafe_conditions.*.item' => $allRules['unsafe_conditions.*.item'],
+                'unsafe_conditions.*.description' => $allRules['unsafe_conditions.*.description'],
+                'unsafe_acts.*.item' => $allRules['unsafe_acts.*.item'],
+                'personal_factors.*.item' => $allRules['personal_factors.*.item'],
+                'job_factors.*.item' => $allRules['job_factors.*.item'],
+                'control_system_factors.*.item' => $allRules['control_system_factors.*.item'],
+            ],
 
             // 7 => [
             //     'visual_evidence' => $allRules['visual_evidence'],
@@ -986,9 +1003,9 @@ class Update extends Component
                     if (str_starts_with($field, 'timelines')) return true;
                     break;
 
-                    // case 6:
-                    //     if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    //     break;
+                case 6:
+                    if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
+                    break;
 
                     // case 7:
                     //     if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
@@ -1045,6 +1062,18 @@ class Update extends Component
             'body_part_category' => $this->isInjury ? $this->selectedBodyPartCategory : null,
             'body_part'          => $this->isInjury ? $this->selectedBodyPart : null,
             'damage_detail'      => !$this->isInjury ? $this->damage_detail : null,
+            // TAMBAHKAN INI UNTUK PART 6 (SCAT)
+            'scat_analysis' => [
+                'langsung' => [
+                    'kondisi_tidak_aman' => $this->unsafe_conditions,
+                    'perilaku_tidak_aman' => $this->unsafe_acts,
+                ],
+                'dasar' => [
+                    'faktor_pribadi'   => $this->personal_factors,
+                    'faktor_pekerjaan' => $this->job_factors,
+                    'sistem_kontrol'   => $this->control_system_factors,
+                ],
+            ],
         ]);
 
         // 3. Update Part 2 (Involved Personnel)
