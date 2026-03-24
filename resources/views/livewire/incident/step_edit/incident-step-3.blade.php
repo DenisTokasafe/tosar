@@ -1,6 +1,4 @@
 <div class="mt-6">
-
-
     {{-- TAMPILAN MOBILE (Android/iPhone) --}}
     <div class="space-y-6 md:hidden">
         {{-- Loop untuk setiap kategori: Pemimpin, Facilitator, Anggota --}}
@@ -48,11 +46,11 @@
     <div class="hidden md:block overflow-x-auto border rounded-xl border-base-300 bg-base-100">
         <table class="table w-full border-collapse table-sm">
             <thead>
-                <tr class="bg-black text-white text-xs uppercase">
+                <tr class="bg-base-300 text-white text-xs uppercase">
                     <th class="w-1/4 border-r border-base-300">Peran</th>
                     <th class="w-1/4 border-r border-base-300">Nama</th>
                     <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
-                    <th class=" border-base-300">Jabatan & Aksi</th>
+                    <th class="w-1/4 border-base-300">Jabatan & Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
@@ -85,9 +83,9 @@
                                 <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
                             </div>
                             <div class="flex gap-1">
-                                <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success text-white">+</button>
+                                <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success  scale-75">+</button>
                                 @if(count($$type) > 1)
-                                <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error text-white">×</button>
+                                <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  scale-75">×</button>
                                 @endif
                             </div>
                         </div>
