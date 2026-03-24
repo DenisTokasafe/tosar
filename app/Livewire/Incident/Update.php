@@ -722,6 +722,36 @@ class Update extends Component
             $this->addCorrectiveRow();
         }
     }
+    public function deleteMedia($id)
+    {
+        // 1. Cari data attachment berdasarkan ID
+        $attachment = IncidentAttachment::find($id);
+
+        if ($attachment) {
+            try {
+                // 2. Hapus file fisik dari folder storage (storage/app/public/...)
+                if (Storage::disk('public')->exists($attachment->file_path)) {
+                    Storage::disk('public')->delete($attachment->file_path);
+                }
+
+                // 3. Hapus record dari database
+                $attachment->delete();
+
+                // 4. Refresh data existing untuk UI
+                $this->mount($this->incidentId);
+
+                $this->dispatch('alert', [
+                    'text' => "File " . $attachment->file_name . " berhasil dihapus permanen.",
+                    'type' => 'success'
+                ]);
+            } catch (\Exception $e) {
+                $this->dispatch('alert', [
+                    'text' => "Gagal menghapus file: " . $e->getMessage(),
+                    'type' => 'error'
+                ]);
+            }
+        }
+    }
     public function deleteFileFromDb($fileId)
     {
         $file = IncidentAttachment::findOrFail($fileId); // Pastikan nama model sesuai tabel Anda
