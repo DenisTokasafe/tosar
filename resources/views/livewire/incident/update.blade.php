@@ -107,7 +107,7 @@
                                         wire:loading.attr="disabled"
                                         class="btn btn-xs btn-success shadow-md px-4 text-white">
                                         <span wire:loading.remove wire:target="update">Update Laporan</span>
-                                        <span wire:loading wire:target="update" class="loading loading-spinner loading-xs"></span>
+                                        <span wire:loading.remove.class="hidden" wire:target="update" class="loading loading-spinner hidden loading-xs"></span>
                                     </button>
                             </div>
                         </div>
