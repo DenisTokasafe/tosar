@@ -1279,7 +1279,7 @@ class Update extends Component
         );
 
         // 4. Navigasi atau Notifikasi
-        if ($this->currentStep < 9) {
+        if ($this->currentStep < 6) {
             $this->currentStep++;
             $this->dispatch('alert', [
                 'text' => "Data Step {$this->currentStep} berhasil disimpan.",
