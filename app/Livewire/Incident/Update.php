@@ -1861,9 +1861,13 @@ class Update extends Component
 
         // 7. Navigasi atau Notifikasi
         if ($this->currentStep < 9) {
+            // Simpan nomor step yang baru saja diproses
+            $completedStep = $this->currentStep;
+
             $this->currentStep++;
+
             $this->dispatch('alert', [
-                'text' => "Data Step berhasil disimpan.",
+                'text' => "Data Bagian {$completedStep} berhasil diperbarui.",
                 'type' => 'success'
             ]);
         } else {
