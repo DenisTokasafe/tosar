@@ -4,7 +4,7 @@
 'tooltip' => 'Tambah Data',
 'color' => 'primary',
 'icon' => 'add',
-'href' => null
+'href' => null // Tambahkan prop href
 ])
 
 @php
@@ -19,33 +19,29 @@ $colorClass = match($color) {
 default => 'btn-primary',
 };
 
-// Bersihkan prefix tooltip jika color adalah default
-$tooltipColorClass = $color === 'default' ? '' : 'tooltip-' . $color;
+$tooltipColor = $color === 'default' ? '' : 'tooltip-' . $color;
 
-// Tentukan tag
+// Logika menentukan tag yang digunakan
 $tag = $href ? 'a' : 'button';
-
-// Pisahkan atribut khusus (seperti class/id dari luar) untuk diletakkan di pembungkus atau tombol
 @endphp
 
-{{-- Pembungkus Tooltip --}}
-<div class="tooltip {{ $tooltipColorClass }} sm:tooltip-right" data-tip="{{ $tooltip }}">
+<div {{ $attributes->merge(['class' => 'tooltip ' . $tooltipColor]) }} data-tip="{{ $tooltip }}">
+    {{-- Custom Tooltip Content --}}
+    <div class="z-[9999] tooltip-content ">
+        <div class="text-sm font-black animate-bounce">{{ $tooltip }}</div>
+    </div>
 
     <{{ $tag }}
-        {{-- Jika ada href, jadi link. Jika tidak, jadi button modal --}}
         @if($href)
         href="{{ $href }}"
         @else
         type="button"
-        @if($modalId) onclick="{{ $modalId }}.showModal()" @endif
+        onclick="{{ $modalId }}.showModal()"
         @endif
 
-        {{-- Pasang wire:click jika ada --}}
         @if($wireClick) wire:click="{{ $wireClick }}" @endif
 
-        {{-- Merge atribut dari luar (termasuk class tambahan) ke tombol --}}
-        {{ $attributes->class(['btn btn-square btn-xs shadow-sm', $colorClass]) }}>
-
+        {{ $attributes->class(['btn btn-square btn-xs ', $colorClass]) }}>
         <x-dynamic-component :component="'icon.' . $icon" class="w-4 h-4" />
     </{{ $tag }}>
 </div>
