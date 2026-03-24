@@ -13,7 +13,7 @@
                 @foreach($existing_visual_evidence as $media)
                 <div class="relative aspect-square group">
                     <div class="avatar">
-                        <div class="w-48 rounded">
+                        <div class="w-40 rounded">
                             <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
                         </div>
                     </div>
