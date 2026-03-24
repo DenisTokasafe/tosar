@@ -720,7 +720,13 @@ class Update extends Component
             $this->addCorrectiveRow();
         }
     }
-
+    public function removeFile($property, $index)
+    {
+        if (isset($this->{$property}[$index])) {
+            unset($this->{$property}[$index]);
+            $this->{$property} = array_values($this->{$property}); // Reset index array
+        }
+    }
     public function updatedVisualEvidence()
     {
         try {
