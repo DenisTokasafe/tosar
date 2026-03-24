@@ -8,6 +8,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\IncidentAttachment;
 use App\Models\IncidentReport;
 use App\Models\Likelihood;
 use App\Models\RiskAssessment;
@@ -21,6 +22,7 @@ use App\Traits\WithDeptContSelection;
 use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -719,6 +721,25 @@ class Update extends Component
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
         }
+    }
+    public function deleteFileFromDb($fileId)
+    {
+        $file = IncidentAttachment::findOrFail($fileId); // Pastikan nama model sesuai tabel Anda
+
+        // 1. Hapus file fisiknya dari storage
+        if (Storage::disk('public')->exists($file->file_path)) {
+            Storage::disk('public')->delete($file->file_path);
+        }
+
+        // 2. Hapus datanya dari database
+        $file->delete();
+
+        // 3. Refresh data existing agar UI terupdate
+        $report = IncidentReport::with('files')->find($this->incidentId);
+        $this->existing_supporting_documents = $report->files->where('file_type', 'document');
+        $this->existing_visual_evidence = $report->files->where('file_type', 'visual');
+
+        $this->dispatch('alert', ['type' => 'success', 'message' => 'Dokumen berhasil dihapus.']);
     }
     public function removeFile($property, $index)
     {
