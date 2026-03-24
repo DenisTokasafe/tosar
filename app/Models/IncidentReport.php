@@ -22,6 +22,23 @@ class IncidentReport extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+    protected static function booted()
+    {
+        static::saving(function ($incident) {
+            // Ambil data corrective actions yang terkait
+            // Jika sedang proses Create/Update di Livewire, biasanya datanya ada di relasi
+            $hasUnfinishedAction = $incident->correctiveActions()
+                ->whereNull('actual_completion_date')
+                ->exists();
+
+            if ($hasUnfinishedAction) {
+                $incident->status = 'Open';
+            } else {
+                // Jika semua tindakan perbaikan sudah ada Tgl. Selesai
+                $incident->status = 'Closed';
+            }
+        });
+    }
 
     /**
      * ==========================================
