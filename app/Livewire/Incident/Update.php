@@ -431,7 +431,11 @@ class Update extends Component
             }
         }
 
-        $analysis = $report->timelines;
+        // Gunakan first() jika relasi mengembalikan banyak data
+        $analysis = $report->timelines()->first();
+
+        // Atau jika relasi di model IncidentReport sudah benar (HasOne), cukup:
+        // $analysis = $report->timeline;
 
         if ($analysis && is_array($analysis->analysis_steps)) {
             $this->why_analysis = $analysis->analysis_steps;
