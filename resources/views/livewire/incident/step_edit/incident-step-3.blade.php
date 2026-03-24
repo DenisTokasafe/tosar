@@ -97,7 +97,7 @@
                             <x-button.btn-tooltip color="primary" icon="add" wireClick="addRow('{{ $type }}')" tooltip="Tambah Data" />
 
                             @if(count($$type) > 1)
-                            <x-button.btn-tooltip color="error" icon="add" wireClick="removeRow('{{ $type }}', {{ $index }})" tooltip="Hapus Data" />
+                            <x-button.btn-tooltip color="error" icon="delete" wireClick="removeRow('{{ $type }}', {{ $index }})" tooltip="Hapus Data" />
 
                             @endif
                         </div>
