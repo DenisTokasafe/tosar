@@ -39,7 +39,7 @@ $tag = $href ? 'a' : 'button';
 @endphp
 
 {{-- Gabungkan class tooltip, warna, dan posisi di sini --}}
-<div {{ $attributes->merge(['class' => "tooltip $tooltipColor $responsivePositionClasses"]) }}
+<div {{ $attributes->merge(['class' => "tooltip inline-block $tooltipColor $responsivePositionClasses"]) }}
     data-tip="{{ $tooltip }}">
     {{-- Custom Tooltip Content --}}
     <div class="z-[9999] tooltip-content ">
