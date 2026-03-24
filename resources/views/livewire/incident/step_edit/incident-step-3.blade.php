@@ -47,10 +47,10 @@
         <table class="table w-full border-collapse table-sm">
             <thead>
                 <tr class="bg-base-300 text-white text-xs uppercase">
-                    <th class="w-1/4 border-r border-base-300">Peran</th>
-                    <th class="w-1/4 border-r border-base-300">Nama</th>
-                    <th class="w-1/4 border-r border-base-300">Dept/Perusahaan</th>
-                    <th class="w-1/4 border-base-300">Jabatan & Aksi</th>
+                    <th class="border-r border-base-300">Peran</th>
+                    <th class="border-r border-base-300">Nama</th>
+                    <th class="border-r border-base-300">Dept/Perusahaan</th>
+                    <th class="border-base-300">Jabatan & Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-xs">
@@ -83,9 +83,9 @@
                                 <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" />
                             </div>
                             <div class="flex gap-1">
-                                <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success  scale-75">+</button>
+                                <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-square btn-xs btn-success">+</button>
                                 @if(count($$type) > 1)
-                                <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  scale-75">×</button>
+                                <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-square btn-xs btn-error  ">×</button>
                                 @endif
                             </div>
                         </div>
