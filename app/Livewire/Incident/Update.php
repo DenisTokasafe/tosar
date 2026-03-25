@@ -1432,6 +1432,7 @@ class Update extends Component
     public function updatedConsequenceId()
     {
         $this->loadRiskAssessment();
+
         if (!in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
             $this->penerimaan_komentar_ktt_id = null;
             $this->penerimaan_komentar_ktt = '';
@@ -1456,25 +1457,32 @@ class Update extends Component
     }
     protected function loadRiskAssessment(): void
     {
+        // 1. Guard clause jika input ID belum lengkap
         if (!$this->likelihood_id || !$this->consequence_id) {
             $this->RiskAssessment = null;
+            $this->rating_name = null; // Pastikan rating di-reset juga
             return;
         }
 
+        // 2. Cari cell berdasarkan persilangan likelihood dan consequence
         $cell = RiskMatrixCell::where('likelihood_id', $this->likelihood_id)
             ->where('risk_consequence_id', $this->consequence_id)
             ->first();
 
         if (!$cell) {
             $this->RiskAssessment = null;
+            $this->rating_name = null;
             return;
         }
 
+        // 3. Ambil data matriks risiko
         $matrix = RiskAssessmentMatrix::where('risk_matrix_cell_id', $cell->id)->first();
 
-        $this->RiskAssessment = $matrix
-            ? RiskAssessment::find($matrix->risk_assessment_id)
-            : null;
+        // 4. Load model RiskAssessment (Sedang, Tinggi, Ekstrim, dll)
+        $this->RiskAssessment = $matrix ? RiskAssessment::find($matrix->risk_assessment_id) : null;
+
+        // 5. PENYEBAB ERROR: Gunakan null-safe operator agar tidak crash saat RiskAssessment null
+        $this->rating_name = $this->RiskAssessment?->name;
     }
     #[Computed]
     public function keterlibatanOptions()
