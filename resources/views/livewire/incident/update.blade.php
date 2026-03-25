@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 gap-4 mt-6 mb-2 md:grid-cols-3">
         <div class="border shadow-sm stats border-base-300 bg-base-100">
             <div class="p-4 stat">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter">Status Laporan</div>
+                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
                 <div class="flex items-center gap-2 mt-1 text-lg stat-value">
                     @if($status == 'Open')
                     <div class="badge badge-error badge-xs animate-pulse"></div>
@@ -42,12 +42,9 @@
             <div class="p-4 stat">
                 <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-primary">Progress Review</div>
                 <div class="flex gap-1 mt-2">
-                    {{-- Indikator Step Review (Flat Table Logic) --}}
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
-
-                    {{-- Indikator KTT hanya muncul jika Rating Sedang, Tinggi, atau Ekstrem --}}
                     @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']))
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
                     @endif
@@ -57,16 +54,13 @@
 
         <div class="border shadow-sm stats border-base-300 bg-base-100">
             <div class="p-4 stat">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter">Otoritas Terakhir</div>
+                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Otoritas Terakhir</div>
                 <div class="mt-2 text-xs font-medium stat-desc text-base-content">
                     <span class="flex items-center gap-1 italic">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        {{ $incident->latest_reviewer_name }}
+                        <x-icon name="user" class="w-3 h-3 text-info" />
+                        {{ $incident->latest_reviewer_name ?? 'N/A' }}
                     </span>
-                    {{-- Menampilkan Badge Otoritas --}}
-                    @if($incident->latest_reviewer_role !== 'Pending')
+                    @if($incident->latest_reviewer_role && $incident->latest_reviewer_role !== 'Pending')
                     <div class="mt-1 lowercase badge badge-outline badge-info badge-xs opacity-70">
                         {{ $incident->latest_reviewer_role }}
                     </div>
@@ -77,14 +71,26 @@
     </div>
 
     <x-incident.layout>
-        {{-- Iterasi Collapse --}}
-        {{-- Iterasi Collapse --}}
+        {{-- Iterasi Collapse SENTRY --}}
         @for ($i = 1; $i <= 9; $i++)
             @php
-            // ... (Logika $hasErrorInStep dan $stepTitles tetap sama) ...
+            // Definisikan variabel SEBELUM digunakan di @class
+            $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
 
-            $canEdit=match($i) {
-            1, 2=> Gate::allows('updateInitialData', $incident),
+            $stepTitles = [
+            1 => 'Detil Laporan',
+            2 => 'Pihak Terlibat Langsung',
+            3 => 'Partisipan Investigasi',
+            4 => 'PEEPO Investigation Factor',
+            5 => 'Time Line & Analisis',
+            6 => 'Investigasi Kecelakaan (Checklist)',
+            7 => 'Tindakan Perbaikan',
+            8 => 'Kunci Pembelajaran',
+            9 => 'Penerimaan & Komentar Reviewer',
+            ];
+
+            $canEdit = match($i) {
+            1, 2 => Gate::allows('updateInitialData', $incident),
             3, 4, 5, 6 => Gate::allows('conductInvestigation', $incident),
             7 => Gate::allows('manageCorrectiveActions', $incident),
             8 => Gate::allows('updateLessonsLearned', $incident),
@@ -96,24 +102,24 @@
             <div
                 wire:key="step-edit-container-{{ $i }}"
                 @class([ 'border collapse collapse-arrow bg-base-100 border-base-300 rounded-xl relative z-0 transition-all duration-300 ease-in-out' , 'hover:-translate-x-1 hover:shadow-xl hover:z-10'=> $canEdit,
-                'bg-base-200/50 cursor-not-allowed opacity-80' => !$canEdit, {{-- Visual feedback jika terkunci --}}
+                'bg-base-200/50 cursor-not-allowed opacity-80' => !$canEdit,
                 'border-error shadow-md' => $hasErrorInStep,
                 'hover:border-info' => $canEdit && !$hasErrorInStep
                 ])>
 
-                {{-- MODIFIKASI DISINI: Tambahkan 'disabled' jika !$canEdit --}}
+                {{-- Radio input dikunci (disabled) jika user tidak punya akses edit --}}
                 <input
                     type="radio"
                     name="edit-accordion"
                     wire:click="{{ $canEdit ? "goToStep($i)" : "" }}"
                     value="{{ $i }}"
                     {{ $currentStep == $i ? 'checked' : '' }}
-                    {{ !$canEdit ? 'disabled' : '' }} {{-- Mencegah collapse terbuka --}} />
+                    {{ !$canEdit ? 'disabled' : '' }} />
 
                 <div @class([ 'flex items-center justify-between font-semibold collapse-title transition-colors duration-300' , 'bg-error text-error-content'=> $hasErrorInStep,
                     'bg-linear-to-r from-blue-600 to-info text-white' => $currentStep == $i,
                     'bg-base-200 text-base-content' => $currentStep != $i && $canEdit,
-                    'bg-base-300 text-base-content/50' => !$canEdit {{-- Warna header jika terkunci --}}
+                    'bg-base-300 text-base-content/40' => !$canEdit
                     ])>
 
                     <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
@@ -121,20 +127,76 @@
                         <span class="hidden md:inline">– {{ $stepTitles[$i] }}</span>
 
                         @if(!$canEdit)
-                        <x-icon name="lock" class="w-3 h-3 opacity-40" />
-                        <span class="text-[9px] lowercase font-normal opacity-60">(akses terbatas)</span>
+                        <x-icon name="lock-closed" class="w-3 h-3 opacity-60" />
+                        <span class="text-[9px] lowercase font-normal opacity-70">(akses terbatas)</span>
                         @endif
 
-                        {{-- ... (Status Error/Success Icon tetap sama) ... --}}
+                        @if($hasErrorInStep)
+                        <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse">⚠️ ERROR</span>
+                        @else
+                        @if($currentStep > $i)
+                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-success">✓</span>
+                        @endif
+                        @endif
                     </h3>
                 </div>
 
                 <div class="text-xs collapse-content bg-base-100">
-                    {{-- Isi konten hanya akan dirender jika input di atas bisa diklik --}}
                     <div class="pt-4">
+                        @if($hasErrorInStep)
+                        <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
+                            <strong>Perhatian:</strong> Beberapa kolom pada bagian ini memerlukan perbaikan sebelum laporan dapat diperbarui.
+                        </div>
+                        @endif
+
                         @include('livewire.incident.step_edit.incident-step-' . $i, ['readonly' => !$canEdit])
 
-                        {{-- ... (Footer navigasi tetap sama) ... --}}
+                        <div class="flex justify-between pt-4 mt-4 border-t border-base-200">
+                            <div>
+                                @if($i > 1)
+                                <button type="button" wire:click="goToStep({{ $i - 1 }})" class="btn btn-ghost btn-xs">
+                                    « Kembali
+                                </button>
+                                @endif
+                            </div>
+
+                            <div class="flex gap-2">
+                                @if ($i < 9)
+                                    <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
+                                    {{ $canEdit ? 'Simpan & Lanjut »' : 'Lihat Selanjutnya »' }}
+                                    </button>
+                                    @endif
+
+                                    <div class="flex flex-col items-end">
+                                        @if($this->canUpdate)
+                                        <button type="button"
+                                            wire:click="update"
+                                            wire:loading.attr="disabled"
+                                            class="px-4 text-white shadow-md btn btn-xs btn-success">
+                                            <span wire:loading.remove wire:target="update">Update Laporan</span>
+                                            <span wire:loading wire:target="update" class="loading loading-spinner loading-xs"></span>
+                                        </button>
+                                        @else
+                                        <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
+                                            <div class="flex items-center gap-1">
+                                                <x-icon name="lock-closed" class="w-3 h-3" />
+                                                <span>Update Terkunci</span>
+                                            </div>
+                                        </button>
+
+                                        @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) && empty($penerimaan_komentar_ktt_id))
+                                        <span class="mt-1 text-[9px] text-error italic animate-pulse">
+                                            Otoritas KTT wajib untuk rating {{ $rating_name }}
+                                        </span>
+                                        @elseif(!$canEdit)
+                                        <span class="mt-1 text-[9px] text-warning italic">
+                                            Akses terbatas (HSE Policy)
+                                        </span>
+                                        @endif
+                                        @endif
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
