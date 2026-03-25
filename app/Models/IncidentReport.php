@@ -22,49 +22,7 @@ class IncidentReport extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-    protected static function booted()
-    {
-        static::saving(function ($incident) {
-            // 1. Initial Reporting (Step 1 & 2) -> Default
-            $status = 'Open';
 
-            // Cek kelengkapan untuk Tahap Investigation (Step 3-6)
-            $hasInvestigation = $incident->investigationTeams()->exists() && $incident->timelines()->exists();
-
-            // Cek kelengkapan untuk Action Plan (Step 7-8)
-            $hasActionPlan = $incident->correctiveActions()->exists() &&
-                !empty($incident->key_learning);
-
-            // Cek kelengkapan untuk Final Review (Step 9)
-            $isAllCorrectiveFinished = $incident->correctiveActions()->count() > 0 &&
-                !$incident->correctiveActions()->whereNull('actual_completion_date')->exists();
-
-            $hasFinalComments = !empty($incident->penerimaan_komentar_ohs) &&
-                !empty($incident->penerimaan_komentar_internal);
-
-            // LOGIKA PENENTUAN STATUS
-            if ($hasInvestigation) {
-                $status = 'In Progress';
-            }
-
-            if ($hasActionPlan) {
-                $status = 'Action Required';
-            }
-
-            if ($isAllCorrectiveFinished && $hasFinalComments) {
-                // Jika KTT diperlukan (Konsekuensi 3-5), cek juga otoritas KTT
-                if (in_array((int)$incident->consequence_id, [3, 4, 5])) {
-                    if (!empty($incident->penerimaan_komentar_ktt)) {
-                        $status = 'Closed';
-                    }
-                } else {
-                    $status = 'Closed';
-                }
-            }
-
-            $incident->status = $status;
-        });
-    }
 
     /**
      * ==========================================

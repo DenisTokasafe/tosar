@@ -741,7 +741,30 @@ class Update extends Component
         }
     }
     // Jika Anda ingin berpindah tab di dalam Bagian 9
+    public function determineReportStatus()
+    {
+        // Cek Investigasi (Step 3-6)
+        $hasInvestigation = $this->incident->investigationTeams()->exists() ||
+            $this->incident->timelines()->exists();
 
+        // Cek Action Plan (Step 7-8)
+        $hasActionPlan = $this->incident->correctiveActions()->exists() ||
+            !empty($this->key_learning);
+
+        // Cek Final Review (Step 9)
+        $isAllActionClosed = $this->incident->correctiveActions()->count() > 0 &&
+            !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
+
+        $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
+            !empty($this->penerimaan_komentar_internal);
+
+        // Tentukan String Status
+        if ($isAllActionClosed && $isReviewed) return 'Closed';
+        if ($hasActionPlan) return 'Action Required';
+        if ($hasInvestigation) return 'In Progress';
+
+        return 'Open';
+    }
     public function deleteMedia($id)
     {
         // 1. Cari data attachment berdasarkan ID
@@ -1995,13 +2018,14 @@ class Update extends Component
         // 1. Validasi berdasarkan Step yang sedang aktif
         // Jika validasi gagal, Livewire akan otomatis berhenti di sini dan memunculkan error di Blade
         $this->validateOnlyStep($this->currentStep);
-
+        $this->status = $this->determineReportStatus();
         $report = IncidentReport::findOrFail($this->incidentId);
 
         try {
             DB::transaction(function () use ($report) {
                 // 2. Update data utama (Mencakup Step 1, 4, 5, 6, dan 9)
                 $report->update([
+                    'status' => $this->status,
                     'event_type_id'       => $this->event_type_id,
                     'event_sub_type_id'   => $this->event_sub_type_id,
                     'description'         => $this->description,
