@@ -4,7 +4,7 @@
         {{-- Loop untuk setiap kategori: Pemimpin, Facilitator, Anggota --}}
         @foreach(['pemimpin' => 'Pemimpin Investigasi (KPLH)', 'facilitator' => 'Facilitator (KPLH)', 'anggota' => 'Tim Anggota'] as $type => $label)
         <div class="space-y-3">
-            <div class="badge badge-outline badge-sm font-bold">{{ $label }}</div>
+            <div class="font-bold badge badge-outline badge-sm">{{ $label }}</div>
 
             @foreach($$type as $index => $item)
             <div class="relative p-4 border shadow-sm rounded-xl bg-base-100 border-base-300" wire:key="mob-{{ $type }}-{{ $index }}">
@@ -19,21 +19,24 @@
                         :options="$options"
                         :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === $type && $activeIndex === $index"
                         clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
-                        x-on:focusin="$wire.set('activeType', '{{ $type }}'); $wire.set('activeIndex', {{ $index }})" />
+                        :disabled="!$canEdit"
+                        x-on:focusin="$canEdit ? ($wire.set('activeType', '{{ $type }}'), $wire.set('activeIndex', {{ $index }})) : null" />
 
                     <div class="grid grid-cols-2 gap-2">
-                        <x-form.input-text label="Dept" model="{{ $type }}.{{ $index }}.dept" :disabled="!empty($item['user_id'])" />
-                        <x-form.input-text label="Jabatan" model="{{ $type }}.{{ $index }}.jabatan" />
+                        <x-form.input-text label="Dept" model="{{ $type }}.{{ $index }}.dept" :disabled="!$canEdit || !empty($item['user_id'])" />
+                        <x-form.input-text label="Jabatan" model="{{ $type }}.{{ $index }}.jabatan" :disabled="!$canEdit" />
                     </div>
                 </div>
 
                 {{-- Action Buttons Mobile --}}
+                @if($canEdit)
                 <div class="flex justify-end gap-2 mt-3">
                     @if(count($$type) > 1)
                     <button type="button" wire:click="removeRow('{{ $type }}', {{ $index }})" class="btn btn-error btn-xs btn-outline">Hapus</button>
                     @endif
                     <button type="button" wire:click="addRow('{{ $type }}')" class="btn btn-success btn-xs btn-outline">+ Tambah</button>
                 </div>
+                @endif
             </div>
             @endforeach
         </div>
@@ -43,11 +46,10 @@
     </div>
 
     {{-- TAMPILAN TABLET & DESKTOP --}}
-    <div class="hidden md:block overflow-x-auto border rounded-xl border-base-300 bg-base-100">
+    <div class="hidden overflow-x-auto border md:block rounded-xl border-base-300 bg-base-100">
         <table class="table w-full border-collapse table-sm">
             <thead>
-                <tr class="bg-base-300 text-base-content text-xs uppercase">
-                    {{-- Pembagian lebar yang lebih seimbang --}}
+                <tr class="text-xs uppercase bg-base-300 text-base-content">
                     <th class="w-[20%] border-r border-base-300 text-center">Peran</th>
                     <th class="w-[30%] border-r border-base-300">Nama</th>
                     <th class="w-[20%] border-r border-base-300">Dept/Perusahaan</th>
@@ -62,13 +64,13 @@
 
                     {{-- Logika Rowspan untuk Peran --}}
                     @if($loop->first)
-                    <td rowspan="{{ count($$type) }}" class="font-bold border-r border-b border-base-300 bg-base-200/30 align-middle text-center px-2 py-4 leading-tight">
+                    <td rowspan="{{ count($$type) }}" class="px-2 py-4 font-bold leading-tight text-center align-middle border-b border-r border-base-300 bg-base-200/30">
                         {{ $label }}
                     </td>
                     @endif
 
-                    {{-- Kolom Nama dengan Searchable Select --}}
-                    <td class="p-1 border-r border-b border-base-300">
+                    {{-- Kolom Nama --}}
+                    <td class="p-1 border-b border-r border-base-300">
                         <x-form.searchable-select2
                             wire:key="sel-dt-{{ $type }}-{{ $index }}"
                             placeholder="Cari Nama..."
@@ -77,28 +79,30 @@
                             :options="$options"
                             :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === $type && $activeIndex === $index"
                             clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
-                            x-on:focusin="$wire.set('activeType', '{{ $type }}'); $wire.set('activeIndex', {{ $index }})" />
+                            :disabled="!$canEdit"
+                            x-on:focusin="$canEdit ? ($wire.set('activeType', '{{ $type }}'), $wire.set('activeIndex', {{ $index }})) : null" />
                     </td>
 
                     {{-- Kolom Dept --}}
-                    <td class="p-1 border-r border-b border-base-300">
-                        <x-form.input-text model="{{ $type }}.{{ $index }}.dept" :disabled="!empty($item['user_id'])" class="input-xs" />
+                    <td class="p-1 border-b border-r border-base-300">
+                        <x-form.input-text model="{{ $type }}.{{ $index }}.dept" :disabled="!$canEdit || !empty($item['user_id'])" class="input-xs" />
                     </td>
 
                     {{-- Kolom Jabatan --}}
-                    <td class="p-1 border-r border-b border-base-300">
-                        <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" class="input-xs" />
+                    <td class="p-1 border-b border-r border-base-300">
+                        <x-form.input-text model="{{ $type }}.{{ $index }}.jabatan" :disabled="!$canEdit" class="input-xs" />
                     </td>
 
                     {{-- Kolom Aksi --}}
-                    <td class="p-1 border-b border-base-300 align-middle">
+                    <td class="p-1 align-middle border-b border-base-300">
                         <div class="flex justify-center gap-1">
-
+                            @if($canEdit)
                             <x-button.btn-tooltip color="primary" icon="add" wireClick="addRow('{{ $type }}')" tooltip="Tambah Data" />
-
                             @if(count($$type) > 1)
                             <x-button.btn-tooltip color="error" icon="delete" wireClick="removeRow('{{ $type }}', {{ $index }})" tooltip="Hapus Data" />
-
+                            @endif
+                            @else
+                            <x-icon name="lock" class="w-4 h-4 text-base-300" />
                             @endif
                         </div>
                     </td>
