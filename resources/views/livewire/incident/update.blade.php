@@ -27,13 +27,24 @@
             <div class="p-4 stat">
                 <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
                 <div class="flex items-center gap-2 mt-1 text-lg stat-value">
-                    @if($status == 'Open')
+                    @switch($status)
+                    @case('Open')
                     <div class="badge badge-error badge-xs animate-pulse"></div>
-                    <span class="text-sm italic font-black uppercase text-error">OPEN</span>
-                    @else
+                    <span class="text-sm italic font-black uppercase text-error">OPEN / REPORTED</span>
+                    @break
+                    @case('In Progress')
+                    <div class="badge badge-info badge-xs animate-bounce"></div>
+                    <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
+                    @break
+                    @case('Action Required')
+                    <div class="badge badge-warning badge-xs"></div>
+                    <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
+                    @break
+                    @case('Closed')
                     <div class="badge badge-success badge-xs"></div>
                     <span class="text-sm italic font-black uppercase text-success">CLOSED</span>
-                    @endif
+                    @break
+                    @endswitch
                 </div>
             </div>
         </div>
@@ -74,8 +85,15 @@
         {{-- Iterasi Collapse SENTRY --}}
         @for ($i = 1; $i <= 9; $i++)
             @php
-            // Definisikan variabel SEBELUM digunakan di @class
-            $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
+            // Logic Deteksi Error yang lebih akurat
+            $fieldsInStep=$this->getFieldsForStep($i);
+            $hasErrorInStep = false;
+            foreach($fieldsInStep as $field) {
+            if ($errors->has($field) || $errors->has($field . '.*')) {
+            $hasErrorInStep = true;
+            break;
+            }
+            }
 
             $stepTitles = [
             1 => 'Detil Laporan',
@@ -107,7 +125,6 @@
                 'hover:border-info' => $canEdit && !$hasErrorInStep
                 ])>
 
-                {{-- Radio input dikunci (disabled) jika user tidak punya akses edit --}}
                 <input
                     type="radio"
                     name="edit-accordion"
@@ -117,7 +134,7 @@
                     {{ !$canEdit ? 'disabled' : '' }} />
 
                 <div @class([ 'flex items-center justify-between font-semibold collapse-title transition-colors duration-300' , 'bg-error text-error-content'=> $hasErrorInStep,
-                    'bg-linear-to-r from-blue-600 to-info text-white' => $currentStep == $i,
+                    'bg-linear-to-r from-blue-600 to-info text-white' => $currentStep == $i && !$hasErrorInStep,
                     'bg-base-200 text-base-content' => $currentStep != $i && $canEdit,
                     'bg-base-300 text-base-content/40' => !$canEdit
                     ])>
