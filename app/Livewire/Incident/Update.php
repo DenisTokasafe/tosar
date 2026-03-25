@@ -1440,18 +1440,20 @@ class Update extends Component
             return;
         }
 
-        // Ambil data severity dari tabel risk_matrix
         $cell = RiskMatrixCell::where('likelihood_id', $this->likelihood_id)
             ->where('risk_consequence_id', $this->consequence_id)
             ->first();
 
-        if (!$cell || !$cell->severity) {
+        if (!$cell) {
             $this->RiskAssessment = null;
             return;
         }
 
-        // Cocokkan kolom 'severity' di Matrix dengan 'name' di RiskAssessment
-        $this->RiskAssessment = RiskAssessment::where('name', $cell->severity)->first();
+        $matrix = RiskAssessmentMatrix::where('risk_matrix_cell_id', $cell->id)->first();
+
+        $this->RiskAssessment = $matrix
+            ? RiskAssessment::find($matrix->risk_assessment_id)
+            : null;
     }
     #[Computed]
     public function keterlibatanOptions()
