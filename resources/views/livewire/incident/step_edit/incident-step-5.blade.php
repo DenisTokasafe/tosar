@@ -1,9 +1,7 @@
 <div class="mt-4">
     {{-- Header Control --}}
-    <div class="flex items-center justify-between pb-2 border-b">
-        <h2 class="text-sm font-bold uppercase md:text-lg text-primary">BAGIAN 5 – Analisis Informasi (5 Why)</h2>
-
-        {{-- Kontrol Tambah Why hanya muncul jika boleh edit --}}
+    <div class="flex items-center justify-end pb-2 border-b">
+        {{-- Kontrol di sisi kanan tanpa judul --}}
         <div class="flex gap-2">
             @if($canEdit)
             <button wire:click="addWhyColumn" class="btn btn-primary btn-xs sm:btn-sm">
