@@ -312,10 +312,7 @@ class Create extends Component
 
     public function validateCurrentStep()
     {
-        // Jika mencoba validasi step investigasi di mode create, hentikan.
-        if (!$this->isEdit && $this->currentStep > 2) {
-            return;
-        }
+
 
         $fields = [];
         switch ($this->currentStep) {
