@@ -2,13 +2,21 @@
     {{-- Header Control --}}
     <div class="flex items-center justify-between pb-2 border-b">
         <h2 class="text-sm font-bold uppercase md:text-lg text-primary">BAGIAN 5 – Analisis Informasi (5 Why)</h2>
+
+        {{-- Kontrol Tambah Why hanya muncul jika boleh edit --}}
         <div class="flex gap-2">
+            @if($canEdit)
             <button wire:click="addWhyColumn" class="btn btn-primary btn-xs sm:btn-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 <span class="hidden sm:inline">Tambah Why</span>
             </button>
+            @else
+            <div class="gap-1 italic badge badge-ghost badge-sm opacity-70">
+                <x-icon name="lock" class="w-3 h-3" /> Terkunci
+            </div>
+            @endif
         </div>
     </div>
 
@@ -29,19 +37,19 @@
             </div>
 
             {{-- ANALISIS FLOW --}}
-            {{-- Mobile: Stacked Vertical with Arrows | Tablet/Desktop: Horizontal Grid --}}
             <div @class([ 'flex flex-col gap-2 md:grid md:gap-4 md:overflow-x-auto pb-4' ,
                 $this->gridClass => $whyCount >= 1
                 ])>
                 @for($i = 1; $i <= $whyCount; $i++)
                     <div class="relative flex flex-col md:flex-row" wire:key="why-container-{{ $i }}">
 
-                    <div class="relative flex-1 p-4 transition-all border shadow-inner rounded-xl bg-base-200/50 border-base-300 focus-within:border-primary/50">
+                    <div @class([ 'relative flex-1 p-4 transition-all border shadow-inner rounded-xl bg-base-200/50 border-base-300' , 'focus-within:border-primary/50'=> $canEdit
+                        ])>
                         <div class="flex items-center justify-between mb-2">
-                            <span class="badge badge-primary badge-sm font-bold tracking-tighter italic">WHY {{ $i }}</span>
+                            <span class="italic font-bold tracking-tighter badge badge-primary badge-sm">WHY {{ $i }}</span>
 
-                            {{-- Tombol Hapus (Hanya muncul di urutan terakhir) --}}
-                            @if($whyCount > 1 && $i == $whyCount)
+                            {{-- Tombol Hapus (Hanya muncul jika boleh edit & urutan terakhir) --}}
+                            @if($canEdit && $whyCount > 1 && $i == $whyCount)
                             <button wire:click="removeWhyColumn" class="btn btn-ghost btn-xs text-error">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -52,20 +60,21 @@
 
                         <x-form.text_area
                             model="why_analysis.why{{ $i }}"
-                            placeholder="Mengapa hal di atas terjadi?"
+                            placeholder="{{ $canEdit ? 'Mengapa hal di atas terjadi?' : 'Tidak ada analisis.' }}"
                             rows="3"
-                            class="bg-base-100" />
+                            class="bg-base-100"
+                            :disabled="!$canEdit" />
                     </div>
 
-                    {{-- Indikator Panah (Muncul jika bukan baris terakhir) --}}
+                    {{-- Indikator Panah --}}
                     @if($i < $whyCount)
                         <div class="flex items-center justify-center py-1 md:hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-base-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                         </svg>
             </div>
-            {{-- Divider Garis Putus-putus untuk Desktop --}}
-            <div class="hidden md:flex items-center justify-center px-1 text-base-300">
+            {{-- Divider Desktop --}}
+            <div class="items-center justify-center hidden px-1 md:flex text-base-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
                 </svg>
@@ -77,7 +86,9 @@
 
     {{-- Hint untuk User --}}
     <div class="mt-2 text-center">
-        <p class="text-[10px] text-base-content/40 italic">Teruskan bertanya "Mengapa" sampai menemukan akar masalah sistemik.</p>
+        <p class="text-[10px] text-base-content/40 italic">
+            {{ $canEdit ? 'Teruskan bertanya "Mengapa" sampai menemukan akar masalah sistemik.' : 'Analisis ini telah dikunci dan bersifat permanen.' }}
+        </p>
     </div>
 </div>
 </div>
