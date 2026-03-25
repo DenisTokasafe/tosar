@@ -150,7 +150,7 @@ class Update extends Component
     public $penerimaan_komentar_ohs;
     public $key_learning;
     // TAMBAHKAN INI:
-
+    public $activeIndexPenerimaan = null;
     #[Computed]
 
     public function isInjury()
