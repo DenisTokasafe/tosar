@@ -1415,6 +1415,7 @@ class Update extends Component
         // Cek apakah ada anak (sub-tipe) untuk tipe yang dipilih
         return EventSubType::where('event_type_id', $this->event_type_id)->exists();
     }
+
     public function edit($likelihoodId, $consequenceId)
     {
         $this->likelihood_id = $likelihoodId;
@@ -1425,6 +1426,7 @@ class Update extends Component
 
         $this->loadRiskAssessment();
     }
+
     public function updatedConsequenceId()
     {
         $this->loadRiskAssessment();
@@ -1445,6 +1447,7 @@ class Update extends Component
             $this->dispatch('refresh-ktt-editor');
         }
     }
+
     public function updatedLikelihoodId()
     {
         $this->loadRiskAssessment();
