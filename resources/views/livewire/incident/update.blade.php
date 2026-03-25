@@ -46,7 +46,11 @@
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
+
+                    {{-- Indikator KTT hanya muncul jika Rating Sedang, Tinggi, atau Ekstrim --}}
+                    @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrim']))
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
+                    @endif
                 </div>
             </div>
         </div>
