@@ -143,7 +143,7 @@ class Update extends Component
     public $penerimaan_komentar_ohs_id;
     public $penerimaan_komentar_ktt_id;
     public $penerimaan_komentar_ktt;
-
+    public $incident;
     // Properti untuk teks editor (CKEditor)
     public $penerimaan_komentar_contractor;
     public $penerimaan_komentar_internal;
@@ -495,6 +495,7 @@ class Update extends Component
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
+        $this->incident = IncidentReport::find($id);
         $report = IncidentReport::with([
             'risk',
             'impact',
