@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::table('incident_reports', function (Blueprint $table) {
             // Kita letakkan setelah kolom nomor laporan agar rapi di database
-            $table->enum('status', ['Open', 'In Progress', 'Closed'])
-                ->default('Open')
-                ->after('report_number');
+            $table->enum('status', ['Open', 'In Progress', 'Closed'])->default('Open')->after('report_number');
 
             // Index ditambahkan untuk mempercepat filter di dashboard SENTRY
             $table->index('status');

@@ -25,16 +25,25 @@ class IncidentReport extends Model
     protected static function booted()
     {
         static::saving(function ($incident) {
-            // Ambil data corrective actions yang terkait
-            // Jika sedang proses Create/Update di Livewire, biasanya datanya ada di relasi
+            // Jika laporan baru dibuat, pasti statusnya Open
+            if (!$incident->exists) {
+                $incident->status = 'Open';
+                return;
+            }
+
+            // Untuk laporan yang sudah ada (Proses Investigasi/Update)
+            // Cek apakah ada tindakan perbaikan yang BELUM selesai
             $hasUnfinishedAction = $incident->correctiveActions()
                 ->whereNull('actual_completion_date')
                 ->exists();
 
-            if ($hasUnfinishedAction) {
+            // Cek juga apakah laporan ini punya setidaknya satu corrective action
+            // (Opsional: Agar laporan tidak Closed jika investigasi belum diisi sama sekali)
+            $hasAnyAction = $incident->correctiveActions()->exists();
+
+            if ($hasUnfinishedAction || !$hasAnyAction) {
                 $incident->status = 'Open';
             } else {
-                // Jika semua tindakan perbaikan sudah ada Tgl. Selesai
                 $incident->status = 'Closed';
             }
         });
