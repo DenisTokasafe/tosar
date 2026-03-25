@@ -750,7 +750,7 @@ class Update extends Component
         $hasTimeline = $this->incident->timelines()->exists();
 
         // Status In Progress aktif jika proses investigasi sudah dimulai
-        $hasInvestigation = $hasTeams || $hasPeepo || $hasTimeline;
+        $hasInvestigation = $hasTeams;
 
         // 2. Cek Action Plan (Step 7-8)
         $hasActionPlan = $this->incident->correctiveActions()->exists() ||
