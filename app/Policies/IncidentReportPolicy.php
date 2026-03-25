@@ -4,103 +4,152 @@ namespace App\Policies;
 
 use App\Models\IncidentReport;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use Illuminate\Database\Eloquent\Builder;
 
 class IncidentReportPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
+    // /**
+    //  * Determine whether the user can view any models.
+    //  */
+    // public function viewAny(User $user): bool
+    // {
+    //     return false;
+    // }
+
+    // /**
+    //  * Determine whether the user can view the model.
+    //  */
+    // public function view(User $user, IncidentReport $incidentReport): bool
+    // {
+    //     return false;
+    // }
+
+    // /**
+    //  * Determine whether the user can create models.
+    //  */
+    // public function create(User $user): bool
+    // {
+    //     return false;
+    // }
 
     /**
-     * Determine whether the user can view the model.
+     * Logic Super Admin / Administrator HSE
      */
-    public function view(User $user, IncidentReport $incidentReport): bool
+    public function before(User $user, string $ability): ?bool
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, IncidentReport $incidentReport): bool
-    {
-        // 1. Admin HSE selalu boleh
-        if ($user->hasRole('Administrator')) return true;
-
-        // 2. Jika laporan masih Open, Pembuat (Originator) bisa edit Part 1-2
-        if ($incidentReport->status === 'Open' && $user->id === $incidentReport->pelapor_id) {
+        if ($user->hasRole('Administrator')) {
             return true;
         }
-
-        // 3. Tim Investigasi yang terdaftar di Part 3
-        // Cek apakah user ID ada dalam relasi investigationTeams
-        if ($incidentReport->investigationTeams()->where('user_id', $user->id)->exists()) {
-            return true;
-        }
-        return false;
+        return null; // Lanjut ke check method di bawah
     }
-    public function close(User $user, IncidentReport $incident)
+    /**
+     * BAGIAN 1 & 2: Detil & Pihak Terlibat
+     * Akses: Pelapor (Originator) & Tim Investigasi
+     */
+    public function updateInitialData(User $user, IncidentReport $incident): bool
     {
-        // Hanya Manager atau Superintendent yang bisa menutup laporan di Part 9
-        $isAssignedModerator = $user->moderatorAssignments()
-            ->where('event_type_id', $incident->event_type_id)
-            ->where(function (Builder $query) use ($incident) {
+        // Hanya bisa diedit jika status masih Open
+        if ($incident->status !== 'Open') return false;
 
-                // Kriteria A: Penugasan bersifat umum (tidak spesifik pada Department/Contractor)
-                $query->whereNull('department_id')
-                    ->whereNull('contractor_id');
+        return $user->id === $incident->pelapor_id ||
+            $this->isInvestigator($user, $incident);
+    }
+    /**
+     * BAGIAN 3 - 6: Analisis & Investigasi (PEEPO, Timeline, Checklist)
+     * Akses: Khusus Tim Investigasi
+     */
+    public function conductInvestigation(User $user, IncidentReport $incident): bool
+    {
+        return $this->isInvestigator($user, $incident);
+    }
+    /**
+     * BAGIAN 7: Tindakan Perbaikan
+     * Akses: Tim Investigasi (Full) & Assignee (Update Tgl Selesai)
+     */
+    public function manageCorrectiveActions(User $user, IncidentReport $incident): bool
+    {
+        $isAssignee = $incident->correctiveActions()->where('assignee_id', $user->id)->exists();
 
-                // Kriteria B: Penugasan spesifik untuk Department
-                if ($incident->department_id) {
-                    $query->orWhere('department_id', $incident->department_id);
-                }
-
-                // Kriteria C: Penugasan spesifik untuk Contractor
-                if ($incident->contractor_id) {
-                    $query->orWhere('contractor_id', $incident->contractor_id);
-                }
-            })
-            ->exists();
-
-        if ($isAssignedModerator) {
-            return true;
-        }
+        return $this->isInvestigator($user, $incident) || $isAssignee;
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * BAGIAN 8: Kunci Pembelajaran
+     * Akses: Tim Investigasi
      */
-    public function delete(User $user, IncidentReport $incidentReport): bool
+    public function updateLessonsLearned(User $user, IncidentReport $incident): bool
     {
-        return false;
+        return $this->isInvestigator($user, $incident);
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * BAGIAN 9: Penerimaan & Komentar Peninjau
+     * Akses: Manager HSE, Superintendent, atau Management
      */
-    public function restore(User $user, IncidentReport $incidentReport): bool
+    public function reviewReport(User $user, IncidentReport $incident): bool
     {
-        return false;
+        return $user->hasAnyRole(['Manager HSE', 'Superintendent', 'General Manager']);
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Helper: Cek apakah user bagian dari Tim Investigasi
      */
-    public function forceDelete(User $user, IncidentReport $incidentReport): bool
+    private function isInvestigator(User $user, IncidentReport $incident): bool
     {
-        return false;
+        return $incident->investigationTeams()->where('user_id', $user->id)->exists();
     }
+
+    // /**
+    //  * Determine whether the user can update the model.
+    //  */
+    // public function update(User $user, IncidentReport $incidentReport): bool
+    // {
+    //     // 1. Admin HSE selalu boleh
+    //     if ($user->hasRole('Administrator')) return true;
+
+    //     // 2. Jika laporan masih Open, Pembuat (Originator) bisa edit Part 1-2
+    //     if ($incidentReport->status === 'Open' && $user->id === $incidentReport->pelapor_id) {
+    //         return true;
+    //     }
+
+    //     // 3. Tim Investigasi yang terdaftar di Part 3
+    //     // Cek apakah user ID ada dalam relasi investigationTeams
+    //     if ($incidentReport->investigationTeams()->where('user_id', $user->id)->exists()) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    // public function close(User $user, IncidentReport $incident)
+    // {
+    //     $users = $user->hasAnyRole(['Manager HSE', 'Superintendent']);
+
+    //     if ($users) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    // /**
+    //  * Determine whether the user can delete the model.
+    //  */
+    // public function delete(User $user, IncidentReport $incidentReport): bool
+    // {
+    //     return false;
+    // }
+
+    // /**
+    //  * Determine whether the user can restore the model.
+    //  */
+    // public function restore(User $user, IncidentReport $incidentReport): bool
+    // {
+    //     return false;
+    // }
+
+    // /**
+    //  * Determine whether the user can permanently delete the model.
+    //  */
+    // public function forceDelete(User $user, IncidentReport $incidentReport): bool
+    // {
+    //     return false;
+    // }
 }

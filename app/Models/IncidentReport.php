@@ -159,4 +159,23 @@ class IncidentReport extends Model
         // HasOne karena 1 laporan hanya punya 1 penilaian risiko
         return $this->hasOne(IncidentRisk::class, 'incident_report_id');
     }
+
+    public function getManagerReviewerAttribute()
+    {
+        // Mengambil user yang memiliki role Manager/Superintendent di departemen terkait
+        // Atau ambil dari data yang sudah di-assign di Part 9
+        return $this->reviews()->first()?->user?->name ?? 'Belum Ditentukan';
+    }
+    /**
+     * Mendapatkan peninjau terakhir yang mengisi komentar untuk Summary Widget
+     */
+    public function getLatestReviewerAttribute()
+    {
+        if ($this->ktt_id) return $this->ktt->name;
+        if ($this->ohs_head_id) return $this->ohsHead->name;
+        if ($this->pm_internal_id) return $this->pmInternal->name;
+        if ($this->pm_contractor_id) return $this->pmContractor->name;
+
+        return 'Menunggu Peninjau';
+    }
 }

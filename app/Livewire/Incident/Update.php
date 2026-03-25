@@ -22,6 +22,7 @@ use App\Traits\WithDeptContSelection;
 use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -1475,27 +1476,61 @@ class Update extends Component
     }
     public function nextStep()
     {
-        // Validasi hanya field yang ada di step saat ini (misal Step 1)
-        $this->validateOnlyStep($this->currentStep);
+        // 1. Validasi input hanya jika user memang punya hak edit di step saat ini
+        // Jika user hanya 'Read-Only', lewati validasi dan langsung pindah
+        $canEditCurrentStep = $this->checkPolicyForStep($this->currentStep);
 
-        if ($this->currentStep < 9) {
-            $this->currentStep++;
-            // Kirim event ke browser untuk scroll ke atas jika perlu
-            $this->dispatch('scroll-to-top');
+        if ($canEditCurrentStep) {
+            $this->validateCurrentStep(); // Fungsi validasi custom Anda
         }
+
+        // 2. Tentukan target step selanjutnya
+        $next = $this->currentStep + 1;
+
+        // 3. Pastikan user boleh masuk ke step selanjutnya tersebut
+        if ($next <= 9) {
+            $this->goToStep($next);
+        }
+    }
+
+    /**
+     * Helper untuk menyederhanakan pengecekan policy per step
+     */
+    private function checkPolicyForStep($step)
+    {
+        return match (intval($step)) {
+            1, 2      => Gate::allows('updateInitialData', $this->incident),
+            3, 4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
+            7         => Gate::allows('manageCorrectiveActions', $this->incident),
+            8         => Gate::allows('updateLessonsLearned', $this->incident),
+            9         => Gate::allows('reviewReport', $this->incident),
+            default   => false
+        };
     }
     /**
      * Berpindah antar step/part secara langsung
      */
     public function goToStep($step)
     {
-        // Opsional: Validasi minimal sebelum pindah (jika diperlukan)
-        // $this->validateOnlyStep($this->currentStep);
+        // Gunakan match yang sama dengan di Blade untuk konsistensi
+        $canAccess = match (intval($step)) {
+            1, 2      => Gate::allows('updateInitialData', $this->incident),
+            3, 4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
+            7         => Gate::allows('manageCorrectiveActions', $this->incident),
+            8         => Gate::allows('updateLessonsLearned', $this->incident),
+            9         => Gate::allows('reviewReport', $this->incident),
+            default   => false
+        };
+
+        if (!$canAccess) {
+            $this->dispatch('alert', [
+                'type' => 'error',
+                'text' => 'Anda tidak memiliki otoritas untuk mengakses Bagian ' . $step
+            ]);
+            return;
+        }
 
         $this->currentStep = $step;
-
-        // Kirim event ke browser untuk scroll ke atas agar user tidak bingung
-        // saat konten di bawah berubah
         $this->dispatch('scroll-to-top');
     }
 
