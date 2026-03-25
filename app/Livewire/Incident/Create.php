@@ -151,29 +151,25 @@ class Create extends Component
 
     public function rules()
     {
+        // PART 1 & 2: Rules Utama yang WAJIB ada saat Create
         $rules = [
             // PART 1
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description' => 'required|string',
             'location_id' => 'required|exists:locations,id',
-            'location_specific' => 'required_with:location_id|string',
+            'location_specific' => 'required|string',
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
-
-
-
-            // Mutual Exclusion Dept/Contractor
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
             'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
-
             'deptCont' => 'required',
             'keyWord' => 'required',
             'likelihood_id' => 'required',
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
-            // Part 2
+
             // PART 2: Pihak Terlibat Langsung
             'directly_involved' => 'required|array|min:1',
             'directly_involved.*.employee_name' => 'required|string',
@@ -184,106 +180,14 @@ class Create extends Component
             'directly_involved.*.sift'          => 'required',
             'directly_involved.*.keterlibatan'  => 'required',
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
-            // PART 3: Tim Investigasi
-            'pemimpin' => 'required|array|min:1',
-            'pemimpin.*.user_id' => 'required',
-            'pemimpin.*.dept'    => 'required|string',
-            'pemimpin.*.jabatan' => 'required|string',
 
-            'facilitator' => 'required|array|min:1',
-            'facilitator.*.user_id' => 'required',
-            'facilitator.*.dept'    => 'required|string',
-            'facilitator.*.jabatan' => 'required|string',
-
-            'anggota' => 'required|array|min:1',
-            'anggota.*.user_id' => 'required',
-            'anggota.*.dept'    => 'required|string',
-            'anggota.*.jabatan' => 'required|string',
-            // PART 4: PEEPO (Analisis Faktor)
-            'peepo.orang.temuan'      => 'required|string|min:3',
-            'peepo.orang.deskripsi'   => 'required|string|min:5',
-
-            'peepo.peralatan.temuan'    => 'required|string|min:3',
-            'peepo.peralatan.deskripsi' => 'required|string|min:5',
-
-            'peepo.lingkungan.temuan'   => 'required|string|min:3',
-            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
-
-            'peepo.prosedur.temuan'     => 'required|string|min:3',
-            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
-
-            'peepo.organisasi.temuan'   => 'required|string|min:3',
-            'peepo.organisasi.deskripsi' => 'required|string|min:5',
-            // PART 5: Timeline & Why Analysis
-            'why_analysis' => 'required|array',
-            // Part 6
-            // Validasi Kondisi Tidak Aman
-            'unsafe_conditions.*.item' => 'required',
-            'unsafe_conditions.*.description' => 'required|string|min:5',
-
-            // Validasi Perilaku Tidak Aman
-            'unsafe_acts.*.item' => 'required',
-            'unsafe_acts.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pribadi
-            'personal_factors.*.item' => 'required',
-            'personal_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pekerjaan
-            'job_factors.*.item' => 'required',
-            'job_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Kelemahan Sistem Kontrol
-            'control_system_factors.*.item' => 'required',
-            'control_system_factors.*.description' => 'required|string|min:5',
-            // Part 7
-            'visual_evidence' => 'required|array|min:1',
-
-            // Validasi tiap file di dalam array (Ukuran dan Tipe)
-            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
-
-            'supporting_documents' => 'required|array|min:1',
-            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
-            'corrective_actions.*.action_description' => 'required|string|min:10',
-            'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            'corrective_actions.*.pic_user_id'         => 'required|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
-            'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            'corrective_actions.*.actual_completion_date' => [
-                'nullable',
-                'date',
-                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
-                'after_or_equal:corrective_actions.*.due_date'
-            ],
-            // Part 8
-            'key_learning' => 'required|string|min:10',
-            // Part 9
-            'penerimaan_komentar_contractor_id' => 'required|exists:users,id',
-            'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
-            'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
-            'penerimaan_komentar_contractor'    => 'required|min:11',
-            'penerimaan_komentar_internal'      => 'required|min:11',
-            'penerimaan_komentar_ohs'           => 'required|min:11',
-
-            // LOGIKA KONDISIONAL BERDASARKAN isInjury
+            // Logika Kondisional Injury / Damage
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
 
-        // Tambahkan Logika KTT di sini agar terbaca secara global
-        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
-            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
-        }
 
-
-        // PERBAIKAN DI SINI:
-        // Gunakan $rules, bukan $attributes.
-        // Dan pastikan key-nya sesuai dengan data binding Anda.
-        foreach (range(1, $this->whyCount) as $i) {
-            $rules["why_analysis.why{$i}"] = 'required|string|min:3';
-        }
 
         return $rules;
     }
@@ -293,7 +197,6 @@ class Create extends Component
     protected function validationAttributes()
     {
         $attributes = [
-            // Part 1
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
@@ -302,27 +205,19 @@ class Create extends Component
             'location_id'       => __('Lokasi Utama'),
             'location_specific' => __('Detail Lokasi Spesifik'),
             'date_time'         => __('Tanggal dan Waktu'),
-
-            // KTA & TTA
-
-            'keyWord'             => __('Jenis Bahaya'),
-
-            // Organisasi
-            'department_id'   => __('Departemen'),
-            'contractor_id'   => __('Perusahaan Kontraktor'),
-            'deptCont'        => __('Pihak Terlibat'),
-            'penanggungJawab' => __('PIC / Penanggung Jawab'),
-
-            // Risiko & Tindakan
-            'likelihood_id'    => __('Kemungkinan (Likelihood)'),
-            'consequence_id'   => __('Konsekuensi (Consequence)'),
-            'emergency_action' => __('Tindakan Darurat'),
-
-            // Kondisional Injury / Damage
+            'keyWord'           => __('Jenis Bahaya'),
+            'department_id'     => __('Departemen'),
+            'contractor_id'     => __('Perusahaan Kontraktor'),
+            'deptCont'          => __('Pihak Terlibat'),
+            'penanggungJawab'   => __('PIC / Penanggung Jawab'),
+            'likelihood_id'     => __('Kemungkinan (Likelihood)'),
+            'consequence_id'    => __('Konsekuensi (Consequence)'),
+            'emergency_action'  => __('Tindakan Darurat'),
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
             'selectedBodyPart'         => __('Detail Bagian Tubuh'),
-            'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
-            // PART 2 (Dynamic Label)
+            'damage_detail'            => __('Detail Kerusakan'),
+
+            // Part 2
             'directly_involved.*.employee_name' => __('Nama Personel'),
             'directly_involved.*.employee_nik'  => __('NIK/ID'),
             'directly_involved.*.dept_cont'     => __('Departemen/Perusahaan'),
@@ -331,101 +226,39 @@ class Create extends Component
             'directly_involved.*.sift'          => __('Shift'),
             'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
             'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
-            // Part 3
-            'pemimpin.*.user_id' => __('Nama Pemimpin'),
-            'pemimpin.*.dept'    => __('Departemen Pemimpin'),
-            'pemimpin.*.jabatan' => __('Jabatan Pemimpin'),
-
-            'facilitator.*.user_id' => __('Nama Facilitator'),
-            'facilitator.*.dept'    => __('Departemen Facilitator'),
-            'facilitator.*.jabatan' => __('Jabatan Facilitator'),
-
-            'anggota.*.user_id' => __('Nama Anggota'),
-            'anggota.*.dept'    => __('Departemen Anggota'),
-            'anggota.*.jabatan' => __('Jabatan Anggota'),
-            // Part 5: Atribut Dinamis untuk Why
-            'why_analysis' => __('Analisis Mengapa'),
-            // Part 7
-            // Validasi Dokumen Pendukung (Multiple)
-            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // Tindakan Perbaikan (Corrective Actions)
-            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
-            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
-            'corrective_actions.*.pic_user_id.required'               => __('PIC wajib dipilih.'),
-            'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
-            'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
-
-            // Part 9
-            'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
-            'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
-            'penerimaan_komentar_ohs_id'        => __('Penanggung Jawab OHS'),
-            'penerimaan_komentar_contractor'    => __('Komentar Kontraktor'),
-            'penerimaan_komentar_internal'      => __('Komentar Internal'),
-            'penerimaan_komentar_ohs'           => __('Komentar OHS'),
-            'penerimaan_komentar_ktt'           => __('Komentar KTT'),
-
         ];
 
-        // Tambahkan atribut dinamis untuk PEEPO
-        foreach ($this->peepoFactors as $key => $label) {
-            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
-            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
-        }
 
-        // Loop untuk membuat label yang dinamis dan user-friendly
-        foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
-            foreach ($this->$key as $index => $row) {
-                $rowNum = $index + 1;
-                $label = str_replace('_', ' ', ucwords($key, '_'));
-                $attributes["$key.$index.item"] = __("$label Baris $rowNum");
-                $attributes["$key.$index.description"] = __("Deskripsi $label Baris $rowNum");
-            }
-        }
         return $attributes;
     }
 
     public function updated($propertyName)
     {
-        // 1. Logika Bisnis: Update otomatis Status/Progress
-        // Jalankan ini DI AWAL agar perubahan properti langsung tercermin di class
-        if (str_contains($propertyName, 'corrective_actions')) {
-            $parts = explode('.', $propertyName);
-
-            if (isset($parts[1]) && isset($parts[2]) && $parts[2] === 'actual_completion_date') {
-                $index = $parts[1];
-
-                if (!empty($this->corrective_actions[$index]['actual_completion_date'])) {
-                    $this->corrective_actions[$index]['status'] = 'Selesai';
-                    $this->corrective_actions[$index]['progress'] = 100;
-                } else {
-                    $this->corrective_actions[$index]['status'] = 'Belum Selesai';
-                    $this->corrective_actions[$index]['progress'] = 0;
-                }
-                $this->dispatch('refresh-component');
-            }
-        }
-
-        // 2. Simpan ke Session
-        // Gunakan fungsi helper saveToSession yang sudah Anda buat agar kode tidak duplikat
+        // 1. Simpan ke Session setiap ada perubahan
         $this->saveToSession();
 
-        // 3. Validasi Kondisional
+        // 2. Validasi Real-time
+        // Khusus untuk event_type_id, validasi juga field dampak karena saling bergantung
         if ($propertyName === 'event_type_id') {
             $this->validateOnly('selectedBodyPartCategory');
             $this->validateOnly('selectedBodyPart');
             $this->validateOnly('damage_detail');
         }
 
-        // 4. Validasi Standar (Real-time feedback)
-        $this->validateOnly($propertyName);
+        // Validasi field yang sedang diubah
+        try {
+            $this->validateOnly($propertyName);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Biarkan Livewire menangani error display
+        }
     }
 
     protected function saveToSession()
     {
+        // Mengambil data property penting saja untuk session
         $data = $this->all();
-        $data['whyCount'] = $this->whyCount;
-        // Hapus file dan properti yang tidak bisa diserialisasi
+
+        // Hapus objek yang tidak bisa diserialisasi (File Uploads)
         unset(
             $data['visual_evidence'],
             $data['supporting_documents'],
@@ -475,12 +308,16 @@ class Create extends Component
     }
 
     public $currentStep = 1; // Pastikan dimulai dari 1
-    public $totalSteps = 9;
+    public $totalSteps = 2;
 
     public function validateCurrentStep()
     {
-        $fields = [];
+        // Jika mencoba validasi step investigasi di mode create, hentikan.
+        if (!$this->isEdit && $this->currentStep > 2) {
+            return;
+        }
 
+        $fields = [];
         switch ($this->currentStep) {
             case 1:
                 $fields = [
@@ -491,7 +328,6 @@ class Create extends Component
                     'location_specific',
                     'date_time',
                     'pelapor_id',
-
                     'department_id',
                     'contractor_id',
                     'deptCont',
@@ -507,7 +343,6 @@ class Create extends Component
                 break;
 
             case 2:
-                // Tambahkan field untuk Part 2 (Saksi, korban, dll)
                 $fields = [
                     'directly_involved',
                     'directly_involved.*.employee_name',
@@ -520,95 +355,16 @@ class Create extends Component
                     'directly_involved.*.pengalaman_kerja',
                 ];
                 break;
-            case 3:
-                $fields = [
-                    'pemimpin',
-                    'pemimpin.*.user_id',
-                    'pemimpin.*.dept',
-                    'pemimpin.*.jabatan',
-                    'facilitator',
-                    'facilitator.*.user_id',
-                    'facilitator.*.dept',
-                    'facilitator.*.jabatan',
-                    'anggota',
-                    'anggota.*.user_id',
-                    'anggota.*.dept',
-                    'anggota.*.jabatan',
-                ];
-                break;
-            case 4:
-                $fields = [];
-                foreach (array_keys($this->peepoFactors) as $key) {
-                    $fields[] = "peepo.$key.temuan";
-                    $fields[] = "peepo.$key.deskripsi";
-                }
-                break;
-            case 5:
-                // Hapus 'timelines.*.kejadian' karena kita tidak pakai baris timeline lagi
-                $fields = [];
-
-                // Daftarkan semua kolom why yang aktif di dalam properti why_analysis
-                for ($i = 1; $i <= $this->whyCount; $i++) {
-                    $fields[] = "why_analysis.why{$i}";
-                }
-                break;
-            case 6:
-                $fields = [
-                    'unsafe_conditions.*.item',
-                    'unsafe_conditions.*.description',
-                    'unsafe_acts.*.item',
-                    'unsafe_acts.*.description',
-                    'personal_factors.*.item',
-                    'personal_factors.*.description',
-                    'job_factors.*.item',
-                    'job_factors.*.description',
-                    'control_system_factors.*.item',
-                    'control_system_factors.*.description',
-                ];
-                break;
-            case 7:
-                $fields = [
-                    'visual_evidence',
-                    'visual_evidence.*',
-                    'supporting_documents',
-                    'supporting_documents.*',
-
-                    // Tabel Tindakan Perbaikan
-                    'corrective_actions.*.action_description',
-                    'corrective_actions.*.control_hierarchy',
-                    // REVISI: Samakan dengan properti yang menyimpan ID User (bukan Nama)
-                    'corrective_actions.*.pic_user_id',
-                    'corrective_actions.*.due_date',
-                    // Tambahkan ini jika Anda mewajibkan tanggal selesai diisi di Step 7
-                    // 'corrective_actions.*.actual_completion_date',
-                ];
-                break;
-            case 8:
-                $fields = [
-                    'key_learning'
-                ];
-                $this->dispatch('validate-key_learning');
-                break;
-            case 9:
-                $fields = [
-                    'penerimaan_komentar_contractor_id',
-                    'penerimaan_komentar_internal_id',
-                    'penerimaan_komentar_ohs_id',
-                    'penerimaan_komentar_contractor',
-                    'penerimaan_komentar_internal',
-                    'penerimaan_komentar_ohs'
-                ];
-                break;
         }
 
         if (!empty($fields)) {
-            // Pastikan rules() adalah PUBLIC
             $allRules = $this->rules();
-
-            // Filter rules hanya untuk field yang ada di step aktif
-            $stepRules = array_intersect_key($allRules, array_flip($fields));
-
-            // Validasi dengan atribut dan pesan custom
+            $stepRules = [];
+            foreach ($fields as $field) {
+                if (isset($allRules[$field])) {
+                    $stepRules[$field] = $allRules[$field];
+                }
+            }
             $this->validate($stepRules, $this->messages(), $this->validationAttributes());
         }
     }
@@ -1447,7 +1203,7 @@ class Create extends Component
     }
     public function save()
     {
-        // 1. Jalankan Validasi Global
+        // 1. Jalankan Validasi Global (Hanya akan memvalidasi field yang ada di rules)
         $this->validate();
 
         try {
@@ -1455,77 +1211,39 @@ class Create extends Component
                 $data = $this->prepareArrayData();
 
                 // A. Simpan Header Utama (Incident Report)
+                // Catatan: scat_analysis kosong karena diinput saat Update
                 $report = IncidentReport::create(array_merge(
                     $data['header'],
-                    ['scat_analysis' => $data['penyebab_insiden']] // Simpan data SCAT di sini
+                    ['scat_analysis' => null]
                 ));
 
+                // B. Simpan Risk Assessment
                 $report->risk()->create($data['risk_assessment']);
 
-                // B. Simpan Detail Dampak (Injury vs Damage) - model IncidentImpact
+                // C. Simpan Detail Dampak (Injury vs Damage)
                 $report->impact()->create([
-                    'is_injury'    => $data['impact_details']['is_injury'],
-                    'body_part_id' => $data['impact_details']['is_injury'] ? $data['impact_details']['injury_data']['part_id'] : null,
+                    'is_injury'     => $data['impact_details']['is_injury'],
+                    'body_part_id'  => $data['impact_details']['is_injury'] ? $data['impact_details']['injury_data']['part_id'] : null,
                     'damage_detail' => !$data['impact_details']['is_injury'] ? $data['impact_details']['damage_data']['detail'] : null,
                 ]);
 
-                // C. Simpan Personel Terlibat (Part 2) - model InvolvedPerson
+                // D. Simpan Personel Terlibat (Hanya Part 2)
                 $report->involvedPersons()->createMany($data['pihak_terlibat']);
 
-                // D. Simpan Tim Investigasi (Part 3) - model InvestigationTeam
-                $report->investigationTeams()->createMany($data['tim_investigasi']);
-
-                // E. Simpan Analisis PEEPO (Part 4) - model PeepoAnalysis
-                $report->peepoAnalyses()->createMany($data['analisis_peepo']);
-
-                // F. Simpan Timeline & 5-Whys (Part 5) - model TimelineAnalysis
-                $report->timelines()->create([
-                    'original_description' => $data['analysis_timeline']['original_description'],
-                    'why_count_used'       => $data['analysis_timeline']['why_count_used'],
-                    'analysis_steps'       => $data['analysis_timeline']['analysis_steps'], // Ini mapping yang benar
-                ]);
-
-                // G. Simpan Tindakan Perbaikan (Part 7) - model CorrectiveAction
-                $report->correctiveActions()->createMany($data['tindakan_perbaikan']);
-
-                // H. Proses Upload Dokumentasi (Part 7) - model IncidentAttachment
-                // Dokumentasi Visual (Foto/Gambar)
-                if ($this->visual_evidence) {
-                    foreach ($this->visual_evidence as $file) {
-                        $path = $file->store('incident/visuals', 'public');
-                        $report->attachments()->create([
-                            'file_path' => $path,
-                            'file_name' => $file->getClientOriginalName(),
-                            'file_type' => 'visual'
-                        ]);
-                    }
-                }
-
-                // Dokumen Pendukung (PDF/Doc)
-                if ($this->supporting_documents) {
-                    foreach ($this->supporting_documents as $doc) {
-                        $path = $doc->store('incident/documents', 'public');
-                        $report->attachments()->create([
-                            'file_path' => $path,
-                            'file_name' => $doc->getClientOriginalName(),
-                            'file_type' => 'document'
-                        ]);
-                    }
-                }
+                // Part 3-9 dilewati karena diisi pada tahap Investigasi/Update
 
                 return $report;
             });
 
-            // === HAPUS SESSION DI SINI ===
-            // Karena data sudah masuk DB, kita tidak butuh draft lagi
+            // Hapus Session draft
             session()->forget('incident_data');
             $this->reset();
 
-            // 3. Feedback Berhasil
+            // Feedback Berhasil
             $this->dispatch('alert', [
-                'text' => "Laporan " . $result->report_number . " berhasil dikirim!",
+                'text' => "Laporan " . $result->report_number . " berhasil dibuat!",
                 'duration' => 5000,
-                'destination' => '/incident/show/' . $result->id, // Arahkan ke detail laporan
+                'destination' => '/incident/show/' . $result->id,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -1534,12 +1252,9 @@ class Create extends Component
             $this->goToStepByField($firstErrorField);
             throw $e;
         } catch (\Exception $e) {
-            // Log error untuk mempermudah debugging sistem SENTRY
-            Log::error('Gagal menyimpan Incident Report: ' . $e->getMessage());
-            $errorMessage = "Gagal menyimpan laporan: " . $e->getMessage();
-
+            Log::error('Gagal menyimpan Incident Report SENTRY: ' . $e->getMessage());
             $this->dispatch('alert', [
-                'text' => $errorMessage,
+                'text' => "Gagal menyimpan: " . $e->getMessage(),
                 'duration' => 7000,
                 'backgroundColor' => "background: #f44336;",
             ]);
@@ -1553,10 +1268,11 @@ class Create extends Component
         $lastReport = IncidentReport::latest()->first();
         $nextId = $lastReport ? $lastReport->id + 1 : 1;
         $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
         return [
-            // KELOMPOK 1: INFORMASI DASAR (Header)
+            // PART 1: INFORMASI DASAR
             'header' => [
-                'report_number'     => $reportNumber, // <--- TAMBAHKAN INI
+                'report_number'     => $reportNumber,
                 'event_type_id'     => $this->event_type_id,
                 'event_sub_type_id' => $this->event_sub_type_id,
                 'date_time'         => $this->date_time,
@@ -1564,167 +1280,67 @@ class Create extends Component
                 'location_specific' => $this->location_specific,
                 'department_id'     => $this->department_id,
                 'contractor_id'     => $this->contractor_id,
-                'penanggungJawab'  => $this->penanggungJawab,
+                'penanggungJawab'   => $this->penanggungJawab,
                 'pelapor_id'        => $this->pelapor_id,
                 'manual_pelapor'    => $this->manualPelaporName,
-                'description'       => $this->description, // 5W+1H
+                'description'       => $this->description,
                 'emergency_action'  => $this->emergency_action,
-                // DATA DARI PART 8 (Key Learning)
-                'key_learning'  => $this->key_learning,
-                // PART 9: KOMENTAR & APPROVAL
-                'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
-                'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
-
-                'pm_internal_comment'   => $this->penerimaan_komentar_internal,
-                'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
-
-                'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
-                'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
-
-                // Logika kondisional KTT (Hanya Level 3, 4, 5)
-                'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
-                    ? $this->penerimaan_komentar_ktt : null,
-                'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
-                    ? $this->penerimaan_komentar_ktt_id : null,
+                // Null-kan field investigasi untuk pembuatan awal
+                'key_learning'      => null,
             ],
 
-            // KELOMPOK 2: RISK MATRIX INTEGRATION
+            // RISK MATRIX
             'risk_assessment' => [
                 'likelihood_id'  => $this->likelihood_id,
                 'consequence_id' => $this->consequence_id,
-                // Data tambahan dari model RiskAssessment yang tampil di UI
                 'rating_name'    => $this->RiskAssessment?->name,
                 'deadline'       => $this->RiskAssessment?->notes,
             ],
 
-            // KELOMPOK 3: KATEGORI BAHAYA & DAMPAK (Injury vs Damage)
+            // IMPACT DETAILS
             'impact_details' => [
-                // Logika isInjury
-                'is_injury'     => $this->isInjury,
-                'injury_data'   => $this->isInjury ? [
-                    'category' => $this->selectedBodyPartCategory,
-                    'part_id'  => $this->selectedBodyPart,
+                'is_injury'   => $this->isInjury,
+                'injury_data' => $this->isInjury ? [
+                    'part_id' => $this->selectedBodyPart,
                 ] : null,
-
-                'damage_data'   => !$this->isInjury ? [
-                    'detail'   => $this->damage_detail,
+                'damage_data' => !$this->isInjury ? [
+                    'detail'  => $this->damage_detail,
                 ] : null,
             ],
 
-            // KELOMPOK PART 2: PERSONEL TERLIBAT LANGSUNG
-            'pihak_terlibat' => collect($this->directly_involved)->map(function ($person, $index) {
+            // PART 2: PERSONEL TERLIBAT
+            'pihak_terlibat' => collect($this->directly_involved)->map(function ($person) {
                 return [
-                    'employee_id'      => $person['employee_id'] ?? null, // ID dari DB jika ada
+                    'employee_id'      => $person['employee_id'] ?? null,
                     'employee_name'    => $person['employee_name'],
                     'employee_nik'     => $person['employee_nik'],
                     'dept_cont'        => $person['dept_cont'],
                     'jabatan'          => $person['jabatan'],
                     'roster'           => $person['roster'],
-                    'shift'            => $person['sift'], // Sesuaikan typo 'sift' dari model Anda
+                    'shift'            => $person['sift'], // tetap menggunakan 'sift' sesuai model
                     'keterlibatan'     => $person['keterlibatan'],
                     'pengalaman_kerja' => $person['pengalaman_kerja'],
                 ];
             })->toArray(),
-
-            // KELOMPOK PART 3: TIM INVESTIGASI
-            'tim_investigasi' => collect()
-                ->concat(collect($this->pemimpin)->map(fn($item) => array_merge($item, ['role' => 'Pemimpin'])))
-                ->concat(collect($this->facilitator)->map(fn($item) => array_merge($item, ['role' => 'Facilitator'])))
-                ->concat(collect($this->anggota)->map(fn($item) => array_merge($item, ['role' => 'Anggota'])))
-                ->map(function ($member) {
-                    return [
-                        'user_id' => $member['user_id'],
-                        'dept'    => $member['dept'],
-                        'jabatan' => $member['jabatan'],
-                        'role'    => $member['role'],
-                    ];
-                })->toArray(),
-
-            // KELOMPOK PART 4: ANALISIS PEEPO
-            'analisis_peepo' => collect($this->peepoFactors)->map(function ($label, $key) {
-                return [
-                    'factor_name' => $label, // e.g., People, Equipment
-                    'factor_key'  => $key,   // e.g., P, E, E, P, O
-                    'temuan'      => $this->peepo[$key]['temuan'] ?? null,
-                    'deskripsi'   => $this->peepo[$key]['deskripsi'] ?? null,
-                ];
-            })->values()->toArray(),
-
-
-            // KELOMPOK PART 5: 5-WHYS ANALYSIS (Single Row)
-            'analysis_timeline' => [
-                'original_description' => $this->description,
-                'why_count_used'       => $this->whyCount,
-                // Menggabungkan semua why1, why2... ke dalam satu array/JSON
-                'analysis_steps'       => $this->why_analysis,
-            ],
-
-            // KELOMPOK PART 6: ANALISIS PENYEBAB (SCAT)
-            'penyebab_insiden' => [
-                // 1. PENYEBAB LANGSUNG
-                'langsung' => [
-                    'kondisi_tidak_aman' => $this->unsafe_conditions,
-                    'perilaku_tidak_aman' => $this->unsafe_acts,
-                ],
-
-                // 2. PENYEBAB DASAR
-                'dasar' => [
-                    'faktor_pribadi'   => $this->personal_factors,
-                    'faktor_pekerjaan' => $this->job_factors,
-                    'sistem_kontrol'   => $this->control_system_factors,
-                ],
-            ],
-
-            // KELOMPOK PART 7: DOKUMENTASI & TINDAKAN PERBAIKAN
-            'dokumentasi' => [
-                'visual_evidence'      => $this->visual_evidence, // Pastikan diproses dengan store() nanti
-                'supporting_documents' => $this->supporting_documents,
-            ],
-
-            'tindakan_perbaikan' => collect($this->corrective_actions)->map(function ($action) {
-                return [
-                    'action_description'     => $action['action_description'],
-                    'hierarchy'       => $action['control_hierarchy'],
-                    'pic_user_id'     => $action['pic_user_id'], // ID dari searchable select
-                    'due_date'        => $action['due_date'],
-                    'completion_date' => $action['actual_completion_date'] ?? null,
-                    'status'          => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
-                ];
-            })->toArray(),
-
-
         ];
     }
     private function goToStepByField($field)
     {
-        // Mapping field ke Part/Step yang sesuai
-        // Sesuaikan dengan name field yang ada di Part 1 - 9 Anda
         if (in_array($field, [
-            // 1. Tipe & Jenis
             'event_type_id',
             'event_sub_type_id',
-
-            // 2. Waktu & Lokasi
             'date_time',
             'location_id',
             'location_specific',
-
-            // 3. Organisasi & PIC
             'department_id',
             'contractor_id',
             'penanggungJawab',
             'pelapor_id',
             'manualPelaporName',
-
-            // 4. Integrasi Risk Matrix
             'consequence_id',
             'likelihood_id',
-
-            // 5. Narasi & Tindakan Segera
             'description',
             'emergency_action',
-
-            // 6. Dampak (Injury vs Damage)
             'selectedBodyPartCategory',
             'selectedBodyPart',
             'damage_detail'
@@ -1732,95 +1348,41 @@ class Create extends Component
             $this->currentStep = 1;
         } elseif (str_starts_with($field, 'directly_involved')) {
             $this->currentStep = 2;
-        } elseif (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) {
-            $this->currentStep = 3;
-        } elseif (str_starts_with($field, 'peepo')) {
-            $this->currentStep = 4;
-        } elseif (str_starts_with($field, 'timelines')) {
-            $this->currentStep = 5;
-        } elseif (collect([
-            'unsafe',
-            'personal_factors',
-            'job_factors',
-            'control_system_factors'
-        ])->some(fn($p) => str_starts_with($field, $p))) {
-            $this->currentStep = 6;
-        } elseif (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) {
-            $this->currentStep = 7;
-        } elseif ($field === 'key_learning') {
-            $this->currentStep = 8;
-        } elseif (str_starts_with($field, 'penerimaan_komentar')) {
-            $this->currentStep = 9;
         }
 
-        // Scroll ke atas agar user sadar ada yang error
         $this->dispatch('scroll-to-top');
     }
-    /**
-     * Memeriksa apakah suatu field error berada di step tertentu.
-     * Digunakan untuk indikator error di UI (Tab/Collapse).
-     */
+
     public function isFieldInStep($step, $errorFields)
     {
-        // Ambil semua key field yang sedang error
         $fields = array_keys($errorFields);
 
         foreach ($fields as $field) {
-            switch ($step) {
-                case 1:
-                    $step1Fields = [
-                        'event_type_id',
-                        'event_sub_type_id',
-                        'date_time',
-                        'location_id',
-                        'location_specific',
-                        'department_id',
-                        'contractor_id',
-                        'penanggungJawab',
-                        'pelapor_id',
-                        'manualPelaporName',
-                        'consequence_id',
-                        'likelihood_id',
-                        'description',
-                        'emergency_action',
-                        'selectedBodyPartCategory',
-                        'selectedBodyPart',
-                        'damage_detail'
-                    ];
-                    if (in_array($field, $step1Fields)) return true;
-                    break;
+            if ($step == 1) {
+                $step1Fields = [
+                    'event_type_id',
+                    'event_sub_type_id',
+                    'date_time',
+                    'location_id',
+                    'location_specific',
+                    'department_id',
+                    'contractor_id',
+                    'penanggungJawab',
+                    'pelapor_id',
+                    'manualPelaporName',
+                    'consequence_id',
+                    'likelihood_id',
+                    'description',
+                    'emergency_action',
+                    'selectedBodyPartCategory',
+                    'selectedBodyPart',
+                    'damage_detail'
+                ];
+                if (in_array($field, $step1Fields)) return true;
+            }
 
-                case 2:
-                    if (str_starts_with($field, 'directly_involved')) return true;
-                    break;
-
-                case 3:
-                    if (collect(['pemimpin', 'facilitator', 'anggota'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    break;
-
-                case 4:
-                    if (str_starts_with($field, 'peepo')) return true;
-                    break;
-
-                case 5:
-                    if (str_starts_with($field, 'timelines')) return true;
-                    break;
-
-                case 6:
-                    if (collect(['unsafe', 'personal_factors', 'job_factors', 'control_system_factors'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    break;
-
-                case 7:
-                    if (collect(['visual_evidence', 'supporting_documents', 'corrective_actions'])->some(fn($p) => str_starts_with($field, $p))) return true;
-                    break;
-
-                case 8:
-                    if ($field === 'key_learning') return true;
-                    break;
-
-                case 9:
-                    if (str_starts_with($field, 'penerimaan_komentar')) return true;
-                    break;
+            if ($step == 2) {
+                if (str_starts_with($field, 'directly_involved')) return true;
             }
         }
 
