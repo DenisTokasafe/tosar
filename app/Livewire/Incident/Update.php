@@ -1478,6 +1478,146 @@ class Update extends Component
             'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
+    public function validateCurrentStep()
+    {
+        $fields = [];
+
+        switch ($this->currentStep) {
+            case 1:
+                $fields = [
+                    'event_type_id',
+                    'event_sub_type_id',
+                    'description',
+                    'location_id',
+                    'location_specific',
+                    'date_time',
+                    'pelapor_id',
+
+                    'department_id',
+                    'contractor_id',
+                    'deptCont',
+                    'keyWord',
+                    'likelihood_id',
+                    'consequence_id',
+                    'emergency_action',
+                    'penanggungJawab',
+                    'selectedBodyPartCategory',
+                    'selectedBodyPart',
+                    'damage_detail'
+                ];
+                break;
+
+            case 2:
+                // Tambahkan field untuk Part 2 (Saksi, korban, dll)
+                $fields = [
+                    'directly_involved',
+                    'directly_involved.*.employee_name',
+                    'directly_involved.*.employee_nik',
+                    'directly_involved.*.dept_cont',
+                    'directly_involved.*.jabatan',
+                    'directly_involved.*.roster',
+                    'directly_involved.*.sift',
+                    'directly_involved.*.keterlibatan',
+                    'directly_involved.*.pengalaman_kerja',
+                ];
+                break;
+            case 3:
+                $fields = [
+                    'pemimpin',
+                    'pemimpin.*.user_id',
+                    'pemimpin.*.dept',
+                    'pemimpin.*.jabatan',
+                    'facilitator',
+                    'facilitator.*.user_id',
+                    'facilitator.*.dept',
+                    'facilitator.*.jabatan',
+                    'anggota',
+                    'anggota.*.user_id',
+                    'anggota.*.dept',
+                    'anggota.*.jabatan',
+                ];
+                break;
+            case 4:
+                $fields = [];
+                foreach (array_keys($this->peepoFactors) as $key) {
+                    $fields[] = "peepo.$key.temuan";
+                    $fields[] = "peepo.$key.deskripsi";
+                }
+                break;
+            case 5:
+                // Hapus 'timelines.*.kejadian' karena kita tidak pakai baris timeline lagi
+                $fields = [];
+
+                // Daftarkan semua kolom why yang aktif di dalam properti why_analysis
+                for ($i = 1; $i <= $this->whyCount; $i++) {
+                    $fields[] = "why_analysis.why{$i}";
+                }
+                break;
+            case 6:
+                $fields = [
+                    'unsafe_conditions.*.item',
+                    'unsafe_conditions.*.description',
+                    'unsafe_acts.*.item',
+                    'unsafe_acts.*.description',
+                    'personal_factors.*.item',
+                    'personal_factors.*.description',
+                    'job_factors.*.item',
+                    'job_factors.*.description',
+                    'control_system_factors.*.item',
+                    'control_system_factors.*.description',
+                ];
+                break;
+            case 7:
+                $fields = [
+                    'visual_evidence',
+                    'visual_evidence.*',
+                    'supporting_documents',
+                    'supporting_documents.*',
+
+                    // Tabel Tindakan Perbaikan
+                    'corrective_actions.*.action_description',
+                    'corrective_actions.*.control_hierarchy',
+                    // REVISI: Samakan dengan properti yang menyimpan ID User (bukan Nama)
+                    'corrective_actions.*.pic_user_id',
+                    'corrective_actions.*.due_date',
+                    // Tambahkan ini jika Anda mewajibkan tanggal selesai diisi di Step 7
+                    // 'corrective_actions.*.actual_completion_date',
+                ];
+                break;
+            case 8:
+                $fields = [
+                    'key_learning'
+                ];
+                $this->dispatch('validate-key_learning');
+                break;
+            case 9:
+                $fields = [
+                    'penerimaan_komentar_contractor_id',
+                    'penerimaan_komentar_internal_id',
+                    'penerimaan_komentar_ohs_id',
+                    'penerimaan_komentar_contractor',
+                    'penerimaan_komentar_internal',
+                    'penerimaan_komentar_ohs'
+                ];
+                // Tambahkan field KTT ke dalam daftar fields jika level 3, 4, atau 5
+                if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+                    // Masukkan ke daftar fields agar dikenali sistem
+                    $fields[] = 'penerimaan_komentar_ktt_id';
+                    $fields[] = 'penerimaan_komentar_ktt';
+                }
+        }
+
+        if (!empty($fields)) {
+            // Pastikan rules() adalah PUBLIC
+            $allRules = $this->rules();
+
+            // Filter rules hanya untuk field yang ada di step aktif
+            $stepRules = array_intersect_key($allRules, array_flip($fields));
+
+            // Validasi dengan atribut dan pesan custom
+            $this->validate($stepRules, $this->messages(), $this->validationAttributes());
+        }
+    }
     public function nextStep()
     {
         // 1. Validasi input hanya jika user memang punya hak edit di step saat ini
