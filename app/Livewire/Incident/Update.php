@@ -297,7 +297,7 @@ class Update extends Component
         ];
 
         // Tambahkan Logika KTT di sini agar terbaca secara global
-        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+        if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
@@ -729,7 +729,7 @@ class Update extends Component
         $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
         $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
 
-        if (in_array((int)$report->consequence_id, [3, 4, 5])) {
+        if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
             $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
             $this->penerimaan_komentar_ktt       = $report->ktt_comment;
             $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
@@ -1432,7 +1432,7 @@ class Update extends Component
     public function updatedConsequenceId()
     {
         $this->loadRiskAssessment();
-        if (!in_array($this->consequence_id, [3, 4, 5])) {
+        if (!in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
             $this->penerimaan_komentar_ktt_id = null;
             $this->penerimaan_komentar_ktt = '';
 
@@ -1623,7 +1623,7 @@ class Update extends Component
                     'penerimaan_komentar_ohs'
                 ];
                 // Tambahkan field KTT ke dalam daftar fields jika level 3, 4, atau 5
-                if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+                if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
                     // Masukkan ke daftar fields agar dikenali sistem
                     $fields = ['penerimaan_komentar_ktt_id', 'penerimaan_komentar_ktt'];
                 }
@@ -1715,7 +1715,7 @@ class Update extends Component
                 'damage_detail' => $allRules['damage_detail']
             ];
 
-        $kttRules = in_array((int)$this->consequence_id, [3, 4, 5])
+        $kttRules = in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])
             ? [
                 'penerimaan_komentar_ktt_id' => $allRules['penerimaan_komentar_ktt_id'],
                 'penerimaan_komentar_ktt' => $allRules['penerimaan_komentar_ktt']
@@ -1961,8 +1961,8 @@ class Update extends Component
                     'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
 
                     // Logika kondisional KTT (Hanya Level 3, 4, 5)
-                    'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5]) ? $this->penerimaan_komentar_ktt : null,
-                    'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5]) ? $this->penerimaan_komentar_ktt_id : null,
+                    'ktt_comment'           => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim']) ? $this->penerimaan_komentar_ktt : null,
+                    'ktt_id'                => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim']) ? $this->penerimaan_komentar_ktt_id : null,
                 ]);
                 // 2. UPDATE RELASI RISK ASSESSMENT
                 // Menggunakan updateOrCreate agar jika data belum ada di tabel relasi, akan dibuat baru
