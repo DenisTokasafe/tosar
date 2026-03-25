@@ -1428,6 +1428,22 @@ class Update extends Component
     public function updatedConsequenceId()
     {
         $this->loadRiskAssessment();
+        if (!in_array($this->consequence_id, [3, 4, 5])) {
+            $this->penerimaan_komentar_ktt_id = null;
+            $this->penerimaan_komentar_ktt = '';
+
+            // Pastikan array searchName dibersihkan agar UI Select2 sinkron
+            if (isset($this->searchNamePenerimaan['ktt'])) {
+                $this->searchNamePenerimaan['ktt'] = '';
+            }
+
+            // Beritahu JS untuk menghancurkan instance editor (opsional tapi bagus untuk memori)
+            $this->dispatch('reset-all-editors');
+        } else {
+            // Jika berubah ke 3, 4, atau 5, beri sinyal kecil untuk re-init jika diperlukan
+            // Livewire v4 biasanya menangani ini lewat x-data init, tapi dispatch membantu jika ada delay render
+            $this->dispatch('refresh-ktt-editor');
+        }
     }
     public function updatedLikelihoodId()
     {
