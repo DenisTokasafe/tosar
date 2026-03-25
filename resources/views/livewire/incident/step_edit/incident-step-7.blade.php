@@ -4,22 +4,24 @@
     <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2">
 
         {{-- 1. VISUAL EVIDENCE --}}
-        <div class="p-4 border rounded-xl bg-base-100 shadow-sm border-base-300">
-            <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" />
-
+        <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
+            {{-- Lock Upload Component --}}
+            <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" :disabled="!$canEdit" />
 
             <div class="grid grid-cols-3 gap-2 mt-3">
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
-
                 <div class="avatar">
-                    <div class="w-40 rounded relative">
+                    <div class="relative w-40 rounded">
                         <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+                        <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20">
                             <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                         </div>
+                        {{-- Lock Delete Button --}}
+                        @if($canEdit)
                         <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Hapus foto permanen?"
-                            class="absolute -top-1 -right-1 btn btn-circle btn-error btn-xs scale-75">✕</button>
+                            class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-error btn-xs">✕</button>
+                        @endif
                     </div>
                 </div>
                 @endforeach
@@ -28,10 +30,12 @@
                 @if($visual_evidence)
                 @foreach($visual_evidence as $index => $image)
                 <div class="avatar">
-                    <div class="w-40 rounded relative">
-                        <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 border-primary rounded-lg shadow-md" />
+                    <div class="relative w-40 rounded">
+                        <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
+                        @if($canEdit)
                         <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
-                            class="absolute -top-1 -right-1 btn btn-circle btn-primary btn-xs scale-75">✕</button>
+                            class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">✕</button>
+                        @endif
                     </div>
                 </div>
                 @endforeach
@@ -40,26 +44,20 @@
         </div>
 
         {{-- 2. SUPPORTING DOCUMENTS --}}
-        <div class="p-4 border rounded-xl bg-base-100 shadow-sm border-base-300">
-            {{-- Input Upload --}}
-            <x-form.upload label="Supporting Docs" model="supporting_documents" multiple keterangan="PDF, DOCX" />
+        <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
+            <x-form.upload label="Supporting Docs" model="supporting_documents" multiple keterangan="PDF, DOCX" :disabled="!$canEdit" />
 
             <div class="mt-3 space-y-2">
-                {{-- 1. DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_supporting_documents as $doc)
                 <div class="flex items-center justify-between p-2 border rounded-lg bg-base-300 border-base-100 group">
                     <div class="flex items-center gap-2 overflow-hidden">
-                        {{-- Deteksi Icon berdasarkan Nama File --}}
-                        @php
-                        $ext = pathinfo($doc->file_name, PATHINFO_EXTENSION);
-                        @endphp
-
+                        @php $ext = pathinfo($doc->file_name, PATHINFO_EXTENSION); @endphp
                         @if($ext === 'pdf')
-                        <x-icon.pdf class="w-4 h-4 text-red-500 flex-shrink-0" />
+                        <x-icon.pdf class="flex-shrink-0 w-4 h-4 text-red-500" />
                         @elseif(in_array($ext, ['doc', 'docx']))
-                        <x-icon.word class="w-4 h-4 text-blue-600 flex-shrink-0" />
+                        <x-icon.word class="flex-shrink-0 w-4 h-4 text-blue-600" />
                         @else
-                        <x-icon.document class="w-4 h-4 text-blue-500 flex-shrink-0" />
+                        <x-icon.document class="flex-shrink-0 w-4 h-4 text-blue-500" />
                         @endif
 
                         <div class="flex flex-col min-w-0">
@@ -72,35 +70,25 @@
 
                     <div class="flex items-center gap-1">
                         <span class="badge badge-success badge-xs text-[8px] font-bold">SAVED</span>
-
-                        {{-- Tombol Hapus Permanen dari DB --}}
-                        <button type="button"
-                            wire:click="deleteFileFromDb({{ $doc->id }})"
-                            wire:confirm="Hapus dokumen '{{ $doc->file_name }}' secara permanen dari server?"
-                            class="btn btn-ghost btn-xs text-error p-0 h-5 w-5 min-h-0">
-                            ✕
-                        </button>
+                        @if($canEdit)
+                        <button type="button" wire:click="deleteFileFromDb({{ $doc->id }})" wire:confirm="Hapus permanen?"
+                            class="w-5 h-5 min-h-0 p-0 btn btn-ghost btn-xs text-error">✕</button>
+                        @endif
                     </div>
                 </div>
                 @endforeach
 
-                {{-- 2. DATA TEMPORARY (NEW UPLOAD) --}}
                 @if($supporting_documents)
                 @foreach($supporting_documents as $index => $doc)
                 <div class="flex items-center justify-between p-2 border border-dashed rounded-lg bg-base-200 border-base-300">
                     <div class="flex items-center gap-2 overflow-hidden opacity-75">
-                        <x-icon.document class="w-4 h-4 text-gray-500 flex-shrink-0" />
+                        <x-icon.document class="flex-shrink-0 w-4 h-4 text-gray-500" />
                         <span class="text-[10px] truncate italic">{{ $doc->getClientOriginalName() }}</span>
                     </div>
-
-                    <div class="flex items-center gap-1">
-                        <span class="text-[8px] font-medium text-gray-500 uppercase">Pending</span>
-                        <button type="button"
-                            wire:click="removeFile('supporting_documents', {{ $index }})"
-                            class="btn btn-ghost btn-xs text-error p-0 h-5 w-5 min-h-0">
-                            ✕
-                        </button>
-                    </div>
+                    @if($canEdit)
+                    <button type="button" wire:click="removeFile('supporting_documents', {{ $index }})"
+                        class="w-5 h-5 min-h-0 p-0 btn btn-ghost btn-xs text-error">✕</button>
+                    @endif
                 </div>
                 @endforeach
                 @endif
@@ -113,14 +101,17 @@
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title">{{ __('Rencana Perbaikan Jangka Panjang') }}</legend>
 
-    <div class="flex items-center justify-between pb-2 mb-4 border-b">
-
+    <div class="flex items-center justify-end pb-2 mb-4 border-b">
+        @if($canEdit)
         <x-button.btn-tooltip color="primary" icon="add" wireClick="addCorrectiveRow" tooltip="Tambah" position="top md:right" />
+        @else
+        <div class="gap-1 italic badge badge-ghost badge-sm opacity-70">
+            <x-icon name="lock" class="w-3 h-3" /> Terkunci
+        </div>
+        @endif
     </div>
 
-
-
-    {{-- VIEW DESKTOP: Tampil di Tablet/Laptop (Table Mode) --}}
+    {{-- VIEW DESKTOP --}}
     <div class="hidden overflow-x-auto md:block">
         <table class="table w-full table-compact">
             <thead>
@@ -130,30 +121,34 @@
                     <th>PIC</th>
                     <th>Batas Waktu</th>
                     <th>Tgl. Selesai</th>
-                    <th class="rounded-r-lg"></th>
+                    <th class="text-center rounded-r-lg">
+                        @if(!$canEdit) <x-icon name="lock" class="w-3 h-3 mx-auto opacity-40" /> @endif
+                    </th>
                 </tr>
             </thead>
             <tbody class="text-xs">
                 @foreach($corrective_actions as $index => $action)
                 <tr wire:key="corrective-desktop-{{ $index }}-{{ count($corrective_actions) }}" class="hover:bg-base-50">
                     <td class="w-1/4 align-top">
-                        <x-form.text_area model="corrective_actions.{{ $index }}.action_description" rows="2" />
+                        <x-form.text_area model="corrective_actions.{{ $index }}.action_description" rows="2" :disabled="!$canEdit" />
                     </td>
                     <td class="w-1/5 align-top">
                         <x-form.select model="corrective_actions.{{ $index }}.control_hierarchy"
-                            :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]" />
+                            :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]"
+                            :disabled="!$canEdit" />
                     </td>
                     <td class="w-1/5 align-top">
                         <x-form.searchable-select-advanced modelsearch="searchPetugas.{{ $index }}"
                             modelid="corrective_actions.{{ $index }}.pic_user_id" :options="$pelaporsAct"
-                            :showdropdown="$showDropdownPetugas[$index] ?? false" clickaction="selectActPelapor" />
+                            :showdropdown="($showDropdownPetugas[$index] ?? false) && $canEdit"
+                            clickaction="selectActPelapor"
+                            :disabled="!$canEdit" />
                     </td>
                     <td class="align-top">
-                        <x-form.tgl-waktu model="corrective_actions.{{ $index }}.due_date" />
+                        <x-form.tgl-waktu model="corrective_actions.{{ $index }}.due_date" :disabled="!$canEdit" />
                     </td>
                     <td class="align-top">
-                        <x-form.tgl-waktu model="corrective_actions.{{ $index }}.actual_completion_date" />
-                        {{-- Desktop Indicators (Icon-only to save space) --}}
+                        <x-form.tgl-waktu model="corrective_actions.{{ $index }}.actual_completion_date" :disabled="!$canEdit" />
                         <div class="flex gap-1 mt-1">
                             @if(!empty($action['due_date']) && !empty($action['actual_completion_date']))
                             @php $isOverdue = \Carbon\Carbon::parse($action['actual_completion_date'])->greaterThan(\Carbon\Carbon::parse($action['due_date'])); @endphp
@@ -168,8 +163,8 @@
                             @endif
                         </div>
                     </td>
-                    <td class="align-top">
-                        @if(count($corrective_actions) > 1)
+                    <td class="text-center align-top">
+                        @if($canEdit && count($corrective_actions) > 1)
                         <button type="button" wire:click="removeCorrectiveRow({{ $index }})" class="btn btn-ghost btn-xs text-error">✕</button>
                         @endif
                     </td>
