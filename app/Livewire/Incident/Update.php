@@ -294,16 +294,16 @@ class Update extends Component
 
         ];
 
-        // // Tambahkan Logika KTT di sini agar terbaca secara global
-        // if (in_array((int)$this->consequence_id, [3, 4, 5])) {
-        //     $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
-        //     $rules['penerimaan_komentar_ktt']    = 'required|min:11';
-        // }
+        // Tambahkan Logika KTT di sini agar terbaca secara global
+        if (in_array((int)$this->consequence_id, [3, 4, 5])) {
+            $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_ktt']    = 'required|min:11';
+        }
 
 
-        // // PERBAIKAN DI SINI:
-        // // Gunakan $rules, bukan $attributes.
-        // // Dan pastikan key-nya sesuai dengan data binding Anda.
+        // PERBAIKAN DI SINI:
+        // Gunakan $rules, bukan $attributes.
+        // Dan pastikan key-nya sesuai dengan data binding Anda.
         foreach (range(1, $this->whyCount) as $i) {
             $rules["why_analysis.why{$i}"] = 'required|string|min:3';
         }
