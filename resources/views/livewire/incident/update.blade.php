@@ -47,8 +47,8 @@
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
 
-                    {{-- Indikator KTT hanya muncul jika Rating Sedang, Tinggi, atau Ekstrim --}}
-                    @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrim']))
+                    {{-- Indikator KTT hanya muncul jika Rating Sedang, Tinggi, atau Ekstrem --}}
+                    @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']))
                     <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
                     @endif
                 </div>
@@ -190,7 +190,7 @@
                                         </button>
 
                                         {{-- Pesan Error Spesifik agar User tidak Bingung --}}
-                                        @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrim']) && empty($penerimaan_komentar_ktt_id))
+                                        @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) && empty($penerimaan_komentar_ktt_id))
                                         <span class="mt-1 text-[9px] text-error italic animate-pulse">
                                             Otoritas KTT wajib untuk rating {{ $rating_name }}
                                         </span>
