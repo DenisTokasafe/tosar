@@ -27,7 +27,7 @@
             <div class="p-4 stat">
                 <div class="stat-title text-[10px] uppercase font-bold tracking-tighter">Status Laporan</div>
                 <div class="flex items-center gap-2 mt-1 text-lg stat-value">
-                    @if($incident->status == 'Open')
+                    @if($status == 'Open')
                     <div class="badge badge-error badge-xs animate-pulse"></div>
                     <span class="text-sm italic font-black uppercase text-error">OPEN</span>
                     @else
@@ -43,10 +43,10 @@
                 <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-primary">Progress Review</div>
                 <div class="flex gap-1 mt-2">
                     {{-- Indikator Step Review (Flat Table Logic) --}}
-                    <div class="h-1.5 w-full rounded-full {{ $incident->pm_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
-                    <div class="h-1.5 w-full rounded-full {{ $incident->pm_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
-                    <div class="h-1.5 w-full rounded-full {{ $incident->ohs_head_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
-                    <div class="h-1.5 w-full rounded-full {{ $incident->ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
+                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
+                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
+                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
+                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
                 </div>
             </div>
         </div>

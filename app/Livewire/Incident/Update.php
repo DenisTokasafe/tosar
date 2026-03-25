@@ -71,7 +71,7 @@ class Update extends Component
     public $damage_detail;
 
     // --- KOLEKSI DATA (FOR DROPDOWNS) ---
-
+    public $status;
     public $locations = [];
     public $departments = [];
     public $contractors = [];
@@ -510,7 +510,7 @@ class Update extends Component
             'ktt'
         ])->findOrFail($id);
         $this->report_number = $report->report_number;
-
+        $this->status = $report->status;
         // --- DATA DASAR ---
         $this->event_type_id = $report->event_type_id;
         $this->event_sub_type_id = $report->event_sub_type_id;
