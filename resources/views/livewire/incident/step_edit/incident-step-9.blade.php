@@ -57,7 +57,7 @@
 
 
     </fieldset>
-    @if(in_array((int)$consequence_id, [3, 4, 5]))
+    @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrim']))
     {{-- Menggunakan key yang unik berdasarkan level agar re-render sempurna --}}
     <fieldset wire:key="fieldset-ktt-{{ $consequence_id }}"
         class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">

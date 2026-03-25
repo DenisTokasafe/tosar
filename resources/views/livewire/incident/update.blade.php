@@ -160,25 +160,47 @@
                             </div>
 
                             <div class="flex gap-2">
+                                {{-- Tombol Navigasi Lanjut --}}
                                 @if ($i < 9)
-                                    <button wire:click="nextStep" class="px-4 text-white btn btn-info btn-xs">
+                                    <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
                                     {{ $canEdit ? 'Simpan & Lanjut »' : 'Lihat Selanjutnya »' }}
                                     </button>
                                     @endif
 
-                                    @if($canEdit)
-                                    <button type="button"
-                                        wire:click="update"
-                                        wire:loading.attr="disabled"
-                                        class="px-4 text-white shadow-md btn btn-xs btn-success">
-                                        <span wire:loading.remove wire:target="update">Update Laporan</span>
-                                        <span wire:loading.remove.class="hidden" wire:target="update" class="hidden loading loading-spinner loading-xs"></span>
-                                    </button>
-                                    @else
-                                    <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled">
-                                        Update Locked
-                                    </button>
-                                    @endif
+                                    {{-- Logika Tombol Update SENTRY --}}
+                                    <div class="flex flex-col items-end">
+                                        @if($this->canUpdate)
+                                        {{-- Tombol AKTIF: Memenuhi Policy & Validasi KTT (jika di step 9) --}}
+                                        <button type="button"
+                                            wire:click="update"
+                                            wire:loading.attr="disabled"
+                                            class="px-4 text-white shadow-md btn btn-xs btn-success">
+                                            <span wire:loading.remove wire:target="update">Update Laporan</span>
+                                            <span wire:loading.remove.class="hidden" wire:target="update" class="hidden loading loading-spinner loading-xs"></span>
+                                        </button>
+                                        @else
+                                        {{-- Tombol TERKUNCI --}}
+                                        <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
+                                            <div class="flex items-center gap-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                                </svg>
+                                                <span>Update Locked</span>
+                                            </div>
+                                        </button>
+
+                                        {{-- Pesan Error Spesifik agar User tidak Bingung --}}
+                                        @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrim']) && empty($penerimaan_komentar_ktt_id))
+                                        <span class="mt-1 text-[9px] text-error italic animate-pulse">
+                                            Otoritas KTT wajib untuk rating {{ $rating_name }}
+                                        </span>
+                                        @elseif(!$canEdit)
+                                        <span class="mt-1 text-[9px] text-warning italic">
+                                            Akses edit dibatasi (Policy)
+                                        </span>
+                                        @endif
+                                        @endif
+                                    </div>
                             </div>
                         </div>
                     </div>

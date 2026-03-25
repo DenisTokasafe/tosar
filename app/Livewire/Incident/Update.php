@@ -1838,7 +1838,46 @@ class Update extends Component
             return $this->validate($stepRules[$step]);
         }
     }
+    // app/Livewire/Incident/Update.php
 
+    public function getCanUpdateProperty()
+    {
+        $user = auth()->user();
+        $incident = $this->incident;
+
+        // --- TAHAP 1: CEK POLICY (Siapa yang boleh klik?) ---
+
+        // Step 1-2: Pelapor & Investigator
+        if (in_array($this->currentStep, [1, 2])) {
+            if (!$user->can('updateInitialData', $incident)) return false;
+        }
+
+        // Step 3-6 & 8: Khusus Investigator
+        if (in_array($this->currentStep, [3, 4, 5, 6, 8])) {
+            if (!$user->can('conductInvestigation', $incident)) return false;
+        }
+
+        // Step 7: Investigator atau Assignee
+        if ($this->currentStep == 7) {
+            if (!$user->can('manageCorrectiveActions', $incident)) return false;
+        }
+
+        // Step 9: Management / Reviewer
+        if ($this->currentStep == 9) {
+            if (!$user->can('reviewReport', $incident)) return false;
+        }
+
+        // --- TAHAP 2: CEK VALIDASI KTT (Apakah data sudah lengkap?) ---
+
+        // Khusus di Step 9, tambahkan interlock KTT untuk risiko tinggi
+        if ($this->currentStep == 9) {
+            if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrim'])) {
+                return !empty($this->penerimaan_komentar_ktt_id) && !empty($this->penerimaan_komentar_ktt);
+            }
+        }
+
+        return true;
+    }
     /**
      * Helper untuk dynamic why analysis rules
      */
