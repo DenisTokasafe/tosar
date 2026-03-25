@@ -2155,9 +2155,14 @@ class Update extends Component
                     );
                 }
 
+                $whyCount = collect($this->why_analysis)->filter(fn($value) => !empty($value))->count();
+
                 $report->timelines()->updateOrCreate(
                     ['incident_report_id' => $report->id],
-                    ['analysis_steps' => $this->why_analysis]
+                    [
+                        'analysis_steps' => $this->why_analysis,
+                        'why_count_used' => $whyCount // Tambahkan ini agar tidak error 1364 lagi
+                    ]
                 );
 
                 // 6. Integrasi Part 7 (Dokumentasi & Corrective Actions)
