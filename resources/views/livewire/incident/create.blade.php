@@ -1,12 +1,12 @@
 <section class="w-full">
     <x-toast />
 
-    {{-- Breadcrumb di sebelah kiri (disamakan dengan update) --}}
+    {{-- Breadcrumb --}}
     <div class="flex justify-start mb-2" wire:ignore>
         {{ Breadcrumbs::render('incident-create') }}
     </div>
 
-    {{-- Header disamakan dengan gaya Update --}}
+    {{-- Header --}}
     <div class="flex flex-col justify-between gap-2 md:flex-row md:items-end">
         <div>
             <flux:heading level="1" class="mb-1 capitalize">
@@ -22,21 +22,14 @@
     </div>
 
     <x-incident.layout>
-        {{-- Iterasi Collapse SENTRY --}}
-        @for ($i = 1; $i <= 9; $i++)
+        {{-- Iterasi hanya sampai Bagian 2 --}}
+        @for ($i = 1; $i <= 2; $i++)
             @php
             $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
 
             $stepTitles = [
             1 => 'Detil Laporan',
             2 => 'Pihak Terlibat Langsung',
-            3 => 'Partisipan Investigasi',
-            4 => 'PEEPO Investigation Factor',
-            5 => 'Time Line & Analisis',
-            6 => 'Investigasi Kecelakaan (Checklist)',
-            7 => 'Tindakan Perbaikan',
-            8 => 'Kunci Pembelajaran',
-            9 => 'Penerimaan & Komentar Reviewer',
             ];
             @endphp
 
@@ -96,10 +89,12 @@
                                 </div>
 
                                 <div class="flex gap-2">
-                                    @if ($i < 9)
+                                    {{-- Tombol "Lanjut" hanya muncul di Bagian 1 --}}
+                                    @if ($i < 2)
                                         <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
                                         Lanjut ke Bagian {{ $i + 1 }} »
                                         </button>
+                                        {{-- Tombol "Submit" muncul di Bagian 2 --}}
                                         @else
                                         <button type="button"
                                             wire:click="save"
