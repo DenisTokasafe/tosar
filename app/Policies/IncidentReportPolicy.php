@@ -68,7 +68,7 @@ class IncidentReportPolicy
      */
     public function manageCorrectiveActions(User $user, IncidentReport $incident): bool
     {
-        $isAssignee = $incident->correctiveActions()->where('assignee_id', $user->id)->exists();
+        $isAssignee = $incident->correctiveActions()->where('pic_user_id', $user->id)->exists();
 
         return $this->isInvestigator($user, $incident) || $isAssignee;
     }
