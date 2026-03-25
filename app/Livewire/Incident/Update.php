@@ -149,7 +149,8 @@ class Update extends Component
     public $penerimaan_komentar_internal;
     public $penerimaan_komentar_ohs;
     public $key_learning;
-
+    // TAMBAHKAN INI:
+    public $activeIndexPenerimaan = 1; // Default ke peninjau pertama (PM Contractor)
     #[Computed]
 
     public function isInjury()
@@ -736,6 +737,11 @@ class Update extends Component
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
         }
+    }
+    // Jika Anda ingin berpindah tab di dalam Bagian 9
+    public function setPenerimaanIndex($index)
+    {
+        $this->activeIndexPenerimaan = $index;
     }
     public function deleteMedia($id)
     {
