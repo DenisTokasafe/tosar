@@ -95,6 +95,7 @@ class Update extends Component
     public $pemimpin = [];
     public $facilitator = [];
     public $anggota = [];
+    public $rating_name;
 
     // State untuk Pencarian/Dropdown
     public $searchQuery = []; // Struktur: [$index][$type] => 'string'
@@ -567,6 +568,7 @@ class Update extends Component
         if ($report->risk) {
             $this->consequence_id = $report->risk->consequence_id;
             $this->likelihood_id = $report->risk->likelihood_id;
+            $this->rating_name = $report->risk->rating_name;
 
             // Set visual state untuk tabel matrix di blade
             $this->selectedLikelihoodId = $this->likelihood_id;
@@ -1623,8 +1625,7 @@ class Update extends Component
                 // Tambahkan field KTT ke dalam daftar fields jika level 3, 4, atau 5
                 if (in_array((int)$this->consequence_id, [3, 4, 5])) {
                     // Masukkan ke daftar fields agar dikenali sistem
-                    $fields[] = 'penerimaan_komentar_ktt_id';
-                    $fields[] = 'penerimaan_komentar_ktt';
+                    $fields = ['penerimaan_komentar_ktt_id', 'penerimaan_komentar_ktt'];
                 }
         }
 
@@ -1960,10 +1961,8 @@ class Update extends Component
                     'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
 
                     // Logika kondisional KTT (Hanya Level 3, 4, 5)
-                    'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
-                        ? $this->penerimaan_komentar_ktt : null,
-                    'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
-                        ? $this->penerimaan_komentar_ktt_id : null,
+                    'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5]) ? $this->penerimaan_komentar_ktt : null,
+                    'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5]) ? $this->penerimaan_komentar_ktt_id : null,
                 ]);
                 // 2. UPDATE RELASI RISK ASSESSMENT
                 // Menggunakan updateOrCreate agar jika data belum ada di tabel relasi, akan dibuat baru
