@@ -1402,39 +1402,7 @@ class Update extends Component
         }
     }
     // Helper untuk memetakan field mana masuk ke step mana
-    public function getFieldsForStep($step)
-    {
-        $map = [
-            1 => ['event_type_id', 'event_sub_type_id', 'description', 'location_id', 'date_time'],
-            2 => ['directly_involved'],
-            3 => ['pemimpin', 'facilitator', 'anggota'],
-            4 => ['peepo'],
-            5 => ['why_analysis'],
-            6 => ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'],
-            7 => ['corrective_actions', 'visual_evidence', 'supporting_documents'],
-            8 => ['key_learning'],
-            9 => ['penerimaan_komentar_ohs', 'penerimaan_komentar_internal', 'penerimaan_komentar_contractor']
-        ];
 
-        return $map[$step] ?? [];
-    }
-
-    // Helper untuk judul step (biar rapi di tampilan)
-    public function getStepTitle($step)
-    {
-        $titles = [
-            1 => 'Informasi Dasar',
-            2 => 'Pihak Terlibat',
-            3 => 'Tim Investigasi',
-            4 => 'Analisis PEEPO',
-            5 => 'Why Analysis',
-            6 => 'Faktor Penyebab',
-            7 => 'Tindakan Perbaikan & Dokumen',
-            8 => 'Lesson Learned',
-            9 => 'Penerimaan & Komentar'
-        ];
-        return $titles[$step] ?? 'Unknown Step';
-    }
 
     public function updatedSelectedBodyPartCategory()
     {
@@ -1910,6 +1878,39 @@ class Update extends Component
         }
 
         return true;
+    }
+    public function getFieldsForStep($step)
+    {
+        $map = [
+            1 => ['event_type_id', 'event_sub_type_id', 'description', 'location_id', 'date_time'],
+            2 => ['directly_involved'],
+            3 => ['pemimpin', 'facilitator', 'anggota'],
+            4 => ['peepo'],
+            5 => ['why_analysis'],
+            6 => ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'],
+            7 => ['corrective_actions', 'visual_evidence', 'supporting_documents'],
+            8 => ['key_learning'],
+            9 => ['penerimaan_komentar_ohs', 'penerimaan_komentar_internal', 'penerimaan_komentar_contractor']
+        ];
+
+        return $map[$step] ?? [];
+    }
+
+    // Helper untuk judul step (biar rapi di tampilan)
+    public function getStepTitle($step)
+    {
+        $titles = [
+            1 => 'Informasi Dasar',
+            2 => 'Pihak Terlibat',
+            3 => 'Tim Investigasi',
+            4 => 'Analisis PEEPO',
+            5 => 'Why Analysis',
+            6 => 'Faktor Penyebab',
+            7 => 'Tindakan Perbaikan & Dokumen',
+            8 => 'Lesson Learned',
+            9 => 'Penerimaan & Komentar'
+        ];
+        return $titles[$step] ?? 'Unknown Step';
     }
     /**
      * Helper untuk dynamic why analysis rules
