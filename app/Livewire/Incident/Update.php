@@ -1930,8 +1930,6 @@ class Update extends Component
                     'manual_pelapor_name' => $this->manualPelaporName,
                     'department_id'       => ($this->deptCont === 'dept') ? $this->department_id : null,
                     'contractor_id'       => ($this->deptCont === 'cont') ? $this->contractor_id : null,
-                    'likelihood_id'       => $this->likelihood_id,
-                    'consequence_id'      => $this->consequence_id,
                     'emergency_action'    => $this->emergency_action,
                     'penanggung_jawab'    => $this->penanggungJawab,
                     'body_part_category'  => $this->isInjury ? $this->selectedBodyPartCategory : null,
@@ -1967,6 +1965,17 @@ class Update extends Component
                     'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
                         ? $this->penerimaan_komentar_ktt_id : null,
                 ]);
+                // 2. UPDATE RELASI RISK ASSESSMENT
+                // Menggunakan updateOrCreate agar jika data belum ada di tabel relasi, akan dibuat baru
+                $report->risk()->updateOrCreate(
+                    ['incident_report_id' => $report->id], // Key pencari
+                    [
+                        'likelihood_id'  => $this->likelihood_id,
+                        'consequence_id' => $this->consequence_id,
+                        'rating_name'    => $this->RiskAssessment?->name,
+                        'deadline'       => $this->RiskAssessment?->notes,
+                    ]
+                );
 
                 // 3. Update Part 2 (Involved Personnel)
                 // Hanya jalankan jika step 2 aktif untuk efisiensi, atau biarkan jika ingin sinkron terus
