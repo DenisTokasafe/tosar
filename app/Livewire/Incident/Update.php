@@ -744,8 +744,7 @@ class Update extends Component
     public function determineReportStatus()
     {
         // Cek Investigasi (Step 3-6)
-        $hasInvestigation = $this->incident->investigationTeams()->exists() ||
-            $this->incident->timelines()->exists();
+        $hasInvestigation = $this->incident->investigationTeams()->exists() && $this->incident->timelines()->exists() && $this->incident->peepoAnalyses()->exists();
 
         // Cek Action Plan (Step 7-8)
         $hasActionPlan = $this->incident->correctiveActions()->exists() ||
