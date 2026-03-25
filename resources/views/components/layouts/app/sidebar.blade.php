@@ -196,7 +196,8 @@
     @livewireScripts
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('ckeditorHelper', (modelName) => {
+            // Tambahkan parameter isReadOnly pada helper
+            Alpine.data('ckeditorHelper', (modelName, isReadOnly = false) => {
                 let editorInstance = null;
                 let listeners = [];
 
@@ -207,40 +208,44 @@
                         window.ClassicEditor
                             .create(this.$refs.editorElement, {
                                 placeholder: this.$refs.editorElement.getAttribute('data-placeholder') || 'Tulis sesuatu...',
-                                toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                                toolbar: isReadOnly ? [] : ['bold', 'italic', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
                                 removePlugins: ['ImageUpload', 'EasyImage']
                             })
                             .then(editor => {
                                 editorInstance = editor;
 
+                                // Terapkan mode ReadOnly jika isReadOnly true
+                                if (isReadOnly) {
+                                    editor.enableReadOnlyMode('policy-lock');
+                                }
+
                                 const initialData = this.$wire.get(modelName) || '';
                                 editorInstance.setData(initialData);
 
-                                editorInstance.model.document.on('change:data', () => {
-                                    const data = editorInstance.getData();
-                                    this.$wire.set(modelName, data);
+                                // Jangan jalankan event listener change jika mode ReadOnly
+                                if (!isReadOnly) {
+                                    editorInstance.model.document.on('change:data', () => {
+                                        const data = editorInstance.getData();
+                                        this.$wire.set(modelName, data);
 
-                                    // LIVE CHECK: Hapus class error jika user mulai mengetik teks
-                                    const plainText = data.replace(/<[^>]*>/g, '').trim();
-                                    if (plainText !== '') {
-                                        const el = editorInstance.ui.view.editable.element;
-                                        if (el) el.classList.remove('error');
-                                    }
-                                });
+                                        const plainText = data.replace(/<[^>]*>/g, '').trim();
+                                        if (plainText !== '') {
+                                            const el = editorInstance.ui.view.editable.element;
+                                            if (el) el.classList.remove('error');
+                                        }
+                                    });
+                                }
                             })
                             .catch(error => console.error('CKEditor Error:', error));
 
-                        // --- IMPLEMENTASI APPLY ERROR ---
+                        // --- LOGIK APPLY ERROR (Hanya jika bisa edit) ---
                         const applyError = () => {
-                            if (editorInstance) {
-                                // Menghapus tag HTML untuk mengecek apakah benar-benar ada teks
+                            if (editorInstance && !isReadOnly) {
                                 const data = editorInstance.getData().replace(/<[^>]*>/g, '').trim();
-
                                 if (data === '') {
                                     const el = editorInstance.ui.view.editable.element;
                                     if (el) {
                                         el.classList.add('error');
-                                        // Opsional: scroll ke elemen yang error agar user tahu
                                         el.scrollIntoView({
                                             behavior: 'smooth',
                                             block: 'center'
@@ -257,12 +262,11 @@
                             }
                         }));
 
-                        // Listeners untuk trigger error
                         listeners.push(Livewire.on(`validate-${modelName}`, applyError));
                         listeners.push(Livewire.on('validate-all-editors', applyError));
 
                         listeners.push(Livewire.on('reset-all-editors', () => {
-                            if (editorInstance) {
+                            if (editorInstance && !isReadOnly) {
                                 editorInstance.setData('');
                                 const el = editorInstance.ui.view.editable.element;
                                 if (el) el.classList.remove('error');
