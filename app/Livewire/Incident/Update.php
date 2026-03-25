@@ -743,25 +743,54 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        // Cek Investigasi (Step 3-6)
-        $hasInvestigation = $this->incident->investigationTeams()->exists() && $this->incident->timelines()->exists() && $this->incident->peepoAnalyses()->exists();
+        // 1. Cek Investigasi (Step 3-6)
+        // Menggunakan && jika ingin WAJIB ketiganya ada, atau || jika salah satu saja sudah cukup
+        $hasTeams = $this->incident->investigationTeams()->exists();
+        $hasPeepo = $this->incident->peepoAnalyses()->exists();
+        $hasTimeline = $this->incident->timelines()->exists();
 
-        // Cek Action Plan (Step 7-8)
+        // Status In Progress aktif jika proses investigasi sudah dimulai
+        $hasInvestigation = $hasTeams || $hasPeepo || $hasTimeline;
+
+        // 2. Cek Action Plan (Step 7-8)
         $hasActionPlan = $this->incident->correctiveActions()->exists() ||
             !empty($this->key_learning);
 
-        // Cek Final Review (Step 9)
+        // 3. Cek Final Review (Step 9)
+        // Pastikan ada action plan dan SEMUA sudah diisi actual_completion_date
         $isAllActionClosed = $this->incident->correctiveActions()->count() > 0 &&
             !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
 
+        // Cek Reviewer (OHS & Internal Manager)
         $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
             !empty($this->penerimaan_komentar_internal);
 
-        // Tentukan String Status
-        if ($isAllActionClosed && $isReviewed) return 'Closed';
-        if ($hasActionPlan) return 'Action Required';
-        if ($hasInvestigation) return 'In Progress';
+        // Cek Otoritas KTT (Hanya jika rating Sedang, Tinggi, atau Ekstrem)
+        $kttRequirementMet = true;
+        if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
+            $kttRequirementMet = !empty($this->penerimaan_komentar_ktt_id);
+        }
 
+        // --- LOGIKA PENENTUAN STATUS (Urutan Prioritas Terbalik) ---
+
+        // Kondisi untuk CLOSED (Paling Ketat)
+        if ($isAllActionClosed && $isReviewed && $kttRequirementMet) {
+            return 'Closed';
+        }
+
+        // Kondisi untuk ACTION REQUIRED (Step 7-8)
+        if ($hasActionPlan) {
+            return 'Action Required';
+        }
+
+        // Kondisi untuk IN PROGRESS (Step 3-6)
+        // Jika kamu ingin WAJIB ketiganya ada untuk In Progress, ganti $hasInvestigation dengan:
+        // ($hasTeams && $hasPeepo && $hasTimeline)
+        if ($hasInvestigation) {
+            return 'In Progress';
+        }
+
+        // Default status jika belum ada data investigasi
         return 'Open';
     }
     public function deleteMedia($id)
