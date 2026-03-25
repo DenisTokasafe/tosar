@@ -29,8 +29,7 @@ class IncidentReport extends Model
             $status = 'Open';
 
             // Cek kelengkapan untuk Tahap Investigation (Step 3-6)
-            $hasInvestigation = $incident->pemimpin()->exists() &&
-                $incident->why_analysis != null;
+            $hasInvestigation = $incident->investigationTeams()->exists() && $incident->why_analysis != null;
 
             // Cek kelengkapan untuk Action Plan (Step 7-8)
             $hasActionPlan = $incident->correctiveActions()->exists() &&
