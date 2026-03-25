@@ -169,13 +169,26 @@ class IncidentReport extends Model
     /**
      * Mendapatkan peninjau terakhir yang mengisi komentar untuk Summary Widget
      */
-    public function getLatestReviewerAttribute()
+    /**
+     * Mendapatkan peninjau terakhir yang mengisi komentar untuk Summary Widget
+     */
+    public function getLatestReviewerNameAttribute()
     {
-        if ($this->ktt_id) return $this->ktt->name;
-        if ($this->ohs_head_id) return $this->ohsHead->name;
-        if ($this->pm_internal_id) return $this->pmInternal->name;
-        if ($this->pm_contractor_id) return $this->pmContractor->name;
+        // Gunakan optional() atau null safe operator untuk menghindari error jika relasi kosong
+        if ($this->ktt_id) return $this->ktt?->name;
+        if ($this->ohs_head_id) return $this->ohsHead?->name;
+        if ($this->pm_internal_id) return $this->pmInternal?->name;
+        if ($this->pm_contractor_id) return $this->pmContractor?->name;
 
-        return 'Menunggu Peninjau';
+        return 'Waiting Review';
+    }
+    public function getLatestReviewerRoleAttribute()
+    {
+        if ($this->ktt_id) return 'KTT';
+        if ($this->ohs_head_id) return 'OHS Head';
+        if ($this->pm_internal_id) return 'PM Internal';
+        if ($this->pm_contractor_id) return 'PM Contractor';
+
+        return 'Pending';
     }
 }

@@ -63,8 +63,14 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        {{ $incident->latest_reviewer_name ?? 'Waiting Review' }}
+                        {{ $incident->latest_reviewer_name }}
                     </span>
+                    {{-- Menampilkan Badge Otoritas --}}
+                    @if($incident->latest_reviewer_role !== 'Pending')
+                    <div class="mt-1 lowercase badge badge-outline badge-info badge-xs opacity-70">
+                        {{ $incident->latest_reviewer_role }}
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
