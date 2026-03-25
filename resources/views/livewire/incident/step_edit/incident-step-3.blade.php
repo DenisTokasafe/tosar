@@ -74,13 +74,16 @@
                         <x-form.searchable-select2
                             wire:key="sel-dt-{{ $type }}-{{ $index }}"
                             placeholder="Cari Nama..."
+                            {{-- Gunakan debounce agar tidak terlalu berat --}}
                             modelsearch="searchQuery.{{ $index }}.{{ $type }}"
                             modelid="{{ $type }}.{{ $index }}.user_id"
                             :options="$options"
-                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === $type && $activeIndex === $index"
+                            {{-- Sederhanakan pengecekan --}}
+                            :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === $type && $activeIndex === (int)$index"
                             clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
                             :disabled="!$canEdit"
-                            x-on:focusin="$canEdit ? ($wire.set('activeType', '{{ $type }}'), $wire.set('activeIndex', {{ $index }})) : null" />
+                            {{-- Tambahkan $wire.set dengan urutan yang benar --}}
+                            x-on:focusin="if ($canEdit) {$wire.set('activeType', '{{ $type }}');$wire.set('activeIndex', {{ $index }});}" />
                     </td>
 
                     {{-- Kolom Dept --}}
