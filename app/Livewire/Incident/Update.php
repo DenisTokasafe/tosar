@@ -1750,168 +1750,165 @@ class Update extends Component
     public function update()
     {
         // 1. Validasi berdasarkan Step yang sedang aktif
+        // Jika validasi gagal, Livewire akan otomatis berhenti di sini dan memunculkan error di Blade
         $this->validateOnlyStep($this->currentStep);
 
         $report = IncidentReport::findOrFail($this->incidentId);
 
-        DB::transaction(function () use ($report) {
-            // 2. Update data utama (Step 1, 4, 5, 6)
-            $report->update([
-                'event_type_id'      => $this->event_type_id,
-                'event_sub_type_id'  => $this->event_sub_type_id,
-                'description'        => $this->description,
-                'date_time'          => $this->date_time,
-                'location_id'        => $this->location_id,
-                'location_specific'  => $this->location_specific,
-                'pelapor_id'         => $this->pelapor_id,
-                'manual_pelapor_name' => $this->manualPelaporName,
-                'department_id'      => ($this->deptCont === 'dept') ? $this->department_id : null,
-                'contractor_id'      => ($this->deptCont === 'cont') ? $this->contractor_id : null,
-                'likelihood_id'      => $this->likelihood_id,
-                'consequence_id'     => $this->consequence_id,
-                'emergency_action'   => $this->emergency_action,
-                'penanggung_jawab'   => $this->penanggungJawab,
-                'body_part_category' => $this->isInjury ? $this->selectedBodyPartCategory : null,
-                'body_part'          => $this->isInjury ? $this->selectedBodyPart : null,
-                'damage_detail'      => !$this->isInjury ? $this->damage_detail : null,
-                'scat_analysis'      => [
-                    'langsung' => [
-                        'kondisi_tidak_aman' => $this->unsafe_conditions,
-                        'perilaku_tidak_aman' => $this->unsafe_acts,
+        try {
+            DB::transaction(function () use ($report) {
+                // 2. Update data utama (Mencakup Step 1, 4, 5, 6, dan 9)
+                $report->update([
+                    'event_type_id'       => $this->event_type_id,
+                    'event_sub_type_id'   => $this->event_sub_type_id,
+                    'description'         => $this->description,
+                    'date_time'           => $this->date_time,
+                    'location_id'         => $this->location_id,
+                    'location_specific'   => $this->location_specific,
+                    'pelapor_id'          => $this->pelapor_id,
+                    'manual_pelapor_name' => $this->manualPelaporName,
+                    'department_id'       => ($this->deptCont === 'dept') ? $this->department_id : null,
+                    'contractor_id'       => ($this->deptCont === 'cont') ? $this->contractor_id : null,
+                    'likelihood_id'       => $this->likelihood_id,
+                    'consequence_id'      => $this->consequence_id,
+                    'emergency_action'    => $this->emergency_action,
+                    'penanggung_jawab'    => $this->penanggungJawab,
+                    'body_part_category'  => $this->isInjury ? $this->selectedBodyPartCategory : null,
+                    'body_part'           => $this->isInjury ? $this->selectedBodyPart : null,
+                    'damage_detail'       => !$this->isInjury ? $this->damage_detail : null,
+
+                    'scat_analysis'       => [
+                        'langsung' => [
+                            'kondisi_tidak_aman'  => $this->unsafe_conditions,
+                            'perilaku_tidak_aman' => $this->unsafe_acts,
+                        ],
+                        'dasar' => [
+                            'faktor_pribadi'   => $this->personal_factors,
+                            'faktor_pekerjaan' => $this->job_factors,
+                            'sistem_kontrol'   => $this->control_system_factors,
+                        ],
                     ],
-                    'dasar' => [
-                        'faktor_pribadi'   => $this->personal_factors,
-                        'faktor_pekerjaan' => $this->job_factors,
-                        'sistem_kontrol'   => $this->control_system_factors,
-                    ],
-                ],
-                'key_learning'  => $this->key_learning,
-                // PART 9: KOMENTAR & APPROVAL
-                'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
-                'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
+                    'key_learning'        => $this->key_learning,
 
-                'pm_internal_comment'   => $this->penerimaan_komentar_internal,
-                'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
+                    // --- INTEGRASI PART 9: KOMENTAR & APPROVAL ---
+                    'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
+                    'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
 
-                'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
-                'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
+                    'pm_internal_comment'   => $this->penerimaan_komentar_internal,
+                    'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
 
-                // Logika kondisional KTT (Hanya Level 3, 4, 5)
-                'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
-                    ? $this->penerimaan_komentar_ktt : null,
-                'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
-                    ? $this->penerimaan_komentar_ktt_id : null,
-            ]);
+                    'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
+                    'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
 
-            // 3. Update Part 2 (Involved Personnel)
-            $report->involvedPersons()->delete();
-            foreach ($this->directly_involved as $person) {
-                if (!empty($person['employee_name'])) {
-                    $report->involvedPersons()->create([
-                        'employee_id'      => $person['employee_id'] ?? null,
-                        'employee_name'    => $person['employee_name'],
-                        'employee_nik'     => $person['employee_nik'],
-                        'dept_cont'        => $person['dept_cont'],
-                        'jabatan'          => $person['jabatan'],
-                        'roster'           => $person['roster'],
-                        'shift'            => $person['shift'] ?? $person['sift'] ?? null,
-                        'keterlibatan'     => $person['keterlibatan'],
-                        'pengalaman_kerja' => $person['pengalaman_kerja'],
-                    ]);
-                }
-            }
+                    // Logika kondisional KTT (Hanya Level 3, 4, 5)
+                    'ktt_comment'           => in_array((int)$this->consequence_id, [3, 4, 5])
+                        ? $this->penerimaan_komentar_ktt : null,
+                    'ktt_id'                => in_array((int)$this->consequence_id, [3, 4, 5])
+                        ? $this->penerimaan_komentar_ktt_id : null,
+                ]);
 
-            // 4. Update Part 3 (Investigation Teams)
-            $report->investigationTeams()->delete();
-            foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
-                foreach ($this->{$role} as $member) {
-                    if (!empty($member['user_id']) || !empty($member['jabatan'])) {
-                        $report->investigationTeams()->create([
-                            'user_id' => $member['user_id'],
-                            'role'    => $role,
-                            'dept'    => $member['dept'],
-                            'jabatan' => $member['jabatan'],
+                // 3. Update Part 2 (Involved Personnel)
+                // Hanya jalankan jika step 2 aktif untuk efisiensi, atau biarkan jika ingin sinkron terus
+                $report->involvedPersons()->delete();
+                foreach ($this->directly_involved as $person) {
+                    if (!empty($person['employee_name'])) {
+                        $report->involvedPersons()->create([
+                            'employee_id'      => $person['employee_id'] ?? null,
+                            'employee_name'    => $person['employee_name'],
+                            'employee_nik'     => $person['employee_nik'],
+                            'dept_cont'        => $person['dept_cont'],
+                            'jabatan'          => $person['jabatan'],
+                            'roster'           => $person['roster'],
+                            'shift'            => $person['shift'] ?? $person['sift'] ?? null,
+                            'keterlibatan'     => $person['keterlibatan'],
+                            'pengalaman_kerja' => $person['pengalaman_kerja'],
                         ]);
                     }
                 }
-            }
 
-            // 5. Update Part 4 & 5 (PEEPO & Why Analysis)
-            foreach ($this->peepo as $key => $value) {
-                $report->peepoAnalyses()->updateOrCreate(
-                    ['factor_key' => $key],
-                    [
-                        'factor_name' => $this->peepoFactors[$key],
-                        'temuan'      => $value['temuan'],
-                        'deskripsi'   => $value['deskripsi'],
-                    ]
+                // 4. Update Part 3 (Investigation Teams)
+                $report->investigationTeams()->delete();
+                foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+                    foreach ($this->{$role} as $member) {
+                        if (!empty($member['user_id']) || !empty($member['jabatan'])) {
+                            $report->investigationTeams()->create([
+                                'user_id' => $member['user_id'],
+                                'role'    => $role,
+                                'dept'    => $member['dept'] ?? null,
+                                'jabatan' => $member['jabatan'] ?? null,
+                            ]);
+                        }
+                    }
+                }
+
+                // 5. Update Part 4 & 5 (PEEPO & Why Analysis)
+                foreach ($this->peepo as $key => $value) {
+                    $report->peepoAnalyses()->updateOrCreate(
+                        ['factor_key' => $key],
+                        [
+                            'factor_name' => $this->peepoFactors[$key],
+                            'temuan'      => $value['temuan'],
+                            'deskripsi'   => $value['deskripsi'],
+                        ]
+                    );
+                }
+
+                $report->timelines()->updateOrCreate(
+                    ['incident_report_id' => $report->id],
+                    ['analysis_steps' => $this->why_analysis]
                 );
-            }
 
-            $report->timelines()->updateOrCreate(
-                ['incident_report_id' => $report->id],
-                ['analysis_steps' => $this->why_analysis]
-            );
-
-            // --- 6. INTEGRASI PART 7: DOKUMENTASI & CORRECTIVE ACTIONS ---
-            if ($this->currentStep == 7) {
-                // Simpan Visual Evidence dari path yang sudah dikompres
-                if (!empty($this->visual_evidence_paths)) {
-                    foreach ($this->visual_evidence_paths as $path) {
-                        $report->attachments()->create([
-                            'file_path' => $path,
-                            'file_name' => basename($path),
-                            'file_type' => 'visual',
-                        ]);
+                // 6. Integrasi Part 7 (Dokumentasi & Corrective Actions)
+                if ($this->currentStep == 7) {
+                    // Attachments
+                    foreach (['visual' => 'visual_evidence_paths', 'document' => 'supporting_documents_paths'] as $type => $prop) {
+                        if (!empty($this->{$prop})) {
+                            foreach ($this->{$prop} as $path) {
+                                $report->attachments()->create([
+                                    'file_path' => $path,
+                                    'file_name' => basename($path),
+                                    'file_type' => $type,
+                                ]);
+                            }
+                            $this->{str_replace('_paths', '', $prop)} = [];
+                            $this->{$prop} = [];
+                        }
                     }
-                    $this->visual_evidence = [];
-                    $this->visual_evidence_paths = [];
-                }
 
-                // Simpan Supporting Documents
-                if (!empty($this->supporting_documents_paths)) {
-                    foreach ($this->supporting_documents_paths as $path) {
-                        $report->attachments()->create([
-                            'file_path' => $path,
-                            'file_name' => basename($path),
-                            'file_type' => 'document',
-                        ]);
-                    }
-                    $this->supporting_documents = [];
-                    $this->supporting_documents_paths = [];
-                }
-
-                // Sinkronisasi Tindakan Perbaikan
-                $report->correctiveActions()->delete();
-                foreach ($this->corrective_actions as $action) {
-                    if (!empty($action['action_description'])) {
-                        $report->correctiveActions()->create([
-                            'action_description'     => $action['action_description'],
-                            'hierarchy'      => $action['control_hierarchy'],
-                            'pic_user_id'            => $action['pic_user_id'],
-                            'due_date'               => $action['due_date'],
-                            'actual_completion_date' => $action['actual_completion_date'] ?? null,
-                            'status'                 => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
-                        ]);
+                    // Corrective Actions
+                    $report->correctiveActions()->delete();
+                    foreach ($this->corrective_actions as $action) {
+                        if (!empty($action['action_description'])) {
+                            $report->correctiveActions()->create([
+                                'action_description'     => $action['action_description'],
+                                'hierarchy'              => $action['control_hierarchy'],
+                                'pic_user_id'            => $action['pic_user_id'],
+                                'due_date'               => $action['due_date'],
+                                'actual_completion_date' => $action['actual_completion_date'] ?? null,
+                                'status'                 => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
+                            ]);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // 7. Navigasi atau Notifikasi
-        if ($this->currentStep < 9) {
-            // Simpan nomor step yang baru saja diproses
+            // 7. Navigasi atau Notifikasi Sukses
             $completedStep = $this->currentStep;
 
-            $this->currentStep++;
+            if ($this->currentStep < 9) {
+                $this->currentStep++;
+            }
 
             $this->dispatch('alert', [
-                'text' => "Data Bagian {$completedStep} berhasil diperbarui.",
+                'text' => "Data Bagian {$completedStep} berhasil diperbarui di SENTRY.",
                 'type' => 'success'
             ]);
-        } else {
-            return redirect()->route('incident.index')
-                ->with('success', 'Laporan SENTRY berhasil diperbarui secara keseluruhan.');
+        } catch (\Exception $e) {
+            // Jika gagal simpan karena database error
+            $this->dispatch('alert', [
+                'text' => "Gagal menyimpan: " . $e->getMessage(),
+                'type' => 'error'
+            ]);
         }
     }
 }
