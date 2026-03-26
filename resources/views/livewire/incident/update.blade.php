@@ -6,81 +6,108 @@
         {{ Breadcrumbs::render('incident-detail', $incidentId) }}
     </div>
 
-    {{-- Header dengan Nomor Laporan --}}
-    <div class="flex flex-col justify-between gap-2 md:flex-row md:items-end">
-        <div>
-            <flux:heading level="1" class="mb-1 capitalize">
-                {{ __('Update Laporan Insiden') }}
-            </flux:heading>
-            <flux:subheading size="sm" class="text-accent">
-                {{ __('Nomor Laporan:') }} <span class="font-bold text-primary">{{ $report_number }}</span>
-            </flux:subheading>
-        </div>
-        <div class="flex gap-2">
-            <span class="badge badge-warning font-bold p-4 shadow-sm italic uppercase tracking-widest text-[10px]">Mode Edit SENTRY</span>
-        </div>
-    </div>
-
-    {{-- SUMMARY WIDGET SENTRY --}}
-    <div class="grid grid-cols-1 gap-4 mt-6 mb-2 md:grid-cols-3">
-        <div class="border shadow-sm stats border-base-300 bg-base-100">
-            <div class="p-4 stat">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
-                <div class="flex items-center gap-2 mt-1 text-lg stat-value">
-                    @switch($status)
-                    @case('Open')
-                    <div class="badge badge-error badge-xs animate-pulse"></div>
-                    <span class="text-sm italic font-black uppercase text-error">OPEN / REPORTED</span>
-                    @break
-                    @case('In Progress')
-                    <div class="badge badge-info badge-xs animate-bounce"></div>
-                    <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
-                    @break
-                    @case('Action Required')
-                    <div class="badge badge-warning badge-xs"></div>
-                    <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
-                    @break
-                    @case('Closed')
-                    <div class="badge badge-success badge-xs"></div>
-                    <span class="text-sm italic font-black uppercase text-success">CLOSED</span>
-                    @break
-                    @endswitch
-                </div>
+    <div class="space-y-6">
+        {{-- HEADER SECTION --}}
+        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+                <flux:heading level="1" class="mb-1 text-xl capitalize md:text-2xl">
+                    {{ __('Update Laporan Insiden') }}
+                </flux:heading>
+                <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
+                    {{ __('Nomor Laporan:') }}
+                    <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
+                </flux:subheading>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="badge badge-warning font-bold p-4 shadow-sm italic uppercase tracking-widest text-[10px] w-full md:w-auto justify-center">
+                    Mode Edit SENTRY
+                </span>
             </div>
         </div>
 
-        <div class="border shadow-sm stats border-base-300 bg-base-100">
-            <div class="p-4 stat">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-primary">Progress Review</div>
-                <div class="flex gap-1 mt-2">
-                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
-                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
-                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
-                    @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']))
-                    <div class="h-1.5 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
-                    @endif
-                </div>
-            </div>
+        {{-- TOTAL PROGRESS BAR (Optional but Recommended) --}}
+        <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
+            <div class="h-full transition-all duration-700 ease-in-out bg-primary" style="width: {{ $this->getProgressPercentage() }}%"></div>
         </div>
 
-        <div class="border shadow-sm stats border-base-300 bg-base-100">
-            <div class="p-4 stat">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Otoritas Terakhir</div>
-                <div class="mt-2 text-xs font-medium stat-desc text-base-content">
-                    <span class="flex items-center gap-1 italic">
-                        <x-icon name="user" class="w-3 h-3 text-info" />
-                        {{ $incident->latest_reviewer_name ?? 'N/A' }}
-                    </span>
-                    @if($incident->latest_reviewer_role && $incident->latest_reviewer_role !== 'Pending')
-                    <div class="mt-1 lowercase badge badge-outline badge-info badge-xs opacity-70">
-                        {{ $incident->latest_reviewer_role }}
+        {{-- SUMMARY WIDGET SENTRY --}}
+        {{-- Responsive: 1 kolom di HP, 2 kolom di Tablet, 3 kolom di Desktop --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+            {{-- STATS: STATUS --}}
+            <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
+                <div class="p-4 stat">
+                    <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
+                    <div class="flex items-center gap-2 mt-1 stat-value">
+                        @switch($status)
+                        @case('Open')
+                        @case('Reported')
+                        <div class="badge badge-error badge-xs animate-pulse"></div>
+                        <span class="text-sm italic font-black uppercase text-error">OPEN / REPORTED</span>
+                        @break
+                        @case('In Progress')
+                        <div class="badge badge-info badge-xs animate-bounce"></div>
+                        <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
+                        @break
+                        @case('Action Required')
+                        <div class="badge badge-warning badge-xs"></div>
+                        <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
+                        @break
+                        @case('Closed')
+                        <div class="badge badge-success badge-xs"></div>
+                        <span class="text-sm italic font-black uppercase text-success">CLOSED</span>
+                        @break
+                        @endswitch
                     </div>
-                    @endif
+                </div>
+            </div>
+
+            {{-- STATS: REVIEW PROGRESS --}}
+            <div class="border shadow-sm stats border-base-300 bg-base-100">
+                <div class="p-4 stat">
+                    <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-primary">Progress Review</div>
+                    <div class="flex items-end justify-between gap-1 mt-2">
+                        <div class="flex-1 space-y-1">
+                            <div class="flex gap-1">
+                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_contract_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
+                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
+                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
+                                @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']))
+                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_ktt_id ? 'bg-success' : 'bg-base-300' }}" title="KTT"></div>
+                                @endif
+                            </div>
+                            <div class="text-[9px] text-base-content/50 font-medium uppercase tracking-tighter flex justify-between">
+                                <span>Contractor</span>
+                                <span>OHS / KTT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- STATS: OTORITAS (Full width di Tablet agar seimbang) --}}
+            <div class="border shadow-sm stats border-base-300 bg-base-100 sm:col-span-2 lg:col-span-1">
+                <div class="p-4 stat">
+                    <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Otoritas Terakhir</div>
+                    <div class="mt-1 text-xs font-medium stat-desc text-base-content">
+                        <div class="flex items-center gap-2 truncate">
+                            <div class="avatar placeholder">
+                                <div class="w-6 rounded-full bg-neutral text-neutral-content">
+                                    <span class="text-[10px]">{{ substr($incident->latest_reviewer_name ?? 'N', 0, 1) }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="italic font-bold truncate">{{ $incident->latest_reviewer_name ?? 'N/A' }}</span>
+                                @if($incident->latest_reviewer_role && $incident->latest_reviewer_role !== 'Pending')
+                                <span class="text-[9px] text-info uppercase font-bold tracking-widest">{{ $incident->latest_reviewer_role }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <x-incident.layout>
         {{-- Iterasi Collapse SENTRY --}}
         @for ($i = 1; $i <= 9; $i++)
