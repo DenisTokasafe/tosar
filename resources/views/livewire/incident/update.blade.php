@@ -33,6 +33,14 @@
         {{-- SUMMARY WIDGET SENTRY --}}
         {{-- Responsive: 1 kolom di HP, 2 kolom di Tablet, 3 kolom di Desktop --}}
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {{-- STATS: STATUS --}}
+            <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
+                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
+                <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
+                    {{ __('Nomor Laporan:') }}
+                    <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
+                </flux:subheading>
+            </div>
 
             {{-- STATS: STATUS --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
