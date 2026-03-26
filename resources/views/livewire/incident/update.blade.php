@@ -8,22 +8,6 @@
 
     <div class="space-y-6">
         {{-- HEADER SECTION --}}
-        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-                <flux:heading level="1" class="mb-1 text-xl capitalize md:text-2xl">
-                    {{ __('Update Laporan Insiden') }}
-                </flux:heading>
-                <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
-                    {{ __('Nomor Laporan:') }}
-                    <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
-                </flux:subheading>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="badge badge-warning font-bold p-4 shadow-sm italic uppercase tracking-widest text-[10px] w-full md:w-auto justify-center">
-                    Mode Edit SENTRY
-                </span>
-            </div>
-        </div>
 
         {{-- TOTAL PROGRESS BAR (Optional but Recommended) --}}
         <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
