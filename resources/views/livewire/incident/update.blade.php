@@ -69,7 +69,7 @@
                     <div class="flex items-end justify-between gap-1 mt-2">
                         <div class="flex-1 space-y-1">
                             <div class="flex gap-1">
-                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_contract_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
+                                <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_contractor_id ? 'bg-success' : 'bg-base-300' }}" title="PM Contractor"></div>
                                 <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_internal_id ? 'bg-success' : 'bg-base-300' }}" title="PM Internal"></div>
                                 <div class="h-2 w-full rounded-full {{ $penerimaan_komentar_ohs_id ? 'bg-success' : 'bg-base-300' }}" title="OHS Head"></div>
                                 @if(in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']))
