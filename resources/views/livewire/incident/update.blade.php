@@ -35,11 +35,13 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {{-- STATS: STATUS --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
-                <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
-                <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
-                    {{ __('Nomor Laporan:') }}
-                    <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
-                </flux:subheading>
+                <div class="p-4 stat">
+                    <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
+                    <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
+                        {{ __('Nomor Laporan:') }}
+                        <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
+                    </flux:subheading>
+                </div>
             </div>
 
             {{-- STATS: STATUS --}}
