@@ -277,72 +277,78 @@
                                 $attributes = $activity->properties['attributes'] ?? [];
                                 $old = $activity->properties['old'] ?? [];
 
-                                // Ambil ringkasan identitas (dari tapActivity yang kita buat tadi)
+                                // Deteksi Identitas Subjek (Penting untuk Step 2 & Relasi Lain)
                                 $summary = $attributes['person_name'] ??
                                 ($attributes['action_summary'] ??
                                 ($attributes['timeline_summary'] ??
                                 ($attributes['file_display'] ??
-                                ($attributes['peepo_category'] ?? ''))));
+                                ($attributes['peepo_category'] ??
+                                ($attributes['impact_summary'] ?? '')))));
                                 @endphp
                                 <tr class="hover">
+                                    {{-- KOLOM 1: WAKTU --}}
                                     <td class="px-2 py-2 border align-top font-mono text-[10px] text-center">
-                                        <div class="font-bold">{{ $activity->created_at->format('d/m/Y') }}</div>
-                                        <div class="opacity-50">{{ $activity->created_at->format('H:i:s') }}</div>
+                                        <div class="font-bold text-base-content">{{ $activity->created_at->format('d/m/Y') }}</div>
+                                        <div class="italic opacity-50">{{ $activity->created_at->format('H:i:s') }}</div>
                                     </td>
 
+                                    {{-- KOLOM 2: USER & MODUL --}}
                                     <td class="px-2 py-2 align-top border">
                                         <div class="w-40 text-xs font-bold truncate text-primary" title="{{ $activity->causer->name ?? 'System' }}">
                                             {{ $activity->causer->name ?? 'System' }}
                                         </div>
                                         <div class="flex items-center gap-1 mt-1">
-                                            <span class="badge badge-ghost badge-xs text-[9px] px-1 uppercase font-bold tracking-tighter">
-                                                {{ $subjectName }}
+                                            {{-- Badge dinamis untuk membedakan tipe subjek --}}
+                                            <span class="badge {{ $subjectName == 'InvolvedPerson' ? 'badge-info' : 'badge-ghost' }} badge-xs text-[9px] px-1.5 uppercase font-black tracking-tighter">
+                                                {{ $subjectName == 'InvolvedPerson' ? 'PERSONNEL' : $subjectName }}
                                             </span>
                                         </div>
                                     </td>
 
+                                    {{-- KOLOM 3: DETAIL PERUBAHAN --}}
                                     <td class="px-2 py-2 border text-wrap">
-                                        {{-- Judul Event & Identitas Subjek --}}
-                                        <div class="flex items-center gap-2 mb-2">
-                                            <span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-base-300 text-base-content uppercase">
+                                        {{-- Judul Event (Created/Updated/Deleted) & Identitas Objek --}}
+                                        <div class="flex items-center flex-wrap gap-1.5 mb-2">
+                                            <span class="text-[9px] font-black px-1.5 py-0.5 rounded {{ $activity->description == 'deleted' ? 'bg-error text-error-content' : 'bg-base-300 text-base-content' }} uppercase">
                                                 {{ $activity->description }}
                                             </span>
                                             @if($summary)
-                                            <span class="text-[10px] font-bold text-secondary truncate italic">
+                                            <span class="text-[10px] font-bold text-secondary italic">
                                                 "{{ $summary }}"
                                             </span>
                                             @endif
                                         </div>
 
                                         {{-- Grid Perubahan Field --}}
-                                        <div class="space-y-1">
+                                        <div class="grid grid-cols-1 gap-1">
                                             @foreach ($attributes as $field => $newValue)
-                                            {{-- Skip fields internal dan label helper itu sendiri --}}
+                                            {{-- Skip meta fields dan field ringkasan agar tidak duplikat --}}
                                             @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']) ||
                                             str_ends_with($field, '_label') ||
                                             in_array($field, ['person_name', 'action_summary', 'timeline_summary', 'file_display', 'peepo_category', 'impact_summary', 'person_nik']))
 
                                             @php
-                                            // Prioritas: Gunakan _label dari tapActivity
+                                            // Gunakan label hasil tapActivity (format manusiawi)
                                             $displayOld = $old[$field . '_label'] ?? ($old[$field] ?? '-');
                                             $displayNew = $attributes[$field . '_label'] ?? ($newValue ?? '-');
 
+                                            // Bersihkan nama label (misal: 'employee_name' jadi 'Employee name')
                                             $label = ucfirst(str_replace(['_id', '_'], ['', ' '], $field));
                                             @endphp
 
                                             <div class="flex flex-col p-1.5 bg-base-200/40 rounded border border-base-300/50">
                                                 <span class="font-bold text-gray-500 uppercase text-[8px] leading-none mb-1">{{ $label }}</span>
-                                                <div class="flex items-center gap-2 text-[11px]">
+                                                <div class="flex items-center gap-2 text-[11px] leading-tight">
                                                     @if($activity->description === 'updated')
-                                                    <span class="px-1 line-through rounded opacity-50 bg-error/5 text-error">
+                                                    <div class="px-1 line-through break-all rounded opacity-50 bg-error/5 text-error">
                                                         {{ is_array($displayOld) ? json_encode($displayOld) : $displayOld }}
-                                                    </span>
-                                                    <span class="text-xs opacity-30">→</span>
+                                                    </div>
+                                                    <span class="text-[10px] opacity-30">→</span>
                                                     @endif
 
-                                                    <span class="px-1 font-semibold rounded bg-success/10 text-success">
+                                                    <div class="px-1 font-semibold break-all rounded bg-success/10 text-success">
                                                         {{ is_array($displayNew) ? json_encode($displayNew) : $displayNew }}
-                                                    </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             @endforeach
@@ -351,12 +357,10 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="3" class="py-12 text-center">
-                                        <div class="flex flex-col items-center opacity-20">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <span class="mt-2 text-sm font-bold">Data riwayat belum tersedia</span>
+                                    <td colspan="3" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center opacity-20">
+                                            <x-icon name="history" class="w-12 h-12 mb-2" />
+                                            <span class="text-sm font-bold tracking-widest uppercase">Belum ada riwayat perubahan</span>
                                         </div>
                                     </td>
                                 </tr>
