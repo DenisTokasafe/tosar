@@ -743,30 +743,29 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        // CRITICAL: Load data relasi terbaru agar perubahan data (seperti penambahan action kosong)
-        // langsung terdeteksi oleh logic di bawah ini.
-        $this->incident->load('correctiveActions');
+        // 1. Refresh relasi untuk memastikan data terbaru terdeteksi
+        $this->incident->load(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
 
         // --- PRE-CALCULATION DATA ---
 
-        // 1. Investigasi (Step 3-6)
+        // Investigasi (Step 3-6)
+        // Gunakan count() atau exists() pada method agar langsung ke database
         $hasTeams = $this->incident->investigationTeams()->exists();
         $hasAnalysis = $this->incident->peepoAnalyses()->exists() || $this->incident->timelines()->exists();
         $hasScat = !empty($this->incident->scat_analysis);
 
-        // Syarat In Progress
         $isInvestigating = $hasTeams || $hasAnalysis || $hasScat;
 
-        // 2. Action Plan (Step 7-8)
-        $totalActions = $this->incident->correctiveActions->count(); // Menggunakan property hasil load()
+        // Action Plan (Step 7-8)
+        $totalActions = $this->incident->correctiveActions->count();
         $hasActionPlan = $totalActions > 0 || !empty($this->key_learning);
 
-        // Syarat Semua Action Selesai:
-        // Harus ada minimal 1 action DAN tidak ada satupun yang actual_completion_date-nya NULL
+        // FIX: Syarat Semua Action Selesai
+        // Kita cek langsung ke database lewat method relation () agar bisa menggunakan whereNull & exists
         $isAllActionClosed = $totalActions > 0 &&
-            !$this->incident->correctiveActions->whereNull('actual_completion_date')->exists();
+            !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
 
-        // 3. Reviewer (Step 9)
+        // Reviewer (Step 9)
         $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
             !empty($this->penerimaan_komentar_internal);
 
@@ -778,25 +777,22 @@ class Update extends Component
 
         // --- LOGIKA PENENTUAN STATUS (STRUKTUR EKSKLUSIF) ---
 
-        // STATUS: CLOSED
-        // Jika syarat ini gagal (misal karena baru tambah action kosong), otomatis lanjut ke IF bawahnya.
+        // 1. STATUS: CLOSED
         if ($isAllActionClosed && $isReviewed && $kttRequirementMet) {
             return 'Closed';
         }
 
-        // STATUS: ACTION REQUIRED
-        // Laporan akan "turun" ke sini jika syarat Closed di atas tidak terpenuhi
-        // tapi sudah ada data Action Plan atau Key Learning.
+        // 2. STATUS: ACTION REQUIRED
         if ($hasActionPlan) {
             return 'Action Required';
         }
 
-        // STATUS: IN PROGRESS
+        // 3. STATUS: IN PROGRESS
         if ($isInvestigating) {
             return 'In Progress';
         }
 
-        // STATUS: OPEN / REPORTED
+        // 4. STATUS: OPEN / REPORTED
         return 'Open';
     }
     public function deleteMedia($id)
