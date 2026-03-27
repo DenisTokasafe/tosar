@@ -7,8 +7,8 @@
                         <th class="w-10 text-center">No</th>
                         <th class="w-40">{{ __('Nomor Referensi') }}</th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
-                        <th>{{ __('Judul Insiden') }}</th>
-                        <th class="w-40">{{ __('Kategori') }}</th>
+                        <th>{{ __('Deskripsi Insiden') }}</th>
+                        <th class="w-40">{{ __('Tipe Insiden') }}</th>
                         <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
                         <th class="w-32 text-center">{{ __('Status') }}</th>
                         <th class="w-20 text-center">{{ __('Aksi') }}</th>
@@ -29,8 +29,8 @@
                         {{-- Tanggal & Waktu --}}
                         <td>
                             <div class="flex flex-col">
-                                <span class="text-xs font-semibold">{{ $item->incident_date->format('d M Y') }}</span>
-                                <span class="text-[10px] opacity-50">{{ $item->incident_time->format('H:i') }} WITA</span>
+                                <span class="text-xs font-semibold">{{ $item->date_time->format('d M Y') }}</span>
+                                <span class="text-[10px] opacity-50">{{ $item->date_time->format('H:i') }} WITA</span>
                             </div>
                         </td>
 
@@ -38,11 +38,11 @@
                         <td>
                             <div class="flex flex-col max-w-xs md:max-w-md">
                                 <span class="text-xs font-bold truncate" title="{{ $item->title }}">
-                                    {{ Str::limit($item->title, 50) }}
+                                    {{ Str::limit($item->description, 50) }}
                                 </span>
                                 <span class="text-[10px] italic opacity-60 flex items-center gap-1">
                                     <x-icon name="location_on" class="w-3 h-3" />
-                                    {{ $item->location_name ?? 'Lokasi tidak spesifik' }}
+                                    {{ $item->location?->location_name ?? $item->location_specific }}
                                 </span>
                             </div>
                         </td>
@@ -50,21 +50,21 @@
                         {{-- Kategori --}}
                         <td>
                             <div class="badge badge-outline badge-xs py-2 px-2 font-medium text-[10px] uppercase">
-                                {{ $item->category->name ?? 'N/A' }}
+                                {{ $item->EventType?->event_type_name ?? 'N/A' }}
                             </div>
                         </td>
 
                         {{-- Klasifikasi Warna --}}
                         <td class="text-center">
                             @php
-                            $riskColor = match($item->actual_risk) {
-                            'Critical' => 'bg-error text-error-content',
-                            'High' => 'bg-orange-500 text-white',
-                            'Medium' => 'bg-warning text-warning-content',
+                            $riskColor = match($item->risk?->rating_name) {
+                            'Ekstrem' => 'bg-error text-error-content',
+                            'Tinggi' => 'bg-orange-500 text-white',
+                            'Sedang' => 'bg-warning text-warning-content',
                             default => 'bg-success text-success-content',
                             };
                             @endphp
-                            <div class="tooltip" data-tip="Actual Risk: {{ $item->actual_risk }}">
+                            <div class="tooltip" data-tip="Actual Risk: {{ $item->rating_name }}">
                                 <span class="inline-block w-3 h-3 rounded-full {{ $riskColor }}"></span>
                             </div>
                         </td>
@@ -72,9 +72,9 @@
                         {{-- Status --}}
                         <td class="text-center">
                             <div @class([ 'badge badge-xs py-2 px-2 font-bold text-[9px] uppercase' , 'badge-success'=> $item->status === 'closed',
-                                'badge-warning' => $item->status === 'open',
-                                'badge-info' => $item->status === 'investigation',
-                                'badge-ghost' => $item->status === 'draft',
+                                'badge-error' => $item->status === 'Open',
+                                'badge-warning' => $item->status === 'Action Required',
+                                'badge-info' => $item->status === 'In Progress',
                                 ])>
                                 {{ $item->status }}
                             </div>
