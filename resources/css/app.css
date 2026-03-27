@@ -310,6 +310,8 @@
     --color-success-content: oklch(26% 0.065 152.934);
     --color-warning: oklch(82% 0.189 84.429);
     --color-warning-content: oklch(27% 0.077 45.635);
+    --color-semi: oklch(64% 0.222 41.116);
+    --color-semi-content: oklch(28% 0.066 53.813);
     --color-error: oklch(70% 0.191 22.216);
     --color-error-content: oklch(25% 0.092 26.042);
     --radius-selector: 0rem;
