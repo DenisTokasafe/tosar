@@ -2061,26 +2061,28 @@ class Update extends Component
     // Logic di Class PHP Livewire
     public function getProgressPercentage()
     {
-        // 1. Definisikan langkah-langkah (Step) yang wajib dicek
-        // Sesuai dengan tabel alur: Step 1-2 (Initial), 3-6 (Investigation), 7-8 (Action), 9 (Final)
+        // Cek apakah rating membutuhkan otorisasi KTT
+        $requiresKTT = in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
+
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
             'step2' => $this->incident->involvedPersons()->exists(),
-            'step3' => $this->incident->investigationTeams()->exists(), // Cek relasi tim
+            'step3' => $this->incident->investigationTeams()->exists(),
             'step4' => $this->incident->peepoAnalyses()->exists(),
-            'step5' => $this->incident->timelines()->exists(), // Cek Why Analysis
+            'step5' => $this->incident->timelines()->exists(),
             'step6' => !empty($this->incident->scat_analysis),
             'step7' => $this->incident->correctiveActions()->exists(),
             'step8' => !empty($this->key_learning),
-            'step9' => !empty($this->penerimaan_komentar_ktt_id), // Syarat penutup
+
+            // Logika Dinamis Step 9
+            'step9' => $requiresKTT ? !empty($this->penerimaan_komentar_ktt_id) // Jika rating tinggi, wajib KTT
+                : (!empty($this->penerimaan_komentar_ohs_id)), // Jika rendah, cukup OHS/Internal
         ];
 
-        // 2. Hitung berapa yang bernilai true
         $completedCount = collect($steps)->filter(fn($step) => $step)->count();
         $totalSteps = count($steps);
 
-        // 3. Kembalikan nilai dalam persen
-        return ($completedCount / $totalSteps) * 100;
+        return round(($completedCount / $totalSteps) * 100);
     }
     public function update()
     {
