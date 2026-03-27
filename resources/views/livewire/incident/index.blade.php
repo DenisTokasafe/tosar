@@ -23,7 +23,7 @@
 
                         {{-- Nomor Referensi --}}
                         <td class="text-xs font-bold tracking-wider uppercase text-primary">
-                            {{ $item->reference_number ?? 'DRAFT' }}
+                            {{ $item->report_number ?? 'DRAFT' }}
                         </td>
 
                         {{-- Tanggal & Waktu --}}
@@ -42,7 +42,7 @@
                                 </span>
                                 <span class="text-[10px] italic opacity-60 flex items-center gap-1">
                                     <x-icon name="map-pin" class="w-3 h-3" />
-                                    {{ $item->location?->name ?? $item->location_specific }}
+                                    {{ $item->location?->name}} ->spesifik: {{ $item->location_specific }}
                                 </span>
                             </div>
                         </td>
