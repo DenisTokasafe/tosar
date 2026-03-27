@@ -83,12 +83,7 @@
                         {{-- Tombol Aksi --}}
                         <td class="text-center">
                             <div class="flex justify-center gap-1">
-                                <x-button.btn-tooltip
-                                    color="ghost"
-                                    icon="visibility"
-                                    wireClick="viewIncident({{ $item->id }})"
-                                    tooltip="Lihat Detail"
-                                    class="btn-xs" />
+
                                 <x-button.btn-tooltip
                                     color="primary"
                                     icon="edit"
