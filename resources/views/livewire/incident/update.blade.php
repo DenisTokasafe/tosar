@@ -252,7 +252,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Audit Trail System - {{ $this->incident->incident_number ?? 'Draft' }}
+                        Audit Trail System - {{ $incident->incident_number ?? 'Draft' }}
                     </h3>
 
                     <div class="max-h-[75vh] overflow-y-auto overflow-x-auto border rounded-lg">
@@ -267,14 +267,14 @@
                             <tbody>
                                 @php
                                 $allLogs = collect();
-                                if (isset($this->incident) && $this->incident->exists) {
+                                if (isset($incident) && $incident->exists) {
                                 $allLogs = \Spatie\Activitylog\Models\Activity::where(function($q) {
-                                $q->where('subject_type', get_class($this->incident))
-                                ->where('subject_id', $this->incident->id);
+                                $q->where('subject_type', get_class($incident))
+                                ->where('subject_id', $incident->id);
                                 })->orWhere(function($q) {
                                 // Mencari log relasi yang memiliki incident_report_id sama dengan ID ini
-                                $q->where('properties->attributes->incident_report_id', $this->incident->id)
-                                ->orWhere('properties->old->incident_report_id', $this->incident->id);
+                                $q->where('properties->attributes->incident_report_id', $incident->id)
+                                ->orWhere('properties->old->incident_report_id', $incident->id);
                                 })->latest()->get();
                                 }
                                 @endphp
