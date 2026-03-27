@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 class IncidentReport extends Model
 {
     use HasFactory, LogsActivity;
 
-    // Mengizinkan mass-assignment untuk semua field kecuali ID
     protected $guarded = ['id'];
 
-    // Casting tipe data agar otomatis menjadi objek Carbon atau tipe yang sesuai
     protected $casts = [
         'scat_analysis' => 'array',
         'date_time' => 'datetime',
@@ -25,22 +25,66 @@ class IncidentReport extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Konfigurasi Log Activity
+     */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat semua kolom kecuali ID
-            ->logOnlyDirty()          // Hanya catat kolom yang berubah
-            ->dontSubmitEmptyLogs()   // Jangan simpan log jika tidak ada perubahan
-            ->useLogName('Incident'); // Penamaan kategori log
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('Incident');
     }
 
     /**
-     * Relasi ke semua aktivitas (termasuk relasi anak)
+     * Tap Activity: Mengubah ID menjadi Label Nama agar log mudah dibaca
      */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        $map = [
+            'event_type_id'     => fn() => $this->eventType?->event_type_name,
+            'event_sub_type_id' => fn() => $this->eventSubType?->event_sub_type_name,
+            'location_id'       => fn() => $this->location?->name,
+            'department_id'     => fn() => $this->department?->department_name,
+            'contractor_id'     => fn() => $this->contractor?->contractor_name,
+            'pelapor_id'        => fn() => $this->reporter?->name,
+            'penanggung_jawab'  => fn() => $this->pic?->name,
+            'pm_contractor_id'  => fn() => $this->pmContractor?->name,
+            'pm_internal_id'    => fn() => $this->pmInternal?->name,
+            'ohs_head_id'       => fn() => $this->ohsHead?->name,
+            'ktt_id'            => fn() => $this->ktt?->name,
+        ];
+
+        foreach (['attributes', 'old'] as $key) {
+            if (!isset($properties[$key])) continue;
+
+            foreach ($map as $field => $resolver) {
+                if (isset($properties[$key][$field])) {
+                    $properties[$key][$field . '_label'] = $resolver();
+                }
+            }
+        }
+
+        $activity->properties = collect($properties);
+    }
+
+    /**
+     * RELASI AKTIVITAS
+     */
+
+    // Relasi standar (Hanya log milik IncidentReport itu sendiri)
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    // Relasi kustom (Menggabungkan log header + log milik tabel anak)
     public function allActivities()
     {
-        // Mengambil log milik laporan ini DAN log milik relasi yang memiliki incident_report_id laporan ini
-        return \Spatie\Activitylog\Models\Activity::where(function ($query) {
+        return Activity::where(function ($query) {
             $query->where('subject_type', IncidentReport::class)
                 ->where('subject_id', $this->id);
         })->orWhere(function ($query) {
@@ -48,7 +92,6 @@ class IncidentReport extends Model
                 ->orWhere('properties->old->incident_report_id', $this->id);
         })->latest();
     }
-
 
     /**
      * ==========================================
@@ -58,35 +101,29 @@ class IncidentReport extends Model
 
     public function eventType(): BelongsTo
     {
-        return $this->belongsTo(EventType::class);
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
-
     public function eventSubType(): BelongsTo
     {
-        return $this->belongsTo(EventSubType::class);
+        return $this->belongsTo(EventSubType::class, 'event_sub_type_id');
     }
-
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
     }
-
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
-
     public function contractor(): BelongsTo
     {
         return $this->belongsTo(Contractor::class);
     }
-
-    public function pic(): BelongsTo // Penanggung Jawab
+    public function pic(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'penanggungJawab');
+        return $this->belongsTo(User::class, 'penanggung_jawab');
     }
-
-    public function reporter(): BelongsTo // Pelapor
+    public function reporter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'pelapor_id');
     }
@@ -101,17 +138,14 @@ class IncidentReport extends Model
     {
         return $this->belongsTo(User::class, 'pm_contractor_id');
     }
-
     public function pmInternal(): BelongsTo
     {
         return $this->belongsTo(User::class, 'pm_internal_id');
     }
-
     public function ohsHead(): BelongsTo
     {
         return $this->belongsTo(User::class, 'ohs_head_id');
     }
-
     public function ktt(): BelongsTo
     {
         return $this->belongsTo(User::class, 'ktt_id');
@@ -119,86 +153,64 @@ class IncidentReport extends Model
 
     /**
      * ==========================================
-     * RELASI DETAIL (HAS ONE / HAS MANY)
+     * RELASI DETAIL (HAS MANY / HAS ONE)
      * ==========================================
      */
 
-    // Part 2 & Body Parts: Dampak Insiden (Injury/Damage)
     public function impact(): HasOne
     {
         return $this->hasOne(IncidentImpact::class);
     }
-
-    // Part 2: Personil Terlibat
     public function involvedPersons(): HasMany
     {
         return $this->hasMany(InvolvedPerson::class);
     }
-
-    // Part 3: Tim Investigasi
     public function investigationTeams(): HasMany
     {
         return $this->hasMany(InvestigationTeam::class);
     }
-
-    // Part 4: Analisis PEEPO
     public function peepoAnalyses(): HasMany
     {
         return $this->hasMany(PeepoAnalysis::class);
     }
-
-    // Part 5: Timeline & 5 Whys
     public function timelines(): HasMany
     {
-        return $this->hasMany(TimelineAnalysis::class);
+        return $this->hasMany(TimelineAnalysis::class, 'incident_report_id');
     }
-
-    // Part 7: Tindakan Perbaikan
     public function correctiveActions(): HasMany
     {
         return $this->hasMany(CorrectiveAction::class);
     }
-
-    // Part 7: Upload Gambar/Dokumen
     public function attachments(): HasMany
     {
         return $this->hasMany(IncidentAttachment::class);
     }
-    public function risk()
+    public function risk(): HasOne
     {
-        // HasOne karena 1 laporan hanya punya 1 penilaian risiko
         return $this->hasOne(IncidentRisk::class, 'incident_report_id');
     }
 
-    public function getManagerReviewerAttribute()
-    {
-        // Mengambil user yang memiliki role Manager/Superintendent di departemen terkait
-        // Atau ambil dari data yang sudah di-assign di Part 9
-        return $this->reviews()->first()?->user?->name ?? 'Belum Ditentukan';
-    }
     /**
-     * Mendapatkan peninjau terakhir yang mengisi komentar untuk Summary Widget
+     * ==========================================
+     * ACCESSORS
+     * ==========================================
      */
-    /**
-     * Mendapatkan peninjau terakhir yang mengisi komentar untuk Summary Widget
-     */
+
     public function getLatestReviewerNameAttribute()
     {
-        // Gunakan optional() atau null safe operator untuk menghindari error jika relasi kosong
         if ($this->ktt_id) return $this->ktt?->name;
         if ($this->ohs_head_id) return $this->ohsHead?->name;
         if ($this->pm_internal_id) return $this->pmInternal?->name;
         if ($this->pm_contractor_id) return $this->pmContractor?->name;
-
         return 'Waiting Review';
     }
+
     public function getLatestReviewerRoleAttribute()
     {
         if ($this->ktt_id) return 'KTT';
         if ($this->ohs_head_id) return 'OHS Head';
         if ($this->pm_internal_id) return 'PM Internal';
         if ($this->pm_contractor_id) return 'PM Contractor';
-
         return 'Pending';
     }
 }

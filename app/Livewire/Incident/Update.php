@@ -2092,28 +2092,22 @@ class Update extends Component
     {
         $this->validateOnlyStep($this->currentStep);
 
-        // Ambil data incident
-        $report = IncidentReport::findOrFail($this->incidentId);
+        // Gunakan $this->incident agar sinkron dengan state komponen
+        $report = $this->incident;
 
-        // Proteksi Race Condition: Cek versi sebelum proses dimulai
+        // 1. Proteksi Race Condition
         if ($report->lock_version !== $this->current_lock_version) {
             $this->dispatch('alert', [
-                'text' => "Data telah diperbarui oleh user lain. Silakan refresh halaman.",
-                'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
-                'close' => true,
-                'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
+                'text' => "Data telah diperbarui oleh user lain (Versi Konflik). Silakan refresh.",
+                'type' => 'error'
             ]);
             return;
         }
 
         try {
             DB::transaction(function () use ($report) {
-                // 1. UPDATE SEMUA RELASI TERLEBIH DAHULU (Step 2 - 7)
-                // -------------------------------------------------------
 
-                // Update Involved Persons (Step 2)
+                // 2. Update Involved Persons (Gunakan delete/create hanya jika data bersifat temporer)
                 $report->involvedPersons()->delete();
                 foreach ($this->directly_involved as $person) {
                     if (!empty($person['employee_name'])) {
@@ -2131,11 +2125,11 @@ class Update extends Component
                     }
                 }
 
-                // Update Investigation Teams (Step 3)
+                // 3. Update Investigation Teams
                 $report->investigationTeams()->delete();
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
                     foreach ($this->{$role} as $member) {
-                        if (!empty($member['user_id']) || !empty($member['jabatan'])) {
+                        if (!empty($member['user_id'])) {
                             $report->investigationTeams()->create([
                                 'user_id' => $member['user_id'],
                                 'role'    => $role,
@@ -2146,25 +2140,25 @@ class Update extends Component
                     }
                 }
 
-                // Update PEEPO (Step 4) & Why Analysis (Step 5)
+                // 4. Update PEEPO & Why Analysis
                 foreach ($this->peepo as $key => $value) {
                     $report->peepoAnalyses()->updateOrCreate(
                         ['factor_key' => $key],
                         [
                             'factor_name' => $this->peepoFactors[$key],
-                            'temuan'      => $value['temuan'],
-                            'deskripsi'   => $value['deskripsi'],
+                            'temuan'      => $value['temuan'] ?? '-',
+                            'deskripsi'   => $value['deskripsi'] ?? '-',
                         ]
                     );
                 }
 
-                $whyCount = collect($this->why_analysis)->filter(fn($value) => !empty($value))->count();
+                $whyCount = collect($this->why_analysis)->filter(fn($val) => !empty($val))->count();
                 $report->timelines()->updateOrCreate(
                     ['incident_report_id' => $report->id],
                     ['analysis_steps' => $this->why_analysis, 'why_count_used' => $whyCount]
                 );
 
-                // Update Corrective Actions (Step 7)
+                // 5. Update Corrective Actions
                 $report->correctiveActions()->delete();
                 foreach ($this->corrective_actions as $action) {
                     if (!empty($action['action_description'])) {
@@ -2179,13 +2173,11 @@ class Update extends Component
                     }
                 }
 
-                // 2. HITUNG ULANG STATUS SETELAH DATA RELASI TERUPDATE
-                // -------------------------------------------------------
-                $this->incident->refresh();
+                // 6. Tentukan Status Berdasarkan Data Terbaru
+                // Penting: Pastikan determineReportStatus() membaca data dari $this
                 $this->status = $this->determineReportStatus();
 
-                // 3. UPDATE DATA UTAMA (Mencakup Status Terbaru)
-                // -------------------------------------------------------
+                // 7. Update Data Utama & Increment Lock
                 $report->update([
                     'status'                => $this->status,
                     'event_type_id'         => $this->event_type_id,
@@ -2212,9 +2204,10 @@ class Update extends Component
                     'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
                     'ktt_comment'           => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt : null,
                     'ktt_id'                => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt_id : null,
+                    'lock_version'          => $report->lock_version + 1, // Increment manual di dalam transaksi
                 ]);
 
-                // Update Risk Assessment
+                // 8. Risk Assessment
                 $report->risk()->updateOrCreate(
                     ['incident_report_id' => $report->id],
                     [
@@ -2223,27 +2216,24 @@ class Update extends Component
                         'rating_name'    => $this->RiskAssessment?->name,
                     ]
                 );
-
-                // 4. INCREMENT LOCK VERSION (Dilakukan di akhir transaksi yang sukses)
-                $report->increment('lock_version');
             });
 
-            // 5. SINKRONISASI KE LIVEWIRE
-            // Kita ambil nilai terbaru agar session saat ini memegang versi terbaru
-            $this->current_lock_version = $report->fresh()->lock_version;
+            // 9. Post-Success Synchronization
+            $this->incident->refresh();
+            $this->current_lock_version = $this->incident->lock_version;
 
-            // FINISHING STEP
             if ($this->currentStep < 9) {
                 $this->currentStep++;
             }
 
             $this->dispatch('alert', [
-                'text' => "SENTRY: Data berhasil disimpan. Status saat ini: {$this->status}",
+                'text' => "SENTRY: Data berhasil diperbarui. Status: {$this->status}",
                 'type' => 'success'
             ]);
         } catch (\Exception $e) {
+            \Log::error("Update Incident Failed: " . $e->getMessage());
             $this->dispatch('alert', [
-                'text' => "Gagal menyimpan: " . $e->getMessage(),
+                'text' => "Terjadi kesalahan sistem. Silakan hubungi admin.",
                 'type' => 'error'
             ]);
         }

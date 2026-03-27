@@ -252,7 +252,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Audit Trail System - {{ $incident->incident_number ?? 'Draft' }}
+                        Audit Trail System - {{ $this->incident->incident_number ?? 'Draft' }}
                     </h3>
 
                     <div class="max-h-[75vh] overflow-y-auto overflow-x-auto border rounded-lg">
@@ -266,17 +266,10 @@
                             </thead>
                             <tbody>
                                 @php
-                                $allLogs = collect();
-                                if (isset($incident) && $incident->exists) {
-                                $allLogs = \Spatie\Activitylog\Models\Activity::where(function($q) {
-                                $q->where('subject_type', get_class($incident))
-                                ->where('subject_id', $incident->id);
-                                })->orWhere(function($q) {
-                                // Mencari log relasi yang memiliki incident_report_id sama dengan ID ini
-                                $q->where('properties->attributes->incident_report_id', $incident->id)
-                                ->orWhere('properties->old->incident_report_id', $incident->id);
-                                })->latest()->get();
-                                }
+                                // Menggunakan fungsi allActivities() dari Model yang mencakup relasi anak
+                                $allLogs = (isset($this->incident) && $this->incident->exists)
+                                ? $this->incident->allActivities()->get()
+                                : collect();
                                 @endphp
 
                                 @forelse($allLogs as $activity)
@@ -291,36 +284,25 @@
                                         </div>
                                     </td>
                                     <td class="px-2 py-2 border text-wrap">
-                                        {{-- Judul Event --}}
+                                        {{-- Judul Event (Created, Updated, Deleted) --}}
                                         <div class="text-[11px] font-semibold mb-1 italic text-base-content/70">
-                                            {{ $activity->description }}
+                                            {{ strtoupper($activity->description) }}
                                         </div>
 
-                                        {{-- Perulangan Attributes --}}
-                                        @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
-                                        @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']))
+                                        {{-- Iterasi perubahan --}}
+                                        @php
+                                        $attributes = $activity->properties['attributes'] ?? [];
+                                        $old = $activity->properties['old'] ?? [];
+                                        @endphp
+
+                                        @foreach ($attributes as $field => $newValue)
+                                        {{-- Skip meta fields dan label helper --}}
+                                        @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']) || str_ends_with($field, '_label'))
 
                                         @php
-                                        $oldValue = $activity->changes['old'][$field] ?? '-';
-                                        $newValue = $new;
-
-                                        // Transformasi ID menjadi Nama agar manusiawi
-                                        switch ($field) {
-                                        case 'penanggungJawab':
-                                        case 'pic_user_id':
-                                        case 'user_id':
-                                        $oldValue = \App\Models\User::find($oldValue)?->name ?? $oldValue;
-                                        $newValue = \App\Models\User::find($newValue)?->name ?? $newValue;
-                                        break;
-                                        case 'location_id':
-                                        $oldValue = \App\Models\Location::find($oldValue)?->name ?? $oldValue;
-                                        $newValue = \App\Models\Location::find($newValue)?->name ?? $newValue;
-                                        break;
-                                        case 'body_part_id':
-                                        $oldValue = \App\Models\BodyPart::find($oldValue)?->name ?? $oldValue;
-                                        $newValue = \App\Models\BodyPart::find($newValue)?->name ?? $newValue;
-                                        break;
-                                        }
+                                        // Gunakan label hasil tapActivity jika ada, jika tidak gunakan nilai asli
+                                        $displayOld = $old[$field . '_label'] ?? ($old[$field] ?? '-');
+                                        $displayNew = $attributes[$field . '_label'] ?? ($newValue ?? '-');
 
                                         $label = ucfirst(str_replace('_', ' ', $field));
                                         @endphp
@@ -328,12 +310,14 @@
                                         <div class="grid grid-cols-1 gap-0 mb-2 p-1.5 bg-base-200/50 rounded text-[11px] border border-base-300">
                                             <span class="font-bold text-gray-500 uppercase text-[9px]">{{ $label }}</span>
                                             <div class="flex items-center gap-2 flex-wrap mt-0.5">
+                                                {{-- Nilai Lama --}}
                                                 <span class="px-1 line-through rounded text-error bg-error/10">
-                                                    {{ is_array($oldValue) ? json_encode($oldValue) : $oldValue }}
+                                                    {{ is_array($displayOld) ? json_encode($displayOld) : $displayOld }}
                                                 </span>
                                                 <span class="text-xs opacity-50">→</span>
+                                                {{-- Nilai Baru --}}
                                                 <span class="px-1 font-medium rounded text-success bg-success/10">
-                                                    {{ is_array($newValue) ? json_encode($newValue) : $newValue }}
+                                                    {{ is_array($displayNew) ? json_encode($displayNew) : $displayNew }}
                                                 </span>
                                             </div>
                                         </div>
