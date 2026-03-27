@@ -20,6 +20,7 @@
             {{-- STATS: STATUS --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
                 <div class="p-2 stat">
+                    <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
                     <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
                         {{ __('Nomor Laporan:') }}
@@ -239,6 +240,126 @@
                 </div>
             </div>
             @endfor
+
+
+            {{-- Modal DaisyUI --}}
+            <dialog class="modal" id="my_modal_2" role="dialog" wire:ignore.self>
+                <div class="md:max-w-5xl modal-box">
+                    <form method="dialog">
+                        <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+                    </form>
+                    <h3 class="flex items-center gap-2 mb-4 text-lg font-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor text-primary">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Audit Trail System - {{ $report->incident_number ?? 'Draft' }}
+                    </h3>
+
+                    <div class="max-h-[75vh] overflow-y-auto overflow-x-auto border rounded-lg">
+                        <table class="table border table-xs table-pin-rows">
+                            <thead>
+                                <tr class="bg-base-200 text-base-content">
+                                    <th class="w-32 px-2 py-2 border">{{ __('Tanggal') }}</th>
+                                    <th class="w-40 px-2 py-2 border">{{ __('User & Modul') }}</th>
+                                    <th class="px-2 py-2 border">{{ __('Detail Perubahan') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{-- Query mengambil log dari IncidentReport dan log relasi yang terikat ID ini --}}
+                                @php
+                                $allLogs = \Spatie\Activitylog\Models\Activity::where(function($q) use ($report) {
+                                $q->where('subject_type', get_class($report))->where('subject_id', $report->id);
+                                })->orWhere(function($q) use ($report) {
+                                $q->where('properties->attributes->incident_report_id', $report->id)
+                                ->orWhere('properties->old->incident_report_id', $report->id);
+                                })->latest()->get();
+                                @endphp
+
+                                @forelse($allLogs as $activity)
+                                <tr class="hover">
+                                    <td class="px-2 py-2 border align-top font-mono text-[10px]">
+                                        {{ $activity->created_at->format('d-m-Y H:i:s') }}
+                                    </td>
+                                    <td class="px-2 py-2 align-top border">
+                                        <div class="text-xs font-bold text-primary">{{ $activity->causer->name ?? 'System' }}</div>
+                                        <div class="badge badge-ghost badge-xs text-[9px] uppercase tracking-tighter">
+                                            {{ class_basename($activity->subject_type) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-2 border">
+                                        {{-- Judul Event --}}
+                                        <div class="text-[11px] font-semibold mb-1 italic text-base-content/70">
+                                            {{ $activity->description }}
+                                        </div>
+
+                                        {{-- Perulangan Attributes --}}
+                                        @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
+                                        @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']))
+
+                                        @php
+                                        $oldValue = $activity->changes['old'][$field] ?? '-';
+                                        $newValue = $new;
+
+                                        // Transformasi ID menjadi Nama agar manusiawi
+                                        switch ($field) {
+                                        case 'penanggungJawab':
+                                        $oldValue = \App\Models\User::find($oldValue)?->name ?? $oldValue;
+                                        $newValue = \App\Models\User::find($newValue)?->name ?? $newValue;
+                                        break;
+                                        case 'location_id':
+                                        $oldValue = \App\Models\Location::find($oldValue)?->name ?? $oldValue;
+                                        $newValue = \App\Models\Location::find($newValue)?->name ?? $newValue;
+                                        break;
+                                        case 'body_part_id':
+                                        $oldValue = \App\Models\BodyPart::find($oldValue)?->name ?? $oldValue;
+                                        $newValue = \App\Models\BodyPart::find($newValue)?->name ?? $newValue;
+                                        break;
+                                        case 'pic_user_id':
+                                        $oldValue = \App\Models\User::find($oldValue)?->name ?? $oldValue;
+                                        $newValue = \App\Models\User::find($newValue)?->name ?? $newValue;
+                                        break;
+                                        }
+
+                                        $label = ucfirst(str_replace('_', ' ', $field));
+                                        @endphp
+
+                                        <div class="grid grid-cols-1 gap-0 mb-2 p-1.5 bg-base-200/50 rounded text-[11px] border border-base-300">
+                                            <span class="font-bold text-gray-500 uppercase text-[9px]">{{ $label }}</span>
+                                            <div class="flex items-center gap-2 flex-wrap mt-0.5">
+                                                <span class="px-1 line-through rounded text-error bg-error/10">
+                                                    {{ is_array($oldValue) ? json_encode($oldValue) : $oldValue }}
+                                                </span>
+                                                <span class="text-xs opacity-50">→</span>
+                                                <span class="px-1 font-medium rounded text-success bg-success/10">
+                                                    {{ is_array($newValue) ? json_encode($newValue) : $newValue }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="py-10 text-center text-gray-400">
+                                        <div class="flex flex-col items-center justify-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            <span>Belum ada riwayat perubahan data.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <button class="btn btn-sm">Tutup</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
     </x-incident.layout>
 
     @push('scripts')

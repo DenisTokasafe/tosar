@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class IncidentReport extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // Mengizinkan mass-assignment untuk semua field kecuali ID
     protected $guarded = ['id'];
@@ -22,6 +24,30 @@ class IncidentReport extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()           // Mencatat semua kolom kecuali ID
+            ->logOnlyDirty()          // Hanya catat kolom yang berubah
+            ->dontSubmitEmptyLogs()   // Jangan simpan log jika tidak ada perubahan
+            ->useLogName('Incident'); // Penamaan kategori log
+    }
+
+    /**
+     * Relasi ke semua aktivitas (termasuk relasi anak)
+     */
+    public function allActivities()
+    {
+        // Mengambil log milik laporan ini DAN log milik relasi yang memiliki incident_report_id laporan ini
+        return \Spatie\Activitylog\Models\Activity::where(function ($query) {
+            $query->where('subject_type', IncidentReport::class)
+                ->where('subject_id', $this->id);
+        })->orWhere(function ($query) {
+            $query->where('properties->attributes->incident_report_id', $this->id)
+                ->orWhere('properties->old->incident_report_id', $this->id);
+        })->latest();
+    }
 
 
     /**

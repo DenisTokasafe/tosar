@@ -2099,7 +2099,11 @@ class Update extends Component
         if ($report->lock_version !== $this->current_lock_version) {
             $this->dispatch('alert', [
                 'text' => "Data telah diperbarui oleh user lain. Silakan refresh halaman.",
-                'type' => 'error'
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
             ]);
             return;
         }
