@@ -42,7 +42,7 @@
                                 </span>
                                 <span class="text-[10px] italic opacity-60 flex items-center gap-1">
                                     <x-icon name="map-pin" class="w-3 h-3" />
-                                    {{ $item->location?->location_name ?? $item->location_specific }}
+                                    {{ $item->location?->name ?? $item->location_specific }}
                                 </span>
                             </div>
                         </td>
