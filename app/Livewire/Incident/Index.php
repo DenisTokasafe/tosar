@@ -7,9 +7,9 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    public $search = '';
     public $filterCategory = '';
     public $filterStatus = '';
-    public $perPage = 10;
 
     // Reset halaman jika filter berubah
     public function updatedSearch()
