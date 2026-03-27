@@ -74,7 +74,7 @@
                             <div @class([ 'badge badge-xs py-2 px-2 font-bold text-[9px] uppercase' , 'badge-success'=> $item->status === 'closed',
                                 'badge-error' => $item->status === 'Open',
                                 'badge-warning' => $item->status === 'Action Required',
-                                'badge-secondary' => $item->status === 'In Progress',
+                                'badge-info' => $item->status === 'In Progress',
                                 ])>
                                 {{ $item->status }}
                             </div>
