@@ -743,54 +743,55 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        // 1. Cek Investigasi (Step 3-6)
-        // Menggunakan && jika ingin WAJIB ketiganya ada, atau || jika salah satu saja sudah cukup
+        // --- PRE-CALCULATION DATA ---
+
+        // 1. Investigasi (Step 3-6)
         $hasTeams = $this->incident->investigationTeams()->exists();
-        $hasPeepo = $this->incident->peepoAnalyses()->exists();
-        $hasTimeline = $this->incident->timelines()->exists();
+        $hasAnalysis = $this->incident->peepoAnalyses()->exists() || $this->incident->timelines()->exists();
+        $hasScat = !empty($this->incident->scat_analysis);
 
-        // Status In Progress aktif jika proses investigasi sudah dimulai
-        $hasInvestigation = $hasTeams;
+        // Syarat In Progress: Sudah ada tim atau sudah mulai input analisis
+        $isInvestigating = $hasTeams || $hasAnalysis || $hasScat;
 
-        // 2. Cek Action Plan (Step 7-8)
-        $hasActionPlan = $this->incident->correctiveActions()->exists() ||
-            !empty($this->key_learning);
+        // 2. Action Plan (Step 7-8)
+        $totalActions = $this->incident->correctiveActions()->count();
+        $hasActionPlan = $totalActions > 0 || !empty($this->key_learning);
 
-        // 3. Cek Final Review (Step 9)
-        // Pastikan ada action plan dan SEMUA sudah diisi actual_completion_date
-        $isAllActionClosed = $this->incident->correctiveActions()->count() > 0 &&
+        // Syarat Semua Action Selesai: Harus ada action DAN tidak ada yang tanggal selesainya NULL
+        $isAllActionClosed = $totalActions > 0 &&
             !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
 
-        // Cek Reviewer (OHS & Internal Manager)
+        // 3. Reviewer (Step 9)
         $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
             !empty($this->penerimaan_komentar_internal);
 
-        // Cek Otoritas KTT (Hanya jika rating Sedang, Tinggi, atau Ekstrem)
+        // Otoritas KTT (Hanya jika rating Sedang ke atas)
         $kttRequirementMet = true;
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $kttRequirementMet = !empty($this->penerimaan_komentar_ktt_id);
         }
 
-        // --- LOGIKA PENENTUAN STATUS (Urutan Prioritas Terbalik) ---
+        // --- LOGIKA PENENTUAN STATUS (STRUKTUR EKSKLUSIF) ---
 
-        // Kondisi untuk CLOSED (Paling Ketat)
+        // STATUS: CLOSED (Hanya jika SEMUA syarat terpenuhi tanpa kecuali)
         if ($isAllActionClosed && $isReviewed && $kttRequirementMet) {
             return 'Closed';
         }
 
-        // Kondisi untuk ACTION REQUIRED (Step 7-8)
+        // STATUS: ACTION REQUIRED
+        // Jika sudah ada Action Plan atau Key Learning, TAPI belum memenuhi syarat Closed di atas
         if ($hasActionPlan) {
             return 'Action Required';
         }
 
-        // Kondisi untuk IN PROGRESS (Step 3-6)
-        // Jika kamu ingin WAJIB ketiganya ada untuk In Progress, ganti $hasInvestigation dengan:
-        // ($hasTeams && $hasPeepo && $hasTimeline)
-        if ($hasInvestigation) {
+        // STATUS: IN PROGRESS
+        // Jika proses investigasi sudah disentuh (Step 3-6)
+        if ($isInvestigating) {
             return 'In Progress';
         }
 
-        // Default status jika belum ada data investigasi
+        // STATUS: OPEN / REPORTED
+        // Jika benar-benar belum ada data investigasi masuk
         return 'Open';
     }
     public function deleteMedia($id)
@@ -2089,6 +2090,7 @@ class Update extends Component
         // 1. Validasi berdasarkan Step yang sedang aktif
         // Jika validasi gagal, Livewire akan otomatis berhenti di sini dan memunculkan error di Blade
         $this->validateOnlyStep($this->currentStep);
+        $this->incident->refresh();
         $this->status = $this->determineReportStatus();
         $report = IncidentReport::findOrFail($this->incidentId);
 
