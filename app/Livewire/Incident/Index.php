@@ -30,8 +30,7 @@ class Index extends Component
     }
     public function render()
     {
-        $incidents = IncidentReport::query()
-            ->with(['category', 'causer']) // Eager loading relasi
+        $incidents = IncidentReport::query() // Eager loading relasi
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('report_number', 'like', '%' . $this->search . '%');
