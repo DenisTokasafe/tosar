@@ -4,9 +4,11 @@ namespace App\Livewire\Incident;
 
 use App\Models\IncidentReport;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
     public $search = '';
     public $filterCategory = '';
     public $filterStatus = '';
