@@ -2069,7 +2069,7 @@ class Update extends Component
             'step3' => $this->incident->investigationTeams()->exists(), // Cek relasi tim
             'step4' => $this->incident->peepoAnalyses()->exists(),
             'step5' => $this->incident->timelines()->exists(), // Cek Why Analysis
-            'step6' => !empty($this->incident->unsafe_conditions),
+            'step6' => !empty($this->incident->scat_analysis),
             'step7' => $this->incident->correctiveActions()->exists(),
             'step8' => !empty($this->key_learning),
             'step9' => !empty($this->penerimaan_komentar_ktt_id), // Syarat penutup
