@@ -150,6 +150,7 @@ class Update extends Component
     public $penerimaan_komentar_internal;
     public $penerimaan_komentar_ohs;
     public $key_learning;
+    public $current_lock_version;
     // TAMBAHKAN INI:
     public $activeIndexPenerimaan = null;
     #[Computed]
@@ -512,6 +513,7 @@ class Update extends Component
             'ohsHead',
             'ktt'
         ])->findOrFail($id);
+        $this->current_lock_version = $report->lock_version;
         $this->report_number = $report->report_number;
         $this->status = $report->status;
         // --- DATA DASAR ---
@@ -2092,7 +2094,13 @@ class Update extends Component
 
         // Ambil data incident
         $report = IncidentReport::findOrFail($this->incidentId);
-
+        if ($report->lock_version !== $this->current_lock_version) {
+            $this->dispatch('alert', [
+                'text' => "Data telah diperbarui oleh user lain. Silakan refresh halaman.",
+                'type' => 'error'
+            ]);
+            return;
+        }
         try {
             DB::transaction(function () use ($report) {
                 // 1. UPDATE SEMUA RELASI TERLEBIH DAHULU (Step 2 - 7)
