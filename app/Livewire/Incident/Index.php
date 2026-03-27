@@ -45,4 +45,8 @@ class Index extends Component
             'incidents' => $incidents
         ]);
     }
+    public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
