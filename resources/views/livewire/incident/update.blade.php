@@ -19,7 +19,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {{-- STATS: STATUS --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
-                <div class="p-4 stat">
+                <div class="p-2 stat">
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
                     <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
                         {{ __('Nomor Laporan:') }}
@@ -30,7 +30,7 @@
 
             {{-- STATS: STATUS --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
-                <div class="p-4 stat">
+                <div class="p-2 stat">
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
                     <div class="flex items-center gap-2 mt-1 stat-value">
                         @switch($status)
@@ -58,7 +58,7 @@
 
             {{-- STATS: REVIEW PROGRESS --}}
             <div class="border shadow-sm stats border-base-300 bg-base-100">
-                <div class="p-4 stat">
+                <div class="p-2 stat">
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-primary">Progress Review</div>
                     <div class="flex items-end justify-between gap-1 mt-2">
                         <div class="flex-1 space-y-1">
@@ -81,7 +81,7 @@
 
             {{-- STATS: OTORITAS (Full width di Tablet agar seimbang) --}}
             <div class="border shadow-sm stats border-base-300 bg-base-100 sm:col-span-2 lg:col-span-1">
-                <div class="p-4 stat">
+                <div class="p-2 stat">
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Otoritas Terakhir</div>
                     <div class="mt-1 text-xs font-medium stat-desc text-base-content">
                         <div class="flex items-center gap-2 truncate">
