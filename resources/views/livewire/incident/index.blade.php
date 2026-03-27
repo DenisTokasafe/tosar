@@ -59,7 +59,7 @@
                             @php
                             $riskColor = match($item->risk?->rating_name) {
                             'Ekstrem' => 'bg-error text-error-content',
-                            'Tinggi' => 'bg-orange-500 text-white',
+                            'Tinggi' => 'bg-semi text-semi-content',
                             'Sedang' => 'bg-warning text-warning-content',
                             default => 'bg-success text-success-content',
                             };
@@ -74,7 +74,7 @@
                             <div @class([ 'badge badge-xs py-2 px-2 font-bold text-[9px] uppercase' , 'badge-success'=> $item->status === 'closed',
                                 'badge-error' => $item->status === 'Open',
                                 'badge-warning' => $item->status === 'Action Required',
-                                'badge-info' => $item->status === 'In Progress',
+                                'badge-semi' => $item->status === 'In Progress',
                                 ])>
                                 {{ $item->status }}
                             </div>
