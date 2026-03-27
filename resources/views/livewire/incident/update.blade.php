@@ -249,10 +249,10 @@
                         <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
                     </form>
                     <h3 class="flex items-center gap-2 mb-4 text-lg font-bold">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Audit Trail System - {{ $report->incident_number ?? 'Draft' }}
+                        Audit Trail System - {{ $this->incident->incident_number ?? 'Draft' }}
                     </h3>
 
                     <div class="max-h-[75vh] overflow-y-auto overflow-x-auto border rounded-lg">
@@ -265,14 +265,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- Query mengambil log dari IncidentReport dan log relasi yang terikat ID ini --}}
                                 @php
-                                $allLogs = \Spatie\Activitylog\Models\Activity::where(function($q) use ($report) {
-                                $q->where('subject_type', get_class($report))->where('subject_id', $report->id);
-                                })->orWhere(function($q) use ($report) {
-                                $q->where('properties->attributes->incident_report_id', $report->id)
-                                ->orWhere('properties->old->incident_report_id', $report->id);
+                                $allLogs = collect();
+                                if (isset($this->incident) && $this->incident->exists) {
+                                $allLogs = \Spatie\Activitylog\Models\Activity::where(function($q) {
+                                $q->where('subject_type', get_class($this->incident))
+                                ->where('subject_id', $this->incident->id);
+                                })->orWhere(function($q) {
+                                // Mencari log relasi yang memiliki incident_report_id sama dengan ID ini
+                                $q->where('properties->attributes->incident_report_id', $this->incident->id)
+                                ->orWhere('properties->old->incident_report_id', $this->incident->id);
                                 })->latest()->get();
+                                }
                                 @endphp
 
                                 @forelse($allLogs as $activity)
@@ -286,7 +290,7 @@
                                             {{ class_basename($activity->subject_type) }}
                                         </div>
                                     </td>
-                                    <td class="px-2 py-2 border">
+                                    <td class="px-2 py-2 border text-wrap">
                                         {{-- Judul Event --}}
                                         <div class="text-[11px] font-semibold mb-1 italic text-base-content/70">
                                             {{ $activity->description }}
@@ -303,6 +307,8 @@
                                         // Transformasi ID menjadi Nama agar manusiawi
                                         switch ($field) {
                                         case 'penanggungJawab':
+                                        case 'pic_user_id':
+                                        case 'user_id':
                                         $oldValue = \App\Models\User::find($oldValue)?->name ?? $oldValue;
                                         $newValue = \App\Models\User::find($newValue)?->name ?? $newValue;
                                         break;
@@ -313,10 +319,6 @@
                                         case 'body_part_id':
                                         $oldValue = \App\Models\BodyPart::find($oldValue)?->name ?? $oldValue;
                                         $newValue = \App\Models\BodyPart::find($newValue)?->name ?? $newValue;
-                                        break;
-                                        case 'pic_user_id':
-                                        $oldValue = \App\Models\User::find($oldValue)?->name ?? $oldValue;
-                                        $newValue = \App\Models\User::find($newValue)?->name ?? $newValue;
                                         break;
                                         }
 
