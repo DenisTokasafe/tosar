@@ -359,7 +359,7 @@
                                 <tr>
                                     <td colspan="3" class="py-16 text-center">
                                         <div class="flex flex-col items-center justify-center opacity-20">
-                                            <x-icon name="history" class="w-12 h-12 mb-2" />
+
                                             <span class="text-sm font-bold tracking-widest uppercase">Belum ada riwayat perubahan</span>
                                         </div>
                                     </td>
