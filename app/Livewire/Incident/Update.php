@@ -1052,8 +1052,21 @@ class Update extends Component
      */
     public function updatedSearchNamePenerimaan($value, $key)
     {
+        // Mapping key input ke activeType agar logic pencarian sinkron
+        $map = [
+            'kontraktor' => 'penerimaan_komentar_contractor',
+            'internal'   => 'penerimaan_komentar_internal',
+            'ohs'        => 'penerimaan_komentar_ohs',
+            'ktt'        => 'penerimaan_komentar_ktt',
+        ];
+
+        if (isset($map[$key])) {
+            $this->activeTypePenerimaan = $map[$key];
+        }
+
         $this->resetDropdowns();
 
+        // Tampilkan dropdown yang sesuai
         if ($key === 'kontraktor') $this->showPenerimaanKomentarContractorDropdown = true;
         if ($key === 'internal') $this->showPenerimaanKomentarInternalDropdown = true;
         if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
@@ -1062,19 +1075,23 @@ class Update extends Component
 
     public function getPelaporsPenerimaanProperty()
     {
-        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
-        $searchTerm = '';
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
+        // Ambil keyword berdasarkan activeTypePenerimaan
+        $keyMapping = [
+            'penerimaan_komentar_contractor' => 'kontraktor',
+            'penerimaan_komentar_internal'   => 'internal',
+            'penerimaan_komentar_ohs'        => 'ohs',
+            'penerimaan_komentar_ktt'        => 'ktt',
+        ];
+
+        $type = $keyMapping[$this->activeTypePenerimaan] ?? null;
+        $searchTerm = $type ? ($this->searchNamePenerimaan[$type] ?? '') : '';
 
         if (strlen($searchTerm) < 2) {
             return [];
         }
 
         return User::where('name', 'like', '%' . $searchTerm . '%')
-            ->limit(80)
+            ->limit(20) // 80 terlalu banyak untuk dropdown, 20 saja agar cepat
             ->get();
     }
 
