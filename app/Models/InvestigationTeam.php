@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class InvestigationTeam extends Model
 {
-    use LogsActivity; // Aktifkan pencatatan aktivitas
+    use LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -19,11 +20,35 @@ class InvestigationTeam extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat user_id, role, incident_report_id, dll
-            ->logOnlyDirty()          // Hanya catat jika ada perubahan data
+            ->logFillable()
+            ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail') // Kelompokkan dengan relasi lainnya
+            ->useLogName('IncidentDetail')
             ->setDescriptionForEvent(fn(string $eventName) => "Investigation Team member has been {$eventName}");
+    }
+
+    /**
+     * Mencegat aktivitas untuk merekam nama User di tim investigasi
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        if (isset($properties['attributes'])) {
+            foreach ($properties['attributes'] as $field => $value) {
+                if ($field === 'user_id') {
+                    // Cari nama user untuk nilai baru
+                    $properties['attributes']['user_id_label'] = \App\Models\User::find($value)?->name ?? 'Unknown User';
+
+                    // Cari nama user untuk nilai lama (jika ada/update)
+                    if (isset($properties['old']['user_id'])) {
+                        $oldId = $properties['old']['user_id'];
+                        $properties['old']['user_id_label'] = \App\Models\User::find($oldId)?->name ?? 'Unknown User';
+                    }
+                }
+            }
+            $activity->properties = collect($properties);
+        }
     }
 
     /**
@@ -35,7 +60,7 @@ class InvestigationTeam extends Model
     }
 
     /**
-     * Relasi ke tabel User untuk mengambil Nama, Foto Profil, dll.
+     * Relasi ke tabel User
      */
     public function user(): BelongsTo
     {

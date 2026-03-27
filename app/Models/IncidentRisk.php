@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class IncidentRisk extends Model
 {
-    use LogsActivity; // Aktifkan pencatatan aktivitas
+    use LogsActivity;
 
     protected $fillable = [
         'incident_report_id',
@@ -24,11 +25,51 @@ class IncidentRisk extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat perubahan likelihood, consequence, rating, dan deadline
-            ->logOnlyDirty()          // Hanya catat jika ada perubahan nilai
+            ->logFillable()
+            ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail') // Kelompokkan dengan relasi investigasi lainnya
+            ->useLogName('IncidentDetail')
             ->setDescriptionForEvent(fn(string $eventName) => "Incident Risk Assessment has been {$eventName}");
+    }
+
+    /**
+     * Mencegat aktivitas untuk merekam label dari Likelihood dan Consequence
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        if (isset($properties['attributes'])) {
+            foreach ($properties['attributes'] as $field => $value) {
+                $labelValue = null;
+
+                switch ($field) {
+                    case 'likelihood_id':
+                        $labelValue = \App\Models\Likelihood::find($value)?->name;
+                        break;
+                    case 'consequence_id':
+                        // Sesuaikan dengan nama model RiskConsequence Anda
+                        $labelValue = \App\Models\RiskConsequence::find($value)?->name;
+                        break;
+                }
+
+                if ($labelValue) {
+                    // Simpan label untuk nilai baru
+                    $properties['attributes'][$field . '_label'] = $labelValue;
+
+                    // Simpan label untuk nilai lama (old) jika sedang update
+                    if (isset($properties['old'][$field])) {
+                        $oldVal = $properties['old'][$field];
+                        if ($field === 'likelihood_id') {
+                            $properties['old'][$field . '_label'] = \App\Models\Likelihood::find($oldVal)?->name;
+                        } elseif ($field === 'consequence_id') {
+                            $properties['old'][$field . '_label'] = \App\Models\RiskConsequence::find($oldVal)?->name;
+                        }
+                    }
+                }
+            }
+            $activity->properties = collect($properties);
+        }
     }
 
     /**
@@ -39,7 +80,6 @@ class IncidentRisk extends Model
         return $this->belongsTo(IncidentReport::class, 'incident_report_id');
     }
 
-    // Rekomendasi: Tambahkan relasi ke Likelihood & Consequence agar bisa ditarik namanya di Audit Trail
     public function likelihood()
     {
         return $this->belongsTo(Likelihood::class);

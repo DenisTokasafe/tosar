@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class InvolvedPerson extends Model
 {
-    use LogsActivity; // Aktifkan logging aktivitas
+    use LogsActivity;
 
     protected $guarded = ['id'];
     protected $table = 'involved_persons';
@@ -20,11 +21,34 @@ class InvolvedPerson extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat semua kolom (nik, nama, jabatan, perusahaan, dll)
-            ->logOnlyDirty()          // Hanya catat kolom yang nilainya benar-benar berubah
+            ->logFillable()
+            ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail') // Kelompokkan dalam kategori Detail agar rapi di Modal
+            ->useLogName('IncidentDetail')
             ->setDescriptionForEvent(fn(string $eventName) => "Involved Person has been {$eventName}");
+    }
+
+    /**
+     * Mencegat aktivitas untuk merekam identitas personil yang terlibat
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        // Rekam nama personil sebagai label utama di dalam log properties
+        // Ini memastikan jika record dihapus, kita tetap tahu siapa yang dihapus
+        if (isset($properties['attributes']['nama'])) {
+            $properties['attributes']['person_name'] = $properties['attributes']['nama'];
+        } elseif (isset($properties['old']['nama'])) {
+            $properties['attributes']['person_name'] = $properties['old']['nama'];
+        }
+
+        // Jika ada NIK, sertakan juga untuk akurasi data mining
+        if (isset($properties['attributes']['nik'])) {
+            $properties['attributes']['person_nik'] = $properties['attributes']['nik'];
+        }
+
+        $activity->properties = collect($properties);
     }
 
     /**

@@ -38,37 +38,54 @@ class IncidentReport extends Model
     }
 
     /**
-     * Tap Activity: Mengubah ID menjadi Label Nama agar log mudah dibaca
+     * Tambahkan fungsi ini untuk mapping ID ke Nama secara otomatis
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
         $properties = $activity->properties->toArray();
 
-        $map = [
-            'event_type_id'     => fn() => $this->eventType?->event_type_name,
-            'event_sub_type_id' => fn() => $this->eventSubType?->event_sub_type_name,
-            'location_id'       => fn() => $this->location?->name,
-            'department_id'     => fn() => $this->department?->department_name,
-            'contractor_id'     => fn() => $this->contractor?->contractor_name,
-            'pelapor_id'        => fn() => $this->reporter?->name,
-            'penanggung_jawab'  => fn() => $this->pic?->name,
-            'pm_contractor_id'  => fn() => $this->pmContractor?->name,
-            'pm_internal_id'    => fn() => $this->pmInternal?->name,
-            'ohs_head_id'       => fn() => $this->ohsHead?->name,
-            'ktt_id'            => fn() => $this->ktt?->name,
-        ];
+        if (isset($properties['attributes'])) {
+            foreach ($properties['attributes'] as $field => $value) {
+                // Mapping otomatis berdasarkan nama field ID
+                $label = match ($field) {
+                    'event_type_id'     => \App\Models\EventType::find($value)?->name,
+                    'location_id'       => \App\Models\Location::find($value)?->name,
+                    'department_id'     => \App\Models\Department::find($value)?->name,
+                    'contractor_id'     => \App\Models\Contractor::find($value)?->name,
+                    'pelapor_id'        => \App\Models\User::find($value)?->name,
+                    'penanggung_jawab'  => \App\Models\User::find($value)?->name,
+                    'pm_contractor_id'  => \App\Models\User::find($value)?->name,
+                    'pm_internal_id'    => \App\Models\User::find($value)?->name,
+                    'ohs_head_id'       => \App\Models\User::find($value)?->name,
+                    'ktt_id'            => \App\Models\User::find($value)?->name,
+                    default             => null
+                };
 
-        foreach (['attributes', 'old'] as $key) {
-            if (!isset($properties[$key])) continue;
+                if ($label) {
+                    // Simpan label ke dalam properties log (misal: location_id_label)
+                    $properties['attributes'][$field . '_label'] = $label;
 
-            foreach ($map as $field => $resolver) {
-                if (isset($properties[$key][$field])) {
-                    $properties[$key][$field . '_label'] = $resolver();
+                    // Jika ada data lama (old), ambil juga label lamanya
+                    if (isset($properties['old'][$field])) {
+                        $oldValue = $properties['old'][$field];
+                        $properties['old'][$field . '_label'] = match ($field) {
+                            'event_type_id'     => \App\Models\EventType::find($oldValue)?->name,
+                            'location_id'       => \App\Models\Location::find($oldValue)?->name,
+                            'department_id'     => \App\Models\Department::find($oldValue)?->name,
+                            'contractor_id'     => \App\Models\Contractor::find($oldValue)?->name,
+                            'pelapor_id'        => \App\Models\User::find($oldValue)?->name,
+                            'penanggung_jawab'  => \App\Models\User::find($oldValue)?->name,
+                            'pm_contractor_id'  => \App\Models\User::find($oldValue)?->name,
+                            'pm_internal_id'    => \App\Models\User::find($oldValue)?->name,
+                            'ohs_head_id'       => \App\Models\User::find($oldValue)?->name,
+                            'ktt_id'            => \App\Models\User::find($oldValue)?->name,
+                            default             => null
+                        } ?? $oldValue;
+                    }
                 }
             }
+            $activity->properties = collect($properties);
         }
-
-        $activity->properties = collect($properties);
     }
 
     /**
@@ -84,8 +101,10 @@ class IncidentReport extends Model
     // Relasi kustom (Menggabungkan log header + log milik tabel anak)
     public function allActivities()
     {
+        // Mengambil log milik Incident ini sendiri
+        // DAN log milik relasi anak yang merujuk ke ID incident ini
         return Activity::where(function ($query) {
-            $query->where('subject_type', IncidentReport::class)
+            $query->where('subject_type', get_class($this))
                 ->where('subject_id', $this->id);
         })->orWhere(function ($query) {
             $query->where('properties->attributes->incident_report_id', $this->id)

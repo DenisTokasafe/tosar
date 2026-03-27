@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class TimelineAnalysis extends Model
 {
-    use LogsActivity; // Aktifkan pencatatan aktivitas
+    use LogsActivity;
 
     protected $guarded = ['id'];
 
-    // Penting: Cast agar array otomatis jadi JSON di DB dan sebaliknya
     protected $casts = [
         'analysis_steps' => 'array',
     ];
@@ -24,11 +24,28 @@ class TimelineAnalysis extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat event_description, analysis_steps, dll
-            ->logOnlyDirty()          // Hanya catat jika ada perubahan isi timeline
+            ->logFillable()
+            ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail') // Kelompokkan dengan relasi investigasi lainnya
+            ->useLogName('IncidentDetail')
             ->setDescriptionForEvent(fn(string $eventName) => "Timeline Analysis has been {$eventName}");
+    }
+
+    /**
+     * Mencegat aktivitas untuk memberikan konteks pada log timeline
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        // Menyimpan ringkasan event agar log mudah dibaca di tabel utama
+        if (isset($properties['attributes']['event_description'])) {
+            $properties['attributes']['timeline_summary'] = $properties['attributes']['event_description'];
+        } elseif (isset($properties['old']['event_description'])) {
+            $properties['attributes']['timeline_summary'] = $properties['old']['event_description'];
+        }
+
+        $activity->properties = collect($properties);
     }
 
     /**

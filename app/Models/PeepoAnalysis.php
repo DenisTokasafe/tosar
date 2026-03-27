@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class PeepoAnalysis extends Model
 {
-    use LogsActivity; // Aktifkan pencatatan aktivitas
+    use LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -19,11 +20,29 @@ class PeepoAnalysis extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()           // Mencatat kolom category, description, incident_report_id, dll
-            ->logOnlyDirty()          // Hanya catat jika ada perubahan pada data analisis
+            ->logFillable()
+            ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail') // Kelompokkan dengan relasi investigasi lainnya
+            ->useLogName('IncidentDetail')
             ->setDescriptionForEvent(fn(string $eventName) => "PEEPO Analysis has been {$eventName}");
+    }
+
+    /**
+     * Mencegat aktivitas untuk memberikan konteks elemen PEEPO
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $properties = $activity->properties->toArray();
+
+        // Menyimpan kategori (People/Equipment/etc) sebagai context di attributes
+        // Ini berguna agar di Blade kita bisa langsung tahu elemen PEEPO mana yang diubah
+        if (isset($properties['attributes']['category'])) {
+            $properties['attributes']['peepo_category'] = strtoupper($properties['attributes']['category']);
+        } elseif (isset($properties['old']['category'])) {
+            $properties['attributes']['peepo_category'] = strtoupper($properties['old']['category']);
+        }
+
+        $activity->properties = collect($properties);
     }
 
     /**

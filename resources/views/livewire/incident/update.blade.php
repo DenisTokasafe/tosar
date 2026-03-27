@@ -259,79 +259,104 @@
                         <table class="table border table-xs table-pin-rows">
                             <thead>
                                 <tr class="bg-base-200 text-base-content">
-                                    <th class="w-32 px-2 py-2 border">{{ __('Tanggal') }}</th>
-                                    <th class="w-40 px-2 py-2 border">{{ __('User & Modul') }}</th>
+                                    <th class="w-32 px-2 py-2 text-center border">{{ __('Waktu') }}</th>
+                                    <th class="px-2 py-2 border w-44">{{ __('User & Modul') }}</th>
                                     <th class="px-2 py-2 border">{{ __('Detail Perubahan') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                // Menggunakan fungsi allActivities() dari Model yang mencakup relasi anak
                                 $allLogs = (isset($this->incident) && $this->incident->exists)
-                                ? $this->incident->allActivities()->get()
+                                ? $this->incident->allActivities()->latest()->get()
                                 : collect();
                                 @endphp
 
                                 @forelse($allLogs as $activity)
+                                @php
+                                $subjectName = class_basename($activity->subject_type);
+                                $attributes = $activity->properties['attributes'] ?? [];
+                                $old = $activity->properties['old'] ?? [];
+
+                                // Ambil ringkasan identitas (dari tapActivity yang kita buat tadi)
+                                $summary = $attributes['person_name'] ??
+                                ($attributes['action_summary'] ??
+                                ($attributes['timeline_summary'] ??
+                                ($attributes['file_display'] ??
+                                ($attributes['peepo_category'] ?? ''))));
+                                @endphp
                                 <tr class="hover">
-                                    <td class="px-2 py-2 border align-top font-mono text-[10px]">
-                                        {{ $activity->created_at->format('d-m-Y H:i:s') }}
+                                    <td class="px-2 py-2 border align-top font-mono text-[10px] text-center">
+                                        <div class="font-bold">{{ $activity->created_at->format('d/m/Y') }}</div>
+                                        <div class="opacity-50">{{ $activity->created_at->format('H:i:s') }}</div>
                                     </td>
+
                                     <td class="px-2 py-2 align-top border">
-                                        <div class="text-xs font-bold text-primary">{{ $activity->causer->name ?? 'System' }}</div>
-                                        <div class="badge badge-ghost badge-xs text-[9px] uppercase tracking-tighter">
-                                            {{ class_basename($activity->subject_type) }}
+                                        <div class="w-40 text-xs font-bold truncate text-primary" title="{{ $activity->causer->name ?? 'System' }}">
+                                            {{ $activity->causer->name ?? 'System' }}
+                                        </div>
+                                        <div class="flex items-center gap-1 mt-1">
+                                            <span class="badge badge-ghost badge-xs text-[9px] px-1 uppercase font-bold tracking-tighter">
+                                                {{ $subjectName }}
+                                            </span>
                                         </div>
                                     </td>
+
                                     <td class="px-2 py-2 border text-wrap">
-                                        {{-- Judul Event (Created, Updated, Deleted) --}}
-                                        <div class="text-[11px] font-semibold mb-1 italic text-base-content/70">
-                                            {{ strtoupper($activity->description) }}
+                                        {{-- Judul Event & Identitas Subjek --}}
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-base-300 text-base-content uppercase">
+                                                {{ $activity->description }}
+                                            </span>
+                                            @if($summary)
+                                            <span class="text-[10px] font-bold text-secondary truncate italic">
+                                                "{{ $summary }}"
+                                            </span>
+                                            @endif
                                         </div>
 
-                                        {{-- Iterasi perubahan --}}
-                                        @php
-                                        $attributes = $activity->properties['attributes'] ?? [];
-                                        $old = $activity->properties['old'] ?? [];
-                                        @endphp
+                                        {{-- Grid Perubahan Field --}}
+                                        <div class="space-y-1">
+                                            @foreach ($attributes as $field => $newValue)
+                                            {{-- Skip fields internal dan label helper itu sendiri --}}
+                                            @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']) ||
+                                            str_ends_with($field, '_label') ||
+                                            in_array($field, ['person_name', 'action_summary', 'timeline_summary', 'file_display', 'peepo_category', 'impact_summary', 'person_nik']))
 
-                                        @foreach ($attributes as $field => $newValue)
-                                        {{-- Skip meta fields dan label helper --}}
-                                        @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']) || str_ends_with($field, '_label'))
+                                            @php
+                                            // Prioritas: Gunakan _label dari tapActivity
+                                            $displayOld = $old[$field . '_label'] ?? ($old[$field] ?? '-');
+                                            $displayNew = $attributes[$field . '_label'] ?? ($newValue ?? '-');
 
-                                        @php
-                                        // Gunakan label hasil tapActivity jika ada, jika tidak gunakan nilai asli
-                                        $displayOld = $old[$field . '_label'] ?? ($old[$field] ?? '-');
-                                        $displayNew = $attributes[$field . '_label'] ?? ($newValue ?? '-');
+                                            $label = ucfirst(str_replace(['_id', '_'], ['', ' '], $field));
+                                            @endphp
 
-                                        $label = ucfirst(str_replace('_', ' ', $field));
-                                        @endphp
+                                            <div class="flex flex-col p-1.5 bg-base-200/40 rounded border border-base-300/50">
+                                                <span class="font-bold text-gray-500 uppercase text-[8px] leading-none mb-1">{{ $label }}</span>
+                                                <div class="flex items-center gap-2 text-[11px]">
+                                                    @if($activity->description === 'updated')
+                                                    <span class="px-1 line-through rounded opacity-50 bg-error/5 text-error">
+                                                        {{ is_array($displayOld) ? json_encode($displayOld) : $displayOld }}
+                                                    </span>
+                                                    <span class="text-xs opacity-30">→</span>
+                                                    @endif
 
-                                        <div class="grid grid-cols-1 gap-0 mb-2 p-1.5 bg-base-200/50 rounded text-[11px] border border-base-300">
-                                            <span class="font-bold text-gray-500 uppercase text-[9px]">{{ $label }}</span>
-                                            <div class="flex items-center gap-2 flex-wrap mt-0.5">
-                                                {{-- Nilai Lama --}}
-                                                <span class="px-1 line-through rounded text-error bg-error/10">
-                                                    {{ is_array($displayOld) ? json_encode($displayOld) : $displayOld }}
-                                                </span>
-                                                <span class="text-xs opacity-50">→</span>
-                                                {{-- Nilai Baru --}}
-                                                <span class="px-1 font-medium rounded text-success bg-success/10">
-                                                    {{ is_array($displayNew) ? json_encode($displayNew) : $displayNew }}
-                                                </span>
+                                                    <span class="px-1 font-semibold rounded bg-success/10 text-success">
+                                                        {{ is_array($displayNew) ? json_encode($displayNew) : $displayNew }}
+                                                    </span>
+                                                </div>
                                             </div>
+                                            @endforeach
                                         </div>
-                                        @endforeach
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="3" class="py-10 text-center text-gray-400">
-                                        <div class="flex flex-col items-center justify-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <td colspan="3" class="py-12 text-center">
+                                        <div class="flex flex-col items-center opacity-20">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
-                                            <span>Belum ada riwayat perubahan data.</span>
+                                            <span class="mt-2 text-sm font-bold">Data riwayat belum tersedia</span>
                                         </div>
                                     </td>
                                 </tr>
