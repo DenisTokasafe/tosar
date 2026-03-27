@@ -2094,6 +2094,8 @@ class Update extends Component
 
         // Ambil data incident
         $report = IncidentReport::findOrFail($this->incidentId);
+
+        // Proteksi Race Condition: Cek versi sebelum proses dimulai
         if ($report->lock_version !== $this->current_lock_version) {
             $this->dispatch('alert', [
                 'text' => "Data telah diperbarui oleh user lain. Silakan refresh halaman.",
@@ -2101,6 +2103,7 @@ class Update extends Component
             ]);
             return;
         }
+
         try {
             DB::transaction(function () use ($report) {
                 // 1. UPDATE SEMUA RELASI TERLEBIH DAHULU (Step 2 - 7)
@@ -2158,7 +2161,6 @@ class Update extends Component
                 );
 
                 // Update Corrective Actions (Step 7)
-                // Hapus dan buat baru agar sinkron dengan baris kosong yang baru ditambah
                 $report->correctiveActions()->delete();
                 foreach ($this->corrective_actions as $action) {
                     if (!empty($action['action_description'])) {
@@ -2175,14 +2177,13 @@ class Update extends Component
 
                 // 2. HITUNG ULANG STATUS SETELAH DATA RELASI TERUPDATE
                 // -------------------------------------------------------
-                // Kita panggil determineReportStatus SEKARANG karena data di DB sudah fresh
                 $this->incident->refresh();
                 $this->status = $this->determineReportStatus();
 
                 // 3. UPDATE DATA UTAMA (Mencakup Status Terbaru)
                 // -------------------------------------------------------
                 $report->update([
-                    'status'                => $this->status, // Status yang sudah dikalkulasi ulang
+                    'status'                => $this->status,
                     'event_type_id'         => $this->event_type_id,
                     'description'           => $this->description,
                     'date_time'             => $this->date_time,
@@ -2218,9 +2219,16 @@ class Update extends Component
                         'rating_name'    => $this->RiskAssessment?->name,
                     ]
                 );
+
+                // 4. INCREMENT LOCK VERSION (Dilakukan di akhir transaksi yang sukses)
+                $report->increment('lock_version');
             });
 
-            // 4. FINISHING
+            // 5. SINKRONISASI KE LIVEWIRE
+            // Kita ambil nilai terbaru agar session saat ini memegang versi terbaru
+            $this->current_lock_version = $report->fresh()->lock_version;
+
+            // FINISHING STEP
             if ($this->currentStep < 9) {
                 $this->currentStep++;
             }
