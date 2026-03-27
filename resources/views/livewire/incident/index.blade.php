@@ -64,7 +64,7 @@
                             default => 'bg-success text-success-content',
                             };
                             @endphp
-                            <div class="tooltip" data-tip="Actual Risk: {{ $item->rating_name }}">
+                            <div class="tooltip" data-tip="Actual Risk: {{ $item->risk?->rating_name }}">
                                 <span class="inline-block w-3 h-3 rounded-full {{ $riskColor }}"></span>
                             </div>
                         </td>
