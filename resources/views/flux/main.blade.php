@@ -4,7 +4,7 @@
 
 @php
 $classes = Flux::classes('[grid-area:main]')
-->add('p-6 lg:px-8 lg:py-4')
+->add('p-6 lg:px-8 lg:py-2')
 ->add('[[data-flux-container]_&]:px-0') // If there is a wrapping container, let IT handle the x padding...
 ->add($container ? 'mx-auto w-full [:where(&)]:max-w-7xl' : '')
 ;
