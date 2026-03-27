@@ -743,6 +743,10 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
+        // CRITICAL: Load data relasi terbaru agar perubahan data (seperti penambahan action kosong)
+        // langsung terdeteksi oleh logic di bawah ini.
+        $this->incident->load('correctiveActions');
+
         // --- PRE-CALCULATION DATA ---
 
         // 1. Investigasi (Step 3-6)
@@ -750,16 +754,17 @@ class Update extends Component
         $hasAnalysis = $this->incident->peepoAnalyses()->exists() || $this->incident->timelines()->exists();
         $hasScat = !empty($this->incident->scat_analysis);
 
-        // Syarat In Progress: Sudah ada tim atau sudah mulai input analisis
+        // Syarat In Progress
         $isInvestigating = $hasTeams || $hasAnalysis || $hasScat;
 
         // 2. Action Plan (Step 7-8)
-        $totalActions = $this->incident->correctiveActions()->count();
+        $totalActions = $this->incident->correctiveActions->count(); // Menggunakan property hasil load()
         $hasActionPlan = $totalActions > 0 || !empty($this->key_learning);
 
-        // Syarat Semua Action Selesai: Harus ada action DAN tidak ada yang tanggal selesainya NULL
+        // Syarat Semua Action Selesai:
+        // Harus ada minimal 1 action DAN tidak ada satupun yang actual_completion_date-nya NULL
         $isAllActionClosed = $totalActions > 0 &&
-            !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
+            !$this->incident->correctiveActions->whereNull('actual_completion_date')->exists();
 
         // 3. Reviewer (Step 9)
         $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
@@ -773,25 +778,25 @@ class Update extends Component
 
         // --- LOGIKA PENENTUAN STATUS (STRUKTUR EKSKLUSIF) ---
 
-        // STATUS: CLOSED (Hanya jika SEMUA syarat terpenuhi tanpa kecuali)
+        // STATUS: CLOSED
+        // Jika syarat ini gagal (misal karena baru tambah action kosong), otomatis lanjut ke IF bawahnya.
         if ($isAllActionClosed && $isReviewed && $kttRequirementMet) {
             return 'Closed';
         }
 
         // STATUS: ACTION REQUIRED
-        // Jika sudah ada Action Plan atau Key Learning, TAPI belum memenuhi syarat Closed di atas
+        // Laporan akan "turun" ke sini jika syarat Closed di atas tidak terpenuhi
+        // tapi sudah ada data Action Plan atau Key Learning.
         if ($hasActionPlan) {
             return 'Action Required';
         }
 
         // STATUS: IN PROGRESS
-        // Jika proses investigasi sudah disentuh (Step 3-6)
         if ($isInvestigating) {
             return 'In Progress';
         }
 
         // STATUS: OPEN / REPORTED
-        // Jika benar-benar belum ada data investigasi masuk
         return 'Open';
     }
     public function deleteMedia($id)
@@ -2087,75 +2092,17 @@ class Update extends Component
     }
     public function update()
     {
-        // 1. Validasi berdasarkan Step yang sedang aktif
-        // Jika validasi gagal, Livewire akan otomatis berhenti di sini dan memunculkan error di Blade
         $this->validateOnlyStep($this->currentStep);
-        $this->incident->refresh();
-        $this->status = $this->determineReportStatus();
+
+        // Ambil data incident
         $report = IncidentReport::findOrFail($this->incidentId);
 
         try {
             DB::transaction(function () use ($report) {
-                // 2. Update data utama (Mencakup Step 1, 4, 5, 6, dan 9)
-                $report->update([
-                    'status' => $this->status,
-                    'event_type_id'       => $this->event_type_id,
-                    'event_sub_type_id'   => $this->event_sub_type_id,
-                    'description'         => $this->description,
-                    'date_time'           => $this->date_time,
-                    'location_id'         => $this->location_id,
-                    'location_specific'   => $this->location_specific,
-                    'pelapor_id'          => $this->pelapor_id,
-                    'manual_pelapor_name' => $this->manualPelaporName,
-                    'department_id'       => ($this->deptCont === 'dept') ? $this->department_id : null,
-                    'contractor_id'       => ($this->deptCont === 'cont') ? $this->contractor_id : null,
-                    'emergency_action'    => $this->emergency_action,
-                    'penanggung_jawab'    => $this->penanggungJawab,
-                    'body_part_category'  => $this->isInjury ? $this->selectedBodyPartCategory : null,
-                    'body_part'           => $this->isInjury ? $this->selectedBodyPart : null,
-                    'damage_detail'       => !$this->isInjury ? $this->damage_detail : null,
+                // 1. UPDATE SEMUA RELASI TERLEBIH DAHULU (Step 2 - 7)
+                // -------------------------------------------------------
 
-                    'scat_analysis'       => [
-                        'langsung' => [
-                            'kondisi_tidak_aman'  => $this->unsafe_conditions,
-                            'perilaku_tidak_aman' => $this->unsafe_acts,
-                        ],
-                        'dasar' => [
-                            'faktor_pribadi'   => $this->personal_factors,
-                            'faktor_pekerjaan' => $this->job_factors,
-                            'sistem_kontrol'   => $this->control_system_factors,
-                        ],
-                    ],
-                    'key_learning'        => $this->key_learning,
-
-                    // --- INTEGRASI PART 9: KOMENTAR & APPROVAL ---
-                    'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
-                    'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
-
-                    'pm_internal_comment'   => $this->penerimaan_komentar_internal,
-                    'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
-
-                    'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
-                    'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
-
-                    // Logika kondisional KTT (Hanya Level 3, 4, 5)
-                    'ktt_comment'           => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt : null,
-                    'ktt_id'                => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt_id : null,
-                ]);
-                // 2. UPDATE RELASI RISK ASSESSMENT
-                // Menggunakan updateOrCreate agar jika data belum ada di tabel relasi, akan dibuat baru
-                $report->risk()->updateOrCreate(
-                    ['incident_report_id' => $report->id], // Key pencari
-                    [
-                        'likelihood_id'  => $this->likelihood_id,
-                        'consequence_id' => $this->consequence_id,
-                        'rating_name'    => $this->RiskAssessment?->name,
-                        'deadline'       => $this->RiskAssessment?->notes,
-                    ]
-                );
-
-                // 3. Update Part 2 (Involved Personnel)
-                // Hanya jalankan jika step 2 aktif untuk efisiensi, atau biarkan jika ingin sinkron terus
+                // Update Involved Persons (Step 2)
                 $report->involvedPersons()->delete();
                 foreach ($this->directly_involved as $person) {
                     if (!empty($person['employee_name'])) {
@@ -2173,7 +2120,7 @@ class Update extends Component
                     }
                 }
 
-                // 4. Update Part 3 (Investigation Teams)
+                // Update Investigation Teams (Step 3)
                 $report->investigationTeams()->delete();
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
                     foreach ($this->{$role} as $member) {
@@ -2188,7 +2135,7 @@ class Update extends Component
                     }
                 }
 
-                // 5. Update Part 4 & 5 (PEEPO & Why Analysis)
+                // Update PEEPO (Step 4) & Why Analysis (Step 5)
                 foreach ($this->peepo as $key => $value) {
                     $report->peepoAnalyses()->updateOrCreate(
                         ['factor_key' => $key],
@@ -2201,62 +2148,84 @@ class Update extends Component
                 }
 
                 $whyCount = collect($this->why_analysis)->filter(fn($value) => !empty($value))->count();
-
                 $report->timelines()->updateOrCreate(
                     ['incident_report_id' => $report->id],
-                    [
-                        'analysis_steps' => $this->why_analysis,
-                        'why_count_used' => $whyCount // Tambahkan ini agar tidak error 1364 lagi
-                    ]
+                    ['analysis_steps' => $this->why_analysis, 'why_count_used' => $whyCount]
                 );
 
-                // 6. Integrasi Part 7 (Dokumentasi & Corrective Actions)
-                if ($this->currentStep == 7) {
-                    // Attachments
-                    foreach (['visual' => 'visual_evidence_paths', 'document' => 'supporting_documents_paths'] as $type => $prop) {
-                        if (!empty($this->{$prop})) {
-                            foreach ($this->{$prop} as $path) {
-                                $report->attachments()->create([
-                                    'file_path' => $path,
-                                    'file_name' => basename($path),
-                                    'file_type' => $type,
-                                ]);
-                            }
-                            $this->{str_replace('_paths', '', $prop)} = [];
-                            $this->{$prop} = [];
-                        }
-                    }
-
-                    // Corrective Actions
-                    $report->correctiveActions()->delete();
-                    foreach ($this->corrective_actions as $action) {
-                        if (!empty($action['action_description'])) {
-                            $report->correctiveActions()->create([
-                                'action_description'     => $action['action_description'],
-                                'hierarchy'              => $action['control_hierarchy'],
-                                'pic_user_id'            => $action['pic_user_id'],
-                                'due_date'               => $action['due_date'],
-                                'actual_completion_date' => $action['actual_completion_date'] ?? null,
-                                'status'                 => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
-                            ]);
-                        }
+                // Update Corrective Actions (Step 7)
+                // Hapus dan buat baru agar sinkron dengan baris kosong yang baru ditambah
+                $report->correctiveActions()->delete();
+                foreach ($this->corrective_actions as $action) {
+                    if (!empty($action['action_description'])) {
+                        $report->correctiveActions()->create([
+                            'action_description'     => $action['action_description'],
+                            'hierarchy'              => $action['control_hierarchy'],
+                            'pic_user_id'            => $action['pic_user_id'],
+                            'due_date'               => $action['due_date'],
+                            'actual_completion_date' => $action['actual_completion_date'] ?? null,
+                            'status'                 => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
+                        ]);
                     }
                 }
+
+                // 2. HITUNG ULANG STATUS SETELAH DATA RELASI TERUPDATE
+                // -------------------------------------------------------
+                // Kita panggil determineReportStatus SEKARANG karena data di DB sudah fresh
+                $this->incident->refresh();
+                $this->status = $this->determineReportStatus();
+
+                // 3. UPDATE DATA UTAMA (Mencakup Status Terbaru)
+                // -------------------------------------------------------
+                $report->update([
+                    'status'                => $this->status, // Status yang sudah dikalkulasi ulang
+                    'event_type_id'         => $this->event_type_id,
+                    'description'           => $this->description,
+                    'date_time'             => $this->date_time,
+                    'location_id'           => $this->location_id,
+                    'location_specific'     => $this->location_specific,
+                    'pelapor_id'            => $this->pelapor_id,
+                    'manual_pelapor_name'   => $this->manualPelaporName,
+                    'department_id'         => ($this->deptCont === 'dept') ? $this->department_id : null,
+                    'contractor_id'         => ($this->deptCont === 'cont') ? $this->contractor_id : null,
+                    'emergency_action'      => $this->emergency_action,
+                    'penanggung_jawab'      => $this->penanggungJawab,
+                    'key_learning'          => $this->key_learning,
+                    'scat_analysis'         => [
+                        'langsung' => ['kondisi_tidak_aman' => $this->unsafe_conditions, 'perilaku_tidak_aman' => $this->unsafe_acts],
+                        'dasar'    => ['faktor_pribadi' => $this->personal_factors, 'faktor_pekerjaan' => $this->job_factors, 'sistem_kontrol' => $this->control_system_factors],
+                    ],
+                    'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
+                    'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
+                    'pm_internal_comment'   => $this->penerimaan_komentar_internal,
+                    'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
+                    'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
+                    'ohs_head_id'           => $this->penerimaan_komentar_ohs_id,
+                    'ktt_comment'           => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt : null,
+                    'ktt_id'                => in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) ? $this->penerimaan_komentar_ktt_id : null,
+                ]);
+
+                // Update Risk Assessment
+                $report->risk()->updateOrCreate(
+                    ['incident_report_id' => $report->id],
+                    [
+                        'likelihood_id'  => $this->likelihood_id,
+                        'consequence_id' => $this->consequence_id,
+                        'rating_name'    => $this->RiskAssessment?->name,
+                    ]
+                );
             });
 
-            // 7. Navigasi atau Notifikasi Sukses
-            $completedStep = $this->currentStep;
-
+            // 4. FINISHING
             if ($this->currentStep < 9) {
                 $this->currentStep++;
             }
 
             $this->dispatch('alert', [
-                'text' => "Data Bagian {$completedStep} berhasil diperbarui di SENTRY.",
+                'text' => "SENTRY: Data berhasil disimpan. Status saat ini: {$this->status}",
                 'type' => 'success'
             ]);
         } catch (\Exception $e) {
-            // Jika gagal simpan karena database error
             $this->dispatch('alert', [
                 'text' => "Gagal menyimpan: " . $e->getMessage(),
                 'type' => 'error'
