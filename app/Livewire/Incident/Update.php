@@ -2065,7 +2065,7 @@ class Update extends Component
         // Sesuai dengan tabel alur: Step 1-2 (Initial), 3-6 (Investigation), 7-8 (Action), 9 (Final)
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
-            'step2' => !empty($this->incident->directly_involved),
+            'step2' => $this->incident->involvedPersons()->exists(),
             'step3' => $this->incident->investigationTeams()->exists(), // Cek relasi tim
             'step4' => $this->incident->peepoAnalyses()->exists(),
             'step5' => $this->incident->timelines()->exists(), // Cek Why Analysis
