@@ -17,12 +17,20 @@
             {{-- STATS: NOMOR LAPORAN --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
                 <div class="p-2 stat">
-                    <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
-                    <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
-                    <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
-                        {{ __('Nomor Laporan:') }}
-                        <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
-                    </flux:subheading>
+                    <div class="flex">
+                        <div class="grow">
+                            <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
+                            <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
+                                {{ __('Nomor Laporan:') }}
+                                <span class="font-black tracking-tight text-primary">{{ $report_number }}</span>
+                            </flux:subheading>
+                        </div>
+                        <div class="grow-0">
+                            <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
