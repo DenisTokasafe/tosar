@@ -1664,6 +1664,27 @@ class Update extends Component
 
         return false;
     }
+    public function reopen()
+    {
+        // 1. Validasi Otoritas (Hanya yang punya permission 'reviewReport' atau Admin)
+        if (!Gate::allows('reviewReport', $this->incident)) {
+            $this->addError('reopen', 'Anda tidak memiliki otoritas untuk membuka kembali laporan ini.');
+            return;
+        }
+
+        // 2. Update Status
+        $this->incident->update([
+            'status' => 'In Progress'
+        ]);
+
+        // 3. Refresh status property di Livewire agar UI terupdate
+        $this->status = 'In Progress';
+
+        // 4. (Optional) Tambahkan Log Activity
+        // activity()->performedOn($this->incident)->log('Laporan dibuka kembali untuk perbaikan data.');
+
+        $this->dispatch('toast', message: 'Laporan berhasil dibuka kembali.', variant: 'success');
+    }
     public function render()
     {
         $stepStatus = [

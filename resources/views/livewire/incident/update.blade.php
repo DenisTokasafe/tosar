@@ -47,6 +47,16 @@
                         @case('Closed')
                         <div class="badge badge-success badge-xs"></div>
                         <span class="text-sm italic font-black uppercase text-success">CLOSED</span>
+                        {{-- Tombol Re-open muncul jika user punya akses review --}}
+                        @can('reviewReport', $incident)
+                        <button
+                            wire:click="reopen"
+                            wire:confirm="Apakah Anda yakin ingin membuka kembali laporan ini untuk perbaikan data?"
+                            class="ml-4 btn btn-outline btn-error btn-xs">
+                            <x-icon name="arrow-path" class="w-3 h-3" />
+                            Re-open Report
+                        </button>
+                        @endcan
                         @break
                         @endswitch
                     </div>
