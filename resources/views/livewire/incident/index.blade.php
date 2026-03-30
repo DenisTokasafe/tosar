@@ -18,7 +18,6 @@
                         <th class="w-40">{{ __('Tipe Insiden') }}</th>
                         <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
                         <th class="w-32 text-center">{{ __('Status') }}</th>
-                        <th class="w-20 text-center">{{ __('Aksi') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-base-200">
@@ -30,7 +29,7 @@
 
                         {{-- Nomor Referensi --}}
                         <td class="text-xs font-bold tracking-wider uppercase text-primary">
-                            {{ $item->report_number ?? 'DRAFT' }}
+                            <button class="btn btn-sm btn-info btn-link" wireClick="editIncident({{ $item->id }})">{{ $item->report_number }}</button>
                         </td>
 
                         {{-- Tanggal & Waktu --}}
@@ -87,18 +86,7 @@
                             </div>
                         </td>
 
-                        {{-- Tombol Aksi --}}
-                        <td class="text-center">
-                            <div class="flex justify-center gap-1">
 
-                                <x-button.btn-tooltip
-                                    color="primary"
-                                    icon="edit"
-                                    wireClick="editIncident({{ $item->id }})"
-                                    tooltip="Detail & Edit"
-                                    class="btn-xs" />
-                            </div>
-                        </td>
                     </tr>
                     @empty
                     <tr>
