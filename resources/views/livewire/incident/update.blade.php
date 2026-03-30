@@ -274,8 +274,6 @@
                 </div>
             </div>
             @endfor
-
-
             {{-- Modal DaisyUI --}}
             <dialog class="modal" id="my_modal_2" role="dialog" wire:ignore.self>
                 <div class="md:max-w-5xl modal-box">
