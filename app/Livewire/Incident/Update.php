@@ -723,26 +723,33 @@ class Update extends Component
 
         // --- MOUNT PART 9 ---
 
-        if ($report->contractor_id) {
+        // 1. Contractor (Sudah oke, tapi pastikan $report->pmContractor tidak null)
+        if (!empty($this->contractor_id)) {
             $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
             $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
             $this->searchNamePenerimaan['contractor'] = $report->pmContractor?->name;
         }
 
-        $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
-        $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
-        $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
+        // 2. Internal (Saran: Tambahkan cek jika perlu)
+        if ($report->pm_internal_id) {
+            $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
+            $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
+            $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
+        }
 
-        $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
-        $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
-        $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
+        // 3. OHS (Saran: Tambahkan cek jika perlu)
+        if ($report->ohs_head_id) {
+            $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
+            $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
+            $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
+        }
 
+        // 4. KTT (Sudah oke secara logika rating)
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
             $this->penerimaan_komentar_ktt       = $report->ktt_comment;
             $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
         }
-
         // Jika data kosong, beri 1 baris default
         if (empty($this->corrective_actions)) {
             $this->addCorrectiveRow();
