@@ -95,7 +95,7 @@
                                     color="primary"
                                     icon="edit"
                                     wireClick="editIncident({{ $item->id }})"
-                                    tooltip="Edit"
+                                    tooltip="Detail & Edit"
                                     class="btn-xs" />
                             </div>
                         </td>

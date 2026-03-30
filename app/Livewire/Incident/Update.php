@@ -302,6 +302,10 @@ class Update extends Component
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
+        if ($this->contractor_id) {
+            $rules['penerimaan_komentar_contractor_id'] = 'required|exists:users,id';
+            $rules['penerimaan_komentar_contractor']    = 'required|min:11';
+        }
 
 
         // PERBAIKAN DI SINI:
@@ -718,10 +722,12 @@ class Update extends Component
         })->toArray();
 
         // --- MOUNT PART 9 ---
-        $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
-        $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
-        // Set search term agar nama muncul di input select saat load
-        $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
+
+        if ($report->contractor_id) {
+            $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
+            $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
+            $this->searchNamePenerimaan['contractor'] = $report->pmContractor?->name;
+        }
 
         $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
         $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
@@ -1506,6 +1512,17 @@ class Update extends Component
     {
         $this->loadRiskAssessment();
 
+        if ($this->contractor_id) {
+            $this->penerimaan_komentar_contractor_id = null;
+            $this->searchNamePenerimaan['kontraktor'] = '';
+            if (isset($this->searchNamePenerimaan['kontraktor'])) {
+                $this->searchNamePenerimaan['kontraktor'] = '';
+            }
+            $this->dispatch('reset-all-editors');
+        } else {
+            $this->dispatch('refresh-contractor-editor');
+        }
+
         if (!in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $this->penerimaan_komentar_ktt_id = null;
             $this->penerimaan_komentar_ktt = '';
@@ -1696,13 +1713,15 @@ class Update extends Component
                 break;
             case 9:
                 $fields = [
-                    'penerimaan_komentar_contractor_id',
+
                     'penerimaan_komentar_internal_id',
                     'penerimaan_komentar_ohs_id',
-                    'penerimaan_komentar_contractor',
                     'penerimaan_komentar_internal',
                     'penerimaan_komentar_ohs'
                 ];
+                if ($this->contractor_id) {
+                    $fields = array_merge($fields, ['penerimaan_komentar_contractor_id', 'penerimaan_komentar_contractor']);
+                }
                 // Tambahkan field KTT ke dalam daftar fields jika level 3, 4, atau 5
                 if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
                     // Masukkan ke daftar fields agar dikenali sistem
@@ -1795,6 +1814,12 @@ class Update extends Component
             : [
                 'damage_detail' => $allRules['damage_detail']
             ];
+        $contractorRules = $this->contractor_id
+            ? [
+                'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
+                'penerimaan_komentar_contractor' => $allRules['penerimaan_komentar_contractor']
+            ]
+            : [];
 
         $kttRules = in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])
             ? [
@@ -1903,7 +1928,7 @@ class Update extends Component
                 'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
                 'penerimaan_komentar_internal'      => $allRules['penerimaan_komentar_internal'],
                 'penerimaan_komentar_ohs'           => $allRules['penerimaan_komentar_ohs'],
-            ], $kttRules),
+            ], $kttRules, $contractorRules),
         ];
 
         // 4. Jalankan Validasi berdasarkan step saat ini
@@ -1944,6 +1969,9 @@ class Update extends Component
 
         // Khusus di Step 9, tambahkan interlock KTT untuk risiko tinggi
         if ($this->currentStep == 9) {
+            if ($this->contractor_id == null) {
+                return !empty($this->penerimaan_komentar_contractor_id) && !empty($this->penerimaan_komentar_contractor);
+            }
             if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
                 return !empty($this->penerimaan_komentar_ktt_id) && !empty($this->penerimaan_komentar_ktt);
             }
@@ -2065,28 +2093,35 @@ class Update extends Component
     // Logic di Class PHP Livewire
     public function getProgressPercentage()
     {
-        // Cek apakah rating membutuhkan otorisasi KTT
+        // 1. Definisikan kondisi dasar
         $requiresKTT = in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
+        $hasContractor = !empty($this->contractor_id);
 
+        // 2. Susun array steps secara linear
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
-            'step2' => $this->incident->involvedPersons()->exists(),
-            'step3' => $this->incident->investigationTeams()->exists(),
-            'step4' => $this->incident->peepoAnalyses()->exists(),
-            'step5' => $this->incident->timelines()->exists(),
+            'step2' => $this->incident->involved_persons_count > 0, // Gunakan withCount di query utama
+            'step3' => $this->incident->investigation_teams_count > 0,
+            'step4' => $this->incident->peepo_analyses_count > 0,
+            'step5' => $this->incident->timelines_count > 0,
             'step6' => !empty($this->incident->scat_analysis),
-            'step7' => $this->incident->correctiveActions()->exists(),
+            'step7' => $this->incident->corrective_actions_count > 0,
             'step8' => !empty($this->key_learning),
-
-            // Logika Dinamis Step 9
-            'step9' => $requiresKTT ? !empty($this->penerimaan_komentar_ktt_id) // Jika rating tinggi, wajib KTT
-                : (!empty($this->penerimaan_komentar_ohs_id)), // Jika rendah, cukup OHS/Internal
         ];
 
-        $completedCount = collect($steps)->filter(fn($step) => $step)->count();
+        // 3. Logika Step 9 (Komentar/Otorisasi)
+        // Kita buat satu kondisi gabungan agar tidak ada duplikasi key
+        $step9_OHS = !empty($this->penerimaan_komentar_ohs_id);
+        $step9_KTT = $requiresKTT ? !empty($this->penerimaan_komentar_ktt_id) : true;
+        $step9_Vendor = $hasContractor ? !empty($this->penerimaan_komentar_contractor_id) : true;
+
+        $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
+
+        // 4. Hitung persentase
+        $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
         $totalSteps = count($steps);
 
-        return round(($completedCount / $totalSteps) * 100);
+        return (int) round(($completedCount / $totalSteps) * 100);
     }
     public function update()
     {
@@ -2196,8 +2231,8 @@ class Update extends Component
                         'langsung' => ['kondisi_tidak_aman' => $this->unsafe_conditions, 'perilaku_tidak_aman' => $this->unsafe_acts],
                         'dasar'    => ['faktor_pribadi' => $this->personal_factors, 'faktor_pekerjaan' => $this->job_factors, 'sistem_kontrol' => $this->control_system_factors],
                     ],
-                    'pm_contractor_comment' => $this->penerimaan_komentar_contractor,
-                    'pm_contractor_id'      => $this->penerimaan_komentar_contractor_id,
+                    'pm_contractor_comment' => $this->contractor_id ? $this->penerimaan_komentar_contractor : null,
+                    'pm_contractor_id'      => $this->contractor_id ? $this->penerimaan_komentar_contractor_id : null,
                     'pm_internal_comment'   => $this->penerimaan_komentar_internal,
                     'pm_internal_id'        => $this->penerimaan_komentar_internal_id,
                     'ohs_head_comment'      => $this->penerimaan_komentar_ohs,
