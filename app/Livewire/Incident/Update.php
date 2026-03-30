@@ -727,6 +727,7 @@ class Update extends Component
         if (!empty($this->contractor_id)) {
             $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
             $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
+            dd($report->pmContractor?->name);
             $this->searchNamePenerimaan['contractor'] = $report->pmContractor?->name;
         }
 
