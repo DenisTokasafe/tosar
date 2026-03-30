@@ -1604,18 +1604,19 @@ class Update extends Component
         $hasContractor = !empty($this->incident->contractor_id);
 
         // 2. Cek Komentar OHS (Wajib untuk semua level)
-        $ohsDone = !empty($this->incident->penerimaan_komentar_ohs_id);
+        $ohsDone = !empty($this->incident->ohs_head_id);
+        $internalDone = !empty($this->incident->pm_internal_id);
 
         // 3. Cek Komentar KTT (Hanya jika rating Sedang ke atas)
         // Jika tidak butuh KTT, otomatis dianggap true
-        $kttDone = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
+        $kttDone = $requiresKTT ? !empty($this->incident->ktt_id) : true;
 
         // 4. Cek Komentar Kontraktor (Hanya jika ada contractor_id)
         // Jika tidak ada kontraktor, otomatis dianggap true
-        $contractorDone = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
+        $contractorDone = $hasContractor ? !empty($this->incident->pm_contractor_id) : true;
 
         // Output: Hanya True jika SEMUA syarat yang relevan terpenuhi
-        return $ohsDone && $kttDone && $contractorDone;
+        return $ohsDone && $internalDone && $kttDone && $contractorDone;
     }
     // Di dalam Update.php
 
