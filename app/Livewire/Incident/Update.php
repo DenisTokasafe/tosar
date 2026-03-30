@@ -770,8 +770,6 @@ class Update extends Component
         $hasAnalysis = $this->incident->peepoAnalyses()->exists() || $this->incident->timelines()->exists();
         $hasScat = !empty($this->incident->scat_analysis);
 
-        $isInvestigating = $hasTeams || $hasAnalysis || $hasScat;
-
         // Action Plan (Step 7-8)
         $totalActions = $this->incident->correctiveActions->count();
         $hasActionPlan = $totalActions > 0 || !empty($this->key_learning);
@@ -804,22 +802,18 @@ class Update extends Component
         }
 
         // 3. STATUS: IN PROGRESS (Dengan Sub-Status untuk UI)
-        if ($isInvestigating) {
-            // Jika semua Investigasi (Teams, Analysis/Timeline, SCAT) sudah terisi
-            if ($hasTeams && $hasAnalysis && $hasScat) {
-                return 'In Progress';
-            }
-
-            // Jika baru sebagian, tambahkan flag khusus untuk UI
-            if ($hasScat || $hasAnalysis) {
-                return 'In Progress : Analysis'; // Gabungkan Analysis & SCAT ke satu label
-            }
-
-            if ($hasTeams) {
-                return 'In Progress : Teams';
-            }
-
+        // Cek kondisi "Lengkap" dulu
+        if ($hasTeams && $hasAnalysis && $hasScat) {
             return 'In Progress';
+        }
+
+        // Cek kondisi "Sebagian" (Urutan dari yang paling detail)
+        if ($hasScat || $hasAnalysis) {
+            return 'In Progress : Analysis';
+        }
+
+        if ($hasTeams) {
+            return 'In Progress : Teams';
         }
 
         // 4. STATUS: OPEN / REPORTED
