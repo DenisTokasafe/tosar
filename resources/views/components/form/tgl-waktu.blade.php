@@ -26,7 +26,7 @@
                 enableTime: true,
                 time_24hr: true,
                 altFormat: '{{ $dateFormat }}',
-                dateFormat: 'Y-m-d',
+                dateFormat: 'Y-m-d H:i:00', // Format yang disimpan di database
                 defaultDate: this.reportDate,
                 onChange: (selectedDates, dateStr) => {
                     this.reportDate = dateStr;
