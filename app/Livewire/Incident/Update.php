@@ -2081,7 +2081,6 @@ class Update extends Component
             ],
 
             9 => array_merge([
-                'penerimaan_komentar_contractor_id' => $allRules['penerimaan_komentar_contractor_id'],
                 'penerimaan_komentar_internal_id'   => $allRules['penerimaan_komentar_internal_id'],
                 'penerimaan_komentar_ohs_id'        => $allRules['penerimaan_komentar_ohs_id'],
                 'penerimaan_komentar_contractor'    => $allRules['penerimaan_komentar_contractor'],
