@@ -266,7 +266,7 @@ class Create extends Component
             $data['supporting_documents_paths']
         );
 
-        session()->put('incident_data', $data);
+        session()->put('incident_create_data', $data);
     }
 
     // Komentar Standard
@@ -413,7 +413,7 @@ class Create extends Component
             $this->searchKorban[$index] = $employee->name;
 
             // 4. PENTING: Simpan perubahan ke session agar tidak hilang saat refresh
-            session(['incident_data' => $this->all()]);
+            session(['incident_create_data' => $this->all()]);
 
             // 5. Opsional: Trigger validasi untuk baris tersebut
             $this->validateOnly("directly_involved.$index.*");
@@ -431,8 +431,8 @@ class Create extends Component
             $this->why_analysis = ['why1' => ''];
         }
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
-        if (session()->has('incident_data')) {
-            $data = session('incident_data');
+        if (session()->has('incident_create_data')) {
+            $data = session('incident_create_data');
             $this->fill($data);
 
             // Pastikan whyCount ikut terisi dari session
@@ -1233,7 +1233,7 @@ class Create extends Component
             });
 
             // Hapus Session draft
-            session()->forget('incident_data');
+            session()->forget('incident_create_data');
             $this->reset();
 
             // Feedback Berhasil
