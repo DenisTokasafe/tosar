@@ -84,7 +84,7 @@
 
                         {{-- Status --}}
                         <td class="text-center">
-                            <div @class([ 'badge badge-xs py-2 px-2 font-bold text-[9px] uppercase' , 'badge-success'=> $item->status === 'closed',
+                            <div @class([ 'badge badge-xs py-2 px-2 font-bold text-[9px] uppercase' , 'badge-success'=> $item->status === 'Closed',
                                 'badge-error' => $item->status === 'Open',
                                 'badge-warning' => $item->status === 'Action Required',
                                 'badge-info' => $item->status === 'In Progress',

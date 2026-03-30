@@ -1723,7 +1723,7 @@ class Update extends Component
     }
     public function render()
     {
-        $this->status = $this->determineReportStatus();
+
         $stepStatus = [
             'step1' => !empty($this->incident->event_type_id),
 
