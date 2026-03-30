@@ -15,6 +15,7 @@
                         <th class="w-40">{{ __('Nomor Referensi') }}</th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
                         <th>{{ __('Deskripsi Insiden') }}</th>
+                        <th>{{ __('Divisi Penanggung Jawab') }}</th>
                         <th class="w-40">{{ __('Tipe Insiden') }}</th>
                         <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
                         <th class="w-32 text-center">{{ __('Status') }}</th>
@@ -50,6 +51,12 @@
                                     <x-icon name="map-pin" class="w-3 h-3" />
                                     {{ $item->location?->name}} ->spesifik: {{ $item->location_specific }}
                                 </span>
+                            </div>
+                        </td>
+                        {{-- Divisi Penanggung Jawab --}}
+                        <td>
+                            <div class="badge badge-outline badge-xs py-2 px-2 font-medium text-[10px] uppercase">
+                                {{ $item->department?->department_name ?? $item->contractor?->contractor_name }}
                             </div>
                         </td>
 
