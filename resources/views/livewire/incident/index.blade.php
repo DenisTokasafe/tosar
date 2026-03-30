@@ -1,5 +1,12 @@
 <section class="w-full">
     <x-incident.layout>
+        <div class="flex items-center justify-end pb-2 border-b">
+            {{-- Kontrol di sisi kanan tanpa judul --}}
+            <div class="flex gap-2">
+                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('incident-create') }}" tooltip="Tambah Data" />
+            </div>
+        </div>
+
         <div class="overflow-x-auto border rounded-xl border-base-300 bg-base-100">
             <table class="table table-sm table-pin-rows">
                 <thead>
