@@ -1,9 +1,9 @@
 <section class="w-full">
     <x-incident.layout>
-        <div class="flex items-center justify-end pb-2 border-b">
+        <div class="flex items-center justify-start pb-2 border-b">
             {{-- Kontrol di sisi kanan tanpa judul --}}
             <div class="flex gap-2">
-                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('incident-create') }}" tooltip="Tambah Data" position="top md:left" />
+                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('incident-create') }}" tooltip="Tambah Data" position="top md:right" />
             </div>
         </div>
 
