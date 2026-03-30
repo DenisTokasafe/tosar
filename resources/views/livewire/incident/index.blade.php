@@ -30,7 +30,7 @@
 
                         {{-- Nomor Referensi --}}
                         <td class="text-xs font-bold tracking-wider uppercase text-primary">
-                            <button class="btn btn-sm btn-info btn-link" wireClick="editIncident({{ $item->id }})">{{ $item->report_number }}</button>
+                            <button class="btn btn-sm btn-info btn-link" wire:click="editIncident({{ $item->id }})">{{ $item->report_number }}</button>
                         </td>
 
                         {{-- Tanggal & Waktu --}}
