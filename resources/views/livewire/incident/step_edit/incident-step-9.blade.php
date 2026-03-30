@@ -1,5 +1,6 @@
 <div class="w-full">
     {{-- 1. PROJECT MANAGER (KONTRAKTOR) --}}
+    @if($contractor_id)
     <fieldset class="w-full p-4 mt-4 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="flex items-center gap-2 fieldset-legend">
             Penerimaan & Komentar Project Manager: (Jika kontraktor)
@@ -24,7 +25,7 @@
                 x-on:focusin="$canEdit ? $wire.set('activeTypePenerimaan', 'penerimaan_komentar_contractor') : null" />
         </div>
     </fieldset>
-
+    @endif
     {{-- 2. PROJECT MANAGER (INTERNAL) --}}
     <fieldset class="w-full p-4 mt-2 border fieldset bg-base-200 border-base-300 rounded-box">
         <legend class="flex items-center gap-2 fieldset-legend">
