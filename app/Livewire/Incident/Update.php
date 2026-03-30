@@ -1587,6 +1587,17 @@ class Update extends Component
     }
     public function render()
     {
+        $stepStatus = [
+            'step1' => !empty($this->incident->event_type_id),
+            'step2' => $this->incident->involved_persons_count > 0,
+            'step3' => $this->incident->investigation_teams_count > 0,
+            'step4' => $this->incident->peepo_analyses_count > 0,
+            'step5' => $this->incident->timelines_count > 0,
+            'step6' => !empty($this->incident->scat_analysis),
+            'step7' => $this->incident->corrective_actions_count > 0,
+            'step8' => !empty($this->key_learning),
+            'step9' => $this->checkStep9Status(), // Fungsi bantuan untuk pengecekan otorisasi
+        ];
         return view('livewire.incident.update', [
             'Department'   => Department::all(),
             'Contractors'  => Contractor::all(),
@@ -1596,7 +1607,8 @@ class Update extends Component
             'eventSubTypes' => EventSubType::where('event_type_id', $this->event_type_id)->get(),
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
-            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
+            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get(),
+            'allStepsData' => $stepStatus
         ]);
     }
     public function validateCurrentStep()

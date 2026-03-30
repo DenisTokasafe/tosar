@@ -183,8 +183,18 @@
                         @if($hasErrorInStep)
                         <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse">⚠️ ERROR</span>
                         @else
-                        @if($currentStep > $i)
-                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-success">✓</span>
+                        @php
+                        // Ambil array steps dari fungsi progress yang kita buat tadi
+                        // Pastikan variable $allStepsData tersedia di view Anda
+                        $isStepCompleted = $allStepsData['step' . $i] ?? false;
+                        @endphp
+
+                        @if($isStepCompleted)
+                        {{-- Centang Hijau jika sudah ada data --}}
+                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-success ring-1 ring-success/30">✓</span>
+                        @else
+                        {{-- Tanda X Merah jika belum ada data --}}
+                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-error opacity-50 ring-1 ring-error/30">✕</span>
                         @endif
                         @endif
                     </h3>
