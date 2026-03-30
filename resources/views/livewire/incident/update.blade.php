@@ -194,7 +194,7 @@
                                         @if($this->canUpdate)
                                         <button type="button" wire:click="update" wire:loading.attr="disabled" class="px-4 text-white shadow-md btn btn-xs btn-success">
                                             <span wire:loading.remove wire:target="update">{{ __('Update Laporan') }}</span>
-                                            <span wire:loading.add wire:target="update">{{ __('Proses Update...') }}</span>
+                                            <span wire:loading.remove.class="hidden" wire:target="update" class="hidden">{{ __('Proses Update...') }}</span>
                                             <span wire:loading.remove.class="hidden" wire:target="update" class="loading loading-spinner loading-xs hidden"></span>
                                         </button>
                                         @else
