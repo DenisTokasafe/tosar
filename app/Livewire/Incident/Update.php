@@ -1618,7 +1618,7 @@ class Update extends Component
             'step2' => $this->incident->involvedPersons()->exists(),
             'step3' => $this->incident->investigationTeams()->exists(),
             'step4' => $this->incident->peepoAnalyses()->whereNotNull('temuan')->where('temuan', '!=', '')->exists(),
-            'step5' => $this->incident->timelines()->whereNotNull('why_count_used')->exists(),
+            'step5' => $this->incident->timelines()->where('why_count_used', '!=', 0)->exists(),
             'step6' => !empty($this->incident->scat_analysis),
             'step7' => $this->incident->correctiveActions()->exists(),
 
