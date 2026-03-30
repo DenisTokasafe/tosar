@@ -39,23 +39,44 @@
                 <div class="p-2 stat">
                     <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Status Laporan</div>
                     <div class="flex items-center gap-2 mt-1 stat-value">
-                        @switch($status)
+                        @php
+                        // Pisahkan status utama dan detail (misal: "In Progress : Teams")
+                        $isDetail = str_contains($status, ':');
+                        $mainStatus = $isDetail ? trim(explode(':', $status)[0]) : $status;
+                        $subStatus = $isDetail ? trim(explode(':', $status)[1]) : null;
+                        @endphp
+
+                        @switch($mainStatus)
                         @case('Open') @case('Reported')
                         <div class="badge badge-error badge-xs animate-pulse"></div>
                         <span class="text-sm italic font-black uppercase text-error">OPEN / REPORTED</span>
                         @break
+
                         @case('In Progress')
-                        <div class="badge badge-info badge-xs animate-bounce"></div>
-                        <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
+                        <div class="flex items-center gap-2">
+                            <div class="badge badge-info badge-xs animate-bounce"></div>
+                            <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
+
+                            {{-- Tampilkan Sub-Status jika ada --}}
+                            @if($subStatus)
+                            <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-info/10 border border-info/20">
+                                <span class="text-[9px] font-bold text-info uppercase tracking-widest">
+                                    HAS {{ $subStatus }}
+                                </span>
+                            </div>
+                            @endif
+                        </div>
                         @break
+
                         @case('Action Required')
                         <div class="badge badge-warning badge-xs"></div>
                         <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
                         @break
+
                         @case('Closed')
                         <div class="badge badge-success badge-xs"></div>
                         <span class="text-sm italic font-black uppercase text-success">CLOSED</span>
-                        {{-- Tombol Re-open muncul jika user punya akses review --}}
+
                         @can('reviewReport', $incident)
                         <button
                             wire:click="reopen"

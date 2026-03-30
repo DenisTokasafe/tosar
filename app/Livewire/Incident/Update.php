@@ -803,13 +803,46 @@ class Update extends Component
             return 'Action Required';
         }
 
-        // 3. STATUS: IN PROGRESS
+        // 3. STATUS: IN PROGRESS (Dengan Sub-Status untuk UI)
         if ($isInvestigating) {
+            // Jika semua Investigasi (Teams, Analysis/Timeline, SCAT) sudah terisi
+            if ($hasTeams && $hasAnalysis && $hasScat) {
+                return 'In Progress';
+            }
+
+            // Jika baru sebagian, tambahkan flag khusus untuk UI
+            if ($hasScat || $hasAnalysis) {
+                return 'In Progress : Analysis'; // Gabungkan Analysis & SCAT ke satu label
+            }
+
+            if ($hasTeams) {
+                return 'In Progress : Teams';
+            }
+
             return 'In Progress';
         }
 
         // 4. STATUS: OPEN / REPORTED
         return 'Open';
+    }
+    // Mengambil Status Utama (Misal: "In Progress")
+    #[Computed]
+    public function mainStatus()
+    {
+        if (str_contains($this->status, ':')) {
+            return trim(explode(':', $this->status)[0]);
+        }
+        return $this->status;
+    }
+
+    // Mengambil Detail/Sub Status (Misal: "Teams")
+    #[Computed]
+    public function subStatus()
+    {
+        if (str_contains($this->status, ':')) {
+            return trim(explode(':', $this->status)[1]);
+        }
+        return null;
     }
     public function deleteMedia($id)
     {
