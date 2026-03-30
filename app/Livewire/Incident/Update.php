@@ -1585,6 +1585,30 @@ class Update extends Component
             'lainnya'       => 'Lainnya',
         ];
     }
+    /**
+     * Logika Validasi Tahap Akhir (Otorisasi & Komentar)
+     * @return bool
+     */
+    public function checkStep9Status(): bool
+    {
+        // 1. Ambil data pendukung (asumsi data ini ada di model Incident atau properti component)
+        $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
+        $hasContractor = !empty($this->incident->contractor_id);
+
+        // 2. Cek Komentar OHS (Wajib untuk semua level)
+        $ohsDone = !empty($this->incident->penerimaan_komentar_ohs_id);
+
+        // 3. Cek Komentar KTT (Hanya jika rating Sedang ke atas)
+        // Jika tidak butuh KTT, otomatis dianggap true
+        $kttDone = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
+
+        // 4. Cek Komentar Kontraktor (Hanya jika ada contractor_id)
+        // Jika tidak ada kontraktor, otomatis dianggap true
+        $contractorDone = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
+
+        // Output: Hanya True jika SEMUA syarat yang relevan terpenuhi
+        return $ohsDone && $kttDone && $contractorDone;
+    }
     public function render()
     {
         $stepStatus = [
