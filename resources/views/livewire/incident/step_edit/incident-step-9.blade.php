@@ -16,7 +16,7 @@
 
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-contractor"
-                placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.kontraktor"
+                placeholder="Cari Nama Project Manager: (Jika kontraktor)" modelsearch="searchNamePenerimaan.kontraktor"
                 modelid="penerimaan_komentar_contractor_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarContractorDropdown && $canEdit"
@@ -42,7 +42,7 @@
 
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-internal"
-                placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.internal"
+                placeholder="Cari Nama Project Manager: (Jika internal)" modelsearch="searchNamePenerimaan.internal"
                 modelid="penerimaan_komentar_internal_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarInternalDropdown && $canEdit"
@@ -68,7 +68,7 @@
 
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
             <x-form.searchable-select2 wire:key="select-penerimaan-komentar-ohs"
-                placeholder="Cari Nama..." modelsearch="searchNamePenerimaan.ohs"
+                placeholder="Cari Nama OHS Dept Head..." modelsearch="searchNamePenerimaan.ohs"
                 modelid="penerimaan_komentar_ohs_id"
                 :options="$this->pelaporsPenerimaan"
                 :showdropdown="$showPenerimaanKomentarOhsDropdown && $canEdit"
@@ -97,7 +97,7 @@
         <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
             <x-form.searchable-select2
                 wire:key="select-penerimaan-komentar-ktt-id"
-                placeholder="Cari Nama..."
+                placeholder="Cari Nama KTT..."
                 modelsearch="searchNamePenerimaan.ktt"
                 modelid="penerimaan_komentar_ktt_id"
                 :options="$this->pelaporsPenerimaan"
