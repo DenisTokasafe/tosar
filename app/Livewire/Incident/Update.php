@@ -1619,9 +1619,7 @@ class Update extends Component
             'step3' => $this->incident->investigationTeams()->exists(),
             'step4' => $this->incident->peepoAnalyses()->whereNotNull('temuan')->where('temuan', '!=', '')->exists(),
             'step5' => $this->incident->timelines()->where('why_count_used', '!=', 0)->exists(),
-            'step6' => !empty($this->incident->scat_analysis) &&
-                !str_contains($this->incident->scat_analysis, '"item":""') &&
-                !str_contains($this->incident->scat_analysis, '"description":""'),
+            'step6' => collect(json_decode($this->incident->scat_analysis, true))->flatten()->contains(fn($value) => !empty($value) && $value !== ""),
             'step7' => $this->incident->correctiveActions()->exists(),
 
             // Pastikan variabel ini sinkron dengan properti component
