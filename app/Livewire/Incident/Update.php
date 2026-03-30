@@ -1609,6 +1609,61 @@ class Update extends Component
         // Output: Hanya True jika SEMUA syarat yang relevan terpenuhi
         return $ohsDone && $kttDone && $contractorDone;
     }
+    // Di dalam Update.php
+
+    /**
+     * Mendapatkan status akses edit per step
+     */
+    public function getCanEditProperty($step)
+    {
+        if ($this->incident->status === 'Closed') {
+            return false;
+        }
+
+        return match ($step) {
+            1, 2 => auth()->user()->can('updateInitialData', $this->incident),
+            3, 4, 5, 6 => auth()->user()->can('conductInvestigation', $this->incident),
+            7 => auth()->user()->can('manageCorrectiveActions', $this->incident),
+            8 => auth()->user()->can('updateLessonsLearned', $this->incident),
+            9 => auth()->user()->can('reviewReport', $this->incident),
+            default => false
+        };
+    }
+
+    /**
+     * Mendapatkan Nama Step (Bisa ditaruh di konstanta atau function)
+     */
+    public function getStepTitle($step)
+    {
+        return [
+            1 => 'Detil Laporan',
+            2 => 'Pihak Terlibat Langsung',
+            3 => 'Partisipan Investigasi',
+            4 => 'PEEPO Investigation Factor',
+            5 => 'Time Line & Analisis',
+            6 => 'Investigasi Kecelakaan (Checklist)',
+            7 => 'Tindakan Perbaikan',
+            8 => 'Kunci Pembelajaran',
+            9 => 'Penerimaan & Komentar Reviewer',
+        ][$step] ?? '';
+    }
+
+    /**
+     * Mengecek apakah step tertentu memiliki error validasi
+     */
+    public function hasErrorInStep($step)
+    {
+        $fields = $this->getFieldsForStep($step);
+
+        foreach ($fields as $field) {
+            // Mengakses error bag dari Livewire
+            if ($this->getErrorBag()->has($field) || $this->getErrorBag()->has($field . '.*')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public function render()
     {
         $stepStatus = [
@@ -2038,21 +2093,7 @@ class Update extends Component
     }
 
     // Helper untuk judul step (biar rapi di tampilan)
-    public function getStepTitle($step)
-    {
-        $titles = [
-            1 => 'Informasi Dasar',
-            2 => 'Pihak Terlibat',
-            3 => 'Tim Investigasi',
-            4 => 'Analisis PEEPO',
-            5 => 'Why Analysis',
-            6 => 'Faktor Penyebab',
-            7 => 'Tindakan Perbaikan & Dokumen',
-            8 => 'Lesson Learned',
-            9 => 'Penerimaan & Komentar'
-        ];
-        return $titles[$step] ?? 'Unknown Step';
-    }
+
     /**
      * Helper untuk dynamic why analysis rules
      */
