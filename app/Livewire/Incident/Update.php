@@ -1613,14 +1613,20 @@ class Update extends Component
     {
         $stepStatus = [
             'step1' => !empty($this->incident->event_type_id),
-            'step2' => $this->incident->involved_persons_count > 0,
-            'step3' => $this->incident->investigation_teams_count > 0,
-            'step4' => $this->incident->peepo_analyses_count > 0,
-            'step5' => $this->incident->timelines_count > 0,
+
+            // Ganti _count dengan memanggil relasi secara langsung agar fresh (reaktif)
+            'step2' => $this->incident->involvedPersons()->exists(),
+            'step3' => $this->incident->investigationTeams()->exists(),
+            'step4' => $this->incident->peepoAnalyses()->exists(),
+            'step5' => $this->incident->timelines()->exists(),
+
             'step6' => !empty($this->incident->scat_analysis),
-            'step7' => $this->incident->corrective_actions_count > 0,
-            'step8' => !empty($this->key_learning),
-            'step9' => $this->checkStep9Status(), // Fungsi bantuan untuk pengecekan otorisasi
+            'step7' => $this->incident->correctiveActions()->exists(),
+
+            // Pastikan variabel ini sinkron dengan properti component
+            'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
+
+            'step9' => $this->checkStep9Status(),
         ];
         return view('livewire.incident.update', [
             'Department'   => Department::all(),
