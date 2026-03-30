@@ -139,14 +139,19 @@
             9 => 'Penerimaan & Komentar Reviewer',
             ];
 
+            // Jika status insiden adalah 'Closed', maka semua akses edit otomatis false
+            if ($this->incident->status === 'Closed') {
+            $canEdit = false;
+            } else {
             $canEdit = match($i) {
-            1, 2 => Gate::allows('updateInitialData', $incident),
-            3, 4, 5, 6 => Gate::allows('conductInvestigation', $incident),
-            7 => Gate::allows('manageCorrectiveActions', $incident),
-            8 => Gate::allows('updateLessonsLearned', $incident),
-            9 => Gate::allows('reviewReport', $incident),
+            1, 2 => Gate::allows('updateInitialData', $this->incident),
+            3, 4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
+            7 => Gate::allows('manageCorrectiveActions', $this->incident),
+            8 => Gate::allows('updateLessonsLearned', $this->incident),
+            9 => Gate::allows('reviewReport', $this->incident),
             default => false
             };
+            }
             @endphp
 
             <div
