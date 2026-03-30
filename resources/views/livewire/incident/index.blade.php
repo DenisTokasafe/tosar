@@ -3,7 +3,7 @@
         <div class="flex items-center justify-end pb-2 border-b">
             {{-- Kontrol di sisi kanan tanpa judul --}}
             <div class="flex gap-2">
-                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('incident-create') }}" tooltip="Tambah Data" />
+                <x-button.btn-tooltip color="primary" icon="add" href="{{ route('incident-create') }}" tooltip="Tambah Data" position="top md:left" />
             </div>
         </div>
 
