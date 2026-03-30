@@ -171,6 +171,7 @@
                     'bg-base-300 text-base-content/40' => !$canEdit
                     ])>
 
+                    {{-- Ganti bagian h3 di dalam collapse-title dengan ini --}}
                     <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
                         <span>BAGIAN {{ $i }}</span>
                         <span class="hidden md:inline">– {{ $stepTitles[$i] }}</span>
@@ -181,20 +182,33 @@
                         @endif
 
                         @if($hasErrorInStep)
-                        <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse">⚠️ ERROR</span>
+                        {{-- Status Error jika validasi gagal --}}
+                        <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse text-[9px]">⚠️ ERROR</span>
                         @else
                         @php
-                        // Ambil array steps dari fungsi progress yang kita buat tadi
-                        // Pastikan variable $allStepsData tersedia di view Anda
+                        // Membaca status penyelesaian dari array allStepsData
                         $isStepCompleted = $allStepsData['step' . $i] ?? false;
+
+                        // Tooltip khusus untuk Step 9 agar lebih informatif
+                        $tooltipTip = ($i == 9)
+                        ? "Membutuhkan komentar OHS/KTT/Vendor"
+                        : "Data bagian ini belum lengkap";
                         @endphp
 
                         @if($isStepCompleted)
-                        {{-- Centang Hijau jika sudah ada data --}}
-                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-success ring-1 ring-success/30">✓</span>
+                        {{-- Centang Hijau jika data sudah ada --}}
+                        <div class="tooltip tooltip-right" data-tip="Bagian Selesai">
+                            <span class="px-1 ml-2 text-white border-none badge badge-sm badge-success ring-1 ring-success/30 shadow-sm">
+                                ✓
+                            </span>
+                        </div>
                         @else
-                        {{-- Tanda X Merah jika belum ada data --}}
-                        <span class="px-1 ml-2 text-white border-none badge badge-sm badge-error opacity-50 ring-1 ring-error/30">✕</span>
+                        {{-- Tanda X jika data belum diinput --}}
+                        <div class="tooltip tooltip-right" data-tip="{{ $tooltipTip }}">
+                            <span class="px-1 ml-2 text-white border-none badge badge-sm badge-error opacity-40 ring-1 ring-error/30 cursor-help transition-opacity hover:opacity-100">
+                                ✕
+                            </span>
+                        </div>
                         @endif
                         @endif
                     </h3>
