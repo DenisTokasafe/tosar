@@ -25,18 +25,33 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // 1. Filter: Hanya tangani request GET
     if (event.request.method !== 'GET') {
-        return; // Biarkan browser menangani request POST/lainnya secara normal
+        return;
     }
 
     event.respondWith(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.match(event.request).then(response => {
-                // Jika ada di cache, kirim response. Jika tidak, fetch dari internet.
-                return response || fetch(event.request).catch(() => {
-                    // Opsional: Return halaman offline jika fetch gagal
+        caches.match(event.request).then(response => {
+            // 1. Jika ada di cache, langsung kembalikan
+            if (response) {
+                return response;
+            }
+
+            // 2. Jika tidak ada, coba ambil dari jaringan
+            return fetch(event.request).catch(() => {
+                /* PERBAIKAN DI SINI:
+                   Jika network gagal dan tidak ada di cache,
+                   kita HARUS mengembalikan sesuatu yang bertipe Response.
+                */
+
+                // Opsi A: Berikan pesan teks sederhana
+                return new Response('Koneksi terputus. Halaman tidak tersedia offline.', {
+                    status: 503,
+                    statusText: 'Service Unavailable',
+                    headers: new Headers({ 'Content-Type': 'text/plain' })
                 });
+
+                // Opsi B: Jika kamu punya file offline.html di cacheAssets:
+                // return caches.match('/offline.html');
             });
         })
     );
