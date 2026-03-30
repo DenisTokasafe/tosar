@@ -2355,11 +2355,16 @@ class Update extends Component
 
                 // 6. Tentukan Status Berdasarkan Data Terbaru
                 // Penting: Pastikan determineReportStatus() membaca data dari $this
-                $this->status = $this->determineReportStatus();
+                // Hitung status terbaru
+                $calculatedStatus = $this->determineReportStatus();
+
+                // Simpan ke database (Hanya status utamanya saja)
+                // explode(':') memastikan "In Progress : Teams" menjadi "In Progress"
+                $cleanStatus = trim(explode(':', $calculatedStatus)[0]);
 
                 // 7. Update Data Utama & Increment Lock
                 $report->update([
-                    'status'                => $this->status,
+                    'status'                => $cleanStatus,
                     'event_type_id'         => $this->event_type_id,
                     'description'           => $this->description,
                     'date_time'             => $this->date_time,
@@ -2397,7 +2402,7 @@ class Update extends Component
                     ]
                 );
             });
-
+            $this->status = $this->determineReportStatus();
             // 9. Post-Success Synchronization
             $this->incident->refresh();
             $this->current_lock_version = $this->incident->lock_version;
