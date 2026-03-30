@@ -17,7 +17,7 @@
             {{-- STATS: NOMOR LAPORAN --}}
             <div class="overflow-visible border shadow-sm stats border-base-300 bg-base-100">
                 <div class="p-2 stat">
-                    <div class="flex">
+                    <div class="flex items-center">
                         <div class="grow">
                             <div class="stat-title text-[10px] uppercase font-bold tracking-tighter text-base-content/60">Update Laporan Insiden</div>
                             <flux:subheading size="sm" class="flex items-center gap-2 text-accent">
