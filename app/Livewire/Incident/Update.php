@@ -1367,8 +1367,8 @@ class Update extends Component
     }
     public function enableManualMode($index = null)
     {
-        dd("Manual mode enabled for index: $index");
         $this->manualKorbanMode[$index] = true;
+        dd("Manual mode enabled for index: $this->manualKorbanMode[$index]");
         $this->show_employee_dropdown[$index] = true;
     }
     public function addManualData($index)
