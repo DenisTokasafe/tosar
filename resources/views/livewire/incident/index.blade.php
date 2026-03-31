@@ -34,7 +34,19 @@
                         </th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
                         <th>{{ __('Deskripsi Insiden') }}</th>
-                        <th>{{ __('Divisi Penanggung Jawab') }}</th>
+                        <th>
+                            {{ __('Divisi Penanggung Jawab') }}
+                            <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
+                                <x-icon-filter :active="!empty($filterDept)" />
+                            </button>
+                            <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
+                                popover
+                                id="pop_dept"
+                                style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
+                                test
+                            </div>
+
+                        </th>
                         <th class="w-40">{{ __('Tipe Insiden') }}</th>
                         <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
                         <th class="w-32 text-center">{{ __('Status') }}</th>
