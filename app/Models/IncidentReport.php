@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Database\Eloquent\Builder;
 
 class IncidentReport extends Model
 {
@@ -231,5 +232,28 @@ class IncidentReport extends Model
         if ($this->pm_internal_id) return 'PM Internal';
         if ($this->pm_contractor_id) return 'PM Contractor';
         return 'Pending';
+    }
+    public function getAssignedModerators()
+    {
+        return User::whereHas('moderatorAssignments', function (Builder $query) {
+            $query->where('event_type_id', $this->event_type_id)
+                ->where(function (Builder $subQuery) {
+                    // Kriteria A: Moderator Global (Dept & Contractor NULL)
+                    $subQuery->where(function ($q) {
+                        $q->whereNull('department_id')
+                            ->whereNull('contractor_id');
+                    });
+
+                    // Kriteria B: Moderator spesifik Department
+                    if ($this->department_id) {
+                        $subQuery->orWhere('department_id', $this->department_id);
+                    }
+
+                    // Kriteria C: Moderator spesifik Contractor
+                    if ($this->contractor_id) {
+                        $subQuery->orWhere('contractor_id', $this->contractor_id);
+                    }
+                });
+        })->get();
     }
 }

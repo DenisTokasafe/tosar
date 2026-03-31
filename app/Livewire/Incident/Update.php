@@ -3,6 +3,7 @@
 namespace App\Livewire\Incident;
 
 use App\Helpers\FileHelper;
+use App\Helpers\MailHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
@@ -135,6 +136,7 @@ class Update extends Component
     public $searchPetugas = [];
     public $showDropdownPetugas = [];
     public $pelaporsAct = [];
+    public $manualKorbanMode = [];
     public $showPenerimaanKomentarContractorDropdown = false;
     public $showPenerimaanKomentarInternalDropdown = false;
     public $showPenerimaanKomentarOhsDropdown = false;
@@ -355,7 +357,7 @@ class Update extends Component
             'directly_involved.*.dept_cont'     => __('Departemen/Perusahaan'),
             'directly_involved.*.jabatan'       => __('Jabatan'),
             'directly_involved.*.roster'        => __('Roster'),
-            'directly_involved.*.sift'          => __('Shift'),
+            'directly_involved.*.sift'          => __('Sift'),
             'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
             'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
             // Part 3
@@ -1363,6 +1365,41 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
+    public function enableManualInvolved($index)
+    {
+        $this->manualKorbanMode[$index] = true;
+        $this->show_employee_dropdown[$index] = true; // Tetap tampilkan dropdown untuk input manual
+    }
+
+    /**
+     * Tahap 2: Konfirmasi penambahan data manual ke array utama
+     */
+    public function confirmManualInvolved($index)
+    {
+        $name = $this->searchKorban[$index];
+
+        if (empty($name)) {
+            $this->addError("searchKorban.$index", "Nama manual tidak boleh kosong.");
+            return;
+        }
+
+        // Isi data ke array directly_involved
+        $this->directly_involved[$index]['employee_name'] = $name;
+        $this->directly_involved[$index]['employee_id']   = null; // ID null menandakan data manual
+        $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
+        $this->directly_involved[$index]['dept_cont']     = '-';
+        $this->directly_involved[$index]['jabatan']       = '-';
+
+        // Reset state
+        $this->manualKorbanMode[$index] = false;
+        $this->show_employee_dropdown[$index] = false;
+
+        // Notifikasi
+        $this->dispatch('alert', [
+            'text' => "Personel '$name' berhasil ditambahkan secara manual.",
+            'backgroundColor' => "linear-gradient(135deg, #00c853, #00bfa5)"
+        ]);
+    }
 
 
     public function addRow($type)
@@ -2281,6 +2318,7 @@ class Update extends Component
             return;
         }
 
+
         try {
             DB::transaction(function () use ($report) {
 
@@ -2304,6 +2342,7 @@ class Update extends Component
 
                 // 3. Update Investigation Teams
                 $report->investigationTeams()->delete();
+                $userIdsToNotify = [];
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
                     foreach ($this->{$role} as $member) {
                         if (!empty($member['user_id'])) {
@@ -2313,8 +2352,42 @@ class Update extends Component
                                 'dept'    => $member['dept'] ?? null,
                                 'jabatan' => $member['jabatan'] ?? null,
                             ]);
+                            $userIdsToNotify[] = $member['user_id'];
                         }
                     }
+                }
+                if (!$this->incident->investigationTeams()->exists()) {
+                    $moderators = $this->incident->getAssignedModerators();
+                    // 2. Kirim email ke masing-masing moderator
+                    foreach ($moderators as $moderator) {
+                        MailHelper::sendToUserId(
+                            $moderator->id,
+                            'Permintaan Penunjukan Tim Investigasi', // Subject
+                            'emails.notification',
+                            [
+                                'subject'        => 'Penunjukan Tim Investigasi: ' . $this->incident->report_number,
+                                'title'          => 'Permintaan Penunjukan Tim Investigasi',
+                                'messageText'    => "Halo {$moderator->name},\n\nLaporan insiden baru dengan nomor {$this->incident->report_number} memerlukan perhatian Anda. Mohon segera menambahkan personil tim investigasi (Pemimpin, Fasilitator, dan Anggota) ke dalam laporan ini agar proses investigasi dapat segera dimulai.",
+                                'additionalInfo' => "Nomor Laporan: {$this->incident->report_number}\nKlasifikasi: {$this->incident->eventType?->name}\nLokasi: {$this->incident->location?->location_name}\nStatus Saat Ini: {$this->status}",
+                                'actionUrl'      => route('incident-detail', $this->incident->id)
+                            ]
+                        );
+                    }
+                }
+                // 2. Kirim Email (Gunakan array_unique agar satu user tidak dapat 2 email jika dia punya double role)
+                foreach (array_unique($userIdsToNotify) as $userId) {
+                    MailHelper::sendToUserId(
+                        $userId,
+                        'Notifikasi Tim Investigasi Insiden',
+                        'emails.notification',
+                        [
+                            'subject'        => 'Penugasan Tim Investigasi - ' . $report->report_number,
+                            'title'          => 'Penugasan Tim Investigasi',
+                            'messageText'    => "Anda telah ditunjuk sebagai bagian dari tim investigasi untuk laporan insiden {$report->report_number}.\nSilakan lakukan tinjauan dan analisis sesuai peran Anda.",
+                            'additionalInfo' => "Nomor Laporan: {$report->report_number}\nStatus: {$this->status}",
+                            'actionUrl'      => route('incident-detail', $report->id) // Sesuaikan nama route Anda
+                        ]
+                    );
                 }
 
                 // 4. Update PEEPO & Why Analysis

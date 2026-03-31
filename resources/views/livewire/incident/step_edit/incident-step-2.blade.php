@@ -23,13 +23,22 @@
 
             <div class="grid grid-cols-1 gap-3">
                 <div class="form-control">
-                    <x-form.searchable-select2 label="Nama" placeholder="Cari Nama..."
+                    <x-form.searchable-select2
+                        label="Nama"
+                        placeholder="Cari Nama..."
                         wire:key="mob-name-{{ $index }}"
+                        {{-- Properti Utama --}}
                         modelsearch="searchKorban.{{ $index }}"
-                        modelid="directly_involved.{{ $index }}.employee_name"
+                        modelid="directly_involved.{{ $index }}.employee_id"
                         :options="$involved_personnel_options"
                         :showdropdown="$show_employee_dropdown[$index] ?? false"
                         clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
+                        {{-- Integrasi Mode Manual --}}
+                        :manualMode="$manualKorbanMode[$index] ?? false"
+                        manualModelName="searchKorban.{{ $index }}" {{-- Gunakan input search sebagai field manual --}}
+                        enableManualAction="enableManualInvolved({{ $index }})"
+                        addManualAction="confirmManualInvolved({{ $index }})"
+
                         :disabled="!$canEdit" />
                 </div>
 
