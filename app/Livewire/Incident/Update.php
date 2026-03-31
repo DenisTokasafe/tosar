@@ -1368,37 +1368,24 @@ class Update extends Component
     public function enableManualInvolved($index)
     {
         $this->manualKorbanMode[$index] = true;
-        $this->show_employee_dropdown[$index] = true; // Tetap tampilkan dropdown untuk input manual
+        $this->show_employee_dropdown[$index] = true;
     }
 
-    /**
-     * Tahap 2: Konfirmasi penambahan data manual ke array utama
-     */
     public function confirmManualInvolved($index)
     {
-        $name = $this->searchKorban[$index];
+        $name = $this->searchKorban[$index] ?? null;
 
-        if (empty($name)) {
-            $this->addError("searchKorban.$index", "Nama manual tidak boleh kosong.");
+        if (!$name) {
+            $this->addError("searchKorban.$index", "Nama tidak boleh kosong.");
             return;
         }
 
-        // Isi data ke array directly_involved
         $this->directly_involved[$index]['employee_name'] = $name;
-        $this->directly_involved[$index]['employee_id']   = null; // ID null menandakan data manual
+        $this->directly_involved[$index]['employee_id']   = null;
         $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
-        $this->directly_involved[$index]['dept_cont']     = '-';
-        $this->directly_involved[$index]['jabatan']       = '-';
 
-        // Reset state
         $this->manualKorbanMode[$index] = false;
         $this->show_employee_dropdown[$index] = false;
-
-        // Notifikasi
-        $this->dispatch('alert', [
-            'text' => "Personel '$name' berhasil ditambahkan secara manual.",
-            'backgroundColor' => "linear-gradient(135deg, #00c853, #00bfa5)"
-        ]);
     }
 
 
