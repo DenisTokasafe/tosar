@@ -15,16 +15,35 @@
 
                         {{-- Nomor Referensi --}}
                         <th class="w-40">
-                            {{ __('Nomor Referensi') }}
-                            <button class="btn btn-ghost btn-xs" popovertarget="my-popover">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <path d="m21 21-4.3-4.3" />
-                                </svg>
-                            </button>
-                            <div popover id="my-popover" class="p-3 shadow-xl opacity-0 rounded-box bg-base-100 w-60 starting:open:opacity-0" ">
-                                <x-form.input-text type=" text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input input-bordered input-sm" />
+                            {{-- 1. Bungkus dengan container relative agar popover punya acuan --}}
+                            <div class="relative flex items-center gap-1">
+                                {{ __('Nomor Referensi') }}
 
+                                {{-- 2. Trigger Button --}}
+                                <button class="btn btn-ghost btn-xs" popovertarget="my-popover">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
+                                </button>
+
+                                {{-- 3. Popover Content --}}
+                                {{-- Hapus opacity-0 dari class utama, biarkan Tailwind Transition yang handle --}}
+                                <div popover id="my-popover"
+                                    class="p-3 shadow-xl rounded-box bg-base-100 w-60 border border-base-300
+                    transition-[opacity,transform,display] duration-300 allow-discrete
+                    opacity-0 open:opacity-100
+                    -translate-y-2 open:translate-y-0
+                    starting:open:opacity-0 starting:open:-translate-y-2"
+                                    style="position: absolute; top: 100%; left: 0; margin-top: 0.5rem;">
+
+                                    <x-form.input-text
+                                        type="text"
+                                        wire:model.live.debounce.300ms="search"
+                                        placeholder="Cari nomor..."
+                                        class="w-full input-bordered input-sm" />
+                                </div>
+                            </div>
                         </th>
 
                         {{-- Tanggal & Waktu --}}
