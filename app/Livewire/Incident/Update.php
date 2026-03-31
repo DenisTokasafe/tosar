@@ -1365,9 +1365,11 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function enableManualMode($index)
+    // Di Class Update.php
+    public function enableManualMode($index = null) // Tambahkan = null
     {
-        dd("Manual mode enabled for index: $index");
+        // Jika karena alasan tertentu index kosong, hentikan proses
+        if (is_null($index)) return;
         $this->manualKorbanMode[$index] = true;
         $this->show_employee_dropdown[$index] = true;
     }
