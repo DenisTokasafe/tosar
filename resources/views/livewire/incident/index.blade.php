@@ -46,39 +46,61 @@
                         <th>
                             <div class="flex items-center gap-1">
                                 {{ __('Divisi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
-                                    <x-icon.icon-filter :active="!empty($filterDept)" />
-                                </button>
-                                <ul popover id="pop_dept" class="p-2 overflow-y-auto shadow-lg menu w-60 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_dept; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['departments'] as $dept)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterDept" value="{{ $dept->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $dept->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
+
+                                {{-- Ganti ke DaisyUI Dropdown agar posisi stabil --}}
+                                <div class="dropdown dropdown-bottom dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-xs">
+                                        <x-icon.icon-filter :active="!empty($filterDept)" />
+                                    </label>
+
+                                    {{-- Dropdown Content --}}
+                                    <ul tabindex="0" class="dropdown-content z-[100] p-2 shadow-xl menu w-60 rounded-box bg-base-100 max-h-60 overflow-y-auto border border-base-300">
+                                        @foreach ($filterOptions['departments'] as $dept)
+                                        <li>
+                                            <label class="flex items-center p-1 cursor-pointer hover:bg-base-200">
+                                                <input type="checkbox"
+                                                    wire:model.live="filterDept"
+                                                    value="{{ $dept->id }}"
+                                                    class="checkbox checkbox-xs checkbox-primary">
+                                                <span class="ml-2 text-xs">{{ $dept->department_name }}</span>
+                                            </label>
+                                        </li>
+                                        @endforeach
+
+                                        @if(empty($filterOptions['departments']))
+                                        <li class="p-2 text-xs italic text-center opacity-50">No data</li>
+                                        @endif
+                                    </ul>
+                                </div>
                             </div>
                         </th>
-
                         {{-- Tipe Insiden (Event Type) --}}
                         <th class="w-40">
                             <div class="flex items-center gap-1">
                                 {{ __('Tipe') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_event" style="anchor-name:--pop_event">
-                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
-                                </button>
-                                <ul popover id="pop_event" class="p-2 overflow-y-auto shadow-lg menu w-52 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_event; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['eventTypes'] as $type)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $type->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
+
+                                {{-- Dropdown Container --}}
+                                <div class="dropdown dropdown-bottom dropdown-end">
+                                    {{-- Tombol Trigger --}}
+                                    <label tabindex="0" class="btn btn-ghost btn-xs">
+                                        <x-icon.icon-filter :active="!empty($filterEventType)" />
+                                    </label>
+
+                                    {{-- Menu Dropdown --}}
+                                    <ul tabindex="0" class="dropdown-content z-[100] p-2 shadow-xl menu w-52 rounded-box bg-base-100 max-h-60 overflow-y-auto border border-base-300 mt-2">
+                                        @foreach ($filterOptions['eventTypes'] as $type)
+                                        <li>
+                                            <label class="flex items-center p-1 cursor-pointer hover:bg-base-200">
+                                                <input type="checkbox"
+                                                    wire:model.live="filterEventType"
+                                                    value="{{ $type->id }}"
+                                                    class="checkbox checkbox-xs checkbox-primary">
+                                                <span class="ml-2 text-xs">{{ $type->name }}</span>
+                                            </label>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </th>
 
@@ -86,19 +108,33 @@
                         <th class="w-32 text-center">
                             <div class="flex items-center justify-center gap-1">
                                 {{ __('Klasifikasi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_subtype" style="anchor-name:--pop_subtype">
-                                    <x-icon.icon-filter :active="!empty($filterEventSubType)" />
-                                </button>
-                                <ul popover id="pop_subtype" class="p-2 overflow-y-auto shadow-lg menu w-52 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_subtype; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['eventSubTypes'] as $sub)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $sub->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
+
+                                {{-- Dropdown Container --}}
+                                <div class="dropdown dropdown-bottom dropdown-end">
+                                    {{-- Trigger Button --}}
+                                    <label tabindex="0" class="btn btn-ghost btn-xs">
+                                        <x-icon.icon-filter :active="!empty($filterEventSubType)" />
+                                    </label>
+
+                                    {{-- Dropdown Content --}}
+                                    <ul tabindex="0" class="dropdown-content z-[100] p-2 shadow-xl menu w-52 rounded-box bg-base-100 max-h-60 overflow-y-auto border border-base-300 mt-2">
+                                        @foreach ($filterOptions['eventSubTypes'] as $sub)
+                                        <li class="text-left"> {{-- Tambahkan text-left agar list tidak ikut rata tengah --}}
+                                            <label class="flex items-center p-1 cursor-pointer hover:bg-base-200">
+                                                <input type="checkbox"
+                                                    wire:model.live="filterEventSubType"
+                                                    value="{{ $sub->id }}"
+                                                    class="checkbox checkbox-xs checkbox-primary">
+                                                <span class="ml-2 text-xs">{{ $sub->name }}</span>
+                                            </label>
+                                        </li>
+                                        @endforeach
+
+                                        @if(count($filterOptions['eventSubTypes']) == 0)
+                                        <li class="p-2 text-xs italic opacity-50">Tidak ada data</li>
+                                        @endif
+                                    </ul>
+                                </div>
                             </div>
                         </th>
 
@@ -106,19 +142,29 @@
                         <th class="w-32 text-center">
                             <div class="flex items-center justify-center gap-1">
                                 {{ __('Status') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_status" style="anchor-name:--pop_status">
-                                    <x-icon.icon-filter :active="!empty($filterStatus)" />
-                                </button>
-                                <ul popover id="pop_status" class="p-2 shadow-lg menu w-44 rounded-box bg-base-100" style="position-anchor:--pop_status; inset-area: bottom span-right;">
-                                    @foreach (['Open', 'In Progress', 'Action Required', 'Closed'] as $status)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterStatus" value="{{ $status }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $status }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
+
+                                {{-- Dropdown Container --}}
+                                <div class="dropdown dropdown-bottom dropdown-end">
+                                    {{-- Trigger Button --}}
+                                    <label tabindex="0" class="btn btn-ghost btn-xs">
+                                        <x-icon.icon-filter :active="!empty($filterStatus)" />
+                                    </label>
+
+                                    {{-- Dropdown Content --}}
+                                    <ul tabindex="0" class="dropdown-content z-[100] p-2 shadow-xl menu w-44 rounded-box bg-base-100 border border-base-300 mt-2">
+                                        @foreach (['Open', 'In Progress', 'Action Required', 'Closed'] as $status)
+                                        <li class="text-left"> {{-- Memastikan teks checkbox tetap rata kiri --}}
+                                            <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
+                                                <input type="checkbox"
+                                                    wire:model.live="filterStatus"
+                                                    value="{{ $status }}"
+                                                    class="checkbox checkbox-xs checkbox-primary">
+                                                <span class="ml-2 text-xs">{{ $status }}</span>
+                                            </label>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </th>
                     </tr>
