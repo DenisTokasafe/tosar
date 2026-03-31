@@ -12,125 +12,13 @@
                 <thead>
                     <tr class="border-b bg-base-200 text-base-content border-base-300">
                         <th class="w-10 text-center">No</th>
-
-                        {{-- Nomor Referensi --}}
-                        <th class="w-40">
-                            {{-- 1. Bungkus dengan container relative agar popover punya acuan --}}
-                            <div class="relative flex items-center gap-1">
-                                {{ __('Nomor Referensi') }}
-
-                                {{-- 2. Trigger Button --}}
-                                <button class="btn btn-ghost btn-xs" popovertarget="my-popover">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="m21 21-4.3-4.3" />
-                                    </svg>
-                                </button>
-
-                                {{-- 3. Popover Content --}}
-                                {{-- Hapus opacity-0 dari class utama, biarkan Tailwind Transition yang handle --}}
-                                <div popover id="my-popover"
-                                    class="p-3 shadow-xl rounded-box bg-base-100 w-60 border border-base-300
-                    transition-[opacity,transform,display] duration-300 allow-discrete
-                    opacity-0 open:opacity-100
-                    -translate-y-2 open:translate-y-0
-                    starting:open:opacity-0 starting:open:-translate-y-2"
-                                    style="position: absolute; top: 100%; left: 0; margin-top: 0.5rem;">
-
-                                    <x-form.input-text
-                                        type="text"
-                                        wire:model.live.debounce.300ms="search"
-                                        placeholder="Cari nomor..."
-                                        class="w-full input-bordered input-sm" />
-                                </div>
-                            </div>
-                        </th>
-
-                        {{-- Tanggal & Waktu --}}
+                        <th class="w-40">{{ __('Nomor Referensi') }}</th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
-
-                        {{-- Deskripsi --}}
                         <th>{{ __('Deskripsi Insiden') }}</th>
-
-                        {{-- Divisi Penanggung Jawab (Department) --}}
-                        <th>
-                            <div class="flex items-center gap-1">
-                                {{ __('Divisi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
-                                    <x-icon.icon-filter :active="!empty($filterDept)" />
-                                </button>
-                                <ul popover id="pop_dept" class="p-2 overflow-y-auto shadow-lg menu w-60 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_dept; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['departments'] as $dept)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterDept" value="{{ $dept->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $dept->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </th>
-
-                        {{-- Tipe Insiden (Event Type) --}}
-                        <th class="w-40">
-                            <div class="flex items-center gap-1">
-                                {{ __('Tipe') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_event" style="anchor-name:--pop_event">
-                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
-                                </button>
-                                <ul popover id="pop_event" class="p-2 overflow-y-auto shadow-lg menu w-52 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_event; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['eventTypes'] as $type)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $type->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </th>
-
-                        {{-- Klasifikasi (Event Sub Type) --}}
-                        <th class="w-32 text-center">
-                            <div class="flex items-center justify-center gap-1">
-                                {{ __('Klasifikasi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_subtype" style="anchor-name:--pop_subtype">
-                                    <x-icon.icon-filter :active="!empty($filterEventSubType)" />
-                                </button>
-                                <ul popover id="pop_subtype" class="p-2 overflow-y-auto shadow-lg menu w-52 rounded-box bg-base-100 max-h-60" style="position-anchor:--pop_subtype; inset-area: bottom span-right;">
-                                    @foreach ($filterOptions['eventSubTypes'] as $sub)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $sub->name }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </th>
-
-                        {{-- Status (Enum) --}}
-                        <th class="w-32 text-center">
-                            <div class="flex items-center justify-center gap-1">
-                                {{ __('Status') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_status" style="anchor-name:--pop_status">
-                                    <x-icon.icon-filter :active="!empty($filterStatus)" />
-                                </button>
-                                <ul popover id="pop_status" class="p-2 shadow-lg menu w-44 rounded-box bg-base-100" style="position-anchor:--pop_status; inset-area: bottom span-right;">
-                                    @foreach (['Open', 'In Progress', 'Action Required', 'Closed'] as $status)
-                                    <li>
-                                        <label class="flex items-center p-1 cursor-pointer">
-                                            <input type="checkbox" wire:model.live="filterStatus" value="{{ $status }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-xs">{{ $status }}</span>
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </th>
+                        <th>{{ __('Divisi Penanggung Jawab') }}</th>
+                        <th class="w-40">{{ __('Tipe Insiden') }}</th>
+                        <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
+                        <th class="w-32 text-center">{{ __('Status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-base-200">
