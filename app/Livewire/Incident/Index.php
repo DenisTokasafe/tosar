@@ -37,28 +37,40 @@ class Index extends Component
     public function render()
     {
         // 1. Ambil data untuk opsi filter di header
-        // Hanya ambil data yang memang ada di table incident_reports agar filter efisien
         $filterOptions = [
-            'departments' => Department::whereHas('incidentReports') //
+            // Ambil Departemen yang hanya memiliki record di incident_reports
+            'departments' => Department::whereHas('incidentReports')
                 ->select('id', 'department_name')
                 ->get()
-                ->map(fn($item) => ['id' => $item->id, 'name' => $item->department_name, 'type' => 'dept']), //
+                ->map(fn($item) => [
+                    'id' => $item->id,
+                    'name' => $item->department_name,
+                    'type' => 'dept'
+                ]),
 
-            'contractors' => Contractor::whereHas('incidentReports') //
+            // Ambil Kontraktor yang hanya memiliki record di incident_reports
+            'contractors' => Contractor::whereHas('incidentReports')
                 ->select('id', 'contractor_name')
                 ->get()
-                ->map(fn($item) => ['id' => $item->id, 'name' => $item->contractor_name, 'type' => 'cont']), //
+                ->map(fn($item) => [
+                    'id' => $item->id,
+                    'name' => $item->contractor_name,
+                    'type' => 'cont'
+                ]),
+
+            // Filter Status sesuai urutan ENUM database
+            'statuses' => ['Open', 'In Progress', 'Action Required', 'Closed'],
 
             'eventTypes'    => EventType::select('id', 'event_type_name')->get(),
             'eventSubTypes' => EventSubType::select('id', 'event_sub_type_name')->get(),
         ];
 
-        // Gabungkan depts dan contractors untuk filter "Divisi" jika Anda ingin satu dropdown
+        // Gabungkan depts dan contractors untuk list "Divisi" di view
         $filterOptions['allDivisions'] = $filterOptions['departments']->concat($filterOptions['contractors']);
 
         // 2. Query utama dengan filter
         $incidents = IncidentReport::query()
-            // Eager Load relasi (Pastikan contractor juga di-load)
+            // Eager Load relasi agar tidak lambat (N+1)
             ->with(['eventType', 'eventSubType', 'department', 'contractor', 'pic'])
 
             // Filter Pencarian (Nomor Referensi)
@@ -66,7 +78,7 @@ class Index extends Component
                 $query->where('report_number', 'like', '%' . $this->search . '%');
             })
 
-            // Filter Status
+            // Filter Status (Multiple Selection)
             ->when($this->filterStatus, function ($query) {
                 $query->whereIn('status', (array) $this->filterStatus);
             })
@@ -75,13 +87,13 @@ class Index extends Component
             ->when($this->filterDept, function ($query) {
                 $query->where(function ($q) {
                     foreach ((array) $this->filterDept as $value) {
-                        // Jika value menggunakan format "tipe-id" (misal: "dept-1" atau "cont-5")
+                        // Logic pemisahan ID berdasarkan prefix 'dept-' atau 'cont-'
                         if (str_contains($value, '-')) {
                             [$type, $id] = explode('-', $value);
                             if ($type === 'dept') $q->orWhere('department_id', $id);
                             if ($type === 'cont') $q->orWhere('contractor_id', $id);
                         } else {
-                            // Fallback jika hanya ID saja
+                            // Fallback jika hanya mengirimkan ID murni
                             $q->orWhere('department_id', $value)->orWhere('contractor_id', $value);
                         }
                     }

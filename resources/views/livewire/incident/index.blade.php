@@ -90,7 +90,27 @@
                             </ul>
                         </th>
                         <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
-                        <th class="w-32 text-center">{{ __('Status') }}</th>
+                        <th class="w-32 text-center">{{ __('Status') }}
+                            <button class="btn btn-ghost btn-xs" popovertarget="pop_status" style="anchor-name:--pop_status">
+                                <x-icon.icon-filter :active="!empty($filterStatus)" />
+                            </button>
+                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
+                                popover
+                                id="pop_status"
+                                style="position-anchor: --pop_status; position-area: bottom; margin-top: 5px;">
+                                @foreach ($filterOptions['statuses'] as $status)
+                                <li class="text-left">
+                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
+                                        <input type="checkbox"
+                                            wire:model.live="filterStatus"
+                                            value="{{ $status }}"
+                                            class="checkbox checkbox-xs checkbox-primary">
+                                        <span class="ml-2 text-xs">{{ $status }}</span>
+                                    </label>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-base-200">
