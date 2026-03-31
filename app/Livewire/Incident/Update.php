@@ -1365,14 +1365,36 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    // Di Class Update.php
-    public function enableManualMode($index = null) // Tambahkan = null
+    public function enableManualMode($index)
     {
-        // Jika karena alasan tertentu index kosong, hentikan proses
-        if (is_null($index)) return;
         dd("Manual mode enabled for index: $index");
         $this->manualKorbanMode[$index] = true;
         $this->show_employee_dropdown[$index] = true;
+    }
+    public function addManualData($index)
+    {
+        $name = $this->searchKorban[$index] ?? null;
+
+        if (empty($name)) {
+            $this->addError("searchKorban.$index", "Nama tidak boleh kosong.");
+            return;
+        }
+
+        $this->directly_involved[$index] = [
+            'employee_name' => $name,
+            'employee_id'   => null,
+            'employee_nik'  => 'MANUAL',
+            'dept_cont'     => '-',
+            'jabatan'       => '-',
+        ];
+
+        $this->manualKorbanMode[$index] = false;
+        $this->show_employee_dropdown[$index] = false;
+        $this->dispatch('alert', [
+            'text' => "Nama '" . $name . "' ditambahkan secara manual!",
+            'duration' => 5000,
+            'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
+        ]);
     }
 
 
