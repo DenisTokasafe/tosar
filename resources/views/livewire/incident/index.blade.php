@@ -12,7 +12,18 @@
                 <thead>
                     <tr class="border-b bg-base-200 text-base-content border-base-300">
                         <th class="w-10 text-center">No</th>
-                        <th class="w-40">{{ __('Nomor Referensi') }}</th>
+                        <th class="w-40">
+                            {{ __('Nomor Referensi') }}
+                            <!-- change popover-1 and --anchor-1 names. Use unique names for each dropdown -->
+                            <button class="btn" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                Button
+                            </button>
+                            <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100"
+                                popover id="popover-1" style="position-anchor:--anchor-1">
+                                <li><a>Item 1</a></li>
+                                <li><a>Item 2</a></li>
+                            </ul>
+                        </th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
                         <th>{{ __('Deskripsi Insiden') }}</th>
                         <th>{{ __('Divisi Penanggung Jawab') }}</th>
