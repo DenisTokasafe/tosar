@@ -17,18 +17,25 @@
                         <th class="w-40">
                             <div class="flex items-center gap-1">
                                 {{ __('Nomor Referensi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="pop_report_number" style="anchor-name:--pop_report_number">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="m21 21-4.3-4.3" />
-                                    </svg>
-                                </button>
-                                <div popover id="pop_report_number" class="p-3 shadow-xl rounded-box bg-base-100 w-60" style="position-anchor:--pop_report_number; inset-area: bottom span-right;">
-                                    <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input input-bordered input-sm" />
+
+                                {{-- Menggunakan DaisyUI Dropdown --}}
+                                <div class="dropdown">
+                                    <label tabindex="0" class="btn btn-ghost btn-xs">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <path d="m21 21-4.3-4.3" />
+                                        </svg>
+                                    </label>
+                                    <div tabindex="0" class="dropdown-content z-[100] p-3 shadow-xl rounded-box bg-base-100 w-60 border border-base-300 mt-2">
+                                        <x-form.input-text
+                                            type="text"
+                                            wire:model.live.debounce.300ms="search"
+                                            placeholder="Cari nomor..."
+                                            class="w-full input-sm" />
+                                    </div>
                                 </div>
                             </div>
                         </th>
-
                         {{-- Tanggal & Waktu --}}
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
 
