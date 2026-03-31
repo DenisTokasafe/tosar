@@ -90,6 +90,30 @@ class IncidentReportPolicy
     {
         return $user->hasAnyRole(['Manager HSE', 'Superintendent', 'General Manager']);
     }
+    public function updateTeamInvestigation(User $user, IncidentReport $incident): bool
+    {
+        return $user->moderatorAssignments()
+            ->where('event_type_id', $incident->event_type_id)
+            ->where(function (Builder $query) use ($incident) {
+                // Gunakan nested WHERE untuk memastikan logika OR tidak bocor ke event_type_id
+                $query->where(function ($q) {
+                    // Kriteria A: Penugasan bersifat Global (Super Moderator untuk Event ini)
+                    $q->whereNull('department_id')
+                        ->whereNull('contractor_id');
+                });
+
+                // Kriteria B: Spesifik ke Department insiden
+                if ($incident->department_id) {
+                    $query->orWhere('department_id', $incident->department_id);
+                }
+
+                // Kriteria C: Spesifik ke Contractor insiden
+                if ($incident->contractor_id) {
+                    $query->orWhere('contractor_id', $incident->contractor_id);
+                }
+            })
+            ->exists();
+    }
 
     /**
      * Helper: Cek apakah user bagian dari Tim Investigasi
@@ -98,6 +122,7 @@ class IncidentReportPolicy
     {
         return $incident->investigationTeams()->where('user_id', $user->id)->exists();
     }
+
 
     // /**
     //  * Determine whether the user can update the model.

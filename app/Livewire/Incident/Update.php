@@ -1658,7 +1658,8 @@ class Update extends Component
 
         return match ($step) {
             1, 2 => auth()->user()->can('updateInitialData', $this->incident),
-            3, 4, 5, 6 => auth()->user()->can('conductInvestigation', $this->incident),
+            3 => auth()->user()->can('updateTeamInvestigation', $this->incident),
+            4, 5, 6 => auth()->user()->can('conductInvestigation', $this->incident),
             7 => auth()->user()->can('manageCorrectiveActions', $this->incident),
             8 => auth()->user()->can('updateLessonsLearned', $this->incident),
             9 => auth()->user()->can('reviewReport', $this->incident),
@@ -1920,7 +1921,8 @@ class Update extends Component
     {
         return match (intval($step)) {
             1, 2      => Gate::allows('updateInitialData', $this->incident),
-            3, 4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
+            3      => Gate::allows('updateTeamInvestigation', $this->incident), // Karena step 3 adalah Partisipan Investigasi, kita anggap ini masih bagian dari investigasi
+            4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
             7         => Gate::allows('manageCorrectiveActions', $this->incident),
             8         => Gate::allows('updateLessonsLearned', $this->incident),
             9         => Gate::allows('reviewReport', $this->incident),
@@ -1935,7 +1937,8 @@ class Update extends Component
         // Gunakan match yang sama dengan di Blade untuk konsistensi
         $canAccess = match (intval($step)) {
             1, 2      => Gate::allows('updateInitialData', $this->incident),
-            3, 4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
+            3      => Gate::allows('updateTeamInvestigation', $this->incident), // Karena step 3 adalah Partisipan Investigasi, kita anggap ini masih bagian dari investigasi
+            4, 5, 6 => Gate::allows('conductInvestigation', $this->incident),
             7         => Gate::allows('manageCorrectiveActions', $this->incident),
             8         => Gate::allows('updateLessonsLearned', $this->incident),
             9         => Gate::allows('reviewReport', $this->incident),
