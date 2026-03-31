@@ -37,7 +37,7 @@
                         <th>
                             {{ __('Divisi Penanggung Jawab') }}
                             <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
-                                <x-icon-filter :active="!empty($filterDept)" />
+                                <x-icon.icon-filter :active="!empty($filterDept)" />
                             </button>
                             <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
                                 popover
