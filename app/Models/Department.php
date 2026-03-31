@@ -12,6 +12,13 @@ class Department extends Model
         'department_name',
         'status'
     ];
+    // app/Models/Department.php
+
+    public function incidentReports()
+    {
+        // Mengacu pada kolom department_id di tabel incident_reports
+        return $this->hasMany(IncidentReport::class, 'department_id');
+    }
 
     public function contractors()
     {

@@ -32,7 +32,12 @@ class Contractor extends Model
         return $query->where('contractor_name',  'like', '%' . $term . '%');
     }
     public function users()
-{
-    return $this->belongsToMany(User::class);
-}
+    {
+        return $this->belongsToMany(User::class);
+    }
+    // app/Models/Contractor.php
+    public function incidentReports()
+    {
+        return $this->hasMany(IncidentReport::class, 'contractor_id');
+    }
 }
