@@ -24,34 +24,12 @@ self.addEventListener('activate', event => {
     );
 });
 
-self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET') {
-        return;
-    }
-
+self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then(response => {
-            // 1. Jika ada di cache, langsung kembalikan
-            if (response) {
-                return response;
-            }
-
-            // 2. Jika tidak ada, coba ambil dari jaringan
-            return fetch(event.request).catch(() => {
-                /* PERBAIKAN DI SINI:
-                   Jika network gagal dan tidak ada di cache,
-                   kita HARUS mengembalikan sesuatu yang bertipe Response.
-                */
-
-                // Opsi A: Berikan pesan teks sederhana
-                return new Response('Koneksi terputus. Halaman tidak tersedia offline.', {
-                    status: 503,
-                    statusText: 'Service Unavailable',
-                    headers: new Headers({ 'Content-Type': 'text/plain' })
-                });
-
-                // Opsi B: Jika kamu punya file offline.html di cacheAssets:
-                // return caches.match('/offline.html');
+        fetch(event.request).catch(() => {
+            return caches.match(event.request).then((response) => {
+                // Jika tidak ada di cache dan network gagal, berikan response kosong/fallback
+                return response || new Response('Offline', { status: 503 });
             });
         })
     );

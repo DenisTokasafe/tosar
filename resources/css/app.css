@@ -79,6 +79,7 @@
     --border: 1px;
     --depth: 1;
     --noise: 1;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
@@ -114,6 +115,7 @@
     --border: 1px;
     --depth: 1;
     --noise: 1;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
@@ -194,6 +196,7 @@
     --border: 1px;
     --depth: 1; /* Memberikan sedikit efek dimensi */
     --noise: 0.05; /* Sedikit tekstur agar terasa seperti material tambang */
+    --noise-url: url("/noise.svg");
 }
 @plugin "daisyui/theme" {
     name: "goldore-light";
@@ -242,6 +245,7 @@
     --border: 1px;
     --depth: 0.5;
     --noise: 0.02;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
@@ -285,6 +289,7 @@
     /* Peningkatan Kedalaman Visual */
     --depth: 2; /* Memberikan efek elevasi yang lebih terasa pada tombol dan card */
     --noise: 0.05; /* Menambahkan tekstur halus agar warna solid tidak membosankan */
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
@@ -321,6 +326,7 @@
     --border: 1.5px;
     --depth: 1;
     --noise: 1;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
@@ -356,6 +362,7 @@
     --border: 2px;
     --depth: 1;
     --noise: 1;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui" {
