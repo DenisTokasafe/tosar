@@ -22,7 +22,11 @@
                                     <path d="m21 21-4.3-4.3" />
                                 </svg>
                             </button>
-                            <div class="shadow-sm w-52 rounded-box bg-base-100" popover id="popover-1" style="position-anchor:--anchor-1">
+
+                            <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
+                                popover
+                                id="popover-1"
+                                style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
                                 <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
                             </div>
 
