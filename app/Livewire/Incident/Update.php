@@ -1367,26 +1367,11 @@ class Update extends Component
     }
     public function enableManualInvolved($index)
     {
+        dd("Manual mode enabled for index: $index");
         $this->manualKorbanMode[$index] = true;
         $this->show_employee_dropdown[$index] = true;
     }
 
-    public function confirmManualInvolved($index)
-    {
-        $name = $this->searchKorban[$index] ?? null;
-
-        if (!$name) {
-            $this->addError("searchKorban.$index", "Nama tidak boleh kosong.");
-            return;
-        }
-
-        $this->directly_involved[$index]['employee_name'] = $name;
-        $this->directly_involved[$index]['employee_id']   = null;
-        $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
-
-        $this->manualKorbanMode[$index] = false;
-        $this->show_employee_dropdown[$index] = false;
-    }
 
 
     public function addRow($type)
