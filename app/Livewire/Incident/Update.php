@@ -1365,7 +1365,7 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function enableManualMode($index)
+    public function enableManualMode($index = null)
     {
         dd("Manual mode enabled for index: $index");
         $this->manualKorbanMode[$index] = true;
