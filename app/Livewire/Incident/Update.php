@@ -1365,11 +1365,12 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function enableManualMode($index = null)
+    public function enableManualMode($index)
     {
-        $this->manualKorbanMode[$index] = true;
-        dd("Manual mode enabled for index: $this->manualKorbanMode[$index]");
-        $this->show_employee_dropdown[$index] = true;
+        $idx = explode('.', $index)[0];
+        $this->manualKorbanMode[$idx] = true;
+
+        $this->show_employee_dropdown[$idx] = true;
     }
     public function addManualData($index)
     {
