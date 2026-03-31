@@ -36,7 +36,7 @@
                         {{-- Integrasi Mode Manual --}}
                         :manualMode="$manualKorbanMode[$index] ?? false"
                         manualModelName="searchKorban.{{ $index }}" {{-- Gunakan input search sebagai field manual --}}
-                        enableManualMode="enableManualInvolved({{ $index }})"
+                        enableManualAction="enableManualInvolved({{ $index }})"
                         addManualAction="confirmManualInvolved({{ $index }})"
 
                         :disabled="!$canEdit" />
