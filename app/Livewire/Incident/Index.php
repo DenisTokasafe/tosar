@@ -40,12 +40,12 @@ class Index extends Component
         // Hanya ambil data yang memang ada di table incident_reports agar filter efisien
         $filterOptions = [
             'departments' => Department::whereHas('incidentReports') //
-                ->select('id', 'name')
+                ->select('id', 'department_name')
                 ->get()
                 ->map(fn($item) => ['id' => $item->id, 'name' => $item->department_name, 'type' => 'dept']), //
 
             'contractors' => Contractor::whereHas('incidentReports') //
-                ->select('id', 'name')
+                ->select('id', 'contractor_name')
                 ->get()
                 ->map(fn($item) => ['id' => $item->id, 'name' => $item->contractor_name, 'type' => 'cont']), //
 
