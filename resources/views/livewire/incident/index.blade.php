@@ -27,7 +27,7 @@
                                 {{-- Popover Content --}}
                                 <div popover id="popover-1"
                                     class="p-3 border shadow-xl rounded-box bg-base-100 w-60 border-base-300"
-                                    style="position-anchor:--anchor-1; inset-area: bottom; margin-top: 8px;">
+                                    style="position-anchor:--popover-1; inset-area: bottom span-right;">
                                     <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
                                 </div>
                             </div>
