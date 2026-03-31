@@ -36,7 +36,7 @@
                         {{-- PERBAIKAN DI SINI: Pastikan nama method sesuai dengan yang ada di Class Livewire --}}
                         :manualMode="$manualKorbanMode[$index] ?? false"
                         manualModelName="searchKorban.{{ $index }}"
-                        enableManualAction="enableManualInvolved({{ $index }})" {{-- Ini harus ada di Class --}}
+                        enableManualAction="enableManualMode({{ $index }})" {{-- Ini harus ada di Class --}}
                         addManualAction="confirmManualInvolved({{ $index }})" {{-- Ini harus ada di Class --}}
 
                         :disabled="!$canEdit" />
