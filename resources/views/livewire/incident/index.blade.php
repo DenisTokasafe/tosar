@@ -24,7 +24,7 @@
                                     </svg>
                                 </button>
                                 <div popover id="pop_report_number" class="p-3 shadow-xl rounded-box bg-base-100 w-60" style="position-anchor:--pop_report_number; inset-area: bottom span-right;">
-                                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input input-bordered input-sm">
+                                    <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input input-bordered input-sm">
                                 </div>
                             </div>
                         </th>
