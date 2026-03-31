@@ -39,12 +39,12 @@
                             <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
                                 <x-icon.icon-filter :active="!empty($filterDept)" />
                             </button>
-                            <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
+                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
                                 popover
                                 id="pop_dept"
                                 style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
-                                test
-                            </div>
+                                <li> test</li>
+                            </ul>
 
                         </th>
                         <th class="w-40">{{ __('Tipe Insiden') }}</th>
