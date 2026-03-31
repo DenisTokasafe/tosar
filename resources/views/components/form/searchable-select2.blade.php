@@ -13,7 +13,7 @@
 // Properti khusus Mode Manual
 'manualMode' => false,
 'manualModelName' => null,
-'enableManualAction' => 'enableManualMode',
+'enableManualAction' => 'enableManualInvolved',
 'addManualAction' => 'addManualData',
 ])
 
