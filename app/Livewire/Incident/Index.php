@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Incident;
 
+use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\EventSubType;
 use App\Models\EventType;
@@ -36,49 +37,67 @@ class Index extends Component
     public function render()
     {
         // 1. Ambil data untuk opsi filter di header
+        // Hanya ambil data yang memang ada di table incident_reports agar filter efisien
         $filterOptions = [
-            'departments'   => Department::select('id', 'department_name')->get(),
+            'departments' => Department::whereHas('incidentReports') //
+                ->select('id', 'name')
+                ->get()
+                ->map(fn($item) => ['id' => $item->id, 'name' => $item->department_name, 'type' => 'dept']), //
+
+            'contractors' => Contractor::whereHas('incidentReports') //
+                ->select('id', 'name')
+                ->get()
+                ->map(fn($item) => ['id' => $item->id, 'name' => $item->contractor_name, 'type' => 'cont']), //
+
             'eventTypes'    => EventType::select('id', 'event_type_name')->get(),
             'eventSubTypes' => EventSubType::select('id', 'event_sub_type_name')->get(),
         ];
 
+        // Gabungkan depts dan contractors untuk filter "Divisi" jika Anda ingin satu dropdown
+        $filterOptions['allDivisions'] = $filterOptions['departments']->concat($filterOptions['contractors']);
+
         // 2. Query utama dengan filter
         $incidents = IncidentReport::query()
-            // Eager Load relasi agar tidak lambat (N+1)
-            ->with(['eventType', 'eventSubType', 'department', 'pic'])
+            // Eager Load relasi (Pastikan contractor juga di-load)
+            ->with(['eventType', 'eventSubType', 'department', 'contractor', 'pic'])
 
             // Filter Pencarian (Nomor Referensi)
             ->when($this->search, function ($query) {
                 $query->where('report_number', 'like', '%' . $this->search . '%');
             })
 
-            // Filter Status (Multiple Selection / Array)
+            // Filter Status
             ->when($this->filterStatus, function ($query) {
-                // Menggunakan whereIn karena user bisa pilih lebih dari satu status
                 $query->whereIn('status', (array) $this->filterStatus);
             })
 
-            // Filter Departemen / Divisi
+            // Filter Departemen / Kontraktor (Dua Relasi)
             ->when($this->filterDept, function ($query) {
-                $query->whereIn('department_id', (array) $this->filterDept);
+                $query->where(function ($q) {
+                    foreach ((array) $this->filterDept as $value) {
+                        // Jika value menggunakan format "tipe-id" (misal: "dept-1" atau "cont-5")
+                        if (str_contains($value, '-')) {
+                            [$type, $id] = explode('-', $value);
+                            if ($type === 'dept') $q->orWhere('department_id', $id);
+                            if ($type === 'cont') $q->orWhere('contractor_id', $id);
+                        } else {
+                            // Fallback jika hanya ID saja
+                            $q->orWhere('department_id', $value)->orWhere('contractor_id', $value);
+                        }
+                    }
+                });
             })
 
-            // Filter Tipe Insiden
-            ->when($this->filterEventType, function ($query) {
-                $query->whereIn('event_type_id', (array) $this->filterEventType);
-            })
-
-            // Filter Sub Tipe / Klasifikasi
-            ->when($this->filterEventSubType, function ($query) {
-                $query->whereIn('event_sub_type_id', (array) $this->filterEventSubType);
-            })
+            // Filter Tipe & Sub Tipe
+            ->when($this->filterEventType, fn($q) => $q->whereIn('event_type_id', (array) $this->filterEventType))
+            ->when($this->filterEventSubType, fn($q) => $q->whereIn('event_sub_type_id', (array) $this->filterEventSubType))
 
             ->latest('date_time')
             ->paginate(20);
 
         return view('livewire.incident.index', [
             'incidents'     => $incidents,
-            'filterOptions' => $filterOptions // Kirim data filter ke view
+            'filterOptions' => $filterOptions
         ]);
     }
     public function paginationView()

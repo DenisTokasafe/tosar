@@ -43,7 +43,27 @@
                                 popover
                                 id="pop_dept"
                                 style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
-                                <li> test</li>
+                                @foreach ($filterOptions['allDivisions'] as $option)
+                                <li>
+                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
+                                        {{--
+               Gunakan format 'type-id' sebagai value agar
+               backend bisa membedakan department_id dan contractor_id
+            --}}
+                                        <input type="checkbox"
+                                            wire:model.live="filterDept"
+                                            value="{{ $option['type'] }}-{{ $option['id'] }}"
+                                            class="checkbox checkbox-xs checkbox-primary">
+
+                                        <div class="flex flex-col ml-2">
+                                            <span class="text-[10px] uppercase font-bold opacity-50 leading-none">
+                                                {{ $option['type'] === 'dept' ? 'Internal' : 'Contractor' }}
+                                            </span>
+                                            <span class="text-xs">{{ $option['name'] }}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                @endforeach
                             </ul>
 
                         </th>
