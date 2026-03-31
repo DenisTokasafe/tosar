@@ -1370,6 +1370,7 @@ class Update extends Component
     {
         // Jika karena alasan tertentu index kosong, hentikan proses
         if (is_null($index)) return;
+        dd("Manual mode enabled for index: $index");
         $this->manualKorbanMode[$index] = true;
         $this->show_employee_dropdown[$index] = true;
     }
