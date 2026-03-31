@@ -99,7 +99,7 @@
                     <tr>
                         <td colspan="8" class="py-20 text-center">
                             <div class="flex flex-col items-center opacity-30">
-                                <x-icon name="description" class="w-16 h-16 mb-2" />
+                                <x-icon name="clipboard-list" class="w-16 h-16 mb-2" />
                                 <p class="text-lg font-bold">Data Insiden Tidak Ditemukan</p>
                                 <p class="text-xs">Coba sesuaikan filter atau tambahkan laporan baru.</p>
                             </div>
