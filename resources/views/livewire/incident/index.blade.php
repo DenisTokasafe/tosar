@@ -15,8 +15,11 @@
                         <th class="w-40">
                             {{ __('Nomor Referensi') }}
                             <!-- change popover-1 and --anchor-1 names. Use unique names for each dropdown -->
-                            <button class="btn" popovertarget="popover-1" style="anchor-name:--anchor-1">
-                                Button
+                            <button class="btn btn-ghost btn-xs" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="m21 21-4.3-4.3" />
+                                </svg>
                             </button>
                             <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100"
                                 popover id="popover-1" style="position-anchor:--anchor-1">
