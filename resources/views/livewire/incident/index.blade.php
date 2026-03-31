@@ -21,11 +21,9 @@
                                     <path d="m21 21-4.3-4.3" />
                                 </svg>
                             </button>
-                            <ul class="shadow-sm dropdown menu w-52 rounded-box bg-base-100"
-                                popover id="popover-1" style="position-anchor:--anchor-1">
-                                <li><a>Item 1</a></li>
-                                <li><a>Item 2</a></li>
-                            </ul>
+                            <div class="shadow-sm dropdown menu w-52 rounded-box bg-base-100" popover id="popover-1" style="position-anchor:--anchor-1">
+                                <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
+                            </div>
                         </th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
                         <th>{{ __('Deskripsi Insiden') }}</th>
