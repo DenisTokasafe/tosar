@@ -192,7 +192,7 @@
                     <div class="pt-4">
                         @if($hasErrorInStep)
                         <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
-                            <strong>Perhatian:</strong> Beberapa kolom pada bagian ini memerlukan perbaikan sebelum laporan dapat diperbarui.
+                            <strong>{{ __('Perhatian:') }}</strong> {{ __('Beberapa kolom pada bagian ini memerlukan perbaikan sebelum laporan dapat diperbarui.') }}
                         </div>
                         @endif
 
@@ -203,14 +203,14 @@
                         <div class="flex justify-between pt-4 mt-4 border-t border-base-200">
                             <div>
                                 @if($i > 1)
-                                <button type="button" wire:click="goToStep({{ $i - 1 }})" class="btn btn-ghost btn-xs">« Kembali</button>
+                                <button type="button" wire:click="goToStep({{ $i - 1 }})" class="btn btn-ghost btn-xs">{{ __('« Kembali') }}</button>
                                 @endif
                             </div>
 
                             <div class="flex gap-2">
                                 @if ($i < 9)
                                     <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
-                                    {{ $canEdit ? 'Simpan & Lanjut »' : 'Lihat Selanjutnya »' }}
+                                    {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
                                     </button>
                                     @endif
 
@@ -225,7 +225,7 @@
                                         <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
                                             <div class="flex items-center gap-1">
                                                 <x-icon name="lock-closed" class="w-3 h-3" />
-                                                <span>Update Terkunci</span>
+                                                <span>{{ __('Update Terkunci') }}</span>
                                             </div>
                                         </button>
                                         @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) && empty($penerimaan_komentar_ktt_id))
