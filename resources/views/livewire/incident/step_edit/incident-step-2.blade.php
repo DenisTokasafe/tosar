@@ -23,18 +23,21 @@
 
             <div class="grid grid-cols-1 gap-3">
                 <div class="form-control">
-
-                    <x-form.search-and-select label="Nama" placeholder="Cari Nama..."
+                    <x-form.searchable-select2 label="Nama" placeholder="Cari Nama..."
                         wire:key="mob-name-{{ $index }}"
                         modelsearch="searchKorban.{{ $index }}"
                         modelid="directly_involved.{{ $index }}.employee_name"
                         :options="$involved_personnel_options"
                         :showdropdown="$show_employee_dropdown[$index] ?? false"
                         clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
-                        klikManualAction="klikManualAction({{ $index }})"
-                        :disabled="!$canEdit" />
 
-                    <x-form.input-text label="Jabatan" model="directly_involved.{{ $index }}.manual_name" :disabled="!$canEdit" />
+                        {{-- Properti Manual Mode --}}
+                        :manualMode="$manualMode[$index] ?? false"
+                        manualModelName="manualEmployeeName.{{ $index }}"
+                        enableManualAction="enableManualMode({{ $index }})"
+                        addManualAction="addManualData({{ $index }})"
+
+                        :disabled="!$canEdit" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -82,14 +85,20 @@
                 <tr wire:key="involved-desktop-{{ $index }}" class="hover:bg-base-100/50">
                     {{-- Nama --}}
                     <td class="p-1 align-top border-r border-base-300">
-                        <x-form.search-and-select label="Nama" placeholder="Cari Nama..."
+                        <x-form.searchable-select2 label="Nama" placeholder="Cari Nama..."
                             wire:key="mob-name-{{ $index }}"
                             modelsearch="searchKorban.{{ $index }}"
                             modelid="directly_involved.{{ $index }}.employee_name"
                             :options="$involved_personnel_options"
                             :showdropdown="$show_employee_dropdown[$index] ?? false"
                             clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
-                            klikManualAction="klikManualAction({{ $index }})"
+
+                            {{-- Properti Manual Mode --}}
+                            :manualMode="$manualMode[$index] ?? false"
+                            manualModelName="manualEmployeeName.{{ $index }}"
+                            enableManualAction="enableManualMode({{ $index }})"
+                            addManualAction="addManualData({{ $index }})"
+
                             :disabled="!$canEdit" />
                     </td>
 

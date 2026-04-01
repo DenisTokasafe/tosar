@@ -79,7 +79,9 @@ class Update extends Component
     public $penanggungJawabOptions = [];
     public $consequences = [];  // Untuk header table matrix
     public $likelihoods = [];   // Untuk row table matrix
-
+    // Tambahkan property baru
+    public $manualMode = []; // Array untuk menyimpan status manual per index
+    public $manualEmployeeName = [];
     /**
      * Computed Property untuk Sub-Tipe Insiden
      * Otomatis update saat event_type_id berubah
@@ -1364,9 +1366,35 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function klikManualAction($index)
+    // 1. Fungsi untuk mengaktifkan inputan manual
+    public function enableManualMode($index)
     {
-        dd($index);
+        $this->manualMode[$index] = true;
+
+        // Opsional: Isi field manual dengan apa yang sudah diketik di search box
+        $this->manualEmployeeName[$index] = $this->searchKorban[$index] ?? '';
+    }
+
+    // 2. Fungsi untuk menyimpan data manual ke dalam baris directly_involved
+    public function addManualData($index)
+    {
+        // Validasi sederhana jika perlu
+        if (empty($this->manualEmployeeName[$index])) {
+            return;
+        }
+
+        // Masukkan ke array utama
+        $this->directly_involved[$index]['employee_name'] = $this->manualEmployeeName[$index];
+        $this->directly_involved[$index]['employee_id']   = null; // Beri null karena tidak ada di DB
+        $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
+
+        // Reset state search dan dropdown
+        $this->searchKorban[$index] = $this->manualEmployeeName[$index];
+        $this->show_employee_dropdown[$index] = false;
+        $this->manualMode[$index] = false;
+
+        // Simpan ke session seperti fungsi selectInvolvedPersonnel Anda
+        $this->saveToSession();
     }
 
 
