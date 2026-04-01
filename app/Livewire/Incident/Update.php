@@ -2395,17 +2395,25 @@ class Update extends Component
                 // 3. Update Investigation Teams
                 $report->investigationTeams()->delete();
                 $userIdsToNotify = [];
+
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
                     foreach ($this->{$role} as $member) {
-                        if (!empty($member['user_id'])) {
+                        // Cek apakah nama tidak kosong (berlaku untuk DB maupun Manual)
+                        if (!empty($member['nama'])) {
+
                             $report->investigationTeams()->create([
-                                'user_id' => $member['user_id'],
-                                'name'    => $member['name'],
+                                // Jika manual, user_id akan tetap null di database
+                                'user_id' => $member['user_id'] ?? null,
+                                'name'    => $member['nama'],
                                 'role'    => $role,
                                 'dept'    => $member['dept'] ?? null,
                                 'jabatan' => $member['jabatan'] ?? null,
                             ]);
-                            $userIdsToNotify[] = $member['user_id'];
+
+                            // Hanya tambahkan ke array notifikasi jika user_id ada (User terdaftar di sistem)
+                            if (!empty($member['user_id'])) {
+                                $userIdsToNotify[] = $member['user_id'];
+                            }
                         }
                     }
                 }
