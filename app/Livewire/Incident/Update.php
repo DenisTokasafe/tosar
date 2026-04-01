@@ -1540,7 +1540,6 @@ class Update extends Component
         $name = $this->manualName[$index][$type] ?? '';
 
         if (empty($name)) return;
-        dd($name);
 
         // 1. Set data ke array utama (sesuai struktur selectUser Anda)
         $this->{$type}[$index]['user_id'] = null; // null karena manual (tidak ada di DB)
