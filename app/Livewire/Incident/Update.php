@@ -1012,8 +1012,7 @@ class Update extends Component
     }
     public function updatedSearchPetugas($value, $key)
     {
-        // Livewire v4 mengirim key berupa index (misal: "0")
-        // Jika format modelsearch adalah searchPetugas.{{ $index }}
+        // Ambil index dari key (misal "0" dari "searchPetugas.0")
         $index = explode('.', $key)[0];
 
         if (strlen($value) > 1) {
@@ -1022,11 +1021,18 @@ class Update extends Component
                 ->limit(20)
                 ->get();
 
-            // Pastikan hanya baris ini yang dropdown-nya terbuka
             $this->showDropdownPetugas[$index] = true;
         } else {
             $this->showDropdownPetugas[$index] = false;
         }
+
+        /** * RESET / TRIGGER VALIDASI
+         * Kita jalankan ini setiap kali ada perubahan ketikan.
+         * Jika user menghapus teks sampai kosong, error 'required_without' akan muncul kembali.
+         * Jika user mengetik sesuatu, sistem akan mengecek apakah syarat validasi terpenuhi.
+         */
+        $this->validateOnly("corrective_actions.$index.name");
+        $this->validateOnly("corrective_actions.$index.pic_user_id");
     }
 
     public function selectActPelapor($id, $name)
