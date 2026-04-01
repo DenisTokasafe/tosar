@@ -92,9 +92,7 @@
         @endif
     </div>
 
-    @if($manualMode && $manualModelName)
-    <x-label-error :messages="$errors->get($manualModelName)" />
-    @else
+
     <x-label-error :messages="$errors->get($modelid)" />
-    @endif
+
 </fieldset>
