@@ -159,7 +159,7 @@
                                 initFlatpickr();
                             });">
                             <input type="text" x-ref="tanggalInput" wire:model.live='tanggal'
-                                placeholder="Pilih Tanggal dan Waktu..." readonly
+                                placeholder="{{ __('Pilih Tanggal dan Waktu...') }}" readonly
                                 class="input input-bordered cursor-pointer w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('tanggal') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}" />
                         </div>
                     </div>
@@ -170,7 +170,7 @@
                     {{-- Induk harus memiliki class="relative" agar dropdown absolute berada di bawahnya --}}
                     <div class="relative">
                         <input name="searchPelapor" type="text" wire:model.live.debounce.300ms="searchPelapor"
-                            placeholder="Cari Nama Pelapor..."
+                            placeholder="{{ __('Cari Nama Pelapor...') }}"
                             class="input input-bordered w-full max-w-sm focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs {{ $errors->has('pelapor_id') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                             {{-- x-ref="searchInput" TIDAK LAGI DIBUTUHKAN --}} />
                         {{-- Menggunakan variabel Pelapor Anda: $showPelaporDropdown, $pelapors, selectPelapor --}}
@@ -331,11 +331,11 @@
                         </label>
                     </div>
                 </div>
-                <div class="my-4 divider text-xs">{{ __('Daftar Tindakan Terinput') }}</div>
-                <div class="max-h-60 overflow-y-auto">
+                <div class="my-4 text-xs divider">{{ __('Daftar Tindakan Terinput') }}</div>
+                <div class="overflow-y-auto max-h-60">
                     <ul class="space-y-2">
                         @forelse ($actions as $index => $action)
-                        <li class="p-2 border rounded-md bg-base-200 flex justify-between items-center">
+                        <li class="flex items-center justify-between p-2 border rounded-md bg-base-200">
                             <div>
                                 <p class="text-sm font-medium">{!! $action['description'] !!}</p>
                                 <p class="text-[10px] opacity-70">Due: {{ $action['due_date'] }} | PIC ID: {{ $action['responsible_id'] }}</p>
@@ -343,7 +343,7 @@
                             <flux:button variant="danger" size="xs" wire:click="removeAction({{ $index }})" icon="trash" />
                         </li>
                         @empty
-                        <li class="text-center py-4 text-gray-400 text-sm italic border-2 border-dashed rounded-lg">
+                        <li class="py-4 text-sm italic text-center text-gray-400 border-2 border-dashed rounded-lg">
                             {{ __('Belum ada tindakan.') }}
                         </li>
                         @endforelse
