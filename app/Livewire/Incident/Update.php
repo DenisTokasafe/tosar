@@ -220,19 +220,19 @@ class Update extends Component
             // PART 3: Tim Investigasi
             'pemimpin' => 'required|array|min:1',
             'pemimpin.*.user_id' => 'required',
-            'pemimpin.*.nama' => 'required|string',
+            'pemimpin.*.name' => 'required|string',
             'pemimpin.*.dept'    => 'required|string',
             'pemimpin.*.jabatan' => 'required|string',
 
             'facilitator' => 'required|array|min:1',
             'facilitator.*.user_id' => 'required',
-            'facilitator.*.nama' => 'required|string',
+            'facilitator.*.name' => 'required|string',
             'facilitator.*.dept'    => 'required|string',
             'facilitator.*.jabatan' => 'required|string',
 
             'anggota' => 'required|array|min:1',
             'anggota.*.user_id' => 'required',
-            'anggota.*.nama' => 'required|string',
+            'anggota.*.name' => 'required|string',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
             // PART 4: PEEPO (Analisis Faktor)
