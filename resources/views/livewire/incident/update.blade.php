@@ -165,7 +165,7 @@
                     'bg-base-300 text-base-content/40' => !$canEdit
                     ])>
                     <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
-                        <span>BAGIAN {{ $i }}</span>
+                        <span>{{ __('BAGIAN') }} {{ $i }}</span>
                         <span class="hidden md:inline">– {{ $stepTitle }}</span>
 
                         @if(!$canEdit)
@@ -176,7 +176,7 @@
                         @if($hasErrorInStep)
                         <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse text-[9px]">⚠️ ERROR</span>
                         @else
-                        <div class="tooltip tooltip-right" data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? 'Membutuhkan komentar OHS/KTT/Vendor' : 'Data belum lengkap') }}">
+                        <div class="tooltip tooltip-right" data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? '{{ __('Membutuhkan komentar OHS/KTT/Vendor') }}' : '{{ __('Data belum lengkap') }}') }}">
                             <span @class([ 'px-1 ml-2 text-white border-none badge badge-sm ring-1 shadow-sm' , 'badge-success ring-success/30'=> $isStepCompleted,
                                 'badge-error opacity-40 ring-error/30 cursor-help' => !$isStepCompleted
                                 ])>
@@ -218,7 +218,7 @@
                                         <button type="button" wire:click="update" wire:loading.attr="disabled" class="px-4 text-white shadow-md btn btn-xs btn-success">
                                             <span wire:loading.remove wire:target="update">{{ __('Update Laporan') }}</span>
                                             <span wire:loading.remove.class="hidden" wire:target="update" class="hidden">{{ __('Proses Update...') }}</span>
-                                            <span wire:loading.remove.class="hidden" wire:target="update" class="loading loading-spinner loading-xs hidden"></span>
+                                            <span wire:loading.remove.class="hidden" wire:target="update" class="hidden loading loading-spinner loading-xs"></span>
                                         </button>
                                         @else
                                         <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
