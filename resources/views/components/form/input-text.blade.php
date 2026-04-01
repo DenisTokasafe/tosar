@@ -18,7 +18,7 @@
     <input {{ $disabled ? 'disabled' : '' }}
         type="{{ $type }}"
         {{ $model ? "wire:model.live=$model" : '' }}
-        placeholder="{{ $placeholder ?: $label }}"
+        placeholder="{{ (__($placeholder)) ?: (__($label)) }}"
         {{ $attributes->merge([
         'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size " .
         ($errors->has($model)
