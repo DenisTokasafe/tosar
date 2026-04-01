@@ -655,7 +655,7 @@ class Update extends Component
                         'dept'    => $team->dept,
                         'jabatan' => $team->jabatan,
                     ];
-                    $this->searchQuery[$index][$role] = $team->user->name ?? '';
+                    $this->searchQuery[$index][$role] = $team->user->name ?? $team->name;
                 }
             } else {
                 $this->addRow($role);
