@@ -1500,7 +1500,7 @@ class Update extends Component
         if ($user) {
             // 1. Set data utama
             $this->{$type}[$index]['user_id'] = $user->id;
-            $this->{$type}[$index]['nama']    = $user->name;
+            $this->{$type}[$index]['name']    = $user->name;
 
             // 2. Set default Jabatan & Dept (Sangat membantu user agar tidak ketik manual)
             $this->{$type}[$index]['jabatan'] = $user->position ?? '';
@@ -1543,7 +1543,7 @@ class Update extends Component
 
         // 1. Set data ke array utama (sesuai struktur selectUser Anda)
         $this->{$type}[$index]['user_id'] = null; // null karena manual (tidak ada di DB)
-        $this->{$type}[$index]['nama']    = $name;
+        $this->{$type}[$index]['name']    = $name;
 
         // 2. Set Jabatan/Dept default jika kosong
         $this->{$type}[$index]['jabatan'] = $this->{$type}[$index]['jabatan'] ?? 'Manual Input';
@@ -1559,7 +1559,7 @@ class Update extends Component
 
         // 5. Simpan & Validasi
         $this->saveToSession();
-        $this->validateOnly($type . '.' . $index . '.nama');
+        $this->validateOnly($type . '.' . $index . '.name');
     }
     public function resetSearch()
     {
@@ -1884,17 +1884,17 @@ class Update extends Component
                 $fields = [
                     'pemimpin',
                     'pemimpin.*.user_id',
-                    'pemimpin.*.nama',
+                    'pemimpin.*.name',
                     'pemimpin.*.dept',
                     'pemimpin.*.jabatan',
                     'facilitator',
                     'facilitator.*.user_id',
-                    'facilitator.*.nama',
+                    'facilitator.*.name',
                     'facilitator.*.dept',
                     'facilitator.*.jabatan',
                     'anggota',
                     'anggota.*.user_id',
-                    'anggota.*.nama',
+                    'anggota.*.name',
                     'anggota.*.dept',
                     'anggota.*.jabatan',
                 ];
@@ -2106,21 +2106,21 @@ class Update extends Component
                 // Pemimpin Investigasi
                 'pemimpin'           => $allRules['pemimpin'],
                 'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
-                'pemimpin.*.nama'    => $allRules['pemimpin.*.nama'],
+                'pemimpin.*.name'    => $allRules['pemimpin.*.name'],
                 'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
                 'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
 
                 // Facilitator (KPLH)
                 'facilitator'           => $allRules['facilitator'],
                 'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
-                'facilitator.*.nama'    => $allRules['facilitator.*.nama'],
+                'facilitator.*.name'    => $allRules['facilitator.*.name'],
                 'facilitator.*.dept'    => $allRules['facilitator.*.dept'],
                 'facilitator.*.jabatan' => $allRules['facilitator.*.jabatan'],
 
                 // Tim Anggota
                 'anggota'           => $allRules['anggota'],
                 'anggota.*.user_id' => $allRules['anggota.*.user_id'],
-                'anggota.*.nama'    => $allRules['anggota.*.nama'],
+                'anggota.*.name'    => $allRules['anggota.*.name'],
                 'anggota.*.dept'    => $allRules['anggota.*.dept'],
                 'anggota.*.jabatan' => $allRules['anggota.*.jabatan'],
             ],
@@ -2400,7 +2400,7 @@ class Update extends Component
                         if (!empty($member['user_id'])) {
                             $report->investigationTeams()->create([
                                 'user_id' => $member['user_id'],
-                                'nama'    => $member['nama'],
+                                'name'    => $member['name'],
                                 'role'    => $role,
                                 'dept'    => $member['dept'] ?? null,
                                 'jabatan' => $member['jabatan'] ?? null,
