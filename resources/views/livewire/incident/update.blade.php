@@ -166,7 +166,7 @@
                     ])>
                     <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
                         <span>{{ __('BAGIAN') }} {{ $i }}</span>
-                        <span class="hidden md:inline">– {{ $stepTitle }}</span>
+                        <span class="hidden md:inline">– {{ __($stepTitle) }}</span>
 
                         @if(!$canEdit)
                         <x-icon name="lock-closed" class="w-3 h-3 opacity-60" />
