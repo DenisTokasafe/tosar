@@ -31,12 +31,6 @@
                         :showdropdown="$show_employee_dropdown[$index] ?? false"
                         clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
 
-                        {{-- Properti Manual Mode --}}
-                        :manualMode="$manualMode[$index] ?? false"
-                        manualModelName="manualEmployeeName.{{ $index }}"
-                        enableManualAction="enableManualMode({{ $index }})"
-                        addManualAction="addManualData({{ $index }})"
-
                         :disabled="!$canEdit" />
                 </div>
 
