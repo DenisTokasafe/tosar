@@ -100,8 +100,9 @@
                                             wire:click="save"
                                             wire:loading.attr="disabled"
                                             class="px-4 text-white shadow-md btn btn-xs btn-success">
-                                            <span wire:loading.remove wire:target="save">Submit Laporan SENTRY</span>
-                                            <span wire:loading wire:target="save" class="loading loading-spinner loading-xs"></span>
+                                            <span wire:loading.remove wire:target="save">Submit Laporan </span>
+                                            <span wire:loading.remove.class="hidden" wire:target="save" class="hidden">{{ __('Proses Submit...') }}</span>
+                                            <span wire:loading.remove.class="hidden" wire:target="save" class="hidden loading loading-spinner loading-xs"></span>
                                         </button>
                                         @endif
                                 </div>
