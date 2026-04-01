@@ -154,6 +154,7 @@ class Update extends Component
     public $penerimaan_komentar_ohs;
     public $key_learning;
     public $current_lock_version;
+    public $manualName = [];
     // TAMBAHKAN INI:
     public $activeIndexPenerimaan = null;
     #[Computed]
@@ -219,16 +220,19 @@ class Update extends Component
             // PART 3: Tim Investigasi
             'pemimpin' => 'required|array|min:1',
             'pemimpin.*.user_id' => 'required',
+            'pemimpin.*.nama' => 'required|string',
             'pemimpin.*.dept'    => 'required|string',
             'pemimpin.*.jabatan' => 'required|string',
 
             'facilitator' => 'required|array|min:1',
             'facilitator.*.user_id' => 'required',
+            'facilitator.*.nama' => 'required|string',
             'facilitator.*.dept'    => 'required|string',
             'facilitator.*.jabatan' => 'required|string',
 
             'anggota' => 'required|array|min:1',
             'anggota.*.user_id' => 'required',
+            'anggota.*.nama' => 'required|string',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
             // PART 4: PEEPO (Analisis Faktor)
@@ -363,14 +367,17 @@ class Update extends Component
             'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
             // Part 3
             'pemimpin.*.user_id' => __('Nama Pemimpin'),
+            'pemimpin.*.name' => __('Nama Pemimpin'),
             'pemimpin.*.dept'    => __('Departemen Pemimpin'),
             'pemimpin.*.jabatan' => __('Jabatan Pemimpin'),
 
             'facilitator.*.user_id' => __('Nama Facilitator'),
+            'facilitator.*.name' => __('Nama Facilitator'),
             'facilitator.*.dept'    => __('Departemen Facilitator'),
             'facilitator.*.jabatan' => __('Jabatan Facilitator'),
 
             'anggota.*.user_id' => __('Nama Anggota'),
+            'anggota.*.name' => __('Nama Anggota'),
             'anggota.*.dept'    => __('Departemen Anggota'),
             'anggota.*.jabatan' => __('Jabatan Anggota'),
             // Part 5: Atribut Dinamis untuk Why
@@ -644,6 +651,7 @@ class Update extends Component
                 foreach ($filtered->values() as $index => $team) {
                     $this->{$role}[] = [
                         'user_id' => $team->user_id,
+                        'name'    => $team->name ?? '',
                         'dept'    => $team->dept,
                         'jabatan' => $team->jabatan,
                     ];
@@ -1515,11 +1523,51 @@ class Update extends Component
             $this->saveToSession();
         }
     }
+    public function enableManualPartisipan($index, $type)
+    {
+        // Aktifkan mode manual untuk index dan tipe spesifik
+        $this->manualMode[$index][$type] = true;
+
+        // Copy apa yang sudah diketik di search ke input manual
+        $this->manualName[$index][$type] = $this->searchQuery[$index][$type] ?? '';
+
+        // Pastikan dropdown tetap terbuka untuk menampilkan input manual
+        $this->showDropdownPartisipan[$index] = true;
+    }
+
+    public function addManualPartisipan($index, $type)
+    {
+        $name = $this->manualName[$index][$type] ?? '';
+
+        if (empty($name)) return;
+
+        // 1. Set data ke array utama (sesuai struktur selectUser Anda)
+        $this->{$type}[$index]['user_id'] = null; // null karena manual (tidak ada di DB)
+        $this->{$type}[$index]['nama']    = $name;
+
+        // 2. Set Jabatan/Dept default jika kosong
+        $this->{$type}[$index]['jabatan'] = $this->{$type}[$index]['jabatan'] ?? 'Manual Input';
+        $this->{$type}[$index]['dept']    = $this->{$type}[$index]['dept'] ?? '';
+
+        // 3. Sinkronkan tampilan search input
+        $this->searchQuery[$index][$type] = $name;
+
+        // 4. Reset states
+        $this->manualMode[$index][$type] = false;
+        $this->showDropdownPartisipan[$index] = false;
+        $this->options = [];
+
+        // 5. Simpan & Validasi
+        $this->saveToSession();
+        $this->validateOnly($type . '.' . $index . '.nama');
+    }
     public function resetSearch()
     {
         $this->searchQuery = []; // Reset ke array kosong
         $this->options = [];
         $this->showDropdownPartisipan = []; // Reset ke array kosong
+        $this->manualMode = []; // Reset ke array kosong
+        $this->manualName = []; // Reset ke array kosong
         $this->activeType = '';
         $this->activeIndex = null;
     }
@@ -1836,14 +1884,17 @@ class Update extends Component
                 $fields = [
                     'pemimpin',
                     'pemimpin.*.user_id',
+                    'pemimpin.*.nama',
                     'pemimpin.*.dept',
                     'pemimpin.*.jabatan',
                     'facilitator',
                     'facilitator.*.user_id',
+                    'facilitator.*.nama',
                     'facilitator.*.dept',
                     'facilitator.*.jabatan',
                     'anggota',
                     'anggota.*.user_id',
+                    'anggota.*.nama',
                     'anggota.*.dept',
                     'anggota.*.jabatan',
                 ];
@@ -2055,18 +2106,21 @@ class Update extends Component
                 // Pemimpin Investigasi
                 'pemimpin'           => $allRules['pemimpin'],
                 'pemimpin.*.user_id' => $allRules['pemimpin.*.user_id'],
+                'pemimpin.*.nama'    => $allRules['pemimpin.*.nama'],
                 'pemimpin.*.dept'    => $allRules['pemimpin.*.dept'],
                 'pemimpin.*.jabatan' => $allRules['pemimpin.*.jabatan'],
 
                 // Facilitator (KPLH)
                 'facilitator'           => $allRules['facilitator'],
                 'facilitator.*.user_id' => $allRules['facilitator.*.user_id'],
+                'facilitator.*.nama'    => $allRules['facilitator.*.nama'],
                 'facilitator.*.dept'    => $allRules['facilitator.*.dept'],
                 'facilitator.*.jabatan' => $allRules['facilitator.*.jabatan'],
 
                 // Tim Anggota
                 'anggota'           => $allRules['anggota'],
                 'anggota.*.user_id' => $allRules['anggota.*.user_id'],
+                'anggota.*.nama'    => $allRules['anggota.*.nama'],
                 'anggota.*.dept'    => $allRules['anggota.*.dept'],
                 'anggota.*.jabatan' => $allRules['anggota.*.jabatan'],
             ],
@@ -2346,6 +2400,7 @@ class Update extends Component
                         if (!empty($member['user_id'])) {
                             $report->investigationTeams()->create([
                                 'user_id' => $member['user_id'],
+                                'nama'    => $member['nama'],
                                 'role'    => $role,
                                 'dept'    => $member['dept'] ?? null,
                                 'jabatan' => $member['jabatan'] ?? null,

@@ -20,7 +20,12 @@
                         :showdropdown="($showDropdownPartisipan[$index] ?? false) && $activeType === $type && $activeIndex === $index"
                         clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
                         :disabled="!$canEdit"
-                        x-on:focusin="$canEdit ? ($wire.set('activeType', '{{ $type }}'), $wire.set('activeIndex', {{ $index }})) : null" />
+                        x-on:focusin="$canEdit ? ($wire.set('activeType', '{{ $type }}'), $wire.set('activeIndex', {{ $index }})) : null"
+                        {{-- Properti Manual Mode Baru --}}
+                        :manualMode="$manualMode[$index][$type] ?? false"
+                        manualModelName="manualName.{{ $index }}.{{ $type }}"
+                        enableManualAction="enableManualPartisipan({{ $index }}, '{{ $type }}')"
+                        addManualAction="addManualPartisipan({{ $index }}, '{{ $type }}')" />
 
                     <div class="grid grid-cols-2 gap-2">
                         <x-form.input-text label="Dept" model="{{ $type }}.{{ $index }}.dept" :disabled="!$canEdit || !empty($item['user_id'])" />
@@ -83,10 +88,12 @@
                             clickaction="selectUser(VALUE_ID, {{ $index }}, '{{ $type }}')"
                             :disabled="!$canEdit"
                             {{-- Gunakan template literal Blade untuk memasukkan boolean ke Alpine --}}
-                            x-on:focusin="if ({{ $canEdit ? 'true' : 'false' }}) {
-        $wire.set('activeType', '{{ $type }}');
-        $wire.set('activeIndex', {{ $index }});
-    }" />
+                            x-on:focusin="if ({{ $canEdit ? 'true' : 'false' }}) { $wire.set('activeType', '{{ $type }}');$wire.set('activeIndex', {{ $index }});}"
+                            {{-- Properti Manual Mode Baru --}}
+                            :manualMode="$manualMode[$index][$type] ?? false"
+                            manualModelName="manualName.{{ $index }}.{{ $type }}"
+                            enableManualAction="enableManualPartisipan({{ $index }}, '{{ $type }}')"
+                            addManualAction="addManualPartisipan({{ $index }}, '{{ $type }}')" />
                     </td>
 
                     {{-- Kolom Dept --}}
