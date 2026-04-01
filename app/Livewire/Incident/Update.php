@@ -2399,12 +2399,12 @@ class Update extends Component
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
                     foreach ($this->{$role} as $member) {
                         // Cek apakah nama tidak kosong (berlaku untuk DB maupun Manual)
-                        if (!empty($member['nama'])) {
+                        if (!empty($member['name'])) {
 
                             $report->investigationTeams()->create([
                                 // Jika manual, user_id akan tetap null di database
                                 'user_id' => $member['user_id'] ?? null,
-                                'name'    => $member['nama'],
+                                'name'    => $member['name'],
                                 'role'    => $role,
                                 'dept'    => $member['dept'] ?? null,
                                 'jabatan' => $member['jabatan'] ?? null,
