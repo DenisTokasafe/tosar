@@ -17,7 +17,7 @@
             </flux:subheading>
         </div>
         <div class="flex gap-2">
-            <span class="badge badge-info font-bold p-4 shadow-sm italic uppercase tracking-widest text-[10px]">Mode Input SENTRY</span>
+            <span class="badge badge-info font-bold p-4 shadow-sm italic uppercase tracking-widest text-[10px]">Mode Input </span>
         </div>
     </div>
 
