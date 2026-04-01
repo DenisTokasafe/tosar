@@ -204,11 +204,12 @@ class Update extends Component
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
+
             // LOGIKA KONDISIONAL BERDASARKAN isInjury
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
-            // Part 2
+
             // PART 2: Pihak Terlibat Langsung
             'directly_involved' => 'required|array|min:1',
             'directly_involved.*.employee_name' => 'required|string',
@@ -219,6 +220,7 @@ class Update extends Component
             'directly_involved.*.sift'          => 'required',
             'directly_involved.*.keterlibatan'  => 'required',
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
+
             // PART 3: Tim Investigasi
             'pemimpin' => 'required|array|min:1',
             'pemimpin.*.user_id' => 'nullable|exists:users,id',
@@ -237,109 +239,90 @@ class Update extends Component
             'anggota.*.name' => 'required|string',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
-            // PART 4: PEEPO (Analisis Faktor)
+
+            // PART 4: PEEPO
             'peepo.orang.temuan'      => 'required|string|min:3',
             'peepo.orang.deskripsi'   => 'required|string|min:5',
-
             'peepo.peralatan.temuan'    => 'required|string|min:3',
             'peepo.peralatan.deskripsi' => 'required|string|min:5',
-
             'peepo.lingkungan.temuan'   => 'required|string|min:3',
             'peepo.lingkungan.deskripsi' => 'required|string|min:5',
-
             'peepo.prosedur.temuan'     => 'required|string|min:3',
             'peepo.prosedur.deskripsi'  => 'required|string|min:5',
-
             'peepo.organisasi.temuan'   => 'required|string|min:3',
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
-            // PART 5: Timeline & Why Analysis
+
+            // PART 5: Timeline & Why
             'why_analysis' => 'required|array',
-            // Part 6
-            // Validasi Kondisi Tidak Aman
+
+            // PART 6: Faktor Penyebab
             'unsafe_conditions.*.item' => 'required',
             'unsafe_conditions.*.description' => 'required|string|min:5',
-
-            // Validasi Perilaku Tidak Aman
             'unsafe_acts.*.item' => 'required',
             'unsafe_acts.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pribadi
             'personal_factors.*.item' => 'required',
             'personal_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Faktor Pekerjaan
             'job_factors.*.item' => 'required',
             'job_factors.*.description' => 'required|string|min:5',
-
-            // Validasi Kelemahan Sistem Kontrol
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
-            // Part 7
+
+            // PART 7: Evidence & Corrective Actions
             'visual_evidence' => 'required|array|min:1',
-
-            // Validasi tiap file di dalam array (Ukuran dan Tipe)
-            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
-
+            'visual_evidence.*' => 'image|max:2048',
             'supporting_documents' => 'required|array|min:1',
             'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
+
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            'corrective_actions.*.pic_user_id' => [
-                'nullable',
-                'exists:users,id',
-                'required_without:corrective_actions.*.name'
-            ],
-
-            'corrective_actions.*.name' => [
-                'nullable',
-                'string',
-                'required_without:corrective_actions.*.pic_user_id'
-            ],
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            'corrective_actions.*.actual_completion_date' => [
-                'nullable',
-                'date',
-                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
-                'after_or_equal:corrective_actions.*.due_date'
-            ],
-            // // Part 8
-            'key_learning' => 'required|string|min:10',
-            // Part 9
+            'corrective_actions.*.actual_completion_date' => 'nullable|date|after_or_equal:corrective_actions.*.due_date',
 
+            // PART 8
+            'key_learning' => 'required|string|min:10',
+
+            // PART 9: Comments
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
             'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
             'penerimaan_komentar_contractor'    => 'required|min:11',
             'penerimaan_komentar_internal'      => 'required|min:11',
             'penerimaan_komentar_ohs'           => 'required|min:11',
-
-
         ];
 
-        // Tambahkan Logika KTT di sini agar terbaca secara global
+        // Logika Khusus Corrective Actions (PIC vs Manual Name)
+        foreach ($this->corrective_actions as $index => $action) {
+            $rules["corrective_actions.{$index}.pic_user_id"] = [
+                'nullable',
+                'exists:users,id',
+                "required_without:corrective_actions.{$index}.name"
+            ];
+            $rules["corrective_actions.{$index}.name"] = [
+                'nullable',
+                'string',
+                "required_without:corrective_actions.{$index}.pic_user_id"
+            ];
+        }
+
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
+
         if ($this->contractor_id) {
             $rules['penerimaan_komentar_contractor_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_contractor']    = 'required|min:11';
         }
 
-
-        // PERBAIKAN DI SINI:
-        // Gunakan $rules, bukan $attributes.
-        // Dan pastikan key-nya sesuai dengan data binding Anda.
         foreach (range(1, $this->whyCount) as $i) {
             $rules["why_analysis.why{$i}"] = 'required|string|min:3';
         }
 
         return $rules;
     }
+
     protected function validationAttributes()
     {
         $attributes = [
-            // Part 1
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
@@ -348,83 +331,48 @@ class Update extends Component
             'location_id'       => __('Lokasi Utama'),
             'location_specific' => __('Detail Lokasi Spesifik'),
             'date_time'         => __('Tanggal dan Waktu'),
-
-            // KTA & TTA
-
-            'keyWord'             => __('Jenis Bahaya'),
-
-            // Organisasi
-            'department_id'   => __('Departemen'),
-            'contractor_id'   => __('Perusahaan Kontraktor'),
-            'deptCont'        => __('Pihak Terlibat'),
-            'penanggungJawab' => __('PIC / Penanggung Jawab'),
-
-            // Risiko & Tindakan
-            'likelihood_id'    => __('Kemungkinan (Likelihood)'),
-            'consequence_id'   => __('Konsekuensi (Consequence)'),
-            'emergency_action' => __('Tindakan Darurat'),
-
-            // Kondisional Injury / Damage
+            'department_id'     => __('Departemen'),
+            'contractor_id'     => __('Perusahaan Kontraktor'),
+            'deptCont'          => __('Pihak Terlibat'),
+            'penanggungJawab'   => __('PIC / Penanggung Jawab'),
+            'likelihood_id'     => __('Kemungkinan (Likelihood)'),
+            'consequence_id'    => __('Konsekuensi (Consequence)'),
+            'emergency_action'  => __('Tindakan Darurat'),
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
             'selectedBodyPart'         => __('Detail Bagian Tubuh'),
             'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
-            // PART 2 (Dynamic Label)
+
             'directly_involved.*.employee_name' => __('Nama Personel'),
             'directly_involved.*.employee_nik'  => __('NIK/ID'),
             'directly_involved.*.dept_cont'     => __('Departemen/Perusahaan'),
             'directly_involved.*.jabatan'       => __('Jabatan'),
             'directly_involved.*.roster'        => __('Roster'),
-            'directly_involved.*.sift'          => __('Sift'),
+            'directly_involved.*.sift'          => __('Shift'),
             'directly_involved.*.keterlibatan'  => __('Jenis Keterlibatan'),
             'directly_involved.*.pengalaman_kerja' => __('Pengalaman Kerja'),
-            // Part 3
-            'pemimpin.*.user_id' => __('Nama Pemimpin'),
+
             'pemimpin.*.name' => __('Nama Pemimpin'),
-            'pemimpin.*.dept'    => __('Departemen Pemimpin'),
-            'pemimpin.*.jabatan' => __('Jabatan Pemimpin'),
-
-            'facilitator.*.user_id' => __('Nama Facilitator'),
             'facilitator.*.name' => __('Nama Facilitator'),
-            'facilitator.*.dept'    => __('Departemen Facilitator'),
-            'facilitator.*.jabatan' => __('Jabatan Facilitator'),
-
-            'anggota.*.user_id' => __('Nama Anggota'),
             'anggota.*.name' => __('Nama Anggota'),
-            'anggota.*.dept'    => __('Departemen Anggota'),
-            'anggota.*.jabatan' => __('Jabatan Anggota'),
-            // Part 5: Atribut Dinamis untuk Why
-            'why_analysis' => __('Analisis Mengapa'),
-            // Part 7
-            // Validasi Dokumen Pendukung (Multiple)
-            'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-            // Tindakan Perbaikan (Corrective Actions)
-            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
-            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
 
-            'corrective_actions.*.name.required_without' =>  __('Nama harus diisi jika petugas tidak dipilih dari daftar.'),
-            'corrective_actions.*.pic_user_id.required_without' =>  __('Pilih petugas atau masukkan nama secara manual.'),
-            'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
-            'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
+            'visual_evidence.*' => __('Bukti Visual'),
+            'supporting_documents.*' => __('Dokumen Pendukung'),
 
-            // Part 9
-            'penerimaan_komentar_contractor_id' => __('Penanggung Jawab Kontraktor'),
-            'penerimaan_komentar_internal_id'   => __('Penanggung Jawab Internal'),
-            'penerimaan_komentar_ohs_id'        => __('Penanggung Jawab OHS'),
-            'penerimaan_komentar_contractor'    => __('Komentar Kontraktor'),
-            'penerimaan_komentar_internal'      => __('Komentar Internal'),
-            'penerimaan_komentar_ohs'           => __('Komentar OHS'),
-            'penerimaan_komentar_ktt'           => __('Komentar KTT'),
+            'corrective_actions.*.action_description' => __('Rencana Perbaikan'),
+            'corrective_actions.*.control_hierarchy'  => __('Hirarki Kontrol'),
+            'corrective_actions.*.name'               => __('Nama PIC'),
+            'corrective_actions.*.pic_user_id'        => __('PIC (Daftar User)'),
+            'corrective_actions.*.due_date'           => __('Batas Waktu'),
+            'corrective_actions.*.actual_completion_date' => __('Tanggal Selesai Aktual'),
 
+            'key_learning' => __('Kunci Pembelajaran'),
         ];
 
-        // Tambahkan atribut dinamis untuk PEEPO
         foreach ($this->peepoFactors as $key => $label) {
             $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . $label;
             $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . $label;
         }
 
-        // Loop untuk membuat label yang dinamis dan user-friendly
         foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
             foreach ($this->$key as $index => $row) {
                 $rowNum = $index + 1;
@@ -433,7 +381,34 @@ class Update extends Component
                 $attributes["$key.$index.description"] = __("Deskripsi $label Baris $rowNum");
             }
         }
+
         return $attributes;
+    }
+
+    protected function messages()
+    {
+        return [
+            'required' => __(':attribute wajib diisi.'),
+            'exists'   => __('Pilihan :attribute tidak valid.'),
+            'min'      => __(':attribute minimal harus :min karakter.'),
+            'date'     => __('Format tanggal :attribute tidak sesuai.'),
+            'after_or_equal' => __(':attribute tidak boleh sebelum :date.'),
+
+            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
+            'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
+            'visual_evidence.required'     => __('Bukti visual wajib dilampirkan.'),
+            'visual_evidence.*.image'      => __('File harus berupa gambar (JPG, PNG, WebP).'),
+            'visual_evidence.*.max'        => __('Ukuran foto maksimal 2MB.'),
+
+            'corrective_actions.*.name.required_without'        => __('Nama PIC wajib diisi jika tidak memilih dari daftar.'),
+            'corrective_actions.*.pic_user_id.required_without' => __('Silakan pilih petugas atau masukkan nama manual.'),
+            'corrective_actions.*.due_date.after_or_equal'      => __('Tanggal batas waktu tidak boleh sebelum tanggal kejadian.'),
+            'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh sebelum batas waktu.'),
+
+            'key_learning.required' => __('Kunci pembelajaran wajib diisi sebagai bahan evaluasi.'),
+            'department_id.required_without' => __('Silakan pilih Departemen atau Kontraktor.'),
+            'contractor_id.required_without' => __('Pilih Kontraktor atau Department terkait.'),
+        ];
     }
     public function updated($propertyName)
     {
@@ -470,36 +445,7 @@ class Update extends Component
         // 4. Validasi Standar (Real-time feedback)
         $this->validateOnly($propertyName);
     }
-    protected function messages()
-    {
-        return [
-            // Pesan Standar
-            'required' => __(':attribute wajib diisi.'),
-            'exists'   => __('Pilihan :attribute tidak valid.'),
-            'min'      => __(':attribute minimal harus :min karakter.'),
-            'date'     => __('Format tanggal :attribute tidak sesuai.'),
-            'after_or_equal' => __(':attribute tidak boleh tanggal lampau.'),
 
-            // --- PART 7: DOKUMENTASI ---
-            'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
-            'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
-
-            'visual_evidence.required' => __('Bukti visual wajib dilampirkan.'),
-            'visual_evidence.*.image'  => __('File harus berupa gambar (JPG, PNG, WebP).'),
-            'visual_evidence.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
-            'visual_evidence.*.max'    => __('Ukuran foto maksimal 2MB.'),
-
-
-            // Part 8
-            'key_learning.required' => __('Kunci pembelajaran wajib diisi sebagai bahan evaluasi.'),
-            'key_learning.min' => __('Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).'),
-
-            // --- PESAN KHUSUS LOGIKA SENTRY ---
-
-            'department_id.required_without'       => __('Silakan pilih Departemen atau Kontraktor.'),
-            'contractor_id.required_without'       => __('Pilih Kontraktor atau Department terkait.'),
-        ];
-    }
     protected function saveToSession()
     {
         $data = $this->all();
