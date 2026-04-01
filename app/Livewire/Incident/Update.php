@@ -982,11 +982,6 @@ class Update extends Component
             // Kosongkan opsi jika pencarian terlalu pendek
             $this->pelaporsAct = [];
         }
-
-        // Jalankan validasi ulang agar error "required_without" muncul kembali
-        // karena data pic_user_id & name baru saja di-reset di atas.
-        $this->validateOnly("corrective_actions.$index.name");
-        $this->validateOnly("corrective_actions.$index.pic_user_id");
     }
 
     public function selectActPelapor($id, $name)
