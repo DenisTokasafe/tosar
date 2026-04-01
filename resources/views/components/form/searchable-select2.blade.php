@@ -22,7 +22,6 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- 1. Gunakan x-data="{ open: false }" untuk mengganti entangle yang error --}}
     <div class="relative" x-data="{ open: false }">
         <input
             x-ref="trigger"
@@ -30,7 +29,6 @@
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
-            {{-- Kontrol visibilitas via Alpine --}}
             x-on:focus="open = true"
             x-on:keydown.escape="open = false"
             {{ $attributes->merge([
@@ -50,7 +48,8 @@
                 x-anchor.bottom-start.offset.4="$refs.trigger"
                 x-on:click.outside="open = false"
                 :style="{ width: $refs.trigger.offsetWidth + 'px' }"
-                class="fixed z-[9999] overflow-auto border rounded-md shadow-xl bg-base-100 border-base-300 max-h-60 list-none">
+                class="fixed z-[9999] overflow-auto border rounded-md shadow-xl bg-base-100 border-base-300 max-h-60 list-none p-0 m-0">
+
                 {{-- Loading State --}}
                 <div wire:loading wire:target="{{ $modelsearch }}, {{ $enableManualAction }}"
                     class="flex flex-col items-center justify-center px-4 py-2 text-center">
@@ -62,7 +61,6 @@
                     @if(count($options) > 0)
                     @foreach($options as $opt)
                     @php
-                    // Logika penggantian placeholder tetap dipertahankan
                     $action = str_replace(
                     ['VALUE_ID', 'VALUE_NAME'],
                     [$opt->id, "'" . addslashes($opt->{$columnName}) . "'"],
@@ -80,8 +78,9 @@
                     @endforeach
                     @else
                     @if(!$manualMode)
-                    <li wire:click="{{ $enableManualAction }}"
-                        class="px-3 py-2 text-sm italic cursor-pointer text-warning hover:bg-base-200 list-none">
+                    {{-- Gunakan {!! !!} agar parameter (index) terbaca dengan benar --}}
+                    <li wire:click="{!! $enableManualAction !!}"
+                        class="px-3 py-2 text-sm italic list-none cursor-pointer text-warning hover:bg-base-200">
                         {{ __('Tidak ditemukan, klik untuk tambah manual') }}
                     </li>
                     @endif
@@ -89,7 +88,7 @@
 
                     {{-- Input Manual Field --}}
                     @if($manualMode)
-                    <li class="p-2 border-t border-base-300 bg-base-200/50 list-none" x-on:click.stop>
+                    <li class="p-2 list-none border-t border-base-300 bg-base-200/50" x-on:click.stop>
                         <div class="flex items-center gap-1">
                             <input type="text"
                                 wire:model.live="{{ $manualModelName }}"
@@ -97,7 +96,7 @@
                                 class="w-full input input-bordered input-xs focus:ring-1 focus:ring-info bg-base-100" />
 
                             <button type="button"
-                                wire:click="{{ $addManualAction }}"
+                                wire:click="{!! $addManualAction !!}"
                                 x-on:click="open = false"
                                 class="btn btn-primary btn-xs">
                                 {{ __('Tambah') }}
