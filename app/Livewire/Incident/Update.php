@@ -726,7 +726,7 @@ class Update extends Component
         // Load Tindakan Perbaikan
         $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
             // Inisialisasi search field untuk tiap baris PIC
-            $this->searchPetugas[$index] = $action->pic->name ?? '';
+            $this->searchPetugas[$index] = $action->pic->name ?? $action->name;
             return [
                 'id' => $action->id, // Penting untuk update
                 'action_description' => $action->action_description,
