@@ -54,10 +54,7 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Wpi\Index as WpiForm;
 use App\Livewire\Wpi\WpiList;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
