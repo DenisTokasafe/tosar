@@ -1364,6 +1364,10 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
+    public function klikManualAction($index)
+    {
+        dd($index);
+    }
 
 
 
