@@ -99,6 +99,8 @@ class Update extends Component
     public $facilitator = [];
     public $anggota = [];
     public $rating_name;
+    public $manualModePetugas = [];
+    public $manualNamePetugas = [];
 
     // State untuk Pencarian/Dropdown
     public $searchQuery = []; // Struktur: [$index][$type] => 'string'
@@ -1048,6 +1050,47 @@ class Update extends Component
             // Tutup dropdown
             $this->showDropdownPetugas[$index] = false;
         }
+    }
+
+    public function enableManualPetugas($index = null)
+    {
+        if ($index === null) return;
+
+        $this->manualModePetugas[$index] = true;
+
+        // Pindahkan teks yang sudah diketik di search ke input manual
+        $this->manualNamePetugas[$index] = $this->searchPetugas[$index] ?? '';
+
+        // Pastikan dropdown tetap terbuka agar input manualnya terlihat
+        $this->showDropdownPetugas[$index] = true;
+    }
+
+    /**
+     * Menyimpan data nama manual ke dalam array corrective_actions
+     */
+    public function addManualPetugas($index = null)
+    {
+        if ($index === null) return;
+
+        $name = $this->manualNamePetugas[$index] ?? '';
+
+        if (!empty($name)) {
+            // Simpan ke array utama (pic_user_id dikosongkan karena manual)
+            $this->corrective_actions[$index]['name'] = $name;
+            $this->corrective_actions[$index]['pic_user_id'] = null;
+            $this->corrective_actions[$index]['id_number'] = 'MANUAL';
+            $this->corrective_actions[$index]['dept_con'] = '-';
+
+            // Update search field agar sinkron
+            $this->searchPetugas[$index] = $name;
+        }
+
+        // Reset UI State
+        $this->manualModePetugas[$index] = false;
+        $this->showDropdownPetugas[$index] = false;
+
+        // Simpan ke session atau trigger validasi jika perlu
+        $this->saveToSession();
     }
 
 

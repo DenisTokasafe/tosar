@@ -142,7 +142,12 @@
                             modelid="corrective_actions.{{ $index }}.pic_user_id" :options="$pelaporsAct"
                             :showdropdown="($showDropdownPetugas[$index] ?? false) && $canEdit"
                             clickaction="selectActPelapor"
-                            :disabled="!$canEdit" />
+                            :disabled="!$canEdit"
+                            {{-- Tambahkan Properti Manual di bawah ini --}}
+                            :manualMode="$manualModePetugas[$index] ?? false"
+                            manualModelName="manualNamePetugas.{{ $index }}"
+                            enableManualAction="enableManualPetugas({{ $index }})"
+                            addManualAction="addManualPetugas({{ $index }})" />
                     </td>
                     <td class="align-top">
                         <x-form.tgl-waktu model="corrective_actions.{{ $index }}.due_date" :disabled="!$canEdit" />
