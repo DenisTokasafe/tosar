@@ -1366,7 +1366,7 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function enableManualMode($index)
+    public function enableManualMode($index = null)
     {
         $this->manualMode[$index] = true;
 
