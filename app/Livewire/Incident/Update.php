@@ -219,19 +219,19 @@ class Update extends Component
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
             // PART 3: Tim Investigasi
             'pemimpin' => 'required|array|min:1',
-            'pemimpin.*.user_id' => 'required',
+            'pemimpin.*.user_id' => 'nullable|exists:users,id',
             'pemimpin.*.name' => 'required|string',
             'pemimpin.*.dept'    => 'required|string',
             'pemimpin.*.jabatan' => 'required|string',
 
             'facilitator' => 'required|array|min:1',
-            'facilitator.*.user_id' => 'required',
+            'facilitator.*.user_id' => 'nullable|exists:users,id',
             'facilitator.*.name' => 'required|string',
             'facilitator.*.dept'    => 'required|string',
             'facilitator.*.jabatan' => 'required|string',
 
             'anggota' => 'required|array|min:1',
-            'anggota.*.user_id' => 'required',
+            'anggota.*.user_id' => 'nullable|exists:users,id',
             'anggota.*.name' => 'required|string',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
