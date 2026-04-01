@@ -136,7 +136,8 @@ class Update extends Component
     public $searchPetugas = [];
     public $showDropdownPetugas = [];
     public $pelaporsAct = [];
-    public $manualKorbanMode = [];
+    public $manualMode = []; // Array untuk menyimpan status manual per index
+    public $manualEmployeeName = [];
     public $showPenerimaanKomentarContractorDropdown = false;
     public $showPenerimaanKomentarInternalDropdown = false;
     public $showPenerimaanKomentarOhsDropdown = false;
@@ -1365,37 +1366,36 @@ class Update extends Component
             $this->validateOnly("directly_involved.$index.*");
         }
     }
-    public function enableManualMode($index = null)
+    public function enableManualMode($index)
     {
-        $idx = explode('.', $index)[0];
-        $this->manualKorbanMode[$idx] = true;
-        $this->show_employee_dropdown[$idx] = true;
+        $this->manualMode[$index] = true;
+
+        // Opsional: Isi field manual dengan apa yang sudah diketik di search box
+        $this->manualEmployeeName[$index] = $this->searchKorban[$index] ?? '';
     }
+
+    // 2. Fungsi untuk menyimpan data manual ke dalam baris directly_involved
     public function addManualData($index)
     {
-        $name = $this->searchKorban[$index] ?? null;
-
-        if (empty($name)) {
-            $this->addError("searchKorban.$index", "Nama tidak boleh kosong.");
+        // Validasi sederhana jika perlu
+        if (empty($this->manualEmployeeName[$index])) {
             return;
         }
 
-        $this->directly_involved[$index] = [
-            'employee_name' => $name,
-            'employee_id'   => null,
-            'employee_nik'  => 'MANUAL',
-            'dept_cont'     => '-',
-            'jabatan'       => '-',
-        ];
+        // Masukkan ke array utama
+        $this->directly_involved[$index]['employee_name'] = $this->manualEmployeeName[$index];
+        $this->directly_involved[$index]['employee_id']   = null; // Beri null karena tidak ada di DB
+        $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
 
-        $this->manualKorbanMode[$index] = false;
+        // Reset state search dan dropdown
+        $this->searchKorban[$index] = $this->manualEmployeeName[$index];
         $this->show_employee_dropdown[$index] = false;
-        $this->dispatch('alert', [
-            'text' => "Nama '" . $name . "' ditambahkan secara manual!",
-            'duration' => 5000,
-            'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
-        ]);
+        $this->manualMode[$index] = false;
+
+        // Simpan ke session seperti fungsi selectInvolvedPersonnel Anda
+        $this->saveToSession();
     }
+
 
 
 
