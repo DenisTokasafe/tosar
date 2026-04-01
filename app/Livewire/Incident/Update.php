@@ -1015,6 +1015,15 @@ class Update extends Component
         // Ambil index dari key (misal "0" dari "searchPetugas.0")
         $index = explode('.', $key)[0];
 
+        /** * RESET DATA LAMA
+         * Setiap kali user mengetik (mengubah isi search input),
+         * kita anggap pilihan sebelumnya sudah tidak valid lagi.
+         */
+        $this->corrective_actions[$index]['pic_user_id'] = null;
+        $this->corrective_actions[$index]['name']        = null;
+        $this->corrective_actions[$index]['id_number']   = null;
+        $this->corrective_actions[$index]['dept_con']    = null;
+
         if (strlen($value) > 1) {
             $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
                 ->orderBy('name')
@@ -1024,13 +1033,12 @@ class Update extends Component
             $this->showDropdownPetugas[$index] = true;
         } else {
             $this->showDropdownPetugas[$index] = false;
+            // Kosongkan opsi jika pencarian terlalu pendek
+            $this->pelaporsAct = [];
         }
 
-        /** * RESET / TRIGGER VALIDASI
-         * Kita jalankan ini setiap kali ada perubahan ketikan.
-         * Jika user menghapus teks sampai kosong, error 'required_without' akan muncul kembali.
-         * Jika user mengetik sesuatu, sistem akan mengecek apakah syarat validasi terpenuhi.
-         */
+        // Jalankan validasi ulang agar error "required_without" muncul kembali
+        // karena data pic_user_id & name baru saja di-reset di atas.
         $this->validateOnly("corrective_actions.$index.name");
         $this->validateOnly("corrective_actions.$index.pic_user_id");
     }
