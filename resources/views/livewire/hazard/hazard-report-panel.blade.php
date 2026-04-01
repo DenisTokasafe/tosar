@@ -31,7 +31,7 @@
         <input type="checkbox" id="myReportsCheckbox" wire:model.live="filterByAuth"
             class="checkbox checkbox-info" />
         <label for="myReportsCheckbox" class="text-sm font-medium text-gray-700 cursor-pointer">
-            Hanya Laporan Saya
+            {{ __('Hanya Laporan Saya') }}
         </label>
     </div>
     <div class="flex flex-col w-full gap-4 md:flex-row md:max-w-md">
