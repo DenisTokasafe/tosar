@@ -176,7 +176,8 @@
                         @if($hasErrorInStep)
                         <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse text-[9px]">⚠️ ERROR</span>
                         @else
-                        <div class="tooltip tooltip-right" data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? '{{ __('Membutuhkan komentar OHS/KTT/Vendor') }}' : '{{ __('Data belum lengkap') }}') }}">
+                        <div class="tooltip tooltip-right"
+                            data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? __('Membutuhkan komentar OHS/KTT/Vendor') : __('Data belum lengkap')) }}">
                             <span @class([ 'px-1 ml-2 text-white border-none badge badge-sm ring-1 shadow-sm' , 'badge-success ring-success/30'=> $isStepCompleted,
                                 'badge-error opacity-40 ring-error/30 cursor-help' => !$isStepCompleted
                                 ])>
