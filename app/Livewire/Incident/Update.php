@@ -286,6 +286,7 @@ class Update extends Component
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
             'corrective_actions.*.pic_user_id'         => 'nullable|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
+            'corrective_actions.*.name'         => 'required', // Ganti 'name' jadi 'pic_user_id'
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
             'corrective_actions.*.actual_completion_date' => [
                 'nullable',
@@ -392,6 +393,7 @@ class Update extends Component
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
             'corrective_actions.*.pic_user_id.nullable'               => __('PIC wajib dipilih.'),
+            'corrective_actions.*.name.required'               => __('Nama PIC wajib diisi.'),
             'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
             'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
 
@@ -482,6 +484,7 @@ class Update extends Component
             'corrective_actions.*.action_description.min'      => __('Deskripsi rencana perbaikan terlalu singkat.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
             'corrective_actions.*.pic_user_id.nullable'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
+            'corrective_actions.*.name.required'               => __('Nama PIC wajib diisi.'),
             'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
             'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
             // Part 8
@@ -729,6 +732,7 @@ class Update extends Component
                 'action_description' => $action->action_description,
                 'control_hierarchy' => $action->hierarchy,
                 'pic_user_id' => $action->pic_user_id,
+                'name' => $action->name ?? '',
                 'due_date' => $action->due_date,
                 'actual_completion_date' => $action->actual_completion_date,
             ];
@@ -990,6 +994,8 @@ class Update extends Component
             'action_description' => '',
             'control_hierarchy' => '',
             'pic_user_id' => '',
+            'name' => '',
+
             'due_date' => '',
             'actual_completion_date' => null,
         ];
@@ -1984,6 +1990,7 @@ class Update extends Component
                     'corrective_actions.*.control_hierarchy',
                     // REVISI: Samakan dengan properti yang menyimpan ID User (bukan Nama)
                     'corrective_actions.*.pic_user_id',
+                    'corrective_actions.*.name', // Ini untuk validasi nama PIC, tapi pastikan di rules() Anda validasi pic_user_id juga
                     'corrective_actions.*.due_date',
                     // Tambahkan ini jika Anda mewajibkan tanggal selesai diisi di Step 7
                     // 'corrective_actions.*.actual_completion_date',
@@ -2199,6 +2206,7 @@ class Update extends Component
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
                 'corrective_actions.*.pic_user_id'         => $allRules['corrective_actions.*.pic_user_id'],
+                'corrective_actions.*.name'                => $allRules['corrective_actions.*.name'],
                 'corrective_actions.*.due_date'            => $allRules['corrective_actions.*.due_date'],
 
                 // Tambahkan validasi untuk hirarki kontrol dan tgl realisasi jika perlu
@@ -2520,6 +2528,7 @@ class Update extends Component
                             'action_description'     => $action['action_description'],
                             'hierarchy'              => $action['control_hierarchy'],
                             'pic_user_id'            => $action['pic_user_id'],
+                            'name'            => $action['name'],
                             'due_date'               => $action['due_date'],
                             'actual_completion_date' => $action['actual_completion_date'] ?? null,
                             'status'                 => !empty($action['actual_completion_date']) ? 'Closed' : 'Open',
