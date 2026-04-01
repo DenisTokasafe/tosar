@@ -401,8 +401,9 @@ class Update extends Component
             // Tindakan Perbaikan (Corrective Actions)
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
             'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
-            'corrective_actions.*.pic_user_id.nullable'               => __('PIC wajib dipilih.'),
-            'corrective_actions.*.name.required'               => __('Nama PIC wajib diisi.'),
+
+            'corrective_actions.*.name.required_without' =>  __('Nama harus diisi jika petugas tidak dipilih dari daftar.'),
+            'corrective_actions.*.pic_user_id.required_without' =>  __('Pilih petugas atau masukkan nama secara manual.'),
             'corrective_actions.*.due_date.after_or_equal' => __('Tanggal tidak boleh lebih kecil dari  (:date_time).'),
             'corrective_actions.*.actual_completion_date.after_or_equal' => __('Tanggal selesai tidak boleh lebih kecil dari  (:due_date).'),
 
@@ -1096,7 +1097,8 @@ class Update extends Component
         // Reset UI State
         $this->manualModePetugas[$index] = false;
         $this->showDropdownPetugas[$index] = false;
-
+        $this->validateOnly("corrective_actions.$index.name");
+        $this->validateOnly("corrective_actions.$index.pic_user_id");
         // Simpan ke session atau trigger validasi jika perlu
         $this->saveToSession();
     }
