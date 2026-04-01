@@ -204,12 +204,11 @@ class Update extends Component
             'consequence_id' => 'required',
             'emergency_action' => 'required',
             'penanggungJawab' => 'required',
-
             // LOGIKA KONDISIONAL BERDASARKAN isInjury
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
-
+            // Part 2
             // PART 2: Pihak Terlibat Langsung
             'directly_involved' => 'required|array|min:1',
             'directly_involved.*.employee_name' => 'required|string',
@@ -220,7 +219,6 @@ class Update extends Component
             'directly_involved.*.sift'          => 'required',
             'directly_involved.*.keterlibatan'  => 'required',
             'directly_involved.*.pengalaman_kerja' => 'required|numeric',
-
             // PART 3: Tim Investigasi
             'pemimpin' => 'required|array|min:1',
             'pemimpin.*.user_id' => 'nullable|exists:users,id',
@@ -239,87 +237,105 @@ class Update extends Component
             'anggota.*.name' => 'required|string',
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
-
-            // PART 4: PEEPO
+            // PART 4: PEEPO (Analisis Faktor)
             'peepo.orang.temuan'      => 'required|string|min:3',
             'peepo.orang.deskripsi'   => 'required|string|min:5',
+
             'peepo.peralatan.temuan'    => 'required|string|min:3',
             'peepo.peralatan.deskripsi' => 'required|string|min:5',
+
             'peepo.lingkungan.temuan'   => 'required|string|min:3',
             'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+
             'peepo.prosedur.temuan'     => 'required|string|min:3',
             'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+
             'peepo.organisasi.temuan'   => 'required|string|min:3',
             'peepo.organisasi.deskripsi' => 'required|string|min:5',
-
-            // PART 5: Timeline & Why
+            // PART 5: Timeline & Why Analysis
             'why_analysis' => 'required|array',
-
-            // PART 6: Faktor Penyebab
+            // Part 6
+            // Validasi Kondisi Tidak Aman
             'unsafe_conditions.*.item' => 'required',
             'unsafe_conditions.*.description' => 'required|string|min:5',
+
+            // Validasi Perilaku Tidak Aman
             'unsafe_acts.*.item' => 'required',
             'unsafe_acts.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pribadi
             'personal_factors.*.item' => 'required',
             'personal_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Faktor Pekerjaan
             'job_factors.*.item' => 'required',
             'job_factors.*.description' => 'required|string|min:5',
+
+            // Validasi Kelemahan Sistem Kontrol
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
-
-            // PART 7: Evidence & Corrective Actions
+            // Part 7
             'visual_evidence' => 'required|array|min:1',
-            'visual_evidence.*' => 'image|max:2048',
+
+            // Validasi tiap file di dalam array (Ukuran dan Tipe)
+            'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
+
             'supporting_documents' => 'required|array|min:1',
             'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
-
+            // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
+            'corrective_actions.*.pic_user_id' => [
+                'nullable',
+                'exists:users,id',
+                'required_without:corrective_actions.*.name'
+            ],
+
+            'corrective_actions.*.name' => [
+                'nullable',
+                'string',
+                'required_without:corrective_actions.*.pic_user_id'
+            ],
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
-            'corrective_actions.*.actual_completion_date' => 'nullable|date|after_or_equal:corrective_actions.*.due_date',
-
-            // PART 8
+            'corrective_actions.*.actual_completion_date' => [
+                'nullable',
+                'date',
+                // 'index' akan otomatis dipetakan oleh Laravel/Livewire untuk baris yang sama
+                'after_or_equal:corrective_actions.*.due_date'
+            ],
+            // // Part 8
             'key_learning' => 'required|string|min:10',
+            // Part 9
 
-            // PART 9: Comments
             'penerimaan_komentar_internal_id'   => 'required|exists:users,id',
             'penerimaan_komentar_ohs_id'        => 'required|exists:users,id',
             'penerimaan_komentar_contractor'    => 'required|min:11',
             'penerimaan_komentar_internal'      => 'required|min:11',
             'penerimaan_komentar_ohs'           => 'required|min:11',
+
+
         ];
 
-        // Logika Khusus Corrective Actions (PIC vs Manual Name)
-        foreach ($this->corrective_actions as $index => $action) {
-            $rules["corrective_actions.{$index}.pic_user_id"] = [
-                'nullable',
-                'exists:users,id',
-                "required_without:corrective_actions.{$index}.name"
-            ];
-            $rules["corrective_actions.{$index}.name"] = [
-                'nullable',
-                'string',
-                "required_without:corrective_actions.{$index}.pic_user_id"
-            ];
-        }
-
+        // Tambahkan Logika KTT di sini agar terbaca secara global
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $rules['penerimaan_komentar_ktt_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_ktt']    = 'required|min:11';
         }
-
         if ($this->contractor_id) {
             $rules['penerimaan_komentar_contractor_id'] = 'required|exists:users,id';
             $rules['penerimaan_komentar_contractor']    = 'required|min:11';
         }
 
+
+        // PERBAIKAN DI SINI:
+        // Gunakan $rules, bukan $attributes.
+        // Dan pastikan key-nya sesuai dengan data binding Anda.
         foreach (range(1, $this->whyCount) as $i) {
             $rules["why_analysis.why{$i}"] = 'required|string|min:3';
         }
 
         return $rules;
     }
-
     protected function validationAttributes()
     {
         $attributes = [
@@ -982,6 +998,11 @@ class Update extends Component
             // Kosongkan opsi jika pencarian terlalu pendek
             $this->pelaporsAct = [];
         }
+
+        // Jalankan validasi ulang agar error "required_without" muncul kembali
+        // karena data pic_user_id & name baru saja di-reset di atas.
+        $this->validateOnly("corrective_actions.$index.name");
+        $this->validateOnly("corrective_actions.$index.pic_user_id");
     }
 
     public function selectActPelapor($id, $name)
