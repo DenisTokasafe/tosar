@@ -1559,7 +1559,6 @@ class Update extends Component
 
         // 5. Simpan & Validasi
         $this->saveToSession();
-        $this->validateOnly($type . '.' . $index . '.name');
     }
     public function resetSearch()
     {
