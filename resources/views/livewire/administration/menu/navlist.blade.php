@@ -2,49 +2,55 @@
     <flux:navlist variant="outline">
         <flux:navlist.group class="grid">
             @foreach ($Menus as $menu)
-            {{-- Logika Filter (Dashboard, Admin, Manhours) tetap sama --}}
-            @if ($menu->menu === 'Dashboard' && (auth()->guest() || !auth()->check()))
-            @continue
-            @endif
-            @if ($menu->menu === 'Administrator' && (auth()->guest() || !auth()->user()->hasRole('administrator')))
-            @continue
-            @endif
-            @if ($menu->menu === 'Manhours' && (!auth()->check() || !auth()->user()?->can('viewAny', \App\Models\Manhour::class)))
-            @continue
-            @endif
-            @if ($menu->menu === 'WPI' && !auth()->check())
-            @continue
-            @endif
+            {{-- Logika Filter tetap sama --}}
+            @if ($menu->menu === 'Dashboard' && (auth()->guest() || !auth()->check())) @continue @endif
+            @if ($menu->menu === 'Administrator' && (auth()->guest() || !auth()->user()->hasRole('administrator'))) @continue @endif
+            @if ($menu->menu === 'Manhours' && (!auth()->check() || !auth()->user()?->can('viewAny', \App\Models\Manhour::class))) @continue @endif
+            @if ($menu->menu === 'WPI' && !auth()->check()) @continue @endif
+
+            @php
+            // Definisikan class efek agar kode lebih rapi
+            $menuEffects = 'transition-all duration-300 ease-in-out hover:-translate-x-1 hover:shadow-lg hover:z-10 rounded-lg';
+            @endphp
+
             {{-- LEVEL 1: Group dengan SubMenu --}}
             @if (count($menu->subMenus) > 0)
-            <flux:navlist.group-list wire:key="menu-group-{{ $menu->id }}" expandable
-                route='{{ $menu->request_route }}' heading="{{ __($menu->menu) }}" class="grid">
+            <flux:navlist.group-list
+                wire:key="menu-group-{{ $menu->id }}"
+                expandable
+                route='{{ $menu->request_route }}'
+                heading="{{ __($menu->menu) }}"
+                class="grid">
                 @foreach ($menu->subMenus as $submenu)
                 {{-- LEVEL 2: Extra SubMenu --}}
                 @if (count($submenu->ExtraSubMenu) > 0)
-                <flux:navlist.group-list wire:key="submenu-group-{{ $submenu->id }}" expandable
-                    route='{{ $submenu->request_route }}' heading="{{ __($submenu->menu) }}" class="grid">
+                <flux:navlist.group-list
+                    wire:key="submenu-group-{{ $submenu->id }}"
+                    expandable
+                    route='{{ $submenu->request_route }}'
+                    heading="{{ __($submenu->menu) }}"
+                    class="grid">
                     @foreach ($submenu->ExtraSubMenu as $xsubmenu)
-                    <flux:menu.item wire:key="xsubmenu-item-{{ $xsubmenu->id }}"
+                    <flux:menu.item
+                        wire:key="xsubmenu-item-{{ $xsubmenu->id }}"
                         :href="route($xsubmenu->route)"
-                        :current="Request::is($xsubmenu->request_route)" wire:navigate>
+                        :current="Request::is($xsubmenu->request_route)"
+                        wire:navigate
+                        class="{{ $menuEffects }}">
                         {{ __($xsubmenu->menu) }}
                     </flux:menu.item>
                     @endforeach
                 </flux:navlist.group-list>
 
                 {{-- LEVEL 2: SubMenu Biasa --}}
-                @elseif(!$submenu->route)
-                <flux:menu.item wire:key="submenu-item-{{ $submenu->id }}"
-                    :current="(($submenu->request_route!=null)? Request::is($submenu->request_route ):Request::is($submenu->route ))"
-                    icon="{{ $submenu->icon }}" wire:navigate>
-                    {{ __($submenu->menu) }}
-                </flux:menu.item>
                 @else
-                <flux:menu.item wire:key="submenu-item-{{ $submenu->id }}"
-                    :href="route($submenu->route)"
+                <flux:menu.item
+                    wire:key="submenu-item-{{ $submenu->id }}"
+                    :href="$submenu->route ? route($submenu->route) : '#'"
                     :current="(($submenu->request_route!=null)? Request::is($submenu->request_route ):request()->routeIs($submenu->route ))"
-                    icon="{{ $submenu->icon }}" wire:navigate>
+                    icon="{{ $submenu->icon }}"
+                    wire:navigate
+                    class="{{ $menuEffects }}">
                     {{ __($submenu->menu) }}
                 </flux:menu.item>
                 @endif
@@ -52,14 +58,14 @@
             </flux:navlist.group-list>
 
             {{-- LEVEL 1: Menu Single --}}
-            @elseif(!$menu->route)
-            <flux:navlist.item wire:key="menu-item-{{ $menu->id }}" icon="{{ $menu->icon ?: 'ban' }}"
-                :current="Request::is($menu->request_route)" wire:navigate>
-                {{ __($menu->menu) }}
-            </flux:navlist.item>
             @else
-            <flux:navlist.item wire:key="menu-item-{{ $menu->id }}" icon="{{ $menu->icon }}"
-                :href="route($menu->route)" :current="Request::is($menu->request_route)" wire:navigate>
+            <flux:navlist.item
+                wire:key="menu-item-{{ $menu->id }}"
+                icon="{{ $menu->icon ?: 'ban' }}"
+                :href="$menu->route ? route($menu->route) : '#'"
+                :current="Request::is($menu->request_route)"
+                wire:navigate
+                class="{{ $menuEffects }}">
                 {{ __($menu->menu) }}
             </flux:navlist.item>
             @endif
