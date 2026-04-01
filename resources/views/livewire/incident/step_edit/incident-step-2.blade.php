@@ -72,7 +72,7 @@
             <thead>
                 <tr class="bg-base-200 text-base-content">
                     <th class="w-1/4 font-bold border-r border-base-300">Nama</th>
-                    <th class="font-bold border-r border-base-300">ID & Perusahaan</th>
+                    <th class="font-bold border-r border-base-300">ID & Divisi</th>
                     <th class="font-bold border-r border-base-300">Jabatan</th>
                     <th class="font-bold text-center border-r border-base-300">Roster/Shift</th>
                     <th class="font-bold border-r border-base-300">Keterlibatan</th>

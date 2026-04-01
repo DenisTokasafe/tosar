@@ -1386,7 +1386,7 @@ class Update extends Component
         // Masukkan ke array utama
         $this->directly_involved[$index]['employee_name'] = $this->manualEmployeeName[$index];
         $this->directly_involved[$index]['employee_id']   = null; // Beri null karena tidak ada di DB
-        $this->directly_involved[$index]['employee_nik']  = 'MANUAL';
+        $this->directly_involved[$index]['employee_nik']  = 'isi manual';
 
         // Reset state search dan dropdown
         $this->searchKorban[$index] = $this->manualEmployeeName[$index];
