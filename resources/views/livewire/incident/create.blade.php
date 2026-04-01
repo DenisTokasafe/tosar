@@ -28,8 +28,8 @@
             $hasErrorInStep=$errors->any() && $this->isFieldInStep($i, $errors->toArray());
 
             $stepTitles = [
-            1 => 'Detil Laporan',
-            2 => 'Pihak Terlibat Langsung',
+            1 => __('Detil Laporan'),
+            2 => __('Pihak Terlibat Langsung'),
             ];
             @endphp
 
@@ -54,7 +54,7 @@
                         ])>
 
                         <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
-                            <span>BAGIAN {{ $i }}</span>
+                            <span>{{ __('BAGIAN') }} {{ $i }}</span>
                             <span class="hidden md:inline">– {{ $stepTitles[$i] }}</span>
 
                             @if($hasErrorInStep)
@@ -72,7 +72,7 @@
                         <div class="pt-4">
                             @if($hasErrorInStep)
                             <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
-                                <strong>Perhatian:</strong> Beberapa kolom wajib di bagian ini belum terisi dengan benar.
+                                <strong>{{ __('Perhatian:') }}</strong> {{ __('Beberapa kolom wajib di bagian ini belum terisi dengan benar.') }}
                             </div>
                             @endif
 
@@ -92,7 +92,7 @@
                                     {{-- Tombol "Lanjut" hanya muncul di Bagian 1 --}}
                                     @if ($i < 2)
                                         <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
-                                        Lanjut ke Bagian {{ $i + 1 }} »
+                                        {{ __('Lanjut ke Bagian') }} {{ $i + 1 }} »
                                         </button>
                                         {{-- Tombol "Submit" muncul di Bagian 2 --}}
                                         @else
@@ -100,7 +100,7 @@
                                             wire:click="save"
                                             wire:loading.attr="disabled"
                                             class="px-4 text-white shadow-md btn btn-xs btn-success">
-                                            <span wire:loading.remove wire:target="save">Submit Laporan </span>
+                                            <span wire:loading.remove wire:target="save">{{ __('Submit Laporan') }} </span>
                                             <span wire:loading.remove.class="hidden" wire:target="save" class="hidden">{{ __('Proses Submit...') }}</span>
                                             <span wire:loading.remove.class="hidden" wire:target="save" class="hidden loading loading-spinner loading-xs"></span>
                                         </button>
