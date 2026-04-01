@@ -285,8 +285,17 @@ class Update extends Component
             // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
             'corrective_actions.*.control_hierarchy' => 'required|in:Eliminasi,Substitusi,Engineering,Administrasi,APD',
-            'corrective_actions.*.pic_user_id'         => 'nullable|exists:users,id', // Ganti 'name' jadi 'pic_user_id'
-            'corrective_actions.*.name'         => 'required', // Ganti 'name' jadi 'pic_user_id'
+            'corrective_actions.*.pic_user_id' => [
+                'nullable',
+                'exists:users,id',
+                'required_without:corrective_actions.*.name'
+            ],
+
+            'corrective_actions.*.name' => [
+                'nullable',
+                'string',
+                'required_without:corrective_actions.*.pic_user_id'
+            ],
             'corrective_actions.*.due_date' => 'required|date|after_or_equal:date_time',
             'corrective_actions.*.actual_completion_date' => [
                 'nullable',
@@ -479,14 +488,7 @@ class Update extends Component
             'visual_evidence.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
             'visual_evidence.*.max'    => __('Ukuran foto maksimal 2MB.'),
 
-            // --- PART 7: TINDAKAN PERBAIKAN ---
-            'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
-            'corrective_actions.*.action_description.min'      => __('Deskripsi rencana perbaikan terlalu singkat.'),
-            'corrective_actions.*.control_hierarchy.required'  => __('Pilih salah satu hirarki kontrol.'),
-            'corrective_actions.*.pic_user_id.nullable'               => __('PIC (Penanggung Jawab) wajib dipilih.'),
-            'corrective_actions.*.name.required'               => __('Nama PIC wajib diisi.'),
-            'corrective_actions.*.due_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
-            'corrective_actions.*.actual_completion_date.required'           => __('Batas waktu (Due Date) wajib diisi.'),
+
             // Part 8
             'key_learning.required' => __('Kunci pembelajaran wajib diisi sebagai bahan evaluasi.'),
             'key_learning.min' => __('Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).'),
