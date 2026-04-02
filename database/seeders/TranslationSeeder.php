@@ -403,7 +403,7 @@ class TranslationSeeder extends Seeder
                 ['key' => $indo], // Agar tidak duplikat jika dijalankan ulang
                 [
                     'en' => $eng,
-                    'id' => $indo,
+                    'id_text' => $indo,
                     'group' => 'general'
                 ]
             );
