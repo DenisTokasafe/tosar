@@ -24,16 +24,16 @@
         if (is_object($option)) {
         // Jika data dari Eloquent Collection
         $value = $option->$optionValue;
-        $displayLabel = $option->$optionLabel;
+        $displayLabel = __($option->$optionLabel);
         } elseif (is_array($option)) {
         // Jika data dari toArray() atau pluck()
         // Mengambil berdasarkan key string 'id' dan 'name'
         $value = $option[$optionValue] ?? $key;
-        $displayLabel = $option[$optionLabel] ?? (is_string($option) ? $option : $key);
+        $displayLabel = __($option[$optionLabel] ?? (is_string($option) ? $option : $key));
         } else {
         // Jika data array sederhana [1 => 'Nama']
         $value = $key;
-        $displayLabel = $option;
+        $displayLabel = __($option);
         }
         @endphp
 
