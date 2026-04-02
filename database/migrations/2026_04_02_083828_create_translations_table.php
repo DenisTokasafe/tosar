@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('key');      // Contoh: "Nama Perusahaan" atau "company_name"
             $table->text('en');         // Contoh: "Company Name"
-            $table->text('id');         // Contoh: "Nama Perusahaan"
+            $table->text('id_text');         // Contoh: "Nama Perusahaan"
             $table->string('group');    // Untuk mengelompokkan (misal: 'form', 'report')
             $table->timestamps();
         });
