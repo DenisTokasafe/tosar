@@ -1,5 +1,5 @@
 <x-form.input-text label="Judul Insiden" model="title" required />
-<div class="grid grid-cols-1 md:grid-cols-2">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
         <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
