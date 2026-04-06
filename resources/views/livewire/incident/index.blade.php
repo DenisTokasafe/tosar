@@ -136,8 +136,8 @@
                         {{-- Judul & Lokasi --}}
                         <td>
                             <div class="flex flex-col max-w-xs md:max-w-md">
-                                <span class="text-xs font-bold truncate" title="{{ $item->title }}">
-                                    {{ Str::limit($item->description, 50) }}
+                                <span class="text-xs font-bold truncate" title="">
+                                    {{ $item->title }}
                                 </span>
                                 <span class="text-[10px] italic opacity-60 flex items-center gap-1">
                                     <x-icon name="map-pin" class="w-3 h-3" />
