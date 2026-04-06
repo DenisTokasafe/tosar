@@ -1,12 +1,15 @@
 <x-form.input-text label="Judul Insiden" model="title" required />
-<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
-    'md:grid-cols-1' => !$this->hasSubTypes,])>
-    <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
-    @if($this->hasSubTypes)
-    <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
-    @endif
+<fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
+    <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
+    <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
+        'md:grid-cols-1' => !$this->hasSubTypes,])>
+        <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
+        @if($this->hasSubTypes)
+        <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
+        @endif
 
-</div>
+    </div>
+</fieldset>
 <div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
     <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
     <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
@@ -41,7 +44,7 @@
         addManualAction="addPelaporManual" clickaction="selectPelapor" />
 </div>
 <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Integrasi Risk Matrix') }}</legend>
+    <legend class="text-sm font-semibold card-title ">{{ __('Risk Parameters') }}</legend>
     <div class="flex flex-col-reverse gap-2 mt-2 md:flex-row">
         {{-- Kolom Likelihood & Consequence --}}
         <div class="space-y-4 md:grow">
