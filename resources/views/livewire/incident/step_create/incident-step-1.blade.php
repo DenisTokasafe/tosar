@@ -1,5 +1,5 @@
 <x-form.input-text label="Judul Insiden" model="title" required />
-<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
         <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
@@ -17,7 +17,7 @@
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
-                :options="$EnvironmentalIncidentClassification"
+                :options="$this->environmentalIncidentOptions()"
                 option-label="name"
                 placeholder="Pilih Klasifikasi Lingkungan"
                 required />
@@ -33,7 +33,7 @@
     <x-form.select
         label="Area Kontrak Karya"
         model="contract_area_name"
-        :options="$contractAreas"
+        :options="$this->contractAreas()"
         option-label="name"
         placeholder="Pilih Area Kontrak Karya"
         required />

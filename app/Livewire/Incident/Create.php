@@ -1401,16 +1401,24 @@ class Create extends Component
 
         return false;
     }
-    public $EnvironmentalIncidentClassification = [
-        ['id' => 'Tidak Significant', 'name' => 'Tidak Significant'],
-        ['id' => 'Kecil', 'name' => 'Kecil'],
-        ['id' => 'Sedang', 'name' => 'Sedang'],
-        ['id' => 'Berat', 'name' => 'Berat'],
-        ['id' => 'Bencana', 'name' => 'Bencana'],
-    ];
-    public $contractAreas = [
-        ['id' => 'PT. MSM', 'name' => 'PT. MSM'],
-        ['id' => 'PT. TTN', 'name' => 'PT. TTN'],
-        ['id' => 'Off Site', 'name' => 'Off Site'],
-    ];
+    #[Computed]
+    public function environmentalIncidentOptions()
+    {
+        return [
+            'Tidak Significant' => __('Tidak Significant'),
+            'Kecil'            => __('Kecil'),
+            'Sedang'           => __('Sedang'),
+            'Berat'            => __('Berat'),
+            'Bencana'          => __('Bencana'),
+        ];
+    }
+    #[Computed]
+    public function contractAreaOptions()
+    {
+        return [
+            'PT. MSM'  => 'PT. MSM',
+            'PT. TTN'  => 'PT. TTN',
+            'Off Site' => __('Off Site'),
+        ];
+    }
 }
