@@ -35,9 +35,11 @@ use App\Livewire\Administration\RiskConsequence\RiskConsequence;
 use App\Livewire\Administration\RiskLikelihood\RiskLikelihood;
 use App\Livewire\Administration\RiskMatrix\Grid;
 use App\Livewire\Administration\Roles\Role;
+use App\Livewire\Administration\Translation\Index as TranslationIndex;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 use App\Livewire\Administration\WorkflowEvent\WpiWorkflowManager;
 use App\Livewire\Administrator\UserRoleManager\UserRole;
+
 use App\Livewire\Dashboard\Hazard;
 use App\Livewire\Hazard\HazardDetail;
 use App\Livewire\Hazard\HazardForm;
@@ -48,7 +50,6 @@ use App\Livewire\Incident\Update as IncidentUpdate;
 use App\Livewire\Inspection\FireInspection;
 use App\Livewire\Inspection\FireInspectionEdit;
 use App\Livewire\Inspection\FireInspectionList;
-use App\Livewire\Manhours\Index;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -130,6 +131,7 @@ Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/equipment-master/inspection-checklist', InspectionChecklist::class)->name('inspection-checklist');
     Route::get('administration/compliances', CompliancesIndex::class)->name('compliances');
     Route::get('administration/body-of-part', PartOfBodyIndex::class)->name('body-of-part');
+    Route::get('administration/translation', TranslationIndex::class)->name('translation');
 });
 // route download storage files
 require __DIR__ . '/auth.php';
