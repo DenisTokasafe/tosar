@@ -98,4 +98,8 @@ class Index extends Component
         Cache::forget('translations_json_en');
         Cache::forget('translations_json_id');
     }
+    public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
