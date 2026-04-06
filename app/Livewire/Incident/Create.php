@@ -1398,4 +1398,9 @@ class Create extends Component
         ['id' => 'Berat', 'name' => 'Berat'],
         ['id' => 'Bencana', 'name' => 'Bencana'],
     ];
+    public $contractAreas = [
+        ['id' => 'PT. MSM', 'name' => 'PT. MSM'],
+        ['id' => 'PT. TTN', 'name' => 'PT. TTN'],
+        ['id' => 'Off Site', 'name' => 'Off Site'],
+    ];
 }

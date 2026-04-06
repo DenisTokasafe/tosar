@@ -25,11 +25,18 @@
     </fieldset>
 </div>
 <div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
-    <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required />
+    <x-form.tgl-waktu label="Tanggal & Waktu Insiden" model="date_time" required />
     <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
     {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
     @if ($location_id)
     <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required />
+    <x-form.select
+        label="Area Kontrak Karya"
+        model="contract_area_name"
+        :options="$contractAreas"
+        option-label="name"
+        placeholder="Pilih Area Kontrak Karya"
+        required />
     @endif
     <x-form.department-contractor-selector
         :dept-cont="$deptCont"
