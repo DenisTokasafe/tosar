@@ -11,5 +11,8 @@ class InspectionChecklist extends Model
     protected $casts = [
         'inputs' => 'array',
         'checks' => 'array',
+        'inputs_req' => 'array', // Cast untuk inputs_req
+
+
     ];
 }
