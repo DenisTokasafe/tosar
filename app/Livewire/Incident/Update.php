@@ -2612,7 +2612,7 @@ class Update extends Component
     {
         return [
             'Tidak Signifikan' => __('Tidak Signifikan'),
-            'Kecil'            => __('Kecil'),
+            'Ringan'            => __('Ringan'),
             'Sedang'           => __('Sedang'),
             'Berat'            => __('Berat'),
             'Bencana'          => __('Bencana'),

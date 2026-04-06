@@ -33,7 +33,7 @@
     <x-form.select
         label="Area Kontrak Karya"
         model="contract_area_name"
-        :options="$this->contractAreas"
+        :options="$this->contractAreaOptions"
         option-label="name"
         placeholder="Pilih Area Kontrak Karya"
         required />
