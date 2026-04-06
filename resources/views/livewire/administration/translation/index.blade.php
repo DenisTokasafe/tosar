@@ -21,10 +21,10 @@
                             <x-form.text_area label="Indonesia (id_text)" model="id_text" placeholder="{{ __('Nama Perusahaan') }}" required />
 
                             <div class="card-actions justify-end mt-6">
-                                <button type="button" wire:click="resetFields" class="btn btn-ghost">Batal</button>
-                                <button type="submit" class="btn btn-primary shadow-md">
+                                <button type="button" wire:click="resetFields" class="btn btn-error btn-xs">{{ __('Batal') }}</button>
+                                <button type="submit" class="btn btn-primary shadow-md btn-xs">
                                     <span wire:loading.remove.class="hidden" wire:target="store" class="loading loading-spinner hidden"></span>
-                                    Simpan
+                                    {{ __('Simpan') }}
                                 </button>
                             </div>
                         </form>
