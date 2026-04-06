@@ -1,7 +1,7 @@
 <section class="w-full">
     <x-toast />
-     @include('partials.menu')
-    <x-tabs-menu.layout >
+    @include('partials.menu')
+    <x-tabs-menu.layout>
         <div class="flex justify-between">
             <flux:tooltip content="tambah data" position="top">
                 <flux:button size="xs" wire:click='open_modal' icon="add-icon" variant="primary"></flux:button>
@@ -27,7 +27,7 @@
                     <tr>
                         <th>{{ $SubMenu->firstItem() + $no }}</th>
                         <th class="flex justify-center ">
-                                <flux:button size="xs" icon="{{ $menu->icon }}" variant="ghost"><span>{{ $menu->icon }}</span></flux:button>  
+                            <flux:button size="xs" icon="{{ $menu->icon }}" variant="ghost"><span>{{ $menu->icon }}</span></flux:button>
                         </th>
                         <th>{{ $menu->menu }}</th>
                         <th>{{ $menu->Menu->menu }}</th>
@@ -61,6 +61,9 @@
                     </tr>
                 </tfoot>
             </table>
+        </div>
+        <div class="p-4">
+            {{ $SubMenu->links() }}
         </div>
         <flux:modal name="sub-menu">
             <form wire:submit='store' class='grid justify-items-stretch'>
