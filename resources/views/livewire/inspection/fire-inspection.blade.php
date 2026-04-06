@@ -43,11 +43,12 @@
             // Ambil checks dari database (config fields)
             $checks = $fields[$type]['checks'] ?? [];
             $inputs = $fields[$type]['inputs'] ?? [];
-            $inputs_req = $fields[$type]['inputs_req'] ?? [];
 
             // Ambil technical keys dari kolom JSON 'technical_data' milik alat pertama yang muncul
             $firstEquipment = $allMasterData->first();
-            $techKeys =$firstEquipment && is_array($firstEquipment->technical_data)? array_keys($firstEquipment->technical_data)
+            $techKeys =
+            $firstEquipment && is_array($firstEquipment->technical_data)
+            ? array_keys($firstEquipment->technical_data)
             : [];
             @endphp
 
@@ -63,7 +64,6 @@
                                 {{ $techKey }}
                             </th>
                             @endforeach
-
                             @foreach ($checks as $checkItem)
                             <th
                                 class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1 whitespace-nowrap md:whitespace-normal md:w-[60px] md:min-w-[60px] md:leading-tight">
@@ -82,12 +82,6 @@
                                 {{ $master->specific_location }}
                             </td>
 
-                            @foreach ($techKeys as $key)
-                            <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
-                                {{-- Ambil langsung dari kolom JSON master data --}}
-                                {{ $master->technical_data[$key] ?? '-' }}
-                            </td>
-                            @endforeach
                             @foreach ($techKeys as $key)
                             <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
                                 {{-- Ambil langsung dari kolom JSON master data --}}

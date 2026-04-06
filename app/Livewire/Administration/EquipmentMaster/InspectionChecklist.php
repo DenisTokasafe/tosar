@@ -18,7 +18,6 @@ class InspectionChecklist extends Component
     // Array dinamis untuk form
     public $inputs = [''];
     public $checks = [''];
-    public $inputs_req = ['']; // Variabel baru yang Anda minta
 
     public function render()
     {
@@ -26,7 +25,7 @@ class InspectionChecklist extends Component
         return view('livewire.administration.equipment-master.inspection-checklist');
     }
 
-    // --- Logika untuk Inputs ---
+    // Menambah baris input kosong
     public function addInput()
     {
         $this->inputs[] = '';
@@ -37,7 +36,7 @@ class InspectionChecklist extends Component
         $this->inputs = array_values($this->inputs);
     }
 
-    // --- Logika untuk Checks ---
+    // Menambah baris check kosong
     public function addCheck()
     {
         $this->checks[] = '';
@@ -47,19 +46,6 @@ class InspectionChecklist extends Component
         unset($this->checks[$index]);
         $this->checks = array_values($this->checks);
     }
-
-    // --- Logika untuk Inputs Req (Baru) ---
-    public function addInputReq()
-    {
-        $this->inputs_req[] = '';
-    }
-
-    public function removeInputReq($index)
-    {
-        unset($this->inputs_req[$index]);
-        $this->inputs_req = array_values($this->inputs_req);
-    }
-
     public function updatedSearchLocation()
     {
         if (strlen($this->searchLocation) > 2) {
@@ -73,7 +59,6 @@ class InspectionChecklist extends Component
             $this->show_location = false;
         }
     }
-
     public function selectLocation($id, $name)
     {
         $this->location_id = $id;
@@ -81,7 +66,6 @@ class InspectionChecklist extends Component
         $this->location_keyword = $name;
         $this->show_location = false;
     }
-
     public function save()
     {
         $this->validate([
@@ -89,7 +73,6 @@ class InspectionChecklist extends Component
             'location_keyword' => 'nullable',
             'inputs.*' => 'required',
             'checks.*' => 'required',
-            'inputs_req.*' => 'required', // Validasi untuk inputs_req
         ]);
 
         InspectionChecklistModel::updateOrCreate(
@@ -99,7 +82,6 @@ class InspectionChecklist extends Component
                 'location_keyword' => $this->location_keyword ?? 'Default',
                 'inputs' => $this->inputs,
                 'checks' => $this->checks,
-                'inputs_req' => $this->inputs_req, // Pastikan kolom ini ada di database/migration
             ]
         );
 
@@ -117,8 +99,6 @@ class InspectionChecklist extends Component
         $this->searchLocation = $checklist->location_keyword;
         $this->inputs = $checklist->inputs;
         $this->checks = $checklist->checks;
-        // Ambil data inputs_req dari database, pastikan ada nilai default jika null
-        $this->inputs_req = $checklist->inputs_req ?? [''];
     }
 
     public function delete($id)
@@ -128,9 +108,8 @@ class InspectionChecklist extends Component
 
     public function resetForm()
     {
-        $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks', 'inputs_req']);
+        $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks']);
         $this->inputs = [''];
         $this->checks = [''];
-        $this->inputs_req = [''];
     }
 }
