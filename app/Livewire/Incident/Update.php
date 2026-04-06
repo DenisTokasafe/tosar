@@ -72,7 +72,7 @@ class Update extends Component
     public $damage_detail;
 
     // --- KOLEKSI DATA (FOR DROPDOWNS) ---
-    public $status;
+    public $status, $title;
     public $locations = [];
     public $departments = [];
     public $contractors = [];
@@ -189,6 +189,7 @@ class Update extends Component
     {
         $rules = [
             // PART 1
+            'title' => 'required|string|max:255',
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description' => 'required|string',
@@ -339,6 +340,7 @@ class Update extends Component
     protected function validationAttributes()
     {
         $attributes = [
+            'title' => __('Judul Laporan'),
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
@@ -498,6 +500,7 @@ class Update extends Component
             'ktt'
         ])->findOrFail($id);
         $this->current_lock_version = $report->lock_version;
+        $this->title = $report->title;
         $this->report_number = $report->report_number;
         $this->status = $report->status;
         // --- DATA DASAR ---
@@ -1874,6 +1877,7 @@ class Update extends Component
         switch ($this->currentStep) {
             case 1:
                 $fields = [
+                    'title',
                     'event_type_id',
                     'event_sub_type_id',
                     'description',
@@ -2105,6 +2109,7 @@ class Update extends Component
         // 3. Pemetaan Rules per Step
         $stepRules = [
             1 => array_merge([
+                'title'             => $allRules['title'],
                 'event_type_id'      => $allRules['event_type_id'],
                 'event_sub_type_id'  => $allRules['event_sub_type_id'],
                 'description'        => $allRules['description'],
@@ -2259,7 +2264,7 @@ class Update extends Component
     public function getFieldsForStep($step)
     {
         $map = [
-            1 => ['event_type_id', 'event_sub_type_id', 'description', 'location_id', 'date_time'],
+            1 => ['event_type_id', 'event_sub_type_id', 'description', 'location_id', 'date_time', 'title'],
             2 => ['directly_involved'],
             3 => ['pemimpin', 'facilitator', 'anggota'],
             4 => ['peepo'],
@@ -2296,6 +2301,7 @@ class Update extends Component
             switch ($step) {
                 case 1:
                     $step1Fields = [
+                        'title',
                         'event_type_id',
                         'event_sub_type_id',
                         'date_time',
@@ -2529,6 +2535,7 @@ class Update extends Component
                 // 7. Update Data Utama & Increment Lock
                 $report->update([
                     'status'                => $cleanStatus,
+                    'title'                 => $this->title,
                     'event_type_id'         => $this->event_type_id,
                     'description'           => $this->description,
                     'date_time'             => $this->date_time,

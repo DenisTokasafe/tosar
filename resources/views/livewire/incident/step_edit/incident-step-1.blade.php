@@ -1,3 +1,4 @@
+<x-form.input-text label="Judul Insiden" model="title" required />
 <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes, 'md:grid-cols-1' => !$this->hasSubTypes,])>
     <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required :disabled="!$canEdit" />
     @if($this->hasSubTypes)

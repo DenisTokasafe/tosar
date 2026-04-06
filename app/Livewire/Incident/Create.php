@@ -37,7 +37,7 @@ class Create extends Component
 {
     use WithFileUploads, WithPagination, WithDeptContSelection, WithSearchLocation, WithSearchPelapor;
 
-    public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific;
+    public $event_type_id, $event_sub_type_id, $description, $location_id, $location_specific, $title;
     public $date_time, $pelapor_id, $manualPelaporName;
     public $department_id, $contractor_id, $penanggungJawab;
     public $deptCont = 'dept';
@@ -154,6 +154,7 @@ class Create extends Component
         // PART 1 & 2: Rules Utama yang WAJIB ada saat Create
         $rules = [
             // PART 1
+            'title' => 'required|string|max:255',
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'description' => 'required|string',
@@ -197,6 +198,7 @@ class Create extends Component
     protected function validationAttributes()
     {
         $attributes = [
+            'title' => __('Judul Laporan'),
             'pelapor_id'        => __('Nama Pelapor'),
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
@@ -318,6 +320,7 @@ class Create extends Component
         switch ($this->currentStep) {
             case 1:
                 $fields = [
+                    'title',
                     'event_type_id',
                     'event_sub_type_id',
                     'description',
@@ -1270,6 +1273,7 @@ class Create extends Component
             // PART 1: INFORMASI DASAR
             'header' => [
                 'report_number'     => $reportNumber,
+                'title'             => $this->title,
                 'event_type_id'     => $this->event_type_id,
                 'event_sub_type_id' => $this->event_sub_type_id,
                 'date_time'         => $this->date_time,
@@ -1324,6 +1328,7 @@ class Create extends Component
     private function goToStepByField($field)
     {
         if (in_array($field, [
+            'title',
             'event_type_id',
             'event_sub_type_id',
             'date_time',
@@ -1357,6 +1362,7 @@ class Create extends Component
         foreach ($fields as $field) {
             if ($step == 1) {
                 $step1Fields = [
+                    'title',
                     'event_type_id',
                     'event_sub_type_id',
                     'date_time',
