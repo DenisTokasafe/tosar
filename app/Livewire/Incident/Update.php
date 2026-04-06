@@ -2516,7 +2516,30 @@ class Update extends Component
                     ['incident_report_id' => $report->id],
                     ['analysis_steps' => $this->why_analysis, 'why_count_used' => $whyCount]
                 );
+                // Hapus record lama hanya jika ada upload baru yang valid di state
+                if (!empty($this->visual_evidence_paths) || !empty($this->supporting_documents_paths)) {
 
+                    // Jika logic bisnis Anda adalah "Mengganti seluruh file" setiap ada update:
+                    $report->attachments()->delete();
+
+                    // Simpan Visual Evidence (Gambar)
+                    foreach ($this->visual_evidence_paths as $vPath) {
+                        $report->attachments()->create([
+                            'file_path' => $vPath,
+                            'file_type' => 'visual',
+                            'file_name' => basename($vPath),
+                        ]);
+                    }
+
+                    // Simpan Supporting Documents (PDF/Word)
+                    foreach ($this->supporting_documents_paths as $dPath) {
+                        $report->attachments()->create([
+                            'file_path' => $dPath,
+                            'file_type' => 'document',
+                            'file_name' => basename($dPath),
+                        ]);
+                    }
+                }
                 // 5. Update Corrective Actions
                 $report->correctiveActions()->delete();
                 foreach ($this->corrective_actions as $action) {
