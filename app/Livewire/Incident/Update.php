@@ -798,11 +798,11 @@ class Update extends Component
 
         // Cek kondisi "Sebagian" (Urutan dari yang paling detail)
         if ($hasScat || $hasAnalysis) {
-            return 'In Progress : Analysis';
+            return 'In Progress';
         }
 
         if ($hasTeams) {
-            return 'In Progress : Teams';
+            return 'In Progress';
         }
 
         // 4. STATUS: OPEN / REPORTED
