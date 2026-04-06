@@ -380,6 +380,9 @@
     "PIC (Penanggung Jawab) wajib dipilih.": "PIC (Person in Charge) must be selected.",
     "Batas waktu (Due Date) wajib diisi.": "Due date is required.",
     "Kunci pembelajaran wajib diisi sebagai bahan evaluasi.": "Key learning must be filled for evaluation purposes.",
-    "Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).": "Please provide more detailed key learning (min. 10 characters)."
+    "Mohon berikan penjelasan kunci pembelajaran yang lebih detail (min. 10 karakter).": "Please provide more detailed key learning (min. 10 characters).",
+    "Manajemen Bahasa": "Language Management",
+    "Kelola bahasa yang tersedia untuk laporan, termasuk nama bahasa dan kode bahasa.": "Manage the languages available for reports, including language names and codes."
+
 
 }

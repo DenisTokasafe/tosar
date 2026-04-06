@@ -2,12 +2,7 @@
     @include('partials.translation')
     <x-manhours.layout>
         <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-base-content">Manajemen Bahasa</h2>
-                <div class="join">
-                    <input wire:model.live="search" type="text" placeholder="Cari kata..." class="input input-bordered join-item w-full max-w-xs" />
-                </div>
-            </div>
+
 
             @if (session()->has('message'))
             <div class="alert alert-success mb-4 shadow-lg">
@@ -20,28 +15,15 @@
                     <div class="card-body">
                         <h3 class="card-title mb-4">{{ $isEditing ? 'Edit Kata' : 'Tambah Kata Baru' }}</h3>
                         <form wire:submit.prevent="store">
-                            <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-semibold">Key (Teks Asli di Kodingan)</span></label>
-                                <textarea wire:model="key" class="textarea textarea-bordered h-24" placeholder="Contoh: Nama Perusahaan"></textarea>
-                                @error('key') <span class="text-error text-sm">{{ $message }}</span> @enderror
-                            </div>
 
-                            <div class="form-control w-full mt-2">
-                                <label class="label"><span class="label-text font-semibold">English (en)</span></label>
-                                <textarea wire:model="en" class="textarea textarea-bordered h-24" placeholder="Company Name"></textarea>
-                                @error('en') <span class="text-error text-sm">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="form-control w-full mt-2">
-                                <label class="label"><span class="label-text font-semibold">Indonesia (id_text)</span></label>
-                                <textarea wire:model="id_text" class="textarea textarea-bordered h-24" placeholder="Nama Perusahaan"></textarea>
-                                @error('id_text') <span class="text-error text-sm">{{ $message }}</span> @enderror
-                            </div>
+                            <x-form.text_area label="Key (Teks Asli di Kodingan)" model="key" placeholder="{{ __('Contoh: Nama Perusahaan') }}" required />
+                            <x-form.text_area label="English (en)" model="en" placeholder="{{ __('Company Name') }}" required />
+                            <x-form.text_area label="Indonesia (id_text)" model="id_text" placeholder="{{ __('Nama Perusahaan') }}" required />
 
                             <div class="card-actions justify-end mt-6">
                                 <button type="button" wire:click="resetFields" class="btn btn-ghost">Batal</button>
                                 <button type="submit" class="btn btn-primary shadow-md">
-                                    <span wire:loading wire:target="store" class="loading loading-spinner"></span>
+                                    <span wire:loading.remove.class="hidden" wire:target="store" class="loading loading-spinner hidden"></span>
                                     Simpan
                                 </button>
                             </div>
