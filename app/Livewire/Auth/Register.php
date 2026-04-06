@@ -191,24 +191,26 @@ class Register extends Component
 
         // 4. Kirim email jika admin ditemukan
         if (!empty($adminIds)) {
-            MailHelper::sendToUserId(
-                $adminIds,
-                'Notifikasi Pendaftaran User Baru',
-                'emails.notification',
-                [
-                    'subject'        => 'User Baru Terdaftar',
-                    'title'          => 'Informasi Akun Baru',
-                    'messageText'    => "Seorang user baru telah didaftarkan ke dalam sistem. Berikut adalah detailnya:",
-                    'additionalInfo' => "Nama: " . $user->name . "\n" . // Bisa pakai $user atau $validated
-                        "Username: " . $user->username . "\n" .
-                        "Email: " . $user->email . "\n" .
-                        "ID Karyawan: " . $user->employee_id . "\n" .
-                        "Jenis Kelamin: " . $genderCode . "\n" .
-                        "Departemen: " . $departmentName,
-                    // 5. MENGAMBIL ID USER BARU: Gunakan $user->id
-                    'actionUrl'      => route('people.details', $user->id)
-                ]
-            );
+            foreach ($adminIds as $adminId) {
+                MailHelper::sendToUserId(
+                    $adminId,
+                    'Notifikasi Pendaftaran User Baru',
+                    'emails.notification',
+                    [
+                        'subject'        => 'User Baru Terdaftar',
+                        'title'          => 'Informasi Akun Baru',
+                        'messageText'    => "Seorang user baru telah didaftarkan ke dalam sistem. Berikut adalah detailnya:",
+                        'additionalInfo' => "Nama: " . $user->name . "\n" . // Bisa pakai $user atau $validated
+                            "Username: " . $user->username . "\n" .
+                            "Email: " . $user->email . "\n" .
+                            "ID Karyawan: " . $user->employee_id . "\n" .
+                            "Jenis Kelamin: " . $genderCode . "\n" .
+                            "Departemen: " . $departmentName,
+                        // 5. MENGAMBIL ID USER BARU: Gunakan $user->id
+                        'actionUrl'      => route('people.details', $user->id)
+                    ]
+                );
+            }
         }
 
         Auth::login($user);
