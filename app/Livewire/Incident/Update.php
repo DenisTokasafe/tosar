@@ -2594,4 +2594,11 @@ class Update extends Component
             ]);
         }
     }
+    public $EnvironmentalIncidentClassification = [
+        ['id' => 'Tidak Significant', 'name' => 'Tidak Significant'],
+        ['id' => 'Kecil', 'name' => 'Kecil'],
+        ['id' => 'Sedang', 'name' => 'Sedang'],
+        ['id' => 'Berat', 'name' => 'Berat'],
+        ['id' => 'Bencana', 'name' => 'Bencana'],
+    ];
 }

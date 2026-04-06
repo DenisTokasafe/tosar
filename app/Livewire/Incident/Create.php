@@ -1391,4 +1391,11 @@ class Create extends Component
 
         return false;
     }
+    public $EnvironmentalIncidentClassification = [
+        ['id' => 'Tidak Significant', 'name' => 'Tidak Significant'],
+        ['id' => 'Kecil', 'name' => 'Kecil'],
+        ['id' => 'Sedang', 'name' => 'Sedang'],
+        ['id' => 'Berat', 'name' => 'Berat'],
+        ['id' => 'Bencana', 'name' => 'Bencana'],
+    ];
 }
