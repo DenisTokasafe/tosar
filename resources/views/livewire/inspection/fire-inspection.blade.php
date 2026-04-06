@@ -63,12 +63,7 @@
                                 {{ $techKey }}
                             </th>
                             @endforeach
-                            @foreach ($inputs_req as $techKeyReq)
-                            <th
-                                class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 whitespace-nowrap md:whitespace-normal md:w-[70px] md:min-w-[70px] md:leading-tight">
-                                {{ $techKeyReq }}
-                            </th>
-                            @endforeach
+
                             @foreach ($checks as $checkItem)
                             <th
                                 class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1 whitespace-nowrap md:whitespace-normal md:w-[60px] md:min-w-[60px] md:leading-tight">
