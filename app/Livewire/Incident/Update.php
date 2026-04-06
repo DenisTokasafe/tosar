@@ -748,65 +748,52 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        // 1. Refresh relasi untuk memastikan data terbaru terdeteksi
         $this->incident->load(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
 
-        // --- PRE-CALCULATION DATA ---
-
-        // Investigasi (Step 3-6)
-        // Gunakan count() atau exists() pada method agar langsung ke database
+        // --- Data Variables ---
         $hasTeams = $this->incident->investigationTeams()->exists();
         $hasAnalysis = $this->incident->peepoAnalyses()->exists() || $this->incident->timelines()->exists();
         $hasScat = !empty($this->incident->scat_analysis);
 
-        // Action Plan (Step 7-8)
         $totalActions = $this->incident->correctiveActions->count();
         $hasActionPlan = $totalActions > 0 || !empty($this->key_learning);
 
-        // FIX: Syarat Semua Action Selesai
-        // Kita cek langsung ke database lewat method relation () agar bisa menggunakan whereNull & exists
         $isAllActionClosed = $totalActions > 0 &&
             !$this->incident->correctiveActions()->whereNull('actual_completion_date')->exists();
 
-        // Reviewer (Step 9)
-        $isReviewed = !empty($this->penerimaan_komentar_ohs) &&
-            !empty($this->penerimaan_komentar_internal);
+        $isReviewed = !empty($this->penerimaan_komentar_ohs) && !empty($this->penerimaan_komentar_internal);
 
-        // Otoritas KTT (Hanya jika rating Sedang ke atas)
         $kttRequirementMet = true;
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $kttRequirementMet = !empty($this->penerimaan_komentar_ktt_id);
         }
 
-        // --- LOGIKA PENENTUAN STATUS (STRUKTUR EKSKLUSIF) ---
+        // --- LOGIKA PENENTUAN STATUS (URUTAN PRIORITAS BARU) ---
 
-        // 1. STATUS: CLOSED
+        // 1. Prioritas Tertinggi: CLOSED
         if ($isAllActionClosed && $isReviewed && $kttRequirementMet) {
             return 'Closed';
         }
 
-        // 2. STATUS: ACTION REQUIRED
+        // 2. Prioritas Kedua: Kelengkapan Investigasi
+        // Jika salah satu dari Tim, Analisis, atau SCAT masih kosong,
+        // maka status WAJIB 'In Progress', meskipun Action Plan sudah diisi.
+        if (!$hasTeams || !$hasAnalysis || !$hasScat) {
+            // Jika sudah mulai ada data tapi belum lengkap
+            if ($hasTeams || $hasAnalysis || $hasScat) {
+                return 'In Progress';
+            }
+            return 'Open';
+        }
+
+        // 3. Prioritas Ketiga: Action Plan
+        // Jika investigasi sudah lengkap (Teams, Analysis, SCAT ada), baru kita cek Action Plan
         if ($hasActionPlan) {
             return 'Action Required';
         }
 
-        // 3. STATUS: IN PROGRESS (Dengan Sub-Status untuk UI)
-        // Cek kondisi "Lengkap" dulu
-        if ($hasTeams && $hasAnalysis && $hasScat) {
-            return 'In Progress';
-        }
-
-        // Cek kondisi "Sebagian" (Urutan dari yang paling detail)
-        if ($hasScat || $hasAnalysis) {
-            return 'In Progress';
-        }
-
-        if ($hasTeams) {
-            return 'In Progress';
-        }
-
-        // 4. STATUS: OPEN / REPORTED
-        return 'Open';
+        // 4. Default: Jika Investigasi Lengkap tapi Action Plan belum ada
+        return 'In Progress';
     }
     // Mengambil Status Utama (Misal: "In Progress")
     #[Computed]
