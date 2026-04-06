@@ -17,7 +17,7 @@
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
-                :options="$this->environmentalIncidentOptions()"
+                :options="$this->environmentalIncidentOptions"
                 option-label="name"
                 placeholder="Pilih Klasifikasi Lingkungan"
                 required />
@@ -33,7 +33,7 @@
     <x-form.select
         label="Area Kontrak Karya"
         model="contract_area_name"
-        :options="$this->contractAreas()"
+        :options="$this->contractAreas"
         option-label="name"
         placeholder="Pilih Area Kontrak Karya"
         required />
