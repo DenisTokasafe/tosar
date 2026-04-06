@@ -39,7 +39,6 @@ use App\Livewire\Administration\Translation\Index as TranslationIndex;
 use App\Livewire\Administration\WorkflowEvent\Hazard as WorkflowEventHazard;
 use App\Livewire\Administration\WorkflowEvent\WpiWorkflowManager;
 use App\Livewire\Administrator\UserRoleManager\UserRole;
-
 use App\Livewire\Dashboard\Hazard;
 use App\Livewire\Hazard\HazardDetail;
 use App\Livewire\Hazard\HazardForm;
@@ -50,6 +49,7 @@ use App\Livewire\Incident\Update as IncidentUpdate;
 use App\Livewire\Inspection\FireInspection;
 use App\Livewire\Inspection\FireInspectionEdit;
 use App\Livewire\Inspection\FireInspectionList;
+use App\Livewire\Manhours\Index;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
