@@ -1,12 +1,12 @@
-<x-form.input-text label="Judul Insiden" model="title" required />
+<x-form.input-text label="Judul Insiden" model="title" required :disabled="!$canEdit" />
 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
         <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
             'md:grid-cols-1' => !$this->hasSubTypes,])>
-            <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
+            <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required :disabled="!$canEdit" />
             @if($this->hasSubTypes)
-            <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
+            <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required :disabled="!$canEdit" />
             @endif
 
         </div>
@@ -172,8 +172,8 @@
     {{-- ... Risk Assessment Info Table (Read Only by nature) ... --}}
 </fieldset>
 
-<x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat...')}}" required :disabled="!$canEdit" />
-<x-form.text_area label="Tindakan Darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera...')}}" required :disabled="!$canEdit" />
+<x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" :deskripsi="true" deskripsi_value="deskripsi_insident" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat...')}}" required :disabled="!$canEdit" />
+<x-form.text_area label="Tindakan Darurat" :deskripsi="true" deskripsi_value="deskripsi_darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera...')}}" required :disabled="!$canEdit" />
 
 @if($this->isInjury)
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
@@ -189,6 +189,6 @@
 @else
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
     <legend class="text-sm font-semibold card-title ">{{ __('Kerusakan alat atau dampak lingkungan') }}</legend>
-    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" model="damage_detail" placeholder="{{ __('Jelaskan kerusakan...')}}" required :disabled="!$canEdit" />
+    <x-form.text_area label="Detail Kerusakan Alat / Lingkungan" :deskripsi="true" deskripsi_value="ket_insident" model="damage_detail" placeholder="{{ __('Jelaskan kerusakan...')}}" required :disabled="!$canEdit" />
 </fieldset>
 @endif
