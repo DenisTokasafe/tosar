@@ -32,6 +32,13 @@
 
     @if ($location_id)
     <x-form.input-text label="Lokasi Spesifik" model="location_specific" placeholder="Masukkan detail lokasi spesifik..." required :disabled="!$canEdit" />
+    <x-form.select
+        label="Area Kontrak Karya"
+        model="contract_area_name"
+        :options="$contractAreas"
+        option-label="name"
+        placeholder="Pilih Area Kontrak Karya"
+        required />
     @endif
 
     <x-form.department-contractor-selector
