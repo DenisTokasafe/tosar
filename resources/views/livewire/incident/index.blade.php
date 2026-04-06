@@ -33,7 +33,7 @@
                             <!-- change popover-1 and --anchor-1 names. Use unique names for each dropdown -->
                         </th>
                         <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
-                        <th>{{ __('Deskripsi Insiden') }}</th>
+                        <th>{{ __('Judul Insiden') }}</th>
                         <th>
                             {{ __('Divisi Penanggung Jawab') }}
                             <button class="btn btn-ghost btn-xs" popovertarget="pop_dept" style="anchor-name:--pop_dept">
