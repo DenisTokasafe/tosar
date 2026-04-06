@@ -2611,7 +2611,7 @@ class Update extends Component
     public function environmentalIncidentOptions()
     {
         return [
-            'Tidak Significant' => __('Tidak Significant'),
+            'Tidak Signifikan' => __('Tidak Signifikan'),
             'Kecil'            => __('Kecil'),
             'Sedang'           => __('Sedang'),
             'Berat'            => __('Berat'),
