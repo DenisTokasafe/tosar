@@ -74,7 +74,7 @@
                     <th class="w-1/4 font-bold border-r border-base-300">{{ __('Nama') }}</th>
                     <th class="font-bold border-r border-base-300">{{ __('ID & Divisi') }}</th>
                     <th class="font-bold border-r border-base-300">{{ __('Jabatan') }}</th>
-                    <th class="font-bold text-center border-r border-base-300">{{ __('Roster/Shift') }}</th>
+                    <th class="font-bold text-center border-r border-base-300">{{ __('Roster/Sift') }}</th>
                     <th class="font-bold border-r border-base-300">{{ __('Keterlibatan') }}</th>
                     <th class="font-bold text-center border-r border-base-300">{{ __('Pengalaman (Tahun)') }}</th>
                     <th class="w-10"></th>

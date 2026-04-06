@@ -26,7 +26,7 @@
 </div>
 
 <div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
-    <x-form.tgl-waktu label="Tanggal & Waktu Kejadian" model="date_time" required :disabled="!$canEdit" />
+    <x-form.tgl-waktu label="Tanggal & Waktu Insiden" model="date_time" required :disabled="!$canEdit" />
 
     <x-form.search-template label="Lokasi" required modelsearch="searchLocation" modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" :disabled="!$canEdit" />
 
