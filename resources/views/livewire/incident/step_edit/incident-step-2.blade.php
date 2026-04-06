@@ -71,12 +71,12 @@
         <table class="table w-full table-xs lg:table-sm">
             <thead>
                 <tr class="bg-base-200 text-base-content">
-                    <th class="w-1/4 font-bold border-r border-base-300">Nama</th>
-                    <th class="font-bold border-r border-base-300">ID & Divisi</th>
-                    <th class="font-bold border-r border-base-300">Jabatan</th>
-                    <th class="font-bold text-center border-r border-base-300">Roster/Shift</th>
-                    <th class="font-bold border-r border-base-300">Keterlibatan</th>
-                    <th class="font-bold text-center border-r border-base-300">Exp</th>
+                    <th class="w-1/4 font-bold border-r border-base-300">{{ __('Nama') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('ID & Divisi') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('Jabatan') }}</th>
+                    <th class="font-bold text-center border-r border-base-300">{{ __('Roster/Shift') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('Keterlibatan') }}</th>
+                    <th class="font-bold text-center border-r border-base-300">{{ __('Pengalaman (Tahun)') }}</th>
                     <th class="w-10"></th>
                 </tr>
             </thead>

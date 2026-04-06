@@ -55,16 +55,16 @@
     </div>
 
     {{-- TAMPILAN TABLET & DESKTOP (Muncul di layar >= 768px) --}}
-    <div class="hidden md:block overflow-x-auto border rounded-lg border-base-300">
+    <div class="hidden overflow-x-auto border rounded-lg md:block border-base-300">
         <table class="table w-full table-xs lg:table-sm">
             <thead>
                 <tr class="bg-base-200 text-base-content">
-                    <th class="w-1/4 font-bold border-r border-base-300">Nama</th>
-                    <th class="font-bold border-r border-base-300">ID & Perusahaan</th>
-                    <th class="font-bold border-r border-base-300">Jabatan</th>
-                    <th class="font-bold border-r border-base-300 text-center">Roster/Shift</th>
-                    <th class="font-bold border-r border-base-300">Keterlibatan</th>
-                    <th class="font-bold border-r border-base-300 text-center">Exp</th>
+                    <th class="w-1/4 font-bold border-r border-base-300">{{ __('Nama') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('ID & Divisi') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('Jabatan') }}</th>
+                    <th class="font-bold text-center border-r border-base-300">{{ __('Roster/Shift') }}</th>
+                    <th class="font-bold border-r border-base-300">{{ __('Keterlibatan') }}</th>
+                    <th class="font-bold text-center border-r border-base-300">{{ __('Pengalaman (Tahun)') }}</th>
                     <th class="w-10"></th>
                 </tr>
             </thead>
