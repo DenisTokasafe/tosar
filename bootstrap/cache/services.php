@@ -43,6 +43,7 @@
     39 => 'LivewireUI\\Modal\\LivewireModalServiceProvider',
     40 => 'App\\Providers\\AppServiceProvider',
     41 => 'App\\Providers\\AuthServiceProvider',
+    42 => 'App\\Providers\\TranslationServiceProvider',
   ),
   'eager' => 
   array (
@@ -72,6 +73,7 @@
     23 => 'LivewireUI\\Modal\\LivewireModalServiceProvider',
     24 => 'App\\Providers\\AppServiceProvider',
     25 => 'App\\Providers\\AuthServiceProvider',
+    26 => 'App\\Providers\\TranslationServiceProvider',
   ),
   'deferred' => 
   array (
