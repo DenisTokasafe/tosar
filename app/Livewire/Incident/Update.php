@@ -88,7 +88,7 @@ class Update extends Component
      */
     public $why_analysis = [];
     public $whyCount = 1;
-
+    public $env_classification, $contract_area_name;
     public $directly_involved = []; // Menampung data baris personel
     public $searchKorban = [];      // Menampung input pencarian per baris
     public $show_employee_dropdown = []; // Status dropdown per baris
@@ -195,6 +195,8 @@ class Update extends Component
             'description' => 'required|string',
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required_with:location_id|string',
+            'contract_area_name' => 'required|string',
+            'env_classification' => 'required|string',
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
             'deptCont' => 'required|in:dept,cont',
@@ -348,6 +350,8 @@ class Update extends Component
             'description'       => __('Deskripsi Kejadian'),
             'location_id'       => __('Lokasi Utama'),
             'location_specific' => __('Detail Lokasi Spesifik'),
+            'contract_area_name' => __('Area Kontrak Karya'),
+            'env_classification' => __('Klasifikasi Lingkungan'),
             'date_time'         => __('Tanggal dan Waktu'),
             'department_id'     => __('Departemen'),
             'contractor_id'     => __('Perusahaan Kontraktor'),
@@ -1883,6 +1887,8 @@ class Update extends Component
                     'description',
                     'location_id',
                     'location_specific',
+                    'contract_area_name',
+                    'env_classification',
                     'date_time',
                     'pelapor_id',
 
@@ -2115,6 +2121,8 @@ class Update extends Component
                 'description'        => $allRules['description'],
                 'location_id'        => $allRules['location_id'],
                 'location_specific'  => $allRules['location_specific'],
+                'contract_area_name' => $allRules['contract_area_name'],
+                'env_classification' => $allRules['env_classification'],
                 'date_time'          => $allRules['date_time'],
                 'pelapor_id'         => $allRules['pelapor_id'],
                 'department_id'      => $allRules['department_id'],
@@ -2307,6 +2315,8 @@ class Update extends Component
                         'date_time',
                         'location_id',
                         'location_specific',
+                        'contract_area_name',
+                        'env_classification',
                         'department_id',
                         'contractor_id',
                         'penanggungJawab',
@@ -2541,6 +2551,8 @@ class Update extends Component
                     'date_time'             => $this->date_time,
                     'location_id'           => $this->location_id,
                     'location_specific'     => $this->location_specific,
+                    'contract_area_name'    => $this->contract_area_name,
+                    'env_classification'    => $this->env_classification,
                     'pelapor_id'            => $this->pelapor_id,
                     'manual_pelapor_name'   => $this->manualPelaporName,
                     'department_id'         => ($this->deptCont === 'dept') ? $this->department_id : null,

@@ -56,9 +56,7 @@ class Create extends Component
     public $selectedLikelihoodId, $selectedConsequenceId;
     public $RiskAssessment;
     public $risk_consequence;
-
-
-
+    public $env_classification, $contract_area_name;
     public $penanggungJawabOptions = [];
     // Involved Personnel
     public $involved_personnel_id, $searchName, $involved_personnel_name;
@@ -160,6 +158,8 @@ class Create extends Component
             'description' => 'required|string',
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required|string',
+            'contract_area_name' => 'required|string',
+            'env_classification' => 'required|string',
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
@@ -205,6 +205,8 @@ class Create extends Component
             'event_sub_type_id' => __('Sub Tipe Kejadian'),
             'description'       => __('Deskripsi Kejadian'),
             'location_id'       => __('Lokasi Utama'),
+            'contract_area_name' => __('Area Kontrak Karya'),
+            'env_classification' => __('Klasifikasi Lingkungan'),
             'location_specific' => __('Detail Lokasi Spesifik'),
             'date_time'         => __('Tanggal dan Waktu'),
             'keyWord'           => __('Jenis Bahaya'),
@@ -325,6 +327,8 @@ class Create extends Component
                     'event_sub_type_id',
                     'description',
                     'location_id',
+                    'contract_area_name',
+                    'env_classification',
                     'location_specific',
                     'date_time',
                     'pelapor_id',
@@ -1279,6 +1283,8 @@ class Create extends Component
                 'date_time'         => $this->date_time,
                 'location_id'       => $this->location_id,
                 'location_specific' => $this->location_specific,
+                'contract_area_name' => $this->contract_area_name,
+                'env_classification' => $this->env_classification,
                 'department_id'     => $this->department_id,
                 'contractor_id'     => $this->contractor_id,
                 'penanggungJawab'   => $this->penanggungJawab,
@@ -1334,6 +1340,8 @@ class Create extends Component
             'date_time',
             'location_id',
             'location_specific',
+            'contract_area_name',
+            'env_classification',
             'department_id',
             'contractor_id',
             'penanggungJawab',
@@ -1368,6 +1376,8 @@ class Create extends Component
                     'date_time',
                     'location_id',
                     'location_specific',
+                    'contract_area_name',
+                    'env_classification',
                     'department_id',
                     'contractor_id',
                     'penanggungJawab',
