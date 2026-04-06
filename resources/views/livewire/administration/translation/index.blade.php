@@ -1,7 +1,9 @@
 <section class="w-full">
     @include('partials.translation')
     <div class="flex items-center justify-end pb-2 border-b w-full md:max-w-xs">
-        <x-form.input-text label="Cari Kata" model="search" required />
+        <div>
+            <x-form.input-text label="Cari Kata" model="search" required />
+        </div>
     </div>
     <x-manhours.layout>
         <div class="p-6">
