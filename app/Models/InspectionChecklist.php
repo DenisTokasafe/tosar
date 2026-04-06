@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InspectionChecklist extends Model
 {
-    protected $fillable = ['equipment_type', 'location_keyword', 'inputs', 'checks'];
+    protected $fillable = ['equipment_type', 'location_keyword', 'inputs', 'inputs_req', 'checks'];
 
     protected $casts = [
         'inputs' => 'array',
