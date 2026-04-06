@@ -27,7 +27,15 @@ class TranslationServiceProvider extends ServiceProvider
         // 3. Suntikkan array tersebut ke dalam Translator Laravel
         // Tanda '*' berarti ini akan menggantikan JSON loader default
         if (!empty($translations)) {
-            $this->app->make('translator')->addLines($translations, $locale, '*');
+            // Gunakan setLoaded untuk mengisi data JSON secara langsung
+            // Ini menghindari error explode() di fungsi addLines
+            app('translator')->setLoaded([
+                '*' => [
+                    '*' => [
+                        $locale => $translations
+                    ]
+                ]
+            ]);
         }
     }
 }
