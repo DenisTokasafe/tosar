@@ -1,5 +1,6 @@
 <section class="w-full">
     @include('partials.translation')
+    <x-form.input-text label="Cari Kata" model="search" required />
     <x-manhours.layout>
         <div class="p-6">
 
