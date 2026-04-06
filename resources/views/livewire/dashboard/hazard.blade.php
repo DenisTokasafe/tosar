@@ -151,7 +151,7 @@
 
         {{-- Daftar Laporan Terbaru --}}
         <div class="p-4 shadow rounded-xl">
-            <h3 class="mb-4 font-semibold">Laporan Hazard Terbaru</h3>
+            <h3 class="mb-4 font-semibold">{{ __('Laporan Hazard Terbaru') }}</h3>
             <div class="overflow-x-auto ">
                 <table class="table table-xs">
                     <thead class="bg-neutral text-neutral-content">
