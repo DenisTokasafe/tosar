@@ -17,7 +17,7 @@
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
-                :options="$this->environmentalIncidentClassification"
+                :options="$this->environmentalIncidentOptions"
                 option-label="name"
                 placeholder="Pilih Klasifikasi Lingkungan"
                 required :disabled="!$canEdit" />
