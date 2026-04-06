@@ -66,9 +66,9 @@
                         <rect x="7" y="5" width="12" height="4" rx="1" />
                     </svg>
                 </div>
-                <div class="stat-title">Total Laporan</div>
+                <div class="stat-title">{{ __('Total Laporan') }}</div>
                 <div class="stat-value text-primary">{{ $totalHazard }}</div>
-                <div class="stat-desc">Semua laporan hazard</div>
+                <div class="stat-desc">{{ __('Semua laporan hazard') }}</div>
             </div>
 
             {{-- Sedang Diproses --}}
@@ -81,11 +81,11 @@
                             d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" />
                     </svg>
                 </div>
-                <div class="stat-title">Sedang Diproses</div>
+                <div class="stat-title">{{ __('Sedang Diproses') }}</div>
                 <div class="stat-value text-secondary">
                     {{ $hazardByStatus['in_progress'] ?? 0 }}
                 </div>
-                <div class="stat-desc">Laporan aktif</div>
+                <div class="stat-desc">{{ __('Laporan aktif') }}</div>
             </div>
 
             {{-- Submitted --}}
@@ -100,11 +100,11 @@
                         <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
                     </svg>
                 </div>
-                <div class="stat-title">Submitted</div>
+                <div class="stat-title">{{ __('Submitted') }}</div>
                 <div class="stat-value text-info">
                     {{ $hazardByStatus['submitted'] ?? 0 }}
                 </div>
-                <div class="stat-desc">Menunggu diproses</div>
+                <div class="stat-desc">{{ __('Menunggu diproses') }}</div>
             </div>
 
             {{-- Closed --}}
@@ -118,11 +118,11 @@
                         <path d="m9 9.5 2 2 4-4" />
                     </svg>
                 </div>
-                <div class="stat-title">Selesai</div>
+                <div class="stat-title">{{ __('Selesai') }}</div>
                 <div class="stat-value text-success">
                     {{ $hazardByStatus['closed'] ?? 0 }}
                 </div>
-                <div class="stat-desc">Laporan selesai</div>
+                <div class="stat-desc">{{ __('Laporan selesai') }}</div>
             </div>
 
         </div>
@@ -156,11 +156,11 @@
                 <table class="table table-xs">
                     <thead class="bg-neutral text-neutral-content">
                         <tr>
-                            <th class="px-3 py-2 border">Referensi</th>
-                            <th class="px-3 py-2 border">Deskripsi</th>
-                            <th class="px-3 py-2 border">Status</th>
-                            <th class="px-3 py-2 border">Pelapor</th>
-                            <th class="px-3 py-2 border">Tanggal</th>
+                            <th class="px-3 py-2 border">{{ __('Referensi') }}</th>
+                            <th class="px-3 py-2 border">{{ __('Deskripsi') }}</th>
+                            <th class="px-3 py-2 border">{{ __('Status') }}</th>
+                            <th class="px-3 py-2 border">{{ __('Pelapor') }}</th>
+                            <th class="px-3 py-2 border">{{ __('Tanggal') }}</th>
                         </tr>
                     </thead>
                     <tbody>

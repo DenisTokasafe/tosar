@@ -45,9 +45,23 @@ class Index extends Component
 
     public function store()
     {
-        $this->validate();
+        // Validasi dengan pengecekan Unique pada kolom 'key'
+        $this->validate([
+            'key' => [
+                'required',
+                // Jika sedang edit ($this->translationId ada), abaikan ID tersebut dari pengecekan unique
+                'unique:translations,key,' . ($this->translationId ?? 'NULL') . ',id'
+            ],
+            'en' => 'required',
+            'id_text' => 'required',
+        ], [
+            // Pesan error kustom dalam Bahasa Indonesia (atau sesuai selera)
+            'key.unique' => __('Key ini sudah terdaftar. Silakan gunakan key lain atau edit data yang sudah ada.'),
+            'key.required' => __('Key wajib diisi.'),
+        ]);
 
-        Translation::updateOrCreate(
+        // Proses Simpan/Update
+        \App\Models\Translation::updateOrCreate(
             ['id' => $this->translationId],
             [
                 'key' => $this->key,
@@ -59,7 +73,7 @@ class Index extends Component
 
         $this->clearTranslationCache();
         $this->resetFields();
-        session()->flash('message', $this->translationId ? 'Data diperbarui!' : 'Data ditambahkan!');
+        session()->flash('message', $this->translationId ? __('Data diperbarui!') : __('Data ditambahkan!'));
     }
 
     public function edit($id)
