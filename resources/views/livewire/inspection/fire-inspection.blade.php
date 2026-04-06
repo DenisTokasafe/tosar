@@ -43,12 +43,11 @@
             // Ambil checks dari database (config fields)
             $checks = $fields[$type]['checks'] ?? [];
             $inputs = $fields[$type]['inputs'] ?? [];
+            $inputs_req = $fields[$type]['inputs_req'] ?? [];
 
             // Ambil technical keys dari kolom JSON 'technical_data' milik alat pertama yang muncul
             $firstEquipment = $allMasterData->first();
-            $techKeys =
-            $firstEquipment && is_array($firstEquipment->technical_data)
-            ? array_keys($firstEquipment->technical_data)
+            $techKeys =$firstEquipment && is_array($firstEquipment->technical_data)? array_keys($firstEquipment->technical_data)
             : [];
             @endphp
 
@@ -62,6 +61,12 @@
                             <th
                                 class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 whitespace-nowrap md:whitespace-normal md:w-[70px] md:min-w-[70px] md:leading-tight">
                                 {{ $techKey }}
+                            </th>
+                            @endforeach
+                            @foreach ($inputs_req as $techKeyReq)
+                            <th
+                                class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 whitespace-nowrap md:whitespace-normal md:w-[70px] md:min-w-[70px] md:leading-tight">
+                                {{ $techKeyReq }}
                             </th>
                             @endforeach
                             @foreach ($checks as $checkItem)
@@ -88,6 +93,12 @@
                                 {{ $master->technical_data[$key] ?? '-' }}
                             </td>
                             @endforeach
+                            @foreach ($techKeys as $key)
+                            <td class="italic text-center border-b border-r bg-slate-50/50 text-slate-500">
+                                {{-- Ambil langsung dari kolom JSON master data --}}
+                                {{ $master->technical_data[$key] ?? '-' }}
+                            </td>
+                            @endforeach
 
                             @foreach ($checks as $field)
                             <td class="text-center bg-white border-b border-r">
@@ -102,7 +113,7 @@
                                 <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
                                     placeholder="Remarks" />
                             </td>
-                            <td class="p-2 text-center bg-white border-b" wire:loading.add.class="skeleton"  wire:target="dokumentasi.{{ $master->id }}">
+                            <td class="p-2 text-center bg-white border-b" wire:loading.add.class="skeleton" wire:target="dokumentasi.{{ $master->id }}">
                                 <div class="flex flex-col items-center justify-center">
                                     <input type="file" id="file-{{ $master->id }}" class="hidden"
                                         wire:model="dokumentasi.{{ $master->id }}">
@@ -139,8 +150,8 @@
                                             <div class="text-sm font-black text-orange-400 animate-bounce">
                                                 upload foto</div>
                                         </div>
-                                        <label for="file-{{ $master->id }}" wire:loading.add.class="skeleton"  wire:target="dokumentasi.{{ $master->id }}"
-                                                        class=" btn btn-ghost btn-xs text-info hover:bg-info/10">
+                                        <label for="file-{{ $master->id }}" wire:loading.add.class="skeleton" wire:target="dokumentasi.{{ $master->id }}"
+                                            class=" btn btn-ghost btn-xs text-info hover:bg-info/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2">
