@@ -2516,29 +2516,40 @@ class Update extends Component
                     ['incident_report_id' => $report->id],
                     ['analysis_steps' => $this->why_analysis, 'why_count_used' => $whyCount]
                 );
-                // Hapus record lama hanya jika ada upload baru yang valid di state
-                if (!empty($this->visual_evidence_paths) || !empty($this->supporting_documents_paths)) {
+                // ---------------------------------------------------------
+                // 9. UPDATE ATTACHMENTS (APPEND MODE)
+                // ---------------------------------------------------------
 
-                    // Jika logic bisnis Anda adalah "Mengganti seluruh file" setiap ada update:
-                    $report->attachments()->delete();
-
-                    // Simpan Visual Evidence (Gambar)
+                // Simpan Visual Evidence Baru (Jika ada yang baru di-upload)
+                if (!empty($this->visual_evidence_paths)) {
                     foreach ($this->visual_evidence_paths as $vPath) {
-                        $report->attachments()->create([
+                        // Cek apakah path ini sudah ada di database untuk incident ini
+                        // Ini mencegah duplikasi jika user menekan tombol simpan berkali-kali
+                        $report->attachments()->firstOrCreate([
                             'file_path' => $vPath,
                             'file_type' => 'visual',
+                        ], [
                             'file_name' => basename($vPath),
                         ]);
                     }
+                    // Kosongkan array temporary paths setelah berhasil masuk ke DB 
+                    // agar tidak terproses ulang di klik simpan berikutnya
+                    $this->visual_evidence_paths = [];
+                    $this->visual_evidence = [];
+                }
 
-                    // Simpan Supporting Documents (PDF/Word)
+                // Simpan Supporting Documents Baru
+                if (!empty($this->supporting_documents_paths)) {
                     foreach ($this->supporting_documents_paths as $dPath) {
-                        $report->attachments()->create([
+                        $report->attachments()->firstOrCreate([
                             'file_path' => $dPath,
                             'file_type' => 'document',
+                        ], [
                             'file_name' => basename($dPath),
                         ]);
                     }
+                    $this->supporting_documents_paths = [];
+                    $this->supporting_documents = [];
                 }
                 // 5. Update Corrective Actions
                 $report->correctiveActions()->delete();
