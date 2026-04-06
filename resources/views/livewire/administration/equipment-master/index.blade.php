@@ -16,7 +16,7 @@
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Pilih --</option>
                             @foreach ($available_types as $t)
-                                <option value="{{ $t }}">{{ $t }}</option>
+                            <option value="{{ $t }}">{{ $t }}</option>
                             @endforeach
                         </select>
 
@@ -32,24 +32,35 @@
                             {{-- List Spesifikasi --}}
                             <div class="mb-3 space-y-2">
                                 @forelse ($technical_data as $key => $val)
-                                    {{-- Gunakan md5 dari key agar ID elemen benar-benar unik dan stabil --}}
-                                    <div wire:key="field-{{ md5($key) }}"
-                                        class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm">
-                                        <div class="flex items-center justify-between">
+                                @php
+                                // Kembalikan ke label asli untuk pengecekan inputs_req
+                                $originalLabel = str_replace('_', ' ', $key);
+                                $isRequired = in_array($originalLabel, $inputs_req);
+                                @endphp
 
-                                            <x-form.input-floating {{-- KEMBALIKAN LABEL KE SEMULA (Ganti underscore jadi spasi lagi) --}}
-                                                label="{{ str_replace('_', ' ', $key) }}" {{-- Gunakan .blur agar sinkronisasi hanya terjadi saat pindah input --}}
+                                <div wire:key="field-{{ md5($key) }}"
+                                    class="flex flex-col gap-1 p-2 bg-white border rounded shadow-sm {{ $isRequired ? 'border-l-4 border-l-warning' : '' }}">
+                                    <div class="flex items-start justify-between gap-2">
+
+                                        <div class="relative flex-1">
+                                            <x-form.input-floating
+                                                label="{{ $originalLabel }}"
                                                 wire:model.blur="technical_data.{{ $key }}" />
 
-                                            <button type="button"
-                                                wire:click="removeTechnicalField('{{ $key }}')"
-                                                class="btn btn-xs btn-error btn-soft">
-                                                <x-icon.delete/>
-                                            </button>
+                                            @if($isRequired)
+                                            <span class="absolute top-0 right-0 p-1 text-[10px] font-bold text-warning uppercase">Required</span>
+                                            @endif
                                         </div>
+
+                                        <button type="button"
+                                            wire:click="removeTechnicalField('{{ $key }}')"
+                                            class="btn btn-xs btn-error btn-soft">
+                                            <x-icon.delete />
+                                        </button>
                                     </div>
+                                </div>
                                 @empty
-                                    <p class="text-xs italic font-semibold text-center text-gray-400">Pilih jenis alat...</p>
+                                <p class="text-xs italic font-semibold text-center text-gray-400">Pilih jenis alat...</p>
                                 @endforelse
                             </div>
 
@@ -69,7 +80,7 @@
                         <div class="flex gap-2 mt-4">
                             <button wire:click="save" class="flex-1 btn btn-success btn-soft btn-xs">Simpan</button>
                             @if ($isEdit)
-                                <button wire:click="resetForm" class="btn btn-error btn-soft btn-sm">Batal</button>
+                            <button wire:click="resetForm" class="btn btn-error btn-soft btn-sm">Batal</button>
                             @endif
                         </div>
                     </div>
@@ -92,74 +103,60 @@
                             Sedang mengunggah file...
                         </div>
 
-                        {{-- Ganti fungsi ke previewExcel --}}
                         <button wire:click="previewExcel" wire:loading.attr="disabled" @disabled(!$file_excel || !$type || !$location_id)
                             class="w-full btn btn-xs btn-outline btn-info">
                             🔍 Preview Data (Sheet: {{ $type }})
                         </button>
 
                         @if (!$type || !$location_id)
-                            <span class="text-[9px] text-error italic text-center">* Jenis alat & lokasi wajib
-                                diisi</span>
+                        <span class="text-[9px] text-error italic text-center">* Jenis alat & lokasi wajib diisi</span>
                         @endif
                     </div>
 
-                    {{-- MODAL / SECTION PREVIEW --}}
-                    {{-- Hidden Checkbox untuk Trigger Modal (Opsional jika ingin kontrol via label) --}}
+                    {{-- MODAL PREVIEW --}}
                     <input type="checkbox" id="import_preview_modal" class="modal-toggle"
                         {{ $showPreview ? 'checked' : '' }} />
 
                     <div class="modal {{ $showPreview ? 'modal-open' : '' }}" role="dialog">
-                        <div class="w-11/12 max-w-5xl modal-box"> {{-- Ukuran modal diperlebar (max-w-5xl) agar tabel data teknis tidak sesak --}}
+                        <div class="w-11/12 max-w-5xl modal-box">
                             <h3 class="flex items-center gap-2 text-lg font-bold">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-info" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="Path d=" M9
-                                        12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414
-                                        5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 Konfirmasi Import Data
                             </h3>
 
                             <p class="py-2 text-sm text-gray-500">
                                 Ditemukan <strong>{{ count($previewData) }}</strong> baris pada kategori
-                                <strong>{{ $type }}</strong>. Silakan periksa kembali sebelum menyimpan.
+                                <strong>{{ $type }}</strong>.
                             </p>
 
                             @if (count($previewData) > 0)
-                                <div class="mt-4 overflow-hidden border rounded-lg">
-                                    <div class="overflow-x-auto overflow-y-auto max-h-80"> {{-- Scroll horizontal & vertical --}}
-                                        <table class="table w-full table-zebra table-xs">
-                                            <thead class="sticky top-0 shadow-sm bg-base-200">
-                                                <tr>
-                                                    @foreach (array_keys($previewData[0]) as $header)
-                                                        <th class="whitespace-nowrap">
-                                                            {{ strtoupper(str_replace('_', ' ', $header)) }}</th>
-                                                    @endforeach
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (array_slice($previewData, 0, 10) as $row)
-                                                    <tr>
-                                                        @foreach ($row as $value)
-                                                            <td class="whitespace-nowrap">{{ $value ?? '-' }}</td>
-                                                        @endforeach
-                                                    </tr>
+                            <div class="mt-4 overflow-hidden border rounded-lg">
+                                <div class="overflow-x-auto overflow-y-auto max-h-80">
+                                    <table class="table w-full table-zebra table-xs">
+                                        <thead class="sticky top-0 shadow-sm bg-base-200">
+                                            <tr>
+                                                @foreach (array_keys($previewData[0]) as $header)
+                                                <th class="whitespace-nowrap">
+                                                    {{ strtoupper(str_replace('_', ' ', $header)) }}
+                                                </th>
                                                 @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (array_slice($previewData, 0, 10) as $row)
+                                            <tr>
+                                                @foreach ($row as $value)
+                                                <td class="whitespace-nowrap">{{ $value ?? '-' }}</td>
+                                                @endforeach
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-
-                                @if (count($previewData) > 10)
-                                    <div class="badge badge-ghost mt-2 text-[10px] italic opacity-70">
-                                        * Menampilkan 10 baris pertama dari total {{ count($previewData) }} baris
-                                    </div>
-                                @endif
-                            @else
-                                <div class="mt-4 alert alert-warning">
-                                    <span>Data tidak ditemukan atau sheet kosong.</span>
-                                </div>
+                            </div>
                             @endif
 
                             <div class="modal-action">
@@ -168,14 +165,9 @@
                                     <span wire:loading wire:target="importExcel" class="loading loading-spinner"></span>
                                     ✅ Simpan Ke Database
                                 </button>
-
-                                <button wire:click="$set('showPreview', false)" class="btn btn-ghost">
-                                    Batal
-                                </button>
+                                <button wire:click="$set('showPreview', false)" class="btn btn-ghost">Batal</button>
                             </div>
                         </div>
-
-                        {{-- Klik di luar modal untuk menutup --}}
                         <label class="modal-backdrop" wire:click="$set('showPreview', false)">Close</label>
                     </div>
                 </div>
@@ -190,7 +182,7 @@
                             class="w-full select select-bordered select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0">
                             <option value="">-- Cari Tipe Alat --</option>
                             @foreach ($available_types as $t)
-                                <option value="{{ $t }}">{{ $t }}</option>
+                            <option value="{{ $t }}">{{ $t }}</option>
                             @endforeach
                         </select>
                     </fieldset>
@@ -198,7 +190,7 @@
                         modelid="cari_location_id" :options="$cari_locations" :showdropdown="$cari_show_location"
                         clickaction="selectCariLocation" namedb="name" />
                 </div>
-                <div class="overflow-x-auto ">
+                <div class="overflow-x-auto">
                     <table class="table table-xs">
                         <thead class="bg-gray-100">
                             <tr>
@@ -210,32 +202,30 @@
                         </thead>
                         <tbody>
                             @forelse($equipments as $item)
-                                <tr>
-                                    <td><strong>{{ $item->type }}</strong></td>
-                                    <td>{{ $item->location->name }} <br> <span
-                                            class="text-[10px] text-gray-500">{{ $item->specific_location }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="flex flex-wrap gap-1">
-                                            @foreach ($item->technical_data as $k => $v)
-                                                <span class="badge badge-ghost text-[9px]">{{ $k }}:
-                                                    {{ $v }}</span>
-                                            @endforeach
-                                        </div>
-                                    </td>
-                                    <td class="flex gap-1">
-                                        <button wire:click="edit({{ $item->id }})"
-                                            class="btn btn-xs btn-soft btn-warning"> <x-icon.edit /> </button>
-                                        <button onclick="confirm('Hapus?') || event.stopImmediatePropagation()"
-                                            wire:click="delete({{ $item->id }})"
-                                            class="btn btn-xs btn-soft btn-error"><x-icon.delete /></button>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td><strong>{{ $item->type }}</strong></td>
+                                <td>{{ $item->location->name }} <br>
+                                    <span class="text-[10px] text-gray-500">{{ $item->specific_location }}</span>
+                                </td>
+                                <td>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach ($item->technical_data as $k => $v)
+                                        <span class="badge badge-ghost text-[9px]">{{ $k }}: {{ $v }}</span>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td class="flex gap-1">
+                                    <button wire:click="edit({{ $item->id }})"
+                                        class="btn btn-xs btn-soft btn-warning"> <x-icon.edit /> </button>
+                                    <button onclick="confirm('Hapus?') || event.stopImmediatePropagation()"
+                                        wire:click="delete({{ $item->id }})"
+                                        class="btn btn-xs btn-soft btn-error"><x-icon.delete /></button>
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="4" class="py-4 text-center text-gray-400">Data tidak ditemukan
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-gray-400">Data tidak ditemukan</td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
