@@ -5,12 +5,14 @@
 'size' => 'textarea-xs',
 'required' => false,
 'disabled' => false,
+'deskripsi' => false,
+'deskripsi_value' => ''
 ])
 
 <fieldset class="w-full fieldset">
     {{-- Label --}}
     @if ($label)
-    <x-form.label :label="$label" :required="$required" />
+    <x-form.label :label="$label" :required="$required" :deskripsi="$deskripsi" :deskripsi_value="$deskripsi_value" />
     @endif
 
     {{-- Textarea Element --}}
