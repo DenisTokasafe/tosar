@@ -13,7 +13,7 @@
     </fieldset>
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden Lingkungan') }}</legend>
-        <div class="p-2">
+        <div class="">
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
