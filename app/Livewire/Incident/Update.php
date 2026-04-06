@@ -519,6 +519,8 @@ class Update extends Component
         }
 
         $this->location_specific = $report->location_specific;
+        $this->contract_area_name = $report->contract_area_name;
+        $this->env_classification = $report->env_classification;
 
         if ($report->department_id) {
             $this->department_id = $report->department_id;
