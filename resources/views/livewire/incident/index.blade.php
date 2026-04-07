@@ -102,7 +102,7 @@
                                             value="{{ $option->id }}"
                                             class="checkbox checkbox-xs checkbox-primary">
 
-                                        <span class="ml-2 text-xs">{{ $option->event_type_name }}</span>
+                                        <span class="ml-2 text-xs">{{ $option->event_sub_type_name }}</span>
                                     </label>
                                 </li>
                                 @endforeach
