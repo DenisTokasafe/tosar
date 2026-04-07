@@ -4654,8 +4654,6 @@ namespace App\Models {
      * @property string|null $event_sub_type_name
      * @property int $id
      * @property-read \App\Models\EventType $EventType
-     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EventSubType> $eventSubTypes
-     * @property-read int|null $event_sub_types_count
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType whereEventSubTypeName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType whereStatus($value)
@@ -4990,6 +4988,8 @@ namespace App\Models {
      * @property-read \App\Models\EventCategory $EventCategories
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EventSubType> $EventSubType
      * @property-read int|null $event_sub_type_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\EventSubType> $eventSubTypes
+     * @property-read int|null $event_sub_types_count
      * @method static \Illuminate\Database\Eloquent\Builder<EventType>|EventType whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<EventType>|EventType whereEventTypeName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<EventType>|EventType whereStatus($value)

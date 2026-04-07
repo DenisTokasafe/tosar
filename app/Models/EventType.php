@@ -52,4 +52,8 @@ class EventType extends Model
     {
         return strtolower($this->event_type_name) === 'ENV Hazard Report';
     }
+    public function eventSubTypes() // Tambahkan 's' dan gunakan camelCase
+    {
+        return $this->hasMany(EventSubType::class, 'event_type_id'); // Tambahkan foreign key eksplisit agar aman
+    }
 }
