@@ -148,7 +148,8 @@ class Index extends Component
                 'Eyewash & Safety Shower',
                 'Muster Point',
                 'Alarm',
-                'First Aid Box'
+                'First Aid Box',
+                'Rescue Car'
             ];
 
             // 2. Cari tahu $this->type itu ada di urutan ke berapa (index)
