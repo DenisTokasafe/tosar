@@ -28,8 +28,15 @@
                     <td class="">{{ $item->equipment_type }}</td>
                     <td class="">{{ $item->location_keyword }}</td>
                     <td class="text-xs ">
-                        <strong>Inputs:</strong> {{ implode(', ', array_column($item->inputs, 'label')) }} <br>
-                        <strong>Checks:</strong> {{ implode(', ', array_column($item->checks, 'label')) }}
+                        <strong>Inputs:</strong>
+                        {{
+    collect($item->inputs)->map(fn($val) => is_array($val) ? ($val['label'] ?? '') : $val)->implode(', ')
+}}
+                        <br>
+                        <strong>Checks:</strong>
+                        {{
+    collect($item->checks)->map(fn($val) => is_array($val) ? ($val['label'] ?? '') : $val)->implode(', ')
+}}
                     </td>
                     <td class="">
                         <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})"
