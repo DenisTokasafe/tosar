@@ -68,27 +68,31 @@ class InspectionChecklist extends Component
     }
     public function save()
     {
-        $this->validate([
-            'equipment_type' => 'required',
-            'location_keyword' => 'nullable',
-            'inputs.*.label' => 'required', // Validasi ke key 'label'
-            'inputs.*.type'  => 'required',  // Validasi ke key 'type'
-            'checks.*' => 'required',
-        ]);
+        try {
+            $this->validate([
+                'equipment_type' => 'required',
+                'location_keyword' => 'nullable',
+                'inputs.*.label' => 'required', // Validasi ke key 'label'
+                'inputs.*.type'  => 'required',  // Validasi ke key 'type'
+                'checks.*' => 'required',
+            ]);
 
-        InspectionChecklistModel::updateOrCreate(
-            ['id' => $this->checklist_id],
-            [
-                'equipment_type' => $this->equipment_type,
-                'location_keyword' => $this->location_keyword ?? 'Default',
-                'inputs' => $this->inputs,
-                'checks' => $this->checks,
-            ]
-        );
+            InspectionChecklistModel::updateOrCreate(
+                ['id' => $this->checklist_id],
+                [
+                    'equipment_type' => $this->equipment_type,
+                    'location_keyword' => $this->location_keyword ?? 'Default',
+                    'inputs' => $this->inputs,
+                    'checks' => $this->checks,
+                ]
+            );
 
-        session()->flash('message', $this->checklist_id ? 'Updated!' : 'Created!');
-        $this->resetForm();
-        $this->dispatch('close-checklist-modal');
+            session()->flash('message', $this->checklist_id ? 'Updated!' : 'Created!');
+            $this->resetForm();
+            $this->dispatch('close-checklist-modal');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e->errors()); // Ini akan memunculkan daftar error di layar jika ada field yang kurang
+        }
     }
 
     public function edit($id)
