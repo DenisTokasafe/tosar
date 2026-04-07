@@ -41,4 +41,8 @@ class EventSubType extends Model
             $q->where('event_type_name', 'like', "%{$t}%");
         });
     }
+    public function eventSubType() // Tambahkan 's' dan gunakan camelCase
+    {
+        return $this->hasMany(EventSubType::class, 'event_type_id'); // Tambahkan foreign key eksplisit agar aman
+    }
 }
