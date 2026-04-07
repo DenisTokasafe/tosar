@@ -21,7 +21,6 @@
             <x-form.radio-group
                 label="Potensi LTI/Fatality?"
                 model="potential_lti"
-                :disabled="!$canEdit"
                 required />
         </div>
     </fieldset>
