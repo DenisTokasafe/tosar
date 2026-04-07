@@ -1421,4 +1421,15 @@ class Create extends Component
             'Off Site' => __('Off Site'),
         ];
     }
+    // Di dalam class Livewire Anda
+
+    #[Computed]
+    public function isEnvironmentType()
+    {
+        // Cari nama event type berdasarkan ID yang sedang dipilih user
+        $selectedType = collect($this->eventTypes)->where('id', $this->event_type_id)->first();
+
+        // Pastikan pengecekan string sesuai dengan data di database Anda (misal: 'Lingkungan' atau 'Environment')
+        return $selectedType && ($selectedType['event_type_name'] === 'Lingkungan' || $selectedType['event_type_name'] === 'Environment');
+    }
 }
