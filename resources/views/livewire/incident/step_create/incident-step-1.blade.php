@@ -24,11 +24,11 @@
                     'border-base-300' => !$errors->has('potential_lti')
                     ])>
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" wire:model.live="potential_lti" value="Yes" class="radio radio-xs radio-warning" />
+                        <input type="radio" name="potential_lit" wire:model.live="potential_lti" value="Yes" class="radio radio-xs radio-warning" />
                         <span class="text-sm">{{ __('Yes') }}</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" wire:model.live="potential_lti" value="No" class="radio radio-xs radio-success" />
+                        <input type="radio" name="potential_lit" wire:model.live="potential_lti" value="No" class="radio radio-xs radio-success" />
                         <span class="text-sm">{{ __('No') }}</span>
                     </label>
                 </div>
