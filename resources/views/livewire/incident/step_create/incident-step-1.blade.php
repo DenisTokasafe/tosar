@@ -18,7 +18,7 @@
             @endif
 
             {{-- Potensi LTI --}}
-            <div class="form-control">
+            <fieldset class="fieldset">
                 <x-form.label label="Potensi LTI/Fatality?" required />
                 <div @class([ 'flex items-center  p-1 border-2 ' , 'border-rose-500'=> $errors->has('potential_lti'),
                     'border-base-300' => !$errors->has('potential_lti')
@@ -33,7 +33,7 @@
                     </label>
                 </div>
                 @error('potential_lti') <span class="text-xs text-error mt-1">{{ $message }}</span> @enderror
-            </div>
+            </fieldset>
         </div>
     </fieldset>
 
