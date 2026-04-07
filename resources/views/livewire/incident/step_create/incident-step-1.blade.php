@@ -20,7 +20,7 @@
                 :options="$this->environmentalIncidentOptions"
                 option-label="name"
                 placeholder="Pilih Klasifikasi Lingkungan"
-                required />
+                {{ $this->isEnvironmentType? 'required' : '' }} />
         </div>
     </fieldset>
     @endif

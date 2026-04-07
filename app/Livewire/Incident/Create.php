@@ -159,7 +159,7 @@ class Create extends Component
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
-            'env_classification' => 'required|string',
+            'env_classification' => $this->isEnvironmentType ? 'required|string' : 'nullable',
             'date_time' => 'required|date',
             'pelapor_id' => 'required_without:manualPelaporName',
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
