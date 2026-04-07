@@ -4665,6 +4665,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType query()
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType search(mixed $term) {@see App\Models\EventSubType::scopeSearch()}
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType searchEventType(mixed $term) {@see App\Models\EventSubType::scopeSearchEventType()}
+     * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType onlyIncidents() {@see App\Models\EventSubType::scopeOnlyIncidents()}
      * @method static \Illuminate\Database\Eloquent\Builder<EventSubType>|EventSubType byEventType(mixed $t) {@see App\Models\EventSubType::scopeByEventType()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)

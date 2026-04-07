@@ -60,7 +60,7 @@
 
                         <th class="whitespace-nowrap">
                             <div class="flex items-center gap-1">
-                                {{ __('Tipe') }}
+                                {{ __('Tipe Insiden') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
                                     <x-icon.icon-filter :active="!empty($filterEventType)" />
                                 </button>
@@ -74,6 +74,31 @@
                                     <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
                                         <input type="checkbox"
                                             wire:model.live="filterEventType"
+                                            value="{{ $option->id }}"
+                                            class="checkbox checkbox-xs checkbox-primary">
+
+                                        <span class="ml-2 text-xs">{{ $option->event_type_name }}</span>
+                                    </label>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </th>
+                        <th class="whitespace-nowrap">
+                            <div class="flex items-center gap-1">
+                                {{ __('Jenis Insiden') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_sub_type" style="anchor-name:--pop_event_sub_type">
+                                    <x-icon.icon-filter :active="!empty($filterEventSubType)" />
+                                </button>
+                            </div>
+                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
+                                popover
+                                id="pop_event_sub_type"
+                                style="position-anchor: --pop_event_sub_type; position-area: bottom; margin-top: 5px;">
+                                @foreach ($filterOptions['eventSubTypes'] as $option)
+                                <li>
+                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
+                                        <input type="checkbox"
+                                            wire:model.live="filterEventSubType"
                                             value="{{ $option->id }}"
                                             class="checkbox checkbox-xs checkbox-primary">
 
@@ -141,6 +166,11 @@
                         <td>
                             <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
                                 {{ $item->EventType?->event_type_name ?? 'N/A' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
+                                {{ $item->eventSubType?->event_sub_type_name ?? 'N/A' }}
                             </div>
                         </td>
 

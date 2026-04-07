@@ -62,7 +62,7 @@ class Index extends Component
             'statuses' => ['Open', 'In Progress', 'Action Required', 'Closed'],
 
             'eventTypes'    => EventType::onlyIncidents()->select('id', 'event_type_name')->get(),
-            'eventSubTypes' => EventSubType::select('id', 'event_sub_type_name')->get(),
+            'eventSubTypes' => EventSubType::onlyIncidents()->select('id', 'event_sub_type_name')->get(),
         ];
 
         // Gabungkan depts dan contractors untuk list "Divisi" di view

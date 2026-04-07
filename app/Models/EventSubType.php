@@ -20,7 +20,7 @@ class EventSubType extends Model
     }
     public function EventType()
     {
-        return $this->belongsTo(EventType::class,'event_type_id');
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
     public function scopeSearch($query, $term)
     {
@@ -30,11 +30,15 @@ class EventSubType extends Model
     {
         return $query->where('event_type_id',  'like', '%' . $term . '%');
     }
-    public function scopeByEventType($q,$t){
+    public function scopeOnlyIncidents($query)
+    {
+        // Menggunakan dot notation untuk relasi yang dalam
+        return $query->whereRelation('EventType.EventCategories', 'event_category_name', 'Incident');
+    }
+    public function scopeByEventType($q, $t)
+    {
         return $q->whereHas('EventType', function ($q) use ($t) {
             $q->where('event_type_name', 'like', "%{$t}%");
         });
     }
-    
-
 }
