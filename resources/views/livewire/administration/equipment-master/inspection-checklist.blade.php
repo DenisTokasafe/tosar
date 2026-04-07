@@ -28,8 +28,8 @@
                     <td class="">{{ $item->equipment_type }}</td>
                     <td class="">{{ $item->location_keyword }}</td>
                     <td class="text-xs ">
-                        <strong>Inputs:</strong> {{ implode(', ', $item->inputs) }} <br>
-                        <strong>Checks:</strong> {{ implode(', ', $item->checks) }}
+                        <strong>Inputs:</strong> {{ implode(', ', array_column($item->inputs, 'label')) }} <br>
+                        <strong>Checks:</strong> {{ implode(', ', array_column($item->checks, 'label')) }}
                     </td>
                     <td class="">
                         <button onclick="checklist_modal.showModal()" wire:click="edit({{ $item->id }})"
