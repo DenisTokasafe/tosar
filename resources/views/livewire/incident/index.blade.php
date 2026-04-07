@@ -43,7 +43,7 @@
                                 </button>
                             </div>
                             {{-- Popover Filter Dept --}}
-                            <ul class="p-3 text-sm border shadow-lg w-64 rounded-box bg-base-100 border-base-300 text-base-content" popover id="pop_dept" style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
+                            <ul class="p-3 text-sm border shadow-lg  rounded-box bg-base-100 border-base-300 text-base-content" popover id="pop_dept" style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
                                 @foreach ($filterOptions['allDivisions'] as $option)
                                 <li>
                                     <label class="flex items-center p-2 rounded-md cursor-pointer hover:bg-base-200">
