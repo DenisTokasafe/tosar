@@ -8,7 +8,7 @@
     <x-incident.layout>
 
         <div class="overflow-x-auto border rounded-xl border-base-300 bg-base-100 shadow-sm">
-            <table class="table table-sm table-pin-rows w-full">
+            <table class="table table-xs  w-full">
                 <thead>
                     <tr class="bg-base-200 text-base-content border-b border-base-300">
                         <th class="text-center w-10">No</th>
