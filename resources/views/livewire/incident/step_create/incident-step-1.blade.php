@@ -7,8 +7,8 @@
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
             @endif
-            <fieldset>
-                <x-form.label label="Apakah insiden ini masih berlangsung?" required />
+            <fieldset class="fieldset">
+                <x-form.label label="Apakah berpotensi LTI/Fatality?" required />
                 <div class="flex items-center gap-4 px-2   ">
                     <label class="label">
                         <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
