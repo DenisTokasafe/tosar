@@ -60,10 +60,44 @@
 
                         <th class="whitespace-nowrap">
                             <div class="flex items-center gap-1">
-                                {{ __('Tipe') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
-                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
+                                {{ __('Kategori Insiden') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_combined" style="anchor-name:--pop_event_combined">
+                                    <x-icon.icon-filter :active="!empty($filterEventType) || !empty($filterEventSubType)" />
                                 </button>
+                            </div>
+
+                            {{-- Popover Filter Berkelompok --}}
+                            <div class="p-0 border shadow-xl w-72 rounded-box bg-base-100 border-base-300 overflow-hidden"
+                                popover id="pop_event_combined"
+                                style="position-anchor: --pop_event_combined; position-area: bottom; margin-top: 5px;">
+
+                                <div class="bg-base-200 px-3 py-2 border-b border-base-300 flex justify-between items-center">
+                                    <span class="text-xs font-bold">{{ __('Filter Tipe & Jenis') }}</span>
+                                </div>
+
+                                <ul class="p-2 max-h-80 overflow-y-auto text-base-content custom-scrollbar">
+                                    @foreach ($filterOptions['eventGroups'] as $type)
+                                    <li class="mb-3">
+                                        {{-- Parent: Event Type --}}
+                                        <label class="flex items-center px-2 py-1 bg-base-200/50 rounded-md mb-1 cursor-pointer hover:bg-base-200">
+                                            <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
+                                            <span class="ml-2 text-[10px] font-black uppercase text-primary tracking-wider">{{ $type->event_type_name }}</span>
+                                        </label>
+
+                                        {{-- Children: Event Sub Type --}}
+                                        <ul class="ml-6 space-y-1 border-l-2 border-base-300">
+                                            @foreach ($type->eventSubTypes as $sub)
+                                            <li>
+                                                <label class="flex items-center p-1 pl-3 rounded-md cursor-pointer hover:bg-base-100 group">
+                                                    <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs">
+                                                    <span class="ml-2 text-xs opacity-70 group-hover:opacity-100 transition-opacity">{{ $sub->event_sub_type_name }}</span>
+                                                </label>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </th>
 
