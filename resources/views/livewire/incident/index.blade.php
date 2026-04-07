@@ -156,8 +156,19 @@
                         </td>
 
                         <td>
-                            <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
-                                {{ $item->EventType?->event_type_name ?? 'N/A' }}
+                            <div class="flex flex-col items-start gap-1">
+                                {{-- Tipe Insiden (Main Category) --}}
+                                <span class="badge badge-outline badge-info text-[9px] font-bold uppercase py-2">
+                                    {{ $item->EventType?->event_type_name ?? 'N/A' }}
+                                </span>
+
+                                {{-- Jenis Insiden (Sub Category) --}}
+                                @if($item->eventSubType)
+                                <div class="flex items-center gap-1 text-[10px] text-base-content/60 italic ml-1">
+                                    <span class="rounded-full bg-base-300"></span>
+                                    {{ $item->eventSubType->event_sub_type_name }}
+                                </div>
+                                @endif
                             </div>
                         </td>
 
