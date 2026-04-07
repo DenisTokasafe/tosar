@@ -65,6 +65,23 @@
                                     <x-icon.icon-filter :active="!empty($filterEventType)" />
                                 </button>
                             </div>
+                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
+                                popover
+                                id="pop_event_type"
+                                style="position-anchor: --pop_event_type; position-area: bottom; margin-top: 5px;">
+                                @foreach ($filterOptions['eventTypes'] as $option)
+                                <li>
+                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
+                                        <input type="checkbox"
+                                            wire:model.live="filterEventType"
+                                            value="{{ $option->id }}"
+                                            class="checkbox checkbox-xs checkbox-primary">
+
+                                        <span class="ml-2 text-xs">{{ $option->event_type_name }}</span>
+                                    </label>
+                                </li>
+                                @endforeach
+                            </ul>
                         </th>
 
                         <th class="text-center whitespace-nowrap">{{ __('Klasifikasi') }}</th>
