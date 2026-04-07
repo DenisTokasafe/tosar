@@ -165,7 +165,7 @@
                                 {{-- Jenis Insiden (Sub Category) --}}
                                 @if($item->eventSubType)
                                 <div class="flex items-center gap-1 text-[10px] text-base-content/60 italic ml-1">
-                                    <span class="rounded-full bg-base-300"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
                                     {{ $item->eventSubType->event_sub_type_name }}
                                 </div>
                                 @endif
