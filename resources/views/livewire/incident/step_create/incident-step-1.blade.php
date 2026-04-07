@@ -20,7 +20,7 @@
             {{-- Potensi LTI --}}
             <fieldset class="fieldset">
                 <x-form.label label="Potensi LTI/Fatality?" required />
-                <div @class([ 'flex items-center border-2 px-2' , 'border-rose-500'=> $errors->has('potential_lti'),
+                <div @class([ 'flex items-center border-2 gap-2 px-2' , 'border-rose-500'=> $errors->has('potential_lti'),
                     'border-base-300' => !$errors->has('potential_lti')
                     ])>
                     <label class="flex items-center gap-2 cursor-pointer">
