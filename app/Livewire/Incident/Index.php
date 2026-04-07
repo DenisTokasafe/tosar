@@ -61,8 +61,13 @@ class Index extends Component
             // Filter Status sesuai urutan ENUM database
             'statuses' => ['Open', 'In Progress', 'Action Required', 'Closed'],
 
-            'eventTypes'    => EventType::onlyIncidents()->select('id', 'event_type_name')->get(),
-            'eventSubTypes' => EventSubType::onlyIncidents()->select('id', 'event_sub_type_name')->get(),
+            // Gabungkan Tipe dan Jenis menggunakan Relasi
+            'eventGroups' => EventType::onlyIncidents()
+                ->with(['eventSubTypes' => function ($query) {
+                    $query->onlyIncidents()->select('id', 'event_type_id', 'event_sub_type_name');
+                }])
+                ->select('id', 'event_type_name')
+                ->get(),
         ];
 
         // Gabungkan depts dan contractors untuk list "Divisi" di view

@@ -45,21 +45,46 @@
                             {{-- Popover Filter Dept Tetap Sama --}}
                         </th>
 
-                        <th class="whitespace-nowrap w-36">
+                        <th class="whitespace-nowrap w-52">
                             <div class="flex items-center gap-1">
-                                {{ __('Tipe Insiden') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
-                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
+                                {{ __('Kategori Insiden') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_combined" style="anchor-name:--pop_event_combined">
+                                    <x-icon.icon-filter :active="!empty($filterEventType) || !empty($filterEventSubType)" />
                                 </button>
                             </div>
-                        </th>
 
-                        <th class="whitespace-nowrap w-36">
-                            <div class="flex items-center gap-1">
-                                {{ __('Jenis Insiden') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_sub_type" style="anchor-name:--pop_event_sub_type">
-                                    <x-icon.icon-filter :active="!empty($filterEventSubType)" />
-                                </button>
+                            {{-- Popover Filter Berkelompok --}}
+                            <div class="p-0 border shadow-xl w-72 rounded-box bg-base-100 border-base-300 overflow-hidden"
+                                popover id="pop_event_combined"
+                                style="position-anchor: --pop_event_combined; position-area: bottom; margin-top: 5px;">
+
+                                <div class="bg-base-200 px-3 py-2 border-b border-base-300 flex justify-between items-center">
+                                    <span class="text-xs font-bold">{{ __('Filter Tipe & Jenis') }}</span>
+                                </div>
+
+                                <ul class="p-2 max-h-80 overflow-y-auto text-base-content custom-scrollbar">
+                                    @foreach ($filterOptions['eventGroups'] as $type)
+                                    <li class="mb-3">
+                                        {{-- Parent: Event Type --}}
+                                        <label class="flex items-center px-2 py-1 bg-base-200/50 rounded-md mb-1 cursor-pointer hover:bg-base-200">
+                                            <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
+                                            <span class="ml-2 text-[10px] font-black uppercase text-primary tracking-wider">{{ $type->event_type_name }}</span>
+                                        </label>
+
+                                        {{-- Children: Event Sub Type --}}
+                                        <ul class="ml-6 space-y-1 border-l-2 border-base-300">
+                                            @foreach ($type->eventSubTypes as $sub)
+                                            <li>
+                                                <label class="flex items-center p-1 pl-3 rounded-md cursor-pointer hover:bg-base-100 group">
+                                                    <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs">
+                                                    <span class="ml-2 text-xs opacity-70 group-hover:opacity-100 transition-opacity">{{ $sub->event_sub_type_name }}</span>
+                                                </label>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </th>
 
@@ -117,22 +142,27 @@
                             </div>
                         </td>
 
-                        <td class="w-36">
-                            <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
-                                {{ $item->EventType?->event_type_name ?? 'N/A' }}
-                            </div>
-                        </td>
+                        <td class="w-52">
+                            <div class="flex flex-col items-start gap-1">
+                                {{-- Tipe Insiden (Main Category) --}}
+                                <span class="badge badge-outline badge-info text-[9px] font-bold uppercase py-2">
+                                    {{ $item->EventType?->event_type_name ?? 'N/A' }}
+                                </span>
 
-                        <td class="w-36">
-                            <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
-                                {{ $item->eventSubType?->event_sub_type_name ?? 'N/A' }}
+                                {{-- Jenis Insiden (Sub Category) --}}
+                                @if($item->eventSubType)
+                                <div class="flex items-center gap-1 text-[10px] text-base-content/60 italic ml-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
+                                    {{ $item->eventSubType->event_sub_type_name }}
+                                </div>
+                                @endif
                             </div>
                         </td>
 
                         <td class="text-center w-24">
                             @php
                             $riskColor = match($item->risk?->rating_name) {
-                            'Ekstrem' => 'bg-error text-error-content',
+                            'Ekstrim' => 'bg-error text-error-content',
                             'Tinggi' => 'bg-secondary text-secondary-content',
                             'Sedang' => 'bg-warning text-warning-content',
                             default => 'bg-success text-success-content',
