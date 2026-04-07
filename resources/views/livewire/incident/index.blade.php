@@ -33,7 +33,7 @@
                         <th class="whitespace-nowrap">{{ __('Tanggal & Waktu') }}</th>
 
                         {{-- Kolom Judul dibuat lebih lebar --}}
-                        <th class="min-w-[200px]">{{ __('Judul Insiden') }}</th>
+                        <th>{{ __('Judul Insiden') }}</th>
 
                         <th class="whitespace-nowrap min-w-[180px]">
                             <div class="flex items-center gap-1">
