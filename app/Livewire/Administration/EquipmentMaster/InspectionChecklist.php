@@ -71,7 +71,8 @@ class InspectionChecklist extends Component
         $this->validate([
             'equipment_type' => 'required',
             'location_keyword' => 'nullable',
-            'inputs.*' => 'required',
+            'inputs.*.label' => 'required', // Validasi ke key 'label'
+            'inputs.*.type'  => 'required',  // Validasi ke key 'type'
             'checks.*' => 'required',
         ]);
 
@@ -108,8 +109,9 @@ class InspectionChecklist extends Component
 
     public function resetForm()
     {
-        $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks']);
-        $this->inputs = [''];
-        $this->checks = [''];
+        $this->reset(['checklist_id', 'equipment_type', 'location_keyword']);
+        // Pastikan strukturnya sesuai dengan yang diharapkan blade
+        $this->inputs = [['label' => '', 'type' => 'text']];
+        $this->checks = [['label' => '']];
     }
 }

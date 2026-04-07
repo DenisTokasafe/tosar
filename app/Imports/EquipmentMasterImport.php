@@ -78,7 +78,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
         }
 
         // Ambil 'Lokasi Spesifik'
-        $specificLocation = $row['lokasi'] ?? $row['lokasi_spesifik'] ?? $row['location'] ?? null;
+        $specificLocation = $row['lokasi'] ?? $row['name'] ?? $row['lokasi_spesifik'] ?? $row['location'] ?? null;
 
         // Data teknis JSON
         $technicalFields = [
@@ -93,7 +93,8 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Hose Reel No'    => $row['hose_reel_no'] ?? null,
             'Sprinkler No'    => $row['sprinkler_no'] ?? null,
             'Ring Buoy No'    => $row['ring_buoy_no'] ?? null,
-            'Alarm No'    => $row['alarm_no'] ?? null,
+            'Alarm No'        => $row['alarm_no'] ?? null,
+            'Quantity'        => $row['quantity '] ?? null,
         ];
 
         // Bersihkan field null
