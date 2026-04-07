@@ -11,30 +11,32 @@
             <table class="table table-sm table-pin-rows w-full">
                 <thead>
                     <tr class="bg-base-200 text-base-content border-b border-base-300">
-                        <th class="text-center w-12">No</th>
+                        <th class="text-center w-10">No</th>
 
-                        {{-- Kolom Nomor Referensi - Lebar Tetap --}}
+                        {{-- Nomor Referensi --}}
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Nomor Referensi') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                <button class="btn btn-ghost btn-xs" popovertarget="popover-1" style="anchor-name:--anchor-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
                                         <circle cx="11" cy="11" r="8" />
                                         <path d="m21 21-4.3-4.3" />
                                     </svg>
                                 </button>
-                            </div>
-                            <div class="p-3 border shadow-lg w-60 rounded-box bg-base-100 border-base-300" popover id="popover-1" style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
-                                <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
-                            </div>
+
+                                <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
+                                    popover
+                                    id="popover-1"
+                                    style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
+                                    <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
+                                </div>
                         </th>
 
                         <th class="whitespace-nowrap">{{ __('Tanggal & Waktu') }}</th>
 
-                        {{-- Kolom Judul - Fleksibel tapi punya min-width agar tidak terlalu sempit --}}
-                        <th class="min-w-[250px]">{{ __('Judul Insiden') }}</th>
+                        {{-- Kolom Judul dibuat lebih lebar --}}
+                        <th class="min-w-[200px]">{{ __('Judul Insiden') }}</th>
 
-                        {{-- Kolom Divisi - Lebar Terkontrol --}}
                         <th class="whitespace-nowrap min-w-[180px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Divisi') }}
@@ -60,50 +62,16 @@
 
                         <th class="whitespace-nowrap">
                             <div class="flex items-center gap-1">
-                                {{ __('Kategori Insiden') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_combined" style="anchor-name:--pop_event_combined">
-                                    <x-icon.icon-filter :active="!empty($filterEventType) || !empty($filterEventSubType)" />
+                                {{ __('Tipe') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
+                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
                                 </button>
-                            </div>
-
-                            {{-- Popover Filter Berkelompok --}}
-                            <div class="p-0 border shadow-xl w-72 rounded-box bg-base-100 border-base-300 overflow-hidden"
-                                popover id="pop_event_combined"
-                                style="position-anchor: --pop_event_combined; position-area: bottom; margin-top: 5px;">
-
-                                <div class="bg-base-200 px-3 py-2 border-b border-base-300 flex justify-between items-center">
-                                    <span class="text-xs font-bold">{{ __('Filter Tipe & Jenis') }}</span>
-                                </div>
-
-                                <ul class="p-2 max-h-80 overflow-y-auto text-base-content custom-scrollbar">
-                                    @foreach ($filterOptions['eventGroups'] as $type)
-                                    <li class="mb-3">
-                                        {{-- Parent: Event Type --}}
-                                        <label class="flex items-center px-2 py-1 bg-base-200/50 rounded-md mb-1 cursor-pointer hover:bg-base-200">
-                                            <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
-                                            <span class="ml-2 text-[10px] font-black uppercase text-primary tracking-wider">{{ $type->event_type_name }}</span>
-                                        </label>
-
-                                        {{-- Children: Event Sub Type --}}
-                                        <ul class="ml-6 space-y-1 border-l-2 border-base-300">
-                                            @foreach ($type->eventSubTypes as $sub)
-                                            <li>
-                                                <label class="flex items-center p-1 pl-3 rounded-md cursor-pointer hover:bg-base-100 group">
-                                                    <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs">
-                                                    <span class="ml-2 text-xs opacity-70 group-hover:opacity-100 transition-opacity">{{ $sub->event_sub_type_name }}</span>
-                                                </label>
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                    @endforeach
-                                </ul>
                             </div>
                         </th>
 
-                        <th class="text-center whitespace-nowrap ">{{ __('Klasifikasi') }}</th>
+                        <th class="text-center whitespace-nowrap">{{ __('Klasifikasi') }}</th>
 
-                        <th class="text-center whitespace-nowrap ">
+                        <th class="text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
                                 {{ __('Status') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_status" style="anchor-name:--pop_status">
@@ -117,25 +85,25 @@
                 <tbody class="divide-y divide-base-200">
                     @forelse($incidents as $index => $item)
                     <tr class="hover:bg-base-200/50 transition-colors">
-                        <td class="text-center font-mono text-[10px] opacity-50 w-12">
+                        <td class="text-center font-mono text-[10px] opacity-50">
                             {{ ($incidents->currentPage() - 1) * $incidents->perPage() + $loop->iteration }}
                         </td>
 
-                        <td class="w-40">
-                            <button class="link link-primary no-underline text-xs font-bold" wire:click="editIncident({{ $item->id }})">
+                        <td class="font-bold">
+                            <button class="link link-primary no-underline text-xs" wire:click="editIncident({{ $item->id }})">
                                 {{ $item->report_number }}
                             </button>
                         </td>
 
-                        <td class="whitespace-nowrap w-32">
+                        <td class="whitespace-nowrap">
                             <div class="flex flex-col">
                                 <span class="text-xs font-semibold">{{ $item->date_time->format('d M Y') }}</span>
                                 <span class="text-[10px] opacity-50">{{ $item->date_time->format('H:i') }} WITA</span>
                             </div>
                         </td>
 
-                        <td class="min-w-[250px]">
-                            <div class="flex flex-col">
+                        <td>
+                            <div class="flex flex-col min-w-[150px]">
                                 <span class="text-xs font-bold leading-tight line-clamp-2" title="{{ $item->title }}">
                                     {{ $item->title }}
                                 </span>
@@ -149,46 +117,34 @@
                             </div>
                         </td>
 
-                        <td class="w-44">
-                            <div class="badge badge-ghost border-base-300 whitespace-nowrap text-[10px] uppercase px-2 max-w-[160px] truncate block overflow-hidden">
+                        <td>
+                            <div class="badge badge-ghost border-base-300 whitespace-nowrap text-[10px] uppercase px-2">
                                 {{ $item->department?->department_name ?? $item->contractor?->contractor_name }}
                             </div>
                         </td>
 
-                        <td class="w-52">
-                            <div class="flex flex-col items-start gap-1">
-                                {{-- Tipe Insiden (Main Category) --}}
-                                <span class="badge badge-outline badge-info text-[9px] font-bold uppercase py-2">
-                                    {{ $item->EventType?->event_type_name ?? 'N/A' }}
-                                </span>
-
-                                {{-- Jenis Insiden (Sub Category) --}}
-                                @if($item->eventSubType)
-                                <div class="flex items-center gap-1 text-[10px] text-base-content/60 italic ml-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-base-300"></span>
-                                    {{ $item->eventSubType->event_sub_type_name }}
-                                </div>
-                                @endif
+                        <td>
+                            <div class="badge badge-outline badge-info text-[10px] uppercase whitespace-nowrap">
+                                {{ $item->EventType?->event_type_name ?? 'N/A' }}
                             </div>
                         </td>
 
-                        <td class="text-center ">
+                        <td class="text-center">
                             @php
                             $riskColor = match($item->risk?->rating_name) {
-                            'Ekstrem' => 'bg-error text-error-content',
-                            'Tinggi' => 'bg-secondary text-secondary-content',
-                            'Sedang' => 'bg-warning text-warning-content',
-                            default => 'bg-success text-success-content',
+                            'Ekstrem' => 'bg-error',
+                            'Tinggi' => 'bg-secondary',
+                            'Sedang' => 'bg-warning',
+                            default => 'bg-success',
                             };
                             @endphp
-                            {{-- Logika Risk Color Tetap Sama --}}
                             <div class="tooltip" data-tip="{{ $item->risk?->rating_name }}">
                                 <span class="inline-block w-3 h-3 rounded-full {{ $riskColor }} shadow-inner"></span>
                             </div>
                         </td>
 
-                        <td class="text-center w-32">
-                            <div @class([ 'badge badge-sm font-bold text-[9px] uppercase w-20 py-3 mx-auto flex justify-center' , 'badge-success'=> $item->status === 'Closed',
+                        <td class="text-center">
+                            <div @class([ 'badge badge-sm font-bold text-[9px] uppercase w-20 py-3' , 'badge-success'=> $item->status === 'Closed',
                                 'badge-error' => $item->status === 'Open',
                                 'badge-warning' => $item->status === 'Action Required',
                                 'badge-info' => $item->status === 'In Progress',
@@ -198,7 +154,6 @@
                         </td>
                     </tr>
                     @empty
-                    {{-- Data Kosong --}}
                     @endforelse
                 </tbody>
             </table>
