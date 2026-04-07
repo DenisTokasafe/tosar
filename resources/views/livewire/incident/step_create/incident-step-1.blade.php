@@ -7,7 +7,7 @@
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
             @endif
-            <label class="input">
+            <label class="flex items-center gap-2 cursor-pointer">
                 <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
                 <span class="label">{{ __('Yes') }}</span>
                 <input type="radio" name="radio-1" class="radio radio-xs radio-success" />
