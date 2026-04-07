@@ -94,11 +94,16 @@ class Index extends Component
 
         if ($checklist && is_array($checklist->inputs)) {
             $fields = [];
-            foreach ($checklist->inputs as $label) {
+            foreach ($checklist->inputs as $inputItem) {
+                // Cek apakah $inputItem itu array (format baru) atau string (format lama)
+                $labelText = is_array($inputItem) ? ($inputItem['label'] ?? '') : $inputItem;
+
                 // GANTI SPASI DENGAN UNDERSCORE agar tidak pecah saat diketik
-                // Contoh: "No Referensi" -> "No_Referensi"
-                $safeKey = str_replace(' ', '_', trim($label));
-                $fields[$safeKey] = '';
+                $safeKey = str_replace(' ', '_', trim($labelText));
+
+                if ($safeKey !== '') {
+                    $fields[$safeKey] = '';
+                }
             }
             $this->technical_data = $fields;
         }
