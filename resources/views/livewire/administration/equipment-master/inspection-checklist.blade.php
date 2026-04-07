@@ -70,12 +70,22 @@
                         <div class="space-y-2">
                             <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Inputs Field</label>
                             @foreach ($inputs as $index => $value)
-                            <div class="flex items-center gap-2 group">
-                                <x-form.input-floating label="Input Field {{ $index + 1 }}" type='text'
-                                    model="inputs.{{ $index }}"
-                                    placeholder="Input Field {{ $index + 1 }}" />
-                                <button wire:click="removeInput({{ $index }})"
-                                    class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
+                            <div class="flex flex-col gap-1 p-2 border rounded-lg border-gray-100 mb-2">
+                                <div class="flex items-center gap-2 group">
+                                    <x-form.input-floating
+                                        label="Label Name"
+                                        model="inputs.{{ $index }}.label"
+                                        placeholder="Contoh: Tekanan Oli" />
+
+                                    <select wire:model="inputs.{{ $index }}.type" class="select select-bordered select-xs">
+                                        <option value="text">Text</option>
+                                        <option value="number">Number</option>
+                                        <option value="date">Date</option>
+                                        <option value="checkbox">Checkbox/OK-Not OK</option>
+                                    </select>
+
+                                    <button wire:click="removeInput({{ $index }})" class="...">×</button>
+                                </div>
                             </div>
                             @endforeach
                             <button wire:click="addInput"

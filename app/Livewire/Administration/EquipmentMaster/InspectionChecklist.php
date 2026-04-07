@@ -16,7 +16,7 @@ class InspectionChecklist extends Component
     public $show_location = false;
 
     // Array dinamis untuk form
-    public $inputs = [''];
+    public $inputs = [['label' => '', 'type' => 'text']];
     public $checks = [''];
 
     public function render()
@@ -28,7 +28,7 @@ class InspectionChecklist extends Component
     // Menambah baris input kosong
     public function addInput()
     {
-        $this->inputs[] = '';
+        $this->inputs[] = ['label' => '', 'type' => 'text'];
     }
     public function removeInput($index)
     {
