@@ -2637,9 +2637,9 @@ class Update extends Component
                 'type' => 'success'
             ]);
         } catch (\Exception $e) {
-            \Log::error("Update Incident Failed: " . $e->getMessage());
+            // \Log::error("Update Incident Failed: " . $e->getMessage());
             $this->dispatch('alert', [
-                'text' => "Terjadi kesalahan sistem. Silakan hubungi admin." . $e->getMessage(),
+                'text' => "Update Incident Failed: " . $e->getMessage(),
                 'type' => 'error'
             ]);
         }
