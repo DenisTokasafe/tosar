@@ -85,7 +85,7 @@
                                         placeholder="Contoh: Tekanan Oli" />
 
                                     <select wire:model="inputs.{{ $index }}.type" class="select select-bordered select-xs">
-                                        <option value="null">Label</option>
+                                        <option value="label">Label</option>
                                         <option value="text">Text</option>
                                         <option value="number">Number</option>
                                         <option value="date">Date</option>
