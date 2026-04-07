@@ -101,7 +101,7 @@
                         </td>
 
                         <td>
-                            <div class="flex flex-col min-w-[150px]">
+                            <div class="flex flex-col ">
                                 <span class="text-xs font-bold leading-tight line-clamp-2" title="{{ $item->title }}">
                                     {{ $item->title }}
                                 </span>
