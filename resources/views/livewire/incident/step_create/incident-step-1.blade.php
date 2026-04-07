@@ -9,7 +9,7 @@
             @endif
             <fieldset class="fieldset">
                 <x-form.label label="Apakah berpotensi LTI/Fatality?" required />
-                <div class="flex items-center gap-4 px-2   ">
+                <div class="flex items-center gap-4 px-2 border">
                     <label class="label">
                         <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
                         <span class="label">{{ __('Yes') }}</span>
