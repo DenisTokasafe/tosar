@@ -130,6 +130,14 @@
                         </td>
 
                         <td class="text-center w-24">
+                            @php
+                            $riskColor = match($item->risk?->rating_name) {
+                            'Ekstrem' => 'bg-error text-error-content',
+                            'Tinggi' => 'bg-secondary text-secondary-content',
+                            'Sedang' => 'bg-warning text-warning-content',
+                            default => 'bg-success text-success-content',
+                            };
+                            @endphp
                             {{-- Logika Risk Color Tetap Sama --}}
                             <div class="tooltip" data-tip="{{ $item->risk?->rating_name }}">
                                 <span class="inline-block w-3 h-3 rounded-full {{ $riskColor }} shadow-inner"></span>
