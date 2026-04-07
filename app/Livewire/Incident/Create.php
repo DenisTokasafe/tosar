@@ -159,7 +159,7 @@ class Create extends Component
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
             'potential_lti' => 'required|in:Yes,No',
             'description' => 'required|string',
-            'tasks' => 'required|array|min:1',
+            'tasks' => 'required|text|min:1',
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
