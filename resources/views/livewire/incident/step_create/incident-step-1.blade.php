@@ -2,11 +2,17 @@
 <div @class(['grid grid-cols-1 gap-2', 'md:grid-cols-2'=> $this->isEnvironmentType, 'md:grid-cols-1' => !$this->isEnvironmentType])>
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
-        <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,'md:grid-cols-1' => !$this->hasSubTypes,])>
+        <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-3'=> $this->hasSubTypes,'md:grid-cols-2' => !$this->hasSubTypes,])>
             <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
             @endif
+            <label class="input">
+                <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
+                <span class="label">{{ __('Yes') }}</span>
+                <input type="radio" name="radio-1" class="radio radio-xs radio-success" />
+                <span class="label">{{ __('No') }}</span>
+            </label>
 
         </div>
     </fieldset>
