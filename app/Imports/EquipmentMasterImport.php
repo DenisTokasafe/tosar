@@ -94,7 +94,7 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Sprinkler No'    => $row['sprinkler_no'] ?? null,
             'Ring Buoy No'    => $row['ring_buoy_no'] ?? null,
             'Alarm No'        => $row['alarm_no'] ?? null,
-            'Quantity'        => $row['quantity '] ?? null,
+            'Quantity'        => $row['quantity'] ?? null,
         ];
 
         // Bersihkan field null
