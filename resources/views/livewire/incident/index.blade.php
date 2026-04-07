@@ -17,19 +17,17 @@
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Nomor Referensi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
                                         <circle cx="11" cy="11" r="8" />
                                         <path d="m21 21-4.3-4.3" />
                                     </svg>
                                 </button>
-
-                                <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
-                                    popover
-                                    id="popover-1"
-                                    style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
-                                    <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
-                                </div>
+                            </div>
+                            {{-- Popover Input Search --}}
+                            <div class="p-3 border shadow-lg w-60 rounded-box bg-base-100 border-base-300" popover id="popover-1" style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
+                                <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
+                            </div>
                         </th>
 
                         <th class="whitespace-nowrap">{{ __('Tanggal & Waktu') }}</th>
@@ -61,52 +59,23 @@
                         </th>
 
                         <th class="whitespace-nowrap">
-                            {{ __('Tipe Insiden') }}
-                            <button class="btn btn-ghost btn-xs" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
-                                <x-icon.icon-filter :active="!empty($filterEventType)" />
-                            </button>
-                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
-                                popover
-                                id="pop_event_type"
-                                style="position-anchor: --pop_event_type; position-area: bottom; margin-top: 5px;">
-                                @foreach ($filterOptions['eventTypes'] as $option)
-                                <li>
-                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
-                                        <input type="checkbox"
-                                            wire:model.live="filterEventType"
-                                            value="{{ $option->id }}"
-                                            class="checkbox checkbox-xs checkbox-primary">
-
-                                        <span class="ml-2 text-xs">{{ $option->event_type_name }}</span>
-                                    </label>
-                                </li>
-                                @endforeach
-                            </ul>
+                            <div class="flex items-center gap-1">
+                                {{ __('Tipe') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
+                                    <x-icon.icon-filter :active="!empty($filterEventType)" />
+                                </button>
+                            </div>
                         </th>
 
                         <th class="text-center whitespace-nowrap">{{ __('Klasifikasi') }}</th>
 
                         <th class="text-center whitespace-nowrap">
-                            {{ __('Status') }}
-                            <button class="btn btn-ghost btn-xs" popovertarget="pop_status" style="anchor-name:--pop_status">
-                                <x-icon.icon-filter :active="!empty($filterStatus)" />
-                            </button>
-                            <ul class="p-3 text-sm border shadow-sm w-52 rounded-box bg-base-100 border-base-300 text-base-content"
-                                popover
-                                id="pop_status"
-                                style="position-anchor: --pop_status; position-area: bottom; margin-top: 5px;">
-                                @foreach ($filterOptions['statuses'] as $status)
-                                <li class="text-left">
-                                    <label class="flex items-center p-1 rounded-md cursor-pointer hover:bg-base-200">
-                                        <input type="checkbox"
-                                            wire:model.live="filterStatus"
-                                            value="{{ $status }}"
-                                            class="checkbox checkbox-xs checkbox-primary">
-                                        <span class="ml-2 text-xs">{{ $status }}</span>
-                                    </label>
-                                </li>
-                                @endforeach
-                            </ul>
+                            <div class="flex items-center justify-center gap-1">
+                                {{ __('Status') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_status" style="anchor-name:--pop_status">
+                                    <x-icon.icon-filter :active="!empty($filterStatus)" />
+                                </button>
+                            </div>
                         </th>
                     </tr>
                 </thead>
