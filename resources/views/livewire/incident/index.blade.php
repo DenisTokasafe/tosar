@@ -11,8 +11,8 @@
             <table class="table table-sm table-pin-rows">
                 <thead>
                     <tr class="border-b bg-base-200 text-base-content border-base-300">
-                        <th class="w-10 text-center">No</th>
-                        <th class="w-40">
+                        <th class="text-center">No</th>
+                        <th class="">
                             {{ __('Nomor Referensi') }}
 
 
@@ -32,7 +32,7 @@
 
                             <!-- change popover-1 and --anchor-1 names. Use unique names for each dropdown -->
                         </th>
-                        <th class="w-48">{{ __('Tanggal & Waktu') }}</th>
+                        <th class="">{{ __('Tanggal & Waktu') }}</th>
                         <th>{{ __('Judul Insiden') }}</th>
                         <th>
                             {{ __('Divisi Penanggung Jawab') }}
@@ -67,7 +67,7 @@
                             </ul>
 
                         </th>
-                        <th class="w-40">{{ __('Tipe Insiden') }}
+                        <th class="">{{ __('Tipe Insiden') }}
                             <button class="btn btn-ghost btn-xs" popovertarget="pop_event_type" style="anchor-name:--pop_event_type">
                                 <x-icon.icon-filter :active="!empty($filterEventType)" />
                             </button>
@@ -89,8 +89,8 @@
                                 @endforeach
                             </ul>
                         </th>
-                        <th class="w-32 text-center">{{ __('Klasifikasi') }}</th>
-                        <th class="w-32 text-center">{{ __('Status') }}
+                        <th class=" text-center">{{ __('Klasifikasi') }}</th>
+                        <th class=" text-center">{{ __('Status') }}
                             <button class="btn btn-ghost btn-xs" popovertarget="pop_status" style="anchor-name:--pop_status">
                                 <x-icon.icon-filter :active="!empty($filterStatus)" />
                             </button>
