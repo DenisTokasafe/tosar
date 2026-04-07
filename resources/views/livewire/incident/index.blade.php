@@ -17,19 +17,17 @@
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Nomor Referensi') }}
-                                <button class="btn btn-ghost btn-xs" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
                                         <circle cx="11" cy="11" r="8" />
                                         <path d="m21 21-4.3-4.3" />
                                     </svg>
                                 </button>
-
-                                <div class="p-3 border shadow-sm w-52 rounded-box bg-base-100 border-base-300"
-                                    popover
-                                    id="popover-1"
-                                    style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
-                                    <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
-                                </div>
+                            </div>
+                            {{-- Popover Input Search --}}
+                            <div class="p-3 border shadow-lg w-60 rounded-box bg-base-100 border-base-300" popover id="popover-1" style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
+                                <x-form.input-text type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nomor..." class="w-full input-sm" />
+                            </div>
                         </th>
 
                         <th class="whitespace-nowrap">{{ __('Tanggal & Waktu') }}</th>
