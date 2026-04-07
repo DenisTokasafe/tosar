@@ -1427,7 +1427,7 @@ class Create extends Component
     public function isEnvironmentType()
     {
         // Cari nama event type berdasarkan ID yang sedang dipilih user
-        $selectedType = collect($this->eventTypes)->where('id', $this->event_type_id)->first();
+        $selectedType = EventType::where('id', $this->event_type_id)->first();
 
         // Pastikan pengecekan string sesuai dengan data di database Anda (misal: 'Lingkungan' atau 'Environment')
         return $selectedType && ($selectedType['event_type_name'] === 'Lingkungan' || $selectedType['event_type_name'] === 'Environment');
