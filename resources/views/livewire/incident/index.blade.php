@@ -14,7 +14,7 @@
                         <th class="text-center w-12">No</th>
 
                         {{-- Kolom Nomor Referensi - Lebar Tetap --}}
-                        <th class="whitespace-nowrap w-40">
+                        <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Nomor Referensi') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
@@ -29,7 +29,7 @@
                             </div>
                         </th>
 
-                        <th class="whitespace-nowrap w-32">{{ __('Tanggal & Waktu') }}</th>
+                        <th class="whitespace-nowrap">{{ __('Tanggal & Waktu') }}</th>
 
                         {{-- Kolom Judul - Fleksibel tapi punya min-width agar tidak terlalu sempit --}}
                         <th class="min-w-[250px]">{{ __('Judul Insiden') }}</th>
@@ -103,7 +103,7 @@
 
                         <th class="text-center whitespace-nowrap ">{{ __('Klasifikasi') }}</th>
 
-                        <th class="text-center whitespace-nowrap w-32">
+                        <th class="text-center whitespace-nowrap ">
                             <div class="flex items-center justify-center gap-1">
                                 {{ __('Status') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_status" style="anchor-name:--pop_status">
