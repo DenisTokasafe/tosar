@@ -175,7 +175,7 @@
                         <td class="text-center ">
                             @php
                             $riskColor = match($item->risk?->rating_name) {
-                            'Ekstrim' => 'bg-error text-error-content',
+                            'Ekstrem' => 'bg-error text-error-content',
                             'Tinggi' => 'bg-secondary text-secondary-content',
                             'Sedang' => 'bg-warning text-warning-content',
                             default => 'bg-success text-success-content',
