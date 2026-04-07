@@ -18,22 +18,11 @@
             @endif
 
             {{-- Potensi LTI --}}
-            <fieldset class="fieldset">
-                <x-form.label label="Potensi LTI/Fatality?" required />
-                <div @class([ 'flex items-center border-2 gap-2 px-2' , 'border-rose-500'=> $errors->has('potential_lti'),
-                    'border-base-300' => !$errors->has('potential_lti')
-                    ])>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="potential_lit" wire:model.live="potential_lti" value="Yes" class="radio radio-xs radio-warning" />
-                        <span class="text-sm">{{ __('Yes') }}</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="potential_lit" wire:model.live="potential_lti" value="No" class="radio radio-xs radio-success" />
-                        <span class="text-sm">{{ __('No') }}</span>
-                    </label>
-                </div>
-                @error('potential_lti') <span class="text-xs text-error mt-1">{{ $message }}</span> @enderror
-            </fieldset>
+            <x-form.radio-group
+                label="Potensi LTI/Fatality?"
+                model="potential_lti"
+                :disabled="!$canEdit"
+                required />
         </div>
     </fieldset>
 

@@ -45,8 +45,7 @@ class Update extends Component
     public $date_time;
     public $location_id;
     public $location_specific;
-
-
+    public $tasks, $potential_lti;
     // --- PART 1: DEPT & PIC ---
     public $deptCont = 'dept'; // Default selector
     public $department_id;
@@ -192,6 +191,8 @@ class Update extends Component
             'title' => 'required|string|max:255',
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
+            'potential_lti' => 'required|in:Yes,No',
+            'tasks' => 'required|array|min:1',
             'description' => 'required|string',
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required_with:location_id|string',
@@ -347,6 +348,8 @@ class Update extends Component
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
             'event_sub_type_id' => __('Sub Tipe Kejadian'),
+            'potential_lti'     => __('Potensi LTI/Fatality'),
+            'tasks'             => __('Tugas/Tindakan Cepat'),
             'description'       => __('Deskripsi Kejadian'),
             'location_id'       => __('Lokasi Utama'),
             'location_specific' => __('Detail Lokasi Spesifik'),
@@ -507,9 +510,12 @@ class Update extends Component
         $this->title = $report->title;
         $this->report_number = $report->report_number;
         $this->status = $report->status;
+
         // --- DATA DASAR ---
         $this->event_type_id = $report->event_type_id;
         $this->event_sub_type_id = $report->event_sub_type_id;
+        $this->tasks = $report->tasks;
+        $this->potential_lti = $report->potential_lti;
         $this->date_time = $report->date_time->format('Y-m-d\TH:i');
         $this->key_learning = $report->key_learning;
 
@@ -1873,6 +1879,8 @@ class Update extends Component
                     'title',
                     'event_type_id',
                     'event_sub_type_id',
+                    'tasks',
+                    'potential_lti',
                     'description',
                     'location_id',
                     'location_specific',
@@ -2108,6 +2116,8 @@ class Update extends Component
                 'event_type_id'      => $allRules['event_type_id'],
                 'event_sub_type_id'  => $allRules['event_sub_type_id'],
                 'description'        => $allRules['description'],
+                'tasks'              => $allRules['tasks'],
+                'potential_lti'      => $allRules['potential_lti'],
                 'location_id'        => $allRules['location_id'],
                 'location_specific'  => $allRules['location_specific'],
                 'contract_area_name' => $allRules['contract_area_name'],
@@ -2303,6 +2313,8 @@ class Update extends Component
                         'event_sub_type_id',
                         'date_time',
                         'location_id',
+                        'tasks',
+                        'potential_lti',
                         'location_specific',
                         'contract_area_name',
                         'env_classification',
@@ -2521,7 +2533,7 @@ class Update extends Component
                             'file_name' => basename($vPath),
                         ]);
                     }
-                    // Kosongkan array temporary paths setelah berhasil masuk ke DB 
+                    // Kosongkan array temporary paths setelah berhasil masuk ke DB
                     // agar tidak terproses ulang di klik simpan berikutnya
                     $this->visual_evidence_paths = [];
                     $this->visual_evidence = [];
@@ -2570,6 +2582,9 @@ class Update extends Component
                     'status'                => $cleanStatus,
                     'title'                 => $this->title,
                     'event_type_id'         => $this->event_type_id,
+                    'event_sub_type_id'     => $this->event_sub_type_id,
+                    'tasks'                 => $this->tasks,
+                    'potential_lti'         => $this->potential_lti,
                     'description'           => $this->description,
                     'date_time'             => $this->date_time,
                     'location_id'           => $this->location_id,
@@ -2649,5 +2664,14 @@ class Update extends Component
             'PT. TTN'  => 'PT. TTN',
             'Off Site' => __('Off Site'),
         ];
+    }
+    #[Computed]
+    public function isEnvironmentType()
+    {
+        // Cari nama event type berdasarkan ID yang sedang dipilih user
+        $selectedType = EventType::where('id', $this->event_type_id)->first();
+
+        // Pastikan pengecekan string sesuai dengan data di database Anda (misal: 'Lingkungan' atau 'Environment')
+        return $selectedType && ($selectedType['event_type_name'] === 'Lingkungan' || $selectedType['event_type_name'] === 'Environment');
     }
 }

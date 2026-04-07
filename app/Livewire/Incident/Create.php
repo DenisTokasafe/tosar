@@ -134,11 +134,13 @@ class Create extends Component
     public $penerimaan_komentar_ktt_id;
     public $penerimaan_komentar_ktt;
 
+
     // Properti untuk teks editor (CKEditor)
     public $penerimaan_komentar_contractor;
     public $penerimaan_komentar_internal;
     public $penerimaan_komentar_ohs;
     public $key_learning;
+    public $tasks, $potential_lti;
 
     public $searchNamePenerimaan = [
         'kontraktor' => '',
@@ -155,7 +157,9 @@ class Create extends Component
             'title' => 'required|string|max:255',
             'event_type_id' => 'required|exists:event_types,id',
             'event_sub_type_id' => 'required|exists:event_sub_types,id',
+            'potential_lti' => 'required|in:Yes,No',
             'description' => 'required|string',
+            'tasks' => 'required|array|min:1',
             'location_id' => 'required|exists:locations,id',
             'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
@@ -203,6 +207,8 @@ class Create extends Component
             'manualPelaporName' => __('Nama Pelapor Manual'),
             'event_type_id'     => __('Tipe Kejadian'),
             'event_sub_type_id' => __('Sub Tipe Kejadian'),
+            'tasks'             => __('Tugas/Tindakan Cepat'),
+            'potential_lti'     => __('Potensi LTI/Fatality'),
             'description'       => __('Deskripsi Kejadian'),
             'location_id'       => __('Lokasi Utama'),
             'contract_area_name' => __('Area Kontrak Karya'),
@@ -326,6 +332,8 @@ class Create extends Component
                     'event_type_id',
                     'event_sub_type_id',
                     'description',
+                    'tasks',
+                    'potential_lti',
                     'location_id',
                     'contract_area_name',
                     'env_classification',
@@ -1280,6 +1288,8 @@ class Create extends Component
                 'title'             => $this->title,
                 'event_type_id'     => $this->event_type_id,
                 'event_sub_type_id' => $this->event_sub_type_id,
+                'potential_lti'     => $this->potential_lti,
+                'tasks'             => $this->tasks,
                 'date_time'         => $this->date_time,
                 'location_id'       => $this->location_id,
                 'location_specific' => $this->location_specific,
@@ -1375,6 +1385,8 @@ class Create extends Component
                     'event_sub_type_id',
                     'date_time',
                     'location_id',
+                    'tasks',
+                    'potential_lti',
                     'location_specific',
                     'contract_area_name',
                     'env_classification',

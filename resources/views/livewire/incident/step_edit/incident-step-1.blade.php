@@ -1,19 +1,35 @@
 <x-form.input-text label="Judul Insiden" model="title" required :disabled="!$canEdit" />
-<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->isEnvironmentType,
+    'md:grid-cols-1' => !$this->isEnvironmentType
+    ])>
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
-        <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->hasSubTypes,
-            'md:grid-cols-1' => !$this->hasSubTypes,])>
+
+        {{-- Hitung kolom secara dinamis: jika ada subtipe total 3 field, jika tidak total 2 field --}}
+        <div @class([ 'grid grid-cols-1 gap-4' , 'md:grid-cols-3'=> $this->hasSubTypes,
+            'md:grid-cols-2' => !$this->hasSubTypes,
+            ])>
+            {{-- Tipe Insiden --}}
             <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required :disabled="!$canEdit" />
+
+            {{-- Jenis Insiden (Conditional) --}}
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required :disabled="!$canEdit" />
             @endif
 
+            <x-form.radio-group
+                label="Potensi LTI/Fatality?"
+                model="potential_lti"
+                :disabled="!$canEdit"
+                required />
         </div>
     </fieldset>
-    <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
+
+    {{-- Klasifikasi Lingkungan --}}
+    @if($this->isEnvironmentType)
+    <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100" wire:transition>
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden Lingkungan') }}</legend>
-        <div class="">
+        <div class="p-1">
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
@@ -23,6 +39,7 @@
                 required :disabled="!$canEdit" />
         </div>
     </fieldset>
+    @endif
 </div>
 
 <div class="grid grid-cols-1 gap-2 mb-8 md:grid-cols-2 lg:grid-cols-3">
