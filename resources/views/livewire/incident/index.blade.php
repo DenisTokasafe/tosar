@@ -67,7 +67,7 @@
                             </div>
 
                             {{-- Popover Filter Berkelompok --}}
-                            <div class="p-0 border shadow-xl w-72 rounded-box bg-base-100 border-base-300 overflow-hidden"
+                            <div class="p-0 border shadow-xl  rounded-box bg-base-100 border-base-300 overflow-hidden"
                                 popover id="pop_event_combined"
                                 style="position-anchor: --pop_event_combined; position-area: bottom; margin-top: 5px;">
 
