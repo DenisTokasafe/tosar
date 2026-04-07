@@ -7,17 +7,19 @@
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
             @endif
-
-            <div class="flex items-center gap-4 px-2   ">
-                <label class="label">
-                    <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
-                    <span class="label">{{ __('Yes') }}</span>
-                </label>
-                <label class="label">
-                    <input type="radio" name="radio-1" class="radio radio-xs radio-success" />
-                    <span class="label">{{ __('No') }}</span>
-                </label>
-            </div>
+            <fieldset>
+                <x-form.label label="Apakah insiden ini masih berlangsung?" required />
+                <div class="flex items-center gap-4 px-2   ">
+                    <label class="label">
+                        <input type="radio" name="radio-1" class="radio radio-xs radio-warning" checked="checked" />
+                        <span class="label">{{ __('Yes') }}</span>
+                    </label>
+                    <label class="label">
+                        <input type="radio" name="radio-1" class="radio radio-xs radio-success" />
+                        <span class="label">{{ __('No') }}</span>
+                    </label>
+                </div>
+            </fieldset>
         </div>
     </fieldset>
     @if($this->isEnvironmentType)
