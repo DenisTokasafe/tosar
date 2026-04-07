@@ -2639,7 +2639,7 @@ class Update extends Component
         } catch (\Exception $e) {
             \Log::error("Update Incident Failed: " . $e->getMessage());
             $this->dispatch('alert', [
-                'text' => "Terjadi kesalahan sistem. Silakan hubungi admin.",
+                'text' => "Terjadi kesalahan sistem. Silakan hubungi admin." . $e->getMessage(),
                 'type' => 'error'
             ]);
         }
