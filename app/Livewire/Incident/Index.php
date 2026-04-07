@@ -61,7 +61,7 @@ class Index extends Component
             // Filter Status sesuai urutan ENUM database
             'statuses' => ['Open', 'In Progress', 'Action Required', 'Closed'],
 
-            'eventTypes'    => EventType::select('id', 'event_type_name')->get(),
+            'eventTypes'    => EventType::onlyIncidents()->select('id', 'event_type_name')->get(),
             'eventSubTypes' => EventSubType::select('id', 'event_sub_type_name')->get(),
         ];
 
