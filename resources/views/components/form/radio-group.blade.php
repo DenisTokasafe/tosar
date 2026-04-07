@@ -13,9 +13,9 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    <div @class([ 'flex items-center border-2 gap-4 px-2 h-12 rounded-lg transition-colors' , 'bg-base-200/50 cursor-not-allowed opacity-70'=> $disabled, // Style saat disabled
+    <div @class([ 'flex items-center border-2 gap-4 px-2  transition-colors' , 'bg-base-200/50 cursor-not-allowed opacity-70'=> $disabled, // Style saat disabled
         'border-error/50 bg-error/5' => $errors->has($model) && !$disabled,
-        'border-base-300 focus-within:border-primary' => !$errors->has($model) && !$disabled
+        'border-base-300 focus-within:border-info' => !$errors->has($model) && !$disabled
         ])>
         @foreach($options as $option)
         <label @class([ 'flex items-center gap-2 group' , 'cursor-pointer'=> !$disabled,
