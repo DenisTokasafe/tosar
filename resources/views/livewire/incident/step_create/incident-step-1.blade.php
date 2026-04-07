@@ -1,31 +1,47 @@
 <x-form.input-text label="Judul Insiden" model="title" required />
-<div @class(['grid grid-cols-1 gap-2', 'md:grid-cols-2'=> $this->isEnvironmentType, 'md:grid-cols-1' => !$this->isEnvironmentType])>
+<div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $this->isEnvironmentType,
+    'md:grid-cols-1' => !$this->isEnvironmentType
+    ])>
     <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden') }}</legend>
-        <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-3'=> $this->hasSubTypes,'md:grid-cols-2' => !$this->hasSubTypes,'md:grid-cols-2' => $this->isEnvironmentType,])>
+
+        {{-- Hitung kolom secara dinamis: jika ada subtipe total 3 field, jika tidak total 2 field --}}
+        <div @class([ 'grid grid-cols-1 gap-4' , 'md:grid-cols-3'=> $this->hasSubTypes,
+            'md:grid-cols-2' => !$this->hasSubTypes,
+            ])>
+            {{-- Tipe Insiden --}}
             <x-form.select label="Tipe Insiden" model="event_type_id" :options="$eventTypes" option-label="event_type_name" required />
+
+            {{-- Jenis Insiden (Conditional) --}}
             @if($this->hasSubTypes)
             <x-form.select label="Jenis Insiden" model="event_sub_type_id" :options="$eventSubTypes" option-label="event_sub_type_name" required />
             @endif
-            <fieldset class="fieldset">
-                <x-form.label label="Apakah berpotensi LTI/Fatality?" required />
-                <div class="flex items-center gap-4 p-1  border-2 rounded {{ $errors->has('potential_lti') ? 'border-rose-500' : 'border-base-300' }}">
-                    <label class="label">
-                        <input type="radio" wire:model.live="potential_lti" name="radio-1" class="radio radio-xs radio-warning" />
-                        <span class="label">{{ __('Yes') }}</span>
+
+            {{-- Potensi LTI --}}
+            <div class="form-control">
+                <x-form.label label="Potensi LTI/Fatality?" required />
+                <div @class([ 'flex items-center gap-4 p-2 border-2 rounded-lg h-12' , 'border-rose-500'=> $errors->has('potential_lti'),
+                    'border-base-300' => !$errors->has('potential_lti')
+                    ])>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" wire:model.live="potential_lti" value="Yes" class="radio radio-xs radio-warning" />
+                        <span class="text-sm">{{ __('Yes') }}</span>
                     </label>
-                    <label class="label">
-                        <input type="radio" wire:model.live="potential_lti" name="radio-1" class="radio radio-xs radio-success" />
-                        <span class="label">{{ __('No') }}</span>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" wire:model.live="potential_lti" value="No" class="radio radio-xs radio-success" />
+                        <span class="text-sm">{{ __('No') }}</span>
                     </label>
                 </div>
-            </fieldset>
+                @error('potential_lti') <span class="text-xs text-error mt-1">{{ $message }}</span> @enderror
+            </div>
         </div>
     </fieldset>
+
+    {{-- Klasifikasi Lingkungan --}}
     @if($this->isEnvironmentType)
-    <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100">
+    <fieldset class="p-0 my-4 border shadow-md md:p-3 border-base-300 fieldset card bg-base-100" wire:transition>
         <legend class="text-sm font-semibold card-title ">{{ __('Klasifikasi Insiden Lingkungan') }}</legend>
-        <div class="">
+        <div class="p-1">
             <x-form.select
                 label="Tingkat Keparahan Lingkungan"
                 model="env_classification"
