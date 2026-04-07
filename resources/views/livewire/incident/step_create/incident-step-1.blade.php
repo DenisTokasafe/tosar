@@ -9,7 +9,7 @@
             @endif
             <fieldset class="fieldset">
                 <x-form.label label="Apakah berpotensi LTI/Fatality?" required />
-                <div class="flex items-center gap-4 p-1  border-[1px]">
+                <div class="flex items-center gap-4 p-1  border-2 rounded {{ $errors->has('potential_lti') ? 'border-rose-500' : 'border-base-300' }}">
                     <label class="label">
                         <input type="radio" name="radio-1" class="radio radio-xs radio-warning" />
                         <span class="label">{{ __('Yes') }}</span>
