@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('incident_reports', function (Blueprint $table) {
             // Kolom untuk menyimpan data tugas/tindakan cepat
-            $table->json('tasks')->nullable()->after('description');
+            $table->text('tasks')->nullable()->after('description');
 
             // Kolom untuk menyimpan potensi LTI (Yes/No)
             // Kita gunakan string agar sinkron dengan value "Yes"/"No" dari radio button
