@@ -489,11 +489,11 @@
             </table>
             @endif
             <div class="flex justify-end hidden mt-4 md:block">
-                <flux:button size="xs" type="submit" icon:trailing="send" variant="primary">{{ __('Kirim Laporan') }}
+                <flux:button wire:loading.attr="disabled" wire:target="submit,doc_corrective,doc_deskripsi" size="xs" type="submit" icon:trailing="send" variant="primary">{{ __('Kirim Laporan') }}
                 </flux:button>
             </div>
             <div class="block mt-4 md:hidden">
-                <flux:button size="xs" class="w-full" type="submit" icon:trailing="send" variant="primary">
+                <flux:button wire:loading.attr="disabled" wire:target="submit,doc_corrective,doc_deskripsi" size="xs" class="w-full" type="submit" icon:trailing="send" variant="primary">
                     {{ __('Kirim Laporan') }}
                 </flux:button>
             </div>
