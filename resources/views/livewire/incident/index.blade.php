@@ -35,17 +35,30 @@
                         <th class="min-w-[250px]">{{ __('Judul Insiden') }}</th>
 
                         {{-- Kolom Divisi - Lebar Terkontrol --}}
-                        <th class="whitespace-nowrap w-44">
+                        <th class="whitespace-nowrap min-w-[180px]">
                             <div class="flex items-center gap-1">
                                 {{ __('Divisi') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_dept" style="anchor-name:--pop_dept">
                                     <x-icon.icon-filter :active="!empty($filterDept)" />
                                 </button>
                             </div>
-                            {{-- Popover Filter Dept Tetap Sama --}}
+                            {{-- Popover Filter Dept --}}
+                            <ul class="p-3 text-sm border shadow-lg w-64 rounded-box bg-base-100 border-base-300 text-base-content" popover id="pop_dept" style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
+                                @foreach ($filterOptions['allDivisions'] as $option)
+                                <li>
+                                    <label class="flex items-center p-2 rounded-md cursor-pointer hover:bg-base-200">
+                                        <input type="checkbox" wire:model.live="filterDept" value="{{ $option['type'] }}-{{ $option['id'] }}" class="checkbox checkbox-xs checkbox-primary">
+                                        <div class="flex flex-col ml-3">
+                                            <span class="text-[9px] uppercase font-bold opacity-50">{{ $option['type'] === 'dept' ? 'Internal' : 'Contractor' }}</span>
+                                            <span class="text-xs">{{ $option['name'] }}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                @endforeach
+                            </ul>
                         </th>
 
-                        <th class="whitespace-nowrap w-52">
+                        <th class="whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 {{ __('Kategori Insiden') }}
                                 <button class="btn btn-ghost btn-xs btn-circle" popovertarget="pop_event_combined" style="anchor-name:--pop_event_combined">
@@ -88,7 +101,7 @@
                             </div>
                         </th>
 
-                        <th class="text-center whitespace-nowrap w-24">{{ __('Klasifikasi') }}</th>
+                        <th class="text-center whitespace-nowrap ">{{ __('Klasifikasi') }}</th>
 
                         <th class="text-center whitespace-nowrap w-32">
                             <div class="flex items-center justify-center gap-1">
@@ -159,7 +172,7 @@
                             </div>
                         </td>
 
-                        <td class="text-center w-24">
+                        <td class="text-center ">
                             @php
                             $riskColor = match($item->risk?->rating_name) {
                             'Ekstrim' => 'bg-error text-error-content',
