@@ -56,4 +56,9 @@ class EventType extends Model
     {
         return $this->hasMany(EventSubType::class, 'event_type_id'); // Tambahkan foreign key eksplisit agar aman
     }
+    public function incidentReports()
+    {
+        // Sesuaikan nama foreign key jika bukan event_type_id
+        return $this->hasMany(IncidentReport::class, 'event_type_id');
+    }
 }

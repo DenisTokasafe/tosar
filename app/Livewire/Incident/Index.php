@@ -63,8 +63,13 @@ class Index extends Component
 
             // Gabungkan Tipe dan Jenis menggunakan Relasi
             'eventGroups' => EventType::onlyIncidents()
+                // 1. Hanya ambil EventType yang dipakai di IncidentReport
+                ->whereHas('incidentReports')
                 ->with(['eventSubTypes' => function ($query) {
-                    $query->onlyIncidents()->select('id', 'event_type_id', 'event_sub_type_name');
+                    $query->onlyIncidents()
+                        // 2. Hanya ambil EventSubType yang dipakai di IncidentReport
+                        ->whereHas('incidentReports')
+                        ->select('id', 'event_type_id', 'event_sub_type_name');
                 }])
                 ->select('id', 'event_type_name')
                 ->get(),
