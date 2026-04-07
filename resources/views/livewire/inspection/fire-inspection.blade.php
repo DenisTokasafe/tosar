@@ -59,9 +59,13 @@
                         <tr class="capitalize bg-slate-100 text-slate-700">
                             <th class="border-b border-r bg-slate-100 text-[10px]">Location</th>
                             @foreach ($inputs as $techKey)
-                            <th
-                                class="text-center text-blue-700 capitalize border-b border-r text-[10px] bg-blue-50/50 whitespace-nowrap md:whitespace-normal md:w-[70px] md:min-w-[70px] md:leading-tight">
+                            <th class="...">
+                                {{-- Cek jika $techKey adalah array/objek, ambil properti 'label' nya --}}
+                                @if(is_array($techKey))
+                                {{ $techKey['label'] ?? 'N/A' }}
+                                @else
                                 {{ $techKey }}
+                                @endif
                             </th>
                             @endforeach
                             @foreach ($checks as $checkItem)
