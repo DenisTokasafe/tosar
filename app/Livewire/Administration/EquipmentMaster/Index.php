@@ -149,7 +149,8 @@ class Index extends Component
                 'Muster Point',
                 'Alarm',
                 'First Aid Box',
-                'Rescue Car'
+                'Rescue Car',
+                'Fire & Rescue Equipment'
             ];
 
             // 2. Cari tahu $this->type itu ada di urutan ke berapa (index)

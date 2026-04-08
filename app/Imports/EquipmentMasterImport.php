@@ -33,7 +33,8 @@ class EquipmentMasterImport implements ToModel, WithHeadingRow, WithMapping, Wit
             'Muster Point',
             'Alarm',
             'First Aid Box',
-            'Rescue Car'
+            'Rescue Car',
+            'Fire & Rescue Equipment'
         ];
 
         // 1. Decode entitas HTML (mengubah &amp; kembali menjadi &)
