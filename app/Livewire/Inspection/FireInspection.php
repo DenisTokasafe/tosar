@@ -109,21 +109,26 @@ class FireInspection extends Component
     }
     public function getChecklistFromDB()
     {
+        // Kita cari yang paling spesifik dulu (location_keyword cocok dengan searchLocation)
+        // Jika tidak ada, baru ambil yang 'Default'
         $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
             ->where(function ($q) {
                 $q->where('location_keyword', 'Default')
-                    ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
+                    ->orWhere('location_keyword', $this->searchLocation);
             })
-            // Mengambil yang lokasi spesifik (seperti Maesa Camp) dulu, baru Default
+            // Urutkan agar yang BUKAN 'Default' muncul paling atas (prioritas spesifik)
             ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
             ->first();
 
         if ($master) {
             $this->fields[$this->type] = [
-                'inputs' => json_decode($master->inputs, true),
-                'checks' => json_decode($master->checks, true),
+                'inputs' => json_decode($master->inputs, true) ?? [],
+                'checks' => json_decode($master->checks, true) ?? [],
             ];
+        } else {
+            // Fallback jika benar-benar tidak ada data di DB
+            $this->fields[$this->type] = ['inputs' => [], 'checks' => []];
         }
     }
     public function selectLocation($id, $name)
@@ -133,39 +138,36 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
-        // Ambil checklist dinamis dari DB (Menggantikan if-else manual)
+        // 1. Ambil checklist dari DB berdasarkan nama lokasi yang baru dipilih
         $this->getChecklistFromDB();
 
-        // Ambil semua alat
-        // 1. Ambil semua data master berdasarkan lokasi dan tipe
+        // 2. Ambil semua alat di area tersebut
         $allMaster = EquipmentMaster::where('location_id', $id)
             ->where('type', $this->type)
             ->get();
 
-        $this->conditions = []; // Reset
+        $this->conditions = [];
 
-        // 2. Looping setiap alat yang ditemukan
         foreach ($allMaster as $master) {
-            // Inisialisasi array untuk ID master ini
             $this->conditions[$master->id] = [];
 
-            // Isi technical data (misal: FE No, Capacity) ke dalam conditions
+            // Isi technical data (Read-only values)
             if ($master->technical_data) {
                 foreach ($master->technical_data as $key => $val) {
                     $this->conditions[$master->id][$key] = $val;
                 }
             }
 
-            // 3. Inisialisasi Checklist (Default: TRUE / Aman)
+            // 3. Inisialisasi Checklist (Sesuai kolom 'checks' dari DB)
             if (isset($this->fields[$this->type]['checks'])) {
                 foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    // Data checklist disimpan berdasarkan ID Master dan Nama Check-nya
+                    // Pastikan key ini ada agar tidak error di Blade
                     $this->conditions[$master->id][$checkField] = true;
                 }
             }
 
-            // Inisialisasi Remarks kosong untuk tiap alat
-            $this->remarks[$master->id] = '';
+            // Inisialisasi remarks per alat
+            $this->conditions[$master->id]['remarks'] = '';
         }
     }
 
