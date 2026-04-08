@@ -151,38 +151,38 @@ class FireInspection extends Component
         foreach ($allMaster as $master) {
             $this->conditions[$master->id] = [];
 
-            // Isi technical data (Read-only values)
+            // 1. Cari checklist yang spesifik untuk alat ini
+            // Membandingkan specific_location alat dengan location_specific di DB checklist
+            $customChecklist = InspectionChecklist::where('equipment_type', $this->type)
+                ->where('location_specific', $master->specific_location)
+                ->first();
+
+            // 2. Jika tidak ada yang spesifik, gunakan checklist default (dari getChecklistFromDB)
+            $activeChecks = $customChecklist
+                ? json_decode($customChecklist->checks, true)
+                : ($this->fields[$this->type]['checks'] ?? []);
+
+            // 3. Isi technical data (Read-only)
             if ($master->technical_data) {
                 foreach ($master->technical_data as $key => $val) {
                     $this->conditions[$master->id][$key] = $val;
                 }
             }
 
-            // 3. Inisialisasi Checklist (Sesuai kolom 'checks' dari DB)
-            if (isset($this->fields[$this->type]['checks'])) {
-                foreach ($this->fields[$this->type]['checks'] as $checkField) {
+            // 4. Inisialisasi Checklist berdasarkan tipe (text/checkbox)
+            foreach ($activeChecks as $checkField) {
+                // Ambil nama dan tipe baik dari data lama (string) atau baru (array)
+                $fieldName = is_array($checkField) ? $checkField['name'] : $checkField;
+                $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
 
-                    /**
-                     * PERBAIKAN LOGIKA:
-                     * Menangani perbedaan format antara data lama (string)
-                     * dan data baru (array/object JSON)
-                     */
-
-                    // Jika data baru (ID 16/17), $checkField adalah array. Ambil 'name'-nya.
-                    // Jika data lama (ID 1-13), $checkField adalah string. Gunakan langsung.
-                    $fieldName = is_array($checkField) ? $checkField['name'] : $checkField;
-
-                    // Tentukan tipe input (Default ke checkbox jika data lama)
-                    $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
-
-                    // Set nilai awal berdasarkan tipe agar sinkron dengan wire:model
-                    // Teks diisi string kosong, Checkbox diisi true (Aman)
-                    $this->conditions[$master->id][$fieldName] = ($type === 'text') ? '' : true;
-                }
+                // Set default value
+                $this->conditions[$master->id][$fieldName] = ($type === 'text') ? '' : true;
             }
 
-            // Inisialisasi remarks per alat
             $this->conditions[$master->id]['remarks'] = '';
+
+            // Simpan daftar kolom checklist khusus alat ini agar Blade bisa merendernya dengan benar
+            $this->masterCheckColumns[$master->id] = $activeChecks;
         }
     }
 

@@ -93,25 +93,29 @@
                             </td>
                             @endforeach
 
-                            @foreach ($checks as $checkItem)
+                            {{-- --- PERBAIKAN DISINI --- --}}
                             @php
-                            // 1. Tentukan Nama/Label
-                            $name = is_array($checkItem) ? $checkItem['name'] : $checkItem;
+                            /** * Mencari konfigurasi checklist yang sesuai dengan specific_location alat ini.
+                            * Kita ambil dari array masterCheckColumns yang sudah kita siapkan di Controller (FireInspection.php)
+                            * Jika tidak ada, fallback ke $checks global.
+                            */
+                            $currentMasterChecks = $masterCheckColumns[$master->id] ?? $checks;
+                            @endphp
 
-                            // 2. Tentukan Tipe (Otomatis checkbox jika data lama/string)
+                            @foreach ($currentMasterChecks as $checkItem)
+                            @php
+                            $name = is_array($checkItem) ? $checkItem['name'] : $checkItem;
                             $inputType = is_array($checkItem) ? ($checkItem['type'] ?? 'checkbox') : 'checkbox';
                             @endphp
 
                             <td class="px-1 text-center bg-white border-b border-r">
                                 @if($inputType === 'text')
-                                {{-- Render Input Text untuk data baru bertipe text --}}
                                 <input type="text"
                                     wire:key="text-{{ $master->id }}-{{ $name }}"
                                     wire:model.blur="conditions.{{ $master->id }}.{{ $name }}"
                                     class="input input-bordered input-xs w-full max-w-[70px] text-[10px] focus:outline-none"
                                     placeholder="..." />
                                 @else
-                                {{-- Render Checkbox untuk data baru bertipe checkbox ATAU data lama (string) --}}
                                 <input type="checkbox"
                                     wire:key="check-{{ $master->id }}-{{ $name }}"
                                     wire:model.live="conditions.{{ $master->id }}.{{ $name }}"
@@ -119,6 +123,7 @@
                                 @endif
                             </td>
                             @endforeach
+                            {{-- --- END PERBAIKAN --- --}}
 
                             <td class="p-1 bg-white border-b border-r ">
                                 <x-form.textarea row='1' model="conditions.{{ $master->id }}.remarks"
