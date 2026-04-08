@@ -319,7 +319,8 @@
                                             @foreach ($attributes as $field => $newValue)
                                             @continue(in_array($field, ['updated_at', 'created_at', 'incident_report_id', 'id']) ||
                                             str_ends_with($field, '_label') ||
-                                            in_array($field, ['person_name', 'action_summary', 'timeline_summary', 'file_display', 'peepo_category', 'impact_summary', 'person_nik']))
+                                            in_array($field, ['person_name', 'action_summary', 'timeline_summary', 'file_display', 'peepo_category', 'impact_summary', 'person_nik', 'user_id_label'])
+                                            )
 
                                             @php
                                             $displayOld = $old[$field . '_label'] ?? ($old[$field] ?? '-');
