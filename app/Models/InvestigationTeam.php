@@ -20,10 +20,10 @@ class InvestigationTeam extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()
+            ->logAll() // Log semua field agar incident_report_id selalu terbawa
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('IncidentDetail')
+            ->useLogName('IncidentDetail') // Pastikan log name ini konsisten
             ->setDescriptionForEvent(fn(string $eventName) => "Investigation Team member has been {$eventName}");
     }
 

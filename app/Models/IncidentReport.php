@@ -102,14 +102,17 @@ class IncidentReport extends Model
     // Relasi kustom (Menggabungkan log header + log milik tabel anak)
     public function allActivities()
     {
-        // Mengambil log milik Incident ini sendiri
-        // DAN log milik relasi anak yang merujuk ke ID incident ini
         return Activity::where(function ($query) {
+            // 1. Ambil log yang subjek utamanya adalah IncidentReport ini sendiri
             $query->where('subject_type', get_class($this))
                 ->where('subject_id', $this->id);
         })->orWhere(function ($query) {
+            // 2. Ambil log dari tabel relasi (anak) yang menyimpan referensi ke Incident ini
+            // Kita periksa di dalam attributes (data baru) dan old (data lama)
             $query->where('properties->attributes->incident_report_id', $this->id)
-                ->orWhere('properties->old->incident_report_id', $this->id);
+                ->orWhere('properties->old->incident_report_id', $this->id)
+                // Tambahan: Kadang Spatie menyimpan ID di root properties tergantung konfigurasi tapActivity
+                ->orWhere('properties->incident_report_id', $this->id);
         })->latest();
     }
 
