@@ -112,11 +112,27 @@ class FireInspection extends Component
         $master = DB::table('inspection_checklists')
             ->where('equipment_type', $this->type)
             ->where(function ($q) {
+                // 1. Cek berdasarkan location_keyword (Area Umum seperti Maesa Camp)
                 $q->where('location_keyword', 'Default')
                     ->orWhereRaw('? LIKE CONCAT("%", location_keyword, "%")', [$this->searchLocation]);
             })
-            // Mengambil yang lokasi spesifik (seperti Maesa Camp) dulu, baru Default
-            ->orderByRaw("CASE WHEN location_keyword = 'Default' THEN 2 ELSE 1 END")
+            ->where(function ($q) {
+                // 2. Cek berdasarkan kolom baru: location_specific (Nama Alat Spesifik)
+                $q->where('location_specific', 'Default')
+                    ->when($this->selected_location, function ($subQ) {
+                        // Mencocokkan jika selected_location (misal: SCBA Drager) ada di kolom location_specific
+                        $subQ->orWhere('location_specific', $this->selected_location);
+                    });
+            })
+            /**
+             * Prioritas Pengurutan:
+             * Kolom location_specific yang bukan 'Default' akan naik ke atas (Prioritas 1)
+             * Kolom location_keyword yang bukan 'Default' (Prioritas 2)
+             * Sisanya Default (Prioritas terakhir)
+             */
+            ->orderByRaw("CASE WHEN location_specific != 'Default' THEN 1
+                           WHEN location_keyword != 'Default' THEN 2
+                           ELSE 3 END")
             ->first();
 
         if ($master) {
