@@ -181,8 +181,8 @@
 
                             @foreach ($checks as $index => $check)
                             <div class="flex flex-col gap-1 p-2 border border-gray-100 rounded-lg bg-gray-50/50 group">
-                                <div class="flex items-center gap-2">
-                                    <div class="flex-1">
+                                <div class="grid items-center grid-cols-3 gap-2">
+                                    <div class="col-span-2">
                                         <x-form.input-floating
                                             label="Item Name {{ $index + 1 }}"
                                             type='text'
@@ -190,10 +190,12 @@
                                             placeholder="e.g. SCBA or Nozzle" />
                                     </div>
 
-                                    <select wire:model="checks.{{ $index }}.type" class="select select-bordered select-xs">
-                                        <option value="checkbox">Centang (V)</option>
-                                        <option value="text">Input (Nilai/Angka)</option>
-                                    </select>
+                                    <div>
+                                        <select wire:model="checks.{{ $index }}.type" class="select select-bordered select-xs">
+                                            <option value="checkbox">Centang (V)</option>
+                                            <option value="text">Input (Nilai/Angka)</option>
+                                        </select>
+                                    </div>
 
                                     <button wire:click="removeCheck({{ $index }})"
                                         class="btn btn-square btn-xs btn-error btn-outline">×</button>
