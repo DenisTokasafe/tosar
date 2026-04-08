@@ -7,22 +7,26 @@
     </div>
     <x-incident.layout>
 
-        <div class="overflow-x-auto border rounded-xl border-base-300 bg-base-100 shadow-sm">
-            <table class="table table-xs  w-full">
+        <div class="overflow-x-auto border shadow-sm rounded-xl border-base-300 bg-base-100">
+            <table class="table w-full table-xs">
                 <thead>
-                    <tr class="bg-base-200 text-base-content border-b border-base-300">
-                        <th class="text-center w-10">No</th>
+                    <tr class="border-b bg-base-200 text-base-content border-base-300">
+                        <th class="w-10 text-center">No</th>
 
                         {{-- Nomor Referensi --}}
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
-                                {{ __('Nomor Referensi') }}
-                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="m21 21-4.3-4.3" />
-                                    </svg>
+                                @can('updateInitialData', $item)
+                                {{-- Jika boleh: Tampilkan sebagai Link Aktif --}}
+                                <button class="text-xs font-bold no-underline link link-primary" wire:click="editIncident({{ $item->id }})">
+                                    {{ $item->report_number }}
                                 </button>
+                                @else
+                                {{-- Jika tidak boleh: Tampilkan teks biasa (Disabled Look) --}}
+                                <span class="text-xs cursor-not-allowed text-base-content/50" title="Anda tidak memiliki akses untuk mengedit/melihat detil ini">
+                                    {{ $item->report_number }}
+                                </span>
+                                @endcan
                             </div>
                             {{-- Popover Input Search --}}
                             <div class="p-3 border shadow-lg w-60 rounded-box bg-base-100 border-base-300" popover id="popover-1" style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
@@ -43,7 +47,7 @@
                                 </button>
                             </div>
                             {{-- Popover Filter Dept --}}
-                            <ul class="p-3 text-sm border shadow-lg  rounded-box bg-base-100 border-base-300 text-base-content" popover id="pop_dept" style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
+                            <ul class="p-3 text-sm border shadow-lg rounded-box bg-base-100 border-base-300 text-base-content" popover id="pop_dept" style="position-anchor: --pop_dept; position-area: bottom; margin-top: 5px;">
                                 @foreach ($filterOptions['allDivisions'] as $option)
                                 <li>
                                     <label class="flex items-center p-2 rounded-md cursor-pointer hover:bg-base-200">
@@ -67,19 +71,19 @@
                             </div>
 
                             {{-- Popover Filter Berkelompok --}}
-                            <div class="p-0 border shadow-xl  rounded-box bg-base-100 border-base-300 overflow-hidden"
+                            <div class="p-0 overflow-hidden border shadow-xl rounded-box bg-base-100 border-base-300"
                                 popover id="pop_event_combined"
                                 style="position-anchor: --pop_event_combined; position-area: bottom; margin-top: 5px;">
 
-                                <div class="bg-base-200 px-3 py-2 border-b border-base-300 flex justify-between items-center">
+                                <div class="flex items-center justify-between px-3 py-2 border-b bg-base-200 border-base-300">
                                     <span class="text-xs font-bold">{{ __('Filter Tipe & Jenis') }}</span>
                                 </div>
 
-                                <ul class="p-2 max-h-80 overflow-y-auto text-base-content custom-scrollbar">
+                                <ul class="p-2 overflow-y-auto max-h-80 text-base-content custom-scrollbar">
                                     @foreach ($filterOptions['eventGroups'] as $type)
                                     <li class="mb-3">
                                         {{-- Parent: Event Type --}}
-                                        <label class="flex items-center px-2 py-1 bg-base-200/50 rounded-md mb-1 cursor-pointer hover:bg-base-200">
+                                        <label class="flex items-center px-2 py-1 mb-1 rounded-md cursor-pointer bg-base-200/50 hover:bg-base-200">
                                             <input type="checkbox" wire:model.live="filterEventType" value="{{ $type->id }}" class="checkbox checkbox-xs checkbox-primary">
                                             <span class="ml-2 text-[10px] font-black uppercase text-primary tracking-wider">{{ $type->event_type_name }}</span>
                                         </label>
@@ -90,7 +94,7 @@
                                             <li>
                                                 <label class="flex items-center p-1 pl-3 rounded-md cursor-pointer hover:bg-base-100 group">
                                                     <input type="checkbox" wire:model.live="filterEventSubType" value="{{ $sub->id }}" class="checkbox checkbox-xs">
-                                                    <span class="ml-2 text-xs opacity-70 group-hover:opacity-100 transition-opacity">{{ $sub->event_sub_type_name }}</span>
+                                                    <span class="ml-2 text-xs transition-opacity opacity-70 group-hover:opacity-100">{{ $sub->event_sub_type_name }}</span>
                                                 </label>
                                             </li>
                                             @endforeach
@@ -116,13 +120,13 @@
 
                 <tbody class="divide-y divide-base-200">
                     @forelse($incidents as $index => $item)
-                    <tr class="hover:bg-base-200/50 transition-colors">
+                    <tr class="transition-colors hover:bg-base-200/50">
                         <td class="text-center font-mono text-[10px] opacity-50">
                             {{ ($incidents->currentPage() - 1) * $incidents->perPage() + $loop->iteration }}
                         </td>
 
                         <td class="font-bold">
-                            <button class="link link-primary no-underline text-xs" wire:click="editIncident({{ $item->id }})">
+                            <button class="text-xs no-underline link link-primary" wire:click="editIncident({{ $item->id }})">
                                 {{ $item->report_number }}
                             </button>
                         </td>
