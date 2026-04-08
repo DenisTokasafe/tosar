@@ -160,8 +160,11 @@ class FireInspection extends Component
 
             // 2. Jika tidak ada yang spesifik, gunakan checklist default (dari getChecklistFromDB)
             $activeChecks = $customChecklist
-                ? json_decode($customChecklist->checks, true)
+                ? (is_array($customChecklist->checks) ? $customChecklist->checks : json_decode($customChecklist->checks, true))
                 : ($this->fields[$this->type]['checks'] ?? []);
+
+            // Pastikan $activeChecks tidak null agar loop selanjutnya tidak error
+            $activeChecks = $activeChecks ?? [];
 
             // 3. Isi technical data (Read-only)
             if ($master->technical_data) {
