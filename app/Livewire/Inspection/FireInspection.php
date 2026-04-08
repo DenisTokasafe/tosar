@@ -174,12 +174,15 @@ class FireInspection extends Component
             }
 
             // 4. Inisialisasi Checklist berdasarkan tipe (text/checkbox)
+            // 4. Inisialisasi Checklist berdasarkan tipe (text/checkbox)
             foreach ($activeChecks as $checkField) {
-                // Ambil nama dan tipe baik dari data lama (string) atau baru (array)
+                // Ambil nama field: jika array pakai ['name'], jika string (data lama) pakai langsung
                 $fieldName = is_array($checkField) ? $checkField['name'] : $checkField;
+
+                // Tentukan tipe input
                 $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
 
-                // Set default value
+                // Set default value: string kosong untuk text, true/false untuk checkbox
                 $this->conditions[$master->id][$fieldName] = ($type === 'text') ? '' : true;
             }
 
