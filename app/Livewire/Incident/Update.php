@@ -2592,6 +2592,7 @@ class Update extends Component
                     'contract_area_name'    => $this->contract_area_name,
                     'env_classification'    => $this->env_classification,
                     'pelapor_id'            => $this->pelapor_id,
+                    'user_auth'         => auth()->user()->id,
                     'manual_pelapor_name'   => $this->manualPelaporName,
                     'department_id'         => ($this->deptCont === 'dept') ? $this->department_id : null,
                     'contractor_id'         => ($this->deptCont === 'cont') ? $this->contractor_id : null,
