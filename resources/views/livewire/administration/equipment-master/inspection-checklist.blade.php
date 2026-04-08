@@ -116,8 +116,8 @@
                     <div class="grid grid-cols-2 gap-4 mb-4">
 
                         <div class="w-full form-control">
+                            <x-form.input-text label="Equipment Type" model="equipment_type" placeholder="Equipment Type" required />
 
-                            <x-form.input-floating label="Equipment Type" type='text' model="equipment_type" placeholder="Equipment Type" />
 
                         </div>
 
