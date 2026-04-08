@@ -1299,6 +1299,7 @@ class Create extends Component
                 'contractor_id'     => $this->contractor_id,
                 'penanggungJawab'   => $this->penanggungJawab,
                 'pelapor_id'        => $this->pelapor_id,
+                'user_auth'         => auth()->user()->id,
                 'manual_pelapor'    => $this->manualPelaporName,
                 'description'       => $this->description,
                 'emergency_action'  => $this->emergency_action,
