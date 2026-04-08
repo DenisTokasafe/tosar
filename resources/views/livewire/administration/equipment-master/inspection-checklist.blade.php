@@ -37,6 +37,7 @@
                     <th class="">Type</th>
 
                     <th class="">Location</th>
+                    <th class="">Location Specific</th>
 
                     <th class="">Inputs/Checks</th>
 
@@ -55,6 +56,7 @@
                     <td class="">{{ $item->equipment_type }}</td>
 
                     <td class="">{{ $item->location_keyword }}</td>
+                    <td class="">{{ $item->location_specific }}</td>
 
                     <td class="text-xs ">
 
