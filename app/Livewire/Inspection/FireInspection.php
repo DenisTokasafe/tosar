@@ -33,6 +33,7 @@ class FireInspection extends Component
     public $responsible_id, $equipment_master_id;
     public $inspected_users = [];
     public $fields = [];
+    public $masterCheckColumns = [];
 
     // Untuk fitur pencarian lokasi
     public $location_id;
