@@ -161,8 +161,23 @@ class FireInspection extends Component
             // 3. Inisialisasi Checklist (Sesuai kolom 'checks' dari DB)
             if (isset($this->fields[$this->type]['checks'])) {
                 foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    // Pastikan key ini ada agar tidak error di Blade
-                    $this->conditions[$master->id][$checkField] = true;
+
+                    /**
+                     * PERBAIKAN LOGIKA:
+                     * Menangani perbedaan format antara data lama (string)
+                     * dan data baru (array/object JSON)
+                     */
+
+                    // Jika data baru (ID 16/17), $checkField adalah array. Ambil 'name'-nya.
+                    // Jika data lama (ID 1-13), $checkField adalah string. Gunakan langsung.
+                    $fieldName = is_array($checkField) ? $checkField['name'] : $checkField;
+
+                    // Tentukan tipe input (Default ke checkbox jika data lama)
+                    $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
+
+                    // Set nilai awal berdasarkan tipe agar sinkron dengan wire:model
+                    // Teks diisi string kosong, Checkbox diisi true (Aman)
+                    $this->conditions[$master->id][$fieldName] = ($type === 'text') ? '' : true;
                 }
             }
 
