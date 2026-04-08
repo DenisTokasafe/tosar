@@ -113,20 +113,15 @@
 
                 <div class="p-6 pt-2 overflow-y-auto max-h-[70vh]">
 
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-
-                        <div class="w-full form-control">
-                            <x-form.input-text label="Equipment Type" model="equipment_type" placeholder="Equipment Type" required />
+                    <div class="grid grid-cols-3 gap-4 mb-4">
 
 
-                        </div>
+                        <x-form.input-text label="Equipment Type" model="equipment_type" placeholder="Equipment Type" required />
+                        <x-form.searchable-dropdown label="Location Keyword" required modelsearch="searchLocation"
+                            modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                            namedb="name" />
+                        <x-form.input-text label="Location Specific" model="location_specific" placeholder="Location Specific" required />
 
-                        <div class="w-full form-control">
-                            <x-form.searchable-dropdown label="Location Keyword" required modelsearch="searchLocation"
-                                modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
-                                namedb="name" />
-
-                        </div>
 
                     </div>
 

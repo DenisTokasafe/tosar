@@ -22,7 +22,7 @@ class InspectionChecklist extends Component
 
     public $location_id;
 
-    public $checklist_id, $equipment_type, $location_keyword;
+    public $checklist_id, $equipment_type, $location_keyword, $location_specific;
 
     public $searchLocation = '';
 
@@ -133,6 +133,7 @@ class InspectionChecklist extends Component
             'equipment_type' => 'required',
 
             'location_keyword' => 'nullable',
+            'location_specific' => 'nullable',
 
             'inputs.*' => 'required',
 
@@ -151,6 +152,7 @@ class InspectionChecklist extends Component
                 'equipment_type' => $this->equipment_type,
 
                 'location_keyword' => $this->location_keyword ?? 'Default',
+                'location_specific' => $this->location_specific ?? 'Default',
 
                 'inputs' => $this->inputs,
 
@@ -177,6 +179,7 @@ class InspectionChecklist extends Component
         $this->checklist_id = $id;
         $this->equipment_type = $checklist->equipment_type;
         $this->location_keyword = $checklist->location_keyword;
+        $this->location_specific = $checklist->location_specific;
         $this->searchLocation = $checklist->location_keyword;
         $this->inputs = $checklist->inputs;
 
@@ -207,7 +210,7 @@ class InspectionChecklist extends Component
 
     public function resetForm()
     {
-        $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks']);
+        $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'location_specific', 'inputs', 'checks']);
         $this->inputs = [''];
         // Inisialisasi checks sebagai array of objects
         $this->checks = [['name' => '', 'type' => 'checkbox']];
