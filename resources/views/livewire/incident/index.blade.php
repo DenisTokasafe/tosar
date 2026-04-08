@@ -16,17 +16,13 @@
                         {{-- Nomor Referensi --}}
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
-                                @can('updateInitialData', $item->id)
-                                {{-- Jika boleh: Tampilkan sebagai Link Aktif --}}
-                                <button class="text-xs font-bold no-underline link link-primary" wire:click="editIncident({{ $item->id }})">
-                                    {{ $item->report_number }}
+                                {{ __('Nomor Referensi') }}
+                                <button class="btn btn-ghost btn-xs btn-circle" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ !empty($search) ? 'text-blue-600' : '' }}">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
                                 </button>
-                                @else
-                                {{-- Jika tidak boleh: Tampilkan teks biasa (Disabled Look) --}}
-                                <span class="text-xs cursor-not-allowed text-base-content/50" title="Anda tidak memiliki akses untuk mengedit/melihat detil ini">
-                                    {{ $item->report_number }}
-                                </span>
-                                @endcan
                             </div>
                             {{-- Popover Input Search --}}
                             <div class="p-3 border shadow-lg w-60 rounded-box bg-base-100 border-base-300" popover id="popover-1" style="position-anchor: --anchor-1; position-area: bottom; margin-top: 5px;">
@@ -126,9 +122,16 @@
                         </td>
 
                         <td class="font-bold">
+                            @can('updateInitialData', $item)
                             <button class="text-xs no-underline link link-primary" wire:click="editIncident({{ $item->id }})">
                                 {{ $item->report_number }}
                             </button>
+                            @else
+                            {{-- Jika tidak boleh: Tampilkan teks biasa (Disabled Look) --}}
+                            <span class="text-xs cursor-not-allowed text-base-content/50" title="Anda tidak memiliki akses untuk mengedit/melihat detil ini">
+                                {{ $item->report_number }}
+                            </span>
+                            @endcan
                         </td>
 
                         <td class="whitespace-nowrap">
