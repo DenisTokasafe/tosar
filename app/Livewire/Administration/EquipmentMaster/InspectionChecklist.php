@@ -74,10 +74,9 @@ class InspectionChecklist extends Component
     // Menambah baris check kosong
 
     public function addCheck()
-
     {
-
-        $this->checks[] = '';
+        // Menambah item baru dengan default type 'checkbox'
+        $this->checks[] = ['name' => '', 'type' => 'checkbox'];
     }
 
     public function removeCheck($index)
@@ -173,22 +172,26 @@ class InspectionChecklist extends Component
 
 
     public function edit($id)
-
     {
-
         $checklist = InspectionChecklistModel::find($id);
-
         $this->checklist_id = $id;
-
         $this->equipment_type = $checklist->equipment_type;
-
         $this->location_keyword = $checklist->location_keyword;
-
         $this->searchLocation = $checklist->location_keyword;
-
         $this->inputs = $checklist->inputs;
 
-        $this->checks = $checklist->checks;
+        // Logic Handle data lama agar tidak error saat diedit
+        $rawChecks = $checklist->checks;
+        $formattedChecks = [];
+        foreach ($rawChecks as $check) {
+            if (is_array($check)) {
+                $formattedChecks[] = $check;
+            } else {
+                // Jika data lama masih string, otomatis anggap checkbox
+                $formattedChecks[] = ['name' => $check, 'type' => 'checkbox'];
+            }
+        }
+        $this->checks = $formattedChecks;
     }
 
 
@@ -203,13 +206,10 @@ class InspectionChecklist extends Component
 
 
     public function resetForm()
-
     {
-
         $this->reset(['checklist_id', 'equipment_type', 'location_keyword', 'inputs', 'checks']);
-
         $this->inputs = [''];
-
-        $this->checks = [''];
+        // Inisialisasi checks sebagai array of objects
+        $this->checks = [['name' => '', 'type' => 'checkbox']];
     }
 }

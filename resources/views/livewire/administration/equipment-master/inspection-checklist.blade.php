@@ -60,7 +60,14 @@
 
                         <strong>Inputs:</strong> {{ implode(', ', $item->inputs) }} <br>
 
-                        <strong>Checks:</strong> {{ implode(', ', $item->checks) }}
+                        <strong>Checks:</strong>
+                        @foreach($item->checks as $c)
+                        @if(is_array($c))
+                        <span class="badge badge-ghost badge-xs">{{ $c['name'] }} ({{ $c['type'] }})</span>
+                        @else
+                        <span class="badge badge-ghost badge-xs">{{ $c }} (checkbox)</span>
+                        @endif
+                        @endforeach
 
                     </td>
 
@@ -172,22 +179,26 @@
 
                             <label class="text-sm font-bold tracking-wider text-gray-600 uppercase">Checkpoints</label>
 
-                            @foreach ($checks as $index => $value)
+                            @foreach ($checks as $index => $check)
+                            <div class="flex flex-col gap-1 p-2 border border-gray-100 rounded-lg bg-gray-50/50 group">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1">
+                                        <x-form.input-floating
+                                            label="Item Name {{ $index + 1 }}"
+                                            type='text'
+                                            model="checks.{{ $index }}.name"
+                                            placeholder="e.g. SCBA or Nozzle" />
+                                    </div>
 
-                            <div class="flex items-center gap-2 group">
+                                    <select wire:model="checks.{{ $index }}.type" class="select select-bordered select-xs">
+                                        <option value="checkbox">Centang (V)</option>
+                                        <option value="text">Input (Nilai/Angka)</option>
+                                    </select>
 
-                                <x-form.input-floating label="Checkpoints {{ $index + 1 }}" type='text'
-
-                                    model="checks.{{ $index }}"
-
-                                    placeholder="Checkpoints {{ $index + 1 }}" />
-
-                                <button wire:click="removeCheck({{ $index }})"
-
-                                    class="transition-opacity opacity-50 btn btn-square btn-xs btn-error btn-outline group-hover:opacity-100">×</button>
-
+                                    <button wire:click="removeCheck({{ $index }})"
+                                        class="btn btn-square btn-xs btn-error btn-outline">×</button>
+                                </div>
                             </div>
-
                             @endforeach
 
                             <button wire:click="addCheck"
