@@ -133,38 +133,45 @@ class FireInspection extends Component
         $this->area = $name;
         $this->show_location = false;
 
-        // Ambil checklist dinamis dari DB (Menggantikan if-else manual)
         $this->getChecklistFromDB();
 
-        // Ambil semua alat
-        // 1. Ambil semua data master berdasarkan lokasi dan tipe
         $allMaster = EquipmentMaster::where('location_id', $id)
             ->where('type', $this->type)
             ->get();
 
-        $this->conditions = []; // Reset
+        $this->conditions = [];
 
-        // 2. Looping setiap alat yang ditemukan
         foreach ($allMaster as $master) {
-            // Inisialisasi array untuk ID master ini
             $this->conditions[$master->id] = [];
 
-            // Isi technical data (misal: FE No, Capacity) ke dalam conditions
+            // 1. Isi technical data (Read-only fields)
             if ($master->technical_data) {
                 foreach ($master->technical_data as $key => $val) {
                     $this->conditions[$master->id][$key] = $val;
                 }
             }
 
-            // 3. Inisialisasi Checklist (Default: TRUE / Aman)
+            // 2. Inisialisasi Checklist (Logika Baru)
             if (isset($this->fields[$this->type]['checks'])) {
                 foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    // Data checklist disimpan berdasarkan ID Master dan Nama Check-nya
-                    $this->conditions[$master->id][$checkField] = true;
+
+                    // Ekstrak nama dan tipe (Handling data array maupun string lama)
+                    $name = is_array($checkField) ? $checkField['name'] : $checkField;
+                    $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
+
+                    if ($type === 'checkbox') {
+                        // Default Aman (True)
+                        $this->conditions[$master->id][$name] = true;
+                    } else {
+                        // Default Kosong untuk input text (seperti BAR/PSI)
+                        $this->conditions[$master->id][$name] = '';
+                    }
                 }
             }
 
-            // Inisialisasi Remarks kosong untuk tiap alat
+            // 3. Inisialisasi Remarks per alat
+            // Catatan: Gunakan array di dalam conditions atau property terpisah
+            // Jika Anda ingin menyimpan per baris, pastikan di blade memanggil remarks[$master->id]
             $this->remarks[$master->id] = '';
         }
     }
@@ -335,7 +342,7 @@ class FireInspection extends Component
             'location_id'     => 'required',
             'inspected_users' => 'required|array|min:1',
             'conditions'      => 'required|array|min:1',
-            'foto_area'       => 'required|image|max:3072', // Foto Area jadi wajib di header
+            'foto_area'       => 'required|image|max:3072',
             'dokumentasi.*'   => 'nullable|image|max:2048',
         ]);
 
@@ -346,20 +353,16 @@ class FireInspection extends Component
             DB::transaction(function () use ($inspectedByString, $generatedNumber) {
 
                 // 1. SIMPAN KE HEADER (inspection_sessions)
-                $areaPhotoPath = null;
-                if ($this->foto_area) {
-                    $areaPhotoPath = $this->foto_area_path;
-                }
+                $areaPhotoPath = $this->foto_area ? $this->foto_area_path : null;
 
-                // Buat record session sebagai induk
                 $sessionId = DB::table('inspection_sessions')->insertGetId([
-                    'inspection_date' => $this->inspection_date,
-                    'inspection_number'   => $generatedNumber,
-                    'area_name'       => $this->area, // Diambil dari selectLocation
-                    'area_photo_path' => $areaPhotoPath,
-                    'submitted_by'        => auth()->user()->name ?? 'System',
-                    'created_at'      => now(),
-                    'updated_at'      => now(),
+                    'inspection_date'   => $this->inspection_date,
+                    'inspection_number' => $generatedNumber,
+                    'area_name'         => $this->area,
+                    'area_photo_path'   => $areaPhotoPath,
+                    'submitted_by'      => auth()->user()->name ?? 'System',
+                    'created_at'        => now(),
+                    'updated_at'        => now(),
                 ]);
 
                 // 2. SIMPAN KE DETAIL (fire_protections)
@@ -367,25 +370,47 @@ class FireInspection extends Component
 
                     $documentationPath = $this->dokumentasi_paths[$equipmentMasterId] ?? null;
 
-                    $rowRemarks = $dataKondisi['remarks'] ?? null;
-                    // Hilangkan key yang bukan checklist sebelum simpan ke JSON
-                    $cleanConditions = collect($dataKondisi)->forget(['remarks'])->toArray();
+                    // Ambil Remarks dari property $this->remarks (karena di selectLocation kita inisialisasi di sana)
+                    $rowRemarks = $this->remarks[$equipmentMasterId] ?? null;
+
+                    // --- PROSES PEMBERSIHAN DATA ---
+                    // Kita perlu membuang field technical_data (seperti FE No, Capacity) dari JSON conditions
+                    $masterObj = EquipmentMaster::find($equipmentMasterId);
+
+                    // Ambil semua keys yang merupakan data teknis statis
+                    $techKeys = $masterObj && $masterObj->technical_data
+                        ? array_keys($masterObj->technical_data)
+                        : [];
+
+                    // Filter: Hanya simpan data yang merupakan hasil checklist/inspeksi
+                    $cleanConditions = collect($dataKondisi)
+                        ->forget(['remarks']) // Pastikan remarks tidak masuk ke JSON conditions
+                        ->forget($techKeys)   // Buang data teknis (FE No, Kapasitas, dll) agar JSON tetap bersih
+                        ->toArray();
 
                     FireProtection::create([
-                        'inspection_session_id' => $sessionId, // <--- RELASI BARU
-                        'equipment_master_id' => $equipmentMasterId,
-                        'documentation_path'  => $documentationPath,
-                        'inspected_by'    => $inspectedByString,
-                        'conditions'          => $cleanConditions,
-                        'remarks'             => $rowRemarks,
+                        'inspection_session_id' => $sessionId,
+                        'equipment_master_id'   => $equipmentMasterId,
+                        'documentation_path'    => $documentationPath,
+                        'inspected_by'          => $inspectedByString,
+                        'conditions'            => $cleanConditions,
+                        'remarks'               => $rowRemarks,
                     ]);
                 }
             });
 
-            $this->reset(['dokumentasi', 'conditions', 'foto_area']);
-            $this->dispatch('alert', ['text' => "Data inspeksi berhasil disimpan per sesi!", 'backgroundColor' => "background: #00c853;"]);
+            $this->reset(['dokumentasi', 'conditions', 'foto_area', 'remarks', 'inspected_users']);
+            $this->updatedType($this->type); // Refresh form untuk input baru
+
+            $this->dispatch('alert', [
+                'text' => "Data inspeksi berhasil disimpan per sesi!",
+                'backgroundColor' => "background: #00c853;"
+            ]);
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['text' => "Kesalahan: " . $e->getMessage(), 'backgroundColor' => "background: #f44336;"]);
+            $this->dispatch('alert', [
+                'text' => "Kesalahan: " . $e->getMessage(),
+                'backgroundColor' => "background: #f44336;"
+            ]);
         }
     }
 
