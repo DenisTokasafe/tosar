@@ -97,7 +97,12 @@
                             </td>
                             @endforeach
 
-                            @foreach ($checks as $field)
+                            {{-- Ambil checklist spesifik untuk baris ini --}}
+                            @php
+                            $currentChecks = $this->masterChecklists[$master->id] ?? [];
+                            @endphp
+
+                            @foreach ($currentChecks as $field)
                             @php
                             // Cek apakah data baru (array) atau data lama (string)
                             $fieldName = is_array($field) ? $field['name'] : $field;

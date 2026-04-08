@@ -160,35 +160,31 @@ class FireInspection extends Component
         foreach ($allMaster as $master) {
             $this->conditions[$master->id] = [];
 
-            // 1. Isi technical data (Read-only fields)
-            if ($master->technical_data) {
-                foreach ($master->technical_data as $key => $val) {
-                    $this->conditions[$master->id][$key] = $val;
+            // CARI CHECKLIST YANG PALING COCOK UNTUK ALAT INI
+            $checklist = DB::table('inspection_checklists')
+                ->where('equipment_type', $this->type)
+                ->where(function ($q) use ($master) {
+                    // Cek apakah ada yang spesifik untuk nama alat ini
+                    $q->where('location_specific', $master->name)
+                        ->orWhere('location_specific', 'Default');
+                })
+                ->orderByRaw("CASE WHEN location_specific != 'Default' THEN 1 ELSE 2 END")
+                ->first();
+
+            if ($checklist) {
+                $checks = json_decode($checklist->checks, true);
+
+                // Simpan daftar kolom cek ke dalam array agar bisa diakses di Blade per ID Master
+                $this->masterChecklists[$master->id] = $checks;
+
+                foreach ($checks as $field) {
+                    $name = is_array($field) ? $field['name'] : $field;
+                    $type = is_array($field) ? ($field['type'] ?? 'checkbox') : 'checkbox';
+
+                    // Inisialisasi nilai default
+                    $this->conditions[$master->id][$name] = ($type === 'checkbox') ? true : '';
                 }
             }
-
-            // 2. Inisialisasi Checklist (Logika Baru)
-            if (isset($this->fields[$this->type]['checks'])) {
-                foreach ($this->fields[$this->type]['checks'] as $checkField) {
-
-                    // Ekstrak nama dan tipe (Handling data array maupun string lama)
-                    $name = is_array($checkField) ? $checkField['name'] : $checkField;
-                    $type = is_array($checkField) ? ($checkField['type'] ?? 'checkbox') : 'checkbox';
-
-                    if ($type === 'checkbox') {
-                        // Default Aman (True)
-                        $this->conditions[$master->id][$name] = true;
-                    } else {
-                        // Default Kosong untuk input text (seperti BAR/PSI)
-                        $this->conditions[$master->id][$name] = '';
-                    }
-                }
-            }
-
-            // 3. Inisialisasi Remarks per alat
-            // Catatan: Gunakan array di dalam conditions atau property terpisah
-            // Jika Anda ingin menyimpan per baris, pastikan di blade memanggil remarks[$master->id]
-            $this->remarks[$master->id] = '';
         }
     }
 
