@@ -192,9 +192,22 @@ class FireInspection extends Component
                 }
             }
             // 3. Inisialisasi Checklist (Default: TRUE / Aman)
+            // 3. Inisialisasi Checklist
             if (isset($this->fields[$this->type]['checks'])) {
                 foreach ($this->fields[$this->type]['checks'] as $checkField) {
-                    $this->conditions[$checkField] = true;
+
+                    // Cek apakah $checkField adalah array (format baru) atau string (format lama)
+                    $name = is_array($checkField) ? $checkField['name'] : $checkField;
+                    $type = is_array($checkField) ? $checkField['type'] : 'checkbox';
+
+                    // Logika inisialisasi nilai default
+                    if ($type === 'checkbox') {
+                        // Jika checkbox, defaultnya TRUE (Aman)
+                        $this->conditions[$master->id][$name] = true;
+                    } else {
+                        // Jika text/input (seperti BAR/PSI), defaultnya string kosong
+                        $this->conditions[$master->id][$name] = '';
+                    }
                 }
             }
         }

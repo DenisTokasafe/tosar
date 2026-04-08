@@ -69,9 +69,13 @@
                             </th>
                             @endforeach
                             @foreach ($checks as $checkItem)
-                            <th
-                                class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1 whitespace-nowrap md:whitespace-normal md:w-[60px] md:min-w-[60px] md:leading-tight">
+                            <th class="text-center border-b border-r bg-amber-50 text-amber-700 text-[10px] capitalize px-1 whitespace-nowrap md:whitespace-normal md:w-[60px] md:min-w-[60px] md:leading-tight">
+                                {{-- Cek jika data berupa array (format baru), ambil property 'name' --}}
+                                @if(is_array($checkItem))
+                                {{ $checkItem['name'] }}
+                                @else
                                 {{ $checkItem }}
+                                @endif
                             </th>
                             @endforeach
 
@@ -94,11 +98,27 @@
                             @endforeach
 
                             @foreach ($checks as $field)
-                            <td class="text-center bg-white border-b border-r">
+                            @php
+                            // Cek apakah data baru (array) atau data lama (string)
+                            $fieldName = is_array($field) ? $field['name'] : $field;
+                            $fieldType = is_array($field) ? ($field['type'] ?? 'checkbox') : 'checkbox';
+                            @endphp
+
+                            <td class="p-1 text-center bg-white border-b border-r">
+                                @if ($fieldType === 'text')
+                                {{-- Tampilan untuk Input Nilai (Contoh: SCBA BAR / Oksigen PSI) --}}
+                                <input type="text"
+                                    wire:key="input-{{ $master->id }}-{{ $fieldName }}"
+                                    wire:model.blur="conditions.{{ $master->id }}.{{ $fieldName }}"
+                                    placeholder="..."
+                                    class="input input-bordered input-xs w-full max-w-[80px] text-center focus:border-emerald-500" />
+                                @else
+                                {{-- Tampilan untuk Checkbox (Default) --}}
                                 <input type="checkbox"
-                                    wire:key="check-{{ $master->id }}-{{ $field }}"
-                                    wire:model.live="conditions.{{ $master->id }}.{{ $field }}"
+                                    wire:key="check-{{ $master->id }}-{{ $fieldName }}"
+                                    wire:model.live="conditions.{{ $master->id }}.{{ $fieldName }}"
                                     class="checkbox checkbox-xs border-rose-600 bg-rose-500 checked:border-emerald-500 checked:bg-emerald-400 checked:text-emerald-800" />
+                                @endif
                             </td>
                             @endforeach
 
