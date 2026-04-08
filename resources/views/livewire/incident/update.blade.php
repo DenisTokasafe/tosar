@@ -276,12 +276,8 @@
                                 $old = $activity->properties['old'] ?? [];
 
                                 // Mencari label identitas (nama person, summary, dll)
-                                $summary = $attributes['person_name'] ??
-                                ($attributes['action_summary'] ??
-                                ($attributes['timeline_summary'] ??
-                                ($attributes['file_display'] ??
-                                ($attributes['peepo_category'] ??
-                                ($attributes['impact_summary'] ?? '')))));
+                                $summary =
+                                $attributes['person_name'] ??($attributes['action_summary'] ??($attributes['timeline_summary'] ??($attributes['file_display'] ??($attributes['peepo_category'] ??($attributes['impact_summary']??($attributes['user_id_label'] ?? ''))))));
                                 @endphp
                                 <tr class="hover">
                                     {{-- KOLOM 1: WAKTU --}}
