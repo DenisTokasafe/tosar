@@ -122,7 +122,9 @@
                         </div>
 
                         <div class="w-full form-control">
-                            <x-form.search-floating label="Location Keyword" required modelsearch="searchLocation" modelid="location_id" placeholder="Location Keyword..." :options="$locations" :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+                            <x-form.searchable-dropdown label="Location Keyword" required modelsearch="searchLocation"
+                                modelid="location_id" :options="$locations" :showdropdown="$show_location" clickaction="selectLocation"
+                                namedb="name" />
 
                         </div>
 
