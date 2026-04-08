@@ -16,7 +16,7 @@
                         {{-- Nomor Referensi --}}
                         <th class="whitespace-nowrap min-w-[150px]">
                             <div class="flex items-center gap-1">
-                                @can('updateInitialData', $item)
+                                @can('updateInitialData', $item->id)
                                 {{-- Jika boleh: Tampilkan sebagai Link Aktif --}}
                                 <button class="text-xs font-bold no-underline link link-primary" wire:click="editIncident({{ $item->id }})">
                                     {{ $item->report_number }}
