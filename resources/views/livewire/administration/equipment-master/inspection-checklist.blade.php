@@ -117,19 +117,13 @@
 
                         <div class="w-full form-control">
 
-                            <x-form.input-floating label="Equipment Type" type='text' model="equipment_type"
-
-                                placeholder="Equipment Type" />
+                            <x-form.input-floating label="Equipment Type" type='text' model="equipment_type" placeholder="Equipment Type" />
 
                         </div>
 
                         <div class="w-full form-control">
-
-                            <x-form.search-floating label="Location Keyword" required modelsearch="searchLocation"
-
-                                modelid="location_id" placeholder="Location Keyword..." :options="$locations"
-
-                                :showdropdown="$show_location" clickaction="selectLocation" namedb="name" />
+                            <x-form.input-floating label="Location Keyword" type='text' model="location_keyword" placeholder="Location Keyword" />
+                            <!-- <x-form.search-floating label="Location Keyword" required modelsearch="searchLocation" modelid="location_id" placeholder="Location Keyword..." :options="$locations":showdropdown="$show_location" clickaction="selectLocation" namedb="name" /> -->
 
                         </div>
 
