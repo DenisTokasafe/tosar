@@ -48,8 +48,10 @@ class IncidentReportPolicy
      */
     public function updateInitialData(User $user, IncidentReport $incident): bool
     {
-        // Hanya bisa diedit jika status masih Open
-        if ($incident->status !== 'Open') return false;
+        // Hanya bisa diedit jika status BELUM Closed
+        if ($incident->status === 'Closed') {
+            return false;
+        }
 
         return $user->id === $incident->pelapor_id ||
             $this->isInvestigator($user, $incident);
