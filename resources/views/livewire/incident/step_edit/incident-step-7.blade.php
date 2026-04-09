@@ -23,6 +23,12 @@
                         <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20">
                             <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                         </div>
+                        <div class="absolute inset-x-0 bottom-0 flex items-center justify-center rounded-lg bg-black/20">
+                            <a href="{{ $secureImgUrl }}" target="_blank"
+                                class="text-[10px] font-bold text-blue-700 hover:underline truncate">
+                                {{ __('lihat') }}
+                            </a>
+                        </div>
 
                         @if($canEdit)
                         <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Hapus foto permanen?"
