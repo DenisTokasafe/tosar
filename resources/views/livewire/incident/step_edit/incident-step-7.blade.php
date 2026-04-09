@@ -17,8 +17,8 @@
         <table class="table w-full table-compact">
             <thead>
                 <tr class="text-[11px] uppercase bg-base-200">
-                    <th class="rounded-l-lg">Rencana Perbaikan</th>
-                    <th>Hirarki</th>
+                    <th class="rounded-l-lg">Tindakan</th>
+                    <th>Kontrol Hirarki</th>
                     <th>PIC</th>
                     <th>Batas Waktu</th>
                     <th>Tgl. Selesai</th>
@@ -93,16 +93,16 @@
             @endif
 
             <div class="grid grid-cols-1 gap-3">
-                {{-- Rencana Perbaikan --}}
+                {{-- Tindakan --}}
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Rencana Perbaikan</span></label>
+                    <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Tindakan</span></label>
                     <x-form.text_area model="corrective_actions.{{ $index }}.action_description" rows="3" :disabled="!$canEdit" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
-                    {{-- Hirarki --}}
+                    {{-- Kontrol Hirarki --}}
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Hirarki</span></label>
+                        <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Kontrol Hirarki</span></label>
                         <x-form.select model="corrective_actions.{{ $index }}.control_hierarchy"
                             :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]"
                             :disabled="!$canEdit" />
