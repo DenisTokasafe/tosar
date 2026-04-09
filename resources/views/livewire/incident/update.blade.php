@@ -73,8 +73,8 @@
                         @break
 
                         @case('Action Required')
-                        <div class="badge badge-warning badge-xs"></div>
-                        <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
+                        <div class="badge badge-neutral badge-xs"></div>
+                        <span class="text-sm italic font-black uppercase text-neutral">ACTION REQUIRED</span>
                         @break
 
                         @case('Closed')
