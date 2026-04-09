@@ -2411,7 +2411,7 @@ class Update extends Component
         ];
 
         // --- Logika Step 9 ---
-        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id);
+        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) && !empty($this->incident->penerimaan_komentar_internal_id);
         $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
         $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
 
