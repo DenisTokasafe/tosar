@@ -48,11 +48,11 @@
 
                         @case('In Progress')
                         <div class="flex items-center gap-2">
-                            <div class="badge badge-info badge-xs animate-bounce"></div>
-                            <span class="text-sm italic font-black uppercase text-info">IN PROGRESS</span>
+                            <div class="badge badge-warning badge-xs animate-bounce"></div>
+                            <span class="text-sm italic font-black uppercase text-warning">IN PROGRESS</span>
 
                             @if($this->subStatus)
-                            <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-info/10 border border-info/20">
+                            <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning/10 border border-warning/20">
                                 <span class="text-[9px] font-bold text-info uppercase tracking-widest">
                                     HAS {{ $this->subStatus }}
                                 </span>
@@ -64,10 +64,10 @@
                         {{-- TAMBAHAN: WAITING REVIEW --}}
                         @case('Waiting Review')
                         <div class="flex items-center gap-2">
-                            <div class="badge badge-primary badge-xs animate-ping"></div>
-                            <span class="text-sm italic font-black uppercase text-primary">WAITING REVIEW</span>
-                            <div class="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-                                <span class="text-[9px] font-bold text-primary uppercase tracking-widest">Awaiting Signatures</span>
+                            <div class="badge badge-info badge-xs animate-ping"></div>
+                            <span class="text-sm italic font-black uppercase text-info">WAITING REVIEW</span>
+                            <div class="px-2 py-0.5 rounded-full bg-info/10 border border-info/20">
+                                <span class="text-[9px] font-bold badge badge-soft badge-info">Awaiting Signatures</span>
                             </div>
                         </div>
                         @break
