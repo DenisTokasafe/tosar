@@ -2204,7 +2204,7 @@ class Update extends Component
                 'visual_evidence' => empty($this->existing_visual_evidence) ? 'required' : 'nullable',
                 'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
 
-                'supporting_documents' => 'nullable', // Dokumen pendukung biasanya opsional
+                'supporting_documents' => empty($this->existing_supporting_documents) ? 'required' : 'nullable', // Dokumen pendukung biasanya opsional
                 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
