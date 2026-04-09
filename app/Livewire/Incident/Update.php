@@ -2682,6 +2682,9 @@ class Update extends Component
             $this->status = $this->determineReportStatus();
             // 9. Post-Success Synchronization
             $this->incident->refresh();
+            $allFiles = $this->incident->attachments;
+            $this->existing_visual_evidence = $allFiles->where('file_type', 'visual')->values()->all();
+            $this->existing_supporting_documents = $allFiles->where('file_type', 'document')->values()->all();
             $this->current_lock_version = $this->incident->lock_version;
 
             if ($this->currentStep < 9) {
