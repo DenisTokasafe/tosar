@@ -220,9 +220,13 @@
 
                             <div class="flex gap-2">
                                 @if ($i < 9)
-                                    <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
-                                    {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
-                                    </button>
+
+                                    <flux:button type="button" variant="info" size="xs" wire:click="nextStep" :disabled="$canEdit ? false : true" wire:loading.attr="disabled" loading.target="nextStep" class="px-4 shadow-sm">
+                                    {{-- Text saat kondisi normal --}}
+                                    <span wire:loading.remove wire:target="nextStep">
+                                        {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
+                                    </span>
+
                                     @endif
 
                                     <div class="flex flex-col items-end">
