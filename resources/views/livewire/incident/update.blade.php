@@ -226,6 +226,7 @@
                                     <span wire:loading.remove wire:target="nextStep">
                                         {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
                                     </span>
+                                    </flux:button>
 
                                     @endif
 
