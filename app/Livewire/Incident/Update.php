@@ -2393,7 +2393,7 @@ class Update extends Component
             'step2' => $this->incident->involved_persons > 0, // Gunakan withCount di query utama
             'step3' => $this->incident->investigation_teams > 0,
             'step4' => $this->incident->peepo_analyses > 0,
-            'step5' => $this->incident->timelines > 0,
+            'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->count() >  0,
             'step6' => !empty($this->incident->scat_analysis),
             'step7' => $this->incident->corrective_actions > 0,
             'step8' => !empty($this->key_learning),
