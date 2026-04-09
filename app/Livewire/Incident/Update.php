@@ -712,8 +712,8 @@ class Update extends Component
 
         $allFiles = $report->attachments; // Ganti 'files' sesuai nama relasi di Model IncidentReport
 
-        $this->existing_visual_evidence = $allFiles->where('file_type', 'visual');
-        $this->existing_supporting_documents = $allFiles->where('file_type', 'document');
+        $this->existing_visual_evidence = $allFiles->where('file_type', 'visual')->values()->all();
+        $this->existing_supporting_documents = $allFiles->where('file_type', 'document')->values()->all();
 
         // Load Tindakan Perbaikan
         $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
@@ -2212,10 +2212,15 @@ class Update extends Component
 
             7 => [
                 // Jika sudah ada file di database, visual_evidence baru harusnya nullable
-                'visual_evidence' => 'required',
+
+                'visual_evidence' => (is_array($this->existing_visual_evidence) && count($this->existing_visual_evidence) > 0)
+                    ? 'nullable'
+                    : 'required',
                 'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
 
-                'supporting_documents' => 'required', // Dokumen pendukung biasanya opsional
+                'supporting_documents' => (is_array($this->existing_supporting_documents) && count($this->existing_supporting_documents) > 0)
+                    ? 'nullable'
+                    : 'required',
                 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
