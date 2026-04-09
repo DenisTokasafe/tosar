@@ -1859,8 +1859,8 @@ class Update extends Component
             'step4' => $this->incident->peepoAnalyses()->whereNotNull('temuan')->where('temuan', '!=', '')->exists(),
             'step5' => $this->incident->timelines()->where('why_count_used', '!=', 0)->exists(),
             'step6' => collect($this->incident->scat_analysis)->flatten()->contains(fn($value) => !empty($value) && $value !== ""),
-            'step7' => $this->incident->correctiveActions()->exists(),
-
+            'step7' => $this->incident->correctiveActions()->exists() &&
+                $this->incident->correctiveActions()->whereNull('actual_completion_date')->count() === 0 && $this->incident->attachments()->exists(),
             // Pastikan variabel ini sinkron dengan properti component
             'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
 

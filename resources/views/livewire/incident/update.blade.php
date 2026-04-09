@@ -265,6 +265,7 @@
                     </h3>
 
                     <div class="max-h-[75vh] overflow-y-auto overflow-x-auto border rounded-lg bg-base-50">
+
                         <table class="table border table-xs table-pin-rows">
                             <thead>
                                 <tr class="bg-base-200 text-base-content">
@@ -273,6 +274,7 @@
                                     <th class="px-2 py-2 border">{{ __('Detail Perubahan') }}</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 @php
                                 $allLogs = (isset($this->incident) && $this->incident->exists)
