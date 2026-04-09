@@ -701,8 +701,9 @@ class Update extends Component
 
         $allFiles = $report->attachments; // Ganti 'files' sesuai nama relasi di Model IncidentReport
 
-        $this->existing_visual_evidence = $allFiles->where('file_type', 'visual');
-        $this->existing_supporting_documents = $allFiles->where('file_type', 'document');
+
+        $this->existing_supporting_documents = $report->attachments()->where('file_type', 'document')->exists();
+        $this->existing_visual_evidence = $report->attachments()->where('file_type', 'visual')->exists();
         // Load Tindakan Perbaikan
         $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
             // Inisialisasi search field untuk tiap baris PIC
@@ -876,8 +877,8 @@ class Update extends Component
 
         // 3. Refresh data existing agar UI terupdate
         $report = IncidentReport::with('attachments')->find($this->incidentId);
-        $this->existing_supporting_documents = $report->attachments->where('file_type', 'document');
-        $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual');
+        $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->exists();
+        $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->exists();
 
         $this->dispatch('alert', ['type' => 'success', 'text' => 'Dokumen berhasil dihapus.']);
     }
@@ -2201,10 +2202,11 @@ class Update extends Component
 
             7 => [
                 // Jika sudah ada file di database, visual_evidence baru harusnya nullable
-                'visual_evidence' => empty($this->existing_visual_evidence) ? 'required' : 'nullable',
+
+                'visual_evidence' => $this->existing_visual_evidence ? 'nullable' : 'required',
                 'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
 
-                'supporting_documents' => empty($this->existing_supporting_documents) ? 'required' : 'nullable', // Dokumen pendukung biasanya opsional
+                'supporting_documents' => $this->existing_supporting_documents ? 'nullable' : 'required', // Dokumen pendukung biasanya opsional
                 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
