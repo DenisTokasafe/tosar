@@ -227,11 +227,25 @@
 
                                     <div class="flex flex-col items-end">
                                         @if($this->canUpdate)
-                                        <button type="button" wire:click="update" wire:loading.attr="disabled" class="px-4 text-white shadow-md btn btn-xs btn-success">
-                                            <span wire:loading.remove.add.class="hidden" wire:target="update">{{ __('Update Laporan') }}</span>
-                                            <span wire:loading.remove.class="hidden" wire:target="update,visual_evidence,supporting_documents" class="hidden">{{ __('Proses Update...') }}</span>
-                                            <span wire:loading.remove.class="hidden" wire:target="update,visual_evidence,supporting_documents" class="hidden loading loading-spinner loading-xs"></span>
-                                        </button>
+                                        <flux:button
+                                            type="button"
+                                            wire:click="update"
+                                            variant="primary"
+                                            size="xs"
+                                            wire:loading.attr="disabled"
+                                            loading.target="update, visual_evidence, supporting_documents"
+                                            class="px-4 shadow-md">
+                                            {{-- Text saat kondisi normal --}}
+                                            <span wire:loading.remove wire:target="update, visual_evidence, supporting_documents">
+                                                {{ __('Update Laporan') }}
+                                            </span>
+
+                                            {{-- Text & Spinner saat kondisi loading --}}
+                                            <span wire:loading wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2">
+                                                <flux:icon.spinner class="w-4 h-4" />
+                                                {{ __('Proses Update...') }}
+                                            </span>
+                                        </flux:button>
                                         @else
                                         <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
                                             <div class="flex items-center gap-1">
