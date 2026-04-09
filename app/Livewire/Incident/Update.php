@@ -785,7 +785,7 @@ class Update extends Component
 
         // --- Check Realisasi (Actual Completion) ---
         $isAllActionClosed = $totalActions > 0 &&
-            !$this->incident->correctiveActions->whereNull('actual_completion_date')->exists();
+            $this->incident->correctiveActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
         // --- LOGIKA HIERARKI STATUS ---
 
