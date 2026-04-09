@@ -5,7 +5,6 @@
 
         {{-- 1. VISUAL EVIDENCE --}}
         <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
-            {{-- Lock Upload Component --}}
             <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" required="true" :disabled="!$canEdit" />
 
             <div class="grid grid-cols-3 gap-2 mt-3">
@@ -13,11 +12,18 @@
                 @foreach($existing_visual_evidence as $media)
                 <div class="avatar">
                     <div class="relative w-40 rounded">
-                        <img src="{{ asset('storage/' . $media->file_path) }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+                        @php
+                        // Enkripsi path untuk masking URL gambar
+                        $secureImgUrl = route('document.secure-view', ['path' => Crypt::encryptString($media->file_path)]);
+                        @endphp
+
+                        {{-- Gunakan link terenkripsi untuk src gambar --}}
+                        <img src="{{ $secureImgUrl }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
+
                         <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20">
                             <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
                         </div>
-                        {{-- Lock Delete Button --}}
+
                         @if($canEdit)
                         <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Hapus foto permanen?"
                             class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-error btn-xs">✕</button>
@@ -31,6 +37,7 @@
                 @foreach($visual_evidence as $index => $image)
                 <div class="avatar">
                     <div class="relative w-40 rounded">
+                        {{-- Untuk file baru yang belum di-save, tetap gunakan temporaryUrl() bawaan Livewire --}}
                         <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
                         @if($canEdit)
                         <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
@@ -48,10 +55,16 @@
             <x-form.upload label="Supporting Docs" model="supporting_documents" multiple keterangan="PDF, DOCX" required="true" :disabled="!$canEdit" />
 
             <div class="mt-3 space-y-2">
+                {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_supporting_documents as $doc)
                 <div class="flex items-center justify-between p-2 border rounded-lg bg-base-300 border-base-100 group">
                     <div class="flex items-center gap-2 overflow-hidden">
-                        @php $ext = pathinfo($doc->file_name, PATHINFO_EXTENSION); @endphp
+                        @php
+                        $ext = pathinfo($doc->file_name, PATHINFO_EXTENSION);
+                        // Enkripsi path untuk masking URL dokumen
+                        $secureDocUrl = route('document.secure-view', ['path' => Crypt::encryptString($doc->file_path)]);
+                        @endphp
+
                         @if($ext === 'pdf')
                         <x-icon.pdf class="flex-shrink-0 w-4 h-4 text-red-500" />
                         @elseif(in_array($ext, ['doc', 'docx']))
@@ -61,7 +74,8 @@
                         @endif
 
                         <div class="flex flex-col min-w-0">
-                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                            {{-- Link sekarang menggunakan secure URL --}}
+                            <a href="{{ $secureDocUrl }}" target="_blank"
                                 class="text-[10px] font-bold text-blue-700 hover:underline truncate">
                                 {{ $doc->file_name }}
                             </a>
@@ -78,6 +92,7 @@
                 </div>
                 @endforeach
 
+                {{-- DATA TEMPORARY (NEW UPLOAD) --}}
                 @if($supporting_documents)
                 @foreach($supporting_documents as $index => $doc)
                 <div class="flex items-center justify-between p-2 border border-dashed rounded-lg bg-base-200 border-base-300">

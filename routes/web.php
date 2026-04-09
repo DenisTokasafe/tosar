@@ -56,6 +56,9 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Wpi\Index as WpiForm;
 use App\Livewire\Wpi\WpiList;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -69,6 +72,28 @@ Route::get('/.well-known/assetlinks.json', function () {
         ]
     ]);
 });
+
+Route::get('/view-document/{path}', function ($path) {
+    try {
+        // 1. Dekripsi string path yang dikirim dari Blade
+        $decryptedPath = Crypt::decryptString($path);
+
+        // 2. Pastikan file ada di disk storage (biasanya 'public')
+        if (!Storage::disk('public')->exists($decryptedPath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        // 3. Ambil informasi file untuk header (Opsional, tapi bagus untuk browser)
+        $mimeType = Storage::disk('public')->mimeType($decryptedPath);
+
+        // 4. Return file sebagai response (Streaming)
+        // response()->file() atau Storage::response() akan membuka file di browser (seperti PDF/Gambar)
+        return Storage::disk('public')->response($decryptedPath);
+    } catch (DecryptException $e) {
+        // Jika link dimanipulasi oleh user, dekripsi akan gagal
+        abort(403, 'Akses ditolak: Link tidak valid.');
+    }
+})->name('document.secure-view')->middleware('auth');
 
 Route::get('dashboard', Hazard::class)->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/', 'dashboard');
