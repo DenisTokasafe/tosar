@@ -236,12 +236,12 @@
                                             loading.target="update, visual_evidence, supporting_documents"
                                             class="px-4 shadow-md">
                                             {{-- Text saat kondisi normal --}}
-                                            <span wire:loading.add.class="hidden" wire:target="update, visual_evidence, supporting_documents">
+                                            <span wire:loading.remove wire:target="update, visual_evidence, supporting_documents">
                                                 {{ __('Update Laporan') }}
                                             </span>
 
                                             {{-- Text & Spinner saat kondisi loading --}}
-                                            <span wire:loading wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2 ">
+                                            <span wire:loading.remove.class="hidden" wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2 hidden">
                                                 {{ __('Proses Update...') }}
                                                 <span wire:loading.remove.class="hidden" class="hidden loading loading-spinner loading-xs"></span>
                                             </span>
