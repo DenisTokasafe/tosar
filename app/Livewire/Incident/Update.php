@@ -2202,11 +2202,11 @@ class Update extends Component
 
             7 => [
                 // Jika sudah ada file di database, visual_evidence baru harusnya nullable
+                'visual_evidence' => 'required',
 
-                'visual_evidence' => $this->existing_visual_evidence ? 'nullable' : 'required',
                 'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
 
-                'supporting_documents' => $this->existing_supporting_documents ? 'nullable' : 'required', // Dokumen pendukung biasanya opsional
+                'supporting_documents' => 'required', // Dokumen pendukung biasanya opsional
                 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
