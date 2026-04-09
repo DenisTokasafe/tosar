@@ -2390,12 +2390,12 @@ class Update extends Component
         // 2. Susun array steps secara linear
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
-            'step2' => $this->incident->involved_persons_count > 0, // Gunakan withCount di query utama
-            'step3' => $this->incident->investigation_teams_count > 0,
-            'step4' => $this->incident->peepo_analyses_count > 0,
-            'step5' => $this->incident->timelines_count > 0,
+            'step2' => $this->incident->involved_persons > 0, // Gunakan withCount di query utama
+            'step3' => $this->incident->investigation_teams > 0,
+            'step4' => $this->incident->peepo_analyses > 0,
+            'step5' => $this->incident->timelines > 0,
             'step6' => !empty($this->incident->scat_analysis),
-            'step7' => $this->incident->corrective_actions_count > 0,
+            'step7' => $this->incident->corrective_actions > 0,
             'step8' => !empty($this->key_learning),
         ];
 
