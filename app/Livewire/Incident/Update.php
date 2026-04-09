@@ -2153,6 +2153,13 @@ class Update extends Component
                 'penerimaan_komentar_ktt' => $allRules['penerimaan_komentar_ktt']
             ]
             : [];
+        // 1. Cek ketersediaan Visual (di DB atau di Input)
+        $hasVisual = (is_array($this->existing_visual_evidence) && count($this->existing_visual_evidence) > 0)
+            || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
+
+        // 2. Cek ketersediaan Dokumen (di DB atau di Input)
+        $hasDocument = (is_array($this->existing_supporting_documents) && count($this->existing_supporting_documents) > 0)
+            || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
 
         // 3. Pemetaan Rules per Step
         $stepRules = [
@@ -2237,14 +2244,17 @@ class Update extends Component
             7 => [
                 // Jika sudah ada file di database, visual_evidence baru harusnya nullable
 
-                'visual_evidence' => (is_array($this->existing_visual_evidence) && count($this->existing_visual_evidence) > 0)
-                    ? 'nullable'
-                    : 'required',
-                'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Validasi tipe file
+                'visual_evidence' => (!$hasDocument)
+                    ? 'required|array|min:1'
+                    : 'nullable|array',
 
-                'supporting_documents' => (is_array($this->existing_supporting_documents) && count($this->existing_supporting_documents) > 0)
-                    ? 'nullable'
-                    : 'required',
+                'visual_evidence.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+
+                // Supporting Documents: Required hanya jika TIDAK ADA visual sama sekali
+                'supporting_documents' => (!$hasVisual)
+                    ? 'required|array|min:1'
+                    : 'nullable|array',
+
                 'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
 
                 'corrective_actions.*.action_description' => $allRules['corrective_actions.*.action_description'],
