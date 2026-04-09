@@ -219,7 +219,7 @@
                             </div>
 
                             <div class="flex gap-2">
-                                @if ($i < 9)
+                                @if ($i <= 9)
                                     <button wire:click="nextStep" class="px-4 text-white shadow-sm btn btn-info btn-xs">
                                     {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
                                     </button>
