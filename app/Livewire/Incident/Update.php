@@ -756,63 +756,61 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
+        // Refresh data untuk memastikan status menghitung data terbaru di database
         $this->incident->load(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
 
-        // --- Check Kelengkapan Step 1-6 (Investigasi) ---
+        // --- Step 1-6: Investigasi ---
         $hasTeams = $this->incident->investigationTeams->count() > 0;
-        $hasAnalysis = $this->incident->peepoAnalyses->count() > 0 || $this->incident->timelines->where('why_count_used', '!=', 0)->count() > 0;
+        $hasAnalysis = $this->incident->peepoAnalyses->whereNotIn('temuan', ['-', '', null])->count() > 0 ||
+            $this->incident->timelines->where('why_count_used', '>', 0)->count() > 0;
         $hasScat = !empty($this->incident->scat_analysis);
         $investigationComplete = $hasTeams && $hasAnalysis && $hasScat;
 
-        // --- Check Kelengkapan Step 7-8 (Action Plan & Key Learning) ---
+        // --- Step 7-8: Action Plan & Key Learning ---
         $totalActions = $this->incident->correctiveActions->count();
         $hasKeyLearning = !empty($this->incident->key_learning);
         $actionPlanComplete = $totalActions > 0 && $hasKeyLearning;
 
-        // --- Check Kelengkapan Step 9 (Review/Approval) ---
-        $reviewInternalMet = !empty($this->incident->penerimaan_komentar_internal_id);
-        $reviewOhsMet = !empty($this->incident->penerimaan_komentar_ohs_id);
+        // --- Step 9: Review/Approval ---
+        $reviewInternalMet = !empty($this->incident->pm_internal_id); // Gunakan nama kolom DB asli
+        $reviewOhsMet = !empty($this->incident->ohs_head_id);
 
         $contractorRequirementMet = $this->incident->contractor_id
-            ? !empty($this->incident->penerimaan_komentar_contractor_id)
+            ? !empty($this->incident->pm_contractor_id)
             : true;
 
         $kttRequirementMet = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])
-            ? !empty($this->incident->penerimaan_komentar_ktt_id)
+            ? !empty($this->incident->ktt_id)
             : true;
 
         $allReviewComplete = $reviewInternalMet && $reviewOhsMet && $contractorRequirementMet && $kttRequirementMet;
 
         // --- Check Realisasi (Actual Completion) ---
+        // Status 'Closed' hanya jika semua action memiliki actual_completion_date
         $isAllActionClosed = $totalActions > 0 &&
             $this->incident->correctiveActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
-        // --- LOGIKA HIERARKI STATUS ---
+        // --- LOGIKA HIERARKI (URUTAN SANGAT PENTING) ---
 
-        // 1. SEMUA SELESAI
-        if ($investigationComplete && $actionPlanComplete && $allReviewComplete && $isAllActionClosed) {
-            return 'Closed';
+        // 1. Jika investigasi & review belum lengkap, tetap di progress/waiting
+        if (!$investigationComplete || !$actionPlanComplete) {
+            return ($hasTeams || $hasAnalysis) ? 'In Progress' : 'Open';
         }
 
-        // 2. STATUS BARU: WAITING REVIEW
-        // Jika Step 1-8 Lengkap, tapi Step 9 (Tanda tangan/Review) belum lengkap
-        if ($investigationComplete && $actionPlanComplete && !$allReviewComplete) {
+        if (!$allReviewComplete) {
             return 'Waiting Review';
         }
 
-        // 3. ACTION REQUIRED
-        // Investigasi & Review beres, tapi ada tindakan perbaikan yang belum di-close (actual_date masih null)
-        if ($investigationComplete && $allReviewComplete && !$isAllActionClosed) {
-            return 'Action Required';
+        // 2. Jika Review SUDAH LENGKAP, cek realisasi tindakan
+        if ($allReviewComplete) {
+            if (!$isAllActionClosed) {
+                // Jika ada action baru atau action lama yang belum di-isi actual_date-nya
+                return 'Action Required';
+            }
+            // Jika semua sudah ditandatangani DAN semua tindakan sudah selesai
+            return 'Closed';
         }
 
-        // 4. IN PROGRESS
-        // Sudah mulai mengisi (Step 1-6) tapi belum lengkap
-        if ($hasTeams || $hasAnalysis || $hasScat) {
-            return 'In Progress';
-        }
-
-        // 5. DEFAULT
         return 'Open';
     }
     // Mengambil Status Utama (Misal: "In Progress")
