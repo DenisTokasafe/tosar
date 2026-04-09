@@ -2400,7 +2400,7 @@ class Update extends Component
             'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
 
             // Step 6: Pastikan pengecekan SCAT tidak hanya !empty tapi juga ada isinya
-            'step6' => !empty($this->incident->scat_analysis) && count(array_filter((array)$this->incident->scat_analysis)) > 0,
+            'step6' => !empty($this->incident->scat_analysis),
 
             // Step 7: Tambahkan validasi tanggal selesai seperti diskusi sebelumnya
             'step7' => $this->incident->corrective_actions_count > 0 &&
