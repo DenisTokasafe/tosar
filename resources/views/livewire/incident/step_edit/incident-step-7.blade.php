@@ -6,7 +6,7 @@
         {{-- 1. VISUAL EVIDENCE --}}
         <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
             {{-- Lock Upload Component --}}
-            <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" required="" :disabled="!$canEdit" />
+            <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" required="true" :disabled="!$canEdit" />
 
             <div class="grid grid-cols-3 gap-2 mt-3">
                 {{-- DATA DARI DATABASE (EXISTING) --}}
@@ -45,7 +45,7 @@
 
         {{-- 2. SUPPORTING DOCUMENTS --}}
         <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
-            <x-form.upload label="Supporting Docs" model="supporting_documents" multiple keterangan="PDF, DOCX" required :disabled="!$canEdit" />
+            <x-form.upload label="Supporting Docs" model="supporting_documents" multiple keterangan="PDF, DOCX" required="true" :disabled="!$canEdit" />
 
             <div class="mt-3 space-y-2">
                 @foreach($existing_supporting_documents as $doc)
