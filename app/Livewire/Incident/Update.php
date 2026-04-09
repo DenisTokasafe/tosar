@@ -2383,41 +2383,63 @@ class Update extends Component
     // Logic di Class PHP Livewire
     public function getProgressPercentage()
     {
-        // Pastikan relasi sudah di-load agar tidak N+1 query
-        $this->incident->loadCount(['involvedPersons', 'investigationTeams',  'correctiveActions']);
+        // 1. Eager Load Counts & Relations untuk menghindari N+1 query dan data null
+        $this->incident->loadCount([
+            'involvedPersons',
+            'investigationTeams',
+            'correctiveActions',
+            'timelines'
+        ]);
 
+        // Load relasi yang dibutuhkan untuk filter koleksi
+        $this->incident->load(['peepoAnalyses', 'correctiveActions', 'timelines']);
+
+        // 2. Definisikan kondisi otorisasi (Rating & Contractor)
         $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
         $hasContractor = !empty($this->incident->contractor_id);
 
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
-            // Gunakan involved_persons_count hasil dari loadCount
+
+            // Step 2 & 3: Menggunakan hasil loadCount
             'step2' => $this->incident->involved_persons_count > 0,
             'step3' => $this->incident->investigation_teams_count > 0,
-            'step4' => $this->incident->peepoAnalyses->whereNotIn('temuan', ['-', '', null])->count() > 0,
 
-            // Step 5: Gunakan logic yang sama dengan tampilan UI Bagian 5
+            // Step 4: Memastikan ada temuan yang bukan strip atau kosong
+            'step4' => $this->incident->peepoAnalyses
+                ->whereNotNull('temuan')
+                ->whereNotIn('temuan', ['-', '', 'null'])
+                ->isNotEmpty(),
+
+            // Step 5: Harus ada minimal satu timeline yang memiliki analisis root cause (why_count_used > 0)
             'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
 
-            // Step 6: Pastikan pengecekan SCAT tidak hanya !empty tapi juga ada isinya
-            'step6' => !empty($this->incident->scat_analysis) && collect($this->incident->scat_analysis)->flatten()->contains(fn($value) => !empty($value) && $value !== ""),
+            // Step 6: Validasi SCAT (memastikan JSON/Array tidak hanya berisi string kosong)
+            'step6' => !empty($this->incident->scat_analysis) &&
+                collect($this->incident->scat_analysis)->flatten()->filter(fn($val) => !empty($val))->isNotEmpty(),
 
-            // Step 7: Tambahkan validasi tanggal selesai seperti diskusi sebelumnya
+            // Step 7: Semua tindakan perbaikan HARUS memiliki tanggal penyelesaian (Actual Completion Date)
             'step7' => $this->incident->corrective_actions_count > 0 &&
                 $this->incident->correctiveActions->whereNull('actual_completion_date')->isEmpty(),
 
-            // Step 8: Gunakan properti dari model atau state livewire
+            // Step 8: Key Learning dari database atau state saat ini
             'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
         ];
 
-        // --- Logika Step 9 ---
-        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) && !empty($this->incident->penerimaan_komentar_internal_id);
+        // --- Logika Step 9 (Otorisasi & Komentar) ---
+        // OHS dan Internal OHS wajib bagi semua laporan
+        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) &&
+            !empty($this->incident->penerimaan_komentar_internal_id);
+
+        // KTT wajib jika rating menengah ke atas
         $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
+
+        // Vendor wajib jika laporan terkait kontraktor
         $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
 
         $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
 
-        // --- Hitung ---
+        // --- Kalkulasi Akhir ---
         $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
         $totalSteps = count($steps);
 
