@@ -217,7 +217,7 @@ class Update extends Component
             'likelihood_id' => 'required',
             'consequence_id' => 'required',
             'emergency_action' => 'required|string',
-            'penanggungJawab' => 'required|string',
+            'penanggungJawab' => 'required|exists:users,id',
 
             // LOGIKA KONDISIONAL Injury vs Damage
             'selectedBodyPartCategory' => $this->isInjury() ? 'required' : 'nullable',
