@@ -2384,7 +2384,7 @@ class Update extends Component
     public function getProgressPercentage()
     {
         // Pastikan relasi sudah di-load agar tidak N+1 query
-        $this->incident->loadCount(['involvedPersons', 'investigationTeams', 'peepoAnalyses', 'correctiveActions']);
+        $this->incident->loadCount(['involvedPersons', 'investigationTeams',  'correctiveActions']);
 
         $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
         $hasContractor = !empty($this->incident->contractor_id);
@@ -2394,7 +2394,7 @@ class Update extends Component
             // Gunakan involved_persons_count hasil dari loadCount
             'step2' => $this->incident->involved_persons_count > 0,
             'step3' => $this->incident->investigation_teams_count > 0,
-            'step4' => $this->incident->peepo_analyses_count > 0,
+            'step4' => $this->incident->peepoAnalyses->whereNotIn('temuan', ['-', '', null])->count() > 0,
 
             // Step 5: Gunakan logic yang sama dengan tampilan UI Bagian 5
             'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
