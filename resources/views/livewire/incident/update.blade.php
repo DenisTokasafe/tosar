@@ -228,7 +228,7 @@
                                     <div class="flex flex-col items-end">
                                         @if($this->canUpdate)
                                         <button type="button" wire:click="update" wire:loading.attr="disabled" class="px-4 text-white shadow-md btn btn-xs btn-success">
-                                            <span wire:loading.remove wire:target="update">{{ __('Update Laporan') }}</span>
+                                            <span wire:loading.remove.add.class="hidden" wire:target="update">{{ __('Update Laporan') }}</span>
                                             <span wire:loading.remove.class="hidden" wire:target="update,visual_evidence,supporting_documents" class="hidden">{{ __('Proses Update...') }}</span>
                                             <span wire:loading.remove.class="hidden" wire:target="update,visual_evidence,supporting_documents" class="hidden loading loading-spinner loading-xs"></span>
                                         </button>
