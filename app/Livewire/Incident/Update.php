@@ -2383,31 +2383,41 @@ class Update extends Component
     // Logic di Class PHP Livewire
     public function getProgressPercentage()
     {
-        // 1. Definisikan kondisi dasar
-        $requiresKTT = in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
-        $hasContractor = !empty($this->contractor_id);
+        // Pastikan relasi sudah di-load agar tidak N+1 query
+        $this->incident->loadCount(['involvedPersons', 'investigationTeams', 'peepoAnalyses', 'correctiveActions']);
 
-        // 2. Susun array steps secara linear
+        $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
+        $hasContractor = !empty($this->incident->contractor_id);
+
         $steps = [
             'step1' => !empty($this->incident->event_type_id),
-            'step2' => $this->incident->involved_persons > 0, // Gunakan withCount di query utama
-            'step3' => $this->incident->investigation_teams > 0,
-            'step4' => $this->incident->peepo_analyses > 0,
-            'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->count() >  0,
-            'step6' => !empty($this->incident->scat_analysis),
-            'step7' => $this->incident->corrective_actions > 0,
-            'step8' => !empty($this->key_learning),
+            // Gunakan involved_persons_count hasil dari loadCount
+            'step2' => $this->incident->involved_persons_count > 0,
+            'step3' => $this->incident->investigation_teams_count > 0,
+            'step4' => $this->incident->peepo_analyses_count > 0,
+
+            // Step 5: Gunakan logic yang sama dengan tampilan UI Bagian 5
+            'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
+
+            // Step 6: Pastikan pengecekan SCAT tidak hanya !empty tapi juga ada isinya
+            'step6' => !empty($this->incident->scat_analysis) && count(array_filter((array)$this->incident->scat_analysis)) > 0,
+
+            // Step 7: Tambahkan validasi tanggal selesai seperti diskusi sebelumnya
+            'step7' => $this->incident->corrective_actions_count > 0 &&
+                $this->incident->correctiveActions->whereNull('actual_completion_date')->isEmpty(),
+
+            // Step 8: Gunakan properti dari model atau state livewire
+            'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
         ];
 
-        // 3. Logika Step 9 (Komentar/Otorisasi)
-        // Kita buat satu kondisi gabungan agar tidak ada duplikasi key
-        $step9_OHS = !empty($this->penerimaan_komentar_ohs_id);
-        $step9_KTT = $requiresKTT ? !empty($this->penerimaan_komentar_ktt_id) : true;
-        $step9_Vendor = $hasContractor ? !empty($this->penerimaan_komentar_contractor_id) : true;
+        // --- Logika Step 9 ---
+        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id);
+        $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
+        $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
 
         $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
 
-        // 4. Hitung persentase
+        // --- Hitung ---
         $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
         $totalSteps = count($steps);
 
