@@ -66,8 +66,8 @@
                         <div class="flex items-center gap-2">
                             <div class="badge badge-info badge-xs animate-ping"></div>
                             <span class="text-sm italic font-black uppercase text-info">WAITING REVIEW</span>
-                            <div class="px-2 py-0.5 rounded-full bg-info/10 border border-info/20">
-                                <span class="text-[9px] font-bold badge badge-soft badge-info">Awaiting Signatures</span>
+                            <div class="px-2 badge badge-soft badge-info text-[9px] font-bold uppercase ">
+                                <span class="text-[9px] font-bold ">Awaiting Signatures</span>
                             </div>
                         </div>
                         @break
