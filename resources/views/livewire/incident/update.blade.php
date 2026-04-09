@@ -61,6 +61,17 @@
                         </div>
                         @break
 
+                        {{-- TAMBAHAN: WAITING REVIEW --}}
+                        @case('Waiting Review')
+                        <div class="flex items-center gap-2">
+                            <div class="badge badge-primary badge-xs animate-ping"></div>
+                            <span class="text-sm italic font-black uppercase text-primary">WAITING REVIEW</span>
+                            <div class="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                                <span class="text-[9px] font-bold text-primary uppercase tracking-widest">Awaiting Signatures</span>
+                            </div>
+                        </div>
+                        @break
+
                         @case('Action Required')
                         <div class="badge badge-warning badge-xs"></div>
                         <span class="text-sm italic font-black uppercase text-warning">ACTION REQUIRED</span>
