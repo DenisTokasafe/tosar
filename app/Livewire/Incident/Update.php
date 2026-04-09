@@ -190,28 +190,39 @@ class Update extends Component
             // PART 1
             'title' => 'required|string|max:255',
             'event_type_id' => 'required|exists:event_types,id',
-            'event_sub_type_id' => 'required|exists:event_sub_types,id',
+
+            // Hanya required jika event type ini memang punya sub-types
+            'event_sub_type_id' => $this->hasSubTypes ? 'required|exists:event_sub_types,id' : 'nullable',
+
             'potential_lti' => 'required|in:Yes,No',
             'tasks' => 'required|string|min:1',
             'description' => 'required|string',
             'location_id' => 'required|exists:locations,id',
-            'location_specific' => 'required_with:location_id|string',
+            'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
-            'env_classification' => 'required|string',
+
+            // Hanya required jika tipe kejadian adalah Environment/Lingkungan
+            'env_classification' => $this->isEnvironmentType ? 'required|string' : 'nullable',
+
             'date_time' => 'required|date',
-            'pelapor_id' => 'required_without:manualPelaporName',
+
+            // Pelapor
+            'pelapor_id' => 'required_without:manualPelaporName|nullable|exists:users,id',
+            'manualPelaporName' => 'required_without:pelapor_id|nullable|string',
+
             'deptCont' => 'required|in:dept,cont',
             'department_id' => $this->deptCont === 'dept' ? 'required|exists:departments,id' : 'nullable',
             'contractor_id' => $this->deptCont === 'cont' ? 'required|exists:contractors,id' : 'nullable',
 
-            'likelihood_id' => 'required',
-            'consequence_id' => 'required',
-            'emergency_action' => 'required',
-            'penanggungJawab' => 'required',
-            // LOGIKA KONDISIONAL BERDASARKAN isInjury
-            'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
-            'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
-            'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
+            'likelihood_id' => 'required|exists:likelihoods,id',
+            'consequence_id' => 'required|exists:consequences,id',
+            'emergency_action' => 'required|string',
+            'penanggungJawab' => 'required|string',
+
+            // LOGIKA KONDISIONAL Injury vs Damage
+            'selectedBodyPartCategory' => $this->isInjury() ? 'required' : 'nullable',
+            'selectedBodyPart' => $this->isInjury() ? 'required' : 'nullable',
+            'damage_detail' => !$this->isInjury() ? 'required|string' : 'nullable',
             // Part 2
             // PART 2: Pihak Terlibat Langsung
             'directly_involved' => 'required|array|min:1',
@@ -1889,27 +1900,27 @@ class Update extends Component
                 $fields = [
                     'title',
                     'event_type_id',
-                    'event_sub_type_id',
-                    'description',
-                    'tasks',
+                    'event_sub_type_id', // Muncul jika hasSubTypes
                     'potential_lti',
-                    'location_id',
-                    'contract_area_name',
-                    'env_classification',
-                    'location_specific',
+                    'env_classification', // Muncul jika isEnvironmentType
                     'date_time',
-                    'pelapor_id',
+                    'location_id',
+                    'location_specific',
+                    'contract_area_name',
                     'department_id',
                     'contractor_id',
-                    'deptCont',
-                    'keyWord',
-                    'likelihood_id',
+                    'deptCont', // Untuk validasi pilihan Dept vs Cont
+                    'penanggungJawab', // Pastikan case-sensitive sesuai wire:model
+                    'pelapor_id',
+                    'manualPelaporName', // Untuk mode manual pelapor
                     'consequence_id',
+                    'likelihood_id',
+                    'tasks',
+                    'description',
                     'emergency_action',
-                    'penanggungJawab',
-                    'selectedBodyPartCategory',
-                    'selectedBodyPart',
-                    'damage_detail'
+                    'selectedBodyPartCategory', // Muncul jika isInjury
+                    'selectedBodyPart',         // Muncul jika isInjury
+                    'damage_detail',            // Muncul jika !isInjury
                 ];
                 break;
 
