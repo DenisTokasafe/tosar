@@ -760,7 +760,7 @@ class Update extends Component
 
         // --- Check Kelengkapan Step 1-6 (Investigasi) ---
         $hasTeams = $this->incident->investigationTeams->count() > 0;
-        $hasAnalysis = $this->incident->peepoAnalyses->count() > 0 || $this->incident->timelines->count() > 0;
+        $hasAnalysis = $this->incident->peepoAnalyses->count() > 0 || $this->incident->timelines->where('why_count_used', '!=', 0)->count() > 0;
         $hasScat = !empty($this->incident->scat_analysis);
         $investigationComplete = $hasTeams && $hasAnalysis && $hasScat;
 
