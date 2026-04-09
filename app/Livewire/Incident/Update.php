@@ -2267,14 +2267,14 @@ class Update extends Component
         // --- TAHAP 2: CEK VALIDASI KTT (Apakah data sudah lengkap?) ---
 
         // Khusus di Step 9, tambahkan interlock KTT untuk risiko tinggi
-        if ($this->currentStep == 9) {
-            if ($this->contractor_id == null) {
-                return !empty($this->penerimaan_komentar_contractor_id) && !empty($this->penerimaan_komentar_contractor);
-            }
-            if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
-                return !empty($this->penerimaan_komentar_ktt_id) && !empty($this->penerimaan_komentar_ktt);
-            }
-        }
+        // if ($this->currentStep == 9) {
+        //     if ($this->contractor_id == null) {
+        //         return !empty($this->penerimaan_komentar_contractor_id) && !empty($this->penerimaan_komentar_contractor);
+        //     }
+        //     if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
+        //         return !empty($this->penerimaan_komentar_ktt_id) && !empty($this->penerimaan_komentar_ktt);
+        //     }
+        // }
 
         return true;
     }
