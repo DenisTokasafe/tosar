@@ -242,8 +242,8 @@
 
                                             {{-- Text & Spinner saat kondisi loading --}}
                                             <span wire:loading wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2">
-                                                <flux:icon.spinner class="w-4 h-4" />
                                                 {{ __('Proses Update...') }}
+                                                <span wire:loading.remove.class="hidden" class="hidden loading loading-spinner loading-xs"></span>
                                             </span>
                                         </flux:button>
                                         @else
