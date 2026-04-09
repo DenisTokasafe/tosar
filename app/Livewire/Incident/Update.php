@@ -1819,7 +1819,7 @@ class Update extends Component
             4 => 'PEEPO Investigation Factor',
             5 => 'Time Line & Analisis',
             6 => 'Investigasi Kecelakaan (Checklist)',
-            7 => 'Tindakan Perbaikan',
+            7 => 'Tindakan Perbaikan & Dokumentasi Pendukung',
             8 => 'Kunci Pembelajaran',
             9 => 'Penerimaan & Komentar Reviewer',
         ][$step] ?? '';
