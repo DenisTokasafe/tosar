@@ -186,6 +186,10 @@ class Update extends Component
 
     public function rules()
     {
+        $hasVisual = (count($this->existing_visual_evidence) > 0) || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
+
+        // Cek apakah ada Supporting Documents (di DB OR sedang di-upload)
+        $hasDocument = (count($this->existing_supporting_documents) > 0) || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
         $rules = [
             // PART 1
             'title' => 'required|string|max:255',
@@ -290,12 +294,11 @@ class Update extends Component
             'control_system_factors.*.item' => 'required',
             'control_system_factors.*.description' => 'required|string|min:5',
             // Part 7
-            'visual_evidence' => 'required|array|min:1',
-
+            'visual_evidence' => !$hasDocument ? 'required|array|min:1' : 'nullable|array',
             // Validasi tiap file di dalam array (Ukuran dan Tipe)
             'visual_evidence.*' => 'image|max:2048', // Maks 2MB per foto
 
-            'supporting_documents' => 'required|array|min:1',
+            'supporting_documents' => !$hasVisual ? 'required|array|min:1' : 'nullable|array',
             'supporting_documents.*' => 'mimes:pdf,doc,docx|max:5120',
             // Validasi Tabel Tindakan Perbaikan (Array Dinamis)
             'corrective_actions.*.action_description' => 'required|string|min:10',
