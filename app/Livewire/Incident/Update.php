@@ -1890,16 +1890,15 @@ class Update extends Component
                     'title',
                     'event_type_id',
                     'event_sub_type_id',
+                    'description',
                     'tasks',
                     'potential_lti',
-                    'description',
                     'location_id',
-                    'location_specific',
                     'contract_area_name',
                     'env_classification',
+                    'location_specific',
                     'date_time',
                     'pelapor_id',
-
                     'department_id',
                     'contractor_id',
                     'deptCont',
@@ -2308,7 +2307,68 @@ class Update extends Component
         }
         return $rules;
     }
+    public function getProgressPercentage()
+    {
+        // 1. Eager Load Counts & Relations untuk menghindari N+1 query dan data null
+        $this->incident->loadCount([
+            'involvedPersons',
+            'investigationTeams',
+            'correctiveActions',
+            'timelines'
+        ]);
 
+        // Load relasi yang dibutuhkan untuk filter koleksi
+        $this->incident->load(['peepoAnalyses', 'correctiveActions', 'timelines']);
+
+        // 2. Definisikan kondisi otorisasi (Rating & Contractor)
+        $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
+        $hasContractor = !empty($this->incident->contractor_id);
+
+        $steps = [
+            'step1' => !empty($this->incident->event_type_id),
+
+            // Step 2 & 3: Menggunakan hasil loadCount
+            'step2' => $this->incident->involved_persons_count > 0,
+            'step3' => $this->incident->investigation_teams_count > 0,
+
+            // Step 4: Memastikan ada temuan yang bukan strip atau kosong
+            'step4' => $this->incident->peepoAnalyses
+                ->whereNotNull('temuan')
+                ->whereNotIn('temuan', ['-', '', 'null'])
+                ->isNotEmpty(),
+
+            // Step 5: Harus ada minimal satu timeline yang memiliki analisis root cause (why_count_used > 0)
+            'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
+
+            // Step 6: Validasi SCAT (memastikan JSON/Array tidak hanya berisi string kosong)
+            'step6' => !empty($this->incident->scat_analysis) &&
+                collect($this->incident->scat_analysis)->flatten()->filter(fn($val) => !empty($val))->isNotEmpty(),
+
+            // Step 7: Semua tindakan perbaikan HARUS memiliki tanggal penyelesaian (Actual Completion Date)
+            'step7' => $this->incident->corrective_actions_count > 0 &&
+                $this->incident->correctiveActions->whereNull('actual_completion_date')->isEmpty(),
+
+            // Step 8: Key Learning dari database atau state saat ini
+            'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
+        ];
+
+        // --- Logika Step 9 (Otorisasi & Komentar) ---
+        // OHS dan Internal OHS wajib bagi semua laporan
+        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) && !empty($this->incident->penerimaan_komentar_internal_id);
+        // KTT wajib jika rating menengah ke atas
+        $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
+
+        // Vendor wajib jika laporan terkait kontraktor
+        $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
+
+        $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
+
+        // --- Kalkulasi Akhir ---
+        $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
+        $totalSteps = count($steps);
+
+        return (int) round(($completedCount / $totalSteps) * 100);
+    }
     public function isFieldInStep($step, $errorFields)
     {
         // Ambil semua key field yang sedang error
@@ -2381,70 +2441,7 @@ class Update extends Component
         return false;
     }
     // Logic di Class PHP Livewire
-    public function getProgressPercentage()
-    {
-        // 1. Eager Load Counts & Relations untuk menghindari N+1 query dan data null
-        $this->incident->loadCount([
-            'involvedPersons',
-            'investigationTeams',
-            'correctiveActions',
-            'timelines'
-        ]);
 
-        // Load relasi yang dibutuhkan untuk filter koleksi
-        $this->incident->load(['peepoAnalyses', 'correctiveActions', 'timelines']);
-
-        // 2. Definisikan kondisi otorisasi (Rating & Contractor)
-        $requiresKTT = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem']);
-        $hasContractor = !empty($this->incident->contractor_id);
-
-        $steps = [
-            'step1' => !empty($this->incident->event_type_id),
-
-            // Step 2 & 3: Menggunakan hasil loadCount
-            'step2' => $this->incident->involved_persons_count > 0,
-            'step3' => $this->incident->investigation_teams_count > 0,
-
-            // Step 4: Memastikan ada temuan yang bukan strip atau kosong
-            'step4' => $this->incident->peepoAnalyses
-                ->whereNotNull('temuan')
-                ->whereNotIn('temuan', ['-', '', 'null'])
-                ->isNotEmpty(),
-
-            // Step 5: Harus ada minimal satu timeline yang memiliki analisis root cause (why_count_used > 0)
-            'step5' => $this->incident->timelines->where('why_count_used', '>', 0)->isNotEmpty(),
-
-            // Step 6: Validasi SCAT (memastikan JSON/Array tidak hanya berisi string kosong)
-            'step6' => !empty($this->incident->scat_analysis) &&
-                collect($this->incident->scat_analysis)->flatten()->filter(fn($val) => !empty($val))->isNotEmpty(),
-
-            // Step 7: Semua tindakan perbaikan HARUS memiliki tanggal penyelesaian (Actual Completion Date)
-            'step7' => $this->incident->corrective_actions_count > 0 &&
-                $this->incident->correctiveActions->whereNull('actual_completion_date')->isEmpty(),
-
-            // Step 8: Key Learning dari database atau state saat ini
-            'step8' => !empty($this->key_learning) || !empty($this->incident->key_learning),
-        ];
-
-        // --- Logika Step 9 (Otorisasi & Komentar) ---
-        // OHS dan Internal OHS wajib bagi semua laporan
-        $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) &&
-            !empty($this->incident->penerimaan_komentar_internal_id);
-
-        // KTT wajib jika rating menengah ke atas
-        $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
-
-        // Vendor wajib jika laporan terkait kontraktor
-        $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
-
-        $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
-
-        // --- Kalkulasi Akhir ---
-        $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
-        $totalSteps = count($steps);
-
-        return (int) round(($completedCount / $totalSteps) * 100);
-    }
     public function update()
     {
         $this->validateOnlyStep($this->currentStep);
