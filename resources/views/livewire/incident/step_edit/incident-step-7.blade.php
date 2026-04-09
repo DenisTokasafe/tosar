@@ -11,7 +11,7 @@
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
                 <div class="avatar">
-                    <div class="relative w-40 rounded">
+                    <div class="relative w-40 rounded bg-warning/10 border border-warning">
                         @php
                         // Enkripsi path untuk masking URL gambar
                         $secureImgUrl = route('document.secure-view', ['path' => Crypt::encryptString($media->file_path)]);
