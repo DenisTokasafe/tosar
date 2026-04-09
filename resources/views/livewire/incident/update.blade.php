@@ -218,69 +218,59 @@
                                 @endif
                             </div>
 
-                            <div class="flex items-center gap-2">
-                                {{-- TOMBOL NAVIGASI (Next Step) --}}
+                            <div class="flex gap-2">
+                                {{-- 1. Navigasi: Selalu aktif agar user Read-Only tetap bisa melihat slide lain --}}
                                 @if ($i < 9)
-                                    <flux:button
-                                    type="button"
-                                    variant="info"
-                                    size="xs"
-                                    wire:click="nextStep"
-                                    wire:loading.attr="disabled"
-                                    loading.target="nextStep"
-                                    class="px-4 shadow-sm"
-                                    {{-- Jangan didisabled agar user read-only tetap bisa navigasi --}}>
+                                    <flux:button type="button" variant="info" size="xs" wire:click="nextStep"
+                                    :disabled="false" {{-- Tetap aktif untuk navigasi 'Lihat Selanjutnya' --}}
+                                    wire:loading.attr="disabled" loading.target="nextStep" class="px-4 shadow-sm">
+
                                     <span wire:loading.remove wire:target="nextStep">
                                         {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
                                     </span>
                                     </flux:button>
                                     @endif
 
-                                    {{-- KONTEN AKSI UTAMA --}}
                                     <div class="flex flex-col items-end">
+                                        {{-- 2. Aksi: Cek apakah bisa update secara sistem --}}
                                         @if($this->canUpdate)
                                         <flux:button
                                             type="button"
                                             wire:click="update"
                                             variant="primary"
                                             size="xs"
-                                            :disabled="!$canEdit" {{-- Gunakan shorthand yang lebih bersih --}}
+                                            :disabled="!$canEdit" {{-- Disabled hanya jika user tidak punya hak edit --}}
                                             wire:loading.attr="disabled"
                                             loading.target="update, visual_evidence, supporting_documents"
                                             class="px-4 shadow-md">
-                                            {{-- Text State Management --}}
+
                                             <span wire:loading.remove wire:target="update, visual_evidence, supporting_documents">
                                                 {{ __('Update Laporan') }}
                                             </span>
 
-                                            <span wire:loading wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2">
-                                                {{ __('Proses...') }}
-                                                <flux:icon.spinner class="w-3 h-3" />
+                                            <span wire:loading.remove.class="hidden" wire:target="update, visual_evidence, supporting_documents" class="flex items-center gap-2 hidden">
+                                                {{ __('Proses Update...') }}
+                                                <span wire:loading.remove.class="hidden" class="hidden loading loading-spinner loading-xs"></span>
                                             </span>
                                         </flux:button>
                                         @else
-                                        <flux:button disabled size="xs" variant="subtle" class="px-4 opacity-50">
+                                        {{-- 3. Status Terkunci: Tampilkan jika laporan sudah final/disetujui --}}
+                                        <button disabled class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
                                             <div class="flex items-center gap-1">
-                                                <flux:icon.lock-closed class="w-3 h-3" />
+                                                <x-icon name="lock-closed" class="w-3 h-3" />
                                                 <span>{{ __('Update Terkunci') }}</span>
                                             </div>
-                                        </flux:button>
+                                        </button>
                                         @endif
 
-                                        {{-- AREA PESAN PERINGATAN (Keterangan di bawah tombol) --}}
-                                        <div class="flex flex-col items-end mt-1">
-                                            @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) && empty($penerimaan_komentar_ktt_id))
-                                            <span class="text-[9px] text-error font-medium italic animate-pulse">
-                                                * Otoritas KTT wajib untuk rating {{ $rating_name }}
-                                            </span>
-                                            @endif
+                                        {{-- 4. Keterangan: Urutkan dari yang paling kritikal (KTT) baru ke akses --}}
+                                        @if($i == 9 && in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) && empty($penerimaan_komentar_ktt_id))
+                                        <span class="mt-1 text-[9px] text-error italic animate-pulse">* Otoritas KTT wajib untuk rating {{ $rating_name }}</span>
+                                        @endif
 
-                                            @if(!$canEdit)
-                                            <span class="text-[9px] text-warning font-medium italic">
-                                                {{ __('Akses terbatas (Mode Baca)') }}
-                                            </span>
-                                            @endif
-                                        </div>
+                                        @if(!$canEdit)
+                                        <span class="mt-1 text-[9px] text-warning italic">Akses terbatas (HSE Policy)</span>
+                                        @endif
                                     </div>
                             </div>
                         </div>
