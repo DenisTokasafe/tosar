@@ -2105,6 +2105,27 @@ class Update extends Component
         $this->dispatch('scroll-to-top');
     }
 
+    // Di dalam Class Livewire Anda
+    public function getIsVisualRequiredProperty()
+    {
+        // Cek apakah ada Dokumen (di DB atau sedang di-upload)
+        $hasDocument = (count($this->existing_supporting_documents) > 0) || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
+
+        // Cek juga apakah sudah ada foto di DB
+        $hasVisualInDb = count($this->existing_visual_evidence) > 0;
+
+        // Required jika tidak ada dokumen DAN belum ada foto di DB
+        return !$hasDocument && !$hasVisualInDb;
+    }
+
+    public function getIsDocumentRequiredProperty()
+    {
+        $hasVisual = (count($this->existing_visual_evidence) > 0) || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
+        $hasDocInDb = count($this->existing_supporting_documents) > 0;
+
+        return !$hasVisual && !$hasDocInDb;
+    }
+
     protected function validateOnlyStep($step)
     {
         // 1. Ambil semua rules utama dari method rules() sebagai referensi
