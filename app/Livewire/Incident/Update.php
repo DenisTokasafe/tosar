@@ -2509,7 +2509,52 @@ class Update extends Component
         return false;
     }
     // Logic di Class PHP Livewire
+    /**
+     * Hook ketika Kolom Kontraktor diubah
+     */
+    public function updatedIncidentContractorId($value)
+    {
+        // Jika ada perubahan vendor, reset tanda tangan vendor sebelumnya
+        $this->incident->update([
+            'pm_contractor_id' => null,
+            'pm_contractor_comment' => null,
+        ]);
 
+        // Refresh status laporan agar kembali ke Waiting Review
+        $this->status = $this->determineReportStatus();
+
+        // Tampilkan notifikasi ke user
+        session()->flash('warning', 'Data Kontraktor berubah. Tanda tangan vendor sebelumnya telah di-reset.');
+        $this->dispatch('alert', [
+            'text' => "Data Kontraktor berubah. Tanda tangan vendor sebelumnya telah di-reset.",
+            'type' => 'success'
+        ]);
+    }
+
+    /**
+     * Hook ketika Rating Risiko diubah
+     */
+    public function updatedIncidentRatingName($value)
+    {
+        // Daftar rating yang TIDAK butuh KTT
+        $lowRatings = ['Rendah', 'Sangat Rendah', null];
+
+        // Jika rating diubah menjadi rendah, atau rating berubah saat sudah ada tanda tangan KTT
+        // Kita reset tanda tangan KTT agar KTT melakukan review ulang sesuai risiko baru
+        if (!in_array($value, $lowRatings) || filled($this->incident->ktt_id)) {
+            $this->incident->update([
+                'ktt_id' => null,
+                'ktt_comment' => null,
+            ]);
+        }
+
+        $this->status = $this->determineReportStatus();
+        session()->flash('warning', 'Rating risiko berubah. Tanda tangan KTT telah di-reset untuk peninjauan ulang.');
+        $this->dispatch('alert', [
+            'text' => "Rating risiko berubah. Tanda tangan KTT telah di-reset untuk peninjauan ulang.",
+            'type' => 'success'
+        ]);
+    }
     public function update()
     {
         $this->validateOnlyStep($this->currentStep);
