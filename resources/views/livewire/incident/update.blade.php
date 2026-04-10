@@ -177,7 +177,7 @@
                     {{ !$canEdit ? 'disabled' : '' }} />
 
                 <div @class([ 'flex items-center justify-between font-semibold collapse-title transition-colors duration-300' , 'bg-error text-error-content'=> $hasErrorInStep,
-                    'bg-linear-to-r from-blue-600 to-info text-white' => $currentStep == $i && !$hasErrorInStep,
+                    'bg-linear-to-r from-accent to-info text-white' => $currentStep == $i && !$hasErrorInStep,
                     'bg-base-200 text-base-content' => $currentStep != $i && $canEdit,
                     'bg-base-300 text-base-content/40' => !$canEdit
                     ])>
