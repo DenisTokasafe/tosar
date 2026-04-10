@@ -251,45 +251,36 @@
 @plugin "daisyui/theme" {
     name: "sentry-interlock";
     default: false;
-    prefersdark: true;
+    prefersdark: false;
     color-scheme: "light";
-
-    /* Color Palette */
-    --color-base-100: oklch(98% 0.003 247.858);
-    --color-base-200: oklch(96% 0.007 247.896);
-    --color-base-300: oklch(92% 0.013 255.508);
-    --color-base-content: oklch(20% 0.042 265.755);
-    --color-primary: oklch(55% 0.15 250);
-    --color-primary-content: oklch(98% 0.003 247.858);
-    --color-secondary: oklch(71% 0.202 349.761);
-    --color-secondary-content: oklch(28% 0.109 3.907);
-    --color-accent: oklch(79% 0.209 151.711);
-    --color-accent-content: oklch(26% 0.065 152.934);
-    --color-neutral: oklch(44% 0.043 257.281);
-    --color-neutral-content: oklch(98% 0.003 247.858);
-
-    /* State Colors */
-    --color-info: oklch(78% 0.154 211.53);
+    --color-base-100: oklch(97% 0.001 106.424);
+    --color-base-200: oklch(92% 0.003 48.717);
+    --color-base-300: oklch(86% 0.005 56.366);
+    --color-base-content: oklch(21% 0.006 56.043);
+    --color-primary: oklch(86% 0.127 207.078);
+    --color-primary-content: oklch(30% 0.056 229.695);
+    --color-secondary: oklch(84% 0.143 164.978);
+    --color-secondary-content: oklch(30% 0.056 229.695);
+    --color-accent: oklch(82% 0.12 346.018);
+    --color-accent-content: oklch(28% 0.109 3.907);
+    --color-neutral: oklch(64% 0.222 41.116);
+    --color-neutral-content: oklch(98% 0.001 106.423);
+    --color-info: oklch(58% 0.158 241.966);
     --color-info-content: oklch(30% 0.056 229.695);
-    --color-success: oklch(84% 0.238 128.85);
-    --color-success-content: oklch(27% 0.072 132.109);
+    --color-success: oklch(79% 0.209 151.711);
+    --color-success-content: oklch(26% 0.065 152.934);
     --color-warning: oklch(75% 0.183 55.934);
     --color-warning-content: oklch(26% 0.079 36.259);
     --color-error: oklch(70% 0.191 22.216);
     --color-error-content: oklch(25% 0.092 26.042);
-
-    /* --- Efek Tambahan --- */
     --radius-selector: 0.5rem;
-    --radius-field: 0.25rem; /* Memberikan sedikit lengkungan agar tidak terlalu kaku */
-    --radius-box: 0.5rem; /* Memberikan sedikit lengkungan agar tidak terlalu kaku */
+    --radius-field: 0.25rem;
+    --radius-box: 0.25rem;
     --size-selector: 0.25rem;
-    --size-field: 0.25rem;
+    --size-field: 0.21875rem;
     --border: 1px;
-
-    /* Peningkatan Kedalaman Visual */
-    --depth: 2; /* Memberikan efek elevasi yang lebih terasa pada tombol dan card */
-    --noise: 0.05; /* Menambahkan tekstur halus agar warna solid tidak membosankan */
-    --noise-url: url("/noise.svg");
+    --depth: 1;
+    --noise: 1;
 }
 
 @plugin "daisyui/theme" {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="{{ session('theme', 'tokasafe') }}"
+<html data-theme="{{ session('theme', 'sentry-interlock') }}"
     lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
