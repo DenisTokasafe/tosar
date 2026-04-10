@@ -2046,7 +2046,7 @@ class Update extends Component
                 // Tambahkan field KTT ke dalam daftar fields jika level 3, 4, atau 5
                 if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
                     // Masukkan ke daftar fields agar dikenali sistem
-                    $fields = ['penerimaan_komentar_ktt_id', 'penerimaan_komentar_ktt'];
+                    $fields = array_merge($fields, ['penerimaan_komentar_ktt_id', 'penerimaan_komentar_ktt']);
                 }
         }
 
@@ -2686,7 +2686,23 @@ class Update extends Component
                 // Simpan ke database (Hanya status utamanya saja)
                 // explode(':') memastikan "In Progress : Teams" menjadi "In Progress"
                 $cleanStatus = trim(explode(':', $calculatedStatus)[0]);
+                // A. DETEKSI PERUBAHAN (Sebelum Update)
+                $isContractorChanged = $report->contractor_id != (($this->deptCont === 'cont') ? $this->contractor_id : null);
+                $isRatingChanged = $report->risk?->rating_name != $this->RiskAssessment?->name;
 
+                // B. LOGIKA RESET APPROVAL
+                if ($isContractorChanged) {
+                    $this->penerimaan_komentar_contractor = null;
+                    $this->penerimaan_komentar_contractor_id = null;
+                }
+
+                if ($isRatingChanged) {
+                    // Jika rating berubah, tanda tangan KTT lama harus tidak valid
+                    $this->penerimaan_komentar_ktt = null;
+                    $this->penerimaan_komentar_ktt_id = null;
+                }
+
+                // C. UPDATE DATA UTAMA
                 // 7. Update Data Utama & Increment Lock
                 $report->update([
                     'status'                => $cleanStatus,
