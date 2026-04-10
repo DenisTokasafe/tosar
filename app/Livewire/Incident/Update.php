@@ -746,7 +746,7 @@ class Update extends Component
         $allActions = $this->incident->correctiveActions; // Ambil collection sekali
         $totalActions = $allActions->count();
         $hasKeyLearning = filled($this->incident->key_learning);
-        $actionPlanComplete = $totalActions > 0 && $hasKeyLearning;
+        $actionPlanComplete = $totalActions > 0;
 
         // --- Step 9: Review/Approval ---
         $reviewInternalMet = filled($this->incident->pm_internal_id);
@@ -768,7 +768,7 @@ class Update extends Component
 
         // --- Check Realisasi ---
         // Gunakan collection $allActions yang sudah diambil di atas (Hemat memory/CPU)
-        $isAllActionClosed = $totalActions > 0 &&
+        $isAllActionClosed = $totalActions > 0 && $hasKeyLearning &&
             $allActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
         // --- LOGIKA HIERARKI ---
