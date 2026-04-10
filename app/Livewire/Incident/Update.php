@@ -2512,7 +2512,7 @@ class Update extends Component
     /**
      * Hook ketika Kolom Kontraktor diubah
      */
-    public function updatedIncidentContractorId($value)
+    public function updatedContractorId($value)
     {
         // Jika ada perubahan vendor, reset tanda tangan vendor sebelumnya
         $this->incident->update([
@@ -2534,7 +2534,7 @@ class Update extends Component
     /**
      * Hook ketika Rating Risiko diubah
      */
-    public function updatedIncidentRatingName($value)
+    public function updatedRatingName($value)
     {
         // Daftar rating yang TIDAK butuh KTT
         $lowRatings = ['Rendah', 'Sangat Rendah', null];
