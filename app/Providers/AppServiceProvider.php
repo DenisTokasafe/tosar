@@ -44,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
             require_once base_path('routes/breadcrumbs.php');
         }
         App::setLocale(Session::get('locale', config('app.locale')));
-        config(['clockwork.enable' => true]);
         Blade::if('role', function ($roles) {
             $user = Auth::user();
             if (!$user) return false;
@@ -55,9 +54,6 @@ class AppServiceProvider extends ServiceProvider
             // ✅ Kasus: single role (role_id)
             if (method_exists($user, 'role') && $user->role) {
                 if (in_array($user->role->name, $roles)) {
-                    return true;
-                }
-                if (in_array($user->role->name, ['Administrator'])) {
                     return true;
                 }
             }
