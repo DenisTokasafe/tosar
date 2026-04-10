@@ -2407,9 +2407,9 @@ class Update extends Component
         $step9_OHS = !empty($this->incident->penerimaan_komentar_ohs_id) && !empty($this->incident->penerimaan_komentar_internal_id);
         // KTT wajib jika rating menengah ke atas
         $step9_KTT = $requiresKTT ? !empty($this->incident->penerimaan_komentar_ktt_id) : true;
-
         // Vendor wajib jika laporan terkait kontraktor
         $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
+        dd($step9_Vendor);
 
         $steps['step9'] = ($step9_OHS && $step9_KTT && $step9_Vendor);
 
