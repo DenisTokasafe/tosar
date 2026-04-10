@@ -104,7 +104,7 @@
                     <div class="form-control">
                         <label class="py-1 label"><span class="label-text font-bold text-[10px] uppercase">{{ __('Kontrol Hirarki') }}</span></label>
                         <x-form.select model="corrective_actions.{{ $index }}.control_hierarchy"
-                            :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]"
+                            :options="[['id' => 'Eliminasi', 'name' => __('Eliminasi')],['id' => 'Substitusi', 'name' => __('Substitusi')],['id' => 'Engineering', 'name' => __('Rekayasa')],['id' => 'Administrasi', 'name' => __('Administrasi')],    ['id' => 'APD', 'name' => __('APD')]]"
                             :disabled="!$canEdit" />
                     </div>
 
