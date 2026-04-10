@@ -69,7 +69,7 @@
                     <td class="p-2 align-top border-r border-base-300">
                         <x-form.text_area
                             model="peepo.{{ $key }}.temuan"
-                            placeholder="{{ __('Temuan faktor') }} {{ $label }}..."
+                            placeholder="{{ __('Temuan faktor') }} {{ __($label) }}..."
                             rows="3"
                             :disabled="!$canEdit" />
                     </td>
