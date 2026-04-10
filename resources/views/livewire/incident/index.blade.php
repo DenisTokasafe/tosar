@@ -194,11 +194,11 @@
                         </td>
 
                         <td class="text-center">
-                            <div @class([ 'badge badge-sm font-bold text-[9px] uppercase w-20 py-3' , 'badge-success'=> $item->status === 'Closed',
-                                'badge-error' => $item->status === 'Open',
-                                'badge-secondary' => $item->status === 'Action Required',
-                                'badge-warning' => $item->status === 'In Progress',
-                                'badge-info' => $item->status === 'Waiting Review',
+                            <div @class([ 'badge badge-sm font-bold text-[9px] uppercase w-20 py-3' , 'badge-success text-success-content'=> $item->status === 'Closed',
+                                'badge-error text-error-content' => $item->status === 'Open',
+                                'badge-secondary text-secondary-content' => $item->status === 'Action Required',
+                                'badge-warning text-warning-content' => $item->status === 'In Progress',
+                                'badge-info text-info-content' => $item->status === 'Waiting Review',
                                 ])>
                                 {{ $item->status }}
                             </div>
