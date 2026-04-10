@@ -2527,7 +2527,7 @@ class Update extends Component
         session()->flash('warning', 'Data Kontraktor berubah. Tanda tangan vendor sebelumnya telah di-reset.');
         $this->dispatch('alert', [
             'text' => "Data Kontraktor berubah. Tanda tangan vendor sebelumnya telah di-reset.",
-            'type' => 'success'
+            'type' => 'warning'
         ]);
     }
 
@@ -2552,7 +2552,7 @@ class Update extends Component
         session()->flash('warning', 'Rating risiko berubah. Tanda tangan KTT telah di-reset untuk peninjauan ulang.');
         $this->dispatch('alert', [
             'text' => "Rating risiko berubah. Tanda tangan KTT telah di-reset untuk peninjauan ulang.",
-            'type' => 'success'
+            'type' => 'warning'
         ]);
     }
     public function update()
