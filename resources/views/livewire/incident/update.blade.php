@@ -136,7 +136,9 @@
                         <div class="flex items-center gap-2 truncate">
                             <div class="avatar placeholder">
                                 <div class="w-6 rounded-full bg-neutral text-neutral-content">
-                                    <span class="text-[10px]">{{ substr($incident->latest_reviewer_name ?? 'N', 0, 1) }}</span>
+                                    <span
+                                        class="flex items-center justify-center w-full h-full text-base-content rounded-lg bg-base-200 ">{{ substr($incident->latest_reviewer_name ?? 'N', 0, 1) }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="flex flex-col">

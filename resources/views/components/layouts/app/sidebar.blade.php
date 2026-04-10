@@ -46,7 +46,7 @@
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <span class="relative flex w-8 h-8 overflow-hidden rounded-lg shrink-0">
                                     <span
-                                        class="flex items-center justify-center w-full h-full text-black rounded-lg bg-neutral-200 dark:bg-neutral-700 dark:text-white">
+                                        class="flex items-center justify-center w-full h-full text-base-content rounded-lg bg-base-200 ">
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
