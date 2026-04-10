@@ -48,9 +48,9 @@
         <table class="table w-full border-collapse">
             <thead>
                 <tr class="border-b bg-base-200/50 text-base-content border-base-300">
-                    <th class="w-1/6 px-4 py-3 font-bold border-r border-base-300">Factors</th>
-                    <th class="w-2/5 px-4 py-3 font-bold border-r border-base-300">Temuan</th>
-                    <th class="px-4 py-3 font-bold">Deskripsi (5W+1H)</th>
+                    <th class="w-1/6 px-4 py-3 font-bold border-r border-base-300">{{ __('Factor') }}</th>
+                    <th class="w-2/5 px-4 py-3 font-bold border-r border-base-300">{{ __('Temuan') }}</th>
+                    <th class="px-4 py-3 font-bold">{{ __('Deskripsi') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-base-300">
@@ -58,25 +58,25 @@
                 <tr class="hover:bg-base-200/20" wire:key="peepo-dt-{{ $key }}">
                     <td class="px-4 pt-4 align-top border-r border-base-300 bg-base-50/50">
                         <div class="flex flex-col gap-2">
-                            <span class="text-sm font-bold">{{ $label }}</span>
+                            <span class="text-sm font-bold">{{ __($label) }}</span>
                             @if(!empty($peepo[$key]['temuan']) && !empty($peepo[$key]['deskripsi']))
-                            <span class="px-2 py-2 badge badge-success badge-outline badge-xs">Lengkap</span>
+                            <span class="px-2 py-2 badge badge-success badge-outline badge-xs">{{ __('Lengkap') }}</span>
                             @else
-                            <span class="px-2 py-2 text-gray-400 badge badge-ghost badge-xs">Belum Lengkap</span>
+                            <span class="px-2 py-2 text-gray-400 badge badge-ghost badge-xs">{{ __('Belum Lengkap') }}</span>
                             @endif
                         </div>
                     </td>
                     <td class="p-2 align-top border-r border-base-300">
                         <x-form.text_area
                             model="peepo.{{ $key }}.temuan"
-                            placeholder="Temuan faktor {{ $label }}..."
+                            placeholder="{{ __('Temuan faktor') }} {{ $label }}..."
                             rows="3"
                             :disabled="!$canEdit" />
                     </td>
                     <td class="p-2 align-top">
                         <x-form.text_area
                             model="peepo.{{ $key }}.deskripsi"
-                            placeholder="Detail siapa, apa, dimana, kapan, mengapa..."
+                            placeholder="{{ __('Detail siapa, apa, dimana, kapan, mengapa...') }}"
                             rows="3"
                             required
                             :disabled="!$canEdit" />
