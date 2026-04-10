@@ -45,7 +45,7 @@
                 readonly
                 {{ $disabled ? 'disabled' : '' }}
                 {{ $model ? "wire:model.live.debounce.300ms=$model" : '' }}
-                placeholder="{{ $placeholder ?: $label }}"
+                placeholder="{{ (__($placeholder)) ?: (__($label)) }}"
                 {{ $attributes->merge([
             'class' => "input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 $size border-gray-300  " .
             ($errors->has($model) ? 'border-rose-500 focus-within:border-rose-500' : '')
