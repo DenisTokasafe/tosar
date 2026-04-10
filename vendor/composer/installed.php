@@ -3,7 +3,7 @@
         'name' => 'laravel/livewire-starter-kit',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'e9b8aa1685188531f6b996083cabbae133e2b464',
+        'reference' => '28352e115024bc38c068e5eebbc1d08e086ad4ad',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -517,6 +517,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'itsgoingd/clockwork' => array(
+            'pretty_version' => 'v5.3.5',
+            'version' => '5.3.5.0',
+            'reference' => 'd928483e231f042dbff9258795cb17aadaebc7d0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../itsgoingd/clockwork',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -535,7 +544,7 @@
         'laravel/livewire-starter-kit' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'e9b8aa1685188531f6b996083cabbae133e2b464',
+            'reference' => '28352e115024bc38c068e5eebbc1d08e086ad4ad',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

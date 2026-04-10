@@ -17,10 +17,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-          if (config('app.env') === 'production') {
+        if (config('app.env') === 'production') {
             $this->app['request']->server->set('HTTPS', true);
         }
-         $this->app->bind('path.public', function () {
+        $this->app->bind('path.public', function () {
             return realpath(base_path() . '/../public_html');
         });
     }
@@ -31,34 +31,54 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // === START: PERBAIKAN MIXED CONTENT UNTUK LIVEWIRE ===
-        // Memaksa Laravel menggunakan skema HTTPS saat membuat URL
-        // karena lingkungan cPanel/proxy sering tidak menyampaikan header HTTPS dengan benar.
-        // APP_ENV diatur ke 'local' di .env Anda, jadi kita gunakan kondisi ini,
-        // atau gunakan 'production' jika Anda sudah mengubahnya.
         if (config('app.env') === 'local' || config('app.env') === 'production') {
             URL::forceScheme('https');
         }
         // === END: PERBAIKAN MIXED CONTENT ===
 
+        // === START: CLOCKWORK MONITORING FILTER (Hanya Admin) ===
+        // Matikan Clockwork secara default
+        config(['clockwork.enable' => false]);
+
+        // Gunakan view composer agar pengecekan Auth::user() tersedia
+        view()->composer('*', function () {
+            $user = Auth::user();
+            if ($user) {
+                $isAdmin = false;
+
+                // Gunakan logika role yang sama dengan aplikasi SENTRY Anda
+                if (method_exists($user, 'role') && $user->role && $user->role->name === 'admin') {
+                    $isAdmin = true;
+                } elseif (method_exists($user, 'roles') && $user->roles()->where('name', 'admin')->exists()) {
+                    $isAdmin = true;
+                }
+
+                if ($isAdmin) {
+                    config(['clockwork.enable' => true]);
+                }
+            }
+        });
+        // === END: CLOCKWORK MONITORING FILTER ===
+
         if (file_exists(base_path('routes/breadcrumbs.php'))) {
             require_once base_path('routes/breadcrumbs.php');
         }
+
         App::setLocale(Session::get('locale', config('app.locale')));
 
+        // Implementasi Blade If untuk Role yang sudah ada
         Blade::if('role', function ($roles) {
             $user = Auth::user();
             if (!$user) return false;
 
             $roles = is_array($roles) ? $roles : [$roles];
 
-            // ✅ Kasus: single role (role_id)
             if (method_exists($user, 'role') && $user->role) {
                 if (in_array($user->role->name, $roles)) {
                     return true;
                 }
             }
 
-            // ✅ Kasus: multiple role (pivot)
             if (method_exists($user, 'roles') && $user->roles()->whereIn('name', $roles)->exists()) {
                 return true;
             }

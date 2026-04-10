@@ -30,6 +30,17 @@
       1 => 'LdapRecord\\Laravel\\LdapAuthServiceProvider',
     ),
   ),
+  'itsgoingd/clockwork' => 
+  array (
+    'aliases' => 
+    array (
+      'Clockwork' => 'Clockwork\\Support\\Laravel\\Facade',
+    ),
+    'providers' => 
+    array (
+      0 => 'Clockwork\\Support\\Laravel\\ClockworkServiceProvider',
+    ),
+  ),
   'laravel/pail' => 
   array (
     'providers' => 
