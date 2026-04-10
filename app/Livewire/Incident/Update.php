@@ -2527,25 +2527,27 @@ class Update extends Component
             DB::transaction(function () use ($report) {
 
                 // 2. Update Involved Persons (Gunakan delete/create hanya jika data bersifat temporer)
-                $report->involvedPersons()->delete();
                 foreach ($this->directly_involved as $person) {
                     if (!empty($person['employee_name'])) {
-                        $report->involvedPersons()->create([
-                            'employee_id'      => $person['employee_id'] ?? null,
-                            'employee_name'    => $person['employee_name'],
-                            'employee_nik'     => $person['employee_nik'],
-                            'dept_cont'        => $person['dept_cont'],
-                            'jabatan'          => $person['jabatan'],
-                            'roster'           => $person['roster'],
-                            'shift'            => $person['shift'] ?? $person['sift'] ?? null,
-                            'keterlibatan'     => $person['keterlibatan'],
-                            'pengalaman_kerja' => $person['pengalaman_kerja'],
-                        ]);
+                        $report->involvedPersons()->updateOrCreate(
+                            ['incident_report_id' => $report->id],
+                            [
+                                'employee_id'      => $person['employee_id'] ?? null,
+                                'employee_name'    => $person['employee_name'],
+                                'employee_nik'     => $person['employee_nik'],
+                                'dept_cont'        => $person['dept_cont'],
+                                'jabatan'          => $person['jabatan'],
+                                'roster'           => $person['roster'],
+                                'shift'            => $person['shift'] ?? $person['sift'] ?? null,
+                                'keterlibatan'     => $person['keterlibatan'],
+                                'pengalaman_kerja' => $person['pengalaman_kerja'],
+                            ]
+                        );
                     }
                 }
 
                 // 3. Update Investigation Teams
-                $report->investigationTeams()->delete();
+
                 $userIdsToNotify = [];
 
                 foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
