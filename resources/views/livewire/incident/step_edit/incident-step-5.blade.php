@@ -10,6 +10,11 @@
                 </svg>
                 <span class="hidden sm:inline">Tambah Why</span>
             </button>
+            <flux:tooltip content="{{ __('Klik untuk menambah tahapan analisis berikutnya') }}" position="top">
+                <flux:button icon="add-icon" wire:click="addWhyColumn" color="primary" size="xs">
+                    <span class="hidden sm:inline">{{ __('Tambah Why') }}</span>
+                </flux:button>
+            </flux:tooltip>
             @else
             <div class="gap-1 italic badge badge-ghost badge-sm opacity-70">
                 <x-icon name="lock" class="w-3 h-3" /> Terkunci
@@ -44,7 +49,7 @@
                     <div @class([ 'relative flex-1 p-4 transition-all border shadow-inner rounded-xl bg-base-200/50 border-base-300' , 'focus-within:border-primary/50'=> $canEdit
                         ])>
                         <div class="flex items-center justify-between mb-2">
-                            <span class="italic font-bold tracking-tighter badge badge-primary badge-sm">WHY {{ $i }}</span>
+                            <span class="italic font-bold tracking-tighter badge badge-primary badge-sm">{{ __('WHY') }} {{ $i }}</span>
 
                             {{-- Tombol Hapus (Hanya muncul jika boleh edit & urutan terakhir) --}}
                             @if($canEdit && $whyCount > 1 && $i == $whyCount)
@@ -58,7 +63,7 @@
 
                         <x-form.text_area
                             model="why_analysis.why{{ $i }}"
-                            placeholder="{{ $canEdit ? 'Mengapa hal di atas terjadi?' : 'Tidak ada analisis.' }}"
+                            placeholder="{{ $canEdit ? __('Mengapa hal di atas terjadi?') : __('Tidak ada analisis.') }}"
                             rows="3"
                             class="bg-base-100"
                             :disabled="!$canEdit" />
@@ -85,7 +90,7 @@
     {{-- Hint untuk User --}}
     <div class="mt-2 text-center">
         <p class="text-[10px] text-base-content/40 italic">
-            {{ $canEdit ? 'Teruskan bertanya "Mengapa" sampai menemukan akar masalah sistemik.' : 'Analisis ini telah dikunci dan bersifat permanen.' }}
+            {{ $canEdit? __('Teruskan bertanya \"Mengapa\" sampai menemukan akar masalah sistemik.'): __('Analisis ini telah dikunci dan bersifat permanen.')}}
         </p>
     </div>
 </div>
