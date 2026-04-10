@@ -17,11 +17,11 @@
         <table class="table w-full table-compact">
             <thead>
                 <tr class="text-[11px] uppercase bg-base-200">
-                    <th class="rounded-l-lg">Tindakan</th>
-                    <th>Kontrol Hirarki</th>
-                    <th>PIC</th>
-                    <th>Batas Waktu</th>
-                    <th>Tgl. Selesai</th>
+                    <th class="rounded-l-lg">{{ __('Tindakan') }}</th>
+                    <th>{{ __('Kontrol Hirarki') }}</th>
+                    <th>{{ __('PIC') }}</th>
+                    <th>{{ __('Batas Waktu') }}</th>
+                    <th>{{ __('Tgl. Selesai') }}</th>
                     <th class="text-center rounded-r-lg">
                         @if(!$canEdit) <x-icon name="lock" class="w-3 h-3 mx-auto opacity-40" /> @endif
                     </th>
@@ -83,26 +83,26 @@
     <div class="space-y-4 md:hidden">
         @foreach($corrective_actions as $index => $action)
         <div wire:key="corrective-mobile-{{ $index }}-{{ count($corrective_actions) }}"
-            class="relative p-4 border rounded-lg bg-base-50 border-base-200 shadow-sm">
+            class="relative p-4 border rounded-lg shadow-sm bg-base-50 border-base-200">
 
             {{-- Tombol Hapus Mobile --}}
             @if($canEdit && count($corrective_actions) > 1)
             <button type="button"
                 wire:click="removeCorrectiveRow({{ $index }})"
-                class="absolute btn btn-circle btn-error btn-xs -top-2 -right-2 shadow-md">✕</button>
+                class="absolute shadow-md btn btn-circle btn-error btn-xs -top-2 -right-2">✕</button>
             @endif
 
             <div class="grid grid-cols-1 gap-3">
                 {{-- Tindakan --}}
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Tindakan</span></label>
+                    <label class="py-1 label"><span class="label-text font-bold text-[10px] uppercase">{{ __('Tindakan') }}</span></label>
                     <x-form.text_area model="corrective_actions.{{ $index }}.action_description" rows="3" :disabled="!$canEdit" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     {{-- Kontrol Hirarki --}}
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Kontrol Hirarki</span></label>
+                        <label class="py-1 label"><span class="label-text font-bold text-[10px] uppercase">{{ __('Kontrol Hirarki') }}</span></label>
                         <x-form.select model="corrective_actions.{{ $index }}.control_hierarchy"
                             :options="[['id'=>'Eliminasi','name'=>'Eliminasi'],['id'=>'Substitusi','name'=>'Substitusi'],['id'=>'Engineering','name'=>'Rekayasa'],['id'=>'Administrasi','name'=>'Admin'],['id'=>'APD','name'=>'APD']]"
                             :disabled="!$canEdit" />
@@ -110,14 +110,14 @@
 
                     {{-- Batas Waktu --}}
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Batas Waktu</span></label>
+                        <label class="py-1 label"><span class="label-text font-bold text-[10px] uppercase">{{ __('Batas Waktu') }}</span></label>
                         <x-form.tgl-waktu model="corrective_actions.{{ $index }}.due_date" :disabled="!$canEdit" />
                     </div>
                 </div>
 
                 {{-- PIC --}}
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-[10px] uppercase">Penanggung Jawab (PIC)</span></label>
+                    <label class="py-1 label"><span class="label-text font-bold text-[10px] uppercase">{{ __('Penanggung Jawab (PIC)') }}</span></label>
                     <x-form.searchable-select-advanced
                         modelsearch="searchPetugas.{{ $index }}"
                         modelid="corrective_actions.{{ $index }}.pic_user_id"
@@ -135,8 +135,8 @@
                 <div class="p-2 mt-2 border-t border-dashed border-base-300">
                     <div class="flex flex-wrap items-end justify-between gap-2">
                         <div class="form-control w-full max-w-[200px]">
-                            <label class="label py-1">
-                                <span class="label-text font-bold text-[10px] uppercase">Tgl. Selesai Aktual</span>
+                            <label class="py-1 label">
+                                <span class="label-text font-bold text-[10px] uppercase">{{ __('Tgl. Selesai Aktual') }}</span>
                             </label>
                             <x-form.tgl-waktu model="corrective_actions.{{ $index }}.actual_completion_date" :disabled="!$canEdit" />
                         </div>
@@ -150,7 +150,7 @@
                             @endif
 
                             @if(!empty($action['actual_completion_date']))
-                            <span class="badge badge-success badge-outline badge-sm font-bold">DONE</span>
+                            <span class="font-bold badge badge-success badge-outline badge-sm">DONE</span>
                             @endif
                         </div>
                     </div>
@@ -173,7 +173,7 @@
                 {{-- DATA DARI DATABASE (EXISTING) --}}
                 @foreach($existing_visual_evidence as $media)
                 <div class="avatar">
-                    <div class="relative w-40 rounded bg-warning/10 border border-warning">
+                    <div class="relative w-40 border rounded bg-warning/10 border-warning">
                         @php
                         // Enkripsi path untuk masking URL gambar
                         $secureImgUrl = route('document.secure-view', ['path' => Crypt::encryptString($media->file_path)]);
