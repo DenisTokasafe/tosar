@@ -2411,7 +2411,7 @@ class Update extends Component
         // Vendor wajib jika laporan terkait kontraktor
         $step9_Vendor = $hasContractor ? !empty($this->incident->penerimaan_komentar_contractor_id) : true;
 
-        $steps['step9'] = $step9_OHS && $step9_KTT && $step9_Vendor;
+        $steps['step9'] = $step9_OHS || $step9_KTT || $step9_Vendor;
 
         // --- Kalkulasi Akhir ---
         $completedCount = collect($steps)->filter(fn($val) => $val === true)->count();
