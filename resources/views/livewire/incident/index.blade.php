@@ -183,7 +183,7 @@
                             @php
                             $riskColor = match($item->risk?->rating_name) {
                             'Ekstrem' => 'bg-error',
-                            'Tinggi' => 'bg-secondary',
+                            'Tinggi' => 'bg-neutral',
                             'Sedang' => 'bg-warning',
                             default => 'bg-success',
                             };
