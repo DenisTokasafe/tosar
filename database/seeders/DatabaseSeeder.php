@@ -14,10 +14,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-        // RiskMatrixCellSeeder::class,
-        // UserSeeder::class,
-        // HazardWorkflowSeeder::class
-        WpiWorkflowSeeder::class,
-    ]);
+            // RiskMatrixCellSeeder::class,
+            // UserSeeder::class,
+            // HazardWorkflowSeeder::class
+            // WpiWorkflowSeeder::class,
+            ScatOptionSeeder::class,
+        ]);
     }
 }

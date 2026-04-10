@@ -501,11 +501,16 @@ class Update extends Component
     }
     public function mount($id)
     {
-
+        // 1. Data referensi statis
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
-        $this->incident = IncidentReport::find($id);
+
+        /**
+         * 2. EAGER LOADING (Optimasi N+1)
+         * Kita memuat semua relasi di awal, termasuk yang sebelumnya terlewat
+         * seperti 'location', 'department', 'contractor', dan 'timelines'.
+         */
         $report = IncidentReport::with([
             'risk',
             'impact',
@@ -514,109 +519,87 @@ class Update extends Component
             'peepoAnalyses',
             'attachments',
             'correctiveActions.pic',
-            // Tambahkan ini untuk Part 9:
+            'location',      // Tambahkan untuk lokasi
+            'department',    // Tambahkan untuk departemen
+            'contractor',    // Tambahkan untuk kontraktor
+            'timelines',     // Tambahkan untuk analisis WHY
             'pmContractor',
             'pmInternal',
             'ohsHead',
             'ktt'
         ])->findOrFail($id);
+
+        // Simpan instance ke properti agar tidak query ulang di fungsi lain
+        $this->incident = $report;
+
+        // --- DATA DASAR ---
         $this->current_lock_version = $report->lock_version;
         $this->title = $report->title;
         $this->report_number = $report->report_number;
         $this->status = $report->status;
-
-        // --- DATA DASAR ---
         $this->event_type_id = $report->event_type_id;
         $this->event_sub_type_id = $report->event_sub_type_id;
         $this->tasks = $report->tasks;
         $this->potential_lti = $report->potential_lti;
-        $this->date_time = $report->date_time->format('Y-m-d\TH:i');
+        $this->date_time = $report->date_time?->format('Y-m-d\TH:i');
         $this->key_learning = $report->key_learning;
-
-        if ($report->location_id) {
-            $this->location_id = $report->location_id;
-            $this->searchLocation = $report->location?->name; // Asumsi relasi 'reporter'
-        }
-
         $this->location_specific = $report->location_specific;
         $this->contract_area_name = $report->contract_area_name;
         $this->env_classification = $report->env_classification;
-
-        if ($report->department_id) {
-            $this->department_id = $report->department_id;
-            $this->deptCont = 'department'; // Jika Anda pakai toggle selector
-
-            // Ambil nama untuk ditampilkan di input search
-            $this->search = $report->department?->department_name;
-
-            // Load awal opsi penanggung jawab (Reuse logic dari Trait)
-            $this->loadInitialPenanggungJawab('department', $report->department_id);
-        }
-        // 2. Cek apakah ini laporan Contractor
-        elseif ($report->contractor_id) {
-            $this->contractor_id = $report->contractor_id;
-            $this->deptCont = 'contractor';
-
-            // Ambil nama untuk ditampilkan di input search
-            $this->searchContractor = $report->contractor?->contractor_name;
-
-            // Load awal opsi penanggung jawab
-            $this->loadInitialPenanggungJawab('contractor', $report->contractor_id);
-        }
-        if ($this->department_id) {
-            $this->deptCont = 'dept';
-        } else {
-            $this->deptCont = 'cont';
-        }
-        $this->penanggungJawab = $report->penanggungJawab;
         $this->description = $report->description;
         $this->emergency_action = $report->emergency_action;
+        $this->penanggungJawab = $report->penanggungJawab;
+
+        // --- LOKASI ---
+        if ($report->location_id) {
+            $this->location_id = $report->location_id;
+            $this->searchLocation = $report->location?->name;
+        }
+
+        // --- DEPARTEMEN / KONTRAKTOR ---
+        if ($report->department_id) {
+            $this->department_id = $report->department_id;
+            $this->deptCont = 'dept';
+            $this->search = $report->department?->department_name;
+            $this->loadInitialPenanggungJawab('department', $report->department_id);
+        } elseif ($report->contractor_id) {
+            $this->contractor_id = $report->contractor_id;
+            $this->deptCont = 'cont';
+            $this->searchContractor = $report->contractor?->contractor_name;
+            $this->loadInitialPenanggungJawab('contractor', $report->contractor_id);
+        }
 
         // --- PELAPOR ---
-        // Ambil data pelapor dari database laporan
-        $this->loadInitialPelapor(
-            $report->pelapor_id,
-            $report->manual_pelapor_name // Sesuaikan dengan nama kolom di tabel Anda
-        );
+        $this->loadInitialPelapor($report->pelapor_id, $report->manual_pelapor_name);
 
         // --- RISK MATRIX ---
         if ($report->risk) {
             $this->consequence_id = $report->risk->consequence_id;
             $this->likelihood_id = $report->risk->likelihood_id;
             $this->rating_name = $report->risk->rating_name;
-
-            // Set visual state untuk tabel matrix di blade
             $this->selectedLikelihoodId = $this->likelihood_id;
             $this->selectedConsequenceId = $this->consequence_id;
-
-            // Cukup panggil fungsi load sekali
             $this->loadRiskAssessment();
         }
 
+        // --- IMPACT & BODY PART ---
         $impact = $report->impact;
         $this->isInjury = $impact?->is_injury ?? false;
-
         if ($this->isInjury) {
             $this->selectedBodyPart = $impact?->body_part_id;
-            // Gunakan find untuk mendapatkan kategori agar select category otomatis terpilih (selected)
+            // Opsional: Jika BodyPart sering diakses, pertimbangkan Eager Loading di relasi Impact
             $bodyPart = BodyPart::find($this->selectedBodyPart);
             $this->selectedBodyPartCategory = $bodyPart?->category;
-
-            // Pastikan damage_detail kosong jika ini adalah cidera
             $this->damage_detail = null;
         } else {
             $this->damage_detail = $impact?->damage_detail;
-
-            // Pastikan data cidera kosong jika ini adalah kerusakan alat/lingkungan
-            $this->selectedBodyPart = null;
-            $this->selectedBodyPartCategory = null;
         }
 
-        // PART 2: Load data personel terlibat
-        if ($report->involvedPersons->count() > 0) {
+        // --- PART 2: PERSONEL TERLIBAT ---
+        if ($report->involvedPersons->isNotEmpty()) {
             foreach ($report->involvedPersons as $person) {
                 $this->directly_involved[] = [
-                    'id' => $person->id, // Simpan ID untuk keperluan update nanti
+                    'id' => $person->id,
                     'employee_id' => $person->employee_id,
                     'employee_name' => $person->employee_name,
                     'employee_nik' => $person->employee_nik,
@@ -627,25 +610,16 @@ class Update extends Component
                     'keterlibatan' => $person->keterlibatan,
                     'pengalaman_kerja' => $person->pengalaman_kerja,
                 ];
-
-                // Isi search input dengan nama yang sudah ada
                 $this->searchKorban[] = $person->employee_name;
             }
         } else {
-            // Jika data kosong, berikan 1 baris kosong default
             $this->addDirectlyInvolvedRow();
         }
 
-        // PART 3: Load Tim Investigasi
+        // --- PART 3: TIM INVESTIGASI ---
         $teams = $report->investigationTeams;
-
         foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
-            // Menggunakan filter agar bisa bekerja seperti "LIKE" dan Case-Insensitive
-            $filtered = $teams->filter(function ($item) use ($role) {
-                // stripos mengembalikan posisi angka jika ditemukan, atau false jika tidak
-                return stripos($item->role, $role) !== false;
-            });
-
+            $filtered = $teams->filter(fn($item) => stripos($item->role, $role) !== false);
             if ($filtered->isNotEmpty()) {
                 foreach ($filtered->values() as $index => $team) {
                     $this->{$role}[] = [
@@ -659,52 +633,34 @@ class Update extends Component
             } else {
                 $this->addRow($role);
             }
-
-            // PART 4: Load PEEPO
-            foreach ($this->peepoFactors as $key => $label) {
-                // Cari berdasarkan factor_key (orang, peralatan, dll)
-                $data = $report->peepoAnalyses->where('factor_key', $key)->first();
-
-                $this->peepo[$key] = [
-                    'temuan'    => $data->temuan ?? '',
-                    'deskripsi' => $data->deskripsi ?? '',
-                ];
-            }
         }
 
-        // Gunakan first() jika relasi mengembalikan banyak data
-        $analysis = $report->timelines()->first();
+        // --- PART 4: PEEPO ---
+        foreach ($this->peepoFactors as $key => $label) {
+            $data = $report->peepoAnalyses->where('factor_key', $key)->first();
+            $this->peepo[$key] = [
+                'temuan'    => $data->temuan ?? '',
+                'deskripsi' => $data->deskripsi ?? '',
+            ];
+        }
 
-        // Atau jika relasi di model IncidentReport sudah benar (HasOne), cukup:
-        // A. Ambil data dari JSON SCAT (jika sudah pernah disimpan)
+        // --- ANALISIS SCAT & WHY ---
         $scat = $report->scat_analysis;
-
         if ($scat) {
-            // Pastikan mapping sesuai dengan struktur di prepareArrayData
             $this->unsafe_conditions = $scat['langsung']['kondisi_tidak_aman'] ?? [];
             $this->unsafe_acts       = $scat['langsung']['perilaku_tidak_aman'] ?? [];
-
             $this->personal_factors  = $scat['dasar']['faktor_pribadi'] ?? [];
             $this->job_factors       = $scat['dasar']['faktor_pekerjaan'] ?? [];
             $this->control_system_factors = $scat['dasar']['sistem_kontrol'] ?? [];
         }
-        // B. Proteksi Form Kosong
-        $categories = [
-            'unsafe_conditions',
-            'unsafe_acts',
-            'personal_factors',
-            'job_factors',
-            'control_system_factors'
-        ];
 
-        foreach ($categories as $category) {
-            // Jika tidak ada data dari DB, tambahkan 1 baris kosong default
-            if (empty($this->{$category})) {
-                $this->addRow($category);
-            }
+        // Tambahkan baris kosong jika kategori SCAT kosong
+        foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $cat) {
+            if (empty($this->{$cat})) $this->addRow($cat);
         }
-        // $analysis = $report->timeline;
 
+        // Gunakan relasi timelines yang sudah di-eager load (Collection, bukan Query)
+        $analysis = $report->timelines->first();
         if ($analysis && is_array($analysis->analysis_steps)) {
             $this->why_analysis = $analysis->analysis_steps;
             $this->whyCount = count($this->why_analysis) ?: 1;
@@ -713,17 +669,15 @@ class Update extends Component
             $this->whyCount = 1;
         }
 
-        $allFiles = $report->attachments; // Ganti 'files' sesuai nama relasi di Model IncidentReport
+        // --- ATTACHMENTS ---
+        $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->values()->all();
+        $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->values()->all();
 
-        $this->existing_visual_evidence = $allFiles->where('file_type', 'visual')->values()->all();
-        $this->existing_supporting_documents = $allFiles->where('file_type', 'document')->values()->all();
-
-        // Load Tindakan Perbaikan
+        // --- TINDAKAN PERBAIKAN ---
         $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
-            // Inisialisasi search field untuk tiap baris PIC
             $this->searchPetugas[$index] = $action->pic->name ?? $action->name;
             return [
-                'id' => $action->id, // Penting untuk update
+                'id' => $action->id,
                 'action_description' => $action->action_description,
                 'control_hierarchy' => $action->hierarchy,
                 'pic_user_id' => $action->pic_user_id,
@@ -732,61 +686,64 @@ class Update extends Component
                 'actual_completion_date' => $action->actual_completion_date,
             ];
         })->toArray();
+        if (empty($this->corrective_actions)) $this->addCorrectiveRow();
 
-        // --- MOUNT PART 9 ---
-
-        // 1. Contractor (Sudah oke, tapi pastikan $report->pmContractor tidak null)
-        if (!empty($this->contractor_id)) {
+        // --- PART 9: REVIEW & APPROVAL ---
+        if ($this->contractor_id) {
             $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
             $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
-
             $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
         }
 
-        // 2. Internal (Saran: Tambahkan cek jika perlu)
         if ($report->pm_internal_id) {
             $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
             $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
             $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
         }
 
-        // 3. OHS (Saran: Tambahkan cek jika perlu)
         if ($report->ohs_head_id) {
             $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
             $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
             $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
         }
 
-        // 4. KTT (Sudah oke secara logika rating)
         if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
             $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
             $this->penerimaan_komentar_ktt       = $report->ktt_comment;
             $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
         }
-        // Jika data kosong, beri 1 baris default
-        if (empty($this->corrective_actions)) {
-            $this->addCorrectiveRow();
-        }
     }
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        /** * 1. REFRESH TOTAL
-         * Tetap lakukan fresh untuk memuat relasi terbaru dari database.
-         */
-        $this->incident = $this->incident->fresh(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
+        // 1. REFRESH TOTAL
+        // Pastikan semua relasi yang digunakan di bawah ini masuk ke dalam array fresh()
+        $this->incident = $this->incident->fresh([
+            'correctiveActions',
+            'investigationTeams',
+            'peepoAnalyses',
+            'timelines'
+        ]);
 
         if (!$this->incident) return 'Open';
 
         // --- Step 1-6: Investigasi ---
-        $hasTeams = $this->incident->investigationTeams->count() > 0;
-        $hasAnalysis = $this->incident->peepoAnalyses->whereNotIn('temuan', ['-', '', null])->count() > 0 ||
-            $this->incident->timelines->where('why_count_used', '>', 0)->count() > 0;
+        $hasTeams = $this->incident->investigationTeams->isNotEmpty(); // Lebih cepat dari count() > 0
+
+        // Gunakan collection methods (memproses di memori)
+        $hasAnalysis = $this->incident->peepoAnalyses
+            ->whereNotIn('temuan', ['-', '', null])
+            ->isNotEmpty() ||
+            $this->incident->timelines
+            ->where('why_count_used', '>', 0)
+            ->isNotEmpty();
+
         $hasScat = filled($this->incident->scat_analysis);
         $investigationComplete = $hasTeams && $hasAnalysis && $hasScat;
 
         // --- Step 7-8: Action Plan & Key Learning ---
-        $totalActions = $this->incident->correctiveActions->count();
+        $allActions = $this->incident->correctiveActions; // Ambil collection sekali
+        $totalActions = $allActions->count();
         $hasKeyLearning = filled($this->incident->key_learning);
         $actionPlanComplete = $totalActions > 0 && $hasKeyLearning;
 
@@ -794,19 +751,13 @@ class Update extends Component
         $reviewInternalMet = filled($this->incident->pm_internal_id);
         $reviewOhsMet      = filled($this->incident->ohs_head_id);
 
-        /**
-         * LOGIKA KONTRAKTOR (SINKRONISASI STEP 1)
-         * Kita cek state Livewire ($this->contractor_id) karena ini yang sedang diubah user.
-         */
+        // LOGIKA KONTRAKTOR
         $currentContractorId = ($this->deptCont === 'cont') ? $this->contractor_id : null;
         $contractorRequirementMet = filled($currentContractorId)
             ? filled($this->incident->pm_contractor_id)
             : true;
 
-        /**
-         * LOGIKA KTT (SINKRONISASI STEP 1)
-         * Kita gunakan rating dari RiskAssessment yang sedang aktif di state.
-         */
+        // LOGIKA KTT
         $currentRating = $this->RiskAssessment?->name ?? $this->incident->rating_name;
         $kttRequirementMet = in_array($currentRating, ['Sedang', 'Tinggi', 'Ekstrem'])
             ? filled($this->incident->ktt_id)
@@ -814,29 +765,24 @@ class Update extends Component
 
         $allReviewComplete = $reviewInternalMet && $reviewOhsMet && $contractorRequirementMet && $kttRequirementMet;
 
-        // --- Check Realisasi (Actual Completion) ---
+        // --- Check Realisasi ---
+        // Gunakan collection $allActions yang sudah diambil di atas (Hemat memory/CPU)
         $isAllActionClosed = $totalActions > 0 &&
-            $this->incident->correctiveActions->whereNotNull('actual_completion_date')->count() === $totalActions;
+            $allActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
         // --- LOGIKA HIERARKI ---
-
-        // 1. Validasi Investigasi & Action Plan
         if (!$investigationComplete || !$actionPlanComplete) {
             return ($hasTeams || $hasAnalysis) ? 'In Progress' : 'Open';
         }
 
-        // 2. Validasi Reviewer (KUNCI UTAMA)
-        // Jika tanda tangan (ID) null tapi syarat (contractor/rating) ada, status lari ke sini.
         if (!$allReviewComplete) {
             return 'Waiting Review';
         }
 
-        // 3. Validasi Realisasi Tindakan
         if (!$isAllActionClosed) {
             return 'Action Required';
         }
 
-        // 4. Final
         return 'Closed';
     }
     // Mengambil Status Utama (Misal: "In Progress")
