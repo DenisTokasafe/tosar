@@ -771,62 +771,80 @@ class Update extends Component
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
     {
-        // Refresh data untuk memastikan status menghitung data terbaru di database
-        $this->incident->load(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
+        /** * 1. REFRESH TOTAL
+         * Menggunakan fresh() alih-alih load() untuk memastikan data kolom utama
+         * (seperti contractor_id dan rating_name) ditarik ulang dari database.
+         */
+        $this->incident = $this->incident->fresh(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
+
+        if (!$this->incident) return 'Open';
 
         // --- Step 1-6: Investigasi ---
         $hasTeams = $this->incident->investigationTeams->count() > 0;
         $hasAnalysis = $this->incident->peepoAnalyses->whereNotIn('temuan', ['-', '', null])->count() > 0 ||
             $this->incident->timelines->where('why_count_used', '>', 0)->count() > 0;
-        $hasScat = !empty($this->incident->scat_analysis);
+        $hasScat = filled($this->incident->scat_analysis);
         $investigationComplete = $hasTeams && $hasAnalysis && $hasScat;
 
         // --- Step 7-8: Action Plan & Key Learning ---
         $totalActions = $this->incident->correctiveActions->count();
-        $hasKeyLearning = !empty($this->incident->key_learning);
+        $hasKeyLearning = filled($this->incident->key_learning);
         $actionPlanComplete = $totalActions > 0 && $hasKeyLearning;
 
-        // --- Step 9: Review/Approval ---
-        $reviewInternalMet = !empty($this->incident->pm_internal_id); // Gunakan nama kolom DB asli
-        $reviewOhsMet = !empty($this->incident->ohs_head_id);
+        // --- Step 9: Review/Approval (Berdasarkan Kolom Database Anda) ---
+        $reviewInternalMet = filled($this->incident->pm_internal_id);
+        $reviewOhsMet      = filled($this->incident->ohs_head_id);
 
-        $contractorRequirementMet = $this->incident->contractor_id
-            ? !empty($this->incident->pm_contractor_id)
+        // Kontraktor wajib jika contractor_id di laporan tidak null
+        $contractorRequirementMet = filled($this->incident->contractor_id)
+            ? filled($this->incident->pm_contractor_id)
             : true;
 
+        // KTT wajib jika rating adalah Sedang, Tinggi, atau Ekstrem
         $kttRequirementMet = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])
-            ? !empty($this->incident->ktt_id)
+            ? filled($this->incident->ktt_id)
             : true;
 
         $allReviewComplete = $reviewInternalMet && $reviewOhsMet && $contractorRequirementMet && $kttRequirementMet;
 
         // --- Check Realisasi (Actual Completion) ---
-        // Status 'Closed' hanya jika semua action memiliki actual_completion_date
+        // Menghitung apakah semua tindakan perbaikan sudah memiliki tanggal selesai
         $isAllActionClosed = $totalActions > 0 &&
             $this->incident->correctiveActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
-        // --- LOGIKA HIERARKI (URUTAN SANGAT PENTING) ---
+    // --- LOGIKA HIERARKI (URUTAN PENENTU STATUS) ---
 
-        // 1. Jika investigasi & review belum lengkap, tetap di progress/waiting
+        /**
+         * HIERARKI 1: Validasi Investigasi & Action Plan
+         * Jika data dasar belum lengkap, status tetap Open atau In Progress.
+         */
         if (!$investigationComplete || !$actionPlanComplete) {
             return ($hasTeams || $hasAnalysis) ? 'In Progress' : 'Open';
         }
 
+        /**
+         * HIERARKI 2: Validasi Reviewer (Kunci Utama)
+         * Jika Anda baru saja menambah contractor_id, maka $contractorRequirementMet menjadi FALSE.
+         * Kondisi ini akan mengunci status di 'Waiting Review' sehingga laporan tidak masuk ke 'Closed'.
+         */
         if (!$allReviewComplete) {
             return 'Waiting Review';
         }
 
-        // 2. Jika Review SUDAH LENGKAP, cek realisasi tindakan
-        if ($allReviewComplete) {
-            if (!$isAllActionClosed) {
-                // Jika ada action baru atau action lama yang belum di-isi actual_date-nya
-                return 'Action Required';
-            }
-            // Jika semua sudah ditandatangani DAN semua tindakan sudah selesai
-            return 'Closed';
+        /**
+         * HIERARKI 3: Validasi Realisasi Tindakan
+         * Jika semua bos sudah tanda tangan, tapi ada tindakan perbaikan yang belum selesai dikerjakan
+         * (actual_completion_date kosong), maka status turun ke 'Action Required'.
+         */
+        if (!$isAllActionClosed) {
+            return 'Action Required';
         }
 
-        return 'Open';
+        /**
+         * HIERARKI FINAL: Selesai
+         * Hanya tercapai jika: Investigasi Beres + Review Lengkap + Semua Tindakan Selesai.
+         */
+        return 'Closed';
     }
     // Mengambil Status Utama (Misal: "In Progress")
     #[Computed]
