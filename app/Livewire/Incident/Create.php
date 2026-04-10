@@ -507,10 +507,6 @@ class Create extends Component
             $this->search = '';
         }
     }
-
-
-
-
     public function updatedVisualEvidence()
     {
         try {
