@@ -6,7 +6,7 @@
             @if($canEdit)
 
             <flux:tooltip content="{{ __('Klik untuk menambah tahapan analisis berikutnya') }}" position="top">
-                <flux:button icon="add-icon" wire:click="addWhyColumn" color="primary" size="xs">
+                <flux:button icon="add-icon" wire:click="addWhyColumn" variant="primary" size="xs">
                     <span class="hidden sm:inline">{{ __('Tambah Why') }}</span>
                 </flux:button>
             </flux:tooltip>
