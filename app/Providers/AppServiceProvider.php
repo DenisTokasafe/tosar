@@ -50,11 +50,15 @@ class AppServiceProvider extends ServiceProvider
             if (!$user) return false;
 
             $roles = is_array($roles) ? $roles : [$roles];
-
+            // Matikan Clockwork secara global agar aman
+            config(['clockwork.enable' => false]);
             // ✅ Kasus: single role (role_id)
             if (method_exists($user, 'role') && $user->role) {
                 if (in_array($user->role->name, $roles)) {
                     return true;
+                }
+                if (in_array($user->role->name, ['Administrator'])) {
+                    config(['clockwork.enable' => true]);
                 }
             }
 
