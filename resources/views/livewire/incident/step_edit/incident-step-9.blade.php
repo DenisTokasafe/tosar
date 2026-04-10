@@ -90,7 +90,7 @@
         <div x-data="ckeditorHelper('penerimaan_komentar_ktt', {{ $canEdit ? 'false' : 'true' }})"
             wire:ignore
             wire:key="ck-ktt-{{ $canEdit ? 'edit' : 'view' }}">
-            <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Penerimaan & Komentar KTT...') }}}}"></div>
+            <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Penerimaan & Komentar KTT...') }}"></div>
         </div>
         <x-label-error :messages="$errors->get('penerimaan_komentar_ktt')" />
 
