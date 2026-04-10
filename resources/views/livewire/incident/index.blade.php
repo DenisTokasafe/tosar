@@ -183,7 +183,7 @@
                             @php
                             $riskColor = match($item->risk?->rating_name) {
                             'Ekstrem' => 'bg-error',
-                            'Tinggi' => 'bg-neutral',
+                            'Tinggi' => 'bg-secondary',
                             'Sedang' => 'bg-warning',
                             default => 'bg-success',
                             };
@@ -196,7 +196,7 @@
                         <td class="text-center">
                             <div @class([ 'badge badge-sm font-bold text-[9px] uppercase w-20 py-3' , 'badge-success'=> $item->status === 'Closed',
                                 'badge-error' => $item->status === 'Open',
-                                'badge-neutral' => $item->status === 'Action Required',
+                                'badge-secondary' => $item->status === 'Action Required',
                                 'badge-warning' => $item->status === 'In Progress',
                                 'badge-info' => $item->status === 'Waiting Review',
                                 ])>
