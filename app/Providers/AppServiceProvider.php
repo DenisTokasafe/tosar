@@ -47,9 +47,9 @@ class AppServiceProvider extends ServiceProvider
                 $isAdmin = false;
 
                 // Gunakan logika role yang sama dengan aplikasi SENTRY Anda
-                if (method_exists($user, 'role') && $user->role && $user->role->name === 'admin') {
+                if (method_exists($user, 'role') && $user->role && $user->role->name === 'Administrator') {
                     $isAdmin = true;
-                } elseif (method_exists($user, 'roles') && $user->roles()->where('name', 'admin')->exists()) {
+                } elseif (method_exists($user, 'roles') && $user->roles()->where('name', 'Administrator')->exists()) {
                     $isAdmin = true;
                 }
 
