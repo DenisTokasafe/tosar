@@ -42,13 +42,13 @@
 
                                 @switch($this->mainStatus)
                                 @case('Open') @case('Reported')
-                                <div class="badge badge-error badge-xs animate-pulse"></div>
+                                <div aria-label="error" class="status status-error animate-pulse"></div>
                                 <span class="text-xs italic font-black uppercase text-error">OPEN / REPORTED</span>
                                 @break
 
                                 @case('In Progress')
                                 <div class="flex items-center gap-2">
-                                    <div class="badge badge-warning badge-xs animate-bounce"></div>
+                                    <div class="status status-warning animate-bounce"></div>
                                     <span class="text-xs italic font-black uppercase text-warning">IN PROGRESS</span>
 
                                     @if($this->subStatus)
@@ -70,18 +70,19 @@
                                     </div>
                                     <span class="text-xs italic font-black uppercase text-info">WAITING REVIEW</span>
                                     <div class="px-2 badge badge-soft badge-info text-[9px] font-bold uppercase ">
-                                        <span class="text-[9px] font-bold ">Awaiting Signatures</span>
+                                        <span class="text-[9px] font-bold ">A waiting Signatures</span>
                                     </div>
                                 </div>
                                 @break
 
                                 @case('Action Required')
-                                <div class="badge badge-neutral badge-xs"></div>
+                                <div aria-label="status" class="status status-neutral"></div>
+
                                 <span class="text-xs italic font-black uppercase text-neutral">ACTION REQUIRED</span>
                                 @break
 
                                 @case('Closed')
-                                <div class="badge badge-success badge-xs"></div>
+                                <div aria-label="success" class="status status-success"></div>
                                 <span class="text-xs italic font-black uppercase text-success">CLOSED</span>
 
                                 @can('reviewReport', $incident)
