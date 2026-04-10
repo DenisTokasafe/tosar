@@ -64,7 +64,10 @@
                                 {{-- TAMBAHAN: WAITING REVIEW --}}
                                 @case('Waiting Review')
                                 <div class="flex items-center gap-2">
-                                    <div class="badge badge-info badge-xs animate-ping"></div>
+                                    <div class="inline-grid *:[grid-area:1/1]">
+                                        <div class="status status-info animate-ping"></div>
+                                        <div class="status status-info"></div>
+                                    </div>
                                     <span class="text-xs italic font-black uppercase text-info">WAITING REVIEW</span>
                                     <div class="px-2 badge badge-soft badge-info text-[9px] font-bold uppercase ">
                                         <span class="text-[9px] font-bold ">Awaiting Signatures</span>
