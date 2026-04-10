@@ -16,6 +16,7 @@ use App\Models\RiskAssessment;
 use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
 use App\Models\RiskMatrixCell;
+use App\Models\ScatOption;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
@@ -1209,79 +1210,32 @@ class Update extends Component
     #[Computed]
     public function unsafeActOptions()
     {
-        return [
-            '1.2.1 Mengoperasikan peralatan tanpa izin' => '1.2.1 Mengoperasikan peralatan tanpa izin',
-            '1.2.2 Gagal / lalai memperingatkan' => '1.2.2 Gagal / lalai memperingatkan',
-            '1.2.3 Gagal / lalai mengamankan' => '1.2.3 Gagal / lalai mengamankan',
-            '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai' => '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai',
-            '1.2.5 Membuat alat pengaman tidak berfungsi' => '1.2.5 Membuat alat pengaman tidak berfungsi',
-            '1.2.6 Memakai alat yang rusak' => '1.2.6 Memakai alat yang rusak',
-            '1.2.7 Gagal / lalai menggunakan APD yang semestinya' => '1.2.7 Gagal / lalai menggunakan APD yang semestinya',
-            '1.2.8 Pembebanan yang tidak sesuai' => '1.2.8 Pembebanan yang tidak sesuai',
-            '1.2.9 Salah meletakkan / memuat' => '1.2.9 Salah meletakkan / memuat',
-            '1.2.10 Pengangkatan yang tidak sesuai' => '1.2.10 Pengangkatan yang tidak sesuai',
-            '1.2.11 Berada di tempat / posisi yang terlarang' => '1.2.11 Berada di tempat / posisi yang terlarang',
-            '1.2.12 Memperbaiki peralatan yang bekerja / bergerak' => '1.2.12 Memperbaiki peralatan yang bekerja / bergerak',
-            '1.2.13 Bercanda berlebihan' => '1.2.13 Bercanda berlebihan',
-            '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang' => '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang',
-            '1.2.15 Memakai peralatan yang bukan semestinya' => '1.2.15 Memakai peralatan yang bukan semestinya',
-            '1.2.16 Gagal / lalai mengikuti prosedur' => '1.2.16 Gagal / lalai mengikuti prosedur',
-            '1.2.17 Lainnya' => '1.2.17 Lainnya',
-        ];
+        return ScatOption::where('type', 'unsafe_act')
+            ->get()
+            ->pluck('full_label', 'full_label');
     }
     #[Computed]
     public function personalFactorOptions()
     {
-        return [
-            '2.1.1 Tidak memadainya kemampuan fisik / fisiologis' => '2.1.1 Tidak memadainya kemampuan fisik / fisiologis',
-            '2.1.2 Keterbatasan mental / Kemampuan psikologi' => '2.1.2 Keterbatasan mental / Kemampuan psikologi',
-            '2.1.3 Tekanan Fisik atau fisiologis' => '2.1.3 Tekanan Fisik atau fisiologis',
-            '2.1.4 Mental atau Tekanan psikologis' => '2.1.4 Mental atau Tekanan psikologis',
-            '2.1.5 Kurangnya pengetahuan' => '2.1.5 Kurangnya pengetahuan',
-            '2.1.6 Kurangnya keahlian' => '2.1.6 Kurangnya keahlian',
-            '2.1.7 Salah Motivasi' => '2.1.7 Salah Motivasi',
-            '2.1.8 Lainnya' => '2.1.8 Lainnya',
-        ];
+        return ScatOption::where('type', 'personal_factor')
+            ->get()
+            ->pluck('full_label', 'full_label');
     }
 
     #[Computed]
     public function jobFactorOptions()
     {
-        return [
-            '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai' => '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai',
-            '2.2.2 Engineering yang tidak memadai' => '2.2.2 Engineering yang tidak memadai',
-            '2.2.3 Pembelian yang tidak memadai' => '2.2.3 Pembelian yang tidak memadai',
-            '2.2.4 Pemeliharaan yang tidak memadai' => '2.2.4 Pemeliharaan yang tidak memadai',
-            '2.2.5 Alat dan peralatan yang tidak memadai' => '2.2.5 Alat dan peralatan yang tidak memadai',
-            '2.2.6 Standar-standar kerja yang tidak memadai' => '2.2.6 Standar-standar kerja yang tidak memadai',
-            '2.2.7 Pemakaian yang berlebihan' => '2.2.7 Pemakaian yang berlebihan',
-            '2.2.8 Salah pakai atau penyalahgunaan' => '2.2.8 Salah pakai atau penyalahgunaan',
-            '2.2.9 Lainnya' => '2.2.9 Lainnya',
-        ];
+        return ScatOption::where('type', 'job_factor')
+            ->get()
+            ->pluck('full_label', 'full_label');
     }
 
     #[Computed]
     public function controlSystemOptions()
     {
-        return [
-            '2.3.1 Perangkat Keras' => '2.3.1 Perangkat Keras',
-            '2.3.2 Pelatihan' => '2.3.2 Pelatihan',
-            '2.3.3 Organisasi' => '2.3.3 Organisasi',
-            '2.3.4 Komunikasi' => '2.3.4 Komunikasi',
-            '2.3.5 Sasaran tidak kompatibel' => '2.3.5 Sasaran tidak kompatibel',
-            '2.3.6 Prosedur' => '2.3.6 Prosedur',
-            '2.3.7 Manajemen Pemeliharaan' => '2.3.7 Manajemen Pemeliharaan',
-            '2.3.8 Disain' => '2.3.8 Disain',
-            '2.3.9 Manajemen Resiko' => '2.3.9 Manajemen Resiko',
-            '2.3.10 Manajemen Perubahan' => '2.3.10 Manajemen Perubahan',
-            '2.3.11 Manajemen Kontraktor' => '2.3.11 Manajemen Kontraktor',
-            '2.3.12 Budaya Organisasi' => '2.3.12 Budaya Organisasi',
-            '2.3.13 Pengaruh Peraturan' => '2.3.13 Pengaruh Peraturan',
-            '2.3.14 Pembelajaran Organisasi' => '2.3.14 Pembelajaran Organisasi',
-            '2.3.15 Manajemen Kendaraan' => '2.3.15 Manajemen Kendaraan',
-            '2.3.16 Sistem Manajemen' => '2.3.16 Sistem Manajemen',
-            '2.3.17 Lainnya' => '2.3.17 Lainnya',
-        ];
+        return ScatOption::where('type', 'control_system')
+            ->get()
+            ->pluck('full_label', 'full_label');
     }
 
     #[Computed]
