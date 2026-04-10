@@ -2754,7 +2754,7 @@ class Update extends Component
             if ($this->currentStep < 9) {
                 $this->currentStep++;
             }
-            session()->forget('incident_data');
+
             $this->dispatch('alert', [
                 'text' => "SENTRY: Data berhasil diperbarui. Status: {$this->status}",
                 'type' => 'success'
