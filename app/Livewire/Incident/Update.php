@@ -772,8 +772,7 @@ class Update extends Component
     public function determineReportStatus()
     {
         /** * 1. REFRESH TOTAL
-         * Menggunakan fresh() alih-alih load() untuk memastikan data kolom utama
-         * (seperti contractor_id dan rating_name) ditarik ulang dari database.
+         * Tetap lakukan fresh untuk memuat relasi terbaru dari database.
          */
         $this->incident = $this->incident->fresh(['correctiveActions', 'investigationTeams', 'peepoAnalyses', 'timelines']);
 
@@ -791,59 +790,53 @@ class Update extends Component
         $hasKeyLearning = filled($this->incident->key_learning);
         $actionPlanComplete = $totalActions > 0 && $hasKeyLearning;
 
-        // --- Step 9: Review/Approval (Berdasarkan Kolom Database Anda) ---
+        // --- Step 9: Review/Approval ---
         $reviewInternalMet = filled($this->incident->pm_internal_id);
         $reviewOhsMet      = filled($this->incident->ohs_head_id);
 
-        // Kontraktor wajib jika contractor_id di laporan tidak null
-        $contractorRequirementMet = filled($this->incident->contractor_id)
+        /**
+         * LOGIKA KONTRAKTOR (SINKRONISASI STEP 1)
+         * Kita cek state Livewire ($this->contractor_id) karena ini yang sedang diubah user.
+         */
+        $currentContractorId = ($this->deptCont === 'cont') ? $this->contractor_id : null;
+        $contractorRequirementMet = filled($currentContractorId)
             ? filled($this->incident->pm_contractor_id)
             : true;
 
-        // KTT wajib jika rating adalah Sedang, Tinggi, atau Ekstrem
-        $kttRequirementMet = in_array($this->incident->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])
+        /**
+         * LOGIKA KTT (SINKRONISASI STEP 1)
+         * Kita gunakan rating dari RiskAssessment yang sedang aktif di state.
+         */
+        $currentRating = $this->RiskAssessment?->name ?? $this->incident->rating_name;
+        $kttRequirementMet = in_array($currentRating, ['Sedang', 'Tinggi', 'Ekstrem'])
             ? filled($this->incident->ktt_id)
             : true;
 
         $allReviewComplete = $reviewInternalMet && $reviewOhsMet && $contractorRequirementMet && $kttRequirementMet;
 
         // --- Check Realisasi (Actual Completion) ---
-        // Menghitung apakah semua tindakan perbaikan sudah memiliki tanggal selesai
         $isAllActionClosed = $totalActions > 0 &&
             $this->incident->correctiveActions->whereNotNull('actual_completion_date')->count() === $totalActions;
 
-    // --- LOGIKA HIERARKI (URUTAN PENENTU STATUS) ---
+        // --- LOGIKA HIERARKI ---
 
-        /**
-         * HIERARKI 1: Validasi Investigasi & Action Plan
-         * Jika data dasar belum lengkap, status tetap Open atau In Progress.
-         */
+        // 1. Validasi Investigasi & Action Plan
         if (!$investigationComplete || !$actionPlanComplete) {
             return ($hasTeams || $hasAnalysis) ? 'In Progress' : 'Open';
         }
 
-        /**
-         * HIERARKI 2: Validasi Reviewer (Kunci Utama)
-         * Jika Anda baru saja menambah contractor_id, maka $contractorRequirementMet menjadi FALSE.
-         * Kondisi ini akan mengunci status di 'Waiting Review' sehingga laporan tidak masuk ke 'Closed'.
-         */
+        // 2. Validasi Reviewer (KUNCI UTAMA)
+        // Jika tanda tangan (ID) null tapi syarat (contractor/rating) ada, status lari ke sini.
         if (!$allReviewComplete) {
             return 'Waiting Review';
         }
 
-        /**
-         * HIERARKI 3: Validasi Realisasi Tindakan
-         * Jika semua bos sudah tanda tangan, tapi ada tindakan perbaikan yang belum selesai dikerjakan
-         * (actual_completion_date kosong), maka status turun ke 'Action Required'.
-         */
+        // 3. Validasi Realisasi Tindakan
         if (!$isAllActionClosed) {
             return 'Action Required';
         }
 
-        /**
-         * HIERARKI FINAL: Selesai
-         * Hanya tercapai jika: Investigasi Beres + Review Lengkap + Semua Tindakan Selesai.
-         */
+        // 4. Final
         return 'Closed';
     }
     // Mengambil Status Utama (Misal: "In Progress")
