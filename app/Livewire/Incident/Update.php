@@ -2553,14 +2553,17 @@ class Update extends Component
                         // Cek apakah nama tidak kosong (berlaku untuk DB maupun Manual)
                         if (!empty($member['name'])) {
 
-                            $report->investigationTeams()->create([
-                                // Jika manual, user_id akan tetap null di database
-                                'user_id' => $member['user_id'] ?? null,
-                                'name'    => $member['name'],
-                                'role'    => $role,
-                                'dept'    => $member['dept'] ?? null,
-                                'jabatan' => $member['jabatan'] ?? null,
-                            ]);
+                            $report->investigationTeams()->updateOrCreate(
+                                ['incident_report_id' => $report->id],
+                                [
+                                    // Jika manual, user_id akan tetap null di database
+                                    'user_id' => $member['user_id'] ?? null,
+                                    'name'    => $member['name'],
+                                    'role'    => $role,
+                                    'dept'    => $member['dept'] ?? null,
+                                    'jabatan' => $member['jabatan'] ?? null,
+                                ]
+                            );
 
                             // Hanya tambahkan ke array notifikasi jika user_id ada (User terdaftar di sistem)
                             if (!empty($member['user_id'])) {
