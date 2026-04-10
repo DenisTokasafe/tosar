@@ -409,8 +409,8 @@ class Update extends Component
         ];
 
         foreach ($this->peepoFactors as $key => $label) {
-            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor ') . __($label);
-            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor ') . __($label);
+            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor') . __($label);
+            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor') . __($label);
         }
 
         foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
