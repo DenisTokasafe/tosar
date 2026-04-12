@@ -55,9 +55,11 @@
 
         .photo-table {
             width: 100%;
-            table-layout: fixed; /* Memaksa kolom bagi rata */
+            table-layout: fixed;
+            /* Memaksa kolom bagi rata */
             border-collapse: separate;
-            border-spacing: 5px; /* Jarak antar kotak */
+            border-spacing: 5px;
+            /* Jarak antar kotak */
         }
 
         .photo-card-td {
@@ -73,7 +75,8 @@
 
         .photo-img {
             width: 100%;
-            height: 150px; /* Tinggi proporsional untuk landscape */
+            height: 150px;
+            /* Tinggi proporsional untuk landscape */
             object-fit: cover;
             display: block;
         }
@@ -150,11 +153,14 @@
                 <tr>
                     <th width="25px">NO</th>
                     <th width="120px">LOKASI</th>
+                    {{-- Loop Inputs --}}
                     @foreach ($structure['inputs'] as $header)
-                        <th>{{ $header }}</th>
+                    <th>{{ is_array($header) ? ($header['label'] ?? 'N/A') : $header }}</th>
                     @endforeach
+
+                    {{-- Loop Checks --}}
                     @foreach ($structure['checks'] as $header)
-                        <th>{{ $header }}</th>
+                    <th>{{ is_array($header) ? ($header['label'] ?? 'N/A') : $header }}</th>
                     @endforeach
                     <th width="60px">TANGGAL</th>
                     <th width="60px">DIPERIKSA OLEH</th>
@@ -163,43 +169,54 @@
             </thead>
             <tbody>
                 @foreach ($data as $index => $item)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td style="text-align: left;">{{ $item->equipmentMaster->specific_location }}</td>
-                        @foreach ($structure['inputs'] as $input)
-                            <td>{{ $item->conditions[$input] ?? '-' }}</td>
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td style="text-align: left;">{{ $item->equipmentMaster->specific_location }}</td>
+
+                    {{-- Loop Inputs Body --}}
+                    @foreach ($structure['inputs'] as $input)
+                    @php
+                    // Ambil key string-nya (jika objek ambil 'label', jika string biarkan)
+                    $key = is_array($input) ? ($input['label'] ?? null) : $input;
+                    @endphp
+                    <td>{{ $item->conditions[$key] ?? '-' }}</td>
+                    @endforeach
+
+                    {{-- Loop Checks Body --}}
+                    @foreach ($structure['checks'] as $check)
+                    @php
+                    $key = is_array($check) ? ($check['label'] ?? null) : $check;
+                    $val = $item->conditions[$key] ?? null;
+                    @endphp
+                    <td>
+                        @if ($val === true || $val === 'true' || $val === 1)
+                        <span class="good">✔</span>
+                        @elseif($val === false || $val === 'false' || $val === 0)
+                        <span class="nogood">✘</span>
+                        @else
+                        -
+                        @endif
+                    </td>
+                    @endforeach
+                    <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }} </td>
+                    <td>
+                        @php
+                        $daftarNama = array_filter(explode('|', $item->inspected_by ?? ''), fn($n) => !empty(trim($n)));
+                        @endphp
+                        @foreach ($daftarNama as $namaOrang)
+                        @php
+                        $search = ['"', ','];
+                        $cleanName = str_replace($search, '', $namaOrang);
+                        $initials = collect(preg_split('/\s+/', trim($cleanName)))
+                        ->filter()
+                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                        ->implode('');
+                        @endphp
+                        {{ $initials }}@if (!$loop->last), @endif
                         @endforeach
-                        @foreach ($structure['checks'] as $check)
-                            <td>
-                                @php $val = $item->conditions[$check] ?? null; @endphp
-                                @if ($val === true || $val === 'true' || $val === 1)
-                                    <span class="good">✔</span>
-                                @elseif($val === false || $val === 'false' || $val === 0)
-                                    <span class="nogood">✘</span>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        @endforeach
-                        <td> {{ \Carbon\Carbon::parse($item->inspectionSession->inspection_date)->format('d/m/Y') }} </td>
-                        <td>
-                            @php
-                                $daftarNama = array_filter(explode('|', $item->inspected_by ?? ''), fn($n) => !empty(trim($n)));
-                            @endphp
-                            @foreach ($daftarNama as $namaOrang)
-                                @php
-                                    $search = ['"', ','];
-                                    $cleanName = str_replace($search, '', $namaOrang);
-                                    $initials = collect(preg_split('/\s+/', trim($cleanName)))
-                                        ->filter()
-                                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
-                                        ->implode('');
-                                @endphp
-                                {{ $initials }}@if (!$loop->last), @endif
-                            @endforeach
-                        </td>
-                        <td style="text-align: left;">{{ $item->remarks }}</td>
-                    </tr>
+                    </td>
+                    <td style="text-align: left;">{{ $item->remarks }}</td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
@@ -210,56 +227,56 @@
             </div>
 
             @php
-                $firstItem = $data->first();
-                $areaPhotoPath = $firstItem && $firstItem->inspectionSession ? $firstItem->inspectionSession->area_photo_path : null;
-                $documentationPhotos = $data->filter(fn($item) => $item->documentation_path && file_exists(storage_path('app/public/' . $item->documentation_path)));
-                $areaPhotoExists = $areaPhotoPath && file_exists(storage_path('app/public/' . $areaPhotoPath));
+            $firstItem = $data->first();
+            $areaPhotoPath = $firstItem && $firstItem->inspectionSession ? $firstItem->inspectionSession->area_photo_path : null;
+            $documentationPhotos = $data->filter(fn($item) => $item->documentation_path && file_exists(storage_path('app/public/' . $item->documentation_path)));
+            $areaPhotoExists = $areaPhotoPath && file_exists(storage_path('app/public/' . $areaPhotoPath));
 
-                // Gabungkan semua item yang akan ditampilkan di grid
-                $gridItems = collect();
-                if($areaPhotoExists) {
-                    $gridItems->push(['type' => 'area', 'path' => $areaPhotoPath]);
-                }
-                foreach($documentationPhotos as $photo) {
-                    $gridItems->push(['type' => 'doc', 'data' => $photo]);
-                }
+            // Gabungkan semua item yang akan ditampilkan di grid
+            $gridItems = collect();
+            if($areaPhotoExists) {
+            $gridItems->push(['type' => 'area', 'path' => $areaPhotoPath]);
+            }
+            foreach($documentationPhotos as $photo) {
+            $gridItems->push(['type' => 'doc', 'data' => $photo]);
+            }
             @endphp
 
             @if($gridItems->isEmpty())
-                <div style="text-align: center; color: #999; padding: 40px; border: 1px dashed #ccc;">
-                    Tidak ada lampiran foto dokumentasi.
-                </div>
+            <div style="text-align: center; color: #999; padding: 40px; border: 1px dashed #ccc;">
+                Tidak ada lampiran foto dokumentasi.
+            </div>
             @else
-                <table class="photo-table">
-                    @foreach ($gridItems->chunk(4) as $chunk)
-                        <tr>
-                            @foreach ($chunk as $cell)
-                                <td class="photo-card-td">
-                                    <div class="photo-img-container">
-                                        @php $path = ($cell['type'] == 'area') ? $cell['path'] : $cell['data']->documentation_path; @endphp
-                                        <img src="{{ storage_path('app/public/' . $path) }}" class="photo-img">
-                                    </div>
-                                    <div class="photo-info">
-                                        @if($cell['type'] == 'area')
-                                            <strong>Foto Inspeksi Area :</strong><br>
-                                            <span style="color: blue; text-decoration: underline;">
-                                                {{ $firstItem->inspectionSession->area_name ?? 'Environment' }}
-                                            </span>
-                                        @else
-                                            <strong>No:</strong> {{ $loop->parent->index * 4 + $loop->iteration - ($areaPhotoExists ? 0 : 0) }}<br>
-                                            <strong>Lokasi:</strong> {{ $cell['data']->equipmentMaster->specific_location ?? '-' }}<br>
-                                            <strong>Ket:</strong> {{ Str::limit($cell['data']->remarks ?? '-', 35) }}
-                                        @endif
-                                    </div>
-                                </td>
-                            @endforeach
-                            {{-- Mengisi kolom kosong jika jumlah foto tidak kelipatan 4 --}}
-                            @for ($i = 0; $i < (4 - $chunk->count()); $i++)
-                                <td style="border: none;"></td>
-                            @endfor
-                        </tr>
+            <table class="photo-table">
+                @foreach ($gridItems->chunk(4) as $chunk)
+                <tr>
+                    @foreach ($chunk as $cell)
+                    <td class="photo-card-td">
+                        <div class="photo-img-container">
+                            @php $path = ($cell['type'] == 'area') ? $cell['path'] : $cell['data']->documentation_path; @endphp
+                            <img src="{{ storage_path('app/public/' . $path) }}" class="photo-img">
+                        </div>
+                        <div class="photo-info">
+                            @if($cell['type'] == 'area')
+                            <strong>Foto Inspeksi Area :</strong><br>
+                            <span style="color: blue; text-decoration: underline;">
+                                {{ $firstItem->inspectionSession->area_name ?? 'Environment' }}
+                            </span>
+                            @else
+                            <strong>No:</strong> {{ $loop->parent->index * 4 + $loop->iteration - ($areaPhotoExists ? 0 : 0) }}<br>
+                            <strong>Lokasi:</strong> {{ $cell['data']->equipmentMaster->specific_location ?? '-' }}<br>
+                            <strong>Ket:</strong> {{ Str::limit($cell['data']->remarks ?? '-', 35) }}
+                            @endif
+                        </div>
+                    </td>
                     @endforeach
-                </table>
+                    {{-- Mengisi kolom kosong jika jumlah foto tidak kelipatan 4 --}}
+                    @for ($i = 0; $i < (4 - $chunk->count()); $i++)
+                        <td style="border: none;"></td>
+                        @endfor
+                </tr>
+                @endforeach
+            </table>
             @endif
         </div>
 
@@ -269,9 +286,15 @@
                 <tr>
                     <td class="no-border" style="width: 15%; vertical-align: top;">
                         <table class="legend-table">
-                            <tr><th class="bg-gray">Keterangan</th></tr>
-                            <tr><td><span class="good">✔</span> Baik</td></tr>
-                            <tr><td><span class="nogood">✘</span> Rusak / Tidak Baik</td></tr>
+                            <tr>
+                                <th class="bg-gray">Keterangan</th>
+                            </tr>
+                            <tr>
+                                <td><span class="good">✔</span> Baik</td>
+                            </tr>
+                            <tr>
+                                <td><span class="nogood">✘</span> Rusak / Tidak Baik</td>
+                            </tr>
                         </table>
                     </td>
                     <td class="no-border" style="width: 5%;"></td>
@@ -295,20 +318,22 @@
                     <td class="no-border" style="width: 30%; vertical-align: top;">
                         <table class="legend-table">
                             @php
-                                $daftarNamaUnik = collect($data)->pluck('inspected_by')->flatMap(fn($item) => explode('|', $item))->map(fn($name) => trim($name))->unique()->filter();
+                            $daftarNamaUnik = collect($data)->pluck('inspected_by')->flatMap(fn($item) => explode('|', $item))->map(fn($name) => trim($name))->unique()->filter();
                             @endphp
-                            <tr><th colspan="2">Inisial Pemeriksa</th></tr>
+                            <tr>
+                                <th colspan="2">Inisial Pemeriksa</th>
+                            </tr>
                             @foreach ($daftarNamaUnik as $name)
-                                <tr>
-                                    <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
-                                        @php
-                                            $clean = str_replace(['"', ','], '', $name);
-                                            $init = collect(preg_split('/\s+/', trim($clean)))->filter()->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('');
-                                        @endphp
-                                        {{ $init }}
-                                    </td>
-                                    <td style="text-align: left;"> {{ trim(str_replace('"', '', $name)) }}</td>
-                                </tr>
+                            <tr>
+                                <td class="bg-gray" style="width: 40px; text-align: center; font-weight: bold;">
+                                    @php
+                                    $clean = str_replace(['"', ','], '', $name);
+                                    $init = collect(preg_split('/\s+/', trim($clean)))->filter()->map(fn($w) => strtoupper(substr($w, 0, 1)))->implode('');
+                                    @endphp
+                                    {{ $init }}
+                                </td>
+                                <td style="text-align: left;"> {{ trim(str_replace('"', '', $name)) }}</td>
+                            </tr>
                             @endforeach
                         </table>
                     </td>
@@ -317,4 +342,5 @@
         </div>
     </main>
 </body>
+
 </html>
