@@ -155,12 +155,19 @@
                     <th width="120px">LOKASI</th>
                     {{-- Loop Inputs --}}
                     @foreach ($structure['inputs'] as $header)
-                    <th>{{ is_array($header) ? ($header['label'] ?? 'N/A') : $header }}</th>
+                    @php
+                    // Cek jika data lama (string) atau data baru (array/object)
+                    $labelText = is_array($header) ? ($header['label'] ?? 'N/A') : $header;
+                    @endphp
+                    <th>{{ $labelText }}</th>
                     @endforeach
 
                     {{-- Loop Checks --}}
                     @foreach ($structure['checks'] as $header)
-                    <th>{{ is_array($header) ? ($header['label'] ?? 'N/A') : $header }}</th>
+                    @php
+                    $labelText = is_array($header) ? ($header['label'] ?? 'N/A') : $header;
+                    @endphp
+                    <th>{{ $labelText }}</th>
                     @endforeach
                     <th width="60px">TANGGAL</th>
                     <th width="60px">DIPERIKSA OLEH</th>
@@ -173,10 +180,9 @@
                     <td>{{ $index + 1 }}</td>
                     <td style="text-align: left;">{{ $item->equipmentMaster->specific_location }}</td>
 
-                    {{-- Loop Inputs Body --}}
                     @foreach ($structure['inputs'] as $input)
                     @php
-                    // Ambil key string-nya (jika objek ambil 'label', jika string biarkan)
+                    // Normalisasi key untuk mencari di array conditions
                     $key = is_array($input) ? ($input['label'] ?? null) : $input;
                     @endphp
                     <td>{{ $item->conditions[$key] ?? '-' }}</td>
@@ -189,9 +195,9 @@
                     $val = $item->conditions[$key] ?? null;
                     @endphp
                     <td>
-                        @if ($val === true || $val === 'true' || $val === 1)
+                        @if ($val === true || $val === 'true' || $val === 1 || $val === '1')
                         <span class="good">✔</span>
-                        @elseif($val === false || $val === 'false' || $val === 0)
+                        @elseif($val === false || $val === 'false' || $val === 0 || $val === '0')
                         <span class="nogood">✘</span>
                         @else
                         -
