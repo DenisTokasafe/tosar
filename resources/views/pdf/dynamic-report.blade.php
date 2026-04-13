@@ -201,7 +201,7 @@
                         @elseif($val === false || $val === 'false' || $val === 0 || $val === '0')
                         <span class="nogood">✘</span>
                         @else
-                        -
+                        {{ $val }}
                         @endif
                     </td>
                     @endforeach
