@@ -715,7 +715,7 @@ class Create extends Component
             'eventSubTypes' => EventSubType::where('event_type_id', $this->event_type_id)->get(),
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
-            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
+            // 'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get()
         ]);
     }
 

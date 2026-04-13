@@ -244,8 +244,7 @@
                 @foreach($detailsBodyPart as $part)
                 <label class="flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300 group" wire:key="body-part-{{ $part->id }}">
                     <input type="checkbox"
-                        value="{{ $part->id }}"
-                        wire:model.live="selectedBodyPart" {{-- Nama variabel harus sama --}}
+                        value="{{ $part->id }}" wire:model.live="selectedBodyPart" {{-- Nama variabel harus sama --}}
                         class="checkbox checkbox-primary checkbox-sm">
                     <span class="text-sm group-hover:font-medium">{{ $part->name }}</span>
                 </label>
