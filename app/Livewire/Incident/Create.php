@@ -190,11 +190,9 @@ class Create extends Component
             // Logika Kondisional Injury / Damage
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
             'selectedBodyParts' => $this->isInjury ? 'required' : 'nullable',
+            'selectedBodyParts.*' => 'exists:body_parts,id',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
-
-
-
         return $rules;
     }
     /**
@@ -350,7 +348,7 @@ class Create extends Component
                     'emergency_action',
                     'penanggungJawab',
                     'selectedBodyPartCategory',
-                    'selectedBodyPart',
+                    'selectedBodyParts',
                     'damage_detail'
                 ];
                 break;
@@ -1244,11 +1242,14 @@ class Create extends Component
                 $report->risk()->create($data['risk_assessment']);
 
                 // C. Simpan Detail Dampak (Injury vs Damage)
-                $report->impact()->create([
+                $impact = $report->impact()->create([
                     'is_injury'     => $data['impact_details']['is_injury'],
-                    'body_part_id'  => $data['impact_details']['is_injury'] ? $data['impact_details']['injury_data']['part_id'] : null,
                     'damage_detail' => !$data['impact_details']['is_injury'] ? $data['impact_details']['damage_data']['detail'] : null,
                 ]);
+                if ($data['impact_details']['is_injury'] && !empty($this->selectedBodyPart)) {
+                    // Gunakan sync() untuk menyimpan array ID ke tabel pivot
+                    $impact->bodyParts()->sync($this->selectedBodyPart);
+                }
 
                 // D. Simpan Personel Terlibat (Hanya Part 2)
                 $report->involvedPersons()->createMany($data['pihak_terlibat']);
@@ -1330,7 +1331,7 @@ class Create extends Component
             'impact_details' => [
                 'is_injury'   => $this->isInjury,
                 'injury_data' => $this->isInjury ? [
-                    'part_id' => $this->selectedBodyPart,
+                    'part_id' => $this->selectedBodyParts,
                 ] : null,
                 'damage_data' => !$this->isInjury ? [
                     'detail'  => $this->damage_detail,
@@ -1374,9 +1375,9 @@ class Create extends Component
             'description',
             'emergency_action',
             'selectedBodyPartCategory',
-            'selectedBodyPart',
+            'selectedBodyParts',
             'damage_detail'
-        ])) {
+        ]) || str_starts_with($field, 'selectedBodyParts')) {
             $this->currentStep = 1;
         } elseif (str_starts_with($field, 'directly_involved')) {
             $this->currentStep = 2;
