@@ -213,7 +213,7 @@
                 <label class="flex items-center gap-2 p-2 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300">
                     <input type="checkbox"
                         value="{{ $part->id }}"
-                        wire:model.live="selectedBodyParts"
+                        wire:model.live="selectedBodyPart"
                         class="checkbox checkbox-primary checkbox-sm"
                         @disabled(!$canEdit)>
                     <span class="text-sm">{{ $part->name }}</span>
@@ -223,9 +223,9 @@
         </div>
         @endif
 
-        @if(count($selectedBodyParts) > 0)
+        @if(count($selectedBodyPart) > 0)
         <div class="flex flex-wrap gap-2 pt-2 border-t border-base-300">
-            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
             <div class="badge badge-primary badge-md gap-2 py-3">
                 @if($canEdit)
                 <svg wire:click="removeBodyPart({{ $selected->id }})" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 cursor-pointer stroke-current hover:text-error">
