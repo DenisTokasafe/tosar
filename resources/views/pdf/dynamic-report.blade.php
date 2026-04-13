@@ -165,7 +165,7 @@
                     {{-- Loop Checks --}}
                     @foreach ($structure['checks'] as $header)
                     @php
-                    $labelText = is_array($header) ? ($header['label'] ?? 'N/A') : $header;
+                    $labelText = is_array($header) ? ($header['name'] ?? 'N/A') : $header;
                     @endphp
                     <th>{{ $labelText }}</th>
                     @endforeach
@@ -183,7 +183,7 @@
                     @foreach ($structure['inputs'] as $input)
                     @php
                     // Normalisasi key untuk mencari di array conditions
-                    $key = is_array($input) ? ($input['label'] ?? null) : $input;
+                    $key = is_array($input) ? ($input['name'] ?? null) : $input;
                     @endphp
                     <td>{{ $item->conditions[$key] ?? '-' }}</td>
                     @endforeach
@@ -191,8 +191,8 @@
                     {{-- Loop Checks Body --}}
                     @foreach ($structure['checks'] as $check)
                     @php
-                    dd($check);
-                    $key = is_array($check) ? ($check['label'] ?? null) : $check;
+                    $key = is_array($check) ? ($check['name'] ?? null) : $check;
+                    dd($key);
                     $val = $item->conditions[$key] ?? null;
                     @endphp
                     <td>
