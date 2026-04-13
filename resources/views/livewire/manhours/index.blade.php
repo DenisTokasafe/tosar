@@ -136,20 +136,24 @@
                 </tbody>
             </table>
         </div>
+
+
+        @livewire('manhours.grafik.index')
         <div class="absolute inset-x-0 bottom-0 z-50 mt-6 shadow-md bg-base-100 inset-shadow-sm">
             {{ $data_manhours->links() }}
         </div>
-        <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='update,store,close_modal,'>
-            <div class="overflow-y-auto modal-box">
-                <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
-                    <fieldset wire.ignore.self
-                        class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
-                        <legend class="fieldset-legend">Formulir {{ $form }} Manhours & Manpower</legend>
-                        <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-                            {{-- Bulan --}}
-                            <fieldset class="fieldset">
-                                <x-form.label label="Bulan" required />
-                                <div wire:ignore wire:key="manhours-month-picker" x-data="{
+    </x-manhours.layout>
+    <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='update,store,close_modal,'>
+        <div class="overflow-y-auto modal-box">
+            <form wire:submit.prevent="{{ $selectedId ? "update($selectedId)" : 'store' }}">
+                <fieldset wire.ignore.self
+                    class="p-4 overflow-y-auto border fieldset bg-base-200 border-base-300 rounded-box">
+                    <legend class="fieldset-legend">Formulir {{ $form }} Manhours & Manpower</legend>
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                        {{-- Bulan --}}
+                        <fieldset class="fieldset">
+                            <x-form.label label="Bulan" required />
+                            <div wire:ignore wire:key="manhours-month-picker" x-data="{
                                     fp: null,
                                     dateValue: @entangle('date').live,
                                     initFlatpickr() {
@@ -175,175 +179,172 @@
                                         });
                                     }
                                 }"
-                                    x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
-                                    <input x-ref="input" type="text" readonly
-                                        class="w-full input input-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
-                                        placeholder="Pilih bulan" />
-                                </div>
-                                <x-label-error :messages="$errors->get('date')" />
-                            </fieldset>
-
-                            {{-- Kategori Perusahaan --}}
-                            <fieldset class="fieldset">
-                                <x-form.label label="Pilih Entitas" required />
-                                <select wire:model.live="entityType"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                    <option value="">-- Pilih --</option>
-                                    <option value="owner">Perusahaan (Owner)</option>
-                                    <option value="contractor">Kontraktor</option>
-
-                                </select>
-
-                                <x-label-error :messages="$errors->get('entityType')" />
-                            </fieldset>
-
-                            {{-- Perusahaan --}}
-                            <fieldset class="fieldset">
-                                <x-form.label label="Perusahaan" required />
-                                <select wire:model.live="company"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                    <option value="">-- Pilih --</option>
-
-                                    {{-- kalau ada owners --}}
-                                    @isset($companies['owners'])
-                                    @foreach ($companies['owners'] as $comp)
-                                    <option value="{{ $comp->company_name }}" @selected($company===$comp->company_name)>
-                                        {{ $comp->company_name }}
-                                    </option>
-                                    @endforeach
-                                    @endisset
-
-                                    @isset($companies['contractors'])
-                                    @foreach ($companies['contractors'] as $cont)
-                                    <option value="{{ $cont->contractor_name }}" @selected($company===$cont->contractor_name)>
-                                        {{ $cont->contractor_name }}
-                                    </option>
-                                    @endforeach
-                                    @endisset
-                                </select>
-                                <x-label-error :messages="$errors->get('company')" />
-                            </fieldset>
-
-
-                            {{-- Departemen --}}
-                            <fieldset class="fieldset">
-                                {{-- MODIFIKASI DIMULAI DI SINI --}}
-                                @if ($entityType === 'contractor')
-                                <x-form.label label="Custodian" required />
-                                @elseif ($entityType === 'owner')
-                                <x-form.label label="Department" required />
-                                @else
-                                {{-- Default jika belum memilih atau nilainya kosong --}}
-                                <x-form.label label="Department / Custodian" required />
-                                @endif
-                                {{-- MODIFIKASI BERAKHIR DI SINI --}}
-                                <select wire:model.live="department"
-                                    class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                    <option value="">-- Pilih --</option>
-                                    @if ($entityType === 'contractor')
-                                    @foreach ($custodian as $cust)
-                                    <option value="{{ $cust->Departemen->department_name }}"
-                                        @selected($department===$cust->Departemen->department_name)>
-                                        {{ $cust->Departemen->department_name }}
-                                    </option>
-                                    @endforeach
-                                    @else
-                                    @foreach ($deptGroup as $dg)
-                                    <option value="{{ $dg->Departemen->department_name }}"
-                                        @selected($department===$dg->Departemen->department_name)>
-                                        {{ $dg->Departemen->department_name }}
-                                    </option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                                <x-label-error :messages="$errors->get('department')" />
-                            </fieldset>
-                        </div>
-
-                        {{-- Job Class Section --}}
-                        @foreach ($jobclasses as $key => $label)
-                        <fieldset class="px-3 border rounded-lg fieldset border-base-300">
-                            <legend class="flex items-center gap-2 text-xs font-semibold">
-                                <span>{{ $label }}</span>
-
-                                {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
-                                <label class="flex items-center space-x-1 cursor-pointer">
-                                    <input type="checkbox" wire:model.live="hide.{{ $key }}"
-                                        class="checkbox checkbox-xs">
-                                    <span class="text-[8px] text-rose-500 capitalize select-none">
-                                        centang jika ada data {{ $label }}
-                                    </span>
-                                </label>
-                            </legend>
-
-                            {{-- Container Manhours dan Manpower --}}
-                            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-
-                                {{-- Manhours (Jumlah Jam Kerja) --}}
-                                <fieldset class="fieldset">
-                                    <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
-
-                                    <input type="number" wire:model.live="manhours.{{ $key }}"
-                                        placeholder="Masukkan Jumlah Jam Kerja..."
-                                        class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
-                                        @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
-
-                                    <x-label-error :messages="$errors->get('manhours.' . $key)" />
-                                </fieldset>
-
-                                {{-- Manpower (Jumlah Tenaga Kerja) --}}
-                                <fieldset class="fieldset">
-                                    <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
-
-                                    <input type="number" wire:model.live="manpower.{{ $key }}"
-                                        placeholder="Masukkan Jumlah Tenaga Kerja..."
-                                        class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
-                                        @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
-
-                                    <x-label-error :messages="$errors->get('manpower.' . $key)" />
-                                </fieldset>
+                                x-init="initFlatpickr()" x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
+                                <input x-ref="input" type="text" readonly
+                                    class="w-full input input-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
+                                    placeholder="Pilih bulan" />
                             </div>
+                            <x-label-error :messages="$errors->get('date')" />
                         </fieldset>
-                        @endforeach
 
-                        {{-- Tombol Aksi --}}
-                        <div class="flex justify-end gap-2 mt-2">
+                        {{-- Kategori Perusahaan --}}
+                        <fieldset class="fieldset">
+                            <x-form.label label="Pilih Entitas" required />
+                            <select wire:model.live="entityType"
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Pilih --</option>
+                                <option value="owner">Perusahaan (Owner)</option>
+                                <option value="contractor">Kontraktor</option>
 
-                            @if ($selectedId)
-                            <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
-                                onclick="manhours_modal.close()">Batal</button>
-                            <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
+                            </select>
+
+                            <x-label-error :messages="$errors->get('entityType')" />
+                        </fieldset>
+
+                        {{-- Perusahaan --}}
+                        <fieldset class="fieldset">
+                            <x-form.label label="Perusahaan" required />
+                            <select wire:model.live="company"
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Pilih --</option>
+
+                                {{-- kalau ada owners --}}
+                                @isset($companies['owners'])
+                                @foreach ($companies['owners'] as $comp)
+                                <option value="{{ $comp->company_name }}" @selected($company===$comp->company_name)>
+                                    {{ $comp->company_name }}
+                                </option>
+                                @endforeach
+                                @endisset
+
+                                @isset($companies['contractors'])
+                                @foreach ($companies['contractors'] as $cont)
+                                <option value="{{ $cont->contractor_name }}" @selected($company===$cont->contractor_name)>
+                                    {{ $cont->contractor_name }}
+                                </option>
+                                @endforeach
+                                @endisset
+                            </select>
+                            <x-label-error :messages="$errors->get('company')" />
+                        </fieldset>
+
+
+                        {{-- Departemen --}}
+                        <fieldset class="fieldset">
+                            {{-- MODIFIKASI DIMULAI DI SINI --}}
+                            @if ($entityType === 'contractor')
+                            <x-form.label label="Custodian" required />
+                            @elseif ($entityType === 'owner')
+                            <x-form.label label="Department" required />
                             @else
-                            <button class="btn btn-xs btn-soft btn-error"
-                                onclick="manhours_modal.close()">Batal</button>
-                            <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
+                            {{-- Default jika belum memilih atau nilainya kosong --}}
+                            <x-form.label label="Department / Custodian" required />
                             @endif
+                            {{-- MODIFIKASI BERAKHIR DI SINI --}}
+                            <select wire:model.live="department"
+                                class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                                <option value="">-- Pilih --</option>
+                                @if ($entityType === 'contractor')
+                                @foreach ($custodian as $cust)
+                                <option value="{{ $cust->Departemen->department_name }}"
+                                    @selected($department===$cust->Departemen->department_name)>
+                                    {{ $cust->Departemen->department_name }}
+                                </option>
+                                @endforeach
+                                @else
+                                @foreach ($deptGroup as $dg)
+                                <option value="{{ $dg->Departemen->department_name }}"
+                                    @selected($department===$dg->Departemen->department_name)>
+                                    {{ $dg->Departemen->department_name }}
+                                </option>
+                                @endforeach
+                                @endif
+                            </select>
+                            <x-label-error :messages="$errors->get('department')" />
+                        </fieldset>
+                    </div>
+
+                    {{-- Job Class Section --}}
+                    @foreach ($jobclasses as $key => $label)
+                    <fieldset class="px-3 border rounded-lg fieldset border-base-300">
+                        <legend class="flex items-center gap-2 text-xs font-semibold">
+                            <span>{{ $label }}</span>
+
+                            {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
+                            <label class="flex items-center space-x-1 cursor-pointer">
+                                <input type="checkbox" wire:model.live="hide.{{ $key }}"
+                                    class="checkbox checkbox-xs">
+                                <span class="text-[8px] text-rose-500 capitalize select-none">
+                                    centang jika ada data {{ $label }}
+                                </span>
+                            </label>
+                        </legend>
+
+                        {{-- Container Manhours dan Manpower --}}
+                        <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+
+                            {{-- Manhours (Jumlah Jam Kerja) --}}
+                            <fieldset class="fieldset">
+                                <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
+
+                                <input type="number" wire:model.live="manhours.{{ $key }}"
+                                    placeholder="Masukkan Jumlah Jam Kerja..."
+                                    class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
+                                    @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
+
+                                <x-label-error :messages="$errors->get('manhours.' . $key)" />
+                            </fieldset>
+
+                            {{-- Manpower (Jumlah Tenaga Kerja) --}}
+                            <fieldset class="fieldset">
+                                <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
+
+                                <input type="number" wire:model.live="manpower.{{ $key }}"
+                                    placeholder="Masukkan Jumlah Tenaga Kerja..."
+                                    class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
+                                    @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
+
+                                <x-label-error :messages="$errors->get('manpower.' . $key)" />
+                            </fieldset>
                         </div>
-                </form>
+                    </fieldset>
+                    @endforeach
+
+                    {{-- Tombol Aksi --}}
+                    <div class="flex justify-end gap-2 mt-2">
+
+                        @if ($selectedId)
+                        <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
+                            onclick="manhours_modal.close()">Batal</button>
+                        <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
+                        @else
+                        <button class="btn btn-xs btn-soft btn-error"
+                            onclick="manhours_modal.close()">Batal</button>
+                        <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
+                        @endif
+                    </div>
+            </form>
+        </div>
+    </dialog>
+    {{-- Modal konfirmasi --}}
+    <dialog id='delete_modal' class="modal" wire:ignore.self>
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
+            <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
+
+            <div class="modal-action">
+                <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
+                    Batal
+                </label>
+
+                <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
+                    wire:target="delete">
+                    Hapus
+                </label>
             </div>
-        </dialog>
-        {{-- Modal konfirmasi --}}
-        <dialog id='delete_modal' class="modal" wire:ignore.self>
-            <div class="modal-box">
-                <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
-                <p class="py-4">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan.</p>
+        </div>
+    </dialog>
 
-                <div class="modal-action">
-                    <label onclick="delete_modal.close()" class="btn btn-xs btn-soft btn-warning">
-                        Batal
-                    </label>
-
-                    <label class="btn btn-error btn-xs btn-soft" wire:click="delete" wire:loading.attr="disabled"
-                        wire:target="delete">
-                        Hapus
-                    </label>
-                </div>
-            </div>
-        </dialog>
-
-        @livewire('manhours.grafik.index')
-
-    </x-manhours.layout>
 </section>
 <script>
     window.addEventListener('close-delete-modal', event => {
