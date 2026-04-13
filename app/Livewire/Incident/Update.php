@@ -227,8 +227,8 @@ class Update extends Component
 
             // LOGIKA KONDISIONAL Injury vs Damage
             'selectedBodyPartCategory' => $this->isInjury() ? 'required' : 'nullable',
-            'selectedBodyPart' => $this->isInjury() ? 'required' : 'nullable',
-            'selectedBodyPart.*' => 'exists:body_parts,id',
+            'selectedBodyParts' => $this->isInjury() ? 'required' : 'nullable',
+            'selectedBodyParts.*' => 'exists:body_parts,id',
             'damage_detail' => !$this->isInjury() ? 'required|string' : 'nullable',
             // Part 2
             // PART 2: Pihak Terlibat Langsung
