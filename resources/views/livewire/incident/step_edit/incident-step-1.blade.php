@@ -194,12 +194,50 @@
 
 @if($this->isInjury)
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
-    <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory, 'md:grid-cols-1' => !$selectedBodyPartCategory ])>
-        <x-form.select label="Kategori Bagian Tubuh" model="selectedBodyPartCategory" :options="$this->existingCategory" option-value="category" option-label="category" placeholder="-- Pilih --" required :disabled="!$canEdit" />
+    <legend class="text-sm font-semibold card-title text-primary">{{ __('Bagian Tubuh yang Terluka') }}</legend>
+
+    <div class="grid grid-cols-1 gap-4">
+        <x-form.select label="Filter Kategori"
+            model="selectedBodyPartCategory"
+            :options="$this->existingCategory"
+            option-value="category"
+            option-label="category"
+            placeholder="-- Pilih Kategori --"
+            :disabled="!$canEdit" />
 
         @if ($selectedBodyPartCategory)
-        <x-form.select label="Detail Bagian Tubuh" model="selectedBodyPart" :options="$detailsBodyPart" option-label="display_name" placeholder="-- Pilih --" required :disabled="!$canEdit" />
+        <div class="p-3 border rounded-lg bg-base-200/50">
+            <label class="block mb-2 text-xs font-bold uppercase text-base-content/60">Pilih Detail (Bisa lebih dari 1):</label>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+                @foreach($this->detailsBodyPart as $part)
+                <label class="flex items-center gap-2 p-2 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300">
+                    <input type="checkbox"
+                        value="{{ $part->id }}"
+                        wire:model.live="selectedBodyParts"
+                        class="checkbox checkbox-primary checkbox-sm"
+                        @disabled(!$canEdit)>
+                    <span class="text-sm">{{ $part->name }}</span>
+                </label>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        @if(count($selectedBodyParts) > 0)
+        <div class="flex flex-wrap gap-2 pt-2 border-t border-base-300">
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
+            <div class="badge badge-primary badge-md gap-2 py-3">
+                @if($canEdit)
+                <svg wire:click="removeBodyPart({{ $selected->id }})" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 cursor-pointer stroke-current hover:text-error">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                @endif
+                {{ $selected->name }}
+            </div>
+            @endforeach
+        </div>
+        @else
+        <p class="text-xs italic text-error">* Belum ada bagian tubuh yang dipilih</p>
         @endif
     </div>
 </fieldset>

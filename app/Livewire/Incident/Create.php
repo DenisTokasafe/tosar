@@ -43,7 +43,7 @@ class Create extends Component
     public $deptCont = 'dept';
     public $keyWord = 'kta';
     public $likelihood_id, $consequence_id, $emergency_action;
-    public $damage_detail, $selectedBodyPartCategory, $selectedBodyPart;
+    public $damage_detail;
 
     public $likelihoods = [], $consequences = [],
         $location_spesific,
@@ -134,7 +134,8 @@ class Create extends Component
     public $penerimaan_komentar_ktt_id;
     public $penerimaan_komentar_ktt;
 
-
+    public $selectedBodyPart = []; // Sekarang menjadi array
+    public $selectedBodyPartCategory = null;
     // Properti untuk teks editor (CKEditor)
     public $penerimaan_komentar_contractor;
     public $penerimaan_komentar_internal;
@@ -544,6 +545,20 @@ class Create extends Component
             // Lempar kembali error agar muncul di komponen x-form.upload
             throw $e;
         }
+    }
+    // Mengambil detail bagian tubuh berdasarkan kategori yang dipilih
+    #[Computed]
+    public function detailsBodyPart()
+    {
+        if (!$this->selectedBodyPartCategory) return [];
+
+        return BodyPart::where('category', $this->selectedBodyPartCategory)->get();
+    }
+
+    // Fungsi helper untuk menghapus badge
+    public function removeBodyPart($id)
+    {
+        $this->selectedBodyPart = array_diff($this->selectedBodyParts, [$id]);
     }
 
     public function updatedSupportingDocuments()
