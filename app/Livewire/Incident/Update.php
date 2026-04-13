@@ -515,218 +515,222 @@ class Update extends Component
          * Kita memuat semua relasi di awal, termasuk yang sebelumnya terlewat
          * seperti 'location', 'department', 'contractor', dan 'timelines'.
          */
-        $report = IncidentReport::with([
-            'risk',
-            'impact.bodyParts',
-            'involvedPersons',
-            'investigationTeams.user',
-            'peepoAnalyses',
-            'attachments',
-            'correctiveActions.pic',
-            'location',      // Tambahkan untuk lokasi
-            'department',    // Tambahkan untuk departemen
-            'contractor',    // Tambahkan untuk kontraktor
-            'timelines',     // Tambahkan untuk analisis WHY
-            'pmContractor',
-            'pmInternal',
-            'ohsHead',
-            'ktt'
-        ])->findOrFail($id);
+        if ($this->incidentId) {
+            $report = IncidentReport::with([
+                'risk',
+                'impact.bodyParts',
+                'involvedPersons',
+                'investigationTeams.user',
+                'peepoAnalyses',
+                'attachments',
+                'correctiveActions.pic',
+                'location',      // Tambahkan untuk lokasi
+                'department',    // Tambahkan untuk departemen
+                'contractor',    // Tambahkan untuk kontraktor
+                'timelines',     // Tambahkan untuk analisis WHY
+                'pmContractor',
+                'pmInternal',
+                'ohsHead',
+                'ktt'
+            ])->findOrFail($id);
 
-        // Simpan instance ke properti agar tidak query ulang di fungsi lain
-        $this->incident = $report;
+            // Simpan instance ke properti agar tidak query ulang di fungsi lain
+            $this->incident = $report;
 
-        // --- DATA DASAR ---
-        $this->current_lock_version = $report->lock_version;
-        $this->title = $report->title;
-        $this->report_number = $report->report_number;
-        $this->status = $report->status;
-        $this->event_type_id = $report->event_type_id;
-        $this->event_sub_type_id = $report->event_sub_type_id;
-        $this->tasks = $report->tasks;
-        $this->potential_lti = $report->potential_lti;
-        $this->date_time = $report->date_time?->format('Y-m-d\TH:i');
-        $this->key_learning = $report->key_learning;
-        $this->location_specific = $report->location_specific;
-        $this->contract_area_name = $report->contract_area_name;
-        $this->env_classification = $report->env_classification;
-        $this->description = $report->description;
-        $this->emergency_action = $report->emergency_action;
-        $this->penanggungJawab = $report->penanggungJawab;
+            // --- DATA DASAR ---
+            $this->current_lock_version = $report->lock_version;
+            $this->title = $report->title;
+            $this->report_number = $report->report_number;
+            $this->status = $report->status;
+            $this->event_type_id = $report->event_type_id;
+            $this->event_sub_type_id = $report->event_sub_type_id;
+            $this->tasks = $report->tasks;
+            $this->potential_lti = $report->potential_lti;
+            $this->date_time = $report->date_time?->format('Y-m-d\TH:i');
+            $this->key_learning = $report->key_learning;
+            $this->location_specific = $report->location_specific;
+            $this->contract_area_name = $report->contract_area_name;
+            $this->env_classification = $report->env_classification;
+            $this->description = $report->description;
+            $this->emergency_action = $report->emergency_action;
+            $this->penanggungJawab = $report->penanggungJawab;
 
-        // --- LOKASI ---
-        if ($report->location_id) {
-            $this->location_id = $report->location_id;
-            $this->searchLocation = $report->location?->name;
-        }
-
-        // --- DEPARTEMEN / KONTRAKTOR ---
-        if ($report->department_id) {
-            $this->department_id = $report->department_id;
-            $this->deptCont = 'dept';
-            $this->search = $report->department?->department_name;
-            $this->loadInitialPenanggungJawab('department', $report->department_id);
-        } elseif ($report->contractor_id) {
-            $this->contractor_id = $report->contractor_id;
-            $this->deptCont = 'cont';
-            $this->searchContractor = $report->contractor?->contractor_name;
-            $this->loadInitialPenanggungJawab('contractor', $report->contractor_id);
-        }
-
-        // --- PELAPOR ---
-        $this->loadInitialPelapor($report->pelapor_id, $report->manual_pelapor_name);
-
-        // --- RISK MATRIX ---
-        if ($report->risk) {
-            $this->consequence_id = $report->risk->consequence_id;
-            $this->likelihood_id = $report->risk->likelihood_id;
-            $this->rating_name = $report->risk->rating_name;
-            $this->selectedLikelihoodId = $this->likelihood_id;
-            $this->selectedConsequenceId = $this->consequence_id;
-            $this->loadRiskAssessment();
-        }
-
-        // --- IMPACT & BODY PART ---
-        $impact = $report->impact;
-        $this->isInjury = $impact?->is_injury ?? false;
-
-        if ($this->isInjury) {
-            // 1. Ambil semua ID dari relasi pivot
-            // pluck('id') mengambil semua ID, toArray() mengubahnya jadi array
-            $this->selectedBodyParts = $impact->bodyParts->pluck('id')
-                ->map(fn($id) => (string)$id) // Opsional: paksa ke string agar cocok dengan value checkbox
-                ->toArray();
-
-
-            // 2. Set kategori default untuk filter (diambil dari item pertama yang dipilih)
-            if (!empty($this->selectedBodyParts)) {
-                $firstPart = \App\Models\BodyPart::find($this->selectedBodyParts[0]);
-                $this->selectedBodyPartCategory = \App\Models\BodyPart::find($this->selectedBodyParts[0])?->category;
+            // --- LOKASI ---
+            if ($report->location_id) {
+                $this->location_id = $report->location_id;
+                $this->searchLocation = $report->location?->name;
             }
 
-            $this->damage_detail = null;
-        } else {
-            $this->selectedBodyParts = [];
-            $this->selectedBodyPartCategory = null;
-            $this->damage_detail = $impact?->damage_detail;
-        }
-
-        // --- PART 2: PERSONEL TERLIBAT ---
-        if ($report->involvedPersons->isNotEmpty()) {
-            foreach ($report->involvedPersons as $person) {
-                $this->directly_involved[] = [
-                    'id' => $person->id,
-                    'employee_id' => $person->employee_id,
-                    'employee_name' => $person->employee_name,
-                    'employee_nik' => $person->employee_nik,
-                    'dept_cont' => $person->dept_cont,
-                    'jabatan' => $person->jabatan,
-                    'roster' => $person->roster,
-                    'sift' => $person->shift,
-                    'keterlibatan' => $person->keterlibatan,
-                    'pengalaman_kerja' => $person->pengalaman_kerja,
-                ];
-                $this->searchKorban[] = $person->employee_name;
+            // --- DEPARTEMEN / KONTRAKTOR ---
+            if ($report->department_id) {
+                $this->department_id = $report->department_id;
+                $this->deptCont = 'dept';
+                $this->search = $report->department?->department_name;
+                $this->loadInitialPenanggungJawab('department', $report->department_id);
+            } elseif ($report->contractor_id) {
+                $this->contractor_id = $report->contractor_id;
+                $this->deptCont = 'cont';
+                $this->searchContractor = $report->contractor?->contractor_name;
+                $this->loadInitialPenanggungJawab('contractor', $report->contractor_id);
             }
-        } else {
-            $this->addDirectlyInvolvedRow();
-        }
 
-        // --- PART 3: TIM INVESTIGASI ---
-        $teams = $report->investigationTeams;
-        foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
-            $filtered = $teams->filter(fn($item) => stripos($item->role, $role) !== false);
-            if ($filtered->isNotEmpty()) {
-                foreach ($filtered->values() as $index => $team) {
-                    $this->{$role}[] = [
-                        'user_id' => $team->user_id,
-                        'name'    => $team->name ?? '',
-                        'dept'    => $team->dept,
-                        'jabatan' => $team->jabatan,
+            // --- PELAPOR ---
+            $this->loadInitialPelapor($report->pelapor_id, $report->manual_pelapor_name);
+
+            // --- RISK MATRIX ---
+            if ($report->risk) {
+                $this->consequence_id = $report->risk->consequence_id;
+                $this->likelihood_id = $report->risk->likelihood_id;
+                $this->rating_name = $report->risk->rating_name;
+                $this->selectedLikelihoodId = $this->likelihood_id;
+                $this->selectedConsequenceId = $this->consequence_id;
+                $this->loadRiskAssessment();
+            }
+
+            // --- IMPACT & BODY PART ---
+            $impact = $report->impact;
+            $this->isInjury = $impact?->is_injury ?? false;
+
+            if ($this->isInjury) {
+                // 1. Ambil semua ID dari relasi pivot
+                // pluck('id') mengambil semua ID, toArray() mengubahnya jadi array
+                $this->selectedBodyParts = $impact->bodyParts->pluck('id')
+                    ->map(fn($id) => (string)$id) // Opsional: paksa ke string agar cocok dengan value checkbox
+                    ->toArray();
+
+
+                // 2. Set kategori default untuk filter (diambil dari item pertama yang dipilih)
+                if (!empty($this->selectedBodyParts)) {
+                    $firstPart = \App\Models\BodyPart::find($this->selectedBodyParts[0]);
+                    $this->selectedBodyPartCategory = \App\Models\BodyPart::find($this->selectedBodyParts[0])?->category;
+                }
+
+                $this->damage_detail = null;
+            } else {
+                $this->selectedBodyParts = [];
+                $this->selectedBodyPartCategory = null;
+                $this->damage_detail = $impact?->damage_detail;
+            }
+
+            // --- PART 2: PERSONEL TERLIBAT ---
+            if ($report->involvedPersons->isNotEmpty()) {
+                foreach ($report->involvedPersons as $person) {
+                    $this->directly_involved[] = [
+                        'id' => $person->id,
+                        'employee_id' => $person->employee_id,
+                        'employee_name' => $person->employee_name,
+                        'employee_nik' => $person->employee_nik,
+                        'dept_cont' => $person->dept_cont,
+                        'jabatan' => $person->jabatan,
+                        'roster' => $person->roster,
+                        'sift' => $person->shift,
+                        'keterlibatan' => $person->keterlibatan,
+                        'pengalaman_kerja' => $person->pengalaman_kerja,
                     ];
-                    $this->searchQuery[$index][$role] = $team->user->name ?? $team->name;
+                    $this->searchKorban[] = $person->employee_name;
                 }
             } else {
-                $this->addRow($role);
+                $this->addDirectlyInvolvedRow();
             }
-        }
 
-        // --- PART 4: PEEPO ---
-        foreach ($this->peepoFactors as $key => $label) {
-            $data = $report->peepoAnalyses->where('factor_key', $key)->first();
-            $this->peepo[$key] = [
-                'temuan'    => $data->temuan ?? '',
-                'deskripsi' => $data->deskripsi ?? '',
-            ];
-        }
+            // --- PART 3: TIM INVESTIGASI ---
+            $teams = $report->investigationTeams;
+            foreach (['pemimpin', 'facilitator', 'anggota'] as $role) {
+                $filtered = $teams->filter(fn($item) => stripos($item->role, $role) !== false);
+                if ($filtered->isNotEmpty()) {
+                    foreach ($filtered->values() as $index => $team) {
+                        $this->{$role}[] = [
+                            'user_id' => $team->user_id,
+                            'name'    => $team->name ?? '',
+                            'dept'    => $team->dept,
+                            'jabatan' => $team->jabatan,
+                        ];
+                        $this->searchQuery[$index][$role] = $team->user->name ?? $team->name;
+                    }
+                } else {
+                    $this->addRow($role);
+                }
+            }
 
-        // --- ANALISIS SCAT & WHY ---
-        $scat = $report->scat_analysis;
-        if ($scat) {
-            $this->unsafe_conditions = $scat['langsung']['kondisi_tidak_aman'] ?? [];
-            $this->unsafe_acts       = $scat['langsung']['perilaku_tidak_aman'] ?? [];
-            $this->personal_factors  = $scat['dasar']['faktor_pribadi'] ?? [];
-            $this->job_factors       = $scat['dasar']['faktor_pekerjaan'] ?? [];
-            $this->control_system_factors = $scat['dasar']['sistem_kontrol'] ?? [];
-        }
+            // --- PART 4: PEEPO ---
+            foreach ($this->peepoFactors as $key => $label) {
+                $data = $report->peepoAnalyses->where('factor_key', $key)->first();
+                $this->peepo[$key] = [
+                    'temuan'    => $data->temuan ?? '',
+                    'deskripsi' => $data->deskripsi ?? '',
+                ];
+            }
 
-        // Tambahkan baris kosong jika kategori SCAT kosong
-        foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $cat) {
-            if (empty($this->{$cat})) $this->addRow($cat);
-        }
+            // --- ANALISIS SCAT & WHY ---
+            $scat = $report->scat_analysis;
+            if ($scat) {
+                $this->unsafe_conditions = $scat['langsung']['kondisi_tidak_aman'] ?? [];
+                $this->unsafe_acts       = $scat['langsung']['perilaku_tidak_aman'] ?? [];
+                $this->personal_factors  = $scat['dasar']['faktor_pribadi'] ?? [];
+                $this->job_factors       = $scat['dasar']['faktor_pekerjaan'] ?? [];
+                $this->control_system_factors = $scat['dasar']['sistem_kontrol'] ?? [];
+            }
 
-        // Gunakan relasi timelines yang sudah di-eager load (Collection, bukan Query)
-        $analysis = $report->timelines->first();
-        if ($analysis && is_array($analysis->analysis_steps)) {
-            $this->why_analysis = $analysis->analysis_steps;
-            $this->whyCount = count($this->why_analysis) ?: 1;
+            // Tambahkan baris kosong jika kategori SCAT kosong
+            foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $cat) {
+                if (empty($this->{$cat})) $this->addRow($cat);
+            }
+
+            // Gunakan relasi timelines yang sudah di-eager load (Collection, bukan Query)
+            $analysis = $report->timelines->first();
+            if ($analysis && is_array($analysis->analysis_steps)) {
+                $this->why_analysis = $analysis->analysis_steps;
+                $this->whyCount = count($this->why_analysis) ?: 1;
+            } else {
+                $this->why_analysis = ['why1' => ''];
+                $this->whyCount = 1;
+            }
+
+            // --- ATTACHMENTS ---
+            $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->values()->all();
+            $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->values()->all();
+
+            // --- TINDAKAN PERBAIKAN ---
+            $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
+                $this->searchPetugas[$index] = $action->pic->name ?? $action->name;
+                return [
+                    'id' => $action->id,
+                    'action_description' => $action->action_description,
+                    'control_hierarchy' => $action->hierarchy,
+                    'pic_user_id' => $action->pic_user_id,
+                    'name' => $action->name ?? '',
+                    'due_date' => $action->due_date,
+                    'actual_completion_date' => $action->actual_completion_date,
+                ];
+            })->toArray();
+            if (empty($this->corrective_actions)) $this->addCorrectiveRow();
+
+            // --- PART 9: REVIEW & APPROVAL ---
+            if ($this->contractor_id) {
+                $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
+                $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
+                $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
+            }
+
+            if ($report->pm_internal_id) {
+                $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
+                $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
+                $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
+            }
+
+            if ($report->ohs_head_id) {
+                $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
+                $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
+                $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
+            }
+
+            if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
+                $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
+                $this->penerimaan_komentar_ktt       = $report->ktt_comment;
+                $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
+            }
         } else {
-            $this->why_analysis = ['why1' => ''];
-            $this->whyCount = 1;
-        }
-
-        // --- ATTACHMENTS ---
-        $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->values()->all();
-        $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->values()->all();
-
-        // --- TINDAKAN PERBAIKAN ---
-        $this->corrective_actions = $report->correctiveActions->map(function ($action, $index) {
-            $this->searchPetugas[$index] = $action->pic->name ?? $action->name;
-            return [
-                'id' => $action->id,
-                'action_description' => $action->action_description,
-                'control_hierarchy' => $action->hierarchy,
-                'pic_user_id' => $action->pic_user_id,
-                'name' => $action->name ?? '',
-                'due_date' => $action->due_date,
-                'actual_completion_date' => $action->actual_completion_date,
-            ];
-        })->toArray();
-        if (empty($this->corrective_actions)) $this->addCorrectiveRow();
-
-        // --- PART 9: REVIEW & APPROVAL ---
-        if ($this->contractor_id) {
-            $this->penerimaan_komentar_contractor_id = $report->pm_contractor_id;
-            $this->penerimaan_komentar_contractor    = $report->pm_contractor_comment;
-            $this->searchNamePenerimaan['kontraktor'] = $report->pmContractor?->name;
-        }
-
-        if ($report->pm_internal_id) {
-            $this->penerimaan_komentar_internal_id   = $report->pm_internal_id;
-            $this->penerimaan_komentar_internal      = $report->pm_internal_comment;
-            $this->searchNamePenerimaan['internal']  = $report->pmInternal?->name;
-        }
-
-        if ($report->ohs_head_id) {
-            $this->penerimaan_komentar_ohs_id        = $report->ohs_head_id;
-            $this->penerimaan_komentar_ohs           = $report->ohs_head_comment;
-            $this->searchNamePenerimaan['ohs']       = $report->ohsHead?->name;
-        }
-
-        if (in_array($this->rating_name, ['Sedang', 'Tinggi', 'Ekstrem'])) {
-            $this->penerimaan_komentar_ktt_id    = $report->ktt_id;
-            $this->penerimaan_komentar_ktt       = $report->ktt_comment;
-            $this->searchNamePenerimaan['ktt']   = $report->ktt?->name;
+            $this->selectedBodyParts = [];
         }
     }
     // Jika Anda ingin berpindah tab di dalam Bagian 9
