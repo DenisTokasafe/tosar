@@ -192,8 +192,8 @@
                     @foreach ($structure['checks'] as $check)
                     @php
                     $key = is_array($check) ? ($check['name'] ?? null) : $check;
-                    dd($key);
                     $val = $item->conditions[$key] ?? null;
+                    dd($val);
                     @endphp
                     <td>
                         @if ($val === true || $val === 'true' || $val === 1 || $val === '1')
