@@ -381,8 +381,8 @@ class Update extends Component
             'consequence_id'    => __('Konsekuensi (Consequence)'),
             'emergency_action'  => __('Tindakan Darurat'),
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
-            'selectedBodyPart'         => __('Detail Bagian Tubuh'),
-            'selectedBodyPart.*' => __('Detail Bagian Tubuh'),
+            'selectedBodyParts'         => __('Detail Bagian Tubuh'),
+            'selectedBodyParts.*' => __('Detail Bagian Tubuh'),
             'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
 
             'directly_involved.*.employee_name' => __('Nama Personel'),
