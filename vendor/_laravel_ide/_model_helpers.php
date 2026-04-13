@@ -8045,7 +8045,8 @@ namespace App\Models {
      * @property bool $is_injury
      * @property mixed $incident_report_id
      * @property int $id
-     * @property-read \App\Models\BodyPart $bodyPart
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BodyPart> $bodyParts
+     * @property-read int|null $body_parts_count
      * @property-read \App\Models\IncidentReport $incidentReport
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
      * @property-read int|null $activities_count

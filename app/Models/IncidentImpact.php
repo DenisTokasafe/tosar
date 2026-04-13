@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class IncidentImpact extends Model
 {
@@ -60,9 +61,11 @@ class IncidentImpact extends Model
     /**
      * Relasi ke tabel body_parts
      */
-    public function bodyPart(): BelongsTo
+    public function bodyParts(): BelongsToMany
     {
-        return $this->belongsTo(BodyPart::class, 'body_part_id');
+        // Parameter 1: Model tujuan
+        // Parameter 2: Nama tabel pivot yang kita buat tadi
+        return $this->belongsToMany(BodyPart::class, 'impact_body_part');
     }
 
     /**
