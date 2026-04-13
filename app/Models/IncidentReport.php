@@ -151,6 +151,7 @@ class IncidentReport extends Model
         return $this->belongsTo(User::class, 'pelapor_id');
     }
 
+
     /**
      * ==========================================
      * RELASI APPROVAL (PART 9)
