@@ -152,7 +152,10 @@
             <thead>
                 <tr>
                     <th width="25px">NO</th>
-                    <th width="120px">LOKASI</th>
+                    @php
+                    $name_loc = strtoupper($type) === 'INSPEKSI FIRE & RESCUE EQUIPMENT' ? 'NAMA' : 'LOKASI';
+                    @endphp
+                    <th width="120px"> {{ $name_loc }}</th>
                     {{-- Loop Inputs --}}
                     @foreach ($structure['inputs'] as $header)
                     @php
