@@ -206,7 +206,7 @@
             placeholder="-- Pilih Kategori --"
             :disabled="!$canEdit" />
         {{-- 2. Ringkasan Pilihan (Badge) - Munculkan jika ada data di array --}}
-        @if(count($selectedBodyParts) > 0)
+        @if(is_array($selectedBodyParts) && count($selectedBodyParts) > 0)
         <div class="flex flex-wrap gap-2 mt-3 mb-4 p-3 border border-dashed rounded-lg border-primary/30 bg-primary/5">
             <span class="text-xs font-bold uppercase w-full mb-1 opacity-60 text-primary">Anggota Tubuh Terpilih:</span>
 
