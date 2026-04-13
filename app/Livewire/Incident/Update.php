@@ -1834,7 +1834,13 @@ class Update extends Component
     // Fungsi helper untuk menghapus badge
     public function removeBodyPart($id)
     {
-        $this->selectedBodyParts = array_values(array_diff($this->selectedBodyParts, [$id]));
+        // Filter array untuk menghapus ID yang dipilih
+        $this->selectedBodyParts = array_values(array_filter($this->selectedBodyParts, function ($value) use ($id) {
+            return $value != $id;
+        }));
+
+        // Opsional: Refresh validation jika perlu
+        $this->validateOnly('selectedBodyParts');
     }
     public function validateCurrentStep()
     {
