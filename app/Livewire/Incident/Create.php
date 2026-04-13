@@ -134,7 +134,7 @@ class Create extends Component
     public $penerimaan_komentar_ktt_id;
     public $penerimaan_komentar_ktt;
 
-    public $selectedBodyPart = []; // Sekarang menjadi array
+    public $selectedBodyParts = []; // Sekarang menjadi array
     public $selectedBodyPartCategory = null;
     // Properti untuk teks editor (CKEditor)
     public $penerimaan_komentar_contractor;
@@ -558,7 +558,7 @@ class Create extends Component
     // Fungsi helper untuk menghapus badge
     public function removeBodyPart($id)
     {
-        $this->selectedBodyPart = array_values(array_diff($this->selectedBodyPart, [$id]));
+        $this->selectedBodyParts = array_values(array_diff($this->selectedBodyParts, [$id]));
     }
 
     public function updatedSupportingDocuments()

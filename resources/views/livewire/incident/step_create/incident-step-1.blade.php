@@ -244,7 +244,7 @@
                 @foreach($this->detailsBodyPart as $part)
                 <label class="flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300 group" wire:key="body-part-{{ $part->id }}">
                     <input type="checkbox"
-                        value="{{ $part->id }}" wire:model.live="selectedBodyPart" name="body_parts[]" {{-- Nama variabel harus sama --}}
+                        value="{{ $part->id }}" wire:model.live="selectedBodyParts" name="body_parts[]" {{-- Nama variabel harus sama --}}
                         class="checkbox checkbox-primary checkbox-sm">
                     <span class="text-sm group-hover:font-medium">{{ $part->name }}</span>
                 </label>
@@ -254,10 +254,10 @@
         @endif
 
         {{-- 3. Ringkasan Terpilih (Badges) --}}
-        @if(is_array($selectedBodyPart) && count($selectedBodyPart) > 0)
+        @if(is_array($selectedBodyParts) && count($selectedBodyParts) > 0)
         <div class="flex flex-wrap gap-2 pt-3 border-t border-base-300">
             <span class="w-full text-xs font-medium text-base-500">{{ __('Terpilih:') }}</span>
-            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
             <div class="badge badge-primary badge-outline gap-2 p-3">
                 <button wire:click="removeBodyPart({{ $selected->id }})" type="button" class="hover:text-error">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
