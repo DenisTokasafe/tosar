@@ -194,12 +194,53 @@
 
 @if($this->isInjury)
 <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-    <legend class="text-sm font-semibold card-title ">{{ __('Bagian Tubuh yang Terluka') }}</legend>
-    <div @class([ 'grid grid-cols-1 gap-2' , 'md:grid-cols-2'=> $selectedBodyPartCategory, 'md:grid-cols-1' => !$selectedBodyPartCategory ])>
-        <x-form.select label="Kategori Bagian Tubuh" model="selectedBodyPartCategory" :options="$this->existingCategory" option-value="category" option-label="category" placeholder="-- Pilih --" required :disabled="!$canEdit" />
+    <legend class="text-sm font-semibold card-title text-primary">{{ __('Bagian Tubuh yang Terluka') }}</legend>
 
+    <div class="grid grid-cols-1 gap-4">
+        {{-- 1. Pilih Kategori (Tetap menggunakan Select untuk memfilter isi checkbox) --}}
+        <x-form.select label="Kategori Bagian Tubuh"
+            model="selectedBodyPartCategory"
+            :options="$this->existingCategory"
+            option-value="category"
+            option-label="category"
+            placeholder="-- Pilih Kategori --"
+            :disabled="!$canEdit" />
+
+        {{-- 2. Detail Bagian Tubuh (Checkbox Group) --}}
         @if ($selectedBodyPartCategory)
-        <x-form.select label="Detail Bagian Tubuh" model="selectedBodyPart" :options="$detailsBodyPart" option-label="display_name" placeholder="-- Pilih --" required :disabled="!$canEdit" />
+        <div class="space-y-2">
+            <label class="text-xs font-semibold opacity-70 uppercase tracking-wider">
+                {{ __('Pilih Detail') }} ({{ $selectedBodyPartCategory }})
+            </label>
+
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+                @foreach($this->detailsBodyPart as $part)
+                <label wire:key="body-part-{{ $part->id }}"
+                    @class([ 'flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer group' , 'bg-primary/5 border-primary/30'=> in_array($part->id, $selectedBodyPart),
+                    'bg-base-100 border-base-300 hover:bg-base-200' => !in_array($part->id, $selectedBodyPart),
+                    'opacity-50 cursor-not-allowed' => !$canEdit
+                    ])>
+
+                    <input type="checkbox"
+                        value="{{ $part->id }}"
+                        wire:model.live="selectedBodyPart"
+                        class="checkbox checkbox-primary checkbox-sm"
+                        @disabled(!$canEdit)>
+
+                    <span @class([ 'text-sm' , 'font-bold text-primary'=> in_array($part->id, $selectedBodyPart),
+                        'group-hover:font-medium' => !in_array($part->id, $selectedBodyPart)
+                        ])>
+                        {{ $part->name }}
+                    </span>
+                </label>
+                @endforeach
+            </div>
+
+            {{-- Menampilkan Pesan Error khusus untuk checkbox --}}
+            @error('selectedBodyPart')
+            <span class="text-xs text-error mt-1 italic">* {{ $message }}</span>
+            @enderror
+        </div>
         @endif
     </div>
 </fieldset>

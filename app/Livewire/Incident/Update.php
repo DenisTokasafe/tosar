@@ -67,8 +67,9 @@ class Update extends Component
     public $description;
     public $emergency_action;
     public $isInjury = false; // Toggle status Cedera Manusia vs Kerusakan Alat
-    public $selectedBodyPartCategory;
-    public $selectedBodyPart;
+
+    public $selectedBodyParts = []; // Pastikan ini array
+    public $selectedBodyPartCategory = null;
     public $damage_detail;
 
     // --- KOLEKSI DATA (FOR DROPDOWNS) ---
@@ -227,6 +228,7 @@ class Update extends Component
             // LOGIKA KONDISIONAL Injury vs Damage
             'selectedBodyPartCategory' => $this->isInjury() ? 'required' : 'nullable',
             'selectedBodyPart' => $this->isInjury() ? 'required' : 'nullable',
+            'selectedBodyPart.*' => 'exists:body_parts,id',
             'damage_detail' => !$this->isInjury() ? 'required|string' : 'nullable',
             // Part 2
             // PART 2: Pihak Terlibat Langsung
@@ -380,6 +382,7 @@ class Update extends Component
             'emergency_action'  => __('Tindakan Darurat'),
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
             'selectedBodyPart'         => __('Detail Bagian Tubuh'),
+            'selectedBodyPart.*' => __('Detail Bagian Tubuh'),
             'damage_detail'            => __('Detail Kerusakan Alat / Lingkungan'),
 
             'directly_involved.*.employee_name' => __('Nama Personel'),
@@ -478,7 +481,7 @@ class Update extends Component
         // 3. Validasi Kondisional
         if ($propertyName === 'event_type_id') {
             $this->validateOnly('selectedBodyPartCategory');
-            $this->validateOnly('selectedBodyPart');
+            $this->validateOnly('selectedBodyParts');
             $this->validateOnly('damage_detail');
         }
 
@@ -514,7 +517,7 @@ class Update extends Component
          */
         $report = IncidentReport::with([
             'risk',
-            'impact',
+            'impact.bodyParts',
             'involvedPersons',
             'investigationTeams.user',
             'peepoAnalyses',
@@ -586,13 +589,24 @@ class Update extends Component
         // --- IMPACT & BODY PART ---
         $impact = $report->impact;
         $this->isInjury = $impact?->is_injury ?? false;
+
         if ($this->isInjury) {
-            $this->selectedBodyPart = $impact?->body_part_id;
-            // Opsional: Jika BodyPart sering diakses, pertimbangkan Eager Loading di relasi Impact
-            $bodyPart = BodyPart::find($this->selectedBodyPart);
-            $this->selectedBodyPartCategory = $bodyPart?->category;
+            // 1. Ambil semua ID dari relasi pivot
+            // pluck('id') mengambil semua ID, toArray() mengubahnya jadi array
+            $this->selectedBodyParts = $impact->bodyParts->pluck('id')
+                ->map(fn($id) => (string)$id) // Opsional: paksa ke string agar cocok dengan value checkbox
+                ->toArray();
+
+            // 2. Set kategori default untuk filter (diambil dari item pertama yang dipilih)
+            if (!empty($this->selectedBodyParts)) {
+                $firstPart = \App\Models\BodyPart::find($this->selectedBodyParts[0]);
+                $this->selectedBodyPartCategory = $firstPart?->category;
+            }
+
             $this->damage_detail = null;
         } else {
+            $this->selectedBodyParts = [];
+            $this->selectedBodyPartCategory = null;
             $this->damage_detail = $impact?->damage_detail;
         }
 
@@ -1560,7 +1574,7 @@ class Update extends Component
                 $this->damage_detail = null; // Reset detail kerusakan alat
             } else {
                 $this->isInjury = false;
-                $this->selectedBodyPart = null; // Reset data cidera
+                $this->selectedBodyParts = null; // Reset data cidera
                 $this->selectedBodyPartCategory = null;
             }
         }
@@ -1571,7 +1585,7 @@ class Update extends Component
     public function updatedSelectedBodyPartCategory()
     {
         // Reset detail bagian tubuh jika kategorinya diganti
-        $this->selectedBodyPart = null;
+        $this->selectedBodyParts = null;
     }
     public function getHasSubTypesProperty()
     {
@@ -1833,7 +1847,7 @@ class Update extends Component
                     'description',
                     'emergency_action',
                     'selectedBodyPartCategory', // Muncul jika isInjury
-                    'selectedBodyPart',         // Muncul jika isInjury
+                    'selectedBodyParts',         // Muncul jika isInjury
                     'damage_detail',            // Muncul jika !isInjury
                 ];
                 break;
@@ -2046,7 +2060,8 @@ class Update extends Component
         $isInjuryRules = $this->isInjury
             ? [
                 'selectedBodyPartCategory' => $allRules['selectedBodyPartCategory'],
-                'selectedBodyPart' => $allRules['selectedBodyPart']
+                'selectedBodyParts' => $allRules['selectedBodyParts'],
+                'selectedBodyParts.*'       => $allRules['selectedBodyParts.*'] ?? 'exists:body_parts,id',
             ]
             : [
                 'damage_detail' => $allRules['damage_detail']
@@ -2359,7 +2374,8 @@ class Update extends Component
                         'description',
                         'emergency_action',
                         'selectedBodyPartCategory',
-                        'selectedBodyPart',
+                        'selectedBodyParts',
+                        'selectedBodyParts.*', // Tambahkan ini juga di list field step 1
                         'damage_detail'
                     ];
                     if (in_array($field, $step1Fields)) return true;
@@ -2642,6 +2658,17 @@ class Update extends Component
                         'rating_name'    => $this->RiskAssessment?->name,
                     ]
                 );
+                $report->impact->update([
+                    'is_injury' => $this->isInjury,
+                    'damage_detail' => !$this->isInjury ? $this->damage_detail : null,
+                ]);
+
+                if ($this->isInjury) {
+                    // sync() akan menghapus yang lama dan memasukkan yang baru dipilih
+                    $report->impact->bodyParts()->sync($this->selectedBodyParts);
+                } else {
+                    $report->impact->bodyParts()->detach();
+                }
             });
             $this->status = $this->determineReportStatus();
             // 9. Post-Success Synchronization
