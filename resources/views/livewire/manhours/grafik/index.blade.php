@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-2 mb-8 lg:grid-cols-2">
+<div class="grid grid-cols-1 gap-2 mb-10 lg:grid-cols-2">
     <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
 
