@@ -1612,11 +1612,7 @@ class Update extends Component
     // Helper untuk memetakan field mana masuk ke step mana
 
 
-    public function updatedSelectedBodyPartCategory()
-    {
-        // Reset detail bagian tubuh jika kategorinya diganti
-        $this->selectedBodyParts = null;
-    }
+
     public function getHasSubTypesProperty()
     {
         if (!$this->event_type_id) {
