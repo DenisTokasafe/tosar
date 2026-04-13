@@ -245,7 +245,7 @@
 
         </div>
         <div class="mt-4 modal-action">
-            <flux:button wire:click="save" wire:loading.attr="disabled" variant="primary" loading.target="save,foto_area">
+            <flux:button wire:click="save" size="xs" wire:loading.attr="disabled" variant="primary" loading.target="save,foto_area">
 
                 <span wire:loading.add.class='hidden' wire:target="save,foto_area">🚀 Simpan Laporan Inspeksi</span>
 
