@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-2 mb-5 lg:grid-cols-2">
+<div class="grid grid-cols-1 gap-2  lg:grid-cols-2">
     <div wire:ignore id="grafik-manhours" style="height: 320px"></div>
     <div wire:ignore id="grafik-manpower" style="height: 320px"></div>
 
@@ -35,33 +35,77 @@
                 const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
 
                 return {
-                    title: { text: titlePrefix + ' Bulanan Tahun ' + (year || '') },
+                    title: {
+                        text: titlePrefix + ' Bulanan Tahun ' + (year || '')
+                    },
                     tooltip: {
                         trigger: 'axis',
-                        axisPointer: { type: 'line', lineStyle: { type: 'dashed' } }
+                        axisPointer: {
+                            type: 'line',
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        }
                     },
                     legend: {
                         data: ['PT. MSM', 'PT. TTN', 'CONTRACTOR'],
                         selected: (function() {
-                            let sel = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                            let sel = {
+                                'PT. MSM': true,
+                                'PT. TTN': true,
+                                'CONTRACTOR': true
+                            };
                             if (parsedData.hidden_legends) {
-                                parsedData.hidden_legends.forEach(name => { sel[name] = false; });
+                                parsedData.hidden_legends.forEach(name => {
+                                    sel[name] = false;
+                                });
                             }
                             return sel;
                         })()
                     },
-                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-                    toolbox: { feature: { saveAsImage: {} } },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
                         data: parsedData.months
                     },
-                    yAxis: { type: 'value' },
-                    series: [
-                        { name: 'PT. MSM', type: 'line', data: parsedData.msm, emphasis: { focus: 'series' } },
-                        { name: 'PT. TTN', type: 'line', data: parsedData.ttn, emphasis: { focus: 'series' } },
-                        { name: 'CONTRACTOR', type: 'line', data: parsedData.contractor, emphasis: { focus: 'series' } }
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                            name: 'PT. MSM',
+                            type: 'line',
+                            data: parsedData.msm,
+                            emphasis: {
+                                focus: 'series'
+                            }
+                        },
+                        {
+                            name: 'PT. TTN',
+                            type: 'line',
+                            data: parsedData.ttn,
+                            emphasis: {
+                                focus: 'series'
+                            }
+                        },
+                        {
+                            name: 'CONTRACTOR',
+                            type: 'line',
+                            data: parsedData.contractor,
+                            emphasis: {
+                                focus: 'series'
+                            }
+                        }
                     ]
                 };
             };
@@ -75,18 +119,33 @@
                 if (!myChartMH) return;
                 const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
 
-                let selMH = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                let selMH = {
+                    'PT. MSM': true,
+                    'PT. TTN': true,
+                    'CONTRACTOR': true
+                };
                 if (payload.hidden_legends) {
-                    payload.hidden_legends.forEach(name => { selMH[name] = false; });
+                    payload.hidden_legends.forEach(name => {
+                        selMH[name] = false;
+                    });
                 }
 
                 myChartMH.setOption({
-                    legend: { selected: selMH },
-                    xAxis: { data: payload.months },
-                    series: [
-                        { data: payload.msm },
-                        { data: payload.ttn },
-                        { data: payload.contractor }
+                    legend: {
+                        selected: selMH
+                    },
+                    xAxis: {
+                        data: payload.months
+                    },
+                    series: [{
+                            data: payload.msm
+                        },
+                        {
+                            data: payload.ttn
+                        },
+                        {
+                            data: payload.contractor
+                        }
                     ]
                 });
             });
@@ -95,18 +154,33 @@
                 if (!myChartMP) return;
                 const payload = typeof event[0] === 'string' ? JSON.parse(event[0]) : event[0];
 
-                let selMP = { 'PT. MSM': true, 'PT. TTN': true, 'CONTRACTOR': true };
+                let selMP = {
+                    'PT. MSM': true,
+                    'PT. TTN': true,
+                    'CONTRACTOR': true
+                };
                 if (payload.hidden_legends) {
-                    payload.hidden_legends.forEach(name => { selMP[name] = false; });
+                    payload.hidden_legends.forEach(name => {
+                        selMP[name] = false;
+                    });
                 }
 
                 myChartMP.setOption({
-                    legend: { selected: selMP },
-                    xAxis: { data: payload.months },
-                    series: [
-                        { data: payload.msm },
-                        { data: payload.ttn },
-                        { data: payload.contractor }
+                    legend: {
+                        selected: selMP
+                    },
+                    xAxis: {
+                        data: payload.months
+                    },
+                    series: [{
+                            data: payload.msm
+                        },
+                        {
+                            data: payload.ttn
+                        },
+                        {
+                            data: payload.contractor
+                        }
                     ]
                 });
             });
