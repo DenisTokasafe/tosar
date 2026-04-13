@@ -245,13 +245,14 @@
 
         </div>
         <div class="mt-4 modal-action">
-            <button wire:click="save" wire:loading.attr="disabled" class="btn btn-success btn-xs md:w-auto">
+            <flux:button wire:click="save" wire:loading.attr="disabled" class="btn btn-primary btn-xs md:w-auto">
 
                 <span wire:loading.add.class='hidden' wire:target="save,foto_area">🚀 Simpan Laporan Inspeksi</span>
 
                 <span wire:loading.remove.class="hidden" class="hidden" wire:target="save,foto_area">Menyimpan...</span>
+            </flux:button>
 
-            </button>
+
         </div>
     </x-tabs-wpi.layout>
 </section>
