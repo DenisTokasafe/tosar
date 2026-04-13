@@ -255,10 +255,10 @@
         @endif
 
         {{-- 3. Ringkasan Terpilih (Badges) --}}
-        @if(count($selectedBodyParts) > 0)
+        @if(count($selectedBodyPart) > 0)
         <div class="flex flex-wrap gap-2 pt-3 border-t border-base-300">
             <span class="w-full text-xs font-medium text-base-500">{{ __('Terpilih:') }}</span>
-            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
             <div class="badge badge-primary badge-outline gap-2 p-3">
                 <button wire:click="removeBodyPart({{ $selected->id }})" type="button" class="hover:text-error">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
