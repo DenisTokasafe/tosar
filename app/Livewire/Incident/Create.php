@@ -1246,9 +1246,9 @@ class Create extends Component
                     'is_injury'     => $data['impact_details']['is_injury'],
                     'damage_detail' => !$data['impact_details']['is_injury'] ? $data['impact_details']['damage_data']['detail'] : null,
                 ]);
-                if ($data['impact_details']['is_injury'] && !empty($this->selectedBodyPart)) {
+                if ($data['impact_details']['is_injury'] && !empty($this->selectedBodyParts)) {
                     // Gunakan sync() untuk menyimpan array ID ke tabel pivot
-                    $impact->bodyParts()->sync($this->selectedBodyPart);
+                    $impact->bodyParts()->sync($this->selectedBodyParts);
                 }
 
                 // D. Simpan Personel Terlibat (Hanya Part 2)
