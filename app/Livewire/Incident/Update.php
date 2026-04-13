@@ -597,10 +597,11 @@ class Update extends Component
                 ->map(fn($id) => (string)$id) // Opsional: paksa ke string agar cocok dengan value checkbox
                 ->toArray();
 
+
             // 2. Set kategori default untuk filter (diambil dari item pertama yang dipilih)
             if (!empty($this->selectedBodyParts)) {
                 $firstPart = \App\Models\BodyPart::find($this->selectedBodyParts[0]);
-                $this->selectedBodyPartCategory = $firstPart?->category;
+                $this->selectedBodyPartCategory = \App\Models\BodyPart::find($this->selectedBodyPart[0])?->category;
             }
 
             $this->damage_detail = null;
