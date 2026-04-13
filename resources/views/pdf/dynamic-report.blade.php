@@ -154,6 +154,7 @@
                     <th width="25px">NO</th>
                     @php
                     $name_loc = strtoupper($type) === 'INSPEKSI FIRE & RESCUE EQUIPMENT' ? 'NAMA' : 'LOKASI';
+                    dd($name_loc);
                     @endphp
                     <th width="120px"> {{ $name_loc }}</th>
                     {{-- Loop Inputs --}}
