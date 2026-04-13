@@ -1815,9 +1815,21 @@ class Update extends Component
             'eventSubTypes' => EventSubType::where('event_type_id', $this->event_type_id)->get(),
             'ktas' => UnsafeCondition::latest()->get(),
             'ttas' => UnsafeAct::latest()->get(),
-            'detailsBodyPart' => BodyPart::searchCategory($this->selectedBodyPartCategory)->orderBy('name')->get(),
             'allStepsData' => $stepStatus
         ]);
+    }
+    #[Computed]
+    public function detailsBodyPart()
+    {
+        if (!$this->selectedBodyPartCategory) return [];
+
+        return BodyPart::where('category', $this->selectedBodyPartCategory)->get();
+    }
+
+    // Fungsi helper untuk menghapus badge
+    public function removeBodyPart($id)
+    {
+        $this->selectedBodyParts = array_values(array_diff($this->selectedBodyParts, [$id]));
     }
     public function validateCurrentStep()
     {
