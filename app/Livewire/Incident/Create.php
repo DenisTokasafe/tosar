@@ -189,7 +189,7 @@ class Create extends Component
 
             // Logika Kondisional Injury / Damage
             'selectedBodyPartCategory' => $this->isInjury ? 'required' : 'nullable',
-            'selectedBodyPart' => $this->isInjury ? 'required' : 'nullable',
+            'selectedBodyParts' => $this->isInjury ? 'required' : 'nullable',
             'damage_detail' => !$this->isInjury ? 'required|string' : 'nullable',
         ];
 
@@ -225,7 +225,7 @@ class Create extends Component
             'consequence_id'    => __('Konsekuensi (Consequence)'),
             'emergency_action'  => __('Tindakan Darurat'),
             'selectedBodyPartCategory' => __('Kategori Bagian Tubuh'),
-            'selectedBodyPart'         => __('Detail Bagian Tubuh'),
+            'selectedBodyParts'         => __('Detail Bagian Tubuh'),
             'damage_detail'            => __('Detail Kerusakan'),
 
             // Part 2
@@ -252,7 +252,7 @@ class Create extends Component
         // Khusus untuk event_type_id, validasi juga field dampak karena saling bergantung
         if ($propertyName === 'event_type_id') {
             $this->validateOnly('selectedBodyPartCategory');
-            $this->validateOnly('selectedBodyPart');
+            $this->validateOnly('selectedBodyParts');
             $this->validateOnly('damage_detail');
         }
 
