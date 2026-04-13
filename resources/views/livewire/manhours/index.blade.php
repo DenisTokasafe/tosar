@@ -1,11 +1,11 @@
 <section class="w-full">
     <x-toast />
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
     @endpush
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     @include('partials.manhours')
     <div class="flex flex-col items-center px-2 rounded-lg shadow-sm lg:flex-row lg:justify-between bg-stone-400/20">
@@ -14,14 +14,14 @@
         {{-- Ikon Tombol Sejajar Horizontal --}}
         <div class="flex flex-row gap-2">
             @can('create', \App\Models\Manhour::class)
-                {{-- Tombol 'tambah data' --}}
+            {{-- Tombol 'tambah data' --}}
 
-                <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal'
-                    tooltip="Tambah Data" />
-                {{-- Komponen Import --}}
+            <x-button.btn-tooltip modalId="manhours_modal" color="primary" icon="add" wireClick='close_modal'
+                tooltip="Tambah Data" />
+            {{-- Komponen Import --}}
             @endcan
             @can('viewAdmin', \App\Models\Manhour::class)
-                @livewire('manhours.manhours-import')
+            @livewire('manhours.manhours-import')
             @endcan
         </div>
 
@@ -104,39 +104,39 @@
                         <th>Manhour</th>
                         <th>Manpower</th>
                         @can('create', \App\Models\Manhour::class)
-                            <th>Aksi</th>
+                        <th>Aksi</th>
                         @endcan
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data_manhours as $no => $manhour)
-                        <tr>
-                            <th>{{ $data_manhours->firstItem() + $no }}</th>
-                            <td>{{ \Carbon\Carbon::parse($manhour->date)->translatedFormat('M-Y') }}</td>
-                            <td>{{ $manhour->company_category }}</td>
-                            <td>{{ $manhour->company }}</td>
-                            <td>{{ $manhour->department }}</td>
-                            <td>{{ $manhour->dept_group }}</td>
-                            <td>{{ $manhour->job_class }}</td>
-                            <td>{{ $manhour->manhours }}</td>
-                            <td>{{ $manhour->manpower }}</td>
-                            @can('create', \App\Models\Manhour::class)
-                                <th class='flex flex-row justify-center gap-2'>
-                                    <x-button.btn-tooltip color="warning" icon="edit"
-                                        wireClick="open_modal({{ $manhour->id }})" modalId="manhours_modal"
-                                        tooltip="Detail" />
-                                    <x-button.btn-tooltip color="error" icon="delete"
-                                        wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
-                                        tooltip="hapus data" />
-                                </th>
-                            @endcan
-                        </tr>
+                    <tr>
+                        <th>{{ $data_manhours->firstItem() + $no }}</th>
+                        <td>{{ \Carbon\Carbon::parse($manhour->date)->translatedFormat('M-Y') }}</td>
+                        <td>{{ $manhour->company_category }}</td>
+                        <td>{{ $manhour->company }}</td>
+                        <td>{{ $manhour->department }}</td>
+                        <td>{{ $manhour->dept_group }}</td>
+                        <td>{{ $manhour->job_class }}</td>
+                        <td>{{ $manhour->manhours }}</td>
+                        <td>{{ $manhour->manpower }}</td>
+                        @can('create', \App\Models\Manhour::class)
+                        <th class='flex flex-row justify-center gap-2'>
+                            <x-button.btn-tooltip color="warning" icon="edit"
+                                wireClick="open_modal({{ $manhour->id }})" modalId="manhours_modal"
+                                tooltip="Detail" />
+                            <x-button.btn-tooltip color="error" icon="delete"
+                                wireClick="showDelete({{ $manhour->id }})" modalId="delete_modal"
+                                tooltip="hapus data" />
+                        </th>
+                        @endcan
+                    </tr>
                     @endforeach
 
                 </tbody>
             </table>
         </div>
-        <div class="absolute inset-x-0 bottom-0 z-50 mt-4 shadow-md bg-base-100 inset-shadow-sm">
+        <div class="absolute inset-x-0 bottom-0 z-50 mt-6 shadow-md bg-base-100 inset-shadow-sm">
             {{ $data_manhours->links() }}
         </div>
         <dialog id='manhours_modal' class="modal" wire:ignore.self wire:target='update,store,close_modal,'>
@@ -206,19 +206,19 @@
 
                                     {{-- kalau ada owners --}}
                                     @isset($companies['owners'])
-                                        @foreach ($companies['owners'] as $comp)
-                                            <option value="{{ $comp->company_name }}" @selected($company === $comp->company_name)>
-                                                {{ $comp->company_name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($companies['owners'] as $comp)
+                                    <option value="{{ $comp->company_name }}" @selected($company===$comp->company_name)>
+                                        {{ $comp->company_name }}
+                                    </option>
+                                    @endforeach
                                     @endisset
 
                                     @isset($companies['contractors'])
-                                        @foreach ($companies['contractors'] as $cont)
-                                            <option value="{{ $cont->contractor_name }}" @selected($company === $cont->contractor_name)>
-                                                {{ $cont->contractor_name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($companies['contractors'] as $cont)
+                                    <option value="{{ $cont->contractor_name }}" @selected($company===$cont->contractor_name)>
+                                        {{ $cont->contractor_name }}
+                                    </option>
+                                    @endforeach
                                     @endisset
                                 </select>
                                 <x-label-error :messages="$errors->get('company')" />
@@ -229,31 +229,31 @@
                             <fieldset class="fieldset">
                                 {{-- MODIFIKASI DIMULAI DI SINI --}}
                                 @if ($entityType === 'contractor')
-                                    <x-form.label label="Custodian" required />
+                                <x-form.label label="Custodian" required />
                                 @elseif ($entityType === 'owner')
-                                    <x-form.label label="Department" required />
+                                <x-form.label label="Department" required />
                                 @else
-                                    {{-- Default jika belum memilih atau nilainya kosong --}}
-                                    <x-form.label label="Department / Custodian" required />
+                                {{-- Default jika belum memilih atau nilainya kosong --}}
+                                <x-form.label label="Department / Custodian" required />
                                 @endif
                                 {{-- MODIFIKASI BERAKHIR DI SINI --}}
                                 <select wire:model.live="department"
                                     class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                     <option value="">-- Pilih --</option>
                                     @if ($entityType === 'contractor')
-                                        @foreach ($custodian as $cust)
-                                            <option value="{{ $cust->Departemen->department_name }}"
-                                                @selected($department === $cust->Departemen->department_name)>
-                                                {{ $cust->Departemen->department_name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($custodian as $cust)
+                                    <option value="{{ $cust->Departemen->department_name }}"
+                                        @selected($department===$cust->Departemen->department_name)>
+                                        {{ $cust->Departemen->department_name }}
+                                    </option>
+                                    @endforeach
                                     @else
-                                        @foreach ($deptGroup as $dg)
-                                            <option value="{{ $dg->Departemen->department_name }}"
-                                                @selected($department === $dg->Departemen->department_name)>
-                                                {{ $dg->Departemen->department_name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($deptGroup as $dg)
+                                    <option value="{{ $dg->Departemen->department_name }}"
+                                        @selected($department===$dg->Departemen->department_name)>
+                                        {{ $dg->Departemen->department_name }}
+                                    </option>
+                                    @endforeach
                                     @endif
                                 </select>
                                 <x-label-error :messages="$errors->get('department')" />
@@ -262,61 +262,61 @@
 
                         {{-- Job Class Section --}}
                         @foreach ($jobclasses as $key => $label)
-                            <fieldset class="px-3 border rounded-lg fieldset border-base-300">
-                                <legend class="flex items-center gap-2 text-xs font-semibold">
-                                    <span>{{ $label }}</span>
+                        <fieldset class="px-3 border rounded-lg fieldset border-base-300">
+                            <legend class="flex items-center gap-2 text-xs font-semibold">
+                                <span>{{ $label }}</span>
 
-                                    {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
-                                    <label class="flex items-center space-x-1 cursor-pointer">
-                                        <input type="checkbox" wire:model.live="hide.{{ $key }}"
-                                            class="checkbox checkbox-xs">
-                                        <span class="text-[8px] text-rose-500 capitalize select-none">
-                                            centang jika ada data {{ $label }}
-                                        </span>
-                                    </label>
-                                </legend>
+                                {{-- Checkbox untuk 'Tidak Ada [Job Class]' --}}
+                                <label class="flex items-center space-x-1 cursor-pointer">
+                                    <input type="checkbox" wire:model.live="hide.{{ $key }}"
+                                        class="checkbox checkbox-xs">
+                                    <span class="text-[8px] text-rose-500 capitalize select-none">
+                                        centang jika ada data {{ $label }}
+                                    </span>
+                                </label>
+                            </legend>
 
-                                {{-- Container Manhours dan Manpower --}}
-                                <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                            {{-- Container Manhours dan Manpower --}}
+                            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
 
-                                    {{-- Manhours (Jumlah Jam Kerja) --}}
-                                    <fieldset class="fieldset">
-                                        <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
+                                {{-- Manhours (Jumlah Jam Kerja) --}}
+                                <fieldset class="fieldset">
+                                    <x-form.label label="Jumlah Jam Kerja" :required="!$hide[$key]" />
 
-                                        <input type="number" wire:model.live="manhours.{{ $key }}"
-                                            placeholder="Masukkan Jumlah Jam Kerja..."
-                                            class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
-                                            @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
+                                    <input type="number" wire:model.live="manhours.{{ $key }}"
+                                        placeholder="Masukkan Jumlah Jam Kerja..."
+                                        class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
+                                        @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
-                                        <x-label-error :messages="$errors->get('manhours.' . $key)" />
-                                    </fieldset>
+                                    <x-label-error :messages="$errors->get('manhours.' . $key)" />
+                                </fieldset>
 
-                                    {{-- Manpower (Jumlah Tenaga Kerja) --}}
-                                    <fieldset class="fieldset">
-                                        <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
+                                {{-- Manpower (Jumlah Tenaga Kerja) --}}
+                                <fieldset class="fieldset">
+                                    <x-form.label label="Jumlah Tenaga Kerja" :required="!$hide[$key]" />
 
-                                        <input type="number" wire:model.live="manpower.{{ $key }}"
-                                            placeholder="Masukkan Jumlah Tenaga Kerja..."
-                                            class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
-                                            @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
+                                    <input type="number" wire:model.live="manpower.{{ $key }}"
+                                        placeholder="Masukkan Jumlah Tenaga Kerja..."
+                                        class="w-full input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
+                                        @disabled(!$hide[$key]) /> {{-- 🛑 PERBAIKAN: DISABLED jika $hide[$key] FALSE --}}
 
-                                        <x-label-error :messages="$errors->get('manpower.' . $key)" />
-                                    </fieldset>
-                                </div>
-                            </fieldset>
+                                    <x-label-error :messages="$errors->get('manpower.' . $key)" />
+                                </fieldset>
+                            </div>
+                        </fieldset>
                         @endforeach
 
                         {{-- Tombol Aksi --}}
                         <div class="flex justify-end gap-2 mt-2">
 
                             @if ($selectedId)
-                                <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
-                                    onclick="manhours_modal.close()">Batal</button>
-                                <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
+                            <button class="btn btn-xs btn-soft btn-error" wire:click='close_modal'
+                                onclick="manhours_modal.close()">Batal</button>
+                            <button class="btn btn-xs btn-soft btn-success" type="submit">Update</button>
                             @else
-                                <button class="btn btn-xs btn-soft btn-error"
-                                    onclick="manhours_modal.close()">Batal</button>
-                                <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
+                            <button class="btn btn-xs btn-soft btn-error"
+                                onclick="manhours_modal.close()">Batal</button>
+                            <button class="btn btn-xs btn-soft btn-success" type="submit">Simpan</button>
                             @endif
                         </div>
                 </form>
