@@ -229,8 +229,7 @@
             :options="$this->existingCategory"
             option-value="category"
             option-label="category"
-            placeholder="-- Pilih Kategori --"
-            :disabled="!$canEdit" />
+            placeholder="-- Pilih Kategori --" />
 
         @if ($selectedBodyPartCategory)
         <div class="p-3 border rounded-lg bg-base-200/50">
