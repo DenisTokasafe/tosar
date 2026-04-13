@@ -253,11 +253,9 @@
         <div class="flex flex-wrap gap-2 pt-2 border-t border-base-300">
             @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
             <div class="badge badge-primary badge-md gap-2 py-3">
-                @if($canEdit)
                 <svg wire:click="removeBodyPart({{ $selected->id }})" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 cursor-pointer stroke-current hover:text-error">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                @endif
                 {{ $selected->name }}
             </div>
             @endforeach
