@@ -238,9 +238,8 @@
             <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                 @foreach($this->detailsBodyPart as $part)
                 <label wire:key="body-part-{{ $part->id }}"
-                    @class([ 'flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer group' , 'bg-primary/5 border-primary/30'=> in_array($part->id, $selectedBodyParts),
-                    'bg-base-100 border-base-300 hover:bg-base-200' => !in_array($part->id, $selectedBodyParts),
-                    'opacity-50 cursor-not-allowed' => !$canEdit
+                    @class([ 'flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer group' , 'bg-primary/10 border-primary/50 ring-1 ring-primary/20'=> in_array($part->id, $selectedBodyParts),
+                    'bg-base-100 border-base-300 hover:bg-white' => !in_array($part->id, $selectedBodyParts),
                     ])>
 
                     <input type="checkbox"
