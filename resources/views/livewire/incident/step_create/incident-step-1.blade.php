@@ -224,43 +224,55 @@
     <legend class="text-sm font-semibold card-title text-primary">{{ __('Bagian Tubuh yang Terluka') }}</legend>
 
     <div class="grid grid-cols-1 gap-4">
-        <x-form.select label="Filter Kategori"
+        {{-- 1. Pilih Kategori --}}
+        <x-form.select
+            label="Kategori Bagian Tubuh"
             model="selectedBodyPartCategory"
             :options="$this->existingCategory"
             option-value="category"
             option-label="category"
-            placeholder="-- Pilih Kategori --" />
+            placeholder="-- {{__('Pilih Kategori untuk Memfilter Detail')}} --"
+            required />
 
+        {{-- 2. Detail Bagian Tubuh (Checkbox Grid) --}}
         @if ($selectedBodyPartCategory)
-        <div class="p-3 border rounded-lg bg-base-200/50">
-            <label class="block mb-2 text-xs font-bold uppercase text-base-content/60">Pilih Detail (Bisa lebih dari 1):</label>
-            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
-                @foreach($this->detailsBodyPart as $part)
-                <label class="flex items-center gap-2 p-2 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300">
+        <div class="p-4 border rounded-lg bg-base-200/30">
+            <label class="block mb-3 text-xs font-bold uppercase text-base-content/60">
+                {{ __('Pilih Detail') }} ({{ $selectedBodyPartCategory }})
+            </label>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+                @foreach($detailsBodyPart as $part)
+                <label class="flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300 group">
                     <input type="checkbox"
                         value="{{ $part->id }}"
-                        wire:model.live="selectedBodyPart"
+                        wire:model.live="selectedBodyParts"
                         class="checkbox checkbox-primary checkbox-sm">
-                    <span class="text-sm">{{ $part->name }}</span>
+                    <span class="text-sm group-hover:font-medium">{{ $part->name }}</span>
                 </label>
                 @endforeach
             </div>
         </div>
         @endif
 
-        @if(count($selectedBodyPart) > 0)
-        <div class="flex flex-wrap gap-2 pt-2 border-t border-base-300">
-            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
-            <div class="badge badge-primary badge-md gap-2 py-3">
-                <svg wire:click="removeBodyPart({{ $selected->id }})" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 cursor-pointer stroke-current hover:text-error">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-                {{ $selected->name }}
+        {{-- 3. Ringkasan Terpilih (Badges) --}}
+        @if(count($selectedBodyParts) > 0)
+        <div class="flex flex-wrap gap-2 pt-3 border-t border-base-300">
+            <span class="w-full text-xs font-medium text-base-500">{{ __('Terpilih:') }}</span>
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
+            <div class="badge badge-primary badge-outline gap-2 p-3">
+                <button wire:click="removeBodyPart({{ $selected->id }})" type="button" class="hover:text-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <span class="text-xs font-semibold">{{ $selected->name }}</span>
             </div>
             @endforeach
         </div>
         @else
-        <p class="text-xs italic text-error">* Belum ada bagian tubuh yang dipilih</p>
+        <div class="text-xs italic text-error">
+            * {{ __('Pilih setidaknya satu detail bagian tubuh.') }}
+        </div>
         @endif
     </div>
 </fieldset>
