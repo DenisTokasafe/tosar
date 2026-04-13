@@ -601,8 +601,8 @@ class Update extends Component
 
                 // 2. Set kategori default untuk filter (diambil dari item pertama yang dipilih)
                 if (!empty($this->selectedBodyParts)) {
-                    $firstPart = \App\Models\BodyPart::find($this->selectedBodyParts[0]);
-                    $this->selectedBodyPartCategory = \App\Models\BodyPart::find($this->selectedBodyParts[0])?->category;
+                    $firstPart = BodyPart::find($this->selectedBodyParts[0]);
+                    $this->selectedBodyPartCategory = BodyPart::find($this->selectedBodyParts[0])?->category;
                 }
 
                 $this->damage_detail = null;
@@ -732,6 +732,31 @@ class Update extends Component
         } else {
             $this->selectedBodyParts = [];
         }
+    }
+    #[Computed]
+    public function detailsBodyPart()
+    {
+        if (!$this->selectedBodyPartCategory) return [];
+
+        return BodyPart::where('category', $this->selectedBodyPartCategory)->get();
+    }
+
+    // Fungsi helper untuk menghapus badge
+    public function removeBodyPart($id)
+    {
+        // Filter array untuk menghapus ID yang dipilih
+        $this->selectedBodyParts = array_values(array_filter($this->selectedBodyParts, function ($value) use ($id) {
+            return $value != $id;
+        }));
+
+        // Opsional: Refresh validation jika perlu
+        $this->validateOnly('selectedBodyParts');
+    }
+    public function updatedSelectedBodyPartCategory($value)
+    {
+        // Cukup biarkan kosong.
+        // Kehadiran method ini memaksa Livewire melakukan request ke server
+        // setiap kali nilai selectedBodyPartCategory berubah.
     }
     // Jika Anda ingin berpindah tab di dalam Bagian 9
     public function determineReportStatus()
@@ -1823,25 +1848,7 @@ class Update extends Component
             'allStepsData' => $stepStatus
         ]);
     }
-    #[Computed]
-    public function detailsBodyPart()
-    {
-        if (!$this->selectedBodyPartCategory) return [];
 
-        return BodyPart::where('category', $this->selectedBodyPartCategory)->get();
-    }
-
-    // Fungsi helper untuk menghapus badge
-    public function removeBodyPart($id)
-    {
-        // Filter array untuk menghapus ID yang dipilih
-        $this->selectedBodyParts = array_values(array_filter($this->selectedBodyParts, function ($value) use ($id) {
-            return $value != $id;
-        }));
-
-        // Opsional: Refresh validation jika perlu
-        $this->validateOnly('selectedBodyParts');
-    }
     public function validateCurrentStep()
     {
         $fields = [];

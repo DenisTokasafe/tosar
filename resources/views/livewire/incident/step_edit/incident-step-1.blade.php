@@ -206,28 +206,6 @@
             placeholder="-- Pilih Kategori --"
             :disabled="!$canEdit" />
         {{-- 2. Ringkasan Pilihan (Badge) - Munculkan jika ada data di array --}}
-        @if(is_array($selectedBodyParts) && count($selectedBodyParts) > 0)
-        <div class="flex flex-wrap gap-2 mt-3 mb-4 p-3 border border-dashed rounded-lg border-primary/30 bg-primary/5">
-            <span class="text-xs font-bold uppercase w-full mb-1 opacity-60 text-primary">Anggota Tubuh Terpilih:</span>
-
-            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
-            <div class="badge badge-primary gap-2 py-3 px-4 shadow-sm">
-                {{-- Tombol Hapus (Hanya jika canEdit) --}}
-                @if($canEdit)
-                <button type="button"
-                    wire:click="$set('selectedBodyParts', {{ json_encode(array_values(array_diff($selectedBodyParts, [$selected->id]))) }})"
-                    class="hover:text-error transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                @endif
-                <span class="text-xs font-semibold">{{ $selected->name }}</span>
-            </div>
-            @endforeach
-        </div>
-        @endif
-
         {{-- 2. Detail Bagian Tubuh (Checkbox Group) --}}
         @if ($selectedBodyPartCategory)
         <div class="space-y-2">
@@ -258,11 +236,34 @@
             </div>
 
             {{-- Menampilkan Pesan Error khusus untuk checkbox --}}
-            @error('selectedBodyPart')
+            @error('selectedBodyParts')
             <span class="text-xs text-error mt-1 italic">* {{ $message }}</span>
             @enderror
         </div>
         @endif
+        @if(is_array($selectedBodyParts) && count($selectedBodyParts) > 0)
+        <div class="flex flex-wrap gap-2 mt-3 mb-4 p-3 border border-dashed rounded-lg border-primary/30 bg-primary/5">
+            <span class="text-xs font-bold uppercase w-full mb-1 opacity-60 text-primary">Anggota Tubuh Terpilih:</span>
+
+            @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyParts)->get() as $selected)
+            <div class="badge badge-primary gap-2 py-3 px-4 shadow-sm">
+                {{-- Tombol Hapus (Hanya jika canEdit) --}}
+                @if($canEdit)
+                <button type="button"
+                    wire:click="$set('selectedBodyParts', {{ json_encode(array_values(array_diff($selectedBodyParts, [$selected->id]))) }})"
+                    class="hover:text-error transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                @endif
+                <span class="text-xs font-semibold">{{ $selected->name }}</span>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
+
     </div>
 </fieldset>
 @else
