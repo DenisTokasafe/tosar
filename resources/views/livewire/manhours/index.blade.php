@@ -137,6 +137,7 @@
             </table>
         </div>
 
+
         @livewire('manhours.grafik.index')
         <div class="absolute inset-x-0 bottom-0 z-50 mt-6 shadow-md bg-base-100 inset-shadow-sm">
             {{ $data_manhours->links() }}
