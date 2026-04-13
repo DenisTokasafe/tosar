@@ -558,7 +558,7 @@ class Create extends Component
     // Fungsi helper untuk menghapus badge
     public function removeBodyPart($id)
     {
-        $this->selectedBodyPart = array_diff($this->selectedBodyParts, [$id]);
+        $this->selectedBodyPart = array_values(array_diff($this->selectedBodyPart, [$id]));
     }
 
     public function updatedSupportingDocuments()
