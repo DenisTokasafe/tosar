@@ -245,7 +245,7 @@
                 <label class="flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer hover:bg-white bg-base-100 border-base-300 group">
                     <input type="checkbox"
                         value="{{ $part->id }}"
-                        wire:model.live="selectedBodyParts"
+                        wire:model.live="selectedBodyPart"
                         class="checkbox checkbox-primary checkbox-sm">
                     <span class="text-sm group-hover:font-medium">{{ $part->name }}</span>
                 </label>
