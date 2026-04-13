@@ -216,19 +216,19 @@
             <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                 @foreach($this->detailsBodyPart as $part)
                 <label wire:key="body-part-{{ $part->id }}"
-                    @class([ 'flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer group' , 'bg-primary/5 border-primary/30'=> in_array($part->id, $selectedBodyPart),
-                    'bg-base-100 border-base-300 hover:bg-base-200' => !in_array($part->id, $selectedBodyPart),
+                    @class([ 'flex items-center gap-3 p-3 transition-all border rounded-md cursor-pointer group' , 'bg-primary/5 border-primary/30'=> in_array($part->id, $selectedBodyParts),
+                    'bg-base-100 border-base-300 hover:bg-base-200' => !in_array($part->id, $selectedBodyParts),
                     'opacity-50 cursor-not-allowed' => !$canEdit
                     ])>
 
                     <input type="checkbox"
                         value="{{ $part->id }}"
-                        wire:model.live="selectedBodyPart"
+                        wire:model.live="selectedBodyParts"
                         class="checkbox checkbox-primary checkbox-sm"
                         @disabled(!$canEdit)>
 
-                    <span @class([ 'text-sm' , 'font-bold text-primary'=> in_array($part->id, $selectedBodyPart),
-                        'group-hover:font-medium' => !in_array($part->id, $selectedBodyPart)
+                    <span @class([ 'text-sm' , 'font-bold text-primary'=> in_array($part->id, $selectedBodyParts),
+                        'group-hover:font-medium' => !in_array($part->id, $selectedBodyParts)
                         ])>
                         {{ $part->name }}
                     </span>
