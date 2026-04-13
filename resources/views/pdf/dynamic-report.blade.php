@@ -180,32 +180,28 @@
                     <td>{{ $index + 1 }}</td>
                     <td style="text-align: left;">{{ $item->equipmentMaster->specific_location }}</td>
 
+                    @foreach ($structure['inputs'] as $input)
+                    @php
+                    // Normalisasi key untuk mencari di array conditions
+                    $key = is_array($input) ? ($input['label'] ?? null) : $input;
+                    @endphp
+                    <td>{{ $item->conditions[$key] ?? '-' }}</td>
+                    @endforeach
+
                     {{-- Loop Checks Body --}}
                     @foreach ($structure['checks'] as $check)
                     @php
-                    // 1. Normalisasi key (ambil 'name' atau 'label' atau string langsung)
-                    $key = is_array($check) ? ($check['name'] ?? $check['label'] ?? null) : $check;
-
-                    // 2. Ambil value dari hasil inspeksi
+                    dd($check);
+                    $key = is_array($check) ? ($check['label'] ?? null) : $check;
                     $val = $item->conditions[$key] ?? null;
-
-                    // 3. Tentukan tipe input (default ke checkbox jika tidak ada info)
-                    $inputType = is_array($check) ? ($check['type'] ?? 'checkbox') : 'checkbox';
                     @endphp
-
                     <td>
-                        @if ($inputType === 'text')
-                        {{-- Jika tipenya text, langsung tampilkan isinya --}}
-                        {{ $val ?? '-' }}
-                        @else
-                        {{-- Jika tipenya checkbox/boolean, tampilkan icon ✔/✘ --}}
-                        @if ($val === true || $val === 'true' || $val === 1 || $val === '1' || $val === 'on')
+                        @if ($val === true || $val === 'true' || $val === 1 || $val === '1')
                         <span class="good">✔</span>
-                        @elseif($val === false || $val === 'false' || $val === 0 || $val === '0' || $val === 'off')
+                        @elseif($val === false || $val === 'false' || $val === 0 || $val === '0')
                         <span class="nogood">✘</span>
                         @else
                         -
-                        @endif
                         @endif
                     </td>
                     @endforeach
