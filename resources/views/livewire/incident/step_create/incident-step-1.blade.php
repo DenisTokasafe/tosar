@@ -255,7 +255,7 @@
         @endif
 
         {{-- 3. Ringkasan Terpilih (Badges) --}}
-        @if(count($selectedBodyPart) > 0)
+        @if(is_array($selectedBodyPart) && count($selectedBodyPart) > 0)
         <div class="flex flex-wrap gap-2 pt-3 border-t border-base-300">
             <span class="w-full text-xs font-medium text-base-500">{{ __('Terpilih:') }}</span>
             @foreach(\App\Models\BodyPart::whereIn('id', $selectedBodyPart)->get() as $selected)
