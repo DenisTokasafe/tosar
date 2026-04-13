@@ -7,12 +7,10 @@ use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
-use App\Models\ErmAssignment;
 use App\Models\EventSubType;
 use App\Models\EventType;
 use App\Models\IncidentReport;
 use App\Models\Likelihood;
-use App\Models\Location;
 use App\Models\RiskAssessment;
 use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
@@ -25,10 +23,8 @@ use App\Traits\WithSearchPelapor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -1311,7 +1307,7 @@ class Create extends Component
                 'contractor_id'     => $this->contractor_id,
                 'penanggungJawab'   => $this->penanggungJawab,
                 'pelapor_id'        => $this->pelapor_id,
-                'user_auth'         => auth()->user()->id,
+                'user_auth'         => Auth::user()->id,
                 'manual_pelapor'    => $this->manualPelaporName,
                 'description'       => $this->description,
                 'emergency_action'  => $this->emergency_action,

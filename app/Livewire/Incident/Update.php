@@ -23,6 +23,7 @@ use App\Models\User;
 use App\Traits\WithDeptContSelection;
 use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -1748,12 +1749,12 @@ class Update extends Component
         }
 
         return match ($step) {
-            1, 2 => auth()->user()->can('updateInitialData', $this->incident),
-            3 => auth()->user()->can('updateTeamInvestigation', $this->incident),
-            4, 5, 6 => auth()->user()->can('conductInvestigation', $this->incident),
-            7 => auth()->user()->can('manageCorrectiveActions', $this->incident),
-            8 => auth()->user()->can('updateLessonsLearned', $this->incident),
-            9 => auth()->user()->can('reviewReport', $this->incident),
+            1, 2 => Auth::user()->can('updateInitialData', $this->incident),
+            3 => Auth::user()->can('updateTeamInvestigation', $this->incident),
+            4, 5, 6 => Auth::user()->can('conductInvestigation', $this->incident),
+            7 => Auth::user()->can('manageCorrectiveActions', $this->incident),
+            8 => Auth::user()->can('updateLessonsLearned', $this->incident),
+            9 => Auth::user()->can('reviewReport', $this->incident),
             default => false
         };
     }
@@ -2240,7 +2241,7 @@ class Update extends Component
 
     public function getCanUpdateProperty()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $incident = $this->incident;
 
         // --- TAHAP 1: CEK POLICY (Siapa yang boleh klik?) ---
@@ -2653,7 +2654,7 @@ class Update extends Component
                     'contract_area_name'    => $this->contract_area_name,
                     'env_classification'    => $this->env_classification,
                     'pelapor_id'            => $this->pelapor_id,
-                    'user_auth'         => auth()->user()->id,
+                    'user_auth'         => Auth::user()->id,
                     'manual_pelapor_name'   => $this->manualPelaporName,
                     'department_id'         => ($this->deptCont === 'dept') ? $this->department_id : null,
                     'contractor_id'         => ($this->deptCont === 'cont') ? $this->contractor_id : null,
