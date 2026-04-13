@@ -240,8 +240,7 @@
                     <input type="checkbox"
                         value="{{ $part->id }}"
                         wire:model.live="selectedBodyPart"
-                        class="checkbox checkbox-primary checkbox-sm"
-                        @disabled(!$canEdit)>
+                        class="checkbox checkbox-primary checkbox-sm">
                     <span class="text-sm">{{ $part->name }}</span>
                 </label>
                 @endforeach
