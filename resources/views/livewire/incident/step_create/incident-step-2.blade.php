@@ -22,7 +22,7 @@
 
             <div class="grid grid-cols-1 gap-3">
                 <div class="form-control">
-                    <x-form.searchable-select2 label="Nama" placeholder="Cari Nama..."
+                    <x-form.searchable-select2 label="Nama" placeholder="Cari Nama...{{ $index }}"
                         wire:key="mob-name-{{ $index }}"
                         modelsearch="searchKorban.{{ $index }}"
                         modelid="directly_involved.{{ $index }}.employee_name"

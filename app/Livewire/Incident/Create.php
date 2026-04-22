@@ -436,7 +436,7 @@ class Create extends Component
     }
 
     // Tambahkan "= null" pada parameter $index
-    public function enableManualMode(int $index)
+    public function enableManualMode($index)
     {
 
         if ($index === null) return; // Proteksi tambahan
