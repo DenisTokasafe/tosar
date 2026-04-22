@@ -60,7 +60,8 @@ class Create extends Component
     public $involved_personnel_id, $searchName, $involved_personnel_name;
     public $showinvolvedPersonnelDropdown = false;
     public $involvedPersonnelManualMode = false;
-
+    public $manualMode = []; // Array untuk menyimpan status manual per index
+    public $manualEmployeeName = [];
     public $involved_personnel = []; // Array utama untuk menampung banyak korban
     public $selected_personnel = [];
     public $showBodyPart = false;
