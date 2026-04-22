@@ -3,6 +3,7 @@
 namespace App\Livewire\Incident;
 
 use \App\Traits\WithDeptContSelection;
+use App\Helpers\DateBeforeOrEqualToday;
 use App\Helpers\FileHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
@@ -18,9 +19,9 @@ use App\Models\RiskMatrixCell;
 use App\Models\UnsafeAct;
 use App\Models\UnsafeCondition;
 use App\Models\User;
-use App\Helpers\DateBeforeOrEqualToday;
 use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -146,6 +147,10 @@ class Create extends Component
         'ohs' => '',
         'ktt' => '',
     ];
+    public function getHasWhenErrorProperty()
+    {
+        return $this->getErrorBag()->has('date_time');
+    }
 
     public function rules()
     {
@@ -1285,6 +1290,7 @@ class Create extends Component
 
     protected function prepareArrayData()
     {
+        $tanggal_time = Carbon::createFromFormat('d-m-Y H:i', $this->date_time)->format('Y-m-d H:i:s');
         // Logika Generate Report Number
         $lastReport = IncidentReport::latest()->first();
         $nextId = $lastReport ? $lastReport->id + 1 : 1;
@@ -1299,7 +1305,7 @@ class Create extends Component
                 'event_sub_type_id' => $this->event_sub_type_id,
                 'potential_lti'     => $this->potential_lti,
                 'tasks'             => $this->tasks,
-                'date_time'         => $this->date_time,
+                'date_time'         => $tanggal_time,
                 'location_id'       => $this->location_id,
                 'location_specific' => $this->location_specific,
                 'contract_area_name' => $this->contract_area_name,
