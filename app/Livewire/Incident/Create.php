@@ -435,8 +435,9 @@ class Create extends Component
         }
     }
 
-    public function enableManualMode($index = null)
+    public function enableManualMode($index)
     {
+        dd($index);
         $this->manualMode[$index] = true;
 
         // Opsional: Isi field manual dengan apa yang sudah diketik di search box
@@ -444,7 +445,7 @@ class Create extends Component
     }
 
     // 2. Fungsi untuk menyimpan data manual ke dalam baris directly_involved
-    public function addManualData($index = null)
+    public function addManualData($index)
     {
         // Validasi sederhana jika perlu
         if (empty($this->manualEmployeeName[$index])) {
