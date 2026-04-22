@@ -435,7 +435,7 @@ class Create extends Component
         }
     }
 
-    public function enableManualMode($index)
+    public function enableManualMode($index = null)
     {
         $this->manualMode[$index] = true;
 
@@ -444,7 +444,7 @@ class Create extends Component
     }
 
     // 2. Fungsi untuk menyimpan data manual ke dalam baris directly_involved
-    public function addManualData($index)
+    public function addManualData($index = null)
     {
         // Validasi sederhana jika perlu
         if (empty($this->manualEmployeeName[$index])) {
