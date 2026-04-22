@@ -1255,7 +1255,8 @@ class Create extends Component
 
                 // Part 3-9 dilewati karena diisi pada tahap Investigasi/Update
 
-                return $this->redirect(route('hazard-detail', $report->id), navigate: true);
+
+                return $report;
             });
 
             // Hapus Session draft
