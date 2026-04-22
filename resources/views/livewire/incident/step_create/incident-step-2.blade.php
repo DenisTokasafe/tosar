@@ -28,7 +28,13 @@
                         modelid="directly_involved.{{ $index }}.employee_name"
                         :options="$involved_personnel_options"
                         :showdropdown="$show_employee_dropdown[$index] ?? false"
-                        clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})" />
+                        clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
+
+                        {{-- Properti Manual Mode --}}
+                        :manualMode="$manualMode[$index] ?? false"
+                        manualModelName="manualEmployeeName.{{ $index }}"
+                        enableManualAction="enableManualMode({{ $index }})"
+                        addManualAction="addManualData({{ $index }})" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">

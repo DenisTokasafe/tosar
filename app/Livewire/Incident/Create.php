@@ -433,6 +433,36 @@ class Create extends Component
         }
     }
 
+    public function enableManualMode($index)
+    {
+        $this->manualMode[$index] = true;
+
+        // Opsional: Isi field manual dengan apa yang sudah diketik di search box
+        $this->manualEmployeeName[$index] = $this->searchKorban[$index] ?? '';
+    }
+
+    // 2. Fungsi untuk menyimpan data manual ke dalam baris directly_involved
+    public function addManualData($index)
+    {
+        // Validasi sederhana jika perlu
+        if (empty($this->manualEmployeeName[$index])) {
+            return;
+        }
+
+        // Masukkan ke array utama
+        $this->directly_involved[$index]['employee_name'] = $this->manualEmployeeName[$index];
+        $this->directly_involved[$index]['employee_id']   = null; // Beri null karena tidak ada di DB
+        $this->directly_involved[$index]['employee_nik']  = 'isi manual';
+
+        // Reset state search dan dropdown
+        $this->searchKorban[$index] = $this->manualEmployeeName[$index];
+        $this->show_employee_dropdown[$index] = false;
+        $this->manualMode[$index] = false;
+
+        // Simpan ke session seperti fungsi selectInvolvedPersonnel Anda
+        $this->saveToSession();
+    }
+
     // State untuk menampilkan dropdown
 
     public function mount()
