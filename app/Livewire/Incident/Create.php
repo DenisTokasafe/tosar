@@ -1290,7 +1290,7 @@ class Create extends Component
 
     protected function prepareArrayData()
     {
-        $tanggal_time = Carbon::createFromFormat('d-m-Y H:i', $this->date_time)->format('Y-m-d H:i:s');
+
         // Logika Generate Report Number
         $lastReport = IncidentReport::latest()->first();
         $nextId = $lastReport ? $lastReport->id + 1 : 1;
@@ -1305,7 +1305,7 @@ class Create extends Component
                 'event_sub_type_id' => $this->event_sub_type_id,
                 'potential_lti'     => $this->potential_lti,
                 'tasks'             => $this->tasks,
-                'date_time'         => $tanggal_time,
+                'date_time'         => $this->date_time,
                 'location_id'       => $this->location_id,
                 'location_specific' => $this->location_specific,
                 'contract_area_name' => $this->contract_area_name,
