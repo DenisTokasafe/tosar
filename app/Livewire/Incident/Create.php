@@ -1258,10 +1258,10 @@ class Create extends Component
 
                 return $report;
             });
-            return $this->redirect(route('hazard-detail',  $this->link), navigate: true);
             // Hapus Session draft
             session()->forget('incident_create_data');
             $this->reset();
+            return $this->redirect(route('hazard-detail',  $this->link), navigate: true);
 
 
 
