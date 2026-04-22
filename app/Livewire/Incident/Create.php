@@ -1272,7 +1272,7 @@ class Create extends Component
                 'destination' => '/incident/show/' . $result->id,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-            return $this->redirect(route('hazard-detail',  $this->link), navigate: true);
+            return $this->redirect(route('hazard-detail',  $this->link))a;
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
             $firstErrorField = collect($e->validator->errors()->keys())->first();
