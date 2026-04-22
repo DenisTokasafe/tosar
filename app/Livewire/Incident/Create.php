@@ -438,6 +438,7 @@ class Create extends Component
     // Tambahkan "= null" pada parameter $index
     public function enableManualMode($index = null)
     {
+        dd(count($this->directly_involved));
         if ($index === null) return; // Proteksi tambahan
 
         $this->manualMode[$index] = true;
@@ -446,6 +447,7 @@ class Create extends Component
 
     public function addManualData($index = null)
     {
+
         if ($index === null) return;
 
         if (empty($this->manualEmployeeName[$index])) {
