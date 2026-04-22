@@ -798,6 +798,7 @@ class Create extends Component
         } else {
             $this->show_employee_dropdown[$idx] = false;
         }
+        $this->directly_involved[$index]['employee_name'] = null;
     }
 
 
