@@ -147,10 +147,7 @@ class Create extends Component
         'ohs' => '',
         'ktt' => '',
     ];
-    public function getHasWhenErrorProperty()
-    {
-        return $this->getErrorBag()->has('date_time');
-    }
+
 
     public function rules()
     {
@@ -167,7 +164,7 @@ class Create extends Component
             'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
             'env_classification' => $this->isEnvironmentType ? 'required|string' : 'nullable',
-            'date_time' => ['required', 'date', new DateBeforeOrEqualToday],
+            'date_time' => 'required|date|before_or_equal:today',
             'pelapor_id' => 'required_without:manualPelaporName',
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
             'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
