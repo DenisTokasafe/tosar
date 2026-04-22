@@ -140,7 +140,7 @@ class Create extends Component
     public $penerimaan_komentar_ohs;
     public $key_learning;
     public $tasks, $potential_lti;
-    public $link;
+
     public $searchNamePenerimaan = [
         'kontraktor' => '',
         'internal' => '',
@@ -1254,14 +1254,13 @@ class Create extends Component
                 $report->involvedPersons()->createMany($data['pihak_terlibat']);
 
                 // Part 3-9 dilewati karena diisi pada tahap Investigasi/Update
-                $this->link = $report->id;
 
-                return $report;
+                return $this->redirect(route('hazard-detail', $report->id), navigate: true);
             });
+
             // Hapus Session draft
             session()->forget('incident_create_data');
             $this->reset();
-
 
 
 
@@ -1272,7 +1271,6 @@ class Create extends Component
                 'destination' => '/incident/show/' . $result->id,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
-            return $this->redirect(route('hazard-detail',  $this->link));
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatchValidationEvents($e->validator->errors());
             $firstErrorField = collect($e->validator->errors()->keys())->first();
