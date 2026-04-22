@@ -140,7 +140,7 @@ class Create extends Component
     public $penerimaan_komentar_ohs;
     public $key_learning;
     public $tasks, $potential_lti;
-
+    public $link;
     public $searchNamePenerimaan = [
         'kontraktor' => '',
         'internal' => '',
@@ -1254,13 +1254,16 @@ class Create extends Component
                 $report->involvedPersons()->createMany($data['pihak_terlibat']);
 
                 // Part 3-9 dilewati karena diisi pada tahap Investigasi/Update
+                $this->link = $report->id;
 
                 return $report;
             });
-
+            return $this->redirect(route('hazard-detail',  $this->link), navigate: true);
             // Hapus Session draft
             session()->forget('incident_create_data');
             $this->reset();
+
+
 
             // Feedback Berhasil
             $this->dispatch('alert', [
