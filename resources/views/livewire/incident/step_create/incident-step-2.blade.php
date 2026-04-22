@@ -29,10 +29,13 @@
                         :options="$involved_personnel_options"
                         :showdropdown="$show_employee_dropdown[$index] ?? false"
                         clickaction="selectInvolvedPersonnel(VALUE_ID, VALUE_NAME, {{ $index }})"
+                        {{-- Properti Manual Mode --}}
+                        :manualMode="$manualMode[$index] ?? false"
+                        manualModelName="manualEmployeeName.{{ $index }}"
+                        enableManualAction="enableManualMode({{ $index }})"
+                        addManualAction="addManualData({{ $index }})" />
 
-                        {{-- Properti Manual Mode --}} />
                 </div>
-
                 <div class="grid grid-cols-2 gap-2">
                     <x-form.input-text label="NIK/ID" model="directly_involved.{{ $index }}.employee_nik" :disabled="$person['employee_id'] ? true : false" />
                     <x-form.input-text label="Dept/Pers" model="directly_involved.{{ $index }}.dept_cont" :disabled="$person['employee_id'] ? true : false" />
