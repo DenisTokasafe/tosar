@@ -287,7 +287,7 @@ class Create extends Component
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
             'after_or_equal' => __(':attribute tidak boleh tanggal lampau.'),
-            'date_time.before_or_equal' => __('Waktu kejadian tidak boleh di masa mendatang (maksimal hari ini).'),
+            'before_or_equal' => __('Waktu kejadian tidak boleh di masa mendatang (maksimal hari ini).'),
             // --- PART 7: DOKUMENTASI ---
             'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
             'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
