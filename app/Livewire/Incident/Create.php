@@ -164,7 +164,7 @@ class Create extends Component
             'location_specific' => 'required|string',
             'contract_area_name' => 'required|string',
             'env_classification' => $this->isEnvironmentType ? 'required|string' : 'nullable',
-            'date_time' => 'required|date|before_or_equal:today',
+            'date_time' => 'required|date|before_or_equal:now',
             'pelapor_id' => 'required_without:manualPelaporName',
             'department_id' => 'nullable|required_without:contractor_id|exists:departments,id',
             'contractor_id' => 'nullable|required_without:department_id|exists:contractors,id',
@@ -287,6 +287,7 @@ class Create extends Component
             'min'      => __(':attribute minimal harus :min karakter.'),
             'date'     => __('Format tanggal :attribute tidak sesuai.'),
             'after_or_equal' => __(':attribute tidak boleh tanggal lampau.'),
+            'date_time.before_or_equal' => __('Waktu kejadian tidak boleh melebihi waktu saat ini.'),
             // --- PART 7: DOKUMENTASI ---
             'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
             'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
