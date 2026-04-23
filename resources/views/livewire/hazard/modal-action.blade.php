@@ -1,10 +1,10 @@
  <dialog id="action_modal" class="modal {{ $showActionModal === 'open' ? 'modal-open' : '' }}">
-     <div class="modal-box w-11/12 max-w-5xl">
+     <div class="w-11/12 max-w-5xl modal-box">
          <form method="dialog">
-             <button wire:click="$set('showActionModal', 'close')" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+             <button wire:click="$set('showActionModal', 'close')" class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
          </form>
 
-         <h3 class="font-bold text-lg mb-4">{{ __('Manajemen Tindakan Lanjutan') }}</h3>
+         <h3 class="mb-4 text-lg font-bold">{{ __('Manajemen Tindakan Lanjutan') }}</h3>
 
          <fieldset class="p-3 border rounded-xl border-base-300 bg-base-100">
              <fieldset class="fieldset md:col-span-1" wire:key="field-action">
@@ -15,7 +15,7 @@
                  <x-label-error :messages="$errors->get('action_description')" />
              </fieldset>
 
-             <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-3 mt-4">
+             <div class="grid items-end grid-cols-1 gap-4 mt-4 md:grid-cols-3">
 
                  <x-form.tgl label="Batas Waktu" format="d-m-Y" model="action_due_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
                  <x-form.tgl label="Tanggal Selesai" format="d-m-Y" model="actual_close_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
@@ -37,11 +37,7 @@
                  </flux:button>
              </div>
 
-
          </fieldset>
 
-         <div class="modal-action">
-             <button wire:click="$set('showActionModal', 'close')" class="btn btn-primary btn-sm">Selesai & Tutup</button>
-         </div>
      </div>
  </dialog>
