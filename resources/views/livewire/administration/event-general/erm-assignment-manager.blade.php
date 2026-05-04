@@ -8,9 +8,9 @@
     <!-- name of each tab group should be unique -->
     <x-tabs-event.layout>
         <div x-data x-on:open-my-modal.window="my_modal_1.showModal()" x-on:close-my-modal.window="my_modal_1.close()">
-            <dialog id="my_modal_1" class="modal">
+            <dialog id="my_modal_1" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
-                    <div wire:ignore class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
                         <fieldset class="fieldset ">
                             <label class="block">Pilih ERM</label>
                             <div class="relative">
