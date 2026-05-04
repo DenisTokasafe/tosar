@@ -46,9 +46,9 @@ class ErmAssignmentManager extends Component
 
     public function open_modal()
     {
-        $this->status = 'department';
         // Lakukan proses logika di sini (misal: reset form, fetch data)
         $this->reset_data();
+
         // Kirim event ke frontend untuk membuka modal
         $this->dispatch('open-my-modal');
     }
@@ -56,9 +56,11 @@ class ErmAssignmentManager extends Component
     {
         // Lakukan proses logika di sini (misal: reset form, fetch data)
         $this->reset_data();
+
         // Kirim event ke frontend untuk membuka modal
         $this->dispatch('close-my-modal');
     }
+
     public function edit($id)
     {
         $item = ErmAssignment::whereId($id)->first();
