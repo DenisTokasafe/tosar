@@ -298,7 +298,6 @@ class ErmAssignmentManager extends Component
         } else {
             $this->searchContractor = $item->contractor->contractor_name;
         }
-        $this->dispatch('open-update-modal');
     }
     public function update()
     {
@@ -324,6 +323,7 @@ class ErmAssignmentManager extends Component
             'duration' => 8000,
             'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
         ]);
+        $this->reset('editId');
     }
     public function delete($id)
     {
