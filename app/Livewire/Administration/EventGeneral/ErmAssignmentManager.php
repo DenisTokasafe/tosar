@@ -61,47 +61,7 @@ class ErmAssignmentManager extends Component
         $this->dispatch('close-my-modal');
     }
 
-    public function edit($id)
-    {
-        $item = ErmAssignment::whereId($id)->first();
-        $this->editId = $id;
-        $this->user_id = $item->user_id;
-        $this->searchModerator = $item->user->name;
-        $this->department_id = $item->department_id;
-        $this->contractor_id = $item->contractor_id;
-        $this->status =  !empty($this->contractor_id) ? 'company'  : 'department';
-        if ($this->department_id) {
-            $this->searchDepartemen = $item->department->department_name;
-        } else {
-            $this->searchContractor = $item->contractor->contractor_name;
-        }
-        $this->dispatch('open-update-modal');
-    }
-    public function update()
-    {
-        // 1. Perbaiki Validasi
-        $this->validate([
-            'user_id'       => 'required|exists:users,id', // 'exists' memastikan ID benar-benar ada di tabel users
-            'department_id' => $this->status === 'department' ? 'required' : 'nullable',
-            'contractor_id' => $this->status === 'company' ? 'required' : 'nullable',
-        ]);
-        // 2. Ambil data dengan findOrFail
-        $assignment = ErmAssignment::findOrFail($this->editId);
-        // 3. Update data
-        $assignment->update([
-            'user_id'       => $this->user_id,
-            'department_id' => $this->status === 'department' ? $this->department_id : null,
-            'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-        ]);
-        // 4. Tutup Modal & Berikan Feedback
-        $this->dispatch('close-update-modal');
-        $this->loadAssignments();
-        $this->dispatch('alert', [
-            'text' => "Data berhasil diupdate!",
-            'duration' => 8000,
-            'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
-        ]);
-    }
+
     public function close_modal_update()
     {
         $this->dispatch('close-update-modal');
@@ -324,9 +284,47 @@ class ErmAssignmentManager extends Component
 
         $this->loadAssignments();
     }
-
-
-
+    public function edit($id)
+    {
+        $item = ErmAssignment::whereId($id)->first();
+        $this->editId = $id;
+        $this->user_id = $item->user_id;
+        $this->searchModerator = $item->user->name;
+        $this->department_id = $item->department_id;
+        $this->contractor_id = $item->contractor_id;
+        $this->status =  !empty($this->contractor_id) ? 'company'  : 'department';
+        if ($this->department_id) {
+            $this->searchDepartemen = $item->department->department_name;
+        } else {
+            $this->searchContractor = $item->contractor->contractor_name;
+        }
+        $this->dispatch('open-update-modal');
+    }
+    public function update()
+    {
+        // 1. Perbaiki Validasi
+        $this->validate([
+            'user_id'       => 'required|exists:users,id', // 'exists' memastikan ID benar-benar ada di tabel users
+            'department_id' => $this->status === 'department' ? 'required' : 'nullable',
+            'contractor_id' => $this->status === 'company' ? 'required' : 'nullable',
+        ]);
+        // 2. Ambil data dengan findOrFail
+        $assignment = ErmAssignment::findOrFail($this->editId);
+        // 3. Update data
+        $assignment->update([
+            'user_id'       => $this->user_id,
+            'department_id' => $this->status === 'department' ? $this->department_id : null,
+            'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+        ]);
+        // 4. Tutup Modal & Berikan Feedback
+        $this->dispatch('close-update-modal');
+        $this->loadAssignments();
+        $this->dispatch('alert', [
+            'text' => "Data berhasil diupdate!",
+            'duration' => 8000,
+            'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+        ]);
+    }
     public function delete($id)
     {
         ErmAssignment::findOrFail($id)->delete();

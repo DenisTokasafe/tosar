@@ -219,7 +219,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <input id="department" value="department" wire:model="status" checked
+                            <input id="department" value="department" wire:model="status"
                                 class="peer/department radio radio-xs radio-accent" type="radio" name="status" />
                             <label for="department" class="peer-checked/department:text-accent">Departemen</label>
 
