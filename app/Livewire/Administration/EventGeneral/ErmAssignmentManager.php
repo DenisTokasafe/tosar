@@ -77,7 +77,7 @@ class ErmAssignmentManager extends Component
         }
         $this->dispatch('open-update-modal');
     }
-    public function update() {}
+
 
     public function loadAssignments()
     {
@@ -277,7 +277,18 @@ class ErmAssignmentManager extends Component
 
         // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
         if ($this->editId) {
-            # code...
+            ErmAssignment::update([
+                'user_id' => $this->user_id,
+                // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                'department_id' => $this->status === 'department' ? $this->department_id : null,
+                'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+            ]);
+            $this->dispatch('alert', [
+                'text' => "data berhasil di update",
+                'duration' => 8000,
+                'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+                // ... properti dispatch lainnya
+            ]);
         } else {
             if ($successfulAssignments > 0) {
                 $message = "Berhasil menetapkan **{$successfulAssignments}** ERM.";
@@ -292,7 +303,6 @@ class ErmAssignmentManager extends Component
                     'text' => $message,
                     'duration' => 8000,
                     'backgroundColor' => $backgroundColor,
-                    // ... properti dispatch lainnya
                 ]);
             } elseif ($failedAssignments > 0) {
                 // Jika semua ID duplikat
