@@ -61,12 +61,12 @@
             </fieldset>
 
             <fieldset>
-                <input id="department" value="department" wire:model="status1"
-                    class="peer/department radio radio-xs radio-accent" type="radio" name="status1" checked />
+                <input id="department" value="department" wire:model="status"
+                    class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
                 <label for="department" class="peer-checked/department:text-accent">Departemen</label>
 
-                <input id="company" value="company" wire:model="status1"
-                    class="peer/company radio radio-xs radio-primary" type="radio" name="status1" />
+                <input id="company" value="company" wire:model="status"
+                    class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
                 <label for="company" class="peer-checked/company:text-primary">Kontraktor</label>
 
                 <div class="hidden peer-checked/department:block mt-0.5">
@@ -171,7 +171,7 @@
             </tbody>
         </table>
 
-        <div class="@if (!$editId) hidden  @endif" x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
+        <div class="@if (empty($editId)) hidden  @endif" x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
             <dialog id="my_modal_2" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
                     <h3 class="text-lg font-bold">Perbaharui User</h3>
