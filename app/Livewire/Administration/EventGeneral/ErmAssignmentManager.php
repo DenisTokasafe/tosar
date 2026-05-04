@@ -17,6 +17,7 @@ class ErmAssignmentManager extends Component
     public $editId;
     #[Validate('required_without:department_id')]
     public $contractor_id;
+    public $status;
     public $assignments, $search = '';
     public $users = [], $showMpderatorDropdown = false, $searchModerator = '';
     public $departments = [], $showDepartemenDropdown = false, $searchDepartemen = '';
