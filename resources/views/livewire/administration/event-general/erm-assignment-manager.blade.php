@@ -239,11 +239,11 @@
                         </fieldset>
 
                         <fieldset>
-                            <input id="department" value="department" wire:model="status"
-                                class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
+                            <input id="department" value="department" wire:model.live="status"
+                                class="peer/department radio radio-xs radio-accent" type="radio" name="status" />
                             <label for="department" class="peer-checked/department:text-accent">Departemen</label>
 
-                            <input id="company" value="company" wire:model="status"
+                            <input id="company" value="company" wire:model.live="status"
                                 class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
                             <label for="company" class="peer-checked/company:text-primary">Kontraktor</label>
 
