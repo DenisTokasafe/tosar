@@ -136,10 +136,19 @@
                             </div>
                     </fieldset>
                 </div>
+                <div class="modal-action">
+
+                    <!-- if there is a button, it will close the modal -->
+                    <button class="btn" onclick="my_modal_1.showModal()">Close</button>
+
+                </div>
             </div>
         </dialog>
-        <div class="mt-2">
-            <flux:button size="xs" icon:trailing="add-icon" onclick="my_modal_1.showModal()" variant="primary">
+        <div class="flex gap-2 mt-2">
+            <flux:button size="xs" icon:trailing="close-icon" onclick="my_modal_1.close()" variant="error">
+                Batal
+            </flux:button>
+            <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
                 Tambah ERM
             </flux:button>
         </div>
