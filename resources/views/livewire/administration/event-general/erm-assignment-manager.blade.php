@@ -169,7 +169,7 @@
                     <td class="px-2 border">{{ $mod->department->department_name ?? '-' }}</td>
                     <td class="px-2 border">{{ $mod->contractor->contractor_name ?? '-' }}</td>
                     <td class="px-2 border">
-                        <flux:button size="xs" variant="warning" wire:click="edit({{ $item->id }})">
+                        <flux:button size="xs" variant="warning" wire:click="edit({{ $mod->id }})">
                             Edit
                         </flux:button>
                         <button wire:click="delete({{ $mod->id }})"
