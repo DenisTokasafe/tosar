@@ -212,30 +212,8 @@
                                     @endforeach
                                 </ul>
                                 @endif
-
-                                @foreach ($moderator_ids as $id)
-                                <input type="hidden" name="moderator_ids[]" value="{{ $id }}">
-                                @endforeach
-
                             </div>
                             <x-label-error :messages="$errors->get('moderator_ids')" />
-                            @if (count($selectedModerators) > 0)
-                            <div class="flex flex-wrap gap-2 mt-2 mb-3">
-                                @foreach ($selectedModerators as $moderator)
-                                <div class="gap-2 badge badge-xs badge-info">
-                                    <span>{{ $moderator['name'] }}</span>
-                                    <button type="button" wire:click="removeModerator({{ $moderator['id'] }})"
-                                        class="btn btn-xs btn-circle btn-ghost">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
                         </fieldset>
 
                         <fieldset>

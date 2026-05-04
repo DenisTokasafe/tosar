@@ -26,6 +26,7 @@ class ErmAssignmentManager extends Component
     // 💡 BARU: Array untuk menampung ID moderator yang dipilih
     #[Validate('required|array', message: 'Anda harus memilih minimal satu moderator.')]
     public $moderator_ids = [];
+    public $user_id;
     // 💡 BARU: Array untuk menampung detail moderator yang dipilih (ID dan Nama)
     public $selectedModerators = [];
     protected $messages =
@@ -64,7 +65,7 @@ class ErmAssignmentManager extends Component
     {
         $item = ErmAssignment::whereId($id)->first();
         $this->editId = $id;
-        $this->searchModerator = $item->user_id;
+        $this->user_id = $item->user_id;
         $this->searchModerator = $item->user->name;
         $this->department_id = $item->department_id;
         $this->contractor_id = $item->contractor_id;
@@ -74,11 +75,9 @@ class ErmAssignmentManager extends Component
         } else {
             $this->searchContractor = $item->contractor->contractor_name;
         }
-
-
-
         $this->dispatch('open-update-modal');
     }
+    public function update() {}
 
     public function loadAssignments()
     {
@@ -127,30 +126,27 @@ class ErmAssignmentManager extends Component
     public function selectModerator($id, $name)
     {
         // 1. Pengecekan agar ID tidak ganda
-        if (!in_array($id, $this->moderator_ids)) {
 
-            // 2. Tambahkan ke array lokal untuk UI
-            $this->moderator_ids[] = (int) $id;
-            $this->selectedModerators[] = [
-                'id' => $id,
-                'name' => $name,
-            ];
-
-            // 3. UPDATE DATABASE SEGERA (Mode Edit)
-            if (!is_null($this->editId)) {
-                // Ganti 'ModelAnda' dengan model yang Anda edit (misal: Project, Event)
-                $item = ErmAssignment::find($this->editId);
-
-                if ($item) {
-                    // syncWithoutDetaching akan menambahkan ID baru ke relasi
-                    // tanpa menghapus ID yang sudah ada sebelumnya
-                    $item->user()->syncWithoutDetaching([$id]);
-                }
+        if (!is_null($this->editId)) {
+            // Ganti 'ModelAnda' dengan model yang Anda edit (misal: Project, Event)
+            $item = ErmAssignment::find($this->editId);
+            if ($item) {
+                $this->user_id = $item->user_id;
             }
+        } else {
+            if (!in_array($id, $this->moderator_ids)) {
+
+                // 2. Tambahkan ke array lokal untuk UI
+                $this->moderator_ids[] = (int) $id;
+                $this->selectedModerators[] = [
+                    'id' => $id,
+                    'name' => $name,
+                ];
+            }
+            // Reset input pencarian
+            $this->reset('searchModerator', 'users');
+            $this->showModeratorDropdown = false;
         }
-        // Reset input pencarian
-        $this->reset('searchModerator', 'users');
-        $this->showModeratorDropdown = false;
     }
     // 💡 BARU: Metode untuk menghapus moderator yang sudah dipilih
     public function removeModerator($id)
