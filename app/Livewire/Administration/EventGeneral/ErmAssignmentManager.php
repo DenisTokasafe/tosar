@@ -76,7 +76,7 @@ class ErmAssignmentManager extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             });
         }
-        $this->assignments = $query->get();
+        $this->assignments = $query->orderBy('department_id', 'ASC')->orderBy('contractor_id', 'ASC')->get();
     }
     public function updatedStatus($value)
     {
