@@ -283,8 +283,8 @@ class ErmAssignmentManager extends Component
         }
         // Reset properti
         $this->reset_data();
-
         $this->loadAssignments();
+        $this->dispatch('close-my-modal');
     }
     public function edit($id)
     {
