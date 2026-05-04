@@ -284,7 +284,7 @@
                                     <!-- Input Search -->
                                     <div class="relative">
                                         <input type="text" wire:model.live.debounce.300ms="searchContractor"
-                                            placeholder="Cari departemen..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
+                                            placeholder="Cari Kontractor..." {{-- 💡 Terapkan SEMUA class styling ke input --}}
                                             class="w-full pr-10 input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs" />
                                         {{-- Spinner diposisikan absolute di kanan input --}}
                                         <div wire:loading.remove.class='hidden' wire:target="searchContractor,selectContractor"
