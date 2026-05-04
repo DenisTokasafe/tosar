@@ -14,7 +14,7 @@ class ErmAssignmentManager extends Component
 {
     #[Validate('required_without:contractor_id')]
     public $department_id;
-    public $modal_id;
+    public $editId;
     #[Validate('required_without:department_id')]
     public $contractor_id;
     public $assignments, $search = '';
@@ -58,6 +58,16 @@ class ErmAssignmentManager extends Component
 
         // Kirim event ke frontend untuk membuka modal
         $this->dispatch('close-my-modal');
+    }
+
+    public function edit($id)
+    {
+        $item = ErmAssignment::findOrFail($id);
+        $this->editId = $id;
+        $this->department_id = $item->department_id;
+        $this->contractor_id = $item->contractor_id;
+        $this->status =  $this->department_id ? 'department'  : null;
+        $this->status =  $this->contractor_id ? 'company'  : null;
     }
 
     public function loadAssignments()
@@ -221,15 +231,22 @@ class ErmAssignmentManager extends Component
                     continue;
                 }
 
-                // 6. Buat entri baru
-                ErmAssignment::create([
-                    'user_id' => $userId,
-                    // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
-                    'department_id' => $this->status === 'department' ? $this->department_id : null,
-                    'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-                ]);
+                if ($this->editId) {
+                    # code...
+                } else {
+                    ErmAssignment::create([
+                        'user_id' => $userId,
+                        // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                        'department_id' => $this->status === 'department' ? $this->department_id : null,
+                        'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+                    ]);
 
-                $successfulAssignments++;
+                    $successfulAssignments++;
+                }
+
+
+                // 6. Buat entri baru
+
             }
 
             // 7. Commit Transaksi
@@ -244,27 +261,32 @@ class ErmAssignmentManager extends Component
         // 8. Pengiriman Notifikasi dan Reset State
 
         // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
-        if ($successfulAssignments > 0) {
-            $message = "Berhasil menetapkan **{$successfulAssignments}** moderator.";
-            $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
+        if ($this->editId) {
+            # code...
+        } else {
+            if ($successfulAssignments > 0) {
+                $message = "Berhasil menetapkan **{$successfulAssignments}** ERM.";
+                $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
 
-            if ($failedAssignments > 0) {
-                $message .= " **{$failedAssignments}** moderator dilewati (sudah terdaftar): " . implode(', ', $failedNames);
-                $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
+                if ($failedAssignments > 0) {
+                    $message .= " **{$failedAssignments}** ERM dilewati (sudah terdaftar): " . implode(', ', $failedNames);
+                    $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
+                }
+
+                $this->dispatch('alert', [
+                    'text' => $message,
+                    'duration' => 8000,
+                    'backgroundColor' => $backgroundColor,
+                    // ... properti dispatch lainnya
+                ]);
+            } elseif ($failedAssignments > 0) {
+                // Jika semua ID duplikat
+                session()->flash('error', 'Semua ERM yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
             }
-
-            $this->dispatch('alert', [
-                'text' => $message,
-                'duration' => 8000,
-                'backgroundColor' => $backgroundColor,
-                // ... properti dispatch lainnya
-            ]);
-        } elseif ($failedAssignments > 0) {
-            // Jika semua ID duplikat
-            session()->flash('error', 'Semua moderator yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
+            // Reset properti
+            $this->reset_data();
         }
-        // Reset properti
-        $this->reset_data();
+
         $this->loadAssignments();
     }
 
