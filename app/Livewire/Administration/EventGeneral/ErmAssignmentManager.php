@@ -66,8 +66,7 @@ class ErmAssignmentManager extends Component
         $this->editId = $id;
         $this->department_id = $item->department_id;
         $this->contractor_id = $item->contractor_id;
-        $this->status =  !empty($this->department_id) ? 'department'  : null;
-        $this->status =  !empty($this->contractor_id) ? 'company'  : null;
+        $this->status =  !empty($this->contractor_id) ? 'company'  : 'department';
         dd($this->status);
 
         $this->dispatch('open-update-modal');
