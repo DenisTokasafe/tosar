@@ -14,6 +14,7 @@ class ErmAssignmentManager extends Component
 {
     #[Validate('required_without:contractor_id')]
     public $department_id;
+    public $modal_id;
     #[Validate('required_without:department_id')]
     public $contractor_id;
     public $assignments, $search = '';
@@ -41,6 +42,7 @@ class ErmAssignmentManager extends Component
     {
         $this->loadAssignments();
     }
+
     public function loadAssignments()
     {
         $query  = ErmAssignment::with(['user', 'department', 'contractor']);
@@ -193,7 +195,7 @@ class ErmAssignmentManager extends Component
                     $failedAssignments++;
 
                     // Catat nama yang gagal
-                    $user = \App\Models\User::find($userId);
+                    $user = User::find($userId);
                     if ($user) {
                         $failedNames[] = $user->name;
                     }
@@ -244,22 +246,24 @@ class ErmAssignmentManager extends Component
             // Jika semua ID duplikat
             session()->flash('error', 'Semua moderator yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
         }
-
         // Reset properti
         $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id']);
         $this->loadAssignments();
     }
+
     public function delete($id)
     {
         ErmAssignment::findOrFail($id)->delete();
         $this->dispatch('alert', [
-                'text' => "Penugasan ERM berhasil dihapus.",
-                'duration' => 8000,
-                'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
-                // ... properti dispatch lainnya
-            ]);
+            'text' => "Penugasan ERM berhasil dihapus.",
+            'duration' => 8000,
+            'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+            // ... properti dispatch lainnya
+        ]);
         $this->loadAssignments();
     }
+
+
     public function render()
     {
         return view('livewire.administration.event-general.erm-assignment-manager', [

@@ -5,6 +5,7 @@ namespace App\Livewire\Incident;
 use \App\Traits\WithDeptContSelection;
 use App\Helpers\DateBeforeOrEqualToday;
 use App\Helpers\FileHelper;
+use App\Helpers\MailHelper;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
@@ -12,6 +13,7 @@ use App\Models\EventSubType;
 use App\Models\EventType;
 use App\Models\IncidentReport;
 use App\Models\Likelihood;
+use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessment;
 use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
@@ -1284,19 +1286,12 @@ class Create extends Component
 
                 // D. Simpan Personel Terlibat (Hanya Part 2)
                 $report->involvedPersons()->createMany($data['pihak_terlibat']);
-
                 // Part 3-9 dilewati karena diisi pada tahap Investigasi/Update
-
-
                 return $report;
             });
-
             // Hapus Session draft
             session()->forget('incident_create_data');
             $this->reset();
-
-
-
             // Feedback Berhasil
             $this->dispatch('alert', [
                 'text' => "Laporan " . $result->report_number . " berhasil dibuat!",
@@ -1304,12 +1299,66 @@ class Create extends Component
                 'destination' => '/incident/show/' . $result->id,
                 'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
             ]);
+            // [START] Logika Baru: Notifikasi ke Semua Moderator
+            // Dapatkan semua ID pengguna moderator yang relevan
+            // Dapatkan semua ID pengguna moderator yang relevan
+            $moderatorIds = ModeratorAssignment::where('event_type_id', $result->event_type_id)
+                ->where(function ($query) use ($result) {
+                    // Moderator ditugaskan untuk Event Type ini,
+                    // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
+                    // Kriteria 1: Penugasan bersifat umum (department_id dan contractor_id di assignment adalah NULL)
+                    $query->whereNull('department_id')
+                        ->whereNull('contractor_id');
+                    // Kriteria 2: Penugasan spesifik untuk Department
+                    if ($result->department_id) {
+                        $query->orWhere('department_id', $result->department_id);
+                    }
+                    // Kriteria 3: Penugasan spesifik untuk Contractor
+                    if ($result->contractor_id) {
+                        $query->orWhere('contractor_id', $result->contractor_id);
+                    }
+                })
+                ->distinct('user_id')
+                ->pluck('user_id');
+            $reporterName = 'Tidak Diketahui';
+            if ($result->pelapor_id) {
+                // Jika ada ID pelapor, ambil dari relasi User
+                // Asumsi relasi User di model Hazard bernama 'pelapor'.
+                // Menggunakan optional chaining (?->) untuk keamanan jika relasi belum dimuat.
+                $reporterName = $result->reporter?->name ?? 'User Terdaftar';
+            } else {
+                // Jika tidak ada ID pelapor, ambil dari input manual
+                $reporterName = $result->manualPelaporName ?? 'Anonim';
+            }
+            $locationName = 'N/A';
+            if ($result->department_id && $result->department) {
+                // Jika Department ada, gunakan namanya
+                $locationName = $result->department->department_name;
+            } elseif ($result->contractor_id && $result->contractor) {
+                // Jika Department NULL/kosong, dan Contractor ada, gunakan namanya
+                // Asumsi: Nama kolom di model Department adalah 'department_name'
+                // dan nama kolom di model Contractor adalah 'name' (sesuaikan jika berbeda)
+                $locationName = $result->contractor->contractor_name;
+            }
+            // Kirim email ke setiap moderator
+            foreach ($moderatorIds as $moderatorId) {
+                MailHelper::sendToUserId(
+                    $moderatorId,
+                    'Notifikasi Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'       => 'Laporan Insiden Baru',
+                        'title'         => 'Laporan Notifikasi Insiden',
+                        'messageText'   => "Telah dibuat laporan Insident baru.\nSilakan lakukan  pemeriksaan.",
+                        'additionalInfo' => "Nomor Laporan: $result->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $result->status",
+                        'actionUrl'     => route('incident-detail', $result->id)
+                    ]
+                );
+            }
+            // [END] Logika Baru: Notifikasi ke Semua Moderator
+
+
             return $this->redirect(route('incident-detail', $result->id), navigate: true);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatchValidationEvents($e->validator->errors());
-            $firstErrorField = collect($e->validator->errors()->keys())->first();
-            $this->goToStepByField($firstErrorField);
-            throw $e;
         } catch (\Exception $e) {
             Log::error('Gagal menyimpan Incident Report SENTRY: ' . $e->getMessage());
             $this->dispatch('alert', [
@@ -1323,12 +1372,10 @@ class Create extends Component
 
     protected function prepareArrayData()
     {
-
         // Logika Generate Report Number
         $lastReport = IncidentReport::latest()->first();
         $nextId = $lastReport ? $lastReport->id + 1 : 1;
         $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
-
         return [
             // PART 1: INFORMASI DASAR
             'header' => [
