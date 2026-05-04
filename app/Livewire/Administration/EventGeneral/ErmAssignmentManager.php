@@ -98,6 +98,7 @@ class ErmAssignmentManager extends Component
 
         // 4. Tutup Modal & Berikan Feedback
         $this->dispatch('close-update-modal');
+        $this->loadAssignments();
         $this->dispatch('alert', [
             'text' => "Data berhasil diupdate!",
             'duration' => 8000,
