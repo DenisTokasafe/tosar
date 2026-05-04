@@ -178,6 +178,4 @@
             </tbody>
         </table>
     </x-tabs-event.layout>
-
-
 </section>
