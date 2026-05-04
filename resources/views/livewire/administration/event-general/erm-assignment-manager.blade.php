@@ -182,7 +182,7 @@
             </tbody>
         </table>
 
-        <div x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update.window="my_modal_2.close()">
+        <div x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
             <dialog id="my_modal_2" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
                     <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
@@ -291,7 +291,7 @@
                     </div>
                     <div class="modal-action">
                         <div class="flex gap-2 mt-2">
-                            <flux:button size="xs" wire:click="close_modal" icon:trailing="close-icon" onclick="my_modal_1.close()" variant="danger">
+                            <flux:button size="xs" wire:click="close_modal_update" icon:trailing="close-icon" onclick="my_modal_2.close()" variant="danger">
                                 Batal
                             </flux:button>
                             <flux:button size="xs" wire:click="assign" icon:trailing="save-icon" variant="primary">

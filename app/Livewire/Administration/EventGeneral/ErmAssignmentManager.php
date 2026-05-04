@@ -77,6 +77,10 @@ class ErmAssignmentManager extends Component
         }
         $this->dispatch('open-update-modal');
     }
+    public function close_modal_update()
+    {
+        $this->dispatch('close-update-modal');
+    }
 
 
     public function loadAssignments()
