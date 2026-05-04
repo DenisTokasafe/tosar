@@ -48,7 +48,6 @@ class ErmAssignmentManager extends Component
     {
         // Lakukan proses logika di sini (misal: reset form, fetch data)
         $this->reset_data();
-
         // Kirim event ke frontend untuk membuka modal
         $this->dispatch('open-my-modal');
     }
@@ -56,11 +55,9 @@ class ErmAssignmentManager extends Component
     {
         // Lakukan proses logika di sini (misal: reset form, fetch data)
         $this->reset_data();
-
         // Kirim event ke frontend untuk membuka modal
         $this->dispatch('close-my-modal');
     }
-
     public function edit($id)
     {
         $item = ErmAssignment::whereId($id)->first();
@@ -85,17 +82,14 @@ class ErmAssignmentManager extends Component
             'department_id' => $this->status === 'department' ? 'required' : 'nullable',
             'contractor_id' => $this->status === 'company' ? 'required' : 'nullable',
         ]);
-
         // 2. Ambil data dengan findOrFail
         $assignment = ErmAssignment::findOrFail($this->editId);
-
         // 3. Update data
         $assignment->update([
             'user_id'       => $this->user_id,
             'department_id' => $this->status === 'department' ? $this->department_id : null,
             'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
         ]);
-
         // 4. Tutup Modal & Berikan Feedback
         $this->dispatch('close-update-modal');
         $this->loadAssignments();
@@ -109,8 +103,6 @@ class ErmAssignmentManager extends Component
     {
         $this->dispatch('close-update-modal');
     }
-
-
     public function loadAssignments()
     {
         $query  = ErmAssignment::with(['user', 'department', 'contractor']);
