@@ -132,12 +132,8 @@ class ErmAssignmentManager extends Component
         // 1. Pengecekan agar ID tidak ganda
 
         if (!is_null($this->editId)) {
-            // Ganti 'ModelAnda' dengan model yang Anda edit (misal: Project, Event)
-            $item = ErmAssignment::find($this->editId);
-            if ($item) {
-                $this->user_id = $item->user_id;
-            }
-            $this->searchModerator = User::whereId($this->user_id)->first()->name;
+
+            $this->searchModerator = $id;
             $this->showModeratorDropdown = false;
         } else {
             if (!in_array($id, $this->moderator_ids)) {
