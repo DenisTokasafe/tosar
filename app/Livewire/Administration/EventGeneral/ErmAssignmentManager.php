@@ -316,7 +316,6 @@ class ErmAssignmentManager extends Component
             'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
         ]);
         // 4. Tutup Modal & Berikan Feedback
-        $this->dispatch('close-update-modal');
         $this->loadAssignments();
         $this->dispatch('alert', [
             'text' => "Data berhasil diupdate!",
