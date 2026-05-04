@@ -143,15 +143,15 @@
 
                 </div>
             </div>
+            <div class="flex gap-2 mt-2">
+                <flux:button size="xs" wire:click='reset_data' icon:trailing="close-icon" onclick="my_modal_1.close()" variant="danger">
+                    Batal
+                </flux:button>
+                <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
+                    Tambah ERM
+                </flux:button>
+            </div>
         </dialog>
-        <div class="flex gap-2 mt-2">
-            <flux:button size="xs" wire:click='reset_data' icon:trailing="close-icon" onclick="my_modal_1.close()" variant="danger">
-                Batal
-            </flux:button>
-            <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
-                Tambah ERM
-            </flux:button>
-        </div>
 
         <hr class="my-4">
         <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
