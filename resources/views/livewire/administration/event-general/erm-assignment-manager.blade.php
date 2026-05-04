@@ -143,11 +143,7 @@
                 Tambah ERM
             </flux:button>
         </div>
-        <!-- <div class="mt-2">
-            <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
-                Tambah ERM
-            </flux:button>
-        </div> -->
+
         <hr class="my-4">
         <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
             class="w-1/2 px-3 py-1 mb-2 text-sm border rounded">
