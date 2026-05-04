@@ -345,8 +345,6 @@ class ErmAssignmentManager extends Component
 
     public function render()
     {
-        return view('livewire.administration.event-general.erm-assignment-manager', [
-            'contractors' => Contractor::all(),
-        ]);
+        return view('livewire.administration.event-general.erm-assignment-manager');
     }
 }
