@@ -133,8 +133,8 @@ class ErmAssignmentManager extends Component
 
         if (!is_null($this->editId)) {
 
-            $this->user_id = $name;
-            $this->searchModerator = $id;
+            $this->user_id = $id;
+            $this->searchModerator = $name;
             $this->showModeratorDropdown = false;
         } else {
             if (!in_array($id, $this->moderator_ids)) {
