@@ -175,7 +175,7 @@
     </x-tabs-event.layout>
 
 
-    <dialog id="my_modal_2" class="modal @if(!empty($editId)) modal-open @endif" wire:ignore.self>
+    <div class="modal @if(!empty($editId)) modal-open @endif">
         <div class="w-11/12 md:max-w-3xl modal-box">
             <h3 class="text-lg font-bold">Perbaharui User</h3>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
@@ -293,6 +293,6 @@
                 </div>
             </div>
         </div>
-    </dialog>
+    </div>
 
 </section>

@@ -18,7 +18,6 @@ class ErmAssignmentManager extends Component
     #[Validate('required_without:department_id')]
     public $contractor_id;
     public $assignments, $search = '';
-    public $status = 'department'; // default departemen
     public $users = [], $showMpderatorDropdown = false, $searchModerator = '';
     public $departments = [], $showDepartemenDropdown = false, $searchDepartemen = '';
     public $contractors = [], $showContractorDropdown = false, $searchContractor = '';
@@ -68,6 +67,7 @@ class ErmAssignmentManager extends Component
     }
     public function loadAssignments()
     {
+        $this->status = 'department';
         $query  = ErmAssignment::with(['user', 'department', 'contractor']);
         if ($this->search) {
             $query->whereHas('user', function ($q) {
