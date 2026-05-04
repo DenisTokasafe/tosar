@@ -46,6 +46,7 @@ class ErmAssignmentManager extends Component
 
     public function open_modal()
     {
+        $this->status = 'department';
         // Lakukan proses logika di sini (misal: reset form, fetch data)
         $this->reset_data();
         // Kirim event ke frontend untuk membuka modal
