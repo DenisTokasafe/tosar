@@ -133,6 +133,7 @@ class ErmAssignmentManager extends Component
 
         if (!is_null($this->editId)) {
 
+            $this->user_id = $name;
             $this->searchModerator = $id;
             $this->showModeratorDropdown = false;
         } else {
@@ -249,7 +250,12 @@ class ErmAssignmentManager extends Component
                 }
 
                 if ($this->editId) {
-                    # code...
+                    ErmAssignment::whereId($this->editId)->update([
+                        'user_id' => $userId,
+                        // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                        'department_id' => $this->status === 'department' ? $this->department_id : null,
+                        'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+                    ]);
                 } else {
                     ErmAssignment::create([
                         'user_id' => $userId,
