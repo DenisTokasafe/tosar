@@ -137,22 +137,18 @@
                     </fieldset>
                 </div>
                 <div class="modal-action">
-
-                    <!-- if there is a button, it will close the modal -->
-                    <button class="btn" onclick="my_modal_1.showModal()">Close</button>
-
+                    <div class="flex gap-2 mt-2">
+                        <flux:button size="xs" wire:click='reset_data' icon:trailing="close-icon" onclick="my_modal_1.close()" variant="danger">
+                            Batal
+                        </flux:button>
+                        <flux:button size="xs" wire:click="assign" icon:trailing="save-icon" variant="primary">
+                            Simpan
+                        </flux:button>
+                    </div>
                 </div>
             </div>
-            <div class="flex gap-2 mt-2">
-                <flux:button size="xs" wire:click='reset_data' icon:trailing="close-icon" onclick="my_modal_1.close()" variant="danger">
-                    Batal
-                </flux:button>
-                <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
-                    Tambah ERM
-                </flux:button>
-            </div>
         </dialog>
-
+        <button class="btn" size="xs" variant="primary" icon:trailing="add-icon" onclick="my_modal_1.showModal()"> Tambah ERM</button>
         <hr class="my-4">
         <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
             class="w-1/2 px-3 py-1 mb-2 text-sm border rounded">
