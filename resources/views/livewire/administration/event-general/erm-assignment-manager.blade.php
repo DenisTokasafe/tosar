@@ -10,6 +10,7 @@
         <div x-data x-on:open-my-modal.window="my_modal_1.showModal()" x-on:close-my-modal.window="my_modal_1.close()">
             <dialog id="my_modal_1" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
+                    <h3 class="text-lg font-bold">Tambah User</h3>
                     <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
                         <fieldset class="fieldset ">
                             <label class="block">Pilih ERM</label>
@@ -185,6 +186,7 @@
         <div x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
             <dialog id="my_modal_2" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
+                    <h3 class="text-lg font-bold">Perbaharui User</h3>
                     <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-3">
                         <fieldset class="fieldset ">
                             <label class="block">Pilih ERM</label>
