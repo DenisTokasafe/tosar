@@ -294,7 +294,7 @@
                             <flux:button size="xs" wire:click="close_modal_update" icon:trailing="close-icon" onclick="my_modal_2.close()" variant="danger">
                                 Batal
                             </flux:button>
-                            <flux:button size="xs" wire:click="assign" icon:trailing="save-icon" variant="primary">
+                            <flux:button size="xs" wire:click="update" icon:trailing="save-icon" variant="primary">
                                 Simpan
                             </flux:button>
                         </div>
