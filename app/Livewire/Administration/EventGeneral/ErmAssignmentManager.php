@@ -62,7 +62,7 @@ class ErmAssignmentManager extends Component
 
     public function edit($id)
     {
-        $item = ErmAssignment::findOrFail($id);
+        $item = ErmAssignment::whereId($id)->first();
         $this->editId = $id;
         $this->department_id = $item->department_id;
         $this->contractor_id = $item->contractor_id;
