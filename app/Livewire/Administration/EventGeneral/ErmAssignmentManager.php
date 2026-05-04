@@ -137,6 +137,7 @@ class ErmAssignmentManager extends Component
             if ($item) {
                 $this->user_id = $item->user_id;
             }
+            $this->showModeratorDropdown = false;
         } else {
             if (!in_array($id, $this->moderator_ids)) {
 
