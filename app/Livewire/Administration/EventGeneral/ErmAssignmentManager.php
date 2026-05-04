@@ -77,6 +77,25 @@ class ErmAssignmentManager extends Component
         }
         $this->dispatch('open-update-modal');
     }
+    public function update()
+    {
+        $this->validate(
+            ['user_id']
+        );
+        ErmAssignment::whereId($this->editId)->update([
+            'user_id' => $this->user_id,
+            // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+            'department_id' => $this->status === 'department' ? $this->department_id : null,
+            'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+        ]);
+        $this->dispatch('close-update-modal');
+        $this->dispatch('alert', [
+            'text' => "data berhasil di update",
+            'duration' => 8000,
+            'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
+            // ... properti dispatch lainnya
+        ]);
+    }
     public function close_modal_update()
     {
         $this->dispatch('close-update-modal');
@@ -249,23 +268,16 @@ class ErmAssignmentManager extends Component
                     continue;
                 }
 
-                if ($this->editId) {
-                    ErmAssignment::whereId($this->editId)->update([
-                        'user_id' => $userId,
-                        // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
-                        'department_id' => $this->status === 'department' ? $this->department_id : null,
-                        'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-                    ]);
-                } else {
-                    ErmAssignment::create([
-                        'user_id' => $userId,
-                        // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
-                        'department_id' => $this->status === 'department' ? $this->department_id : null,
-                        'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-                    ]);
 
-                    $successfulAssignments++;
-                }
+                ErmAssignment::create([
+                    'user_id' => $userId,
+                    // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+                    'department_id' => $this->status === 'department' ? $this->department_id : null,
+                    'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+                ]);
+
+                $successfulAssignments++;
+
 
 
                 // 6. Buat entri baru
@@ -284,44 +296,32 @@ class ErmAssignmentManager extends Component
         // 8. Pengiriman Notifikasi dan Reset State
 
         // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
-        if ($this->editId) {
-            ErmAssignment::update([
-                'user_id' => $this->user_id,
-                // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
-                'department_id' => $this->status === 'department' ? $this->department_id : null,
-                'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
-            ]);
-            $this->dispatch('alert', [
-                'text' => "data berhasil di update",
-                'duration' => 8000,
-                'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
-                // ... properti dispatch lainnya
-            ]);
-        } else {
-            if ($successfulAssignments > 0) {
-                $message = "Berhasil menetapkan **{$successfulAssignments}** ERM.";
-                $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
 
-                if ($failedAssignments > 0) {
-                    $message .= " **{$failedAssignments}** ERM dilewati (sudah terdaftar): " . implode(', ', $failedNames);
-                    $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
-                }
+        if ($successfulAssignments > 0) {
+            $message = "Berhasil menetapkan **{$successfulAssignments}** ERM.";
+            $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
 
-                $this->dispatch('alert', [
-                    'text' => $message,
-                    'duration' => 8000,
-                    'backgroundColor' => $backgroundColor,
-                ]);
-            } elseif ($failedAssignments > 0) {
-                // Jika semua ID duplikat
-                session()->flash('error', 'Semua ERM yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
+            if ($failedAssignments > 0) {
+                $message .= " **{$failedAssignments}** ERM dilewati (sudah terdaftar): " . implode(', ', $failedNames);
+                $backgroundColor = "linear-gradient(to right, #f59e0b, #ef4444)";
             }
-            // Reset properti
-            $this->reset_data();
+
+            $this->dispatch('alert', [
+                'text' => $message,
+                'duration' => 8000,
+                'backgroundColor' => $backgroundColor,
+            ]);
+        } elseif ($failedAssignments > 0) {
+            // Jika semua ID duplikat
+            session()->flash('error', 'Semua ERM yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
         }
+        // Reset properti
+        $this->reset_data();
 
         $this->loadAssignments();
     }
+
+
 
     public function delete($id)
     {
