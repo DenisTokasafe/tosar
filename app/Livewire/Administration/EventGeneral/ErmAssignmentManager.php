@@ -79,21 +79,29 @@ class ErmAssignmentManager extends Component
     }
     public function update()
     {
-        $this->validate(
-            ['user_id']
-        );
-        ErmAssignment::whereId($this->editId)->update([
-            'user_id' => $this->user_id,
-            // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
+        // 1. Perbaiki Validasi
+        $this->validate([
+            'user_id'       => 'required|exists:users,id', // 'exists' memastikan ID benar-benar ada di tabel users
+            'department_id' => $this->status === 'department' ? 'required' : 'nullable',
+            'contractor_id' => $this->status === 'company' ? 'required' : 'nullable',
+        ]);
+
+        // 2. Ambil data dengan findOrFail
+        $assignment = ErmAssignment::findOrFail($this->editId);
+
+        // 3. Update data
+        $assignment->update([
+            'user_id'       => $this->user_id,
             'department_id' => $this->status === 'department' ? $this->department_id : null,
             'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
         ]);
+
+        // 4. Tutup Modal & Berikan Feedback
         $this->dispatch('close-update-modal');
         $this->dispatch('alert', [
-            'text' => "data berhasil di update",
+            'text' => "Data berhasil diupdate!",
             'duration' => 8000,
             'backgroundColor' => "linear-gradient(to right, #f59e0b, #ef4444)",
-            // ... properti dispatch lainnya
         ]);
     }
     public function close_modal_update()
