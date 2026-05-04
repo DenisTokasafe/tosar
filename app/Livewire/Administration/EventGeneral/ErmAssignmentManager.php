@@ -64,6 +64,8 @@ class ErmAssignmentManager extends Component
     {
         $item = ErmAssignment::whereId($id)->first();
         $this->editId = $id;
+        $this->searchModerator = $item->user_id;
+        $this->searchModerator = $item->user->name;
         $this->department_id = $item->department_id;
         $this->contractor_id = $item->contractor_id;
         $this->status =  !empty($this->contractor_id) ? 'company'  : 'department';
@@ -72,6 +74,7 @@ class ErmAssignmentManager extends Component
         } else {
             $this->searchContractor = $item->contractor->contractor_name;
         }
+
 
 
         $this->dispatch('open-update-modal');
@@ -123,22 +126,32 @@ class ErmAssignmentManager extends Component
 
     public function selectModerator($id, $name)
     {
-        // Pengecekan agar ID tidak ganda
+        // 1. Pengecekan agar ID tidak ganda
         if (!in_array($id, $this->moderator_ids)) {
-            // 1. Tambahkan ID ke array
+
+            // 2. Tambahkan ke array lokal untuk UI
             $this->moderator_ids[] = (int) $id;
-            // 2. Tambahkan detail moderator ke array untuk ditampilkan di Blade
             $this->selectedModerators[] = [
                 'id' => $id,
                 'name' => $name,
             ];
+
+            // 3. UPDATE DATABASE SEGERA (Mode Edit)
+            if (!is_null($this->editId)) {
+                // Ganti 'ModelAnda' dengan model yang Anda edit (misal: Project, Event)
+                $item = ErmAssignment::find($this->editId);
+
+                if ($item) {
+                    // syncWithoutDetaching akan menambahkan ID baru ke relasi
+                    // tanpa menghapus ID yang sudah ada sebelumnya
+                    $item->user()->syncWithoutDetaching([$id]);
+                }
+            }
         }
-        // Reset input pencarian dan sembunyikan dropdown
-        // PERBAIKAN: Hapus reset contractor, fokus pada moderator
+
+        // Reset input pencarian
         $this->reset('searchModerator', 'users');
         $this->showModeratorDropdown = false;
-        // Hapus $this->user_id = $id; karena sudah diganti dengan array
-        // Hapus $this->validateOnly('user_id'); jika Anda sekarang memvalidasi 'moderator_ids'
     }
     // 💡 BARU: Metode untuk menghapus moderator yang sudah dipilih
     public function removeModerator($id)
