@@ -171,7 +171,7 @@
             </tbody>
         </table>
 
-        <div x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
+        <div class="@if (!$editId) hidden  @endif" x-data x-on:open-update-modal.window="my_modal_2.showModal()" x-on:close-update-modal.window="my_modal_2.close()">
             <dialog id="my_modal_2" class="modal" wire:ignore.self>
                 <div class="w-11/12 md:max-w-3xl modal-box">
                     <h3 class="text-lg font-bold">Perbaharui User</h3>
