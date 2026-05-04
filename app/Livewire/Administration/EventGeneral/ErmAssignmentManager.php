@@ -247,7 +247,7 @@ class ErmAssignmentManager extends Component
             session()->flash('error', 'Semua moderator yang dipilih sudah terdaftar untuk level dan tipe bahaya ini: ' . implode(', ', $failedNames));
         }
         // Reset properti
-        $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id']);
+        $this->reset_data();
         $this->loadAssignments();
     }
 
@@ -261,6 +261,10 @@ class ErmAssignmentManager extends Component
             // ... properti dispatch lainnya
         ]);
         $this->loadAssignments();
+    }
+    public function reset_data()
+    {
+        $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id']);
     }
 
 

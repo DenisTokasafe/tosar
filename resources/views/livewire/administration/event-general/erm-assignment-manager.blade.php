@@ -145,7 +145,7 @@
             </div>
         </dialog>
         <div class="flex gap-2 mt-2">
-            <flux:button size="xs" icon:trailing="close-icon" onclick="my_modal_1.close()" variant="error">
+            <flux:button size="xs" wire:click='reset_data' icon:trailing="close-icon" onclick="my_modal_1.close()" variant="error">
                 Batal
             </flux:button>
             <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
