@@ -148,7 +148,6 @@ class ErmAssignmentManager extends Component
                 }
             }
         }
-
         // Reset input pencarian
         $this->reset('searchModerator', 'users');
         $this->showModeratorDropdown = false;
