@@ -139,15 +139,15 @@
             </div>
         </dialog>
         <div class="mt-2">
-            <flux:button size="xs" wire:click="open_modal" icon:trailing="add-icon" onclick="my_modal_1.showModal()" variant="primary">
+            <flux:button size="xs" icon:trailing="add-icon" onclick="my_modal_1.showModal()" variant="primary">
                 Tambah ERM
             </flux:button>
         </div>
-        <div class="mt-2">
+        <!-- <div class="mt-2">
             <flux:button size="xs" wire:click="assign" icon:trailing="add-icon" variant="primary">
                 Tambah ERM
             </flux:button>
-        </div>
+        </div> -->
         <hr class="my-4">
         <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
             class="w-1/2 px-3 py-1 mb-2 text-sm border rounded">
