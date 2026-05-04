@@ -149,7 +149,7 @@
                 </div>
             </dialog>
         </div>
-        <button class="btn" size="xs" variant="primary" wire:click="open_modal" icon:trailing="add-icon" onclick=""> Tambah ERM</button>
+        <flux:button size="xs" variant="primary" wire:click="open_modal" icon:trailing="add-icon" onclick=""> Tambah ERM </flux:button>
         <hr class="my-4">
         <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
             class="w-1/2 px-3 py-1 mb-2 text-sm border rounded">
