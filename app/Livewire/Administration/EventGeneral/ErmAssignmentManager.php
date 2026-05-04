@@ -17,6 +17,7 @@ class ErmAssignmentManager extends Component
     public $editId;
     #[Validate('required_without:department_id')]
     public $contractor_id;
+    public $status_new = 'department';
     public $status;
     public $assignments, $search = '';
     public $users = [], $showMpderatorDropdown = false, $searchModerator = '';
@@ -201,8 +202,8 @@ class ErmAssignmentManager extends Component
         $failedNames = [];
 
         // Tentukan kolom dan nilai ID level yang sedang aktif
-        $levelColumn = $this->status === 'department' ? 'department_id' : 'contractor_id';
-        $levelValue = $this->status === 'department' ? $this->department_id : $this->contractor_id;
+        $levelColumn = $this->status_new === 'department' ? 'department_id' : 'contractor_id';
+        $levelValue = $this->status_new === 'department' ? $this->department_id : $this->contractor_id;
 
         // 2. Persiapan: Ambil ID user yang sudah terdaftar dengan KOMBINASI LENGKAP ini
         $existingAssignments = ErmAssignment::where($levelColumn, $levelValue)
@@ -237,8 +238,8 @@ class ErmAssignmentManager extends Component
                 ErmAssignment::create([
                     'user_id' => $userId,
                     // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
-                    'department_id' => $this->status === 'department' ? $this->department_id : null,
-                    'contractor_id' => $this->status === 'company' ? $this->contractor_id : null,
+                    'department_id' => $this->status_new === 'department' ? $this->department_id : null,
+                    'contractor_id' => $this->status_new === 'company' ? $this->contractor_id : null,
                 ]);
 
                 $successfulAssignments++;

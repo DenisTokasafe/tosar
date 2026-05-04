@@ -61,12 +61,12 @@
             </fieldset>
 
             <fieldset>
-                <input id="department" value="department" wire:model="status"
-                    class="peer/department radio radio-xs radio-accent" type="radio" name="status" checked />
+                <input id="department" value="department" wire:model="status_new"
+                    class="peer/department radio radio-xs radio-accent" type="radio" name="status_new" checked />
                 <label for="department" class="peer-checked/department:text-accent">Departemen</label>
 
-                <input id="company" value="company" wire:model="status"
-                    class="peer/company radio radio-xs radio-primary" type="radio" name="status" />
+                <input id="company" value="company" wire:model="status_new"
+                    class="peer/company radio radio-xs radio-primary" type="radio" name="status_new" />
                 <label for="company" class="peer-checked/company:text-primary">Kontraktor</label>
 
                 <div class="hidden peer-checked/department:block mt-0.5">
