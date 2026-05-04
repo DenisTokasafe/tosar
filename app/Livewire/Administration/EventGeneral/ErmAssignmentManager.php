@@ -43,6 +43,23 @@ class ErmAssignmentManager extends Component
         $this->loadAssignments();
     }
 
+    public function open_modal()
+    {
+        // Lakukan proses logika di sini (misal: reset form, fetch data)
+        $this->reset_data();
+
+        // Kirim event ke frontend untuk membuka modal
+        $this->dispatch('open-my-modal');
+    }
+    public function close_modal()
+    {
+        // Lakukan proses logika di sini (misal: reset form, fetch data)
+        $this->reset_data();
+
+        // Kirim event ke frontend untuk membuka modal
+        $this->dispatch('close-my-modal');
+    }
+
     public function loadAssignments()
     {
         $query  = ErmAssignment::with(['user', 'department', 'contractor']);
