@@ -80,13 +80,30 @@ class ErmAssignmentManager extends Component
     public function loadAssignments()
     {
         $this->status = 'department';
-        $query  = ErmAssignment::with(['user', 'department', 'contractor']);
-        if ($this->search) {
-            $query->whereHas('user', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })->where('department_id', $this->department_search)->where('contractor_id', $this->contractor_search);
-        }
-        $this->assignments = $query->orderBy('department_id', 'DESC')->orderBy('contractor_id', 'DESC')->get();
+
+        $query = ErmAssignment::with(['user', 'department', 'contractor']);
+
+        // Pencarian nama user (Opsional)
+        $query->when($this->search, function ($q) {
+            $q->whereHas('user', function ($subQ) {
+                $subQ->where('name', 'like', '%' . $this->search . '%');
+            });
+        });
+
+        // Filter Department (Opsional)
+        $query->when($this->department_search, function ($q) {
+            $q->where('department_id', $this->department_search);
+        });
+
+        // Filter Contractor (Opsional)
+        $query->when($this->contractor_search, function ($q) {
+            $q->where('contractor_id', $this->contractor_search);
+        });
+
+        // Eksekusi
+        $this->assignments = $query->orderBy('department_id', 'DESC')
+            ->orderBy('contractor_id', 'DESC')
+            ->get();
     }
     public function updatedStatus($value)
     {

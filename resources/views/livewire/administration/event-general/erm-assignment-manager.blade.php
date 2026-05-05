@@ -152,23 +152,23 @@
         </div>
         <flux:button size="xs" variant="primary" wire:click="open_modal" icon:trailing="add-icon" onclick=""> Tambah ERM </flux:button>
         <hr class="my-4">
-        <x-form.input-text label="Cari Nama ERM" model="search" placeholder="Cari nama ERM..." />
-        <x-form.select
-            label="department"
-            model="department_search"
-            :options="$department_all"
-            optionValue="id"
-            optionLabel="department_name"
-            placeholder="-- Pilih Penanggung Jawab --"
-            required="true" />
-        <x-form.select
-            label="Kontraktor"
-            model="contractor_search"
-            :options="$contractor_all"
-            optionValue="id"
-            optionLabel="contractor_name"
-            placeholder="-- Pilih Penanggung Jawab --"
-            required="true" />
+        <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+            <x-form.input-text label="Cari Nama ERM" model="search" placeholder="Cari nama ERM..." />
+            <x-form.select
+                label="department"
+                model="department_search"
+                :options="$department_all"
+                optionValue="id"
+                optionLabel="department_name"
+                placeholder="-- Pilih Penanggung Jawab --" />
+            <x-form.select
+                label="Kontraktor"
+                model="contractor_search"
+                :options="$contractor_all"
+                optionValue="id"
+                optionLabel="contractor_name"
+                placeholder="-- Pilih Penanggung Jawab --" />
+        </div>
         <table class="w-full text-sm border table-auto">
             <thead>
                 <tr class="bg-gray-100">
