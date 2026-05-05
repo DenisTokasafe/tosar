@@ -23,7 +23,7 @@ class Department extends Component
     public $dept_id, $search_department, $search_company, $search_company_id, $company_name;
     public function resetFilds()
     {
-        $this->reset('department_name', 'status');
+        $this->reset('department_name', 'status', 'dept_id');
     }
     public function open_modal(ModelDepartment $id)
     {
