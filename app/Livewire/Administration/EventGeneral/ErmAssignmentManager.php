@@ -46,6 +46,14 @@ class ErmAssignmentManager extends Component
     {
         $this->loadAssignments();
     }
+    public function updatedContractorSearch()
+    {
+        $this->loadAssignments();
+    }
+    public function updatedDepartmentSearch()
+    {
+        $this->loadAssignments();
+    }
 
     public function open_modal()
     {
