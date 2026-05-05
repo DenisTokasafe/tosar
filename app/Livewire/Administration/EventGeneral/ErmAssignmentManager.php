@@ -28,6 +28,7 @@ class ErmAssignmentManager extends Component
     #[Validate('required|array', message: 'Anda harus memilih minimal satu moderator.')]
     public $moderator_ids = [];
     public $user_id;
+    public $department_search, $contractor_search;
     // 💡 BARU: Array untuk menampung detail moderator yang dipilih (ID dan Nama)
     public $selectedModerators = [];
     protected $messages =
@@ -40,6 +41,7 @@ class ErmAssignmentManager extends Component
     {
         $this->loadAssignments();
     }
+
     public function updatedSearch()
     {
         $this->loadAssignments();
@@ -74,7 +76,7 @@ class ErmAssignmentManager extends Component
         if ($this->search) {
             $query->whereHas('user', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
-            });
+            })->where('department_id', $this->department_search)->where('contractor_id', $this->contractor_search);
         }
         $this->assignments = $query->orderBy('department_id', 'DESC')->orderBy('contractor_id', 'DESC')->get();
     }
@@ -196,7 +198,6 @@ class ErmAssignmentManager extends Component
     {
         // 1. Validasi Properti Dasar (required, array)
         $this->validate();
-
         $successfulAssignments = 0;
         $failedAssignments = 0;
         $failedNames = [];
@@ -229,12 +230,9 @@ class ErmAssignmentManager extends Component
                     if ($user) {
                         $failedNames[] = $user->name;
                     }
-
                     // Langsung lanjut ke ID berikutnya (mengabaikan ID yang duplikat)
                     continue;
                 }
-
-
                 ErmAssignment::create([
                     'user_id' => $userId,
                     // Pastikan hanya ID yang relevan yang diisi, yang lain null/default
@@ -243,11 +241,6 @@ class ErmAssignmentManager extends Component
                 ]);
 
                 $successfulAssignments++;
-
-
-
-                // 6. Buat entri baru
-
             }
 
             // 7. Commit Transaksi
@@ -258,11 +251,8 @@ class ErmAssignmentManager extends Component
             session()->flash('error', 'Terjadi kesalahan sistem saat menyimpan data.');
             return;
         }
-
         // 8. Pengiriman Notifikasi dan Reset State
-
         // Gabungkan pesan notifikasi untuk memberitahu user ID mana yang berhasil/gagal
-
         if ($successfulAssignments > 0) {
             $message = "Berhasil menetapkan **{$successfulAssignments}** ERM.";
             $backgroundColor = "linear-gradient(to right, #06b6d4, #22c55e)";
@@ -341,10 +331,11 @@ class ErmAssignmentManager extends Component
     {
         $this->reset(['moderator_ids', 'selectedModerators', 'searchModerator', 'department_id', 'contractor_id']);
     }
-
-
     public function render()
     {
-        return view('livewire.administration.event-general.erm-assignment-manager');
+        return view('livewire.administration.event-general.erm-assignment-manager', [
+            'department_all' => Department::all(),
+            'contractor_all' => Contractor::all()
+        ]);
     }
 }

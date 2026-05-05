@@ -152,8 +152,23 @@
         </div>
         <flux:button size="xs" variant="primary" wire:click="open_modal" icon:trailing="add-icon" onclick=""> Tambah ERM </flux:button>
         <hr class="my-4">
-        <input type="text" wire:model.live="search" placeholder="Cari nama ERM..."
-            class="w-1/2 px-3 py-1 mb-2 text-sm border rounded">
+        <x-form.input-text label="Cari Nama ERM" model="search" placeholder="Cari nama ERM..." />
+        <x-form.select
+            label="Department"
+            model="department_search"
+            :options="$department_all"
+            optionValue="id"
+            optionLabel="name"
+            placeholder="-- Pilih Penanggung Jawab --"
+            required="true" />
+        <x-form.select
+            label="Department"
+            model="contractor_search"
+            :options="$contractor_all"
+            optionValue="id"
+            optionLabel="name"
+            placeholder="-- Pilih Penanggung Jawab --"
+            required="true" />
         <table class="w-full text-sm border table-auto">
             <thead>
                 <tr class="bg-gray-100">
