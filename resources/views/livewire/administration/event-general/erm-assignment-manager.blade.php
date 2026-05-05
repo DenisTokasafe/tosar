@@ -154,19 +154,19 @@
         <hr class="my-4">
         <x-form.input-text label="Cari Nama ERM" model="search" placeholder="Cari nama ERM..." />
         <x-form.select
-            label="Department"
+            label="department"
             model="department_search"
             :options="$department_all"
             optionValue="id"
-            optionLabel="name"
+            optionLabel="department_name"
             placeholder="-- Pilih Penanggung Jawab --"
             required="true" />
         <x-form.select
-            label="Department"
+            label="Kontraktor"
             model="contractor_search"
             :options="$contractor_all"
             optionValue="id"
-            optionLabel="name"
+            optionLabel="contractor_name"
             placeholder="-- Pilih Penanggung Jawab --"
             required="true" />
         <table class="w-full text-sm border table-auto">
