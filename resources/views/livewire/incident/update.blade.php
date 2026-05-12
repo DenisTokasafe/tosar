@@ -189,212 +189,224 @@
                         @endif
 
                         {{-- TAB HEADER --}}
-                        <input
-                        type="radio"
-                        name="edit-tabs"
-                        class="tab text-[11px] font-bold uppercase"
-                        aria-label="Bagian {{ $i }}"
-                        wire:click="{{ $canEdit ? "goToStep($i)" : '' }}"
-                        value="{{ $i }}"
-                        {{ $currentStep == $i ? 'checked' : '' }}
-                        {{ !$canEdit ? 'disabled' : '' }} />
-
-                    {{-- TAB CONTENT --}}
-                    <div
-                        wire:key="step-edit-container-{{ $i }}"
-                        @class([ 'tab-content border border-base-300 bg-base-100 rounded-box p-4 transition-all duration-300 ease-in-out' , 'border-error shadow-md'=> $hasErrorInStep,
-                        'opacity-80 bg-base-200/30' => !$canEdit,
-                        ])
-                        >
-
-                        {{-- HEADER --}}
                         <div
-                            @class([ 'flex items-center justify-between mb-4 rounded-lg px-4 py-3 transition-colors duration-300' , 'bg-error text-error-content'=> $hasErrorInStep,
-                            'bg-gradient-to-r from-accent to-info text-white' => $currentStep == $i && !$hasErrorInStep,
-                            'bg-base-200 text-base-content' => $currentStep != $i && $canEdit,
-                            'bg-base-300 text-base-content/40' => !$canEdit,
-                            ])
-                            >
+                        class="tooltip tooltip-bottom"
+                        data-tip="{{ !$canEdit
+        ? 'Akses terbatas'
+        : ($hasErrorInStep
+            ? 'Bagian memiliki error'
+            : ($isStepCompleted
+                ? 'Bagian selesai'
+                : 'Data belum lengkap')) }}">
 
-                            <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
-
-                                <span>{{ __('BAGIAN') }} {{ $i }}</span>
-
-                                <span class="hidden md:inline">
-                                    – {{ __($stepTitle) }}
-                                </span>
-
-                                @if(!$canEdit)
-                                <x-icon name="lock-closed" class="w-3 h-3 opacity-60" />
-
-                                <span class="text-[9px] lowercase font-normal opacity-70">
-                                    (akses terbatas)
-                                </span>
-                                @endif
-
-                                @if($hasErrorInStep)
-
-                                <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse text-[9px]">
-                                    ⚠️ ERROR
-                                </span>
-
-                                @else
-
-                                <div
-                                    class="tooltip tooltip-right"
-                                    data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? __('Membutuhkan komentar OHS/KTT/Vendor') : __('Data belum lengkap')) }}">
-
-                                    <span
-                                        @class([ 'px-1 ml-2 text-white border-none badge badge-sm ring-1 shadow-sm' , 'badge-success ring-success/30'=> $isStepCompleted,
-                                        'badge-error opacity-40 ring-error/30 cursor-help' => !$isStepCompleted,
-                                        ])
-                                        >
-                                        {{ $isStepCompleted ? '✓' : '✕' }}
-                                    </span>
-
-                                </div>
-
-                                @endif
-
-                            </h3>
-                        </div>
-
-                        {{-- CONTENT --}}
-                        <div class="text-xs">
-
-                            @if($hasErrorInStep)
-                            <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
-                                <strong>{{ __('Perhatian:') }}</strong>
-                                {{ __('Beberapa kolom pada bagian ini memerlukan perbaikan sebelum laporan dapat diperbarui.') }}
-                            </div>
-                            @endif
-
-                            {{-- FORM --}}
-                            @include(
-                            'livewire.incident.step_edit.incident-step-' . $i,
-                            ['readonly' => !$canEdit]
-                            )
-
-                            {{-- NAVIGATION --}}
-                            <div class="flex justify-between pt-4 mt-4 border-t border-base-200">
-
-                                {{-- LEFT --}}
-                                <div>
-                                    @if($i > 1)
-                                    <button
-                                        type="button"
-                                        wire:click="goToStep({{ $i - 1 }})"
-                                        class="btn btn-ghost btn-xs">
-                                        {{ __('« Kembali') }}
-                                    </button>
-                                    @endif
-                                </div>
-
-                                {{-- RIGHT --}}
-                                <div class="flex gap-2">
-
-                                    {{-- NEXT --}}
-                                    @if ($i < 9)
-
-                                        <flux:button
-                                        type="button"
-                                        variant="info"
-                                        size="xs"
-                                        wire:click="nextStep"
-                                        :disabled="false"
-                                        wire:loading.attr="disabled"
-                                        loading.target="nextStep"
-                                        class="px-4 shadow-sm">
-
-                                        <span wire:loading.remove wire:target="nextStep">
-                                            {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
-                                        </span>
-
-                                        </flux:button>
-
-                                        @endif
-
-                                        <div class="flex flex-col items-end">
-
-                                            {{-- UPDATE --}}
-                                            @if($this->canUpdate)
-
-                                            <flux:button
-                                                type="button"
-                                                wire:click="update"
-                                                variant="primary"
-                                                size="xs"
-                                                :disabled="!$canEdit"
-                                                wire:loading.attr="disabled"
-                                                loading.target="update, visual_evidence, supporting_documents"
-                                                class="px-4 shadow-md">
-
-                                                <span
-                                                    wire:loading.remove
-                                                    wire:target="update, visual_evidence, supporting_documents">
-                                                    {{ __('Update Laporan') }}
-                                                </span>
-
-                                                <span
-                                                    wire:loading.remove.class="hidden"
-                                                    wire:target="update, visual_evidence, supporting_documents"
-                                                    class="flex items-center hidden gap-2">
-
-                                                    {{ __('Proses Update...') }}
-
-                                                    <span
-                                                        class="hidden loading loading-spinner loading-xs"></span>
-
-                                                </span>
-
-                                            </flux:button>
-
-                                            @else
-
-                                            {{-- LOCKED --}}
-                                            <button
-                                                disabled
-                                                class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
-
-                                                <div class="flex items-center gap-1">
-                                                    <x-icon name="lock-closed" class="w-3 h-3" />
-                                                    <span>{{ __('Update Terkunci') }}</span>
-                                                </div>
-
-                                            </button>
-
-                                            @endif
-
-                                            {{-- NOTES --}}
-                                            @if(
-                                            $i == 9 &&
-                                            in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) &&
-                                            empty($penerimaan_komentar_ktt_id)
-                                            )
-
-                                            <span class="mt-1 text-[9px] text-error italic animate-pulse">
-                                                * Otoritas KTT wajib untuk rating {{ $rating_name }}
-                                            </span>
-
-                                            @endif
-
-                                            @if(!$canEdit)
-
-                                            <span class="mt-1 text-[9px] text-warning italic">
-                                                Akses terbatas (HSE Policy)
-                                            </span>
-
-                                            @endif
-
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endfor
+                        <input
+                            type="radio"
+                            name="edit-tabs"
+                            class="tab text-[11px] font-bold uppercase"
+                            aria-label="Bagian {{ $i }}"
+                            wire:click="{{ $canEdit ? "goToStep($i)" : '' }}"
+                            value="{{ $i }}"
+                            {{ $currentStep == $i ? 'checked' : '' }}
+                            {{ !$canEdit ? 'disabled' : '' }} />
 
             </div>
+
+            {{-- TAB CONTENT --}}
+            <div
+                wire:key="step-edit-container-{{ $i }}"
+                @class([ 'tab-content border border-base-300 bg-base-100 rounded-box p-4 transition-all duration-300 ease-in-out' , 'border-error shadow-md'=> $hasErrorInStep,
+                'opacity-80 bg-base-200/30' => !$canEdit,
+                ])
+                >
+
+                {{-- HEADER --}}
+                <div
+                    @class([ 'flex items-center justify-between mb-4 rounded-lg px-4 py-3 transition-colors duration-300' , 'bg-error text-error-content'=> $hasErrorInStep,
+                    'bg-gradient-to-r from-accent to-info text-white' => $currentStep == $i && !$hasErrorInStep,
+                    'bg-base-200 text-base-content' => $currentStep != $i && $canEdit,
+                    'bg-base-300 text-base-content/40' => !$canEdit,
+                    ])
+                    >
+
+                    <h3 class="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
+
+                        <span>{{ __('BAGIAN') }} {{ $i }}</span>
+
+                        <span class="hidden md:inline">
+                            – {{ __($stepTitle) }}
+                        </span>
+
+                        @if(!$canEdit)
+                        <x-icon name="lock-closed" class="w-3 h-3 opacity-60" />
+
+                        <span class="text-[9px] lowercase font-normal opacity-70">
+                            (akses terbatas)
+                        </span>
+                        @endif
+
+                        @if($hasErrorInStep)
+
+                        <span class="ml-2 text-white border-none badge badge-sm badge-ghost bg-white/20 animate-pulse text-[9px]">
+                            ⚠️ ERROR
+                        </span>
+
+                        @else
+
+                        <div
+                            class="tooltip tooltip-right"
+                            data-tip="{{ $isStepCompleted ? 'Bagian Selesai' : ($i == 9 ? __('Membutuhkan komentar OHS/KTT/Vendor') : __('Data belum lengkap')) }}">
+
+                            <span
+                                @class([ 'px-1 ml-2 text-white border-none badge badge-sm ring-1 shadow-sm' , 'badge-success ring-success/30'=> $isStepCompleted,
+                                'badge-error opacity-40 ring-error/30 cursor-help' => !$isStepCompleted,
+                                ])
+                                >
+                                {{ $isStepCompleted ? '✓' : '✕' }}
+                            </span>
+
+                        </div>
+
+                        @endif
+
+                    </h3>
+                </div>
+
+                {{-- CONTENT --}}
+                <div class="text-xs">
+
+                    @if($hasErrorInStep)
+                    <div class="p-2 mb-4 text-xs border rounded-lg bg-error/10 text-error border-error/20">
+                        <strong>{{ __('Perhatian:') }}</strong>
+                        {{ __('Beberapa kolom pada bagian ini memerlukan perbaikan sebelum laporan dapat diperbarui.') }}
+                    </div>
+                    @endif
+
+                    {{-- FORM --}}
+                    @include(
+                    'livewire.incident.step_edit.incident-step-' . $i,
+                    ['readonly' => !$canEdit]
+                    )
+
+                    {{-- NAVIGATION --}}
+                    <div class="flex justify-between pt-4 mt-4 border-t border-base-200">
+
+                        {{-- LEFT --}}
+                        <div>
+                            @if($i > 1)
+                            <button
+                                type="button"
+                                wire:click="goToStep({{ $i - 1 }})"
+                                class="btn btn-ghost btn-xs">
+                                {{ __('« Kembali') }}
+                            </button>
+                            @endif
+                        </div>
+
+                        {{-- RIGHT --}}
+                        <div class="flex gap-2">
+
+                            {{-- NEXT --}}
+                            @if ($i < 9)
+
+                                <flux:button
+                                type="button"
+                                variant="info"
+                                size="xs"
+                                wire:click="nextStep"
+                                :disabled="false"
+                                wire:loading.attr="disabled"
+                                loading.target="nextStep"
+                                class="px-4 shadow-sm">
+
+                                <span wire:loading.remove wire:target="nextStep">
+                                    {{ $canEdit ? __('Simpan & Lanjut »') : __('Lihat Selanjutnya »') }}
+                                </span>
+
+                                </flux:button>
+
+                                @endif
+
+                                <div class="flex flex-col items-end">
+
+                                    {{-- UPDATE --}}
+                                    @if($this->canUpdate)
+
+                                    <flux:button
+                                        type="button"
+                                        wire:click="update"
+                                        variant="primary"
+                                        size="xs"
+                                        :disabled="!$canEdit"
+                                        wire:loading.attr="disabled"
+                                        loading.target="update, visual_evidence, supporting_documents"
+                                        class="px-4 shadow-md">
+
+                                        <span
+                                            wire:loading.remove
+                                            wire:target="update, visual_evidence, supporting_documents">
+                                            {{ __('Update Laporan') }}
+                                        </span>
+
+                                        <span
+                                            wire:loading.remove.class="hidden"
+                                            wire:target="update, visual_evidence, supporting_documents"
+                                            class="flex items-center hidden gap-2">
+
+                                            {{ __('Proses Update...') }}
+
+                                            <span
+                                                class="hidden loading loading-spinner loading-xs"></span>
+
+                                        </span>
+
+                                    </flux:button>
+
+                                    @else
+
+                                    {{-- LOCKED --}}
+                                    <button
+                                        disabled
+                                        class="px-4 opacity-50 btn btn-xs btn-disabled bg-base-300">
+
+                                        <div class="flex items-center gap-1">
+                                            <x-icon name="lock-closed" class="w-3 h-3" />
+                                            <span>{{ __('Update Terkunci') }}</span>
+                                        </div>
+
+                                    </button>
+
+                                    @endif
+
+                                    {{-- NOTES --}}
+                                    @if(
+                                    $i == 9 &&
+                                    in_array($rating_name, ['Sedang', 'Tinggi', 'Ekstrem']) &&
+                                    empty($penerimaan_komentar_ktt_id)
+                                    )
+
+                                    <span class="mt-1 text-[9px] text-error italic animate-pulse">
+                                        * Otoritas KTT wajib untuk rating {{ $rating_name }}
+                                    </span>
+
+                                    @endif
+
+                                    @if(!$canEdit)
+
+                                    <span class="mt-1 text-[9px] text-warning italic">
+                                        Akses terbatas (HSE Policy)
+                                    </span>
+
+                                    @endif
+
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @endfor
+
+        </div>
         </div>
 
         {{-- Modal Audit Trail --}}
