@@ -1284,8 +1284,7 @@ class Create extends Component
                     }
                     // Kosongkan array temporary paths setelah berhasil masuk ke DB
                     // agar tidak terproses ulang di klik simpan berikutnya
-                    $this->incident_photo_paths = [];
-                    $this->incident_photo = [];
+                    $this->reset(['incident_photo_paths', 'incident_photo']);
                 }
 
                 // B. Simpan Risk Assessment
