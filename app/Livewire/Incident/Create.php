@@ -1277,7 +1277,7 @@ class Create extends Component
                         // Ini mencegah duplikasi jika user menekan tombol simpan berkali-kali
                         $report->attachments()->firstOrCreate([
                             'file_path' => $vPath,
-                            'file_type' => 'visual',
+                            'file_type' => 'incident_photo',
                         ], [
                             'file_name' => basename($vPath),
                         ]);
