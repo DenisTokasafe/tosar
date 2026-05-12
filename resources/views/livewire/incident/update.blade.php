@@ -39,8 +39,8 @@
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">Waktu / Time</div>
                         <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['time'] }}</div>
 
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
-                        <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Lokasi</div>
+                        <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['location'] }}</div>
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
                         <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
                     </div>
