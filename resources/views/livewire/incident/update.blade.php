@@ -681,7 +681,15 @@
                 <div class="mt-2 border-t border-l border-black">
                     <div class="grid grid-cols-12">
                         <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black">Approved By</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approver_name'] }}</div>
+                        <div class="col-span-3 p-2 border-b border-r border-black">
+                            <select wire:model.live="name_ktt"
+                                class="select select-xs md:select-xs select-bordered w-full md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0 >
+                                <option value="">{{__('-- Pilih --')}}</option>
+                                @foreach ($Ktt as $name)
+                                <option value=" {{ $cons->name }}">{{ __($cons->name) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-span-3 p-2 font-bold border-b border-r border-black">KTT PT MSM</div>
                         <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approval_date'] }}</div>
                     </div>
