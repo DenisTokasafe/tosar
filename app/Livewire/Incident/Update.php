@@ -198,7 +198,6 @@ class Update extends Component
     public function rules()
     {
         $hasVisual = (count($this->existing_visual_evidence) > 0) || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
-        $hasIncidentPhoto = (count($this->existing_saved_photos) > 0) || (is_array($this->saved_photos) && count($this->saved_photos) > 0);
 
         // Cek apakah ada Supporting Documents (di DB OR sedang di-upload)
         $hasDocument = (count($this->existing_supporting_documents) > 0) || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
@@ -909,6 +908,7 @@ class Update extends Component
         $report = IncidentReport::with('attachments')->find($this->incidentId);
         $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->exists();
         $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->exists();
+        $this->existing_saved_photos = $report->attachments->where('file_type', 'incident_photo')->exists();
 
         $this->dispatch('alert', ['type' => 'success', 'text' => 'Dokumen berhasil dihapus.']);
     }
@@ -2773,6 +2773,7 @@ class Update extends Component
             $this->incident->refresh();
             $allFiles = $this->incident->attachments;
             $this->existing_visual_evidence = $allFiles->where('file_type', 'visual')->values()->all();
+            $this->existing_saved_photos = $allFiles->where('file_type', 'incident_photo')->values()->all();
             $this->existing_supporting_documents = $allFiles->where('file_type', 'document')->values()->all();
             $this->current_lock_version = $this->incident->lock_version;
 

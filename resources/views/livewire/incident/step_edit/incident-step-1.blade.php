@@ -234,14 +234,14 @@
         @endforeach
 
         {{-- DATA TEMPORARY (NEW UPLOAD) --}}
-        @if($visual_evidence)
-        @foreach($visual_evidence as $index => $image)
+        @if($incident_photo)
+        @foreach($incident_photo as $index => $image)
         <div class="avatar">
             <div class="relative w-40 rounded">
                 {{-- Untuk file baru yang belum di-save, tetap gunakan temporaryUrl() bawaan Livewire --}}
                 <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
                 @if($canEdit)
-                <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
+                <button type="button" wire:click="removeFile('incident_photo', {{ $index }})"
                     class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">✕</button>
                 @endif
             </div>
@@ -250,9 +250,6 @@
         @endif
     </div>
 
-    {{-- Error handling khusus untuk array --}}
-    @error('incident_photo.*') <span class="mt-2 text-xs text-error">{{ $message }}</span> @enderror
-    @error('saved_photos') <span class="mt-2 text-xs text-error">{{ $message }}</span> @enderror
 </div>
 <x-form.text_area label="Tindakan Darurat" :deskripsi="true" deskripsi_value="deskripsi_darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera...')}}" required :disabled="!$canEdit" />
 
