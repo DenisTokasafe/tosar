@@ -11,7 +11,10 @@
         <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
             <div class="h-full transition-all duration-700 ease-in-out bg-primary" style="width: {{ $this->getProgressPercentage() }}%"></div>
         </div>
-
+        <button class="btn btn-primary btn-xs" wire:click="showPreview({{ $incidentId }})" onclick="incident_modal.showModal()">
+            <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
+            Buka Incident Alert
+        </button>
 
         {{-- SUMMARY WIDGET SENTRY --}}
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -28,10 +31,7 @@
                         </div>
                         <div class="grow-0">
                             <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
-                            <button class="btn btn-primary btn-xs" wire:click="showPreview({{ $incidentId }})" onclick="incident_modal.showModal()">
-                                <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
-                                Buka Incident Alert
-                            </button>
+
                         </div>
                     </div>
                 </div>
