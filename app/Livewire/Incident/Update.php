@@ -1898,9 +1898,9 @@ class Update extends Component
 
             'step9' => $this->checkStep9Status(),
         ];
-        $users = User::whereHas('role', function ($query) {
-            $query->where('name', 'Kepala Teknik Tambang (KTT)'); // Ganti 'name' sesuai kolom nama role di tabelmu
-        })->with('role')->get();
+        $users = User::with('role')->whereHas('role', function ($query) {
+            $query->where('name', 'LIKE', 'Kepala Teknik Tambang (KTT)'); // Ganti 'name' sesuai kolom nama role di tabelmu
+        })->get();
         return view('livewire.incident.update', [
             'Department'   => Department::all(),
             'Ktt' => $users,
