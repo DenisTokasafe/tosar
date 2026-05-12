@@ -200,61 +200,54 @@
         :required="empty($this->saved_photos)"
         :disabled="!$canEdit" />
 
-    <div class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-3 lg:grid-cols-4">
-
-        {{-- 1. PREVIEW DARI DATABASE / STORAGE (Sudah Terkompresi) --}}
-        @foreach($existing_saved_photos as $index => $path)
+    <div class="grid grid-cols-3 gap-2 mt-3">
+        {{-- DATA DARI DATABASE (EXISTING) --}}
+        @foreach($existing_saved_photos as $media)
         <div class="avatar">
-            <div class="relative w-full h-32 border rounded-lg group bg-base-200 border-base-300">
+            <div class="relative w-40 border rounded bg-warning/10 border-warning">
                 @php
-                // Cek apakah ini path dari database atau temporary storage
-                // Jika menggunakan secure view route:
-                $imageUrl = route('document.secure-view', ['path' => Crypt::encryptString($path)]);
+                // Enkripsi path untuk masking URL gambar
+                $secureImgUrl = route('document.secure-view', ['path' => Crypt::encryptString($media->file_path)]);
                 @endphp
 
-                <img src="{{ $imageUrl }}" class="object-cover w-full h-full rounded-lg shadow-sm" />
+                {{-- Gunakan link terenkripsi untuk src gambar --}}
+                <img src="{{ $secureImgUrl }}" class="object-cover w-full h-full border rounded-lg opacity-70" />
 
-                {{-- Overlay Label --}}
-                <div class="absolute top-1 left-1">
-                    <span class="text-[10px] font-bold text-white bg-success/80 backdrop-blur-sm px-2 py-0.5 rounded shadow-sm">
-                        READY
+                <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20">
+                    <span class="text-[8px] font-bold text-white bg-success px-1 rounded">SAVED</span>
+                </div>
+                <div class="absolute inset-x-0 bottom-0 flex items-center justify-center rounded-lg bg-black/20">
+                    <span class="text-[8px] font-bold text-white bg-success px-1 rounded">
+                        <a href="{{ $secureImgUrl }}" target="_blank"
+                            class="text-[10px] font-bold text-blue-700 hover:underline truncate">
+                            {{ __('lihat') }}
+                        </a>
                     </span>
                 </div>
 
-                {{-- Link Lihat Full --}}
-                <div class="absolute inset-x-0 bottom-0 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100 bg-black/40 rounded-b-lg">
-                    <a href="{{ $imageUrl }}" target="_blank" class="py-1 text-xs font-medium text-white hover:text-primary-content">
-                        {{ __('Lihat Foto') }}
-                    </a>
-                </div>
-
                 @if($canEdit)
-                {{-- Tombol Hapus: Panggil fungsi khusus untuk hapus file di storage/saved_photos --}}
-                <button type="button"
-                    wire:click="removeSavedPhoto({{ $index }})"
-                    wire:confirm="Hapus foto ini?"
-                    class="absolute -top-2 -right-2 btn btn-circle btn-error btn-xs shadow-lg border-2 border-white">
-                    ✕
-                </button>
+                <button type="button" wire:click="deleteMedia({{ $media->id }})" wire:confirm="Hapus foto permanen?"
+                    class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-error btn-xs">✕</button>
                 @endif
             </div>
         </div>
         @endforeach
 
-        {{-- 2. PREVIEW TEMPORARY (Saat Proses Upload Sedang Berjalan) --}}
-        @if($incident_photo)
-        @foreach($incident_photo as $index => $file)
-        {{-- Hanya tampilkan preview jika file belum masuk ke saved_photos (biasanya saat loading) --}}
-        <div class="avatar opacity-60">
-            <div class="relative w-full h-32 border-2 border-dashed rounded-lg border-primary animate-pulse">
-                <div class="absolute inset-0 flex items-center justify-center bg-primary/5">
-                    <span class="loading loading-spinner loading-xs text-primary"></span>
-                </div>
+        {{-- DATA TEMPORARY (NEW UPLOAD) --}}
+        @if($visual_evidence)
+        @foreach($visual_evidence as $index => $image)
+        <div class="avatar">
+            <div class="relative w-40 rounded">
+                {{-- Untuk file baru yang belum di-save, tetap gunakan temporaryUrl() bawaan Livewire --}}
+                <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
+                @if($canEdit)
+                <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
+                    class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">✕</button>
+                @endif
             </div>
         </div>
         @endforeach
         @endif
-
     </div>
 
     {{-- Error handling khusus untuk array --}}
