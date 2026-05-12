@@ -47,7 +47,7 @@
 
                     <div class="bg-gray-50 border-r border-b border-black font-semibold">
                         @php
-                        $cleanDescription = strip_tags($report->description);
+                        $cleanDescription = strip_tags($previewData['description']);
                         $truncatedDescription = Str::limit($cleanDescription, 50, '...');
                         @endphp
                         {{ $truncatedDescription }}
