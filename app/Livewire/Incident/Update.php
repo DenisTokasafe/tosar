@@ -4,11 +4,13 @@ namespace App\Livewire\Incident;
 
 use App\Helpers\FileHelper;
 use App\Helpers\MailHelper;
+use App\Mail\IncidentAlertMail;
 use App\Models\BodyPart;
 use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\EventSubType;
 use App\Models\EventType;
+use App\Models\Hazard;
 use App\Models\IncidentAttachment;
 use App\Models\IncidentReport;
 use App\Models\Likelihood;
@@ -23,9 +25,11 @@ use App\Models\User;
 use App\Traits\WithDeptContSelection;
 use App\Traits\WithSearchLocation;
 use App\Traits\WithSearchPelapor;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -2750,5 +2754,41 @@ class Update extends Component
 
         // Pastikan pengecekan string sesuai dengan data di database Anda (misal: 'Lingkungan' atau 'Environment')
         return $selectedType && ($selectedType['event_type_name'] === 'Lingkungan' || $selectedType['event_type_name'] === 'Environment');
+    }
+
+    // app/Livewire/IncidentReport.php
+
+    public function sendAlert()
+    {
+        $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')->whereId($this->incidentId)->first();
+
+        $visualPhotos = $incident->attachments->where('file_type', 'visual')
+            ->take(2)
+            ->map(function ($doc) {
+                return [
+                    'full_path' => storage_path('app/public/' . $doc->file_path),
+                    'exists'    => file_exists(storage_path('app/public/' . $doc->file_path))
+                ];
+            });
+
+        $datetime = Carbon::parse($incident->date_time);
+        $data = [
+            'safety_no' => $incident->report_number,
+            'inx_no' => $incident->report_number,
+            'date'      => $datetime->format('d/m/Y'),
+            'time'      => $datetime->format('H:i'),
+            'location' => $incident->location->name,
+            'department' => $incident->department->department_name ?? $incident->contractor->contractor_name,
+            'description' => $incident->description,
+            'immediate_actions' => $incident->emergency_action,
+            'approver_name' => 'Nama Pejabat',
+            'approval_date' => now()->format('d/m/Y'),
+            'contact_person' => Auth::user()->mail,
+            'contact_date' => now()->format('d/m/Y'),
+            // Pastikan path foto adalah path absolut di server
+            'photos' => $visualPhotos,
+        ];
+
+        Mail::to('yoman.banea@archimining.com')->send(new IncidentAlertMail($data));
     }
 }
