@@ -332,6 +332,7 @@ class Create extends Component
                     'title',
                     'event_type_id',
                     'event_sub_type_id',
+                    'incident_photo',
                     'description',
                     'tasks',
                     'potential_lti',
