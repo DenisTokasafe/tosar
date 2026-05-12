@@ -701,6 +701,7 @@ class Update extends Component
 
             // --- ATTACHMENTS ---
             $this->existing_visual_evidence = $report->attachments->where('file_type', 'visual')->values()->all();
+            $this->existing_saved_photos = $report->attachments->where('file_type', 'incident_photo')->values()->all();
             $this->existing_supporting_documents = $report->attachments->where('file_type', 'document')->values()->all();
 
             // --- TINDAKAN PERBAIKAN ---

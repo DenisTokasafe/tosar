@@ -203,7 +203,7 @@
     <div class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-3 lg:grid-cols-4">
 
         {{-- 1. PREVIEW DARI DATABASE / STORAGE (Sudah Terkompresi) --}}
-        @foreach($saved_photos as $index => $path)
+        @foreach($existing_saved_photos as $index => $path)
         <div class="avatar">
             <div class="relative w-full h-32 border rounded-lg group bg-base-200 border-base-300">
                 @php
