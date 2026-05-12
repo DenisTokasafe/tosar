@@ -244,7 +244,7 @@
     <x-incident.layout>
 
         <div class="w-full overflow-x-auto">
-            <div class="tabs tabs-lift tabs-lg min-w-max">
+            <div class="tabs tabs-lift tabs-lg ">
 
                 @for ($i = 1; $i <= 9; $i++)
 
