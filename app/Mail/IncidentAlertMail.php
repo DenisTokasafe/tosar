@@ -37,7 +37,7 @@ class IncidentAlertMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.incident-aler',
+            markdown: 'emails.incident-alert',
         );
     }
 
