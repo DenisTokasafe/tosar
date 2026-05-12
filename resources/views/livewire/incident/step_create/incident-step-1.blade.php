@@ -219,17 +219,17 @@
 <x-form.text_area label="Tugas yang dilakukan" model="tasks" placeholder="{{ __('Contoh: Pembersihan tumpahan oli di area Workshop.') }}" required />
 <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" :deskripsi="true" deskripsi_value="deskripsi_insident" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat, Apa yang terjadi, Dimana, Kapan, Mengapa, dan Bagaimana urutannya.')}}" required />
 <div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
-    <x-form.upload label="Visual Evidence" model="visual_evidence" multiple keterangan="JPG, PNG (Max 2MB)" required />
+    <x-form.upload label="Visual Evidence" model="incident_photo" multiple keterangan="JPG, PNG (Max 2MB)" required />
     <div class="grid grid-cols-3 gap-2 mt-3">
         {{-- DATA TEMPORARY (NEW UPLOAD) --}}
-        @if($visual_evidence)
-        @foreach($visual_evidence as $index => $image)
+        @if($incident_photo)
+        @foreach($incident_photo as $index => $image)
         <div class="avatar">
             <div class="relative w-40 rounded">
                 {{-- Untuk file baru yang belum di-save, tetap gunakan temporaryUrl() bawaan Livewire --}}
                 <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
                 @if($canEdit)
-                <button type="button" wire:click="removeFile('visual_evidence', {{ $index }})"
+                <button type="button" wire:click="removeFile('incident_photo', {{ $index }})"
                     class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">✕</button>
                 @endif
             </div>

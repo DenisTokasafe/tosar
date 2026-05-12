@@ -48,7 +48,7 @@ class Create extends Component
     public $likelihoods = [], $consequences = [],
         $location_spesific,
         $documentation,
-        $visual_evidence_path,
+        $incident_photo_path,
         $supporting_documents_path;
     #[Url(as: 'step')]
 
@@ -84,7 +84,7 @@ class Create extends Component
     public $searchQuery = [];
     public $searchQueryFacilitator = [];
     public $showDropdownPartisipan = [];
-    public $visual_evidence_paths = []; // Ubah dari string ke array
+    public $incident_photo_paths = []; // Ubah dari string ke array
     public $supporting_documents_paths = []; // Ubah dari string ke array
     public $options = [];
 
@@ -124,7 +124,7 @@ class Create extends Component
     public $searchPetugas = [];         // Menampung input teks pencarian per index
     public $showDropdownPetugas = [];   // Menampung status open/close per index
     public $pelaporsAct = [];
-    public $visual_evidence = [];
+    public $incident_photo = [];
     public $supporting_documents = [];      // Hasil query pencarian (biasanya global atau di-filter)
     public $manualActPelaporMode = false; // Jika mode manual global atau per baris
 
@@ -271,9 +271,9 @@ class Create extends Component
 
         // Hapus objek yang tidak bisa diserialisasi (File Uploads)
         unset(
-            $data['visual_evidence'],
+            $data['incident_photo'],
             $data['supporting_documents'],
-            $data['visual_evidence_paths'],
+            $data['incident_photo_paths'],
             $data['supporting_documents_paths']
         );
 
@@ -295,10 +295,10 @@ class Create extends Component
             'supporting_documents.*.mimes' => __('Hanya file PDF dan Word yang diperbolehkan.'),
             'supporting_documents.*.max'   => __('Ukuran file dokumen tidak boleh lebih dari 5MB.'),
 
-            'visual_evidence.required' => __('Bukti visual wajib dilampirkan.'),
-            'visual_evidence.*.image'  => __('File harus berupa gambar (JPG, PNG, WebP).'),
-            'visual_evidence.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
-            'visual_evidence.*.max'    => __('Ukuran foto maksimal 2MB.'),
+            'incident_photo.required' => __('Bukti visual wajib dilampirkan.'),
+            'incident_photo.*.image'  => __('File harus berupa gambar (JPG, PNG, WebP).'),
+            'incident_photo.*.mimes'  => __('Format file tidak didukung. Gunakan JPG atau PNG.'),
+            'incident_photo.*.max'    => __('Ukuran foto maksimal 2MB.'),
 
             // --- PART 7: TINDAKAN PERBAIKAN ---
             'corrective_actions.*.action_description.required' => __('Rencana perbaikan wajib diisi.'),
@@ -543,35 +543,35 @@ class Create extends Component
     {
         try {
             // 1. Validasi setiap file di dalam array secara real-time
-            $this->validateOnly('visual_evidence.*', [
-                'visual_evidence.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            $this->validateOnly('incident_photo.*', [
+                'incident_photo.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             ], [
-                'visual_evidence.*.image' => 'File harus berupa gambar.',
-                'visual_evidence.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
-                'visual_evidence.*.max'   => 'Ukuran foto maksimal 2MB.',
+                'incident_photo.*.image' => 'File harus berupa gambar.',
+                'incident_photo.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
+                'incident_photo.*.max'   => 'Ukuran foto maksimal 2MB.',
             ]);
 
             // 2. Jika validasi lolos, bersihkan file lama dari storage (jika ada)
-            if (!empty($this->visual_evidence_paths)) {
-                foreach ($this->visual_evidence_paths as $oldPath) {
+            if (!empty($this->incident_photo_paths)) {
+                foreach ($this->incident_photo_paths as $oldPath) {
                     FileHelper::deleteFile($oldPath);
                 }
             }
 
             // 3. Reset array path untuk data baru
-            $this->visual_evidence_paths = [];
+            $this->incident_photo_paths = [];
 
             // 4. Looping dan simpan (Compress) hanya jika file valid
-            foreach ($this->visual_evidence as $file) {
-                $this->visual_evidence_paths[] = FileHelper::compressAndStore(
+            foreach ($this->incident_photo as $file) {
+                $this->incident_photo_paths[] = FileHelper::compressAndStore(
                     $file,
-                    'incident/visual_evidence/documentation'
+                    'incident/incident_photo/documentation'
                 );
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 5. AUTO-CLEAR: Jika ada file yang salah format (seperti PDF),
             // kita reset array-nya agar preview file yang salah hilang dari UI.
-            $this->visual_evidence = [];
+            $this->incident_photo = [];
 
             // Lempar kembali error agar muncul di komponen x-form.upload
             throw $e;
