@@ -690,11 +690,10 @@
 
             <div class="p-4 modal-action bg-gray-50">
                 <form method="dialog">
-                    <button class="btn btn-ghost">Tutup</button>
-                    <button class="text-white btn btn-error" wire:click="sendAlert">
-                        <span wire:loading wire:target="sendAlert" class="loading loading-spinner"></span>
+                    <flux:button size="xs" variant="error">Tutup</flux:button>
+                    <flux:button size="xs" variant="success" wire:click="sendAlert">
                         Kirim Email
-                    </button>
+                    </flux:button>
                 </form>
             </div>
             @endif
