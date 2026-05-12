@@ -16,7 +16,7 @@
             Buka Incident Alert
         </button>
 
-        <dialog id="incident_modal" class="modal">
+        <dialog id="incident_modal" class="modal" wire:ignore.self>
             <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden border border-gray-300">
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white z-10">✕</button>
