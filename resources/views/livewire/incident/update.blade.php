@@ -677,7 +677,6 @@
                         <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 1</div>
                         <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 2</div>
                 </div>
-
                 <div class="mt-2 border-t border-l border-black">
                     <div class="grid grid-cols-12">
                         <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black">Approved By</div>
