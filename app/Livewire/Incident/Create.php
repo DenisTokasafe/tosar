@@ -1272,22 +1272,15 @@ class Create extends Component
 
 
                 // 2. Baru proses file foto jika ada
-                if ($this->incident_photo) {
-                    foreach ($this->incident_photo as $file) {
-                        // Proses kompresi dan simpan ke storage permanen
-                        $path = FileHelper::compressAndStore(
-                            $file,
-                            'incident/incident_photo/documentation'
-                        );
-
-                        // Simpan path hasil kompresi ke database
-                        $report->attachments()->create([
-                            'file_path' => $path,
-                            'file_type' => 'incident_photo',
-                            'file_name' => basename($path),
-                        ]);
-                    }
+                foreach ($this->saved_photos as $vPath) {
+                    $report->attachments()->create([
+                        'file_path' => $vPath,
+                        'file_type' => 'incident_photo',
+                        'file_name' => basename($vPath),
+                    ]);
                 }
+
+                $this->reset(['saved_photos']);
                 $this->reset(['incident_photo']);
                 // B. Simpan Risk Assessment
                 $report->risk()->create($data['risk_assessment']);
