@@ -2657,6 +2657,22 @@ class Update extends Component
                     $this->visual_evidence_paths = [];
                     $this->visual_evidence = [];
                 }
+                if (!empty($this->saved_photos)) {
+                    foreach ($this->saved_photos as $vPath) {
+                        // Cek apakah path ini sudah ada di database untuk incident ini
+                        // Ini mencegah duplikasi jika user menekan tombol simpan berkali-kali
+                        $report->attachments()->firstOrCreate([
+                            'file_path' => $vPath,
+                            'file_type' => 'incident_photo',
+                        ], [
+                            'file_name' => basename($vPath),
+                        ]);
+                    }
+                    // Kosongkan array temporary paths setelah berhasil masuk ke DB
+                    // agar tidak terproses ulang di klik simpan berikutnya
+                    $this->saved_photos = [];
+                    $this->incident_photo = [];
+                }
 
                 // Simpan Supporting Documents Baru
                 if (!empty($this->supporting_documents_paths)) {
