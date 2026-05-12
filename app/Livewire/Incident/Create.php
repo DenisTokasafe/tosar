@@ -403,11 +403,15 @@ class Create extends Component
     }
 
 
-    public function removeFile($property, $index)
+    public function removeFile($index)
     {
-        if (isset($this->{$property}[$index])) {
-            unset($this->{$property}[$index]);
-            $this->{$property} = array_values($this->{$property}); // Reset index array
+        // Hapus file fisik jika perlu
+        if (isset($this->saved_photos[$index])) {
+            FileHelper::deleteFile($this->saved_photos[$index]);
+            unset($this->saved_photos[$index]);
+
+            // Re-index array agar tidak berantakan
+            $this->saved_photos = array_values($this->saved_photos);
         }
     }
     public function selectInvolvedPersonnel($id, $name, $index)
@@ -540,10 +544,11 @@ class Create extends Component
             $this->search = '';
         }
     }
+    public $saved_photos = [];
     public function updatedIncidentPhoto()
     {
         try {
-            // 1. Validasi real-time (Hanya mengecek, tidak memindahkan file)
+            // 1. Validasi file yang baru masuk
             $this->validateOnly('incident_photo.*', [
                 'incident_photo.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             ], [
@@ -551,9 +556,22 @@ class Create extends Component
                 'incident_photo.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
                 'incident_photo.*.max'   => 'Ukuran foto maksimal 2MB.',
             ]);
+
+            // 2. Jika valid, langsung proses & pindahkan ke storage permanen/semi-permanen
+            foreach ($this->incident_photo as $file) {
+                $path = FileHelper::compressAndStore(
+                    $file,
+                    'incident/incident_photo/documentation'
+                );
+
+                // Simpan path-nya saja (String), bukan objek filenya
+                $this->saved_photos[] = $path;
+            }
+
+            // 3. PENTING: Kosongkan incident_photo agar objek TemporaryUploadedFile hilang
+            // Ini yang mencegah error "Serialization of ... not allowed"
+            $this->incident_photo = [];
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Jika ada satu file yang salah (misal: upload PDF),
-            // hapus semua input foto agar user mengulang dari awal
             $this->incident_photo = [];
             throw $e;
         }

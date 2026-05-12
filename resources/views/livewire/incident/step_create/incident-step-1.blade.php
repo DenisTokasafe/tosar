@@ -222,20 +222,22 @@
     <x-form.upload label="Visual Evidence" model="incident_photo" multiple keterangan="JPG, PNG (Max 2MB)" required />
     <div class="grid grid-cols-3 gap-2 mt-3">
         {{-- DATA TEMPORARY (NEW UPLOAD) --}}
-        @if($incident_photo)
-        @foreach($incident_photo as $index => $image)
+
+        @foreach($saved_photos as $index => $path)
         <div class="avatar">
             <div class="relative w-40 rounded">
-                {{-- Untuk file baru yang belum di-save, tetap gunakan temporaryUrl() bawaan Livewire --}}
-                <img src="{{ $image->temporaryUrl() }}" class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
+                {{-- Gunakan Storage::url karena file sudah tersimpan fisik --}}
+                <img src="{{ \Storage::url($path) }}"
+                    class="object-cover w-full h-full border-2 rounded-lg shadow-md border-primary" />
 
-                <button type="button" wire:click="removeFile('incident_photo', {{ $index }})"
-                    class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">✕</button>
-
+                <button type="button" wire:click="removeFile({{ $index }})"
+                    class="absolute scale-75 -top-1 -right-1 btn btn-circle btn-primary btn-xs">
+                    ✕
+                </button>
             </div>
         </div>
         @endforeach
-        @endif
+
     </div>
 </div>
 
