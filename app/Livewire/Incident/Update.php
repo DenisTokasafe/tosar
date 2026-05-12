@@ -130,6 +130,7 @@ class Update extends Component
     ];
     public $activeTypePenerimaan = '';
     public $existing_visual_evidence = [];
+    public $existing_saved_photos = [];
     public $existing_supporting_documents = [];
 
     public $unsafe_conditions = [];
@@ -139,7 +140,10 @@ class Update extends Component
     public $control_system_factors = [];
     // Di bagian atas Class
     public $visual_evidence = [];
+    public $saved_photos = [];
+    public $incident_photo = [];
     public $supporting_documents = [];
+    public $saved_photos_paths = []; // Ubah dari string ke array
     public $visual_evidence_paths = []; // Ubah dari string ke array
     public $supporting_documents_paths = [];
     public $corrective_actions = [];
@@ -194,6 +198,7 @@ class Update extends Component
     public function rules()
     {
         $hasVisual = (count($this->existing_visual_evidence) > 0) || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
+        $hasIncidentPhoto = (count($this->existing_saved_photos) > 0) || (is_array($this->saved_photos) && count($this->saved_photos) > 0);
 
         // Cek apakah ada Supporting Documents (di DB OR sedang di-upload)
         $hasDocument = (count($this->existing_supporting_documents) > 0) || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
@@ -559,7 +564,10 @@ class Update extends Component
             $this->description = $report->description;
             $this->emergency_action = $report->emergency_action;
             $this->penanggungJawab = $report->penanggungJawab;
-
+            $this->saved_photos = $report->attachments
+                ->where('file_type', 'saved_photos')
+                ->pluck('file_path')
+                ->toArray();
             // --- LOKASI ---
             if ($report->location_id) {
                 $this->location_id = $report->location_id;
@@ -908,6 +916,56 @@ class Update extends Component
         if (isset($this->{$property}[$index])) {
             unset($this->{$property}[$index]);
             $this->{$property} = array_values($this->{$property}); // Reset index array
+        }
+    }
+    public function updatedIncidentPhoto()
+    {
+        try {
+            // 1. Validasi setiap file di dalam array secara real-time
+            $this->validateOnly('incident_photo.*', [
+                'incident_photo.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            ], [
+                'incident_photo.*.image' => 'File harus berupa gambar.',
+                'incident_photo.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
+                'incident_photo.*.max'   => 'Ukuran foto maksimal 2MB.',
+            ]);
+
+            /**
+             * 2. Logika Pembersihan (Cleanup)
+             * Jika Anda ingin setiap kali upload baru menghapus foto lama (Single-batch upload),
+             * gunakan loop di bawah. Tapi jika sistemnya "tambah foto", bagian ini dilewati.
+             */
+            if (!empty($this->saved_photos)) {
+                foreach ($this->saved_photos as $oldPath) {
+                    // Pastikan hanya menghapus file temporary jika diperlukan,
+                    // atau hapus file lama jika user mengganti seluruh batch foto.
+                    FileHelper::deleteFile($oldPath);
+                }
+            }
+
+            // 3. Reset array path untuk menampung hasil kompresi yang baru
+            $this->saved_photos = [];
+
+            // 4. Looping, Compress, dan Store
+            foreach ($this->incident_photo as $file) {
+                $this->saved_photos[] = FileHelper::compressAndStore(
+                    $file,
+                    'incident/incident_photos/evidence'
+                );
+            }
+
+            // Opsional: Clear temporary upload object setelah diproses ke saved_photos
+            // agar tidak membebani memori browser/server
+            // $this->incident_photo = [];
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 5. AUTO-CLEAR jika validasi gagal
+            $this->incident_photo = [];
+
+            // Tetap biarkan saved_photos yang lama jika ingin foto sebelumnya tidak hilang,
+            // atau kosongkan jika ingin reset total.
+
+            throw $e;
         }
     }
     public function updatedVisualEvidence()
@@ -2086,7 +2144,7 @@ class Update extends Component
     {
         // 1. Ambil semua rules utama dari method rules() sebagai referensi
         $allRules = $this->rules();
-
+        $hasIncidentPhotos = count($this->saved_photos) > 0;
         // 2. Definisikan Base Rules kondisional (untuk digunakan di array_merge)
         $isInjuryRules = $this->isInjury
             ? [
@@ -2114,6 +2172,8 @@ class Update extends Component
         $hasVisual = (is_array($this->existing_visual_evidence) && count($this->existing_visual_evidence) > 0)
             || (is_array($this->visual_evidence) && count($this->visual_evidence) > 0);
 
+
+
         // 2. Cek ketersediaan Dokumen (di DB atau di Input)
         $hasDocument = (is_array($this->existing_supporting_documents) && count($this->existing_supporting_documents) > 0)
             || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
@@ -2140,6 +2200,9 @@ class Update extends Component
                 'consequence_id'     => $allRules['consequence_id'],
                 'emergency_action'   => $allRules['emergency_action'],
                 'penanggungJawab'    => $allRules['penanggungJawab'],
+                'saved_photos'       => $hasIncidentPhotos ? 'nullable|array' : 'required|array|min:1',
+                // Aturan untuk file upload (nullable karena begitu masuk langsung dipindah ke saved_photos)
+                'incident_photo.*'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             ], $isInjuryRules),
 
             2 => [
@@ -2407,7 +2470,10 @@ class Update extends Component
                         'selectedBodyPartCategory',
                         'selectedBodyParts',
                         'selectedBodyParts.*', // Tambahkan ini juga di list field step 1
-                        'damage_detail'
+                        'damage_detail',
+                        'incident_photo',
+                        'incident_photo.*',
+                        'saved_photos'
                     ];
                     if (in_array($field, $step1Fields)) return true;
                     break;

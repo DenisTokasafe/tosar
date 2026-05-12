@@ -190,6 +190,77 @@
 </fieldset>
 <x-form.text_area label="Tugas yang dilakukan" model="tasks" placeholder="{{ __('Contoh: Pembersihan tumpahan oli di area Workshop.') }}" required />
 <x-form.text_area label="Narasi detail mengenai urutan kejadian (5W+1H)" :deskripsi="true" deskripsi_value="deskripsi_insident" model="description" placeholder="{{ __('Contoh: Siapa yang terlibat...')}}" required :disabled="!$canEdit" />
+{{-- FOTO DOKUMENTASI KEJADIAN (STEP 1) --}}
+<div class="p-4 border shadow-sm rounded-xl bg-base-100 border-base-300">
+    <x-form.upload
+        label="Foto Dokumentasi Kejadian"
+        model="incident_photo"
+        multiple
+        keterangan="JPG, PNG, WebP (Max 2MB)"
+        :required="empty($this->saved_photos)"
+        :disabled="!$canEdit" />
+
+    <div class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-3 lg:grid-cols-4">
+
+        {{-- 1. PREVIEW DARI DATABASE / STORAGE (Sudah Terkompresi) --}}
+        @foreach($saved_photos as $index => $path)
+        <div class="avatar">
+            <div class="relative w-full h-32 border rounded-lg group bg-base-200 border-base-300">
+                @php
+                // Cek apakah ini path dari database atau temporary storage
+                // Jika menggunakan secure view route:
+                $imageUrl = route('document.secure-view', ['path' => Crypt::encryptString($path)]);
+                @endphp
+
+                <img src="{{ $imageUrl }}" class="object-cover w-full h-full rounded-lg shadow-sm" />
+
+                {{-- Overlay Label --}}
+                <div class="absolute top-1 left-1">
+                    <span class="text-[10px] font-bold text-white bg-success/80 backdrop-blur-sm px-2 py-0.5 rounded shadow-sm">
+                        READY
+                    </span>
+                </div>
+
+                {{-- Link Lihat Full --}}
+                <div class="absolute inset-x-0 bottom-0 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100 bg-black/40 rounded-b-lg">
+                    <a href="{{ $imageUrl }}" target="_blank" class="py-1 text-xs font-medium text-white hover:text-primary-content">
+                        {{ __('Lihat Foto') }}
+                    </a>
+                </div>
+
+                @if($canEdit)
+                {{-- Tombol Hapus: Panggil fungsi khusus untuk hapus file di storage/saved_photos --}}
+                <button type="button"
+                    wire:click="removeSavedPhoto({{ $index }})"
+                    wire:confirm="Hapus foto ini?"
+                    class="absolute -top-2 -right-2 btn btn-circle btn-error btn-xs shadow-lg border-2 border-white">
+                    ✕
+                </button>
+                @endif
+            </div>
+        </div>
+        @endforeach
+
+        {{-- 2. PREVIEW TEMPORARY (Saat Proses Upload Sedang Berjalan) --}}
+        @if($incident_photo)
+        @foreach($incident_photo as $index => $file)
+        {{-- Hanya tampilkan preview jika file belum masuk ke saved_photos (biasanya saat loading) --}}
+        <div class="avatar opacity-60">
+            <div class="relative w-full h-32 border-2 border-dashed rounded-lg border-primary animate-pulse">
+                <div class="absolute inset-0 flex items-center justify-center bg-primary/5">
+                    <span class="loading loading-spinner loading-xs text-primary"></span>
+                </div>
+            </div>
+        </div>
+        @endforeach
+        @endif
+
+    </div>
+
+    {{-- Error handling khusus untuk array --}}
+    @error('incident_photo.*') <span class="mt-2 text-xs text-error">{{ $message }}</span> @enderror
+    @error('saved_photos') <span class="mt-2 text-xs text-error">{{ $message }}</span> @enderror
+</div>
 <x-form.text_area label="Tindakan Darurat" :deskripsi="true" deskripsi_value="deskripsi_darurat" model="emergency_action" placeholder="{{ __('Jelaskan tindakan segera...')}}" required :disabled="!$canEdit" />
 
 @if($this->isInjury)
