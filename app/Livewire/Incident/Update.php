@@ -2791,4 +2791,42 @@ class Update extends Component
 
         Mail::to('yoman.banea@archimining.com')->send(new IncidentAlertMail($data));
     }
+    public $previewData = [];
+    public function showPreview($id)
+    {
+        $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')->find($id);
+
+        $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')->whereId($this->incidentId)->first();
+
+        $visualPhotos = $incident->attachments->where('file_type', 'visual')
+            ->take(2)
+            ->map(function ($doc) {
+                return [
+                    'full_path' => storage_path('app/public/' . $doc->file_path),
+                    'exists'    => file_exists(storage_path('app/public/' . $doc->file_path))
+                ];
+            });
+
+        $datetime = Carbon::parse($incident->date_time);
+        $data = [
+            'safety_no' => $incident->report_number,
+            'inx_no' => $incident->report_number,
+            'date'      => $datetime->format('d/m/Y'),
+            'time'      => $datetime->format('H:i'),
+            'location' => $incident->location->name,
+            'department' => $incident->department->department_name ?? $incident->contractor->contractor_name,
+            'description' => $incident->description,
+            'immediate_actions' => $incident->emergency_action,
+            'approver_name' => 'Nama Pejabat',
+            'approval_date' => now()->format('d/m/Y'),
+            'contact_person' => Auth::user()->mail,
+            'contact_date' => now()->format('d/m/Y'),
+            // Pastikan path foto adalah path absolut di server
+            'photos' => $visualPhotos,
+        ];
+
+
+        $this->previewData = $data; // Simpan ke public property
+        $this->dispatch('open-modal'); // Trigger modal daisyUI
+    }
 }

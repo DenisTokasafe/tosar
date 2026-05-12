@@ -11,7 +11,10 @@
         <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
             <div class="h-full transition-all duration-700 ease-in-out bg-primary" style="width: {{ $this->getProgressPercentage() }}%"></div>
         </div>
-        <button class="btn btn-primary" onclick="incident_modal.showModal()">Buka Incident Alert</button>
+        <button class="btn btn-primary" wire:click="showPreview({{ $incidentId }})">
+            <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
+            Buka Incident Alert
+        </button>
 
         <dialog id="incident_modal" class="modal">
             <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden border border-gray-300">
@@ -19,6 +22,7 @@
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white z-10">✕</button>
                 </form>
 
+                @if($previewData)
                 <div class="bg-red-600 text-white text-center py-2 font-bold text-lg uppercase tracking-wider">
                     Preliminary Significant Incident Alert
                 </div>
@@ -26,84 +30,41 @@
                 <div class="p-4 bg-white text-black text-sm">
                     <div class="grid grid-cols-12 border-t border-l border-black">
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">Safety Alert No.</div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $safety_no }}</div>
+                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['safety_no'] }}</div>
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">INX No.</div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $inx_no }}</div>
+                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['inx_no'] }}</div>
 
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">
-                            Tanggal / <span class="text-blue-600 italic font-normal">Date</span>
-                        </div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $date }}</div>
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">
-                            Waktu / <span class="text-blue-600 italic font-normal">Time</span>
-                        </div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $time }}</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">Tanggal / Date</div>
+                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['date'] }}</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">Waktu / Time</div>
+                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['time'] }}</div>
 
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">
-                            Lokasi / <span class="text-blue-600 italic font-normal">Location</span>
-                        </div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $location }}</div>
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">
-                            Perusahaan/Departemen / <br><span class="text-blue-600 italic font-normal">Company/Department</span>
-                        </div>
-                        <div class="col-span-3 p-2 border-r border-b border-black">{{ $department ?? $contractor }}</div>
-                    </div>
-
-                    <div class="grid grid-cols-12 border-l border-black">
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">
-                            Uraian singkat insiden / <br><span class="text-blue-600 italic font-normal">Description of the Incident:</span>
-                        </div>
-                        <div class="col-span-9 p-2 border-r border-b border-black min-h-[60px]">{{ $description }}</div>
-
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold">
-                            Tindakan langsung untuk mencegah kejadian serupa terulang / <br><span class="text-blue-600 italic font-normal text-xs">Immediate Actions to Prevent Recurrence on Site</span>
-                        </div>
-                        <div class="col-span-9 p-2 border-r border-b border-black min-h-[60px]">{{ $immediate_actions }}</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
+                        <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
                     </div>
 
                     <div class="grid grid-cols-2 border-l border-black">
-                        <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
-                            @if($photo1)
-                            <img src="{{ asset('storage/'.$photo1) }}" class="object-contain h-full w-full">
-                            @else
-                            <span class="text-gray-400 italic">No Photo 1</span>
-                            @endif
-                        </div>
-                        <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
-                            @if($photo2)
-                            <img src="{{ asset('storage/'.$photo2) }}" class="object-contain h-full w-full">
-                            @else
-                            <span class="text-gray-400 italic">No Photo 2</span>
-                            @endif
-                        </div>
-                        <div class="p-1 text-center font-bold italic border-r border-b border-black">Photo 1</div>
-                        <div class="p-1 text-center font-bold italic border-r border-b border-black">Photo 2</div>
+                        @for ($i = 0; $i < 2; $i++)
+                            @php $photo=$previewData['photos']->values()->get($i); @endphp
+                            <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
+                                @if($photo && $photo['exists'])
+                                {{-- Mengubah storage_path menjadi URL publik untuk preview browser --}}
+                                <img src="{{ asset('storage/' . str_replace(storage_path('app/public/'), '', $photo['full_path'])) }}" class="object-contain h-full w-full">
+                                @else
+                                <span class="text-gray-400 italic">No Photo {{ $i + 1 }}</span>
+                                @endif
+                            </div>
+                            @endfor
+                            <div class="p-1 text-center font-bold italic border-r border-b border-black text-xs">Photo 1</div>
+                            <div class="p-1 text-center font-bold italic border-r border-b border-black text-xs">Photo 2</div>
                     </div>
 
                     <div class="mt-2 border-t border-l border-black">
-                        <div class="p-1 text-blue-600 italic font-bold border-r border-b border-black bg-gray-50 text-xs uppercase">
-                            Persetujuan / Approval
-                        </div>
                         <div class="grid grid-cols-12">
-                            <div class="col-span-3 p-2 border-r border-b border-black flex items-center font-semibold">
-                                Disetujui oleh / <br><span class="text-blue-600 italic font-normal ml-1 text-xs">Approved By</span>
-                            </div>
-                            <div class="col-span-9 grid grid-cols-3">
-                                <div class="p-1 bg-gray-50 border-r border-b border-black text-xs font-semibold">Nama / <span class="text-blue-600 italic font-normal">Name</span></div>
-                                <div class="p-1 bg-gray-50 border-r border-b border-black text-xs font-semibold">Posisi / <span class="text-blue-600 italic font-normal">Position</span></div>
-                                <div class="p-1 bg-gray-50 border-r border-b border-black text-xs font-semibold">Tanggal / <span class="text-blue-600 italic font-normal">Date</span></div>
-
-                                <div class="p-2 border-r border-b border-black h-12 uppercase">{{ $approver_name }}</div>
-                                <div class="p-2 border-r border-b border-black h-12 flex items-center font-bold">KTT PT MSM</div>
-                                <div class="p-2 border-r border-b border-black h-12">{{ $approval_date }}</div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-12">
-                            <div class="col-span-3 p-2 border-r border-b border-black font-semibold text-xs">
-                                Orang yang dapat dihubungi / <br><span class="text-blue-600 italic font-normal">Contact Person</span>
-                            </div>
-                            <div class="col-span-6 p-2 border-r border-b border-black">{{ $contact_person }}</div>
-                            <div class="col-span-3 p-2 border-r border-b border-black">{{ $contact_date }}</div>
+                            <div class="col-span-3 p-2 border-r border-b border-black font-semibold text-xs">Approved By</div>
+                            <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['approver_name'] }}</div>
+                            <div class="col-span-3 p-2 border-r border-b border-black font-bold">KTT PT MSM</div>
+                            <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['approval_date'] }}</div>
                         </div>
                     </div>
                 </div>
@@ -111,9 +72,13 @@
                 <div class="modal-action p-4 bg-gray-50">
                     <form method="dialog">
                         <button class="btn btn-ghost">Tutup</button>
-                        <button class="btn btn-error text-white" wire:click="sendAlert">Kirim Email</button>
+                        <button class="btn btn-error text-white" wire:click="sendAlert">
+                            <span wire:loading wire:target="sendAlert" class="loading loading-spinner"></span>
+                            Kirim Email
+                        </button>
                     </form>
                 </div>
+                @endif
             </div>
         </dialog>
         {{-- SUMMARY WIDGET SENTRY --}}
