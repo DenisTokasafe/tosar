@@ -41,6 +41,8 @@
 
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
                         <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
+                        <div class="col-span-9 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
                     </div>
 
                     <div class="grid grid-cols-2 border-l border-black">
