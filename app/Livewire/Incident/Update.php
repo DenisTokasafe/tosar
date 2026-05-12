@@ -2865,7 +2865,7 @@ class Update extends Component
 
         $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')->whereId($this->incidentId)->first();
 
-        $visualPhotos = $incident->attachments->where('file_type', 'visual')
+        $visualPhotos = $incident->attachments->where('file_type', 'incident_photo')
             ->take(2)
             ->map(function ($doc) {
                 return [
