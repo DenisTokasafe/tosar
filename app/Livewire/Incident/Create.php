@@ -543,7 +543,7 @@ class Create extends Component
     public function updatedIncidentPhoto()
     {
         try {
-            // 1. Validasi setiap file di dalam array secara real-time
+            // 1. Validasi real-time (Hanya mengecek, tidak memindahkan file)
             $this->validateOnly('incident_photo.*', [
                 'incident_photo.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             ], [
@@ -551,30 +551,10 @@ class Create extends Component
                 'incident_photo.*.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
                 'incident_photo.*.max'   => 'Ukuran foto maksimal 2MB.',
             ]);
-
-            // 2. Jika validasi lolos, bersihkan file lama dari storage (jika ada)
-            if (!empty($this->incident_photo_paths)) {
-                foreach ($this->incident_photo_paths as $oldPath) {
-                    FileHelper::deleteFile($oldPath);
-                }
-            }
-
-            // 3. Reset array path untuk data baru
-            $this->incident_photo_paths = [];
-
-            // 4. Looping dan simpan (Compress) hanya jika file valid
-            foreach ($this->incident_photo as $file) {
-                $this->incident_photo_paths[] = FileHelper::compressAndStore(
-                    $file,
-                    'incident/incident_photo/documentation'
-                );
-            }
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // 5. AUTO-CLEAR: Jika ada file yang salah format (seperti PDF),
-            // kita reset array-nya agar preview file yang salah hilang dari UI.
+            // Jika ada satu file yang salah (misal: upload PDF),
+            // hapus semua input foto agar user mengulang dari awal
             $this->incident_photo = [];
-
-            // Lempar kembali error agar muncul di komponen x-form.upload
             throw $e;
         }
     }
@@ -1272,22 +1252,25 @@ class Create extends Component
                     ['scat_analysis' => null]
                 ));
 
-                if (!empty($this->incident_photo_paths)) {
-                    foreach ($this->incident_photo_paths as $vPath) {
-                        // Cek apakah path ini sudah ada di database untuk incident ini
-                        // Ini mencegah duplikasi jika user menekan tombol simpan berkali-kali
-                        $report->attachments()->firstOrCreate([
-                            'file_path' => $vPath,
+
+                // 2. Baru proses file foto jika ada
+                if ($this->incident_photo) {
+                    foreach ($this->incident_photo as $file) {
+                        // Proses kompresi dan simpan ke storage permanen
+                        $path = FileHelper::compressAndStore(
+                            $file,
+                            'incident/incident_photo/documentation'
+                        );
+
+                        // Simpan path hasil kompresi ke database
+                        $report->attachments()->create([
+                            'file_path' => $path,
                             'file_type' => 'incident_photo',
-                        ], [
-                            'file_name' => basename($vPath),
+                            'file_name' => basename($path),
                         ]);
                     }
-                    // Kosongkan array temporary paths setelah berhasil masuk ke DB
-                    // agar tidak terproses ulang di klik simpan berikutnya
-                    $this->reset(['incident_photo_paths', 'incident_photo']);
                 }
-
+                $this->reset(['incident_photo']);
                 // B. Simpan Risk Assessment
                 $report->risk()->create($data['risk_assessment']);
 
