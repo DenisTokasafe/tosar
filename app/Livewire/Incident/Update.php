@@ -2854,7 +2854,7 @@ class Update extends Component
             'immediate_actions' => $incident->emergency_action,
             'approver_name'     => 'Nama Pejabat', // Sesuaikan
             'approval_date'     => now()->format('d/m/Y'),
-            'contact_person'    => auth()->user()->email,
+            'contact_person'    => auth()->user()->name,
             'contact_date'      => now()->format('d/m/Y'),
             'photos'            => $visualPhotos,
         ];
