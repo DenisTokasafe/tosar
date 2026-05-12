@@ -1271,6 +1271,23 @@ class Create extends Component
                     ['scat_analysis' => null]
                 ));
 
+                if (!empty($this->incident_photo_paths)) {
+                    foreach ($this->incident_photo_paths as $vPath) {
+                        // Cek apakah path ini sudah ada di database untuk incident ini
+                        // Ini mencegah duplikasi jika user menekan tombol simpan berkali-kali
+                        $report->attachments()->firstOrCreate([
+                            'file_path' => $vPath,
+                            'file_type' => 'visual',
+                        ], [
+                            'file_name' => basename($vPath),
+                        ]);
+                    }
+                    // Kosongkan array temporary paths setelah berhasil masuk ke DB
+                    // agar tidak terproses ulang di klik simpan berikutnya
+                    $this->incident_photo_paths = [];
+                    $this->incident_photo = [];
+                }
+
                 // B. Simpan Risk Assessment
                 $report->risk()->create($data['risk_assessment']);
 
@@ -1420,6 +1437,8 @@ class Create extends Component
                     'detail'  => $this->damage_detail,
                 ] : null,
             ],
+
+
 
             // PART 2: PERSONEL TERLIBAT
             'pihak_terlibat' => collect($this->directly_involved)->map(function ($person) {
