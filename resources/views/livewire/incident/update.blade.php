@@ -690,7 +690,7 @@
 
             <div class="p-4 modal-action bg-gray-50">
                 <form method="dialog">
-                    <flux:button size="xs" variant="error">Tutup</flux:button>
+                    <flux:button size="xs" variant="danger">Tutup</flux:button>
                     <flux:button size="xs" variant="success" wire:click="sendAlert">
                         Kirim Email
                     </flux:button>
