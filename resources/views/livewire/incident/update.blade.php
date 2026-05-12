@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 border-l border-black mt-2 p-4">
+                    <div class="grid grid-cols-2 border border-black mt-2 p-4">
                         @for ($i = 0; $i < 2; $i++)
                             @php $photo=$previewData['photos']->values()->get($i); @endphp
                             <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
