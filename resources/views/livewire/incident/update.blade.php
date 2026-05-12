@@ -11,94 +11,8 @@
         <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
             <div class="h-full transition-all duration-700 ease-in-out bg-primary" style="width: {{ $this->getProgressPercentage() }}%"></div>
         </div>
-        <button class="btn btn-primary btn-xs" wire:click="showPreview({{ $incidentId }})" onclick="incident_modal.showModal()">
-            <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
-            Buka Incident Alert
-        </button>
 
-        <dialog id="incident_modal" class="modal" wire:ignore.self>
-            <div class="w-11/12 max-w-4xl p-0 overflow-hidden border border-gray-300 modal-box">
-                <form method="dialog">
-                    <button class="absolute z-10 text-white btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
-                </form>
 
-                @if($previewData)
-                <div class="py-2 text-lg font-bold tracking-wider text-center text-white uppercase bg-red-600">
-                    Preliminary Significant Incident Alert
-                </div>
-
-                <div class="p-4 text-sm text-black bg-white">
-                    <div class="grid grid-cols-12 border-t border-l border-black">
-                        <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Safety Alert No.</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['safety_no'] }}</div>
-                        <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">INX No.</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['inx_no'] }}</div>
-
-                        <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Tanggal / Date</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['date'] }}</div>
-                        <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Waktu / Time</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['time'] }}</div>
-
-                        <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Lokasi</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['location'] }}</div>
-                        <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Perusahaan/Departemen</div>
-                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['department'] }}</div>
-                        <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Uraian singkat insiden </div>
-                        <div class="col-span-9 p-2 border-b border-r border-black">
-                            @php
-                            $cleanDescription = strip_tags($previewData['description']);
-                            $truncatedDescription = Str::limit($cleanDescription, 50, '...');
-                            @endphp
-                            {{ $truncatedDescription }}
-                        </div>
-                        <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Tindakan langsung untuk mencegah kejadian serupa terulang </div>
-                        <div class="col-span-9 p-2 border-b border-r border-black">
-                            @php
-                            $cleanimmediate_actions = strip_tags($previewData['immediate_actions']);
-                            $truncatedimmediate_actions = Str::limit($cleanimmediate_actions, 50, '...');
-                            @endphp
-                            {{ $truncatedimmediate_actions }}
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 p-4 mt-2 border border-black">
-                        @for ($i = 0; $i < 2; $i++)
-                            @php $photo=$previewData['photos']->values()->get($i); @endphp
-                            <div class="flex items-center justify-center h-64 overflow-hidden bg-gray-100 border-t border-b border-l border-r border-black">
-                                @if($photo && $photo['exists'])
-                                {{-- Mengubah storage_path menjadi URL publik untuk preview browser --}}
-                                <img src="{{ asset('storage/' . str_replace(storage_path('app/public/'), '', $photo['full_path'])) }}" class="object-contain w-full h-full">
-                                @else
-                                <span class="italic text-gray-400">No Photo {{ $i + 1 }}</span>
-                                @endif
-                            </div>
-                            @endfor
-                            <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 1</div>
-                            <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 2</div>
-                    </div>
-
-                    <div class="mt-2 border-t border-l border-black">
-                        <div class="grid grid-cols-12">
-                            <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black">Approved By</div>
-                            <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approver_name'] }}</div>
-                            <div class="col-span-3 p-2 font-bold border-b border-r border-black">KTT PT MSM</div>
-                            <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approval_date'] }}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 modal-action bg-gray-50">
-                    <form method="dialog">
-                        <button class="btn btn-ghost">Tutup</button>
-                        <button class="text-white btn btn-error" wire:click="sendAlert">
-                            <span wire:loading wire:target="sendAlert" class="loading loading-spinner"></span>
-                            Kirim Email
-                        </button>
-                    </form>
-                </div>
-                @endif
-            </div>
-        </dialog>
         {{-- SUMMARY WIDGET SENTRY --}}
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {{-- STATS: NOMOR LAPORAN --}}
@@ -114,6 +28,10 @@
                         </div>
                         <div class="grow-0">
                             <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
+                            <button class="btn btn-primary btn-xs" wire:click="showPreview({{ $incidentId }})" onclick="incident_modal.showModal()">
+                                <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
+                                Buka Incident Alert
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -699,6 +617,90 @@
         </dialog>
 
     </x-incident.layout>
+
+    <dialog id="incident_modal" class="modal" wire:ignore.self>
+        <div class="w-11/12 max-w-4xl p-0 overflow-hidden border border-gray-300 modal-box">
+            <form method="dialog">
+                <button class="absolute z-10 text-white btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+            </form>
+
+            @if($previewData)
+            <div class="py-2 text-lg font-bold tracking-wider text-center text-white uppercase bg-red-600">
+                Preliminary Significant Incident Alert
+            </div>
+
+            <div class="p-4 text-sm text-black bg-white">
+                <div class="grid grid-cols-12 border-t border-l border-black">
+                    <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Safety Alert No.</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['safety_no'] }}</div>
+                    <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">INX No.</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['inx_no'] }}</div>
+
+                    <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Tanggal / Date</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['date'] }}</div>
+                    <div class="col-span-3 p-2 font-semibold border-b border-r border-black bg-gray-50">Waktu / Time</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['time'] }}</div>
+
+                    <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Lokasi</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['location'] }}</div>
+                    <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Perusahaan/Departemen</div>
+                    <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['department'] }}</div>
+                    <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Uraian singkat insiden </div>
+                    <div class="col-span-9 p-2 border-b border-r border-black">
+                        @php
+                        $cleanDescription = strip_tags($previewData['description']);
+                        $truncatedDescription = Str::limit($cleanDescription, 50, '...');
+                        @endphp
+                        {{ $truncatedDescription }}
+                    </div>
+                    <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black bg-gray-50">Tindakan langsung untuk mencegah kejadian serupa terulang </div>
+                    <div class="col-span-9 p-2 border-b border-r border-black">
+                        @php
+                        $cleanimmediate_actions = strip_tags($previewData['immediate_actions']);
+                        $truncatedimmediate_actions = Str::limit($cleanimmediate_actions, 50, '...');
+                        @endphp
+                        {{ $truncatedimmediate_actions }}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 p-4 mt-2 border border-black">
+                    @for ($i = 0; $i < 2; $i++)
+                        @php $photo=$previewData['photos']->values()->get($i); @endphp
+                        <div class="flex items-center justify-center h-64 overflow-hidden bg-gray-100 border-t border-b border-l border-r border-black">
+                            @if($photo && $photo['exists'])
+                            {{-- Mengubah storage_path menjadi URL publik untuk preview browser --}}
+                            <img src="{{ asset('storage/' . str_replace(storage_path('app/public/'), '', $photo['full_path'])) }}" class="object-contain w-full h-full">
+                            @else
+                            <span class="italic text-gray-400">No Photo {{ $i + 1 }}</span>
+                            @endif
+                        </div>
+                        @endfor
+                        <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 1</div>
+                        <div class="p-1 text-xs italic font-bold text-center border-b border-r border-black">Photo 2</div>
+                </div>
+
+                <div class="mt-2 border-t border-l border-black">
+                    <div class="grid grid-cols-12">
+                        <div class="col-span-3 p-2 text-xs font-semibold border-b border-r border-black">Approved By</div>
+                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approver_name'] }}</div>
+                        <div class="col-span-3 p-2 font-bold border-b border-r border-black">KTT PT MSM</div>
+                        <div class="col-span-3 p-2 border-b border-r border-black">{{ $previewData['approval_date'] }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 modal-action bg-gray-50">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Tutup</button>
+                    <button class="text-white btn btn-error" wire:click="sendAlert">
+                        <span wire:loading wire:target="sendAlert" class="loading loading-spinner"></span>
+                        Kirim Email
+                    </button>
+                </form>
+            </div>
+            @endif
+        </div>
+    </dialog>
 </section>
 
 @push('scripts')
