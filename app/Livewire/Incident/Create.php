@@ -539,7 +539,7 @@ class Create extends Component
             $this->search = '';
         }
     }
-    public function updatedVisualEvidence()
+    public function updatedIncidentPhoto()
     {
         try {
             // 1. Validasi setiap file di dalam array secara real-time
