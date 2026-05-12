@@ -507,7 +507,9 @@ class Update extends Component
             $data['visual_evidence'],
             $data['supporting_documents'],
             $data['visual_evidence_paths'],
-            $data['supporting_documents_paths']
+            $data['supporting_documents_paths'],
+            $data['incident_photo'],
+            $data['saved_photos']
         );
 
         session()->put('incident_data', $data);
