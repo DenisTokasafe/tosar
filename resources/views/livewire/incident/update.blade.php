@@ -43,14 +43,14 @@
                         <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['location'] }}</div>
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
                         <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
-                    </div>
-
-                    <div class="bg-gray-50 border-r border-b border-black font-semibold">
-                        @php
-                        $cleanDescription = strip_tags($previewData['description']);
-                        $truncatedDescription = Str::limit($cleanDescription, 50, '...');
-                        @endphp
-                        {{ $truncatedDescription }}
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Deskripsi</div>
+                        <div class="col-span-9 p-2 border-r border-b border-black">
+                            @php
+                            $cleanDescription = strip_tags($previewData['description']);
+                            $truncatedDescription = Str::limit($cleanDescription, 50, '...');
+                            @endphp
+                            {{ $truncatedDescription }}
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 border-l border-black">
