@@ -11,7 +11,7 @@
         <div class="w-full bg-base-200 rounded-full h-1.5 mb-2 overflow-hidden shadow-inner">
             <div class="h-full transition-all duration-700 ease-in-out bg-primary" style="width: {{ $this->getProgressPercentage() }}%"></div>
         </div>
-        <button class="btn btn-primary" wire:click="showPreview({{ $incidentId }})">
+        <button class="btn btn-primary" wire:click="showPreview({{ $incidentId }})" onclick="incident_modal.showModal()">
             <span wire:loading wire:target="showPreview" class="loading loading-spinner loading-xs"></span>
             Buka Incident Alert
         </button>

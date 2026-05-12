@@ -2827,6 +2827,5 @@ class Update extends Component
 
 
         $this->previewData = $data; // Simpan ke public property
-        $this->dispatch('open-modal'); // Trigger modal daisyUI
     }
 }
