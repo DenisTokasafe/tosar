@@ -2827,8 +2827,11 @@ class Update extends Component
 
     public function sendAlert()
     {
-        $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')->whereId($this->incidentId)->first();
+        // Ambil data incident
+        $incident = IncidentReport::with('location', 'department', 'contractor', 'attachments')
+            ->findOrFail($this->incidentId);
 
+        // Filter foto (Incident Photo)
         $visualPhotos = $incident->attachments->where('file_type', 'incident_photo')
             ->take(2)
             ->map(function ($doc) {
@@ -2838,25 +2841,31 @@ class Update extends Component
                 ];
             });
 
-        $datetime = Carbon::parse($incident->date_time);
+        $datetime = \Carbon\Carbon::parse($incident->date_time);
+
         $data = [
-            'safety_no' => $incident->report_number,
-            'inx_no' => $incident->report_number,
-            'date'      => $datetime->format('d/m/Y'),
-            'time'      => $datetime->format('H:i'),
-            'location' => $incident->location->name,
-            'department' => $incident->department->department_name ?? $incident->contractor->contractor_name,
-            'description' => $incident->description,
+            'safety_no'         => $incident->report_number,
+            'inx_no'            => $incident->report_number,
+            'date'              => $datetime->format('d/m/Y'),
+            'time'              => $datetime->format('H:i'),
+            'location'          => $incident->location->name ?? '-',
+            'department'        => $incident->department->department_name ?? ($incident->contractor->contractor_name ?? '-'),
+            'description'       => $incident->description,
             'immediate_actions' => $incident->emergency_action,
-            'approver_name' => 'Nama Pejabat',
-            'approval_date' => now()->format('d/m/Y'),
-            'contact_person' => Auth::user()->mail,
-            'contact_date' => now()->format('d/m/Y'),
-            // Pastikan path foto adalah path absolut di server
-            'photos' => $visualPhotos,
+            'approver_name'     => 'Nama Pejabat', // Sesuaikan
+            'approval_date'     => now()->format('d/m/Y'),
+            'contact_person'    => auth()->user()->email,
+            'contact_date'      => now()->format('d/m/Y'),
+            'photos'            => $visualPhotos,
         ];
 
+        // Kirim Email
         Mail::to('yoman.banea@archimining.com')->send(new IncidentAlertMail($data));
+
+        $this->dispatch('alert', [
+            'text' => "Alert has been sent successfully!",
+            'type' => 'success'
+        ]);
     }
     public $previewData = [];
     public function showPreview($id)

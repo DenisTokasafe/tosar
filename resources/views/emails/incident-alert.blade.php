@@ -101,45 +101,23 @@
 
     <table>
         <tr>
-            <td class="photo-box" style="width: 50%;">
-                @if($data['photo1'])
-                <img src="{{ $message->embed($data['photo1']) }}" style="max-width: 100%; max-height: 180px;">
-                @else
-                [Photo 1]
-                @endif
-            </td>
-            <td class="photo-box" style="width: 50%;">
-                @if($data['photo2'])
-                <img src="{{ $message->embed($data['photo2']) }}" style="max-width: 100%; max-height: 180px;">
-                @else
-                [Photo 2]
-                @endif
-            </td>
-        </tr>
-        <tr style="text-align: center; font-weight: bold; font-style: italic;">
-            @foreach($data['photos'] as $index => $photo)
-            <td class="photo-box" style="width: 50%;">
-                @if($photo['exists'])
-                <img src="{{ $message->embed($photo['full_path']) }}" style="max-width: 100%; max-height: 180px;">
-                @else
-                <div style="color: #ccc;">[ File Not Found ]</div>
-                @endif
-                <div style="font-weight: bold; margin-top: 5px;">Photo {{ $index + 1 }}</div>
-            </td>
-            @endforeach
+            @php
+            $photos = $data['photos'];
+            @endphp
 
-            {{-- Jika hanya ada 1 foto, tambahkan kolom kosong agar layout tidak berantakan --}}
-            @if($data['photos']->count() == 1)
-            <td class="photo-box" style="width: 50%; border: 1px solid #000;">
-                <div style="color: #ccc;">[ No Photo 2 ]</div>
-            </td>
-            @endif
-
-            {{-- Jika tidak ada foto sama sekali --}}
-            @if($data['photos']->count() == 0)
-            <td class="photo-box" style="width: 50%;">[ No Photo 1 ]</td>
-            <td class="photo-box" style="width: 50%;">[ No Photo 2 ]</td>
-            @endif
+            @for($i = 0; $i < 2; $i++)
+                <td class="photo-box" style="width: 50%; border: 1px solid #000;">
+                @if(isset($photos[$i]) && $photos[$i]['exists'])
+                {{-- Menggunakan $message->embed untuk menampilkan gambar langsung di body email --}}
+                <img src="{{ $message->embed($photos[$i]['full_path']) }}" style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
+                <div style="font-weight: bold; margin-top: 5px; text-align: center;">Photo {{ $i + 1 }}</div>
+                @else
+                <div style="color: #ccc; text-align: center; padding: 40px 0;">
+                    [ No Photo {{ $i + 1 }} ]
+                </div>
+                @endif
+                </td>
+                @endfor
         </tr>
     </table>
 

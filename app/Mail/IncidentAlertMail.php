@@ -12,32 +12,28 @@ use Illuminate\Queue\SerializesModels;
 class IncidentAlertMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $data; // Public agar otomatis terbaca di blade
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Incident Alert Mail',
+            // Subjek email yang lebih profesional sesuai standar mining
+            subject: 'Significant Incident Alert - ' . $this->data['safety_no'],
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.incident-alert',
+            // Gunakan view() karena template Anda adalah HTML tabel
+            view: 'emails.incident-alert',
         );
     }
 
