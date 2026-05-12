@@ -43,7 +43,7 @@
                         <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['location'] }}</div>
                         <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Perusahaan/Departemen</div>
                         <div class="col-span-3 p-2 border-r border-b border-black">{{ $previewData['department'] }}</div>
-                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Deskripsi</div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Uraian singkat insiden </div>
                         <div class="col-span-9 p-2 border-r border-b border-black">
                             @php
                             $cleanDescription = strip_tags($previewData['description']);
@@ -51,9 +51,17 @@
                             @endphp
                             {{ $truncatedDescription }}
                         </div>
+                        <div class="col-span-3 p-2 bg-gray-50 border-r border-b border-black font-semibold text-xs">Tindakan langsung untuk mencegah kejadian serupa terulang </div>
+                        <div class="col-span-9 p-2 border-r border-b border-black">
+                            @php
+                            $cleanimmediate_actions = strip_tags($previewData['immediate_actions']);
+                            $truncatedimmediate_actions = Str::limit($cleanimmediate_actions, 50, '...');
+                            @endphp
+                            {{ $truncatedimmediate_actions }}
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-2 border-l border-black">
+                    <div class="grid grid-cols-2 border-l border-black mt-2 p-4">
                         @for ($i = 0; $i < 2; $i++)
                             @php $photo=$previewData['photos']->values()->get($i); @endphp
                             <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
