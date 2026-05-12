@@ -64,7 +64,7 @@
                     <div class="grid grid-cols-2 border border-black mt-2 p-4">
                         @for ($i = 0; $i < 2; $i++)
                             @php $photo=$previewData['photos']->values()->get($i); @endphp
-                            <div class="border-r border-b border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
+                            <div class="border-r border-b border-l border-t border-black h-64 flex items-center justify-center bg-gray-100 overflow-hidden">
                                 @if($photo && $photo['exists'])
                                 {{-- Mengubah storage_path menjadi URL publik untuk preview browser --}}
                                 <img src="{{ asset('storage/' . str_replace(storage_path('app/public/'), '', $photo['full_path'])) }}" class="object-contain h-full w-full">
