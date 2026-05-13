@@ -1365,6 +1365,14 @@ class Update extends Component
         $this->why_analysis['why' . $this->whyCount] = '';
         $this->saveToSession();
     }
+    public function addPeepoColumn()
+    {
+        $this->whyCount++;
+
+        // Inisialisasi key baru di setiap baris timeline agar tidak error
+        $this->why_analysis['why' . $this->whyCount] = '';
+        $this->saveToSession();
+    }
     public function removeWhyColumn()
     {
         if ($this->whyCount > 1) {

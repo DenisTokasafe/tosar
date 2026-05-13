@@ -45,44 +45,135 @@
 
     {{-- TAMPILAN TABLET & DESKTOP --}}
     <div class="hidden overflow-hidden border shadow-sm md:block rounded-xl border-base-300 bg-base-100">
-        <table class="table w-full border-collapse">
-            <thead>
-                <tr class="border-b bg-base-200/50 text-base-content border-base-300">
-                    <th class="w-1/6 px-4 py-3 font-bold border-r border-base-300">{{ __('Factor') }}</th>
-                    <th class="w-2/5 px-4 py-3 font-bold border-r border-base-300">{{ __('Temuan') }}</th>
-                    <th class="px-4 py-3 font-bold">{{ __('Deskripsi') }}</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-base-300">
+        <table class="table w-full border-collapse table-xs">
+            <tbody>
+
                 @foreach($peepoFactors as $key => $label)
-                <tr class="hover:bg-base-200/20" wire:key="peepo-dt-{{ $key }}">
-                    <td class="px-4 pt-4 align-top border-r border-base-300 bg-base-50/50">
-                        <div class="flex flex-col gap-2">
-                            <span class="text-sm font-bold">{{ __($label) }}</span>
-                            @if(!empty($peepo[$key]['temuan']) && !empty($peepo[$key]['deskripsi']))
-                            <span class="px-2 py-2 badge badge-success badge-outline badge-xs">{{ __('Lengkap') }}</span>
-                            @else
-                            <span class="px-2 py-2 text-gray-400 badge badge-ghost badge-xs">{{ __('Belum Lengkap') }}</span>
+
+                {{-- HEADER FACTOR --}}
+                <tr class="bg-base-200 text-base-content">
+                    <th colspan="3"
+                        class="py-2 italic font-extrabold tracking-widest uppercase border-b border-base-300">
+
+                        <div class="flex items-center justify-between">
+
+                            <div class="flex items-center gap-2">
+                                <span>{{ __($label) }}</span>
+
+                                @php
+                                $isComplete = collect($peepo[$key] ?? [])
+                                ->every(fn($row) =>
+                                !empty($row['temuan']) &&
+                                !empty($row['deskripsi'])
+                                );
+                                @endphp
+
+                                @if($isComplete && count($peepo[$key] ?? []))
+                                <span class="badge badge-success badge-xs">
+                                    Lengkap
+                                </span>
+                                @else
+                                <span class="text-gray-400 badge badge-ghost badge-xs">
+                                    Belum Lengkap
+                                </span>
+                                @endif
+                            </div>
+
+                            {{-- ADD BUTTON --}}
+                            @if($canEdit)
+                            <button
+                                type="button"
+                                wire:click="addRowPeepo('{{ $key }}')"
+                                class="btn btn-info btn-xs">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-3 h-3 mr-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="3"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+
+                                Tambah
+                            </button>
                             @endif
+
                         </div>
-                    </td>
-                    <td class="p-2 align-top border-r border-base-300">
+                    </th>
+                </tr>
+
+                {{-- TABLE HEADER --}}
+                <tr class="uppercase bg-base-100 text-base-content">
+                    <th class="w-1/3 px-4 py-2 font-bold border-r border-b border-base-300 text-[10px]">
+                        Temuan
+                    </th>
+
+                    <th class="px-4 py-2 font-bold border-b border-base-300 text-[10px]">
+                        Deskripsi
+                    </th>
+
+                    <th class="w-10 border-b border-l border-base-300"></th>
+                </tr>
+
+                {{-- ROWS --}}
+                @foreach(($peepo[$key] ?? []) as $index => $row)
+
+                <tr
+                    wire:key="peepo-{{ $key }}-{{ $index }}"
+                    class="transition-colors hover:bg-base-200/30">
+
+                    {{-- TEMUAN --}}
+                    <td class="p-1 align-top border-b border-r border-base-300">
+
                         <x-form.text_area
-                            model="peepo.{{ $key }}.temuan"
-                            placeholder="{{ __('Temuan faktor') }} {{ __($label) }}..."
-                            rows="3"
+                            model="peepo.{{ $key }}.{{ $index }}.temuan"
+                            placeholder="Temuan faktor {{ $label }}..."
+                            rows="2"
                             :disabled="!$canEdit" />
+
                     </td>
-                    <td class="p-2 align-top">
+
+                    {{-- DESKRIPSI --}}
+                    <td class="p-1 align-top border-b border-base-300">
+
                         <x-form.text_area
-                            model="peepo.{{ $key }}.deskripsi"
-                            placeholder="{{ __('Detail siapa, apa, dimana, kapan, mengapa...') }}"
-                            rows="3"
+                            model="peepo.{{ $key }}.{{ $index }}.deskripsi"
+                            placeholder="Detail siapa, apa, dimana, kapan, mengapa..."
+                            rows="2"
                             required
                             :disabled="!$canEdit" />
+
                     </td>
+
+                    {{-- DELETE --}}
+                    <td class="p-1 text-center align-middle border-b border-l border-base-300">
+
+                        @if($canEdit && count($peepo[$key]) > 1)
+
+                        <button
+                            type="button"
+                            wire:click="removeRowPeepo('{{ $key }}', {{ $index }})"
+                            class="btn btn-ghost btn-xs text-error">
+
+                            ✕
+
+                        </button>
+
+                        @endif
+
+                    </td>
+
                 </tr>
+
                 @endforeach
+
+                @endforeach
+
             </tbody>
         </table>
     </div>
