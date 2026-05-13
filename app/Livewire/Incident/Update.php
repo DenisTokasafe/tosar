@@ -713,10 +713,33 @@ class Update extends Component
             }
 
             // --- PART 4: PEEPO ---
+
+            // Reset default
+            $this->peepo = [];
+
+            // Ambil data peepo dari relasi
+            $peepoData = $this->incident
+                ->peepoAnalyses
+                ->groupBy('factor_key');
+
+            // Loop semua factor
             foreach ($this->peepoFactors as $key => $label) {
 
-                if (!isset($this->peepo[$key])) {
+                // Jika ada data di database
+                if (isset($peepoData[$key]) && $peepoData[$key]->count()) {
 
+                    $this->peepo[$key] = $peepoData[$key]
+                        ->map(function ($item) {
+
+                            return [
+                                'temuan' => $item->temuan ?? '',
+                                'deskripsi' => $item->deskripsi ?? '',
+                            ];
+                        })
+                        ->toArray();
+                } else {
+
+                    // Default 1 row kosong
                     $this->peepo[$key] = [
                         [
                             'temuan' => '',
@@ -725,7 +748,6 @@ class Update extends Component
                     ];
                 }
             }
-
             // --- ANALISIS SCAT & WHY ---
             $scat = $report->scat_analysis;
             if ($scat) {
