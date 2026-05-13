@@ -2245,6 +2245,17 @@ class Update extends Component
         $hasDocument = (is_array($this->existing_supporting_documents) && count($this->existing_supporting_documents) > 0)
             || (is_array($this->supporting_documents) && count($this->supporting_documents) > 0);
 
+        $step4Rules = [];
+
+        foreach (array_keys($this->peepoFactors) as $key) {
+
+            $step4Rules["peepo.$key.*.temuan"] =
+                $allRules["peepo.$key.*.temuan"];
+
+            $step4Rules["peepo.$key.*.deskripsi"] =
+                $allRules["peepo.$key.*.deskripsi"];
+        }
+
         // 3. Pemetaan Rules per Step
         $stepRules = [
             1 => array_merge([
@@ -2307,22 +2318,7 @@ class Update extends Component
                 'anggota.*.jabatan' => $allRules['anggota.*.jabatan'],
             ],
 
-            4 => [
-                'peepo.orang.*.temuan'        => $allRules['peepo.orang.*.temuan'],
-                'peepo.orang.*.deskripsi'     => $allRules['peepo.orang.*.deskripsi'],
-
-                'peepo.peralatan.*.temuan'    => $allRules['peepo.peralatan.*.temuan'],
-                'peepo.peralatan.*.deskripsi' => $allRules['peepo.peralatan.*.deskripsi'],
-
-                'peepo.lingkungan.*.temuan'   => $allRules['peepo.lingkungan.*.temuan'],
-                'peepo.lingkungan.*.deskripsi' => $allRules['peepo.lingkungan.*.deskripsi'],
-
-                'peepo.prosedur.*.temuan'     => $allRules['peepo.prosedur.*.temuan'],
-                'peepo.prosedur.*.deskripsi'  => $allRules['peepo.prosedur.*.deskripsi'],
-
-                'peepo.organisasi.*.temuan'   => $allRules['peepo.organisasi.*.temuan'],
-                'peepo.organisasi.*.deskripsi' => $allRules['peepo.organisasi.*.deskripsi'],
-            ],
+            4 => $step4Rules,
 
             5 => $this->getWhyAnalysisRules(),
 
