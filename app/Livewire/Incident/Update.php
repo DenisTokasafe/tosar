@@ -304,20 +304,25 @@ class Update extends Component
             'anggota.*.dept'    => 'required|string',
             'anggota.*.jabatan' => 'required|string',
             // PART 4: PEEPO (Analisis Faktor)
-            'peepo.orang.temuan'      => 'required|string|min:3',
-            'peepo.orang.deskripsi'   => 'required|string|min:5',
+            'peepo.orang' => 'required|array|min:1',
+            'peepo.orang.*.temuan' => 'required|string|min:3',
+            'peepo.orang.*.deskripsi' => 'required|string|min:5',
 
-            'peepo.peralatan.temuan'    => 'required|string|min:3',
-            'peepo.peralatan.deskripsi' => 'required|string|min:5',
+            'peepo.peralatan' => 'required|array|min:1',
+            'peepo.peralatan.*.temuan' => 'required|string|min:3',
+            'peepo.peralatan.*.deskripsi' => 'required|string|min:5',
 
-            'peepo.lingkungan.temuan'   => 'required|string|min:3',
-            'peepo.lingkungan.deskripsi' => 'required|string|min:5',
+            'peepo.lingkungan' => 'required|array|min:1',
+            'peepo.lingkungan.*.temuan' => 'required|string|min:3',
+            'peepo.lingkungan.*.deskripsi' => 'required|string|min:5',
 
-            'peepo.prosedur.temuan'     => 'required|string|min:3',
-            'peepo.prosedur.deskripsi'  => 'required|string|min:5',
+            'peepo.prosedur' => 'required|array|min:1',
+            'peepo.prosedur.*.temuan' => 'required|string|min:3',
+            'peepo.prosedur.*.deskripsi' => 'required|string|min:5',
 
-            'peepo.organisasi.temuan'   => 'required|string|min:3',
-            'peepo.organisasi.deskripsi' => 'required|string|min:5',
+            'peepo.organisasi' => 'required|array|min:1',
+            'peepo.organisasi.*.temuan' => 'required|string|min:3',
+            'peepo.organisasi.*.deskripsi' => 'required|string|min:5',
             // PART 5: Timeline & Why Analysis
             'why_analysis' => 'required|array',
             // Part 6
@@ -456,8 +461,12 @@ class Update extends Component
         ];
 
         foreach ($this->peepoFactors as $key => $label) {
-            $attributes["peepo.$key.temuan"]    = __('Temuan Faktor') . " " . __($label);
-            $attributes["peepo.$key.deskripsi"] = __('Deskripsi Faktor') . " " . __($label);
+
+            $attributes["peepo.$key.*.temuan"] =
+                __('Temuan Faktor') . ' ' . __($label);
+
+            $attributes["peepo.$key.*.deskripsi"] =
+                __('Deskripsi Faktor') . ' ' . __($label);
         }
 
         foreach (['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'] as $key) {
@@ -556,18 +565,7 @@ class Update extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
 
-        foreach ($this->peepoFactors as $key => $label) {
 
-            if (!isset($this->peepo[$key])) {
-
-                $this->peepo[$key] = [
-                    [
-                        'temuan' => '',
-                        'deskripsi' => '',
-                    ]
-                ];
-            }
-        }
 
         /**
          * 2. EAGER LOADING (Optimasi N+1)
@@ -715,7 +713,18 @@ class Update extends Component
             }
 
             // --- PART 4: PEEPO ---
+            foreach ($this->peepoFactors as $key => $label) {
 
+                if (!isset($this->peepo[$key])) {
+
+                    $this->peepo[$key] = [
+                        [
+                            'temuan' => '',
+                            'deskripsi' => '',
+                        ]
+                    ];
+                }
+            }
 
             // --- ANALISIS SCAT & WHY ---
             $scat = $report->scat_analysis;
@@ -2028,10 +2037,16 @@ class Update extends Component
                 break;
             case 4:
                 $fields = [];
+
                 foreach (array_keys($this->peepoFactors) as $key) {
-                    $fields[] = "peepo.$key.temuan";
-                    $fields[] = "peepo.$key.deskripsi";
+
+                    $fields[] = "peepo.$key";
+
+                    $fields[] = "peepo.$key.*.temuan";
+
+                    $fields[] = "peepo.$key.*.deskripsi";
                 }
+
                 break;
             case 5:
                 // Hapus 'timelines.*.kejadian' karena kita tidak pakai baris timeline lagi
@@ -2668,16 +2683,32 @@ class Update extends Component
                     );
                 }
 
-                // 4. Update PEEPO & Why Analysis
-                foreach ($this->peepo as $key => $value) {
-                    $report->peepoAnalyses()->updateOrCreate(
-                        ['factor_key' => $key],
-                        [
+                // 4. Update PEEPO
+                foreach ($this->peepo as $key => $rows) {
+
+                    // Hapus data lama factor ini
+                    $report->peepoAnalyses()
+                        ->where('factor_key', $key)
+                        ->delete();
+
+                    // Insert ulang semua row
+                    foreach ($rows as $row) {
+
+                        // Skip row kosong
+                        if (
+                            empty($row['temuan']) &&
+                            empty($row['deskripsi'])
+                        ) {
+                            continue;
+                        }
+
+                        $report->peepoAnalyses()->create([
+                            'factor_key'  => $key,
                             'factor_name' => $this->peepoFactors[$key],
-                            'temuan'      => $value['temuan'] ?? '-',
-                            'deskripsi'   => $value['deskripsi'] ?? '-',
-                        ]
-                    );
+                            'temuan'      => $row['temuan'] ?? '-',
+                            'deskripsi'   => $row['deskripsi'] ?? '-',
+                        ]);
+                    }
                 }
 
                 $whyCount = collect($this->why_analysis)->filter(fn($val) => !empty($val))->count();
