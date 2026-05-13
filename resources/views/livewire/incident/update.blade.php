@@ -192,7 +192,7 @@
                         type="radio"
                         name="edit-tabs"
                         class="text-xs font-bold uppercase tab"
-                        aria-label="{{ __($stepTitle) }}"
+                        aria-label="BAGIAN-{{ $i }}"
                         wire:click="{{ $canEdit ? "goToStep($i)" : '' }}"
                         value="{{ $i }}"
                         {{ $currentStep == $i ? 'checked' : '' }}
