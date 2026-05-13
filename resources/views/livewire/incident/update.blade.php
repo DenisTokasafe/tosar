@@ -191,7 +191,7 @@
                         <input
                         type="radio"
                         name="edit-tabs"
-                        class="text-xs font-bold uppercase tab"
+                        class="text-[9px] font-bold uppercase tab"
                         aria-label="BAGIAN-{{ $i }}"
                         wire:click="{{ $canEdit ? "goToStep($i)" : '' }}"
                         value="{{ $i }}"
