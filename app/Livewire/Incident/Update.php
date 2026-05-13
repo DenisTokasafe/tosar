@@ -2849,7 +2849,7 @@ class Update extends Component
     }
 
     // app/Livewire/IncidentReport.php
-
+    public $name_ktt;
     public function sendAlert()
     {
         // Ambil data incident
@@ -2877,7 +2877,7 @@ class Update extends Component
             'department'        => $incident->department->department_name ?? ($incident->contractor->contractor_name ?? '-'),
             'description'       => $incident->description,
             'immediate_actions' => $incident->emergency_action,
-            'approver_name'     => 'Nama Pejabat', // Sesuaikan
+            'approver_name'     => $this->name_ktt, // Sesuaikan
             'approval_date'     => now()->format('d/m/Y'),
             'contact_person'    => auth()->user()->name,
             'contact_date'      => now()->format('d/m/Y'),
