@@ -205,7 +205,7 @@ class Update extends Component
     // TAMBAHKAN INI:
     public $activeIndexPenerimaan = null;
     #[Computed]
-
+    public $name_ktt;
     public function isInjury()
     {
         if (!$this->event_type_id) {
@@ -565,7 +565,13 @@ class Update extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
 
+        if (
+            Auth::check() &&
+            Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
+        ) {
 
+            $this->name_ktt = Auth::id();
+        }
 
         /**
          * 2. EAGER LOADING (Optimasi N+1)
@@ -2948,7 +2954,7 @@ class Update extends Component
     }
 
     // app/Livewire/IncidentReport.php
-    public $name_ktt;
+
     public function sendAlert()
     {
         // Ambil data incident
