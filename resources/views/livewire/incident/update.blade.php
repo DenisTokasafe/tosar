@@ -471,7 +471,7 @@
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
                                 <option value="">{{__('-- Pilih --')}}</option>
                                 @foreach ($Ktt as $name)
-                                <option value=" {{$name->name}}">{{ __($name->name) }}</option>
+                                <option value="{{ $user->id }}">{{ __($name->name) }}</option>
                                 @endforeach
                             </select>
                         </div>

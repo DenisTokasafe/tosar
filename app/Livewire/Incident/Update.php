@@ -1977,7 +1977,7 @@ class Update extends Component
             Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
         ) {
 
-            $this->name_ktt = Auth::user()->name;
+            $this->name_ktt = Auth::id();
         }
         $users = User::with('roles')
             ->whereHas('roles', function ($query) {
