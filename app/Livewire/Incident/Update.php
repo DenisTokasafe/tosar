@@ -2308,13 +2308,20 @@ class Update extends Component
             ],
 
             4 => [
-                'peepo.orang.temuan'       => $allRules['peepo.orang.temuan'],
-                'peepo.orang.deskripsi'    => $allRules['peepo.orang.deskripsi'],
-                'peepo.peralatan.temuan'   => $allRules['peepo.peralatan.temuan'],
-                'peepo.peralatan.deskripsi' => $allRules['peepo.peralatan.deskripsi'],
-                'peepo.lingkungan.temuan'  => $allRules['peepo.lingkungan.temuan'],
-                'peepo.prosedur.temuan'    => $allRules['peepo.prosedur.temuan'],
-                'peepo.organisasi.temuan'  => $allRules['peepo.organisasi.temuan'],
+                'peepo.orang.*.temuan'        => $allRules['peepo.orang.*.temuan'],
+                'peepo.orang.*.deskripsi'     => $allRules['peepo.orang.*.deskripsi'],
+
+                'peepo.peralatan.*.temuan'    => $allRules['peepo.peralatan.*.temuan'],
+                'peepo.peralatan.*.deskripsi' => $allRules['peepo.peralatan.*.deskripsi'],
+
+                'peepo.lingkungan.*.temuan'   => $allRules['peepo.lingkungan.*.temuan'],
+                'peepo.lingkungan.*.deskripsi' => $allRules['peepo.lingkungan.*.deskripsi'],
+
+                'peepo.prosedur.*.temuan'     => $allRules['peepo.prosedur.*.temuan'],
+                'peepo.prosedur.*.deskripsi'  => $allRules['peepo.prosedur.*.deskripsi'],
+
+                'peepo.organisasi.*.temuan'   => $allRules['peepo.organisasi.*.temuan'],
+                'peepo.organisasi.*.deskripsi' => $allRules['peepo.organisasi.*.deskripsi'],
             ],
 
             5 => $this->getWhyAnalysisRules(),
