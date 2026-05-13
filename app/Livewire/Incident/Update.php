@@ -570,7 +570,7 @@ class Update extends Component
             Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
         ) {
 
-            $this->name_ktt = Auth::id();
+            $this->name_ktt = Auth::user()->name;
         }
 
         /**
