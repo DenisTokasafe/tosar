@@ -1972,13 +1972,7 @@ class Update extends Component
 
             'step9' => $this->checkStep9Status(),
         ];
-        if (
-            Auth::check() &&
-            Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
-        ) {
 
-            $this->name_ktt = Auth::id();
-        }
         $users = User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'Kepala Teknik Tambang (KTT)');
