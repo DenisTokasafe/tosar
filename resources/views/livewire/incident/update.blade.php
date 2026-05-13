@@ -191,18 +191,14 @@
                         <input
                         type="radio"
                         name="edit-tabs"
-                        class="tab tooltip tooltip-bottom text-[11px] font-bold uppercase"
-                        data-tip="
-        {{ $stepTitle }}
-        • {{ $isStepCompleted ? 'Selesai' : 'Belum Lengkap' }}
-        {{ $hasErrorInStep ? ' • Ada Error' : '' }}
-        {{ !$canEdit ? ' • Akses Terbatas' : '' }}
-    "
+                        class="tab text-[11px] font-bold uppercase tooltip tooltip-bottom"
+                        data-tip="{{ $stepTitle }} • {{ $isStepCompleted ? 'Selesai' : 'Belum Lengkap' }} {{ $hasErrorInStep ? ' • Ada Error' : '' }} {{ !$canEdit ? ' • Akses Terbatas' : '' }}"
                         aria-label="Bagian {{ $i }}"
                         wire:click="{{ $canEdit ? "goToStep($i)" : '' }}"
                         value="{{ $i }}"
                         {{ $currentStep == $i ? 'checked' : '' }}
                         {{ !$canEdit ? 'disabled' : '' }} />
+
                     {{-- TAB CONTENT --}}
                     <div
                         wire:key="step-edit-container-{{ $i }}"
