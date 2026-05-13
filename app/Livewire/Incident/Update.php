@@ -114,13 +114,48 @@ class Update extends Component
     public $activeType = null;
     public $activeIndex = null;
     public $options = []; // Hasil pencarian User
-    public $peepo = [];
     public $peepoFactors = [
         'orang' => 'Orang',
         'peralatan' => 'Peralatan',
         'lingkungan' => 'Lingkungan',
         'prosedur' => 'Prosedur',
         'organisasi' => 'Organisasi'
+    ];
+    public $peepo = [
+        'orang' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'peralatan' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'lingkungan' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'prosedur' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'organisasi' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
     ];
     public $searchNamePenerimaan = [
         'kontraktor' => '',
@@ -520,6 +555,19 @@ class Update extends Component
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
+
+        foreach ($this->peepoFactors as $key => $label) {
+
+            if (!isset($this->peepo[$key])) {
+
+                $this->peepo[$key] = [
+                    [
+                        'temuan' => '',
+                        'deskripsi' => '',
+                    ]
+                ];
+            }
+        }
 
         /**
          * 2. EAGER LOADING (Optimasi N+1)
@@ -1365,14 +1413,7 @@ class Update extends Component
         $this->why_analysis['why' . $this->whyCount] = '';
         $this->saveToSession();
     }
-    public function addPeepoColumn()
-    {
-        $this->whyCount++;
 
-        // Inisialisasi key baru di setiap baris timeline agar tidak error
-        $this->why_analysis['why' . $this->whyCount] = '';
-        $this->saveToSession();
-    }
     public function removeWhyColumn()
     {
         if ($this->whyCount > 1) {
@@ -2936,5 +2977,21 @@ class Update extends Component
 
 
         $this->previewData = $data; // Simpan ke public property
+    }
+
+
+    public function addRowPeepo($factor)
+    {
+        $this->peepo[$factor][] = [
+            'temuan' => '',
+            'deskripsi' => '',
+        ];
+    }
+
+    public function removeRowPeepo($factor, $index)
+    {
+        unset($this->peepo[$factor][$index]);
+
+        $this->peepo[$factor] = array_values($this->peepo[$factor]);
     }
 }
