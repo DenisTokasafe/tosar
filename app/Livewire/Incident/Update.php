@@ -122,40 +122,11 @@ class Update extends Component
         'organisasi' => 'Organisasi'
     ];
     public $peepo = [
-        'orang' => [
-            [
-                'temuan' => '',
-                'deskripsi' => ''
-            ]
-        ],
-
-        'peralatan' => [
-            [
-                'temuan' => '',
-                'deskripsi' => ''
-            ]
-        ],
-
-        'lingkungan' => [
-            [
-                'temuan' => '',
-                'deskripsi' => ''
-            ]
-        ],
-
-        'prosedur' => [
-            [
-                'temuan' => '',
-                'deskripsi' => ''
-            ]
-        ],
-
-        'organisasi' => [
-            [
-                'temuan' => '',
-                'deskripsi' => ''
-            ]
-        ],
+        'orang' => [''],
+        'peralatan' => [''],
+        'lingkungan' => [''],
+        'prosedur' => [''],
+        'organisasi' => [''],
     ];
     public $searchNamePenerimaan = [
         'kontraktor' => '',
