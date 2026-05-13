@@ -122,11 +122,40 @@ class Update extends Component
         'organisasi' => 'Organisasi'
     ];
     public $peepo = [
-        'orang' => [''],
-        'peralatan' => [''],
-        'lingkungan' => [''],
-        'prosedur' => [''],
-        'organisasi' => [''],
+        'orang' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'peralatan' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'lingkungan' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'prosedur' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
+
+        'organisasi' => [
+            [
+                'temuan' => '',
+                'deskripsi' => ''
+            ]
+        ],
     ];
     public $searchNamePenerimaan = [
         'kontraktor' => '',
@@ -686,13 +715,7 @@ class Update extends Component
             }
 
             // --- PART 4: PEEPO ---
-            foreach ($this->peepoFactors as $key => $label) {
-                $data = $report->peepoAnalyses->where('factor_key', $key)->first();
-                $this->peepo[$key] = [
-                    'temuan'    => $data->temuan ?? '',
-                    'deskripsi' => $data->deskripsi ?? '',
-                ];
-            }
+
 
             // --- ANALISIS SCAT & WHY ---
             $scat = $report->scat_analysis;

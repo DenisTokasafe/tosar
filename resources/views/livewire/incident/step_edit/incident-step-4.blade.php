@@ -121,20 +121,37 @@
                 </tr>
 
                 {{-- ROWS --}}
-                @foreach(($peepo[$key] ?? []) as $index => $value)
+                @foreach(($peepo[$key] ?? []) as $index => $row)
 
-                <tr>
-                    <td class="p-2">
+                <tr
+                    wire:key="peepo-{{ $key }}-{{ $index }}"
+                    class="transition-colors hover:bg-base-200/30">
+
+                    {{-- TEMUAN --}}
+                    <td class="p-1 align-top border-b border-r border-base-300">
 
                         <x-form.text_area
-                            model="peepo.{{ $key }}.{{ $index }}"
-                            placeholder="Input {{ $label }}"
+                            model="peepo.{{ $key }}.{{ $index }}.temuan"
+                            placeholder="Temuan faktor {{ $label }}..."
                             rows="2"
                             :disabled="!$canEdit" />
 
                     </td>
 
-                    <td class="w-10 text-center">
+                    {{-- DESKRIPSI --}}
+                    <td class="p-1 align-top border-b border-base-300">
+
+                        <x-form.text_area
+                            model="peepo.{{ $key }}.{{ $index }}.deskripsi"
+                            placeholder="Detail siapa, apa, dimana, kapan, mengapa..."
+                            rows="2"
+                            required
+                            :disabled="!$canEdit" />
+
+                    </td>
+
+                    {{-- DELETE --}}
+                    <td class="p-1 text-center align-middle border-b border-l border-base-300">
 
                         @if($canEdit && count($peepo[$key]) > 1)
 
@@ -150,6 +167,7 @@
                         @endif
 
                     </td>
+
                 </tr>
 
                 @endforeach
