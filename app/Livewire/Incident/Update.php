@@ -565,13 +565,7 @@ class Update extends Component
         $this->consequences = RiskConsequence::orderBy('level')->get();
         $this->incidentId = $id;
 
-        if (
-            Auth::check() &&
-            Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
-        ) {
 
-            $this->name_ktt = Auth::user()->name;
-        }
 
         /**
          * 2. EAGER LOADING (Optimasi N+1)
@@ -1978,6 +1972,13 @@ class Update extends Component
 
             'step9' => $this->checkStep9Status(),
         ];
+        if (
+            Auth::check() &&
+            Auth::user()->hasRole('Kepala Teknik Tambang (KTT)')
+        ) {
+
+            $this->name_ktt = Auth::user()->name;
+        }
         $users = User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'Kepala Teknik Tambang (KTT)');
