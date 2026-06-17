@@ -14,6 +14,7 @@ class GenerateSchedule extends Component
     public $location;
     public $searchSupervisor = ''; // Search term untuk dropdown
     public $showSupervisorDropdown = false;
+    public $manualSupervisorMode = false;
 
     public $activeRowId = null; // Melacak baris (karyawan) mana yang sedang dipilih atasan
     public $activeField = null; // Melacak apakah ini untuk 'spv_id' atau 'dept_head_id'
