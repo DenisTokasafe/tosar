@@ -25,30 +25,29 @@
                 <form wire:submit="generateJadwal">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text font-semibold">Tanggal Pelaksanaan <span class="text-error">*</span></span>
-                            </label>
-                            <input type="date"
-                                wire:model="schedule_date"
-                                class="input input-bordered w-full @error('schedule_date') input-error @enderror" />
-                            @error('schedule_date')
-                            <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
-                            @enderror
-                        </div>
 
-                        <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text font-semibold">Lokasi MCU <span class="text-error">*</span></span>
-                            </label>
-                            <input type="text"
-                                wire:model="location"
-                                placeholder="Contoh: Klinik Perusahaan / RS Pelita"
-                                class="input input-bordered w-full @error('location') input-error @enderror" />
-                            @error('location')
-                            <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
-                            @enderror
-                        </div>
+                        <fieldset class="fieldset">
+                            <x-form.label label="Tanggal Lahir" required />
+                            <input type="text" readonly id="schedule_date" wire:model="schedule_date"
+                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                                placeholder="Pilih tanggal lahir {{ $errors->has('schedule_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                                x-data="{ fp: null }" x-init="
+                                    fp = flatpickr($refs.input, {
+                                        dateFormat: 'Y-m-d',
+                                    });
+
+                                    // Dengarkan event 'dateLoaded' dari Livewire
+                                    $wire.on('dateLoaded', () => {
+                                        // Set tanggal menggunakan nilai Livewire saat event dipanggil
+                                        if ($wire.schedule_date) {
+                                            fp.setDate($wire.schedule_date);
+                                        }
+                                    });" x-ref="input" />
+                            <x-label-error :messages="$errors->get('schedule_date')" />
+                        </fieldset>
+                        <x-form.input-text label="Lokasi MCU" model="location" placeholder="Lokasi MCU" />
+
+
                     </div>
 
                     <div class="divider text-lg font-semibold">Daftar Peserta (Karyawan)</div>
