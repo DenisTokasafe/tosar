@@ -9,8 +9,16 @@ class Role extends Model
     protected $table = 'roles';
     protected $fillable = ['name'];
 
-    public function users()
+    public function render()
     {
-        return $this->belongsToMany(User::class, 'role_user');
+        // Menggunakan whereHas untuk mencari User yang memiliki role tertentu
+        // Sesuaikan 'User' dengan nama role yang merepresentasikan Karyawan di tabel roles Anda.
+        $employees = User::whereHas('roles', function ($query) {
+            $query->where('name', 'User');
+        })->get();
+
+        return view('livewire.mcu.generate-schedule', [
+            'employees' => $employees
+        ]);
     }
 }

@@ -50,15 +50,16 @@ use App\Livewire\Inspection\FireInspection;
 use App\Livewire\Inspection\FireInspectionEdit;
 use App\Livewire\Inspection\FireInspectionList;
 use App\Livewire\Manhours\Index;
+use App\Livewire\Mcu\GenerateSchedule;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Wpi\Index as WpiForm;
 use App\Livewire\Wpi\WpiList;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 Route::get('/.well-known/assetlinks.json', function () {
     return response()->json([
@@ -119,6 +120,8 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('incident', IncidentIndex::class)->name('incident');
     Route::get('incident/create', IncidentCreate::class)->name('incident-create');
     Route::get('incident/detail/{id}', IncidentUpdate::class)->name('incident-detail');
+
+    Route::get('mcu/generate', GenerateSchedule::class)->name('mcu.generate');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
