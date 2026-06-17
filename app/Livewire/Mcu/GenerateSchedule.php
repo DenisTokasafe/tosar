@@ -13,8 +13,8 @@ class GenerateSchedule extends Component
     public $search = '';
     public $location;
     public $searchSupervisor = [];
-    public $showSupervisorDropdown = false; // Selalu true, hide/show diatur oleh AlpineJS di dalam komponen
-    public $manualSupervisorMode = false;
+    public $showSupervisorDropdown = [];
+    public $manualSupervisorMode = [];
     public $manualSupervisorName = [];
 
     public $activeRowId = null; // Melacak baris (karyawan) mana yang sedang dipilih atasan
@@ -32,50 +32,45 @@ class GenerateSchedule extends Component
             'participantsData' => 'required|array',
         ];
     }
-    // --- FUNGSI PELACAK BARIS ---
-    public function setActiveRow($employeeId)
+    // --- FUNGSI 1: AKTIFKAN MODE MANUAL ---
+    public function enableManualSupervisor($employeeId)
     {
-        $this->activeRowId = $employeeId;
-        $this->manualSupervisorMode = false; // Reset mode manual jika pindah baris
+        // Hanya baris karyawan ini saja yang berubah jadi mode manual
+        $this->manualSupervisorMode[$employeeId] = true;
     }
 
-    // --- FUNGSI: SAAT OPTION DIPILIH (clickaction) ---
+    // --- FUNGSI 2: SIMPAN DATA MANUAL ---
+    public function addSupervisorManual($employeeId)
+    {
+        if (isset($this->manualSupervisorName[$employeeId])) {
+            $manualName = $this->manualSupervisorName[$employeeId];
+
+            // 1. Set ID jadi null (karena manual) dan simpan namanya
+            $this->participantsData[$employeeId]['spv_id'] = null;
+            $this->participantsData[$employeeId]['spv_name_manual'] = $manualName;
+
+            // 2. Tampilkan nama manual di input text
+            $this->searchSupervisor[$employeeId] = $manualName;
+
+            // 3. Matikan mode manual untuk baris ini
+            $this->manualSupervisorMode[$employeeId] = false;
+        }
+    }
+
+    // --- FUNGSI 3: PILIH DARI DROPDOWN ---
     public function selectSupervisor($managerId, $managerName)
     {
+        // Menggunakan activeRowId yang ditangkap saat input di-focus
         if ($this->activeRowId) {
-            // 1. Simpan ID ke dalam array utama untuk dikirim ke database
             $this->participantsData[$this->activeRowId]['spv_id'] = $managerId;
-
-            // 2. Tampilkan nama yang dipilih di kolom pencarian agar terlihat rapi
             $this->searchSupervisor[$this->activeRowId] = $managerName;
+
+            // Pastikan mode manual baris ini mati jika sebelumnya sempat terbuka
+            $this->manualSupervisorMode[$this->activeRowId] = false;
         }
 
-        // Tutup mode manual jika sedang terbuka
-        $this->manualSupervisorMode = false;
-    }
-
-    // --- FUNGSI: KLIK TOMBOL "TAMBAH MANUAL" (enableManualAction) ---
-    public function enableManualSupervisor()
-    {
-        $this->manualSupervisorMode = true;
-    }
-
-    // --- FUNGSI: SIMPAN DATA MANUAL (addManualAction) ---
-    public function addSupervisorManual()
-    {
-        if ($this->activeRowId && isset($this->manualSupervisorName[$this->activeRowId])) {
-            $manualName = $this->manualSupervisorName[$this->activeRowId];
-
-            // 1. Kosongkan ID karena ini data manual, dan simpan namanya
-            $this->participantsData[$this->activeRowId]['spv_id'] = null;
-            $this->participantsData[$this->activeRowId]['spv_name_manual'] = $manualName;
-
-            // 2. Ganti text di input utama dengan nama manual
-            $this->searchSupervisor[$this->activeRowId] = $manualName;
-
-            // 3. Reset state
-            $this->manualSupervisorMode = false;
-        }
+        // Reset pelacak baris aktif
+        $this->activeRowId = null;
     }
     public function generateJadwal()
     {

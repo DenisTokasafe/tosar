@@ -118,14 +118,17 @@
                                                 modelsearch="searchSupervisor.{{ $employee->id }}"
                                                 modelid="participantsData.{{ $employee->id }}.spv_id"
                                                 :options="$managers"
-                                                :showdropdown="$showSupervisorDropdown[$employee->id]"
-                                                :manualMode="$manualSupervisorMode[$employee->id]"
 
-                                                {{-- PERHATIKAN INI: Tambahkan ID ke manualModelName --}}
+                                                {{-- Pastikan diberi nilai default true/false jika array belum terisi --}}
+                                                :showdropdown="$showSupervisorDropdown[$employee->id] ?? true"
+                                                :manualMode="$manualSupervisorMode[$employee->id] ?? false"
+
                                                 manualModelName="manualSupervisorName.{{ $employee->id }}"
 
-                                                enableManualAction="enableManualSupervisor"
-                                                addManualAction="addSupervisorManual"
+                                                {{-- GANTI TITIK MENJADI KURUNG PARAMETER --}}
+                                                enableManualAction="enableManualSupervisor({{ $employee->id }})"
+                                                addManualAction="addSupervisorManual({{ $employee->id }})"
+
                                                 clickaction="selectSupervisor" />
 
                                         </div>
