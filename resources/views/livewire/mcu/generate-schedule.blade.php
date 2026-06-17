@@ -1,4 +1,4 @@
-<div class="container max-w-6xl mx-auto p-4 lg:p-8">
+<section class="w-full">
 
     @if (session()->has('message'))
     <div class="alert alert-success shadow-lg mb-6">
@@ -161,4 +161,4 @@
             </div>
         </div>
     </x-manhours.layout>
-</div>
+</section>
