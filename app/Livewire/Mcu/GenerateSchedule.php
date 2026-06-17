@@ -108,9 +108,9 @@ class GenerateSchedule extends Component
     {
         $this->resetPage(); // Fungsi bawaan WithPagination
     }
-    public function updatingSearchSupervisor()
+    public function updatingSearchSupervisor($employeeId)
     {
-        $this->showSupervisorDropdown = true;
+        $this->showSupervisorDropdown[$employeeId] = true;
     }
 
 
