@@ -101,22 +101,29 @@
                                 </td>
                                 <td>
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
-                                    <div class="flex flex-col gap-2">
-                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" class="input input-sm input-bordered" />
+                                    <div class="flex flex-col gap-3">
 
-                                        <select wire:model="participantsData.{{ $employee->id }}.spv_id" class="select select-sm select-bordered w-full">
-                                            <option value="">Pilih Supervisor</option>
-                                            @foreach($managers as $manager)
-                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'spv_id')">
+                                            <x-form.searchable-select-advanced
+                                                label="Supervisor"
+                                                placeholder="Cari Supervisor..."
+                                                modelsearch="managerSearch"
+                                                modelid="participantsData.{{ $employee->id }}.spv_id"
+                                                :options="$managers"
+                                                :showdropdown="true"
+                                                clickaction="selectManager" />
+                                        </div>
 
-                                        <select wire:model="participantsData.{{ $employee->id }}.dept_head_id" class="select select-sm select-bordered w-full">
-                                            <option value="">Pilih Dept Head</option>
-                                            @foreach($managers as $manager)
-                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'dept_head_id')">
+                                            <x-form.searchable-select-advanced
+                                                label="Dept Head"
+                                                placeholder="Cari Dept Head..."
+                                                modelsearch="managerSearch"
+                                                modelid="participantsData.{{ $employee->id }}.dept_head_id"
+                                                :options="$managers"
+                                                :showdropdown="true"
+                                                clickaction="selectManager" />
+                                        </div>
                                     </div>
                                     @endif
                                 </td>
