@@ -5,6 +5,7 @@ namespace App\Livewire\Mcu;
 use Livewire\Component;
 use App\Models\McuSchedule;
 use App\Models\User;
+use Livewire\WithPagination;
 
 class GenerateSchedule extends Component
 {
@@ -14,7 +15,7 @@ class GenerateSchedule extends Component
     // Ubah format untuk menampung ID Karyawan sekaligus Nomor WA-nya
     // Contoh bentuk array: [ user_id => ['selected' => true, 'wa' => '08123456789'] ]
     public $participantsData = [];
-
+    use WithPagination;
     public function rules()
     {
         return [
@@ -61,7 +62,7 @@ class GenerateSchedule extends Component
     {
         $employees = User::whereHas('role', function ($query) {
             $query->where('name', 'User'); // Pastikan huruf besar/kecil sesuai di database (misal: 'User' atau 'user')
-        })->get();
+        })->paginate(10);
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees

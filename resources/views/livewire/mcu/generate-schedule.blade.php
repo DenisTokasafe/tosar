@@ -124,6 +124,7 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="mt-4">{{ $employees->links() }}</div>
                 </div>
 
                 <div class="card-actions justify-end pt-4 border-t border-base-200">
