@@ -118,8 +118,8 @@
                                                 modelsearch="searchSupervisor.{{ $employee->id }}"
                                                 modelid="participantsData.{{ $employee->id }}.spv_id"
                                                 :options="$managers"
-                                                :showdropdown="$showSupervisorDropdown"
-                                                :manualMode="$manualSupervisorMode"
+                                                :showdropdown="$showSupervisorDropdown[$employee->id]"
+                                                :manualMode="$manualSupervisorMode[$employee->id]"
 
                                                 {{-- PERHATIKAN INI: Tambahkan ID ke manualModelName --}}
                                                 manualModelName="manualSupervisorName.{{ $employee->id }}"
