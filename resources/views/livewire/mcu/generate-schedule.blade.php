@@ -102,14 +102,8 @@
                                 <td>
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
                                     <div class="flex flex-col gap-2">
-                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" class="input input-sm input-bordered" />
+                                        <x-form.input-text model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" />
 
-                                        <select wire:model="participantsData.{{ $employee->id }}.spv_id" class="select select-sm select-bordered w-full">
-                                            <option value="">Pilih Supervisor</option>
-                                            @foreach($managers as $manager)
-                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
-                                            @endforeach
-                                        </select>
                                         <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
 
                                             <x-form.searchable-select-advanced
@@ -132,8 +126,8 @@
                                                 clickaction="selectSupervisor" />
 
                                         </div>
+                                        <x-form.input-text model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" />
 
-                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" class="input input-sm input-bordered" />
 
                                     </div>
                                     @endif
