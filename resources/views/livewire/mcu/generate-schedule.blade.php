@@ -142,14 +142,14 @@
             </div>
 
             <div class="card-actions justify-end pt-4 border-t border-base-200">
-                <button type="submit" class="btn btn-primary w-full sm:w-auto">
+                <button type="submit" class="btn btn-primary btn-xs">
                     <span wire:loading.remove wire:target="generateJadwal">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                         </svg>
                         Generate Jadwal MCU
                     </span>
-                    <span wire:loading wire:target="generateJadwal" class="loading loading-spinner"></span>
+                    <span wire:loading.remove.class="hidden" wire:target="generateJadwal" class="loading loading-spinner hidden"></span>
                 </button>
             </div>
         </x-manhours.layout>
