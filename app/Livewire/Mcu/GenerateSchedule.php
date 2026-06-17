@@ -132,14 +132,7 @@ class GenerateSchedule extends Component
         }
 
         // Filter manager berdasarkan ketikan pada baris yang aktif saja
-        $managers = User::whereHas('roles', function ($query) {
-            $query->whereIn('name', ['Manager', 'Supervisor', 'Department Head']);
-        })
-            ->when($currentSearch, function ($query) use ($currentSearch) {
-                $query->where('name', 'like', '%' . $currentSearch . '%');
-            })
-            ->limit(10) // Batasi agar dropdown tidak berat
-            ->get();
+        $managers = User::search($currentSearch)->limit(100)->get();
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees,
