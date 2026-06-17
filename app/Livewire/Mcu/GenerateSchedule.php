@@ -12,7 +12,9 @@ class GenerateSchedule extends Component
     public $schedule_date;
     public $search = '';
     public $location;
-    public $managerSearch = ''; // Search term untuk dropdown
+    public $searchSupervisor = ''; // Search term untuk dropdown
+    public $showContractorDropdown = false;
+
     public $activeRowId = null; // Melacak baris (karyawan) mana yang sedang dipilih atasan
     public $activeField = null; // Melacak apakah ini untuk 'spv_id' atau 'dept_head_id'
 
@@ -66,30 +68,17 @@ class GenerateSchedule extends Component
     {
         $this->resetPage(); // Fungsi bawaan WithPagination
     }
-
-    public function selectManager($managerId, $managerName)
+    public function updatingSearchSupervisor()
     {
-        // Update data peserta berdasarkan baris dan kolom yang sedang aktif
-        if ($this->activeRowId && $this->activeField) {
-            $this->participantsData[$this->activeRowId][$this->activeField] = $managerId;
-
-            // Simpan nama/label agar user tahu siapa yang dipilih (optional, untuk tampilan)
-            $this->participantsData[$this->activeRowId][$this->activeField . '_name'] = $managerName;
-        }
-
-        // Reset search agar dropdown tertutup/bersih
-        $this->managerSearch = '';
-        $this->activeRowId = null;
-        $this->activeField = null;
+        $this->showContractorDropdown = true;
     }
+
+
 
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);
-        $managers = User::whereHas('roles', function ($query) {
-            $query->whereIn('name', ['Manager', 'Supervisor', 'Department Head']);
-        })->where('name', 'like', '%' . $this->managerSearch . '%')
-            ->get();
+        $managers = User::search(trim($this->searchSupervisor))->limit(100)->get();
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees,

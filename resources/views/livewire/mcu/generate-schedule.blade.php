@@ -101,17 +101,21 @@
                                 </td>
                                 <td>
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
-                                    <div class="flex flex-col gap-3">
+                                    <div class="flex flex-col gap-2">
+                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" class="input input-sm input-bordered" />
 
-                                        <x-form.searchable-select-advanced
-                                            label="Supervisor"
-                                            placeholder="Cari Supervisor..."
-                                            modelsearch="managerSearch"
-                                            modelid="participantsData.{{ $employee->id }}.spv_id"
-                                            :options="$managers"
-                                            :showdropdown="true"
-                                            clickaction="selectManager" />
-
+                                        <select wire:model="participantsData.{{ $employee->id }}.spv_id" class="select select-sm select-bordered w-full">
+                                            <option value="">Pilih Supervisor</option>
+                                            @foreach($managers as $manager)
+                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-form.searchable-select-advanced label="" placeholder="Cari Nama Supervisor..."
+                                            modelsearch="searchSupervisor" modelid="participantsData.{{ $employee->id }}.spv_id" :options="$managers"
+                                            :showdropdown="$showSupervisorDropdown" :manualMode="$manualSupervisorMode"
+                                            manualModelName="manualSupervisorName" enableManualAction="enableManualSupervisor"
+                                            addManualAction="addSupervisorManual" clickaction="selectSupervisor" />
+                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" class="input input-sm input-bordered" />
 
                                     </div>
                                     @endif
