@@ -21,7 +21,7 @@
     <div class="card bg-base-100 shadow-xl border border-base-200">
         <div class="card-body">
             <h2 class="card-title text-2xl font-bold border-b pb-4 mb-4">Buat Jadwal MCU Baru</h2>
-
+            <x-manhours.layout>
             <form wire:submit="generateJadwal">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -61,90 +61,90 @@
                     <span>Anda harus memilih minimal 1 peserta untuk membuat jadwal.</span>
                 </div>
                 @enderror
-                <x-manhours.layout>
-                    <div class="overflow-x-auto border border-base-200 rounded-box shadow-sm mb-6">
-                        <table class="table table-zebra table-pin-rows w-full table-xs">
-                            <thead class="bg-base-200 text-base-content text-sm">
-                                <tr>
-                                    <th class="w-16 text-center">Pilih</th>
-                                    <th>Informasi Karyawan</th>
-                                    <th>Departemen & NIK</th>
-                                    <th class="w-1/4">No WhatsApp & Supervisor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($employees as $employee)
-                                <tr class="hover">
-                                    <td class="text-center">
-                                        <input type="checkbox"
-                                            wire:model.live="participantsData.{{ $employee->id }}.selected"
-                                            value="true"
-                                            class="checkbox checkbox-primary" />
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center gap-3">
-                                            <div class="avatar placeholder">
-                                                <div class="bg-neutral text-neutral-content rounded-full w-10">
-                                                    <span class="text-xs">{{ $employee->initials() }}</span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="font-bold">{{ $employee->name }}</div>
-                                                <div class="text-sm opacity-70">{{ $employee->email }}</div>
+
+                <div class="overflow-x-auto border border-base-200 rounded-box shadow-sm mb-6">
+                    <table class="table table-zebra table-pin-rows w-full table-xs">
+                        <thead class="bg-base-200 text-base-content text-sm">
+                            <tr>
+                                <th class="w-16 text-center">Pilih</th>
+                                <th>Informasi Karyawan</th>
+                                <th>Departemen & NIK</th>
+                                <th class="w-1/4">No WhatsApp & Supervisor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($employees as $employee)
+                            <tr class="hover">
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                        wire:model.live="participantsData.{{ $employee->id }}.selected"
+                                        value="true"
+                                        class="checkbox checkbox-primary" />
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar placeholder">
+                                            <div class="bg-neutral text-neutral-content rounded-full w-10">
+                                                <span class="text-xs">{{ $employee->initials() }}</span>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="badge badge-ghost mb-1">{{ $employee->department_name ?? 'Belum ada Dept' }}</div>
-                                        <br>
-                                        <span class="text-xs opacity-70">NIK: {{ $employee->employee_id ?? '-' }}</span>
-                                    </td>
-                                    <td>
-                                        @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
-                                        <div class="flex flex-col gap-2">
-                                            <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" />
+                                        <div>
+                                            <div class="font-bold">{{ $employee->name }}</div>
+                                            <div class="text-sm opacity-70">{{ $employee->email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="badge badge-ghost mb-1">{{ $employee->department_name ?? 'Belum ada Dept' }}</div>
+                                    <br>
+                                    <span class="text-xs opacity-70">NIK: {{ $employee->employee_id ?? '-' }}</span>
+                                </td>
+                                <td>
+                                    @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
+                                    <div class="flex flex-col gap-2">
+                                        <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" />
 
-                                            <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
+                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
 
-                                                <x-form.searchable-select-advanced
-                                                    label="Supervisor"
-                                                    placeholder="Cari Nama Supervisor..."
-                                                    modelsearch="searchSupervisor.{{ $employee->id }}"
-                                                    modelid="participantsData.{{ $employee->id }}.spv_id"
-                                                    :options="$managers"
+                                            <x-form.searchable-select-advanced
+                                                label="Supervisor"
+                                                placeholder="Cari Nama Supervisor..."
+                                                modelsearch="searchSupervisor.{{ $employee->id }}"
+                                                modelid="participantsData.{{ $employee->id }}.spv_id"
+                                                :options="$managers"
 
-                                                    {{-- Pastikan diberi nilai default true/false jika array belum terisi --}}
-                                                    :showdropdown="$showSupervisorDropdown[$employee->id] ?? false"
-                                                    :manualMode="$manualSupervisorMode[$employee->id] ?? false"
+                                                {{-- Pastikan diberi nilai default true/false jika array belum terisi --}}
+                                                :showdropdown="$showSupervisorDropdown[$employee->id] ?? false"
+                                                :manualMode="$manualSupervisorMode[$employee->id] ?? false"
 
-                                                    manualModelName="manualSupervisorName.{{ $employee->id }}"
+                                                manualModelName="manualSupervisorName.{{ $employee->id }}"
 
-                                                    {{-- GANTI TITIK MENJADI KURUNG PARAMETER --}}
-                                                    enableManualAction="enableManualSupervisor({{ $employee->id }})"
-                                                    addManualAction="addSupervisorManual({{ $employee->id }})"
+                                                {{-- GANTI TITIK MENJADI KURUNG PARAMETER --}}
+                                                enableManualAction="enableManualSupervisor({{ $employee->id }})"
+                                                addManualAction="addSupervisorManual({{ $employee->id }})"
 
-                                                    clickaction="selectSupervisor" />
-
-                                            </div>
-                                            <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" />
-
+                                                clickaction="selectSupervisor" />
 
                                         </div>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center py-8 text-base-content/60">
-                                        Tidak ada data karyawan dengan Role 'User' yang ditemukan.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                        <div class="mt-4">{{ $employees->links() }}</div>
-                    </div>
-                </x-manhours.layout>
+                                        <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" />
+
+
+                                    </div>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-8 text-base-content/60">
+                                    Tidak ada data karyawan dengan Role 'User' yang ditemukan.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div class="mt-4">{{ $employees->links() }}</div>
+                </div>
+
                 <div class="card-actions justify-end pt-4 border-t border-base-200">
                     <button type="submit" class="btn btn-primary w-full sm:w-auto">
                         <span wire:loading.remove wire:target="generateJadwal">
@@ -158,6 +158,7 @@
                 </div>
 
             </form>
+            </x-manhours.layout>
         </div>
     </div>
 </div>
