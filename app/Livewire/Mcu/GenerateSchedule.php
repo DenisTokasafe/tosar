@@ -117,7 +117,10 @@ class GenerateSchedule extends Component
         // Pastikan baris yang sedang diketik menjadi baris aktif
         $this->activeRowId = $key;
     }
-
+    public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 
 
 
