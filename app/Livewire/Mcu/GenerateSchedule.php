@@ -67,9 +67,14 @@ class GenerateSchedule extends Component
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);
+        $managers = User::whereHas('role', function ($query) {
+            $query->whereIn('name', ['Manager', 'Supervisor', 'Department Head']);
+        })->get();
 
         return view('livewire.mcu.generate-schedule', [
-            'employees' => $employees
+            'employees' => $employees,
+            'managers' => $managers
+
         ]);
     }
 }

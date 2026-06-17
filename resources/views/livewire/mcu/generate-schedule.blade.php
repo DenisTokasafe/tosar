@@ -101,17 +101,23 @@
                                 </td>
                                 <td>
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
-                                    <input type="text"
-                                        wire:model="participantsData.{{ $employee->id }}.wa"
-                                        placeholder="Format: 08123456..."
-                                        class="input input-sm input-bordered input-primary w-full max-w-xs" />
-                                    @else
-                                    <span class="text-xs text-base-content/50 italic flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z" />
-                                        </svg>
-                                        Pilih karyawan untuk input WA
-                                    </span>
+                                    <div class="flex flex-col gap-2">
+                                        <input type="text" wire:model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" class="input input-sm input-bordered" />
+
+                                        <select wire:model="participantsData.{{ $employee->id }}.spv_id" class="select select-sm select-bordered w-full">
+                                            <option value="">Pilih Supervisor</option>
+                                            @foreach($managers as $manager)
+                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                                            @endforeach
+                                        </select>
+
+                                        <select wire:model="participantsData.{{ $employee->id }}.dept_head_id" class="select select-sm select-bordered w-full">
+                                            <option value="">Pilih Dept Head</option>
+                                            @foreach($managers as $manager)
+                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     @endif
                                 </td>
                             </tr>
