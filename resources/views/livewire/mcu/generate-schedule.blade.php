@@ -51,7 +51,7 @@
                 </div>
                 <x-manhours.layout>
                     <div class="divider text-lg font-semibold">Daftar Peserta (Karyawan)</div>
-                    <div class="w-full md:max-w-sm"><x-form.input-floating label="Cari Perusahaan" model="search" /></div>
+                    <div class="w-full md:max-w-sm"><x-form.input-floating label="Cari Nama Karyawan" model="search" /></div>
                     @error('participantsData')
                     <div class="alert alert-warning py-2 mb-4 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
