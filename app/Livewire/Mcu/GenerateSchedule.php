@@ -4,6 +4,8 @@ namespace App\Livewire\Mcu;
 
 use App\Models\McuSchedule;
 use App\Models\User;
+use App\Notifications\McuReminderNotification;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -106,24 +108,24 @@ class GenerateSchedule extends Component
             ]);
 
             // 2. Kirim Notifikasi Langsung ke KARYAWAN
-            $employee = User::whereId($employee_id);
+            $employee = User::find($employee_id);
             if ($employee && !empty($participant->whatsapp_number)) {
-                $employee->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule'));
+                $employee->notify(new McuReminderNotification($participant, 'new_schedule'));
             }
 
             // 3. Kirim Notifikasi Langsung ke SUPERVISOR (Bisa dari sistem / manual)
             if (!empty($participant->spv_wa_number)) {
                 if ($participant->supervisor_id) {
                     // Jika SPV terdaftar di sistem
-                    $spv = User::whereId($participant->supervisor_id);
+                    $spv = User::find($participant->supervisor_id);
                     if ($spv) {
-                        $spv->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv'));
+                        $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
                     }
                 } else {
                     // Jika SPV input manual (Gunakan Anonymous Notification bawaan Laravel)
                     Notification::send(
-                        new \Illuminate\Notifications\AnonymousNotifiable,
-                        new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv')
+                        new AnonymousNotifiable,
+                        new McuReminderNotification($participant, 'new_schedule_spv')
                     );
                 }
             }

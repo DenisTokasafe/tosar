@@ -28,9 +28,10 @@ class WhatsAppChannel
         $phone = $messageData['phone'] ?? null;
         $message = $messageData['message'] ?? null;
 
-        // Jika nomor WA tidak diisi manual saat pembuatan jadwal, batalkan pengiriman
+        // Ubah baris pengecekan kosong ini:
         if (empty($phone) || empty($message)) {
-            Log::warning("Gagal mengirim WA: Nomor telepon tidak ditemukan untuk User ID {$notifiable->id}");
+            $notifiableId = $notifiable->id ?? 'Manual/Anonymous'; // Tambahkan fallback
+            Log::warning("Gagal mengirim WA: Nomor telepon tidak ditemukan untuk User ID {$notifiableId}");
             return;
         }
 

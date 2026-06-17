@@ -21,6 +21,11 @@ class McuReminderNotification extends Notification implements ShouldQueue
     // Tentukan channel berdasarkan target (Email, custom WhatsApp)
     public function via(object $notifiable): array
     {
+        // Jika input manual (AnonymousNotifiable), hanya kirim via WA karena tidak ada email
+        if ($notifiable instanceof \Illuminate\Notifications\AnonymousNotifiable) {
+            return [WhatsAppChannel::class];
+        }
+
         return ['mail', WhatsAppChannel::class];
     }
 
@@ -47,27 +52,27 @@ class McuReminderNotification extends Notification implements ShouldQueue
         $date = $this->participant->schedule->schedule_date->format('d M Y');
         $employeeName = $this->participant->employee->name ?? 'Karyawan';
 
-        // 1. JIKA NOTIFIKASI UNTUK SUPERVISOR
-        if ($this->type === 'new_schedule_spv') {
-            // Handle nama SPV jika manual (tidak ada object notifiable->name)
-            $spvName = $notifiable->name ?? 'Bapak/Ibu Supervisor';
+        // Deteksi apakah yang menerima ini Atasan atau Karyawan
+        $isManualSpv = $notifiable instanceof \Illuminate\Notifications\AnonymousNotifiable;
+        $isManager = $this->type === 'new_schedule_spv' || $isManualSpv || (isset($notifiable->id) && $notifiable->id !== $this->participant->employee_id);
 
+        if ($isManager) {
+            $spvName = $notifiable->name ?? 'Bapak/Ibu Atasan';
             $text = "*PEMBERITAHUAN JADWAL MCU BAWAHAN*\n\n";
             $text .= "Halo {$spvName},\n";
-            $text .= "Anggota tim Anda, *{$employeeName}*, telah dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
-            $text .= "Mohon bantuan Anda untuk memastikan kehadiran yang bersangkutan.";
+            $text .= "Anggota tim Anda, *{$employeeName}*, dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
+            $text .= "Mohon bantuan Anda untuk memastikan kehadirannya.";
 
-            // Langsung ambil dari kolom database yang baru dibuat
-            $phone = $this->participant->spv_wa_number;
-        }
-        // 2. JIKA NOTIFIKASI UNTUK KARYAWAN
-        else {
+            // Jika SPV manual ambil dari spv_wa_number, jika SPV sistem ambil dari data model user-nya (pastikan ada field no_wa/phone)
+            $phone = $isManualSpv || $this->type === 'new_schedule_spv'
+                ? $this->participant->spv_wa_number
+                : ($notifiable->whatsapp_number ?? $notifiable->phone ?? $this->participant->spv_wa_number);
+        } else {
             $text = "*PEMBERITAHUAN JADWAL MCU*\n\n";
             $text .= "Halo {$notifiable->name},\n";
             $text .= "Anda telah dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
             $text .= "Mohon persiapkan diri Anda.";
 
-            // Langsung ambil dari kolom database karyawan
             $phone = $this->participant->whatsapp_number;
         }
 
