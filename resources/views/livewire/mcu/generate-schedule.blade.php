@@ -24,8 +24,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
 
             <fieldset class="fieldset">
-                <x-form.label label="Tanggal Lahir" required />
-                <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih tanggal lahir"
+                <x-form.label label="Tanggal MCU" required />
+                <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih Tanggal MCU"
                     class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs {{ $errors->has('schedule_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
                     x-data="{ fp: null }" x-init="
                                     fp = flatpickr($refs.input, {
