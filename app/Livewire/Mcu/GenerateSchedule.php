@@ -59,8 +59,8 @@ class GenerateSchedule extends Component
 
     public function render()
     {
-        $employees = User::whereHas('roles', function ($query) {
-            $query->where('name', 'User');
+        $employees = User::whereHas('role', function ($query) {
+            $query->where('name', 'User'); // Pastikan huruf besar/kecil sesuai di database (misal: 'User' atau 'user')
         })->get();
 
         return view('livewire.mcu.generate-schedule', [
@@ -68,3 +68,4 @@ class GenerateSchedule extends Component
         ]);
     }
 }
+dsd
