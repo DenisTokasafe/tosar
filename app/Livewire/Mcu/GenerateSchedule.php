@@ -13,7 +13,7 @@ class GenerateSchedule extends Component
     public $search = '';
     public $location;
     public $searchSupervisor = [];
-    public $showSupervisorDropdown = true; // Selalu true, hide/show diatur oleh AlpineJS di dalam komponen
+    public $showSupervisorDropdown = false; // Selalu true, hide/show diatur oleh AlpineJS di dalam komponen
     public $manualSupervisorMode = false;
     public $manualSupervisorName = [];
 
