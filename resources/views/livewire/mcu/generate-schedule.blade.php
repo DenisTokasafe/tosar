@@ -110,11 +110,26 @@
                                             <option value="{{ $manager->id }}">{{ $manager->name }}</option>
                                             @endforeach
                                         </select>
-                                        <x-form.searchable-select-advanced label="" placeholder="Cari Nama Supervisor..."
-                                            modelsearch="searchSupervisor" modelid="participantsData.{{ $employee->id }}.spv_id" :options="$managers"
-                                            :showdropdown="$showSupervisorDropdown" :manualMode="$manualSupervisorMode"
-                                            manualModelName="manualSupervisorName" enableManualAction="enableManualSupervisor"
-                                            addManualAction="addSupervisorManual" clickaction="selectSupervisor" />
+                                        <div x-on:focusin="$wire.setActiveRow({{ $employee->id }})">
+
+                                            <x-form.searchable-select-advanced
+                                                label=""
+                                                placeholder="Cari Nama Supervisor..."
+                                                modelsearch="searchSupervisor.{{ $employee->id }}"
+                                                modelid="participantsData.{{ $employee->id }}.spv_id"
+                                                :options="$managers"
+                                                :showdropdown="$showSupervisorDropdown"
+                                                :manualMode="$manualSupervisorMode"
+
+                                                {{-- PERHATIKAN INI: Tambahkan ID ke manualModelName --}}
+                                                manualModelName="manualSupervisorName.{{ $employee->id }}"
+
+                                                enableManualAction="enableManualSupervisor"
+                                                addManualAction="addSupervisorManual"
+                                                clickaction="selectSupervisor" />
+
+                                        </div>
+
                                         <input type="text" wire:model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA Supervisor" class="input input-sm input-bordered" />
 
                                     </div>
