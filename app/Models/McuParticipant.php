@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @property int|null $supervisor_id
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

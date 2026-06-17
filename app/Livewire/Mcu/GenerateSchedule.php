@@ -105,7 +105,7 @@ class GenerateSchedule extends Component
             ]);
 
             // 2. Kirim Notifikasi Langsung ke KARYAWAN
-            $employee = User::find($employee_id);
+            $employee = User::whereId($employee_id);
             if ($employee && !empty($participant->whatsapp_number)) {
                 $employee->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule'));
             }
@@ -114,7 +114,7 @@ class GenerateSchedule extends Component
             if (!empty($participant->spv_wa_number)) {
                 if ($participant->supervisor_id) {
                     // Jika SPV terdaftar di sistem
-                    $spv = User::find($participant->supervisor_id);
+                    $spv = User::whereId($participant->supervisor_id);
                     if ($spv) {
                         $spv->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv'));
                     }
