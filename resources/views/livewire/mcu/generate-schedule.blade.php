@@ -103,7 +103,7 @@
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
                                     <div class="flex flex-col gap-3">
 
-                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'spv_id')">
+                                        <div wire:ignore.self x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'spv_id')">
                                             <x-form.searchable-select-advanced
                                                 label="Supervisor"
                                                 placeholder="Cari Supervisor..."
