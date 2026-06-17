@@ -9,7 +9,8 @@ use Livewire\WithPagination;
 
 class GenerateSchedule extends Component
 {
-    public $schedule_date, $search;
+    public $schedule_date;
+    public $search = '';
     public $location;
 
     // Ubah format untuk menampung ID Karyawan sekaligus Nomor WA-nya
@@ -56,6 +57,11 @@ class GenerateSchedule extends Component
 
         $this->reset(['schedule_date', 'location', 'participantsData']);
         session()->flash('message', 'Jadwal MCU berhasil dibuat beserta nomor WhatsApp peserta.');
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage(); // Fungsi bawaan WithPagination
     }
 
     public function render()
