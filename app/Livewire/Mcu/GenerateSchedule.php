@@ -77,7 +77,6 @@ class GenerateSchedule extends Component
     {
         $this->validate();
 
-        // Filter hanya karyawan yang dicentang (selected = true)
         $selectedParticipants = array_filter($this->participantsData, function ($data) {
             return isset($data['selected']) && $data['selected'] == true;
         });
@@ -94,15 +93,43 @@ class GenerateSchedule extends Component
         ]);
 
         foreach ($selectedParticipants as $employee_id => $data) {
-            $schedule->participants()->create([
+            // 1. Simpan data sesuai struktur terbaru Anda
+            $participant = $schedule->participants()->create([
                 'employee_id' => $employee_id,
-                'whatsapp_number' => $data['wa'] ?? null, // Simpan nomor WA manual
-                'notification_status' => 'pending'
+                'whatsapp_number' => $data['wa'] ?? null,
+                'supervisor_id' => $data['spv_id'] ?? null,
+                'spv_wa_number' => $data['wa_spv'] ?? null,
+
+                // Ubah jadi 'notified' agar tidak dikirim ganda oleh Cron Job H-30
+                'notification_status' => 'notified'
             ]);
+
+            // 2. Kirim Notifikasi Langsung ke KARYAWAN
+            $employee = User::find($employee_id);
+            if ($employee && !empty($participant->whatsapp_number)) {
+                $employee->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule'));
+            }
+
+            // 3. Kirim Notifikasi Langsung ke SUPERVISOR (Bisa dari sistem / manual)
+            if (!empty($participant->spv_wa_number)) {
+                if ($participant->supervisor_id) {
+                    // Jika SPV terdaftar di sistem
+                    $spv = User::find($participant->supervisor_id);
+                    if ($spv) {
+                        $spv->notify(new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv'));
+                    }
+                } else {
+                    // Jika SPV input manual (Gunakan Anonymous Notification bawaan Laravel)
+                    \Illuminate\Support\Facades\Notification::send(
+                        new \Illuminate\Notifications\AnonymousNotifiable,
+                        new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv')
+                    );
+                }
+            }
         }
 
         $this->reset(['schedule_date', 'location', 'participantsData']);
-        session()->flash('message', 'Jadwal MCU berhasil dibuat beserta nomor WhatsApp peserta.');
+        session()->flash('message', 'Jadwal MCU berhasil dibuat dan notifikasi WA sedang dikirim.');
     }
 
     public function updatingSearch()

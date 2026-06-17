@@ -45,15 +45,34 @@ class McuReminderNotification extends Notification implements ShouldQueue
     public function toWhatsApp(object $notifiable): array
     {
         $date = $this->participant->schedule->schedule_date->format('d M Y');
+        $employeeName = $this->participant->employee->name ?? 'Karyawan';
 
-        $text = "*PENGINGAT MCU*\n\n";
-        $text .= "Halo {$notifiable->name},\n";
-        $text .= "Anda memiliki jadwal Medical Check-Up pada tanggal *{$date}*.\n";
-        $text .= "Mohon persiapkan diri Anda.";
+        // 1. JIKA NOTIFIKASI UNTUK SUPERVISOR
+        if ($this->type === 'new_schedule_spv') {
+            // Handle nama SPV jika manual (tidak ada object notifiable->name)
+            $spvName = $notifiable->name ?? 'Bapak/Ibu Supervisor';
+
+            $text = "*PEMBERITAHUAN JADWAL MCU BAWAHAN*\n\n";
+            $text .= "Halo {$spvName},\n";
+            $text .= "Anggota tim Anda, *{$employeeName}*, telah dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
+            $text .= "Mohon bantuan Anda untuk memastikan kehadiran yang bersangkutan.";
+
+            // Langsung ambil dari kolom database yang baru dibuat
+            $phone = $this->participant->spv_wa_number;
+        }
+        // 2. JIKA NOTIFIKASI UNTUK KARYAWAN
+        else {
+            $text = "*PEMBERITAHUAN JADWAL MCU*\n\n";
+            $text .= "Halo {$notifiable->name},\n";
+            $text .= "Anda telah dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
+            $text .= "Mohon persiapkan diri Anda.";
+
+            // Langsung ambil dari kolom database karyawan
+            $phone = $this->participant->whatsapp_number;
+        }
 
         return [
-            // Ambil nomor WA yang diinput manual dari tabel mcu_participants
-            'phone' => $this->participant->whatsapp_number,
+            'phone' => $phone,
             'message' => $text
         ];
     }

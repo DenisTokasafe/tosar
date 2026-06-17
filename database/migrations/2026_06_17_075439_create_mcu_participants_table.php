@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mcu_schedule_id')->constrained()->cascadeOnDelete();
             $table->foreignId('employee_id')->constrained('users'); // Karyawan
+            $table->foreignId('supervisor_id')->constrained('users');
             $table->string('whatsapp_number')->nullable();
+            $table->string('spv_wa_number')->nullable();
             // Status Tracking Notifikasi
             $table->enum('notification_status', [
                 'pending',
