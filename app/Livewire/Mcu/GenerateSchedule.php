@@ -23,6 +23,7 @@ class GenerateSchedule extends Component
     // Contoh bentuk array: [ user_id => ['selected' => true, 'wa' => '08123456789'] ]
     public $participantsData = [];
     use WithPagination;
+
     public function rules()
     {
         return [
@@ -60,16 +61,16 @@ class GenerateSchedule extends Component
     // --- FUNGSI 3: PILIH DARI DROPDOWN ---
     public function selectSupervisor($managerId, $managerName)
     {
-        // Menggunakan activeRowId yang ditangkap saat input di-focus
         if ($this->activeRowId) {
             $this->participantsData[$this->activeRowId]['spv_id'] = $managerId;
             $this->searchSupervisor[$this->activeRowId] = $managerName;
 
-            // Pastikan mode manual baris ini mati jika sebelumnya sempat terbuka
             $this->manualSupervisorMode[$this->activeRowId] = false;
+
+            // --- TAMBAHKAN INI UNTUK MENUTUP DROPDOWN ---
+            $this->showSupervisorDropdown[$this->activeRowId] = false;
         }
 
-        // Reset pelacak baris aktif
         $this->activeRowId = null;
     }
     public function generateJadwal()
@@ -108,9 +109,13 @@ class GenerateSchedule extends Component
     {
         $this->resetPage(); // Fungsi bawaan WithPagination
     }
-    public function updatingSearchSupervisor($employeeId)
+    public function updatedSearchSupervisor($value, $key)
     {
-        $this->showSupervisorDropdown[$employeeId] = true;
+        // $key di sini adalah $employee->id
+        $this->showSupervisorDropdown[$key] = true;
+
+        // Pastikan baris yang sedang diketik menjadi baris aktif
+        $this->activeRowId = $key;
     }
 
 
