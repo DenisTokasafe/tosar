@@ -14737,6 +14737,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $name
      * @property int $id
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+     * @property-read int|null $users_count
      * @method static \Illuminate\Database\Eloquent\Builder<Role>|Role whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Role>|Role whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Role>|Role whereCreatedAt($value)

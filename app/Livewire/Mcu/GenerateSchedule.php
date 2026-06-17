@@ -67,7 +67,7 @@ class GenerateSchedule extends Component
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);
-        $managers = User::whereHas('role', function ($query) {
+        $managers = User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['Manager', 'Supervisor', 'Department Head']);
         })->get();
 
