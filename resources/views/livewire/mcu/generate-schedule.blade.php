@@ -112,14 +112,7 @@
                                             :showdropdown="true"
                                             clickaction="selectManager" />
 
-                                        <x-form.searchable-select-advanced
-                                            label="Dept Head"
-                                            placeholder="Cari Dept Head..."
-                                            modelsearch="managerSearch"
-                                            modelid="participantsData.{{ $employee->id }}.dept_head_id"
-                                            :options="$managers"
-                                            :showdropdown="true"
-                                            clickaction="selectManager" />
+
                                     </div>
                                     @endif
                                 </td>
