@@ -141,7 +141,7 @@
                 <div class="mt-4">{{ $employees->links() }}</div>
             </div>
 
-            <div class="card-actions justify-end pt-4 border-t border-base-200">
+            <div class=" justify-end pt-4 border-t border-base-200">
                 <button type="submit" class="btn btn-primary btn-xs">
                     <span wire:loading.remove wire:target="generateJadwal">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
