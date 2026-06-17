@@ -110,7 +110,7 @@
                                             <option value="{{ $manager->id }}">{{ $manager->name }}</option>
                                             @endforeach
                                         </select>
-                                        <div x-on:focusin="$wire.setActiveRow({{ $employee->id }})">
+                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
 
                                             <x-form.searchable-select-advanced
                                                 label=""
