@@ -103,27 +103,23 @@
                                     @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
                                     <div class="flex flex-col gap-3">
 
-                                        <div wire:ignore.self x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'spv_id')">
-                                            <x-form.searchable-select-advanced
-                                                label="Supervisor"
-                                                placeholder="Cari Supervisor..."
-                                                modelsearch="managerSearch"
-                                                modelid="participantsData.{{ $employee->id }}.spv_id"
-                                                :options="$managers"
-                                                :showdropdown="true"
-                                                clickaction="selectManager" />
-                                        </div>
+                                        <x-form.searchable-select-advanced
+                                            label="Supervisor"
+                                            placeholder="Cari Supervisor..."
+                                            modelsearch="managerSearch"
+                                            modelid="participantsData.{{ $employee->id }}.spv_id"
+                                            :options="$managers"
+                                            :showdropdown="true"
+                                            clickaction="selectManager" />
 
-                                        <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }}); $wire.set('activeField', 'dept_head_id')">
-                                            <x-form.searchable-select-advanced
-                                                label="Dept Head"
-                                                placeholder="Cari Dept Head..."
-                                                modelsearch="managerSearch"
-                                                modelid="participantsData.{{ $employee->id }}.dept_head_id"
-                                                :options="$managers"
-                                                :showdropdown="true"
-                                                clickaction="selectManager" />
-                                        </div>
+                                        <x-form.searchable-select-advanced
+                                            label="Dept Head"
+                                            placeholder="Cari Dept Head..."
+                                            modelsearch="managerSearch"
+                                            modelid="participantsData.{{ $employee->id }}.dept_head_id"
+                                            :options="$managers"
+                                            :showdropdown="true"
+                                            clickaction="selectManager" />
                                     </div>
                                     @endif
                                 </td>
