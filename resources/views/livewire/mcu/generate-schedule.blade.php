@@ -18,20 +18,20 @@
     </div>
     @endif
 
-    <x-manhours.layout>
-        <div class="card bg-base-100 shadow-xl border border-base-200">
-            <div class="card-body">
-                <h2 class="card-title text-2xl font-bold border-b pb-4 mb-4">Buat Jadwal MCU Baru</h2>
-                <form wire:submit="generateJadwal">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+        <div class="card-body">
+            <h2 class="card-title text-2xl font-bold border-b pb-4 mb-4">Buat Jadwal MCU Baru</h2>
+            <form wire:submit="generateJadwal">
 
-                        <fieldset class="fieldset">
-                            <x-form.label label="Tanggal Lahir" required />
-                            <input type="text" readonly id="schedule_date" wire:model="schedule_date"
-                                class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
-                                placeholder="Pilih tanggal lahir {{ $errors->has('schedule_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
-                                x-data="{ fp: null }" x-init="
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+                    <fieldset class="fieldset">
+                        <x-form.label label="Tanggal Lahir" required />
+                        <input type="text" readonly id="schedule_date" wire:model="schedule_date"
+                            class="w-full cursor-pointer input input-bordered focus:ring-1 focus:border-info focus:ring-info focus:outline-hidden input-xs"
+                            placeholder="Pilih tanggal lahir {{ $errors->has('schedule_date') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}"
+                            x-data="{ fp: null }" x-init="
                                     fp = flatpickr($refs.input, {
                                         dateFormat: 'Y-m-d',
                                     });
@@ -43,13 +43,13 @@
                                             fp.setDate($wire.schedule_date);
                                         }
                                     });" x-ref="input" />
-                            <x-label-error :messages="$errors->get('schedule_date')" />
-                        </fieldset>
-                        <x-form.input-text label="Lokasi MCU" model="location" placeholder="Lokasi MCU" />
+                        <x-label-error :messages="$errors->get('schedule_date')" />
+                    </fieldset>
+                    <x-form.input-text label="Lokasi MCU" model="location" placeholder="Lokasi MCU" />
 
 
-                    </div>
-
+                </div>
+                <x-manhours.layout>
                     <div class="divider text-lg font-semibold">Daftar Peserta (Karyawan)</div>
                     <div class="w-full md:max-w-sm"><x-form.input-floating label="Cari Perusahaan" model="search" /></div>
                     @error('participantsData')
@@ -155,9 +155,9 @@
                             <span wire:loading wire:target="generateJadwal" class="loading loading-spinner"></span>
                         </button>
                     </div>
-
-                </form>
-            </div>
+                </x-manhours.layout>
+            </form>
         </div>
-    </x-manhours.layout>
+    </div>
+
 </section>
