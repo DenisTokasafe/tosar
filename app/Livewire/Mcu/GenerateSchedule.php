@@ -68,4 +68,3 @@ class GenerateSchedule extends Component
         ]);
     }
 }
-dsd
