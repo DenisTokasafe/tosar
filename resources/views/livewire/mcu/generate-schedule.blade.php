@@ -21,7 +21,7 @@
 
     <div class="card bg-base-100 shadow-xl border border-base-200">
         <div class="card-body">
-            <h2 class="card-title text-2xl font-bold border-b pb-4 mb-4">Buat Jadwal MCU Baru</h2>
+            <h2 class="card-title text-2xl font-bold border-b  mb-4">Buat Jadwal MCU Baru</h2>
             <form wire:submit="generateJadwal">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
