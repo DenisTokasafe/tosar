@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Mcu;
 
-use Livewire\Component;
 use App\Models\McuSchedule;
 use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class GenerateSchedule extends Component
@@ -120,7 +121,7 @@ class GenerateSchedule extends Component
                     }
                 } else {
                     // Jika SPV input manual (Gunakan Anonymous Notification bawaan Laravel)
-                    \Illuminate\Support\Facades\Notification::send(
+                    Notification::send(
                         new \Illuminate\Notifications\AnonymousNotifiable,
                         new \App\Notifications\McuReminderNotification($participant, 'new_schedule_spv')
                     );
