@@ -69,7 +69,7 @@
                                 <th class="w-16 text-center">Pilih</th>
                                 <th>Informasi Karyawan</th>
                                 <th>Departemen & NIK</th>
-                                <th class="w-1/4">Nomor WhatsApp</th>
+                                <th class="w-1/4">No WhatsApp & Supervisor</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,7 +107,7 @@
                                         <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
 
                                             <x-form.searchable-select-advanced
-                                                label=""
+                                                label="Supervisor"
                                                 placeholder="Cari Nama Supervisor..."
                                                 modelsearch="searchSupervisor.{{ $employee->id }}"
                                                 modelid="participantsData.{{ $employee->id }}.spv_id"
