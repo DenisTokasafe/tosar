@@ -120,7 +120,7 @@
                                                 :options="$managers"
 
                                                 {{-- Pastikan diberi nilai default true/false jika array belum terisi --}}
-                                                :showdropdown="$showSupervisorDropdown[$employee->id] ?? true"
+                                                :showdropdown="$showSupervisorDropdown[$employee->id] ?? false"
                                                 :manualMode="$manualSupervisorMode[$employee->id] ?? false"
 
                                                 manualModelName="manualSupervisorName.{{ $employee->id }}"
