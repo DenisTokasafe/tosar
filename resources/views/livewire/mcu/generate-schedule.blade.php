@@ -1,4 +1,4 @@
-<section class="w-full max-w-7xl ">
+<section class="w-full max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
 
     @if (session()->has('message'))
     <div class="alert alert-success shadow-sm mb-6 rounded-xl">
