@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <dialog wire:ignore.self class="modal {{ $showReviewModal ? 'modal-open' : '' }}">
+    <div class="modal {{ $showReviewModal ? 'modal-open' : '' }}">
         <div class="modal-box w-11/12 max-w-2xl">
             <h3 class="font-bold text-lg border-b pb-2">Review Status MCU</h3>
 
@@ -90,6 +90,6 @@
             </form>
         </div>
         <form method="dialog" class="modal-backdrop" wire:click="$set('showReviewModal', false)"><button>close</button></form>
-    </dialog>
+    </div>
 
 </section>
