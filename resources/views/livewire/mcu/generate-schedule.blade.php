@@ -31,7 +31,7 @@
 
         <div class="card bg-base-100 border border-base-200 shadow-sm">
             <div class="card-body p-2 md:p-4">
-                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-2 text-base-content/80 flex items-center gap-2">
+                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-0 text-base-content/80 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
