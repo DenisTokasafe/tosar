@@ -41,9 +41,9 @@
         </div>
     </div>
 
-    <div class="modal {{ $showReviewModal ? 'modal-open' : '' }}" style="z-index: 999;">
-        <div class="modal-box w-11/12 max-w-2xl">
-            <h3 class="font-bold text-lg border-b pb-2">Review Status MCU</h3>
+    <flux:modal wire:model="showReviewModal" class="w-full max-w-2xl">
+        <div class="space-y-2">
+            <flux:heading size="lg" class="border-b pb-2">Review Status MCU</flux:heading>
 
             <form wire:submit="saveReview" class="py-4 space-y-4">
 
@@ -81,18 +81,16 @@
                     @error('doctor_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="modal-action">
-                    <button type="button" wire:click="$set('showReviewModal', false)" class="btn btn-ghost">Batal</button>
+                <div class="flex justify-end space-x-2 pt-4 border-t border-base-200">
+                    <flux:button variant="ghost" wire:click="$set('showReviewModal', false)">Batal</flux:button>
 
-                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                        <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm"></span>
+                    <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
+                        <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm mr-1"></span>
                         Simpan Review
-                    </button>
+                    </flux:button>
                 </div>
             </form>
         </div>
-
-        <div class="modal-backdrop bg-black/40" wire:click="$set('showReviewModal', false)"></div>
-    </div>
+    </flux:modal>
 
 </section>
