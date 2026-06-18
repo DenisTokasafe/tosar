@@ -95,11 +95,6 @@
                                     </td>
                                     <td class="align-top pt-3">
                                         <div class="flex items-center gap-3">
-                                            <div class="avatar placeholder">
-                                                <div class="bg-neutral text-neutral-content rounded-full w-10 md:w-12 shadow-sm">
-                                                    <span class="text-xs md:text-sm font-semibold">{{ $employee->initials() }}</span>
-                                                </div>
-                                            </div>
                                             <div>
                                                 <div class="font-bold text-base">{{ $employee->name }}</div>
                                                 <div class="text-xs text-base-content/70 mt-0.5">{{ $employee->email }}</div>
