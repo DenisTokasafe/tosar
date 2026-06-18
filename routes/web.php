@@ -124,7 +124,7 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('incident/detail/{id}', IncidentUpdate::class)->name('incident-detail');
 });
 // Bisa diakses keduanya
-Route::middleware(['role:administration,medical staff'])->group(function () {
+Route::middleware(['role:administrator,medical staff'])->group(function () {
     Route::get('mcu/generate', GenerateSchedule::class)->name('mcu.generate');
     Route::get('mcu/input-result', InputResult::class)->name('mcu.input-result');
     Route::get('mcu/doctor-review', DoctorReview::class)->name('mcu.doctor-review');
