@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="{{ session('theme', 'goldore-light') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html data-theme="{{ session('theme', 'sentry-interlock') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
     @include('partials.head')
