@@ -50,7 +50,9 @@ use App\Livewire\Inspection\FireInspection;
 use App\Livewire\Inspection\FireInspectionEdit;
 use App\Livewire\Inspection\FireInspectionList;
 use App\Livewire\Manhours\Index;
+use App\Livewire\Mcu\DoctorReview;
 use App\Livewire\Mcu\GenerateSchedule;
+use App\Livewire\Mcu\InputResult;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -122,6 +124,9 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('incident/detail/{id}', IncidentUpdate::class)->name('incident-detail');
 
     Route::get('mcu/generate', GenerateSchedule::class)->name('mcu.generate');
+    Route::get('mcu/input-result', InputResult::class)->name('mcu.input-result');
+    // Route untuk Company Doctor (Review Status Kebugaran)
+    Route::get('mcu/doctor-review', DoctorReview::class)->name('mcu.doctor-review');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
