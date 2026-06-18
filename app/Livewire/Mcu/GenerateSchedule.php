@@ -150,7 +150,17 @@ class GenerateSchedule extends Component
             // Jika SPV tidak diisi di sistem DAN tidak diisi manual, beri pesan error terarah
             if (empty($data['spv_id']) && empty($data['spv_name_manual'])) {
                 $employeeName = User::find($employee_id)->name ?? 'Karyawan';
-                session()->flash('error', "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.");
+                $this->dispatch(
+                    'alert',
+                    [
+                        'text' => "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.",
+                        'duration' => 5000,
+                        'destination' => '/contact',
+                        'newWindow' => true,
+                        'close' => true,
+                        'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                    ]
+                );
                 return;
             }
         }
@@ -205,7 +215,14 @@ class GenerateSchedule extends Component
         }
 
         $this->reset(['schedule_date', 'location', 'participantsData']);
-        session()->flash('message', 'Jadwal MCU berhasil dibuat dan notifikasi WA sedang dikirim.');
+        $this->dispatch('alert', [
+            'text'            => "Jadwal MCU berhasil dibuat dan notifikasi WA sedang dikirim.",
+            'duration'        => 5000,
+            'destination'     => '/contact',
+            'newWindow'       => true,
+            'close'           => true,
+            'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
+        ]);
     }
 
     public function updatingSearch()

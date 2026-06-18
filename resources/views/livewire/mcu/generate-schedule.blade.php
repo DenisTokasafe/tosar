@@ -1,23 +1,5 @@
 <section class="w-full px-4 mx-auto sm:px-6 lg:px-8">
-
-    @if (session()->has('message'))
-    <div class="mb-6 shadow-sm alert alert-success rounded-xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="text-sm font-medium md:text-base">{{ session('message') }}</span>
-    </div>
-    @endif
-
-    @if (session()->has('error'))
-    <div class="mb-6 shadow-sm alert alert-error rounded-xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="text-sm font-medium md:text-base">{{ session('error') }}</span>
-    </div>
-    @endif
-
+    <x-toast />
     <div class="flex items-center gap-3 pb-4 mb-4 border-b border-base-200">
         <div class="p-2 rounded-lg bg-primary/10">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
