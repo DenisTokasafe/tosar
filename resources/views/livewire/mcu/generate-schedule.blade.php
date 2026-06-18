@@ -46,12 +46,7 @@
                                 });" x-ref="input" />
                         <x-label-error :messages="$errors->get('schedule_date')" />
                     </fieldset>
-
-                    <fieldset class="fieldset w-full">
-                        <div class="mt-1 md:mt-0">
-                            <x-form.input-text label="Lokasi MCU" model="location" placeholder="Masukkan Lokasi MCU" />
-                        </div>
-                    </fieldset>
+                    <x-form.input-text label="Lokasi MCU" model="location" placeholder="Masukkan Lokasi MCU" />
                 </div>
             </div>
         </div>
