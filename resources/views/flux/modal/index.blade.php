@@ -10,19 +10,26 @@
 @php
 $closable ??= $variant === 'bare' ? false : true;
 
+// 1. UBAH CLASS DI SINI UNTUK MENYESUAIKAN DENGAN DAISYUI
 $classes = Flux::classes()
+->add('modal-box relative') // daisyUI modal-box dasar + relative untuk close button
 ->add(match ($variant) {
-default => 'p-6 [:where(&)]:max-w-xl shadow-lg rounded-xl',
+// Default Modal daisyUI (Tengah)
+default => 'max-w-xl',
+
+// Flyout / Drawer style (daisyUI biasanya pakai komponen drawer,
+// tapi kita bisa manipulasi modal-box agar mepet ke samping)
 'flyout' => match($position) {
-'bottom' => 'fixed m-0 p-8 min-w-[100vw] overflow-y-auto mt-auto [--fx-flyout-translate:translateY(50px)] border-t',
-'left' => 'fixed m-0 p-8 max-h-dvh min-h-dvh md:[:where(&)]:min-w-[25rem] overflow-y-auto mr-auto [--fx-flyout-translate:translateX(-50px)] border-e rtl:mr-0 rtl:ml-auto rtl:[--fx-flyout-translate:translateX(50px)]',
-default => 'fixed m-0 p-8 max-h-dvh min-h-dvh md:[:where(&)]:min-w-[25rem] overflow-y-auto ml-auto [--fx-flyout-translate:translateX(50px)] border-s rtl:ml-0 rtl:mr-auto rtl:[--fx-flyout-translate:translateX(-50px)]',
+'bottom' => 'max-w-none w-full mt-auto rounded-t-2xl rounded-b-none translate-y-0',
+'left' => 'max-w-md h-full max-h-screen mr-auto ml-0 rounded-r-2xl rounded-l-none',
+default => 'max-w-md h-full max-h-screen ml-auto mr-0 rounded-l-2xl rounded-r-none', // right
 },
-'bare' => '',
+'bare' => 'bg-transparent shadow-none p-0 max-w-none',
 })
+// Menggunakan sistem pewarnaan / tema dari daisyUI (misal: bg-base-100)
 ->add(match ($variant) {
-default => 'bg-base-300 border-zinc-700',
-'flyout' => 'bg-base-300 border-zinc-700',
+default => 'bg-base-100 text-base-content border border-base-200',
+'flyout' => 'bg-base-100 text-base-content border-base-200',
 'bare' => 'bg-transparent',
 });
 
@@ -38,14 +45,12 @@ $attributes = $attributes->merge([$wireModel->directive => $wireModel->value]);
 // Support <flux:modal ... @close="?"> syntax...
     if ($attributes['@close'] ?? null) {
     $attributes['wire:close'] = $attributes['@close'];
-
     unset($attributes['@close']);
     }
 
     // Support <flux:modal ... @cancel="?"> syntax...
         if ($attributes['@cancel'] ?? null) {
         $attributes['wire:cancel'] = $attributes['@cancel'];
-
         unset($attributes['@cancel']);
         }
 
@@ -57,25 +62,60 @@ $attributes = $attributes->merge([$wireModel->directive => $wireModel->value]);
         @endphp
 
         <ui-modal {{ $attributes }} data-flux-modal>
-            <?php if ($trigger): ?>
+            @if ($trigger)
             {{ $trigger }}
-            <?php endif; ?>
+            @endif
 
-            <dialog wire:ignore.self {{-- This needs to be here because the dialog element adds a "close" attribute that isn't durable... --}} {{ $styleAttributes->class($classes) }} @if ($name) data-modal="{{ $name }}" @endif @if ($variant==='flyout' ) data-flux-flyout @endif x-data @isset($__livewire) x-on:modal-show.document="
+            {{-- Tambahkan class 'modal' daisyUI di tag <dialog> utama --}}
+            {{-- Dan modifikasi perilaku posisi flyout via utility class daisyUI --}}
+            <dialog
+                wire:ignore.self
+                {{ $styleAttributes->class([
+            'modal custom-flux-modal',
+            'modal-bottom sm:modal-middle' => $variant !== 'flyout', // perilaku responsive daisyUI asli
+            'justify-start items-stretch' => $variant === 'flyout' && $position === 'left',
+            'justify-end items-stretch' => $variant === 'flyout' && $position !== 'left' && $position !== 'bottom',
+            'justify-end items-end' => $variant === 'flyout' && $position === 'bottom',
+        ]) }}
+                @if ($name) data-modal="{{ $name }}" @endif
+                @if ($variant==='flyout' ) data-flux-flyout @endif
+                x-data
+                @isset($__livewire)
+                x-on:modal-show.document="
                 if ($event.detail.name === @js($name) && ($event.detail.scope === @js($__livewire->getId()))) $el.showModal();
                 if ($event.detail.name === @js($name) && (! $event.detail.scope)) $el.showModal();
-            " x-on:modal-close.document="
+            "
+                x-on:modal-close.document="
                 if ($event.detail.name === @js($name) && ($event.detail.scope === @js($__livewire->getId()))) $el.close();
                 if (! $event.detail.name || ($event.detail.name === @js($name) && (! $event.detail.scope))) $el.close();
-            " @else x-on:modal-show.document="if ($event.detail.name === @js($name) && (! $event.detail.scope)) $el.showModal()" x-on:modal-close.document="if (! $event.detail.name || ($event.detail.name === @js($name) && (! $event.detail.scope))) $el.close()" @endif>
-                {{ $slot }}
+            "
+                @else
+                x-on:modal-show.document="if ($event.detail.name === @js($name) && (! $event.detail.scope)) $el.showModal()"
+                x-on:modal-close.document="if (! $event.detail.name || ($event.detail.name === @js($name) && (! $event.detail.scope))) $el.close()"
+                @endif>
+                {{-- Wrapper konten dengan class modal-box daisyUI yang sudah kita racik di atas --}}
+                <div class="{{ $classes }}">
+                    {{ $slot }}
 
-                <?php if ($closable): ?>
-                <div class="absolute top-0 end-0 mt-4 me-4">
-                    <flux:modal.close>
-                        <flux:button variant="ghost" icon="x-mark" size="sm" alt="Close modal" class="text-zinc-400! hover:text-zinc-800! dark:text-zinc-500! dark:hover:text-white!"></flux:button>
-                    </flux:modal.close>
+                    @if ($closable)
+                    <div class="absolute top-2 right-2 m-2">
+                        <flux:modal.close>
+                            {{-- Menggunakan class btn-sm btn-circle btn-ghost dari daisyUI --}}
+                            <button type="button" class="btn btn-sm btn-circle btn-ghost text-base-content/70 hover:text-base-content">✕</button>
+                        </flux:modal.close>
+                    </div>
+                    @endif
                 </div>
-                <?php endif; ?>
+
+                {{-- Backdrop daisyUI (Klik di luar untuk menutup otomatis didukung jika dismissible) --}}
+                @if ($dismissible !== false)
+                <form method="dialog" class="modal-backdrop bg-neutral/40 backdrop-blur-xs">
+                    <flux:modal.close>
+                        <button>close</button>
+                    </flux:modal.close>
+                </form>
+                @else
+                <div class="modal-backdrop bg-neutral/40 backdrop-blur-xs pointer-events-none"></div>
+                @endif
             </dialog>
         </ui-modal>
