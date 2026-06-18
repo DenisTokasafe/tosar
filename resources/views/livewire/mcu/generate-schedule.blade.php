@@ -152,10 +152,7 @@
                                                         placeholder="Cari Dept Head..."
                                                         modelsearch="searchDeptHead.{{ $employee->id }}"
                                                         modelid="participantsData.{{ $employee->id }}.dept_head_id"
-
-                                                        {{-- Ubah $deptHeads menjadi $managers jika Anda menggunakan array data yang sama dari backend --}}
                                                         :options="$deptHeads"
-
                                                         :showdropdown="$showDeptHeadDropdown[$employee->id] ?? false"
                                                         :manualMode="$manualDeptHeadMode[$employee->id] ?? false"
                                                         manualModelName="manualDeptHeadName.{{ $employee->id }}"

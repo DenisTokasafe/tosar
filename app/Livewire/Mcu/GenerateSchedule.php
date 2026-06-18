@@ -62,9 +62,9 @@ class GenerateSchedule extends Component
     // --- PILIH SUPERVISOR (ANTI RACE-CONDITION) ---
     public function selectSupervisor($managerId, $managerName)
     {
-        // Fallback: Jika activeSpvRowId mendadak null karena race condition fokus,
-        // cari ID karyawan berdasarkan dropdown supervisor yang bernilai true (sedang terbuka)
         $employeeId = $this->activeSpvRowId;
+
+        // Fallback jika terjadi delay koneksi Livewire
         if (!$employeeId) {
             $openedDropdowns = array_filter($this->showSupervisorDropdown);
             $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
@@ -77,7 +77,7 @@ class GenerateSchedule extends Component
             $this->showSupervisorDropdown[$employeeId] = false;
         }
 
-        $this->activeSpvRowId = null;
+        $this->activeSpvRowId = null; // Reset setelah dipilih
     }
 
     // --- DEPT HEAD MANUAL ---
@@ -101,8 +101,9 @@ class GenerateSchedule extends Component
     // --- PILIH DEPT HEAD (ANTI RACE-CONDITION) ---
     public function selectDeptHead($managerId, $managerName)
     {
-        // Fallback: Jika activeDeptRowId mendadak null, cari dari dropdown dept head yang aktif
         $employeeId = $this->activeDeptRowId;
+
+        // Fallback jika terjadi delay koneksi Livewire
         if (!$employeeId) {
             $openedDropdowns = array_filter($this->showDeptHeadDropdown);
             $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
@@ -115,7 +116,7 @@ class GenerateSchedule extends Component
             $this->showDeptHeadDropdown[$employeeId] = false;
         }
 
-        $this->activeDeptRowId = null;
+        $this->activeDeptRowId = null; // Reset setelah dipilih
     }
 
     public function updatedSearchDeptHead($value, $key)
@@ -221,12 +222,14 @@ class GenerateSchedule extends Component
     {
         $employees = User::search(trim($this->search))->paginate(10);
 
+        // Pencarian untuk Supervisor
         $currentSearchSpv = '';
         if ($this->activeSpvRowId && isset($this->searchSupervisor[$this->activeSpvRowId])) {
             $currentSearchSpv = $this->searchSupervisor[$this->activeSpvRowId];
         }
         $managers = User::search($currentSearchSpv)->limit(100)->get();
 
+        // Pencarian untuk Dept Head
         $currentSearchDept = '';
         if ($this->activeDeptRowId && isset($this->searchDeptHead[$this->activeDeptRowId])) {
             $currentSearchDept = $this->searchDeptHead[$this->activeDeptRowId];
