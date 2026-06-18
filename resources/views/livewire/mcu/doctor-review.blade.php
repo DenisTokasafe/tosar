@@ -46,7 +46,16 @@
             <flux:heading size="lg" class="border-b pb-2">Review Status MCU</flux:heading>
 
             <form wire:submit="saveReview" class="py-4 space-y-4">
-
+                @if ($errors->any())
+                <div class="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+                    <p class="font-bold mb-1">Gagal menyimpan karena:</p>
+                    <ul class="list-disc pl-4 space-y-1">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-bold">Status MCU</span></label>
                     <select wire:model.live="fit_status" class="select select-bordered w-full border-primary">
