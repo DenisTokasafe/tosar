@@ -20,11 +20,11 @@
 
     <div class="flex items-center gap-3 mb-4 border-b border-base-200 pb-4">
         <div class="p-2 bg-primary/10 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6   text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
         </div>
-        <h2 class="text-xl md:text-2xl font-bold text-base-content">Buat Jadwal MCU Baru</h2>
+        <h2 class="text-xl md:text-xl font-bold text-base-content">Buat Jadwal MCU Baru</h2>
     </div>
 
     <form wire:submit="generateJadwal" class="space-y-6">
