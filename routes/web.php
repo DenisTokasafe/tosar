@@ -122,10 +122,11 @@ Route::middleware(['auth', 'check.menu'])->group(function () {
     Route::get('incident', IncidentIndex::class)->name('incident');
     Route::get('incident/create', IncidentCreate::class)->name('incident-create');
     Route::get('incident/detail/{id}', IncidentUpdate::class)->name('incident-detail');
-
+});
+// Bisa diakses keduanya
+Route::middleware(['role:administration,medical staff'])->group(function () {
     Route::get('mcu/generate', GenerateSchedule::class)->name('mcu.generate');
     Route::get('mcu/input-result', InputResult::class)->name('mcu.input-result');
-    // Route untuk Company Doctor (Review Status Kebugaran)
     Route::get('mcu/doctor-review', DoctorReview::class)->name('mcu.doctor-review');
 });
 Route::middleware(['role:Administrator'])->group(function () {
