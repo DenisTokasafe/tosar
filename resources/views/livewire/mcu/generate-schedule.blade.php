@@ -91,7 +91,7 @@
                                         <input type="checkbox"
                                             wire:model.live="participantsData.{{ $employee->id }}.selected"
                                             value="true"
-                                            class="checkbox checkbox-primary checkbox-sm md:checkbox-md" />
+                                            class="checkbox checkbox-primary checkbox-xs md:checkbox-sm" />
                                     </td>
                                     <td class="align-top pt-3">
                                         <div class="flex items-center gap-3">
