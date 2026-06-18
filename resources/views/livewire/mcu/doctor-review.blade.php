@@ -41,11 +41,11 @@
         </div>
     </div>
 
-    <div class="modal {{ $showReviewModal ? 'modal-open' : '' }}">
+    <div class="modal {{ $showReviewModal ? 'modal-open' : '' }}" style="z-index: 999;">
         <div class="modal-box w-11/12 max-w-2xl">
             <h3 class="font-bold text-lg border-b pb-2">Review Status MCU</h3>
 
-            <form wire:submit='saveReview' class="py-4 space-y-4">
+            <form wire:submit="saveReview" class="py-4 space-y-4">
 
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-bold">Status MCU</span></label>
@@ -62,7 +62,7 @@
                 @if($fit_status === 'fit_with_notes')
                 <div wire:key="box-restriction" class="form-control w-full animate-fade-in-down">
                     <label class="label"><span class="label-text font-semibold text-warning">Catatan Batasan Kerja (Restriction Monitoring)</span></label>
-                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya..."></textarea>
+                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya (contoh: Tidak boleh mengangkat beban >10kg)"></textarea>
                     @error('restriction_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
                 @endif
@@ -78,10 +78,12 @@
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-semibold">Catatan Tambahan Dokter</span></label>
                     <textarea wire:model="doctor_notes" class="textarea textarea-bordered h-20" placeholder="Opsional..."></textarea>
+                    @error('doctor_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="modal-action">
                     <button type="button" wire:click="$set('showReviewModal', false)" class="btn btn-ghost">Batal</button>
+
                     <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                         <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm"></span>
                         Simpan Review
@@ -89,7 +91,8 @@
                 </div>
             </form>
         </div>
-        <form method="dialog" class="modal-backdrop" wire:click="$set('showReviewModal', false)"><button>close</button></form>
+
+        <div class="modal-backdrop bg-black/40" wire:click="$set('showReviewModal', false)"></div>
     </div>
 
 </section>
