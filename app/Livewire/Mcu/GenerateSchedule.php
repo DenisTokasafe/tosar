@@ -26,7 +26,8 @@ class GenerateSchedule extends Component
     public $manualDeptHeadMode = [];
     public $manualDeptHeadName = [];
 
-    public $activeRowId = null;
+    public $activeSpvRowId = null;
+    public $activeDeptRowId = null;
     public $participantsData = [];
 
     use WithPagination;
@@ -61,9 +62,9 @@ class GenerateSchedule extends Component
     // --- PILIH SUPERVISOR (ANTI RACE-CONDITION) ---
     public function selectSupervisor($managerId, $managerName)
     {
-        // Fallback: Jika activeRowId mendadak null karena race condition fokus,
+        // Fallback: Jika activeSpvRowId mendadak null karena race condition fokus,
         // cari ID karyawan berdasarkan dropdown supervisor yang bernilai true (sedang terbuka)
-        $employeeId = $this->activeRowId;
+        $employeeId = $this->activeSpvRowId;
         if (!$employeeId) {
             $openedDropdowns = array_filter($this->showSupervisorDropdown);
             $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
@@ -76,7 +77,7 @@ class GenerateSchedule extends Component
             $this->showSupervisorDropdown[$employeeId] = false;
         }
 
-        $this->activeRowId = null;
+        $this->activeSpvRowId = null;
     }
 
     // --- DEPT HEAD MANUAL ---
@@ -100,8 +101,8 @@ class GenerateSchedule extends Component
     // --- PILIH DEPT HEAD (ANTI RACE-CONDITION) ---
     public function selectDeptHead($managerId, $managerName)
     {
-        // Fallback: Jika activeRowId mendadak null, cari dari dropdown dept head yang aktif
-        $employeeId = $this->activeRowId;
+        // Fallback: Jika activeDeptRowId mendadak null, cari dari dropdown dept head yang aktif
+        $employeeId = $this->activeDeptRowId;
         if (!$employeeId) {
             $openedDropdowns = array_filter($this->showDeptHeadDropdown);
             $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
@@ -114,19 +115,19 @@ class GenerateSchedule extends Component
             $this->showDeptHeadDropdown[$employeeId] = false;
         }
 
-        $this->activeRowId = null;
+        $this->activeDeptRowId = null;
     }
 
     public function updatedSearchDeptHead($value, $key)
     {
         $this->showDeptHeadDropdown[$key] = true;
-        $this->activeRowId = $key;
+        $this->activeDeptRowId = $key;
     }
 
     public function updatedSearchSupervisor($value, $key)
     {
         $this->showSupervisorDropdown[$key] = true;
-        $this->activeRowId = $key;
+        $this->activeSpvRowId = $key;
     }
 
     // --- GENERATE JADWAL ---
@@ -221,14 +222,14 @@ class GenerateSchedule extends Component
         $employees = User::search(trim($this->search))->paginate(10);
 
         $currentSearchSpv = '';
-        if ($this->activeRowId && isset($this->searchSupervisor[$this->activeRowId])) {
-            $currentSearchSpv = $this->searchSupervisor[$this->activeRowId];
+        if ($this->activeSpvRowId && isset($this->searchSupervisor[$this->activeSpvRowId])) {
+            $currentSearchSpv = $this->searchSupervisor[$this->activeSpvRowId];
         }
         $managers = User::search($currentSearchSpv)->limit(100)->get();
 
         $currentSearchDept = '';
-        if ($this->activeRowId && isset($this->searchDeptHead[$this->activeRowId])) {
-            $currentSearchDept = $this->searchDeptHead[$this->activeRowId];
+        if ($this->activeDeptRowId && isset($this->searchDeptHead[$this->activeDeptRowId])) {
+            $currentSearchDept = $this->searchDeptHead[$this->activeDeptRowId];
         }
         $deptHeads = User::search($currentSearchDept)->limit(100)->get();
 

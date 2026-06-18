@@ -146,7 +146,7 @@
 
                                             <div class="flex flex-col gap-3">
                                                 <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA (cth: 0812...)" />
-                                                <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
+                                                <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeDeptRowId', {{ $employee->id }})">
                                                     <x-form.searchable-select-advanced
                                                         label="Dept Head (Opsional)"
                                                         placeholder="Cari Dept Head..."
@@ -164,7 +164,7 @@
                                                         clickaction="selectDeptHead" />
                                                 </div>
 
-                                                <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
+                                                <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeSpvRowId', {{ $employee->id }})">
                                                     <x-form.searchable-select-advanced
                                                         label="Supervisor (Opsional)"
                                                         placeholder="Cari SPV..."
