@@ -146,6 +146,23 @@
 
                                             <div class="flex flex-col gap-3">
                                                 <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA (cth: 0812...)" />
+                                                <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
+                                                    <x-form.searchable-select-advanced
+                                                        label="Dept Head (Opsional)"
+                                                        placeholder="Cari Dept Head..."
+                                                        modelsearch="searchDeptHead.{{ $employee->id }}"
+                                                        modelid="participantsData.{{ $employee->id }}.dept_head_id"
+
+                                                        {{-- Ubah $deptHeads menjadi $managers jika Anda menggunakan array data yang sama dari backend --}}
+                                                        :options="$deptHeads"
+
+                                                        :showdropdown="$showDeptHeadDropdown[$employee->id] ?? false"
+                                                        :manualMode="$manualDeptHeadMode[$employee->id] ?? false"
+                                                        manualModelName="manualDeptHeadName.{{ $employee->id }}"
+                                                        enableManualAction="enableManualDeptHead({{ $employee->id }})"
+                                                        addManualAction="addDeptHeadManual({{ $employee->id }})"
+                                                        clickaction="selectDeptHead" />
+                                                </div>
 
                                                 <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
                                                     <x-form.searchable-select-advanced

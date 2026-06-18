@@ -20,6 +20,12 @@ class GenerateSchedule extends Component
     public $manualSupervisorMode = [];
     public $manualSupervisorName = [];
 
+    // --- Variabel Dept Head ---
+    public $searchDeptHead = [];
+    public $showDeptHeadDropdown = [];
+    public $manualDeptHeadMode = [];
+    public $manualDeptHeadName = [];
+
     public $activeRowId = null; // Melacak baris (karyawan) mana yang sedang dipilih atasan
 
     // Ubah format untuk menampung ID Karyawan sekaligus Nomor WA-nya
@@ -76,6 +82,43 @@ class GenerateSchedule extends Component
 
         $this->activeRowId = null;
     }
+
+    // ==========================================
+    // FUNGSI DEPT HEAD
+    // ==========================================
+    public function enableManualDeptHead($employeeId)
+    {
+        $this->manualDeptHeadMode[$employeeId] = true;
+    }
+
+    public function addDeptHeadManual($employeeId)
+    {
+        if (isset($this->manualDeptHeadName[$employeeId])) {
+            $manualName = $this->manualDeptHeadName[$employeeId];
+
+            $this->participantsData[$employeeId]['dept_head_id'] = null;
+            $this->participantsData[$employeeId]['dept_head_name_manual'] = $manualName;
+            $this->searchDeptHead[$employeeId] = $manualName;
+            $this->manualDeptHeadMode[$employeeId] = false;
+        }
+    }
+
+    public function selectDeptHead($managerId, $managerName)
+    {
+        if ($this->activeRowId) {
+            $this->participantsData[$this->activeRowId]['dept_head_id'] = $managerId;
+            $this->searchDeptHead[$this->activeRowId] = $managerName;
+            $this->manualDeptHeadMode[$this->activeRowId] = false;
+            $this->showDeptHeadDropdown[$this->activeRowId] = false;
+        }
+        $this->activeRowId = null;
+    }
+
+    public function updatedSearchDeptHead($value, $key)
+    {
+        $this->showDeptHeadDropdown[$key] = true;
+        $this->activeRowId = $key;
+    }
     public function generateJadwal()
     {
         $this->validate();
@@ -102,6 +145,7 @@ class GenerateSchedule extends Component
                 'whatsapp_number' => $data['wa'] ?? null,
                 'supervisor_id' => $data['spv_id'] ?? null,
                 'spv_wa_number' => $data['wa_spv'] ?? null,
+                'dept_head_id' => $data['dept_head_id'] ?? null,
 
                 // Ubah jadi 'notified' agar tidak dikirim ganda oleh Cron Job H-30
                 'notification_status' => 'notified'
@@ -127,6 +171,13 @@ class GenerateSchedule extends Component
                         new AnonymousNotifiable,
                         new McuReminderNotification($participant, 'new_schedule_spv')
                     );
+                }
+            }
+            // 4. Kirim Notifikasi Langsung ke DEPT HEAD (Cukup Email Saja)
+            if ($participant->dept_head_id) {
+                $deptHead = User::find($participant->dept_head_id);
+                if ($deptHead && $deptHead->email) {
+                    $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head'));
                 }
             }
         }
@@ -158,19 +209,24 @@ class GenerateSchedule extends Component
     {
         $employees = User::search(trim($this->search))->paginate(10);
 
-        // Ambil text pencarian dari baris yang sedang aktif
-        $currentSearch = '';
+        // Pencarian untuk Supervisor
+        $currentSearchSpv = '';
         if ($this->activeRowId && isset($this->searchSupervisor[$this->activeRowId])) {
-            $currentSearch = $this->searchSupervisor[$this->activeRowId];
+            $currentSearchSpv = $this->searchSupervisor[$this->activeRowId];
         }
+        $managers = User::search($currentSearchSpv)->limit(100)->get();
 
-        // Filter manager berdasarkan ketikan pada baris yang aktif saja
-        $managers = User::search($currentSearch)->limit(100)->get();
+        // Pencarian untuk Dept Head
+        $currentSearchDept = '';
+        if ($this->activeRowId && isset($this->searchDeptHead[$this->activeRowId])) {
+            $currentSearchDept = $this->searchDeptHead[$this->activeRowId];
+        }
+        $deptHeads = User::search($currentSearchDept)->limit(100)->get();
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees,
-            'managers' => $managers
-
+            'managers' => $managers,
+            'deptHeads' => $deptHeads
         ]);
     }
 }
