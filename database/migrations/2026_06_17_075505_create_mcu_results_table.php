@@ -18,20 +18,27 @@ return new class extends Migration
 
             // 2. Tambahkan status alur kerja (workflow)
             $table->enum('workflow_status', [
-                'pending_doctor', // Baru diupload admin, menunggu dokter
-                'reviewed'        // Sudah selesai direview dokter
+                'pending_doctor',
+                'reviewed'
             ])->default('pending_doctor');
 
-            // 3. Status Medis dari Dokter (Buat NULLABLE karena diisi belakangan)
+            // 3. Status Medis dari Dokter
             $table->enum('status', [
                 'fit_to_work',
                 'fit_with_notes',
                 'temporary_unfit',
                 'unfit'
-            ])->nullable(); // <--- WAJIB NULLABLE
+            ])->nullable();
 
-            $table->text('doctor_site_consult')->nullable();
-            $table->date('follow_up_date')->nullable();
+            $table->text('doctor_site_consult')->nullable(); // Untuk Catatan Batasan Kerja
+            $table->date('follow_up_date')->nullable();      // Untuk Tanggal Follow Up
+
+            // --- TAMBAHKAN 3 BARIS INI ---
+            $table->text('doctor_notes')->nullable();        // Catatan umum tambahan dari dokter
+            $table->foreignId('reviewed_by')->nullable()->constrained('users'); // ID Dokter yang review
+            $table->timestamp('reviewed_at')->nullable();    // Waktu ketika dokter selesai review
+            // ------------------------------
+
             $table->boolean('is_published')->default(false);
             $table->timestamps();
         });

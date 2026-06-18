@@ -67,8 +67,7 @@
                 </div>
                 @endif
 
-                @if($fit_status === 'Temporary Unfit')
-                <div class="form-control w-full animate-fade-in-down">
+                @if($fit_status === 'temporary_unfit') <div class="form-control w-full animate-fade-in-down">
                     <label class="label"><span class="label-text font-semibold text-info">Jadwal Follow Up MCU</span></label>
                     <input type="date" wire:model="follow_up_date" class="input input-bordered input-info w-full" />
                     @error('follow_up_date') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
