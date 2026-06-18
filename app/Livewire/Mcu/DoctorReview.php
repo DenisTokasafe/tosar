@@ -54,7 +54,7 @@ class DoctorReview extends Component
     public function render()
     {
         // Tampilkan hanya yang butuh direview
-        $pendingReviews = McuResult::where('status', 'pending_doctor')
+        $pendingReviews = McuResult::where('workflow_status', 'pending_doctor')
             ->with('participant.employee')
             ->get();
 
