@@ -36,7 +36,8 @@ class InputResult extends Component
             'mcu_participant_id' => $this->participant_id,
             'result_document' => $path,
             'admin_notes' => $this->admin_notes,
-            'status' => 'pending_review'
+            'workflow_status'    => 'pending_doctor', // Mengisi status alur kerja
+            'status'             => null,             // Status medis dikosongkan dulu karena belum direview dokter
         ]);
 
         session()->flash('message', 'Hasil MCU berhasil diunggah. Menunggu review Dokter.');
