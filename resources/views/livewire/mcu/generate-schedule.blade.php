@@ -145,7 +145,7 @@
                                             </div>
 
                                             <div class="flex flex-col gap-3">
-                                                <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA (cth: 0812...)" class="input-sm md:input-md" />
+                                                <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA (cth: 0812...)" />
 
                                                 <div class="border-t border-base-200 pt-3 mt-1" x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
                                                     <x-form.searchable-select-advanced
@@ -162,7 +162,7 @@
                                                         clickaction="selectSupervisor" />
                                                 </div>
 
-                                                <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA SPV (Opsional)" class="input-sm md:input-md" />
+                                                <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA SPV (Opsional)" />
                                             </div>
                                         </div>
                                         @else
