@@ -1,4 +1,4 @@
-<section class="w-full max-w-7xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
+<section class="w-full max-w-7xl ">
 
     @if (session()->has('message'))
     <div class="alert alert-success shadow-sm mb-6 rounded-xl">
@@ -18,7 +18,7 @@
     </div>
     @endif
 
-    <div class="flex items-center gap-3 mb-6 border-b border-base-200 pb-4">
+    <div class="flex items-center gap-3 mb-4 border-b border-base-200 pb-4">
         <div class="p-2 bg-primary/10 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -30,7 +30,7 @@
     <form wire:submit="generateJadwal" class="space-y-6">
 
         <div class="card bg-base-100 border border-base-200 shadow-sm">
-            <div class="card-body p-4 md:p-6">
+            <div class="card-body p-2 md:p-4">
                 <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-base-content/80 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -62,9 +62,9 @@
 
         <x-mcu.layout>
             <div class="card bg-base-100 border border-base-200 shadow-sm">
-                <div class="card-body p-0 md:p-6">
+                <div class="card-body p-0 md:p-4">
 
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 border-b border-base-200 md:border-none md:mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-2 border-b border-base-200 md:border-none md:mb-4">
                         <div>
                             <h3 class="text-base md:text-lg font-semibold text-base-content flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
