@@ -209,19 +209,37 @@ class GenerateSchedule extends Component
     {
         $employees = User::search(trim($this->search))->paginate(10);
 
-        // Pencarian untuk Supervisor
+        // 1. AMBIL SEMUA ID YANG SUDAH TERPILIH AGAR TIDAK HILANG SAAT RENDER ULANG
+        $selectedSpvIds = array_filter(array_column($this->participantsData, 'spv_id'));
+        $selectedDeptIds = array_filter(array_column($this->participantsData, 'dept_head_id'));
+
+        // 2. PROSES PENCARIAN SUPERVISOR
         $currentSearchSpv = '';
         if ($this->activeRowId && isset($this->searchSupervisor[$this->activeRowId])) {
             $currentSearchSpv = $this->searchSupervisor[$this->activeRowId];
         }
-        $managers = User::search($currentSearchSpv)->limit(100)->get();
 
-        // Pencarian untuk Dept Head
+        // Kunci Pengaman: Gabungkan hasil pencarian dengan ID yang sudah terpilih sebelumnya
+        $managers = User::search($currentSearchSpv)
+            ->when(!empty($selectedSpvIds), function ($query) use ($selectedSpvIds) {
+                return $query->orWhereIn('id', $selectedSpvIds);
+            })
+            ->limit(100)
+            ->get();
+
+        // 3. PROSES PENCARIAN DEPT HEAD
         $currentSearchDept = '';
         if ($this->activeRowId && isset($this->searchDeptHead[$this->activeRowId])) {
             $currentSearchDept = $this->searchDeptHead[$this->activeRowId];
         }
-        $deptHeads = User::search($currentSearchDept)->limit(100)->get();
+
+        // Kunci Pengaman: Gabungkan hasil pencarian dengan ID yang sudah terpilih sebelumnya
+        $deptHeads = User::search($currentSearchDept)
+            ->when(!empty($selectedDeptIds), function ($query) use ($selectedDeptIds) {
+                return $query->orWhereIn('id', $selectedDeptIds);
+            })
+            ->limit(100)
+            ->get();
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees,
