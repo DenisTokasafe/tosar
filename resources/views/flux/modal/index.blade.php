@@ -98,7 +98,7 @@ $attributes = $attributes->merge([$wireModel->directive => $wireModel->value]);
                     {{ $slot }}
 
                     @if ($closable)
-                    <div class="absolute top-2 right-2 m-2">
+                    <div class="absolute m-2 top-2 right-2">
                         <flux:modal.close>
                             {{-- Menggunakan class btn-sm btn-circle btn-ghost dari daisyUI --}}
                             <button type="button" class="btn btn-sm btn-circle btn-ghost text-base-content/70 hover:text-base-content">✕</button>
@@ -115,7 +115,7 @@ $attributes = $attributes->merge([$wireModel->directive => $wireModel->value]);
                     </flux:modal.close>
                 </form>
                 @else
-                <div class="modal-backdrop bg-neutral/40 backdrop-blur-xs pointer-events-none"></div>
+                <div class="pointer-events-none modal-backdrop bg-neutral/40 backdrop-blur-xs"></div>
                 @endif
             </dialog>
         </ui-modal>
