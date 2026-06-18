@@ -59,7 +59,7 @@
                     @error('fit_status') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
-                @if($fit_status === 'Fit With Restriction')
+                @if($fit_status === 'fit_with_notes')
                 <div class="form-control w-full animate-fade-in-down">
                     <label class="label"><span class="label-text font-semibold text-warning">Catatan Batasan Kerja (Restriction Monitoring)</span></label>
                     <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya (contoh: Tidak boleh mengangkat beban >10kg)"></textarea>
