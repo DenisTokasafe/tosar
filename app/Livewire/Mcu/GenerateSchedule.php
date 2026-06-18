@@ -218,6 +218,13 @@ class GenerateSchedule extends Component
         return 'paginate.pagination';
     }
 
+    public function getEmployeeName($id)
+    {
+        // Cari nama karyawan berdasarkan ID
+        // Jika data ada di memori, ambil dari sana. Jika tidak, query ke DB.
+        $employee = User::find($id);
+        return $employee ? $employee->name : 'Unknown';
+    }
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);
