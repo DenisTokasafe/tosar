@@ -29,7 +29,7 @@
 
         <div class="card bg-base-100 border border-base-200 shadow-sm">
             <div class="card-body p-2 md:p-4">
-                <h3 class="text-lg font-semibold  text-base-content/80">Informasi Jadwal</h3>
+                <h3 class="text-md font-semibold  text-base-content/80">Informasi Jadwal</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <fieldset class="fieldset w-full">
                         <x-form.label label="Tanggal MCU" required />
