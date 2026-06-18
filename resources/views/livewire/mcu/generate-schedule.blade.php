@@ -18,19 +18,19 @@
     </div>
     @endif
 
-    <div class="flex items-center gap-2 mb-6 border-b border-base-200 pb-4">
+    <div class="flex items-center gap-2 mb-4 border-b border-base-200 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         <h2 class="text-2xl font-bold text-base-content">Buat Jadwal MCU Baru</h2>
     </div>
 
-    <form wire:submit="generateJadwal" class="space-y-6">
+    <form wire:submit="generateJadwal" class="space-y-4">
 
         <div class="card bg-base-100 border border-base-200 shadow-sm">
             <div class="card-body p-2 md:p-4">
                 <h3 class="text-md font-semibold  text-base-content/80">Informasi Jadwal</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <fieldset class="fieldset w-full">
                         <x-form.label label="Tanggal MCU" required />
                         <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih Tanggal MCU"
