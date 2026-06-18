@@ -52,7 +52,7 @@
                     <select wire:model.live="fit_status" class="select select-bordered w-full border-primary">
                         <option value="">-- Pilih Status Kebugaran --</option>
                         <option value="Fit To Work">✅ Fit To Work</option>
-                        <option value="Fit With Restriction">⚠️ Fit With Restriction</option>
+                        <option value="Fit With Restriction">⚠️ Fit With Note</option>
                         <option value="Temporary Unfit">⏳ Temporary Unfit</option>
                         <option value="Permanent Unfit">❌ Permanent Unfit</option>
                     </select>
