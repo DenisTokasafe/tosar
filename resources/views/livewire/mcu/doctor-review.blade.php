@@ -45,7 +45,7 @@
         <div class="modal-box w-11/12 max-w-2xl">
             <h3 class="font-bold text-lg border-b pb-2">Review Status MCU</h3>
 
-            <form wire:submit.prevent="saveReview" class="py-4 space-y-4">
+            <form wire:submit="saveReview" class="py-4 space-y-4">
 
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-bold">Status MCU</span></label>
@@ -60,14 +60,15 @@
                 </div>
 
                 @if($fit_status === 'fit_with_notes')
-                <div class="form-control w-full animate-fade-in-down">
+                <div wire:key="box-restriction" class="form-control w-full animate-fade-in-down">
                     <label class="label"><span class="label-text font-semibold text-warning">Catatan Batasan Kerja (Restriction Monitoring)</span></label>
-                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya (contoh: Tidak boleh mengangkat beban >10kg)"></textarea>
+                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya..."></textarea>
                     @error('restriction_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
                 @endif
 
-                @if($fit_status === 'temporary_unfit') <div class="form-control w-full animate-fade-in-down">
+                @if($fit_status === 'temporary_unfit')
+                <div wire:key="box-followup" class="form-control w-full animate-fade-in-down">
                     <label class="label"><span class="label-text font-semibold text-info">Jadwal Follow Up MCU</span></label>
                     <input type="date" wire:model="follow_up_date" class="input input-bordered input-info w-full" />
                     @error('follow_up_date') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
@@ -81,7 +82,10 @@
 
                 <div class="modal-action">
                     <button type="button" wire:click="$set('showReviewModal', false)" class="btn btn-ghost">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Review</button>
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm"></span>
+                        Simpan Review
+                    </button>
                 </div>
             </form>
         </div>
