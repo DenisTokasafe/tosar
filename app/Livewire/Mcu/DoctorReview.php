@@ -3,6 +3,7 @@
 namespace App\Livewire\Mcu;
 
 use App\Models\McuResult;
+use App\Notifications\McuResultNotification;
 use Livewire\Component;
 
 class DoctorReview extends Component
@@ -26,7 +27,6 @@ class DoctorReview extends Component
 
     public function saveReview()
     {
-        // 1. TAMBAHKAN 'nullable' pada restriction_notes dan follow_up_date
         $this->validate([
             'fit_status'        => 'required|in:fit_to_work,fit_with_notes,temporary_unfit,unfit',
             'restriction_notes' => 'required_if:fit_status,fit_with_notes|nullable|string',
@@ -37,16 +37,16 @@ class DoctorReview extends Component
             'follow_up_date.required_if'    => 'Tanggal Follow Up wajib diisi untuk status ini.'
         ]);
 
-        // Pastikan ID ini tidak null sebelum melakukan query
         if (!$this->selectedResultId) {
             session()->flash('error', 'Data MCU tidak ditemukan.');
             return;
         }
 
-        $result = McuResult::find($this->selectedResultId);
+        // Eager load relasi employee dan supervisor yang baru dibuat
+        $result = McuResult::with(['participant.employee', 'participant.supervisor'])->find($this->selectedResultId);
 
         if ($result) {
-            // 2. Mapping data ke kolom database
+            // 1. Jalankan Update ke Database
             $result->update([
                 'status'              => $this->fit_status,
                 'workflow_status'     => 'reviewed',
@@ -57,15 +57,27 @@ class DoctorReview extends Component
                 'reviewed_at'         => now(),
             ]);
 
-            $this->showReviewModal = false;
+            // 2. Ambil Instansiasi User Terkait
+            $employeeUser = $result->participant->employee;   // Ini langsung Model User Karyawan
+            $deptHeadUser = $result->participant->deptHead; // Ini langsung Model User Dept Head
 
-            // Reset form setelah berhasil disimpan agar bersih kembali
+            // 3. Kirim Notifikasi ke Karyawan
+            if ($employeeUser) {
+                $employeeUser->notify(new McuResultNotification($result, 'employee'));
+            }
+
+            // 4. Kirim Notifikasi ke Dept Head / Supervisor
+            if ($deptHeadUser) {
+                $deptHeadUser->notify(new McuResultNotification($result, 'dept_head'));
+            }
+
+            // 5. Tutup Modal & Reset Form
+            $this->showReviewModal = false;
             $this->reset(['fit_status', 'restriction_notes', 'follow_up_date', 'doctor_notes', 'selectedResultId']);
 
-            session()->flash('message', 'Review MCU berhasil disimpan.');
+            session()->flash('message', 'Review MCU berhasil disimpan dan notifikasi hasil telah terkirim.');
         }
     }
-
     public function render()
     {
         // Tampilkan hanya yang butuh direview oleh dokter

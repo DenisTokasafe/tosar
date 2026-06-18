@@ -24,6 +24,16 @@ class McuParticipant extends Model
         return $this->belongsTo(User::class, 'employee_id');
     }
 
+    // TAMBAHKAN INI: Relasi ke Dept Head / Supervisor (User)
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+    public function deptHead(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dept_head_id');
+    }
+
     public function result(): HasOne
     {
         return $this->hasOne(McuResult::class);

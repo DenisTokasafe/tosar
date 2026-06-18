@@ -11455,6 +11455,8 @@ namespace App\Models {
      *
      * @property-read \App\Models\McuSchedule $schedule
      * @property-read \App\Models\User $employee
+     * @property-read \App\Models\User $supervisor
+     * @property-read \App\Models\User $deptHead
      * @property-read \App\Models\McuResult $result
      * @method static \Illuminate\Database\Eloquent\Builder<McuParticipant>|McuParticipant newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<McuParticipant>|McuParticipant newQuery()
