@@ -45,7 +45,7 @@
         <div class="modal-box w-11/12 max-w-2xl">
             <h3 class="font-bold text-lg border-b pb-2">Review Status MCU</h3>
 
-            <form wire:submit="saveReview" class="py-4 space-y-4">
+            <form wire:submit='saveReview' class="py-4 space-y-4">
 
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-bold">Status MCU</span></label>
