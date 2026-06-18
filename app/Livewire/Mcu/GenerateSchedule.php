@@ -26,11 +26,9 @@ class GenerateSchedule extends Component
     public $manualDeptHeadMode = [];
     public $manualDeptHeadName = [];
 
-    public $activeRowId = null; // Melacak baris (karyawan) mana yang sedang dipilih atasan
-
-    // Ubah format untuk menampung ID Karyawan sekaligus Nomor WA-nya
-    // Contoh bentuk array: [ user_id => ['selected' => true, 'wa' => '08123456789'] ]
+    public $activeRowId = null;
     public $participantsData = [];
+
     use WithPagination;
 
     public function rules()
@@ -38,54 +36,50 @@ class GenerateSchedule extends Component
         return [
             'schedule_date' => 'required|date|after:today',
             'location' => 'required|string',
-            // Validasi untuk memastikan minimal 1 karyawan dipilih
             'participantsData' => 'required|array',
         ];
     }
-    // --- FUNGSI 1: AKTIFKAN MODE MANUAL ---
+
+    // --- SUPERVISOR MANUAL ---
     public function enableManualSupervisor($employeeId)
     {
-        // Hanya baris karyawan ini saja yang berubah jadi mode manual
         $this->manualSupervisorMode[$employeeId] = true;
     }
 
-    // --- FUNGSI 2: SIMPAN DATA MANUAL ---
     public function addSupervisorManual($employeeId)
     {
         if (isset($this->manualSupervisorName[$employeeId])) {
             $manualName = $this->manualSupervisorName[$employeeId];
 
-            // 1. Set ID jadi null (karena manual) dan simpan namanya
             $this->participantsData[$employeeId]['spv_id'] = null;
             $this->participantsData[$employeeId]['spv_name_manual'] = $manualName;
-
-            // 2. Tampilkan nama manual di input text
             $this->searchSupervisor[$employeeId] = $manualName;
-
-            // 3. Matikan mode manual untuk baris ini
             $this->manualSupervisorMode[$employeeId] = false;
         }
     }
 
-    // --- FUNGSI 3: PILIH DARI DROPDOWN ---
+    // --- PILIH SUPERVISOR (ANTI RACE-CONDITION) ---
     public function selectSupervisor($managerId, $managerName)
     {
-        if ($this->activeRowId) {
-            $this->participantsData[$this->activeRowId]['spv_id'] = $managerId;
-            $this->searchSupervisor[$this->activeRowId] = $managerName;
+        // Fallback: Jika activeRowId mendadak null karena race condition fokus,
+        // cari ID karyawan berdasarkan dropdown supervisor yang bernilai true (sedang terbuka)
+        $employeeId = $this->activeRowId;
+        if (!$employeeId) {
+            $openedDropdowns = array_filter($this->showSupervisorDropdown);
+            $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
+        }
 
-            $this->manualSupervisorMode[$this->activeRowId] = false;
-
-            // --- TAMBAHKAN INI UNTUK MENUTUP DROPDOWN ---
-            $this->showSupervisorDropdown[$this->activeRowId] = false;
+        if ($employeeId) {
+            $this->participantsData[$employeeId]['spv_id'] = $managerId;
+            $this->searchSupervisor[$employeeId] = $managerName;
+            $this->manualSupervisorMode[$employeeId] = false;
+            $this->showSupervisorDropdown[$employeeId] = false;
         }
 
         $this->activeRowId = null;
     }
 
-    // ==========================================
-    // FUNGSI DEPT HEAD
-    // ==========================================
+    // --- DEPT HEAD MANUAL ---
     public function enableManualDeptHead($employeeId)
     {
         $this->manualDeptHeadMode[$employeeId] = true;
@@ -103,14 +97,23 @@ class GenerateSchedule extends Component
         }
     }
 
+    // --- PILIH DEPT HEAD (ANTI RACE-CONDITION) ---
     public function selectDeptHead($managerId, $managerName)
     {
-        if ($this->activeRowId) {
-            $this->participantsData[$this->activeRowId]['dept_head_id'] = $managerId;
-            $this->searchDeptHead[$this->activeRowId] = $managerName;
-            $this->manualDeptHeadMode[$this->activeRowId] = false;
-            $this->showDeptHeadDropdown[$this->activeRowId] = false;
+        // Fallback: Jika activeRowId mendadak null, cari dari dropdown dept head yang aktif
+        $employeeId = $this->activeRowId;
+        if (!$employeeId) {
+            $openedDropdowns = array_filter($this->showDeptHeadDropdown);
+            $employeeId = !empty($openedDropdowns) ? key($openedDropdowns) : null;
         }
+
+        if ($employeeId) {
+            $this->participantsData[$employeeId]['dept_head_id'] = $managerId;
+            $this->searchDeptHead[$employeeId] = $managerName;
+            $this->manualDeptHeadMode[$employeeId] = false;
+            $this->showDeptHeadDropdown[$employeeId] = false;
+        }
+
         $this->activeRowId = null;
     }
 
@@ -119,6 +122,14 @@ class GenerateSchedule extends Component
         $this->showDeptHeadDropdown[$key] = true;
         $this->activeRowId = $key;
     }
+
+    public function updatedSearchSupervisor($value, $key)
+    {
+        $this->showSupervisorDropdown[$key] = true;
+        $this->activeRowId = $key;
+    }
+
+    // --- GENERATE JADWAL ---
     public function generateJadwal()
     {
         $this->validate();
@@ -132,6 +143,16 @@ class GenerateSchedule extends Component
             return;
         }
 
+        // VALIDASI TAMBAHAN (SAFEGUARD): Mencegah lolos ke query DB jika data kosong
+        foreach ($selectedParticipants as $employee_id => $data) {
+            // Jika SPV tidak diisi di sistem DAN tidak diisi manual, beri pesan error terarah
+            if (empty($data['spv_id']) && empty($data['spv_name_manual'])) {
+                $employeeName = User::find($employee_id)->name ?? 'Karyawan';
+                session()->flash('error', "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.");
+                return;
+            }
+        }
+
         $schedule = McuSchedule::create([
             'schedule_date' => $this->schedule_date,
             'location' => $this->location,
@@ -139,41 +160,40 @@ class GenerateSchedule extends Component
         ]);
 
         foreach ($selectedParticipants as $employee_id => $data) {
-            // 1. Simpan data sesuai struktur terbaru Anda
             $participant = $schedule->participants()->create([
                 'employee_id' => $employee_id,
                 'whatsapp_number' => $data['wa'] ?? null,
-                'supervisor_id' => $data['spv_id'] ?? null,
+                'supervisor_id' => $data['spv_id'] ?? null, // Sekarang aman karena ada validasi di atas
                 'spv_wa_number' => $data['wa_spv'] ?? null,
                 'dept_head_id' => $data['dept_head_id'] ?? null,
 
-                // Ubah jadi 'notified' agar tidak dikirim ganda oleh Cron Job H-30
+                // Masukkan field manual name jika Anda menyimpannya di DB
+                'spv_name_manual' => $data['spv_name_manual'] ?? null,
+                'dept_head_name_manual' => $data['dept_head_name_manual'] ?? null,
+
                 'notification_status' => 'notified'
             ]);
 
-            // 2. Kirim Notifikasi Langsung ke KARYAWAN
+            // Kirim Notifikasi Karyawan
             $employee = User::find($employee_id);
             if ($employee && !empty($participant->whatsapp_number)) {
                 $employee->notify(new McuReminderNotification($participant, 'new_schedule'));
             }
 
-            // 3. Kirim Notifikasi Langsung ke SUPERVISOR (Bisa dari sistem / manual)
+            // Kirim Notifikasi Supervisor
             if (!empty($participant->spv_wa_number)) {
                 if ($participant->supervisor_id) {
-                    // Jika SPV terdaftar di sistem
                     $spv = User::find($participant->supervisor_id);
                     if ($spv) {
                         $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
                     }
                 } else {
-                    // Jika SPV input manual (Gunakan Anonymous Notification bawaan Laravel)
-                    Notification::send(
-                        new AnonymousNotifiable,
-                        new McuReminderNotification($participant, 'new_schedule_spv')
-                    );
+                    Notification::route('whatsapp', $participant->spv_wa_number)
+                        ->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
                 }
             }
-            // 4. Kirim Notifikasi Langsung ke DEPT HEAD (Cukup Email Saja)
+
+            // Kirim Notifikasi Dept Head
             if ($participant->dept_head_id) {
                 $deptHead = User::find($participant->dept_head_id);
                 if ($deptHead && $deptHead->email) {
@@ -188,58 +208,29 @@ class GenerateSchedule extends Component
 
     public function updatingSearch()
     {
-        $this->resetPage(); // Fungsi bawaan WithPagination
+        $this->resetPage();
     }
-    public function updatedSearchSupervisor($value, $key)
-    {
-        // $key di sini adalah $employee->id
-        $this->showSupervisorDropdown[$key] = true;
 
-        // Pastikan baris yang sedang diketik menjadi baris aktif
-        $this->activeRowId = $key;
-    }
     public function paginationView()
     {
         return 'paginate.pagination';
     }
 
-
-
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);
 
-        // 1. AMBIL SEMUA ID YANG SUDAH TERPILIH AGAR TIDAK HILANG SAAT RENDER ULANG
-        $selectedSpvIds = array_filter(array_column($this->participantsData, 'spv_id'));
-        $selectedDeptIds = array_filter(array_column($this->participantsData, 'dept_head_id'));
-
-        // 2. PROSES PENCARIAN SUPERVISOR
         $currentSearchSpv = '';
         if ($this->activeRowId && isset($this->searchSupervisor[$this->activeRowId])) {
             $currentSearchSpv = $this->searchSupervisor[$this->activeRowId];
         }
+        $managers = User::search($currentSearchSpv)->limit(100)->get();
 
-        // Kunci Pengaman: Gabungkan hasil pencarian dengan ID yang sudah terpilih sebelumnya
-        $managers = User::search($currentSearchSpv)
-            ->when(!empty($selectedSpvIds), function ($query) use ($selectedSpvIds) {
-                return $query->orWhereIn('id', $selectedSpvIds);
-            })
-            ->limit(100)
-            ->get();
-
-        // 3. PROSES PENCARIAN DEPT HEAD
         $currentSearchDept = '';
         if ($this->activeRowId && isset($this->searchDeptHead[$this->activeRowId])) {
             $currentSearchDept = $this->searchDeptHead[$this->activeRowId];
         }
-
-        // Kunci Pengaman: Gabungkan hasil pencarian dengan ID yang sudah terpilih sebelumnya
-        $deptHeads = User::search($currentSearchDept)
-            ->when(!empty($selectedDeptIds), function ($query) use ($selectedDeptIds) {
-                return $query->orWhereIn('id', $selectedDeptIds);
-            })
-            ->limit(100)
-            ->get();
+        $deptHeads = User::search($currentSearchDept)->limit(100)->get();
 
         return view('livewire.mcu.generate-schedule', [
             'employees' => $employees,
