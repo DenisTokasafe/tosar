@@ -31,17 +31,17 @@
 
         <div class="card bg-base-100 border border-base-200 shadow-sm">
             <div class="card-body p-2 md:p-4">
-                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-base-content/80 flex items-center gap-2">
+                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-2 text-base-content/80 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Informasi Jadwal
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
                     <fieldset class="fieldset w-full">
                         <x-form.label label="Tanggal MCU" required />
                         <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih Tanggal MCU"
-                            class="w-full cursor-pointer input input-bordered input-sm md:input-md focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
+                            class="w-full cursor-pointer input input-bordered input-xs md:input-md focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
                             x-data="{ fp: null }" x-init="
                                 fp = flatpickr($refs.input, {
                                     dateFormat: 'Y-m-d',
@@ -54,7 +54,7 @@
                         <x-label-error :messages="$errors->get('schedule_date')" />
                     </fieldset>
                     <div class="w-full">
-                        <x-form.input-text label="Lokasi MCU" model="location" placeholder="Masukkan Lokasi MCU" class="input-sm md:input-md" />
+                        <x-form.input-text label="Lokasi MCU" model="location" placeholder="Masukkan Lokasi MCU" required />
                     </div>
                 </div>
             </div>
