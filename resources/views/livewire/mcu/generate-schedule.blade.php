@@ -177,6 +177,13 @@
                                                 </div>
 
                                                 <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA SPV (Opsional)" />
+
+                                                <div class="mt-5 p-4 bg-base-200 rounded-lg">
+                                                    <h3 class="font-bold mb-2">Data JSON saat ini:</h3>
+                                                    <pre class="text-xs bg-neutral text-neutral-content p-3 rounded overflow-x-auto">
+                                                    {{ json_encode($participantsData, JSON_PRETTY_PRINT) }}
+                                                    </pre>
+                                                </div>
                                             </div>
                                         </div>
                                         @else
