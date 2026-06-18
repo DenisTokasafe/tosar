@@ -225,6 +225,17 @@ class GenerateSchedule extends Component
         $employee = User::find($id);
         return $employee ? $employee->name : 'Unknown';
     }
+
+    public function removeParticipant($id)
+    {
+        // Mengubah status selected menjadi false untuk ID terkait
+        if (isset($this->participantsData[$id])) {
+            $this->participantsData[$id]['selected'] = false;
+            // Opsional: Jika Anda ingin menghapus data input lainnya (seperti WA)
+            $this->participantsData[$id]['wa'] = null;
+            $this->participantsData[$id]['dept_head_id'] = null;
+        }
+    }
     public function render()
     {
         $employees = User::search(trim($this->search))->paginate(10);

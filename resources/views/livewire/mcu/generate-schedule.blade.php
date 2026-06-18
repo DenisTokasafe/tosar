@@ -178,12 +178,6 @@
 
                                                         <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa_spv" placeholder="No WA SPV (Opsional)" />
 
-                                                        <div class="p-4 mt-5 rounded-lg bg-base-200">
-                                                            <h3 class="mb-2 font-bold">Data JSON saat ini:</h3>
-                                                            <pre class="p-3 overflow-x-auto text-xs rounded bg-neutral text-neutral-content">
-                                                            {{ json_encode($participantsData, JSON_PRETTY_PRINT) }}
-                                                            </pre>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 @else
@@ -247,11 +241,18 @@
                         <div class="max-h-[400px] overflow-y-auto space-y-2 pr-1">
                             @foreach($participantsData as $id => $data)
                             @if(isset($data['selected']) && $data['selected'])
-                            <div class="flex items-center justify-between p-2 text-sm rounded-lg bg-base-200/50">
+                            <div class="flex items-center justify-between p-2 text-sm rounded-lg bg-base-200/50 group">
                                 <span class="truncate">
-                                    {{-- Tips: Gunakan helper untuk mencari nama berdasarkan ID --}}
                                     {{ $this->getEmployeeName($id) }}
                                 </span>
+
+                                <button type="button"
+                                    wire:click="removeParticipant('{{ $id }}')"
+                                    class="p-1 text-error hover:bg-error/20 rounded-full transition-all opacity-0 group-hover:opacity-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
                             @endif
                             @endforeach
