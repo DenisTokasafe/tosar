@@ -27,7 +27,6 @@ class McuResultNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        // Secara default aktifkan Mail, Database, dan custom WhatsApp Channel
         return ['mail', 'database', WhatsAppChannel::class];
     }
 
@@ -36,7 +35,10 @@ class McuResultNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $employeeName = $this->result->participant->employee->name;
+        // PENTING: Ambil ulang relasi yang hilang akibat serialisasi Queue
+        $this->result->loadMissing(['participant.employee', 'participant.supervisor']);
+
+        $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
 
         if ($this->recipientType === 'employee') {
@@ -45,10 +47,8 @@ class McuResultNotification extends Notification implements ShouldQueue
                 ->greeting('Halo, ' . $employeeName)
                 ->line('Dokter telah selesai meninjau hasil pemeriksaan kesehatan (MCU) Anda.')
                 ->line('**Status Kebugaran:** ' . $statusText)
-                // Jika status fit dengan catatan
                 ->line($this->result->status === 'fit_with_notes' ? '• Catatan Batasan Kerja: ' . $this->result->doctor_site_consult : '')
-                // Jika status memerlukan follow up
-                ->line($this->result->status === 'temporary_unfit' ? '• Jadwal MCU Follow Up Anda: ' . $this->result->follow_up_date->format('d M Y') : '')
+                ->line($this->result->status === 'temporary_unfit' && $this->result->follow_up_date ? '• Jadwal MCU Follow Up Anda: ' . $this->result->follow_up_date->format('d M Y') : '')
                 ->action('Lihat Detail Hasil', url('/dashboard/mcu'))
                 ->line('Terima kasih, tetap jaga kesehatan dan keselamatan kerja Anda.');
         }
@@ -56,7 +56,7 @@ class McuResultNotification extends Notification implements ShouldQueue
         // Template Email Untuk Dept Head / Supervisor
         return (new MailMessage)
             ->subject('Pemberitahuan Status MCU Anggota Tim: ' . $employeeName)
-            ->greeting('Halo, ' . $notifiable->name) // Nama Supervisor
+            ->greeting('Halo, ' . ($notifiable->name ?? 'Supervisor'))
             ->line('Pemberitahuan bahwa proses review medis untuk anggota tim Anda telah selesai dilakukan oleh dokter.')
             ->line('**Nama Karyawan:** ' . $employeeName)
             ->line('**Status Kebugaran Kerja:** ' . $statusText)
@@ -70,7 +70,10 @@ class McuResultNotification extends Notification implements ShouldQueue
      */
     public function toWhatsApp(object $notifiable): array
     {
-        $employeeName = $this->result->participant->employee->name;
+        // PENTING: Ambil ulang relasi yang hilang akibat serialisasi Queue
+        $this->result->loadMissing(['participant.employee', 'participant.supervisor']);
+
+        $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
 
         if ($this->recipientType === 'employee') {
@@ -87,10 +90,8 @@ class McuResultNotification extends Notification implements ShouldQueue
 
             $text .= "\nDetail selengkapnya dapat Anda lihat melalui Dashboard sistem.";
 
-            // Nomor WA diambil dari data user/karyawan (menyesuaikan kolom di sistem Anda)
             $phone = $notifiable->whatsapp_number ?? $notifiable->phone ?? $this->result->participant->whatsapp_number;
         } else {
-            // Jika penerima adalah Dept Head / Supervisor
             $spvName = $notifiable->name ?? 'Bapak/Ibu Atasan';
 
             $text = "*PEMBERITAHUAN HASIL MCU ANGGOTA TIM*\n\n";
@@ -104,7 +105,6 @@ class McuResultNotification extends Notification implements ShouldQueue
                 $text .= "Mohon lakukan penyesuaian operasional lapangan jika diperlukan.";
             }
 
-            // Nomor WA diambil dari data user Supervisor
             $phone = $notifiable->whatsapp_number ?? $notifiable->phone ?? $this->result->participant->spv_wa_number;
         }
 
@@ -114,9 +114,6 @@ class McuResultNotification extends Notification implements ShouldQueue
         ];
     }
 
-    /**
-     * Menyimpan data log notifikasi ke tabel `notifications` (Database Channel).
-     */
     public function toArray(object $notifiable): array
     {
         return [
@@ -124,7 +121,7 @@ class McuResultNotification extends Notification implements ShouldQueue
             'status'        => $this->result->status,
             'message'       => $this->recipientType === 'employee'
                 ? 'Hasil review MCU Anda sudah keluar dengan status ' . $this->result->status
-                : 'Anggota tim Anda (' . $this->result->participant->employee->name . ') telah di-review dengan status ' . $this->result->status,
+                : 'Anggota tim Anda (' . ($this->result->participant->employee->name ?? 'Karyawan') . ') telah di-review dengan status ' . $this->result->status,
         ];
     }
 }

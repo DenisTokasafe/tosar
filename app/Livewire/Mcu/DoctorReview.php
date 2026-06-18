@@ -42,8 +42,8 @@ class DoctorReview extends Component
             return;
         }
 
-        // Eager load relasi employee dan supervisor yang baru dibuat
-        $result = McuResult::with(['participant.employee', 'participant.supervisor'])->find($this->selectedResultId);
+        // Pastikan memuat relasi supervisor
+        $result = McuResult::with(['participant.employee', 'participant.deptHead'])->find($this->selectedResultId);
 
         if ($result) {
             // 1. Jalankan Update ke Database
@@ -57,9 +57,9 @@ class DoctorReview extends Component
                 'reviewed_at'         => now(),
             ]);
 
-            // 2. Ambil Instansiasi User Terkait
-            $employeeUser = $result->participant->employee;   // Ini langsung Model User Karyawan
-            $deptHeadUser = $result->participant->deptHead; // Ini langsung Model User Dept Head
+            // 2. Ambil Model User Terkait (Ganti deptHead menjadi supervisor)
+            $employeeUser = $result->participant?->employee;
+            $deptHeadUser = $result->participant?->deptHead;
 
             // 3. Kirim Notifikasi ke Karyawan
             if ($employeeUser) {
