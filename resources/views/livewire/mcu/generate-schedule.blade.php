@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <x-manhours.layout>
+        <x-mcu.layout>
             <div class="card bg-base-100 border border-base-200 shadow-sm">
                 <div class="card-body p-0 sm:p-5 md:p-6">
 
@@ -170,6 +170,6 @@
                     <span wire:loading wire:target="generateJadwal" class="ml-2 hidden">Memproses...</span>
                 </button>
             </div>
-        </x-manhours.layout>
+        </x-mcu.layout>
     </form>
 </section>
