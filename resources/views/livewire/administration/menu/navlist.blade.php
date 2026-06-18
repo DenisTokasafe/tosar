@@ -7,15 +7,7 @@
             @if ($menu->menu === 'Administrator' && (auth()->guest() || !auth()->user()->hasRole('administrator'))) @continue @endif
             @if ($menu->menu === 'Manhours' && (!auth()->check() || !auth()->user()?->can('viewAny', \App\Models\Manhour::class))) @continue @endif
             @if ($menu->menu === 'WPI' && !auth()->check()) @continue @endif
-            @if (
-            $menu->menu === 'MCU' &&
-            (
-            auth()->guest() ||
-            !auth()->user()->hasAnyRole(['administrator', 'medical_staff'])
-            )
-            )
-            @continue
-            @endif
+            @if ($menu->menu === 'MCU' && (auth()->guest() || !auth()->user()->hasAnyRole(['administrator', 'medical_staff'])) ) @continue @endif
 
             @php
             // Definisikan class efek agar kode lebih rapi
