@@ -97,7 +97,7 @@
                             <td>
                                 @if(isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'])
                                 <div class="flex flex-col gap-2">
-                                    <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA" />
+                                    <x-form.input-text type="number" model="participantsData.{{ $employee->id }}.wa" placeholder="No WA Karyawan" />
 
                                     <div x-on:focusin="$wire.set('activeRowId', {{ $employee->id }})">
 
