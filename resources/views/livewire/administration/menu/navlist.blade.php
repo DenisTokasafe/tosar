@@ -10,6 +10,10 @@
             @if ($menu->menu === 'MCU Schedule' && (auth()->guest() || !auth()->user()->hasAnyRole(['administrator', 'Medical Staff'])) ) @continue @endif
 
             @php
+            dd([
+            'role' => auth()->user()->role,
+            'role_id' => auth()->user()->role_id,
+            ]);
             $menuEffects = 'transition-all duration-300 ease-in-out hover:-translate-x-1 hover:shadow-lg hover:z-10 rounded-lg';
             @endphp
 
