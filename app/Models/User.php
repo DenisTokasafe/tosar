@@ -140,6 +140,12 @@ class User extends Authenticatable implements LdapAuthenticatable
     public function hasAnyRole(array $roles)
     {
         // Menggunakan eager loading collection agar hemat query
-        return $this->roles->whereIn('name', $roles)->isNotEmpty();
+        $userRoles = $this->roles
+            ->pluck('name')
+            ->map(fn($role) => strtolower($role));
+
+        return $userRoles->intersect(
+            collect($roles)->map(fn($role) => strtolower($role))
+        )->isNotEmpty();
     }
 }
