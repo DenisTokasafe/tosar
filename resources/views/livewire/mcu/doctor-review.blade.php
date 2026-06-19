@@ -56,24 +56,28 @@
                     </ul>
                 </div>
                 @endif
-                <div class="form-control w-full">
-                    <label class="label"><span class="label-text font-bold">Status MCU</span></label>
-                    <select wire:model.live="fit_status" class="select select-bordered w-full border-primary">
-                        <option value="">-- Pilih Status Kebugaran --</option>
-                        <option value="fit_to_work">✅ Fit To Work</option>
-                        <option value="fit_with_notes">⚠️ Fit With Notes (Restriction)</option>
-                        <option value="temporary_unfit">⏳ Temporary Unfit</option>
-                        <option value="unfit">❌ Unfit</option>
-                    </select>
-                    @error('fit_status') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
+
+                <flux:select size="xs" wire:model.live='fit_status' placeholder="Choose Status...">
+                    <option value="">-- Pilih Status Kebugaran --</option>
+                    <option value="fit_to_work">✅ Fit To Work</option>
+                    <option value="fit_with_notes">⚠️ Fit With Notes (Restriction)</option>
+                    <option value="temporary_unfit">⏳ Temporary Unfit</option>
+                    <option value="unfit">❌ Unfit</option>
+
+                </flux:select>
+                <x-label-error :messages="$errors->get('fit_status')" />
 
                 @if($fit_status === 'fit_with_notes')
-                <div wire:key="box-restriction" class="form-control w-full animate-fade-in-down">
-                    <label class="label"><span class="label-text font-semibold text-warning">Catatan Batasan Kerja (Restriction Monitoring)</span></label>
-                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered textarea-warning h-24" placeholder="Sebutkan batasan kerjanya (contoh: Tidak boleh mengangkat beban >10kg)"></textarea>
-                    @error('restriction_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
+                <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-restriction">
+
+                    <x-form.label label="Catatan Batasan Kerja (Restriction Monitoring)" required />
+                    <div x-data="ckeditorHelper('restriction_notes')" wire:ignore>
+                        <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Catatan Batasan Kerja (Restriction Monitoring)...') }}"></div>
+                    </div>
+
+                    <x-label-error :messages="$errors->get('restriction_notes')" />
+                </fieldset>
+
                 @endif
 
                 @if($fit_status === 'temporary_unfit')
@@ -84,11 +88,13 @@
                 </div>
                 @endif
 
-                <div class="form-control w-full">
-                    <label class="label"><span class="label-text font-semibold">Catatan Tambahan Dokter</span></label>
-                    <textarea wire:model="doctor_notes" class="textarea textarea-bordered h-20" placeholder="Opsional..."></textarea>
-                    @error('doctor_notes') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
+                <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-doctor_notes">
+                    <x-form.label label="Catatan Tambahan Dokter" required />
+                    <div x-data="ckeditorHelper('doctor_notes')" wire:ignore>
+                        <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Catatan Tambahan Dokter...') }}"></div>
+                    </div>
+                    <x-label-error :messages="$errors->get('doctor_notes')" />
+                </fieldset>
 
                 <div class="flex justify-end space-x-2 pt-4 border-t border-base-200">
                     <flux:button variant="ghost" wire:click="$set('showReviewModal', false)">Batal</flux:button>
