@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <flux:modal wire:model="showReviewModal" class="w-full max-w-2xl">
+    <flux:modal wire:model="showReviewModal" class="w-full ">
         <div class="space-y-2">
             <flux:heading size="lg" class="border-b pb-2">Review Status MCU</flux:heading>
 
