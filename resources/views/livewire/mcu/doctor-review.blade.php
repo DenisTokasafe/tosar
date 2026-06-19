@@ -89,6 +89,7 @@
                         x-data="{ fp: null }" x-init="
                                 fp = flatpickr($refs.input, {
                                     dateFormat: 'Y-m-d',
+                                     static: true,
                                 });
                                 $wire.on('dateLoaded', () => {
                                     if ($wire.follow_up_date) {
