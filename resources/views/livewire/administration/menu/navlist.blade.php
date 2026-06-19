@@ -13,7 +13,9 @@
             // Definisikan class efek agar kode lebih rapi
             $menuEffects = 'transition-all duration-300 ease-in-out hover:-translate-x-1 hover:shadow-lg hover:z-10 rounded-lg';
             @endphp
-
+            @php
+            dd(auth()->user()->getRoleNames());
+            @endphp
             {{-- LEVEL 1: Group dengan SubMenu --}}
             @if (count($menu->subMenus) > 0)
             <flux:navlist.group-list
