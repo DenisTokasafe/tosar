@@ -78,7 +78,7 @@
     --size-field: 0.21875rem;
     --border: 1px;
     --depth: 1;
-    --noise: 1;
+
     --noise-url: url("/noise.svg");
 }
 
@@ -114,7 +114,7 @@
     --size-field: 0.25rem;
     --border: 1px;
     --depth: 1;
-    --noise: 1;
+
     --noise-url: url("/noise.svg");
 }
 
@@ -280,7 +280,7 @@
     --size-field: 0.21875rem;
     --border: 1px;
     --depth: 1;
-    --noise: 1;
+
     --noise-url: url("/noise.svg");
 }
 
@@ -317,7 +317,7 @@
     --size-field: 0.25rem;
     --border: 1.5px;
     --depth: 1;
-    --noise: 1;
+
     --noise-url: url("/noise.svg");
 }
 
@@ -353,7 +353,7 @@
     --size-field: 0.25rem;
     --border: 2px;
     --depth: 1;
-    --noise: 1;
+
     --noise-url: url("/noise.svg");
 }
 
@@ -389,7 +389,6 @@
     --size-field: 0.25rem;
     --border: 1px;
     --depth: 1;
-    --noise: 1;
 }
 
 @plugin "daisyui" {
@@ -506,6 +505,7 @@ select:focus[data-flux-control] {
     --ck-color-text: var(--color-base-content);
     --ck-color-toolbar-background: var(--color-base-200);
     --ck-color-toolbar-border: var(--color-base-300);
+    --noise: url("/noise.svg") !important;
 }
 
 .ck-editor {
