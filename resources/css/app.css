@@ -281,6 +281,7 @@
     --border: 1px;
     --depth: 1;
     --noise: 1;
+    --noise-url: url("/noise.svg");
 }
 
 @plugin "daisyui/theme" {
