@@ -9,7 +9,7 @@
 
             <form wire:submit="saveResult" class="space-y-4">
 
-                <div class="form-control w-full">
+                <fieldset class="fieldset">
                     <x-form.label label="Pilih Karyawan" />
                     <flux:select size="xs" wire:model.live='participant_id' placeholder="Choose Status...">
                         <option value="">-- Pilih Peserta MCU --</option>
@@ -20,7 +20,7 @@
                         @endforeach
                     </flux:select>
                     <x-label-error :messages="$errors->get('participant_id')" />
-                </div>
+                </fieldset>
 
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-semibold">Unggah Dokumen Hasil (PDF/JPG)</span></label>
