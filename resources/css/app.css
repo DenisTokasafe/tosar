@@ -484,6 +484,9 @@ select:focus[data-flux-control] {
     .bg-from-db-green {
         @apply bg-green-500;
     }
+    .bg-noise {
+        background-image: url("/noise.svg");
+    }
 }
 
 .rotate_text {
