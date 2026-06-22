@@ -10,13 +10,13 @@
             <form wire:submit="saveResult" class="space-y-4">
 
                 <x-form.searchable-select-advanced
-                    label="Dept Head (Opsional)"
-                    placeholder="Cari Nama Karyawan MCU..."
-                    modelsearch="searchEmployeeMCU"
-                    modelid="participantsData"
-                    :options="$deptHeads"
-                    :showdropdown="$showEmployeeMcuDropdown"
-                    clickaction="selectEmployeeMCU" />
+                    label="Peserta MCU"
+                    placeholder="Cari Nama Peserta MCU..."
+                    modelsearch="searchParticipant"
+                    modelid="participant_id"
+                    :options="$formattedParticipants"
+                    :showdropdown="$showParticipantDropdown"
+                    clickaction="selectParticipant" />
                 <fieldset class="fieldset">
                     <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document" required />
                 </fieldset>
