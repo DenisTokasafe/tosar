@@ -60,7 +60,7 @@
 
                 {{-- Opsi List --}}
                 <div wire:loading.remove wire:target="{{ $clickaction }}, {{ $enableManualAction }}">
-                    @if(count($options) > 0)
+                    @if(count($options) >= 0)
                     @foreach($options as $opt)
                     <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
                         wire:key="opt-{{ $opt->id }}"
