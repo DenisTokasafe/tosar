@@ -53,14 +53,13 @@
                 :style="{ width: $refs.trigger.offsetWidth + 'px' }"
                 class="fixed z-[9999] overflow-auto border rounded-md shadow-xl bg-base-100 border-base-300 max-h-60 list-none">
                 {{-- Loading State --}}
-                <div wire:loading wire:target="{{ $clickaction }}, {{ $enableManualAction }}, {{ $addManualAction }}"
-                    class="flex flex-col items-center justify-center px-4 py-2 text-center">
-                    <span wire:loading.remove.class="hidden" wire:target="{{ $clickaction }}, {{ $enableManualAction }}, {{ $addManualAction }}" class="loading loading-spinner loading-sm text-secondary hidden"></span>
+                <div class="flex flex-col items-center justify-center px-4 py-2 text-center">
+                    <span wire:loading.remove.class="hidden" wire:target="{{ $clickaction }}, {{ $enableManualAction }}, {{ $addManualAction }},{{ $modelsearch }}" class="loading loading-spinner loading-sm text-secondary hidden"></span>
                 </div>
 
                 {{-- Opsi List --}}
                 <div wire:loading.remove wire:target="{{ $clickaction }}, {{ $enableManualAction }}">
-                    @if(count($options) >= 0)
+                    @if(count($options) > 0)
                     @foreach($options as $opt)
                     <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$columnName}) }}')"
                         wire:key="opt-{{ $opt->id }}"
