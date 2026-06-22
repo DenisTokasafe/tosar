@@ -29,7 +29,7 @@
                     <fieldset class="w-full fieldset">
                         <x-form.label label="Pilih Bulan" required />
 
-                        <div class="w-full" wire:ignore wire:key="manhours-month-picker-{{ time() }}"
+                        <div class="w-full" wire:ignore wire:key="filter-month-picker"
                             x-data="{
                                 fp: null,
                                 dateValue: @entangle('date').live,
@@ -59,6 +59,9 @@
                                                 this.dateValue = dateStr;
                                             }
                                         });
+                                        this.$cleanup(() => {
+            if (this.fp) this.fp.destroy();
+        });
                                     });
                                 }
                             }" x-init="initFlatpickr()"
