@@ -22,11 +22,21 @@
         </div>
     </div>
     <script>
-        document.addEventListener('livewire:initialized', () => {
+        function initMcuCharts() {
+            // Cek apakah elemen ada di halaman ini untuk menghindari error
+            if (!document.getElementById('chartKehadiran')) return;
 
-            // ==========================================
-            // 1. Grafik Kehadiran (Donut Chart)
-            // ==========================================
+            // 1. PENTING: Bersihkan instance lama agar tidak terjadi error "Already initialized"
+            const chartIds = ['chartKehadiran', 'chartFitStatus', 'chartWorkflow'];
+            chartIds.forEach(id => {
+                const dom = document.getElementById(id);
+                if (dom) {
+                    const existingInstance = echarts.getInstanceByDom(dom);
+                    if (existingInstance) existingInstance.dispose();
+                }
+            });
+
+            // 2. Grafik Kehadiran (Donut Chart)
             var chartKehadiran = echarts.init(document.getElementById('chartKehadiran'));
             chartKehadiran.setOption({
                 tooltip: {
@@ -69,9 +79,7 @@
                 }]
             });
 
-            // ==========================================
-            // 2. Grafik Status Kebugaran (Pie Chart)
-            // ==========================================
+            // 3. Grafik Status Kebugaran (Pie Chart)
             var chartFitStatus = echarts.init(document.getElementById('chartFitStatus'));
             chartFitStatus.setOption({
                 tooltip: {
@@ -118,9 +126,7 @@
                 }]
             });
 
-            // ==========================================
-            // 3. Grafik Workflow Review (Bar Chart)
-            // ==========================================
+            // 4. Grafik Workflow Review (Bar Chart)
             var chartWorkflow = echarts.init(document.getElementById('chartWorkflow'));
             chartWorkflow.setOption({
                 tooltip: {
@@ -162,12 +168,19 @@
                     ]
                 }]
             });
+        }
 
-            // Bikin grafik responsive jika jendela browser di-resize
-            window.addEventListener('resize', function() {
-                chartKehadiran.resize();
-                chartFitStatus.resize();
-                chartWorkflow.resize();
+        // Jalankan saat pertama kali halaman dimuat
+        document.addEventListener('livewire:initialized', initMcuCharts);
+
+        // Jalankan setiap kali berpindah halaman via wire:navigate
+        document.addEventListener('livewire:navigated', initMcuCharts);
+
+        // Resize handling yang lebih aman
+        window.addEventListener('resize', function() {
+            ['chartKehadiran', 'chartFitStatus', 'chartWorkflow'].forEach(id => {
+                const chart = echarts.getInstanceByDom(document.getElementById(id));
+                if (chart) chart.resize();
             });
         });
     </script>
