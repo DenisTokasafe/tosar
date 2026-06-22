@@ -1,4 +1,4 @@
-<section class="w-full max-w-4xl mx-auto px-4 py-6">
+<section class="w-full  mx-auto px-4 py-6">
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body">
             <h2 class="card-title text-xl mb-4">Input Hasil MCU (Medical Admin)</h2>
