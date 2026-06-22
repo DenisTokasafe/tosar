@@ -48,7 +48,7 @@ class McuResultNotification extends Notification implements ShouldQueue
                 ->greeting('Halo, ' . $employeeName)
                 ->line('Dokter telah selesai meninjau hasil pemeriksaan kesehatan (MCU) Anda.')
                 ->line('**Status Kebugaran:** ' . $statusText)
-                ->line($this->result->status === 'fit_with_notes' ? '• Catatan Batasan Kerja: ' . $this->result->doctor_site_consult : '')
+                ->line($this->result->status === 'fit_with_notes' ? '• Catatan Batasan Kerja: ' . strip_tags($this->result->doctor_site_consult) : '')
                 ->line($this->result->status === 'temporary_unfit' && $this->result->follow_up_date ? '• Jadwal MCU Follow Up Anda: ' . $this->result->follow_up_date->format('d M Y') : '')
                 ->action('Lihat Detail Hasil', url('/dashboard/mcu'))
                 ->line('Terima kasih, tetap jaga kesehatan dan keselamatan kerja Anda.');
@@ -61,7 +61,7 @@ class McuResultNotification extends Notification implements ShouldQueue
             ->line('Pemberitahuan bahwa proses review medis untuk anggota tim Anda telah selesai dilakukan oleh dokter.')
             ->line('**Nama Karyawan:** ' . $employeeName)
             ->line('**Status Kebugaran Kerja:** ' . $statusText)
-            ->line($this->result->status === 'fit_with_notes' ? '• Batasan Kerja (Harap Dimonitor): ' . $this->result->doctor_site_consult : '')
+            ->line($this->result->status === 'fit_with_notes' ? '• Batasan Kerja (Harap Dimonitor): ' . strip_tags($this->result->doctor_site_consult) : '')
             ->action('Buka Menu Monitoring', url('/supervisor/mcu-monitoring'))
             ->line('Mohon lakukan penyesuaian operasional di lapangan jika terdapat batasan kerja pada karyawan terkait.');
     }
@@ -76,6 +76,7 @@ class McuResultNotification extends Notification implements ShouldQueue
 
         $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
+        $doctorNotes = strip_tags( $this->result->doctor_site_consult)
 
         if ($this->recipientType === 'employee') {
             $text = "*HASIL MEDICAL CHECK-UP (MCU)*\n\n";
@@ -84,7 +85,7 @@ class McuResultNotification extends Notification implements ShouldQueue
             $text .= "*Status Kebugaran:* {$statusText}\n";
 
             if ($this->result->status === 'fit_with_notes') {
-                $text .= "*Catatan Batasan Kerja:* {$this->result->doctor_site_consult}\n";
+                $text .= "*Catatan Batasan Kerja:* {$doctorNotes}\n";
             } elseif ($this->result->status === 'temporary_unfit' && $this->result->follow_up_date) {
                 $text .= "*Jadwal MCU Follow Up:* " . $this->result->follow_up_date->format('d M Y') . "\n";
             }
@@ -102,7 +103,7 @@ class McuResultNotification extends Notification implements ShouldQueue
             $text .= "*Status Kebugaran Kerja:* {$statusText}\n";
 
             if ($this->result->status === 'fit_with_notes') {
-                $text .= "*Batasan Kerja (Harap Dimonitor):* {$this->result->doctor_site_consult}\n\n";
+                $text .= "*Batasan Kerja (Harap Dimonitor):* {$doctorNotes}\n\n";
                 $text .= "Mohon lakukan penyesuaian operasional lapangan jika diperlukan.";
             }
 
