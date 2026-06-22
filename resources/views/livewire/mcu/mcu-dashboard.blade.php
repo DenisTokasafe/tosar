@@ -1,21 +1,21 @@
 <div>
-    <div class="p-6 bg-base-200 min-h-screen">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">Dashboard Medical Check-Up</h1>
+    <div class="min-h-screen p-6 bg-base-200">
+        <h1 class="mb-6 text-2xl font-bold text-base-content">Dashboard Medical Check-Up</h1>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
 
-            <div class="bg-base-100 p-4 rounded-xl shadow border border-base-300">
-                <h3 class="text-lg font-semibold mb-2 text-center">Tingkat Kehadiran MCU</h3>
+            <div class="p-4 border shadow bg-base-100 rounded-xl border-base-300">
+                <h3 class="mb-2 text-lg font-semibold text-center">Tingkat Kehadiran MCU</h3>
                 <div id="chartKehadiran" wire:ignore style="width: 100%; height: 300px;"></div>
             </div>
 
-            <div class="bg-base-100 p-4 rounded-xl shadow border border-base-300">
-                <h3 class="text-lg font-semibold mb-2 text-center">Sebaran Status Kebugaran</h3>
+            <div class="p-4 border shadow bg-base-100 rounded-xl border-base-300">
+                <h3 class="mb-2 text-lg font-semibold text-center">Sebaran Status Kebugaran</h3>
                 <div id="chartFitStatus" wire:ignore style="width: 100%; height: 300px;"></div>
             </div>
 
-            <div class="bg-base-100 p-4 rounded-xl shadow border border-base-300">
-                <h3 class="text-lg font-semibold mb-2 text-center">Status Review Dokter</h3>
+            <div class="p-4 border shadow bg-base-100 rounded-xl border-base-300">
+                <h3 class="mb-2 text-lg font-semibold text-center">Status Review Dokter</h3>
                 <div id="chartWorkflow" wire:ignore style="width: 100%; height: 300px;"></div>
             </div>
 
@@ -39,7 +39,7 @@
                     bottom: '0%',
                     left: 'center'
                 },
-                color: ['#10b981', '#ef4444', '#f59e0b'], // Hijau (Sudah), Merah (Lewat), Kuning (Menunggu)
+                color: ['#10b981', '#ef4444', '#f59e0b'],
                 series: [{
                     name: 'Kehadiran',
                     type: 'pie',
@@ -57,27 +57,15 @@
                         }
                     },
                     data: [{
-                            value: {
-                                {
-                                    $sudahMcu
-                                }
-                            },
+                            value: {{ $sudahMcu ?? 0 }},
                             name: 'Sudah MCU'
                         },
                         {
-                            value: {
-                                {
-                                    $terlewatMcu
-                                }
-                            },
+                            value: {{ $terlewatMcu ?? 0 }},
                             name: 'Terlewat Jadwal'
                         },
                         {
-                            value: {
-                                {
-                                    $menungguJadwal
-                                }
-                            },
+                            value: {{ $menungguJadwal ?? 0 }},
                             name: 'Menunggu Jadwal'
                         }
                     ]
@@ -101,41 +89,25 @@
                         fontSize: 10
                     }
                 },
-                color: ['#3b82f6', '#eab308', '#f97316', '#ef4444'], // Biru, Kuning, Oranye, Merah
+                color: ['#3b82f6', '#eab308', '#f97316', '#ef4444'],
                 series: [{
                     name: 'Status',
                     type: 'pie',
                     radius: '60%',
                     data: [{
-                            value: {
-                                {
-                                    $fitStatus['fit_to_work']
-                                }
-                            },
+                            value: {{ $fitStatus['fit_to_work'] ?? 0 }},
                             name: '✅ Fit To Work'
                         },
                         {
-                            value: {
-                                {
-                                    $fitStatus['fit_with_notes']
-                                }
-                            },
+                            value: {{ $fitStatus['fit_with_notes'] ?? 0 }},
                             name: '⚠️ Fit With Notes'
                         },
                         {
-                            value: {
-                                {
-                                    $fitStatus['temporary_unfit']
-                                }
-                            },
+                            value: {{ $fitStatus['temporary_unfit'] ?? 0 }},
                             name: '⏳ Temp. Unfit'
                         },
                         {
-                            value: {
-                                {
-                                    $fitStatus['unfit']
-                                }
-                            },
+                            value: {{ $fitStatus['unfit'] ?? 0 }},
                             name: '❌ Unfit'
                         }
                     ],
@@ -180,7 +152,6 @@
                     name: 'Jumlah Data',
                     type: 'bar',
                     barWidth: '50%',
-                    // Warna dinamis: Kuning untuk pending, Hijau untuk reviewed
                     itemStyle: {
                         color: function(params) {
                             var colorList = ['#eab308', '#10b981'];
@@ -188,16 +159,9 @@
                         },
                         borderRadius: [4, 4, 0, 0]
                     },
-                    data: [{
-                            {
-                                $workflowStatus['pending_doctor']
-                            }
-                        },
-                        {
-                            {
-                                $workflowStatus['reviewed']
-                            }
-                        }
+                    data: [
+                        {{ $workflowStatus['pending_doctor'] ?? 0 }},
+                        {{ $workflowStatus['reviewed'] ?? 0 }}
                     ]
                 }]
             });
