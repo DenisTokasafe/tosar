@@ -130,6 +130,7 @@ Route::middleware(['role:administrator,medical staff'])->group(function () {
     Route::get('mcu/input-result', InputResult::class)->name('mcu.input-result');
     Route::get('mcu/doctor-review', DoctorReview::class)->name('mcu.doctor-review');
     Route::get('mcu/list', McuResultList::class)->name('mcu.list');
+    Route::get('mcu/dashboard', McuResultList::class)->name('mcu.dashboard');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
