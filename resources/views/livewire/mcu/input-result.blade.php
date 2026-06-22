@@ -10,33 +10,35 @@
             <form wire:submit="saveResult" class="space-y-4">
 
                 <div class="form-control w-full">
-                    <label class="label"><span class="label-text font-semibold">Pilih Karyawan</span></label>
-                    <select wire:model="participant_id" class="select select-bordered w-full">
+                    <x-form.label label="Pilih Karyawan" />
+                    <flux:select size="xs" wire:model.live='participant_id' placeholder="Choose Status...">
                         <option value="">-- Pilih Peserta MCU --</option>
                         @foreach($participants as $p)
                         <option value="{{ $p->id }}">
                             {{ $p->employee->name }} - {{ $p->schedule->schedule_date->format('d M Y') }}
                         </option>
                         @endforeach
-                    </select>
-                    @error('participant_id') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+                    </flux:select>
+                    <x-label-error :messages="$errors->get('participant_id')" />
                 </div>
 
                 <div class="form-control w-full">
                     <label class="label"><span class="label-text font-semibold">Unggah Dokumen Hasil (PDF/JPG)</span></label>
-                    <input type="file" wire:model="result_document" class="file-input file-input-bordered w-full" accept=".pdf,.jpg,.jpeg,.png" />
+                    <input type="file" wire:model="result_document" class="file-input file-input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary w-full input-xs " accept=".pdf,.jpg,.jpeg,.png" />
                     @error('result_document') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
-
-                <div class="form-control w-full">
-                    <label class="label"><span class="label-text font-semibold">Catatan Admin (Opsional)</span></label>
-                    <textarea wire:model="admin_notes" class="textarea textarea-bordered h-24" placeholder="Ketik catatan jika ada..."></textarea>
-                </div>
+                <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-admin_notes">
+                    <x-form.label label="Catatan Admin (Opsional)" />
+                    <div x-data="ckeditorHelper('admin_notes')" wire:ignore>
+                        <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Catatan Admin...') }}"></div>
+                    </div>
+                    <x-label-error :messages="$errors->get('admin_notes')" />
+                </fieldset>
 
                 <div class="mt-6 flex justify-end">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-sm">
                         <span wire:loading.remove wire:target="saveResult">Kirim ke Dokter</span>
-                        <span wire:loading wire:target="saveResult" class="loading loading-spinner"></span>
+                        <span wire:loading.remove.class="hidden" wire:target="saveResult" class="loading loading-spinner hidden"></span>
                     </button>
                 </div>
             </form>
