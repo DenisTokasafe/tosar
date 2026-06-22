@@ -53,6 +53,7 @@ use App\Livewire\Manhours\Index;
 use App\Livewire\Mcu\DoctorReview;
 use App\Livewire\Mcu\GenerateSchedule;
 use App\Livewire\Mcu\InputResult;
+use App\Livewire\Mcu\McuResultList;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -128,6 +129,7 @@ Route::middleware(['role:administrator,medical staff'])->group(function () {
     Route::get('mcu/generate', GenerateSchedule::class)->name('mcu.generate');
     Route::get('mcu/input-result', InputResult::class)->name('mcu.input-result');
     Route::get('mcu/doctor-review', DoctorReview::class)->name('mcu.doctor-review');
+    Route::get('mcu/list', McuResultList::class)->name('mcu.list');
 });
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
