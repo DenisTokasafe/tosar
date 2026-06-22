@@ -21,12 +21,11 @@
                     </flux:select>
                     <x-label-error :messages="$errors->get('participant_id')" />
                 </fieldset>
-
-                <div class="form-control w-full">
+                <fieldset class="fieldset">
                     <label class="label"><span class="label-text font-semibold">Unggah Dokumen Hasil (PDF/JPG)</span></label>
                     <input type="file" wire:model="result_document" class="file-input file-input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary w-full input-xs " accept=".pdf,.jpg,.jpeg,.png" />
                     @error('result_document') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
+                </fieldset>
                 <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-admin_notes">
                     <x-form.label label="Catatan Admin (Opsional)" />
                     <div x-data="ckeditorHelper('admin_notes')" wire:ignore>
