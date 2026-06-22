@@ -36,7 +36,7 @@
                         wire:key="xsubmenu-item-{{ $xsubmenu->id }}"
                         :href="route($xsubmenu->route)"
                         :current="Request::is($xsubmenu->request_route)"
-                        wire:navigate
+
                         class="{{ $menuEffects }}">
                         {{ __($xsubmenu->menu) }}
                     </flux:menu.item>
@@ -50,7 +50,7 @@
                     :href="$submenu->route ? route($submenu->route) : '#'"
                     :current="(($submenu->request_route!=null)? Request::is($submenu->request_route ):request()->routeIs($submenu->route ))"
                     icon="{{ $submenu->icon }}"
-                    wire:navigate
+
                     class="{{ $menuEffects }}">
                     {{ __($submenu->menu) }}
                 </flux:menu.item>
@@ -65,7 +65,7 @@
                 icon="{{ $menu->icon ?: 'ban' }}"
                 :href="$menu->route ? route($menu->route) : '#'"
                 :current="Request::is($menu->request_route)"
-                wire:navigate
+
                 class="{{ $menuEffects }}">
                 {{ __($menu->menu) }}
             </flux:navlist.item>
