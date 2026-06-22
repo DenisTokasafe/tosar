@@ -29,47 +29,49 @@
                     <fieldset class="w-full fieldset">
                         <x-form.label label="Pilih Bulan" required />
 
-                        <div class="w-full" wire:ignore wire:key="filter-month-picker"
-                            x-data="{
-                                fp: null,
-                                dateValue: @entangle('date').live,
-                                initFlatpickr() {
-                                    // Gunakan nextTick untuk memastikan DOM input sudah render sempurna
-                                    this.$nextTick(() => {
-                                        if (this.fp) {
-                                            this.fp.destroy();
-                                        }
+                        <div wire:ignore wire:key="filter-month-picker-wrapper" class="w-full">
 
-                                        // Pastikan x-ref input tersedia
-                                        if (!this.$refs.input) return;
+                            <div x-data="{
+                fp: null,
+                dateValue: @entangle('date').live,
 
-                                        this.fp = flatpickr(this.$refs.input, {
-                                            static: true,
-                                            plugins: [
-                                                new monthSelectPlugin({
-                                                    disableMobile: false,
-                                                    shorthand: true,
-                                                    dateFormat: 'M-Y',
-                                                    altFormat: 'F Y',
-                                                    theme: 'light'
-                                                })
-                                            ],
-                                            defaultDate: this.dateValue,
-                                            onChange: (selectedDates, dateStr) => {
-                                                this.dateValue = dateStr;
-                                            }
-                                        });
-                                        this.$cleanup(() => {
-            if (this.fp) this.fp.destroy();
-        });
-                                    });
-                                }
-                            }" x-init="initFlatpickr()"
-                            x-effect="if(fp && dateValue) fp.setDate(dateValue, false)">
+                // Alpine otomatis menjalankan fungsi init() saat komponen dimuat
+                init() {
+                    // Eksekusi Flatpickr langsung ke $refs.input
+                    this.fp = flatpickr(this.$refs.input, {
+                        static: true,
+                        plugins: [
+                            new monthSelectPlugin({
+                                disableMobile: false,
+                                shorthand: true,
+                                dateFormat: 'M-Y',
+                                altFormat: 'F Y',
+                                theme: 'light'
+                            })
+                        ],
+                        defaultDate: this.dateValue,
+                        onChange: (selectedDates, dateStr) => {
+                            // Update nilai ke Livewire saat user memilih tanggal
+                            this.dateValue = dateStr;
+                        }
+                    });
 
-                            <input x-ref="input" type="text" readonly
-                                class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
-                                placeholder="Pilih bulan" />
+                    // Pantau perubahan dari Livewire. Jika properti $date reset, UI flatpickr ikut reset
+                    this.$watch('dateValue', (value) => {
+                        if (this.fp && value) {
+                            this.fp.setDate(value, false);
+                        } else if (this.fp && !value) {
+                            this.fp.clear();
+                        }
+                    });
+                }
+            }">
+
+                                <input x-ref="input" type="text" readonly
+                                    class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs"
+                                    placeholder="Pilih bulan" />
+                            </div>
+
                         </div>
                         <x-label-error :messages="$errors->get('date')" />
                     </fieldset>
