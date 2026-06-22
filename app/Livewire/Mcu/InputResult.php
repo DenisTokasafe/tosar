@@ -11,9 +11,11 @@ class InputResult extends Component
 {
     use WithFileUploads;
 
-    public $participant_id;
+    public $participant_id = null;
     public $result_document;
     public $admin_notes;
+    public $searchParticipant = '';
+    public $showParticipantDropdown = false;
 
     public function rules()
     {
@@ -44,13 +46,53 @@ class InputResult extends Component
         $this->reset(['participant_id', 'result_document', 'admin_notes']);
     }
 
+    public function updatedSearchParticipant()
+    {
+        $this->showParticipantDropdown = true;
+
+        // Opsional: Reset ID jika user mengetik ulang pencarian
+        if (strlen($this->searchParticipant) > 0) {
+            $this->participant_id = null;
+        }
+    }
+
+    /**
+     * Trigger saat user mengklik salah satu opsi di dropdown
+     */
+    public function selectParticipant($id, $name)
+    {
+        $this->participant_id = $id;
+        $this->searchParticipant = $name; // Ubah teks input menjadi nama yang dipilih
+        $this->showParticipantDropdown = false; // Tutup dropdown
+    }
+
     public function render()
     {
-        // Ambil data peserta yang belum memiliki hasil MCU
-        $participants = McuParticipant::whereDoesntHave('result')->with('employee', 'schedule')->get();
+        // 1. Mulai query dasar: Ambil peserta yang belum memiliki hasil MCU
+        $query = McuParticipant::whereDoesntHave('result')->with(['employee', 'schedule']);
 
+        // 2. Tambahkan filter pencarian (Jika user mengetik di input pencarian)
+        // Pastikan variabel $this->searchParticipant sudah dideklarasikan di class Anda
+        if (!empty($this->searchParticipant) && empty($this->participant_id)) {
+            $query->whereHas('employee', function ($q) {
+                $q->where('name', 'like', '%' . $this->searchParticipant . '%');
+            });
+        }
+
+        // 3. Ambil data dan format menjadi bentuk Array yang dibutuhkan komponen kustom
+        $formattedParticipants = $query->take(50)->get()->map(function ($p) {
+            // Ambil tanggal jadwal jika ada
+            $date = $p->schedule ? $p->schedule->schedule_date->format('d M Y') : 'Tanpa Jadwal';
+
+            return [
+                'id'   => $p->id,
+                'name' => $p->employee->name . ' - ' . $date
+            ];
+        })->toArray(); // Konversi ke array agar mudah dibaca oleh komponen x-form
+
+        // 4. Kirim data yang sudah diformat ke view
         return view('livewire.mcu.input-result', [
-            'participants' => $participants
+            'formattedParticipants' => $formattedParticipants
         ]);
     }
 }

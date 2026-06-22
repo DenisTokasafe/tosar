@@ -9,17 +9,14 @@
 
             <form wire:submit="saveResult" class="space-y-4">
 
-                <fieldset class="fieldset">
-                    <x-form.label label="Pilih Karyawan" />
-                    <flux:select size="xs" wire:model.live='participant_id' placeholder="Pilih Peserta MCU...">
-                        @foreach($participants as $p)
-                        <option value="{{ $p->id }}">
-                            {{ $p->employee->name }} - {{ $p->schedule->schedule_date->format('d M Y') }}
-                        </option>
-                        @endforeach
-                    </flux:select>
-                    <x-label-error :messages="$errors->get('participant_id')" />
-                </fieldset>
+                <x-form.searchable-select-advanced
+                    label="Dept Head (Opsional)"
+                    placeholder="Cari Nama Karyawan MCU..."
+                    modelsearch="searchEmployeeMCU"
+                    modelid="participantsData"
+                    :options="$deptHeads"
+                    :showdropdown="$showEmployeeMcuDropdown"
+                    clickaction="selectEmployeeMCU" />
                 <fieldset class="fieldset">
                     <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document" required />
                 </fieldset>
