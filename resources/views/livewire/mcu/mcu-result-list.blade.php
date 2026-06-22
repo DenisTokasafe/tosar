@@ -61,4 +61,74 @@
     <div class="mt-4">
         {{ $mcuResults->links() }}
     </div>
+
+    <div class="modal {{ $showReviewModal ? 'modal-open' : '' }}" role="dialog">
+        <div class="modal-box w-11/12 max-w-2xl bg-white">
+
+            <button wire:click="closeReviewModal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+
+            <h3 class="font-bold text-lg border-b pb-2 mb-4">
+                Review Medis Karyawan: <span class="text-primary">{{ $employeeName }}</span>
+            </h3>
+
+            <div class="space-y-4">
+
+                <div class="form-control w-full">
+                    <label class="label font-semibold">
+                        <span class="label-text">Status Kebugaran Kerja (Fit Status) <span class="text-error">*</span></span>
+                    </label>
+                    <select wire:model.live="fit_status" class="select select-bordered w-full @error('fit_status') select-error @enderror">
+                        <option value="">-- Pilih Status Kebugaran --</option>
+                        <option value="fit_to_work">Fit To Work (Sehat)</option>
+                        <option value="fit_with_notes">Fit With Notes (Fit dengan Catatan/Batasan)</option>
+                        <option value="temporary_unfit">Temporary Unfit (Tidak Fit Sementara)</option>
+                        <option value="unfit">Unfit (Tidak Fit Permanen)</option>
+                    </select>
+                    @error('fit_status') <span class="text-error text-sm mt-1">{{ $message }}</span> @enderror
+                </div>
+
+                @if($fit_status === 'fit_with_notes')
+                <div class="form-control w-full">
+                    <label class="label font-semibold">
+                        <span class="label-text">Catatan Batasan Kerja (Site Consult) <span class="text-error">*</span></span>
+                    </label>
+                    <textarea wire:model="restriction_notes" class="textarea textarea-bordered h-24 @error('restriction_notes') textarea-error @enderror" placeholder="Contoh: Tidak boleh mengangkat beban lebih dari 10kg, tidak boleh bekerja di ketinggian..."></textarea>
+                    @error('restriction_notes') <span class="text-error text-sm mt-1">{{ $message }}</span> @enderror
+                </div>
+                @endif
+
+                @if($fit_status === 'temporary_unfit')
+                <div class="form-control w-full">
+                    <label class="label font-semibold">
+                        <span class="label-text">Jadwal MCU Follow Up <span class="text-error">*</span></span>
+                    </label>
+                    <input type="date" wire:model="follow_up_date" class="input input-bordered w-full @error('follow_up_date') input-error @enderror" />
+                    @error('follow_up_date') <span class="text-error text-sm mt-1">{{ $message }}</span> @enderror
+                </div>
+                @endif
+
+                <div class="form-control w-full">
+                    <label class="label font-semibold">
+                        <span class="label-text">Catatan Internal Dokter (Opsional)</span>
+                    </label>
+                    <textarea wire:model="doctor_notes" class="textarea textarea-bordered h-20" placeholder="Catatan medis tambahan (hanya dilihat oleh tim medis)..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-action mt-6 border-t pt-4">
+                <button wire:click="closeReviewModal" class="btn btn-ghost">Batal</button>
+
+                <button wire:click="saveReview" class="btn btn-primary" wire:loading.attr="disabled">
+                    <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm"></span>
+                    Simpan & Kirim Notifikasi
+                </button>
+            </div>
+
+        </div>
+
+        <div class="modal-backdrop" wire:click="closeReviewModal">
+            <button class="cursor-default">close</button>
+        </div>
+    </div>
 </div>
