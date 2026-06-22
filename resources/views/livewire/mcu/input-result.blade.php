@@ -11,8 +11,7 @@
 
                 <fieldset class="fieldset">
                     <x-form.label label="Pilih Karyawan" />
-                    <flux:select size="xs" wire:model.live='participant_id' placeholder="Choose Status...">
-                        <option value="">-- Pilih Peserta MCU --</option>
+                    <flux:select size="xs" wire:model.live='participant_id' placeholder="Pilih Peserta MCU...">
                         @foreach($participants as $p)
                         <option value="{{ $p->id }}">
                             {{ $p->employee->name }} - {{ $p->schedule->schedule_date->format('d M Y') }}
@@ -22,7 +21,7 @@
                     <x-label-error :messages="$errors->get('participant_id')" />
                 </fieldset>
                 <fieldset class="fieldset">
-                    <label class="label"><span class="label-text font-semibold">Unggah Dokumen Hasil (PDF/JPG)</span></label>
+                    <x-form.label label="Unggah Dokumen Hasil (PDF/JPG)" />
                     <input type="file" wire:model="result_document" class="file-input file-input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary w-full input-xs " accept=".pdf,.jpg,.jpeg,.png" />
                     @error('result_document') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
                 </fieldset>
