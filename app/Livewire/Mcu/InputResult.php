@@ -84,11 +84,12 @@ class InputResult extends Component
             // Ambil tanggal jadwal jika ada
             $date = $p->schedule ? $p->schedule->schedule_date->format('d M Y') : 'Tanpa Jadwal';
 
-            return [
+            // Tambahkan (object) agar datanya berbentuk objek, sesuai permintaan Blade
+            return (object) [
                 'id'   => $p->id,
                 'name' => $p->employee->name . ' - ' . $date
             ];
-        })->toArray(); // Konversi ke array agar mudah dibaca oleh komponen x-form
+        }); // Hapus ->toArray() di sini agar tetap menjadi Collection berisi Objek
 
         // 4. Kirim data yang sudah diformat ke view
         return view('livewire.mcu.input-result', [
