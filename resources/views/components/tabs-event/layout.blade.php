@@ -1,5 +1,5 @@
 <div>
-    @if (auth()->User()->hasRole(['Moderator']))
+    @if (auth()->User()->hasRole(['Administrator']))
     <div class="flex  flex-col ">
         <div class=" overflow-x-auto w-auto md:overflow-x-hidden ">
             <flux:navlist-horizontal>
@@ -10,10 +10,6 @@
                 <flux:navlist-horizontal.item :href="route('administration-event_general-ErmAssignmentManager')" wire:navigate>{{ __('ERM Assigment') }}</flux:navlist-horizontal.item>
             </flux:navlist-horizontal>
         </div>
-
-
-
-
         {{-- <flux:separator class="md:hidden" /> --}}
 
         <div class=" p-2 ">
