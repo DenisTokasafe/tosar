@@ -1,4 +1,4 @@
-@if (auth()->User()->hasAnyRole(['Moderator']))
+@if (auth()->User()->hasAnyRole(['Moderator']) &&!auth()->User()->hasAnyRole(['Moderator']))
 <div class="flex  flex-col ">
     <div class=" overflow-x-auto w-auto md:overflow-x-hidden ">
         <flux:navlist-horizontal>
