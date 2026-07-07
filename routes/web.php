@@ -133,6 +133,11 @@ Route::middleware(['role:administrator,medical staff'])->group(function () {
     Route::get('mcu/list', McuResultList::class)->name('mcu.list');
     Route::get('mcu/dashboard', McuDashboard::class)->name('mcu.dashboard');
 });
+Route::middleware(['role:administrator,moderator'])->group(function () {
+     Route::get('event_general/ErmAssignmentManager', ErmAssignmentManager::class)->name('event_general-ErmAssignmentManager');
+     Route::get('event_general/location', Location::class)->name('event_general-location');
+});
+
 Route::middleware(['role:Administrator'])->group(function () {
     Route::get('administration/companies', CompanyIndex::class)->name('administration-companies');
     Route::get('administration/department', Department::class)->name('administration-department');
