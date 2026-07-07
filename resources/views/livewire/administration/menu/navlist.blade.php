@@ -8,7 +8,7 @@
             @if ($menu->menu === 'Manhours' && (!auth()->check() || !auth()->user()?->can('viewAny', \App\Models\Manhour::class))) @continue @endif
             @if ($menu->menu === 'WPI' && !auth()->check()) @continue @endif
             @if ($menu->menu === 'MCU Schedule' && (auth()->guest() || !auth()->user()->hasAnyRole(['administrator', 'Medical Staff'])) ) @continue @endif
-            @if ($menu->menu === 'Even General' && (auth()->guest() || !auth()->user()->hasAnyRole(['administrator', 'Moderator'])) ) @continue @endif
+            @if ($menu->menu === 'Event General' && (auth()->guest() || !auth()->user()->hasAnyRole(['administrator', 'Moderator'])) ) @continue @endif
 
             @php
 
