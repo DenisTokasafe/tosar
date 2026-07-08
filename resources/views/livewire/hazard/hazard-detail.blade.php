@@ -576,7 +576,7 @@
                                     readonly />
                             </div>
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
-                        </fieldset>0
+                        </fieldset>
                         {{-- === TAMBAHAN: Final Doc Upload & Preview === --}}
                         <fieldset class="mt-4 fieldset">
                             <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
