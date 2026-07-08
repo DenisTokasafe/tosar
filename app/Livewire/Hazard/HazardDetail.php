@@ -867,38 +867,25 @@ class HazardDetail extends Component
         // Convert tanggal ke format Y-m-d H:i:s
         $tanggal = Carbon::createFromFormat('d-m-Y H:i', $this->tanggal)->format('Y-m-d H:i');
         // Update file sebelum perbaikan
-        // Update file sebelum perbaikan
         if ($this->new_doc_deskripsi) {
-            // 1. Simpan file baru
+            // Hapus file lama (opsional)
+            if ($this->doc_deskripsi && Storage::disk('public')->exists($this->doc_deskripsi)) {
+                Storage::disk('public')->delete($this->doc_deskripsi);
+            }
+
+            // Simpan file baru
             $docDeskripsiPath = FileHelper::compressAndStore($this->new_doc_deskripsi, 'sebelum_perbaikan');
-
-            // 2. Ambil data file lama (jadikan array jika sebelumnya string, atau array kosong jika belum ada)
-            $existingDocs = is_array($this->doc_deskripsi)
-                ? $this->doc_deskripsi
-                : ($this->doc_deskripsi ? [$this->doc_deskripsi] : []);
-
-            // 3. Tambahkan file baru ke tumpukan array
-            $existingDocs[] = $docDeskripsiPath;
-
-            // 4. Simpan kembali ke properti
-            $this->doc_deskripsi = $existingDocs;
+            $this->doc_deskripsi = $docDeskripsiPath;
         }
 
         // Update file sesudah perbaikan
         if ($this->new_doc_corrective) {
-            // 1. Simpan file baru
+            if ($this->doc_corrective && Storage::disk('public')->exists($this->doc_corrective)) {
+                Storage::disk('public')->delete($this->doc_corrective);
+            }
+
             $docCorrectivePath = FileHelper::compressAndStore($this->new_doc_corrective, 'sesudah_perbaikan');
-
-            // 2. Ambil data file lama
-            $existingCorrectiveDocs = is_array($this->doc_corrective)
-                ? $this->doc_corrective
-                : ($this->doc_corrective ? [$this->doc_corrective] : []);
-
-            // 3. Tambahkan file baru ke tumpukan array
-            $existingCorrectiveDocs[] = $docCorrectivePath;
-
-            // 4. Simpan kembali ke properti
-            $this->doc_corrective = $existingCorrectiveDocs;
+            $this->doc_corrective = $docCorrectivePath;
         }
         // Hitung risk level (opsional: ambil dari RiskMatrixCell atau kalkulasi manual)
         $riskLevel = null;
