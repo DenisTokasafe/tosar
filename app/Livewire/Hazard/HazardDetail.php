@@ -47,6 +47,11 @@ class HazardDetail extends Component
     public ?int $assignTo1 = null;
     public ?int $assignTo2 = null;
     public array $ermList = [];
+    // Untuk menampung file baru dari input
+    public $edit_action_final_doc;
+
+    // Untuk menampung array file lama dari database
+    public $existing_final_docs = [];
     public $asModerator = false;
     public $asErm = false;
 
