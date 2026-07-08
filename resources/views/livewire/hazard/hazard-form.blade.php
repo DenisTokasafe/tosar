@@ -312,22 +312,22 @@
             </fieldset>
 
             <fieldset class="p-3 my-4 border shadow-md border-base-300 fieldset card bg-base-100">
-                <legend class="text-sm font-semibold card-title "> {{ __('Tindakan Lanjutan') }}</legend>
+                <legend class="text-sm font-semibold card-title "> {{ __('Status Area Saat Ini?') }}</legend>
                 <div class="flex gap-4">
                     <div class="flex items-center gap-2">
                         <label class="label">
                             <input type="radio" name="action_trigger" value="open"
                                 wire:model.live="showActionModal"
-                                class="radio radio-xs bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success" />
-                            {{ __('Buka Form Tindakan') }}
+                                class="radio radio-xs bg-error/40 border-error/20 checked:bg-error/50 checked:text-error-content checked:border-error" />
+                            {{ __('Aman Sementara') }}
                         </label>
                     </div>
                     <div class="flex items-center gap-2">
                         <label class="label">
                             <input type="radio" name="action_trigger" value="close"
                                 wire:model.live="showActionModal"
-                                class="radio radio-xs bg-error/40 border-error/20 checked:bg-error/10 checked:text-error-content checked:border-error" />
-                            {{ __('Closed') }}
+                                class="radio radio-xs bg-success/40 border-success/20 checked:bg-success/10 checked:text-success-content checked:border-success " />
+                            {{ __('Sudah Aman Total') }}
                         </label>
                     </div>
                 </div>
