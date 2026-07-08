@@ -980,18 +980,20 @@
                         </div>
                     @endif
 
-                    {{-- Input untuk upload file baru --}}
-                    <input type="file" wire:model="edit_action_final_doc"
-                        class="w-full file-input file-input-bordered file-input-xs" />
+                    <div class="relative ">
+                        {{-- Input untuk upload file baru --}}
+                        <input type="file" wire:model.live="edit_action_final_doc"
+                            class="w-full file-input file-input-bordered file-input-xs" />
 
-                    {{-- Loading state --}}
-                    <div wire:loading wire:target="edit_action_final_doc" class="mt-1">
-                        <span class="flex items-center gap-1">
-                            <span class="loading loading-spinner loading-xs text-info"></span>
-                            <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
-                        </span>
+                        {{-- Loading state --}}
+                        <div wire:loading.remove.class="hidden" wire:target="edit_action_final_doc"
+                            class="mt-1 hidden absolute inset-y-0 right-0">
+                            <span class="flex items-center gap-1">
+                                <span class="loading loading-spinner loading-xs text-info"></span>
+                                <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
+                            </span>
+                        </div>
                     </div>
-
                     <x-label-error :messages="$errors->get('edit_action_final_doc')" />
                 </fieldset>
                 {{-- === END TAMBAHAN === --}}
