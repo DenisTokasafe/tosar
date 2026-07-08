@@ -888,7 +888,6 @@
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_actual_close_date')" />
                 </fieldset>
-
                 {{-- === TAMBAHAN: Final Doc Upload & Preview === --}}
                 <fieldset class="mt-4 fieldset">
                     <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
@@ -926,6 +925,7 @@
                     <x-label-error :messages="$errors->get('edit_action_final_doc')" />
                 </fieldset>
                 {{-- === END TAMBAHAN === --}}
+
 
                 {{-- Responsible Person --}}
                 <x-form.searchable-select-advanced label="PIC" placeholder="Cari Nama Pelapor..."
