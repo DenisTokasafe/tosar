@@ -252,6 +252,7 @@ class HazardDetail extends Component
         $this->tindakan_tidak_aman = $this->hazard->tindakan_tidak_aman_id;
         $this->consequence_id = $this->hazard->consequence_id;
         $this->likelihood_id = $this->hazard->likelihood_id;
+        $this->moderator_comment = $this->hazard->moderator_comment;
         // ✅ Load nama untuk ditampilkan di search input
         if ($this->pelapor_id) {
             // ✅ Jika pelapor_id ada → ambil nama user
