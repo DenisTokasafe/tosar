@@ -4,26 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage; // <-- Jangan lupa import Storage
 
 class ActionHazard extends Model
 {
     use HasFactory;
 
     protected $casts = [
-        'due_date' => 'datetime',
+        'due_date'          => 'datetime',
         'actual_close_date' => 'datetime',
+        'final_doc'         => 'array', // <-- Cast sebagai array
     ];
+
     protected $fillable = [
         'hazard_id',
-        'original_date',      // atau 'original_date'
+        'original_date',
         'description',
         'due_date',
         'actual_close_date',
         'responsible_id',
+        'final_doc', // <-- Tambahkan di fillable
     ];
 
 
-     // === BOOTED EVENT HOOKS ===
+    // === BOOTED EVENT HOOKS ===
     protected static function booted()
     {
         // Saat CREATE
@@ -55,6 +59,18 @@ class ActionHazard extends Model
 
         // Saat DELETE
         static::deleted(function ($action) {
+            // <-- LOGIKA HAPUS FILE FISIK -->
+            if ($action->final_doc) {
+                // Pastikan formatnya array
+                $files = is_array($action->final_doc) ? $action->final_doc : [$action->final_doc];
+
+                foreach ($files as $file) {
+                    if ($file && Storage::disk('public')->exists($file)) {
+                        Storage::disk('public')->delete($file);
+                    }
+                }
+            }
+
             activity()
                 ->performedOn($action->hazard)
                 ->causedBy(auth()->user())
@@ -72,6 +88,7 @@ class ActionHazard extends Model
     {
         return $this->belongsTo(Hazard::class);
     }
+
     public function responsible()
     {
         return $this->belongsTo(User::class, 'responsible_id');
