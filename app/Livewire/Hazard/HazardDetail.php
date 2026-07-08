@@ -970,41 +970,35 @@ class HazardDetail extends Component
             );
         }
         if ($this->moderator_comment) {
-            // Kirim notifikasi ke erm dan penanggung jawab yang terlibat jika ada komentar moderator
-            $assignedErmIds = [];
-            if ($this->assignTo1 || $this->assignTo2) {
-                // ID ERM yang baru ditugaskan
-                $assignIds = array_filter([$this->assignTo1, $this->assignTo2]);
-                $this->hazard->assignedErms()->sync($assignIds);
-                $assignedErmIds = $assignIds; // Simpan ID untuk notifikasi
+            // 1. Kumpulkan semua ID yang berpotensi di-assign
+            $rawAssignIds = [
+                $this->assignTo1,
+                $this->assignTo2,
+                $penanggungJawab
+            ];
 
-                foreach ($assignedErmIds as $userId) {
-                    MailHelper::sendToUserId(
-                        $userId,
-                        'Komentar Moderator pada Laporan Hazard',
-                        'emails.notification', // Gunakan template notifikasi yang sama
-                        [
-                            'subject'        => 'Komentar Moderator: ' . $hazard->no_referensi,
-                            'title'          => 'Komentar Baru dari Moderator',
-                            'messageText'    =>  "Moderator telah menambahkan komentar pada laporan hazard ini:\n\n\"{$this->moderator_comment}\"\n\nSilakan tinjau komentar tersebut dan lakukan tindakan yang diperlukan.",
-                            'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
-                            'actionUrl'      => route('hazard-detail', $hazard->id)
-                        ]
-                    );
-                }
+            // 2. Filter nilai kosong (null) dan hilangkan ID duplikat
+            // array_unique mencegah pengiriman email 2x ke orang yang sama
+            $uniqueAssignIds = array_unique(array_filter($rawAssignIds));
+
+            // 3. Sync ke database
+            $this->hazard->assignedErms()->sync($uniqueAssignIds);
+
+            // 4. Looping untuk kirim email ke semua pihak yang terlibat
+            foreach ($uniqueAssignIds as $userId) {
+                MailHelper::sendToUserId(
+                    $userId,
+                    'Komentar Moderator pada Laporan Hazard',
+                    'emails.notification',
+                    [
+                        'subject'        => 'Komentar Moderator: ' . $hazard->no_referensi,
+                        'title'          => 'Komentar Baru dari Moderator',
+                        'messageText'    => "Moderator telah menambahkan komentar pada laporan hazard ini:\n\n\"{$this->moderator_comment}\"\n\nSilakan tinjau komentar tersebut dan lakukan tindakan yang diperlukan.",
+                        'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
+                        'actionUrl'      => route('hazard-detail', $hazard->id)
+                    ]
+                );
             }
-            MailHelper::sendToUserId(
-                $penanggungJawab,
-                'Komentar Moderator pada Laporan Hazard',
-                'emails.notification',
-                [
-                    'subject'       => 'Komentar Moderator: ' . $hazard->no_referensi,
-                    'title'         => 'Komentar Baru dari Moderator',
-                    'messageText'   => "Moderator telah menambahkan komentar pada laporan hazard ini:\n\n\"{$this->moderator_comment}\"\n\nSilakan tinjau komentar tersebut dan lakukan tindakan yang diperlukan.",
-                    'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
-                    'actionUrl'     => route('hazard-detail', $hazard->id)
-                ]
-            );
         }
 
         // [START] Logika Baru: Notifikasi ke Semua Moderator
