@@ -1249,8 +1249,11 @@ class HazardDetail extends Component
             [
                 'edit_action_description'       => 'required|string',
                 'edit_action_responsible_id'    => 'nullable|integer',
+                // Validasi file baru (opsional, maks 5MB, sesuaikan tipe file jika perlu)
+                'edit_action_final_doc'         => 'nullable|file|max:5120',
+
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
-                'edit_action_due_date'       => [
+                'edit_action_due_date'          => [
                     'required',
                     'date_format:d-m-Y',
                     'before_or_equal:edit_action_actual_close_date'
@@ -1273,18 +1276,44 @@ class HazardDetail extends Component
                 'edit_action_actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
 
                 'edit_action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
+                'edit_action_final_doc.max'           => 'Ukuran dokumen maksimal adalah 5MB.',
             ]
-
         );
 
         $action = ActionHazard::findOrFail($this->edit_action_id);
-        $action->update([
+
+        // 1. Siapkan data standar yang akan di-update
+        $updateData = [
             'description'       => $this->edit_action_description,
             'due_date'          => Carbon::createFromFormat('d-m-Y', $this->edit_action_due_date),
             'actual_close_date' => $this->edit_action_actual_close_date ? Carbon::createFromFormat('d-m-Y', $this->edit_action_actual_close_date) : null,
             'responsible_id'    => $this->edit_action_responsible_id,
-        ]);
+        ];
+
+        // 2. Logika Tambahan: Jika user mengunggah file final_doc baru
+        if ($this->edit_action_final_doc) {
+            // Simpan file baru lewat FileHelper
+            $newDocPath = FileHelper::compressAndStore($this->edit_action_final_doc, 'action_hazard_docs');
+
+            // Ambil array data lama langsung dari database (default array kosong jika masih null)
+            $existingDocs = $action->final_doc ?? [];
+
+            // Gabungkan file baru ke tumpukan array dokumen lama
+            $existingDocs[] = $newDocPath;
+
+            // Masukkan array yang sudah diperbarui ke data update
+            $updateData['final_doc'] = $existingDocs;
+        }
+
+        // 3. Eksekusi update data ke database
+        $action->update($updateData);
+
+        // 4. Reset & Sinkronisasi properti input file setelah berhasil disimpan
+        $this->edit_action_final_doc = null;
+        $this->existing_final_docs = $action->final_doc ?? [];
+
         $this->dispatch('close-modal', id: 'editActionModal');
+
         // Refresh list
         $this->dispatch(
             'alert',
@@ -1297,6 +1326,7 @@ class HazardDetail extends Component
                 'backgroundColor' => "background: linear-gradient(135deg, #42a5f5, #478ed1);",
             ]
         );
+
         $this->loadActionHazards();
     }
     public function loadActionHazards()
