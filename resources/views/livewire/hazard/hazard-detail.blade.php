@@ -614,7 +614,7 @@
 
                             <div class="relative ">
                                 {{-- Input untuk upload file baru --}}
-                                <input type="file" wire:model="edit_action_final_doc"
+                                <input type="file" wire:model.live="edit_action_final_doc"
                                     class="w-full file-input file-input-bordered file-input-xs" />
 
                                 {{-- Loading state --}}
@@ -626,7 +626,6 @@
                                     </span>
                                 </div>
                             </div>
-
                             <x-label-error :messages="$errors->get('edit_action_final_doc')" />
                         </fieldset>
                         {{-- === END TAMBAHAN === --}}

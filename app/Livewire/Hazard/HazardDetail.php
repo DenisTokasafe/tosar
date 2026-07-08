@@ -16,6 +16,7 @@ use App\Models\HazardChat;
 use App\Models\HazardWorkflow;
 use App\Models\Likelihood;
 use App\Models\Location;
+use App\Models\ModeratorAssignment;
 use App\Models\RiskAssessment;
 use App\Models\RiskAssessmentMatrix;
 use App\Models\RiskConsequence;
@@ -1336,7 +1337,7 @@ class HazardDetail extends Component
 
     public function deleteHazard(Hazard $hazard)
     {
-        $moderatorIds = \App\Models\ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
+        $moderatorIds = ModeratorAssignment::where('event_type_id', $hazard->event_type_id)
             ->where(function ($query) use ($hazard) {
                 // Moderator ditugaskan untuk Event Type ini,
                 // DAN penugasan tersebut harus berlaku (cocok dengan laporan)
