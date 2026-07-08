@@ -648,10 +648,42 @@
                     <ul class="space-y-2">
                         @forelse($actionHazards as $act)
                             <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                                <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                                    <div class="w-full rounded md:maxw-96 xl:max-w-1/2 bg-base-200">
-                                        <span class="font-semibold">{!! $act['description'] !!}</span>
+                                <div class="flex flex-col gap-2 md:flex-row md:justify-between">
+                                    {{-- Bagian Kiri: Deskripsi & Lampiran Dokumen Final --}}
+                                    <div
+                                        class="w-full rounded md:max-w-96 xl:max-w-1/2 bg-base-200 p-2 flex flex-col justify-between gap-2">
+                                        <div>
+                                            <span class="font-semibold">{!! $act['description'] !!}</span>
+                                        </div>
+
+                                        {{-- === TAMPILKAN DATA FINAL DOC YANG DIUPLOAD === --}}
+                                        @if (!empty($act['final_doc']))
+                                            <div class="mt-1">
+                                                <span
+                                                    class="text-[10px] font-bold text-gray-500 block mb-1">{{ __('Lampiran Dokumen Final:') }}</span>
+                                                <div class="flex flex-wrap gap-1.5">
+                                                    @foreach ($act['final_doc'] as $file)
+                                                        <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                            class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition shadow-sm">
+                                                            {{-- Icon Clip Kertas --}}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12"
+                                                                height="12" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="lucide lucide-paperclip">
+                                                                <path
+                                                                    d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                                            </svg>
+                                                            <span
+                                                                class="truncate max-w-[150px]">{{ basename($file) }}</span>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
+
+                                    {{-- Bagian Kanan: Batas Waktu, Tanggal Selesai, PIC & Tombol Aksi --}}
                                     <div class="flex flex-col gap-1 md:flex-row md:items-center">
                                         <span class="text-[9px] badge badge-primary badge-outline">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
