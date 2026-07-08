@@ -104,15 +104,10 @@ class HazardForm extends Component
     public $doc_deskripsi_path;
     public $doc_corrective_path;
     public $actions = []; // kumpulan action sebelum disimpan
-    public $showActionModal = 'close'; // default tertutup
+    public $showActionModal = ''; // default tertutup
 
     // Fungsi untuk memastikan modal terbuka/tertutup dengan benar
-    public function updatedShowActionModal($value)
-    {
-        if ($value === 'open') {
-            // Bisa tambahkan logic reset form input disini jika perlu
-        }
-    }
+
     public function rules()
     {
         $baseRules = [
@@ -788,7 +783,7 @@ class HazardForm extends Component
 
     public function render()
     {
-        $this->showActionModal = empty($this->actions) ? 'close' : 'open';
+
         return view('livewire.hazard.hazard-form', [
             'users' => User::limit(10)->get(),
             'Department'   => Department::all(),
