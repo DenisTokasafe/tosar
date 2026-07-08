@@ -604,7 +604,7 @@
                             <input type="file" wire:model="edit_action_final_doc" class="w-full file-input file-input-bordered file-input-xs" />
 
                             {{-- Loading state --}}
-                            <div wire:loading wire:target="edit_action_final_doc" class="mt-1">
+                            <div wire:loading.remove.class="hidden" wire:target="edit_action_final_doc" class="mt-1 hidden">
                                 <span class="flex items-center gap-1">
                                     <span class="loading loading-spinner loading-xs text-info"></span>
                                     <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
