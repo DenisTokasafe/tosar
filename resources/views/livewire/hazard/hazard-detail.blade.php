@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <div class="flex justify-start mb-2 " wire:ignore>
         @if (Breadcrumbs::exists('hazard-detail'))
-        {!! Breadcrumbs::render('hazard-detail', $hazard_id) !!}
+            {!! Breadcrumbs::render('hazard-detail', $hazard_id) !!}
         @endif
     </div>
     <div class="mb-2 shadow-md card bg-base-100 ">
@@ -22,22 +22,21 @@
 
                 {{-- Tombol buka modal --}}
                 <div class="flex gap-2 ">
-                    <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()"></flux:button>
+                    <flux:button size="xs" variant="accent" icon='clock' onclick="my_modal_2.showModal()">
+                    </flux:button>
 
                     <div class="relative inline-block" wire:poll.10s>
-                        <flux:button
-                            size="xs"
-                            variant="filled"
-                            icon="message-circle-more"
-                            wire:click="markAsRead" {{-- Tambahkan ini --}}
-                            onclick="my_modal_5.showModal()">
+                        <flux:button size="xs" variant="filled" icon="message-circle-more" wire:click="markAsRead"
+                            {{-- Tambahkan ini --}} onclick="my_modal_5.showModal()">
                             Chat Laporan Hazard
                         </flux:button>
 
-                        @if($this->hasUnread)
-                        <div class="absolute flex items-center justify-center -top-1 -right-1">
-                            <div class="w-3 h-3 border-2 rounded-full status status-info animate-bounce border-base-100"></div>
-                        </div>
+                        @if ($this->hasUnread)
+                            <div class="absolute flex items-center justify-center -top-1 -right-1">
+                                <div
+                                    class="w-3 h-3 border-2 rounded-full status status-info animate-bounce border-base-100">
+                                </div>
+                            </div>
                         @endif
                     </div>
 
@@ -45,7 +44,7 @@
             </div>
 
             @php
-            $isDisabled = in_array(optional($hazard)->status, ['cancelled', 'closed']);
+                $isDisabled = in_array(optional($hazard)->status, ['cancelled', 'closed']);
             @endphp
 
             {{-- Form Action --}}
@@ -57,42 +56,43 @@
                     </label>
                     <select wire:model.live="proceedTo"
                         class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                        <option value="">{{__('-- Pilih Aksi --')}}</option>
+                        <option value="">{{ __('-- Pilih Aksi --') }}</option>
                         @foreach ($availableTransitions as $label => $status)
-                        <option class="text-{{ $this->getTextColor($status) }}" value="{{ $status }}">
-                            {{ $label }}
-                        </option>
+                            <option class="text-{{ $this->getTextColor($status) }}" value="{{ $status }}">
+                                {{ $label }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
                 {{-- PILIH ERM --}}
                 @if ($proceedTo === 'in_progress')
-                <div class="max-w-sm">
-                    <label class="label">
-                        <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Utama') }}</span>
-                    </label>
-                    <select wire:model="assignTo1"
-                        class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                        <option value="">{{ __('-- Pilih --') }}</option>
-                        @foreach ($ermList as $erm)
-                        <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="max-w-sm">
+                        <label class="label">
+                            <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Utama') }}</span>
+                        </label>
+                        <select wire:model="assignTo1"
+                            class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">{{ __('-- Pilih --') }}</option>
+                            @foreach ($ermList as $erm)
+                                <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div class="max-w-sm">
-                    <label class="label">
-                        <span class="text-xs font-semibold label-text">{{ __('Pilih ERM Tambahan (Opsional)') }}</span>
-                    </label>
-                    <select wire:model="assignTo2"
-                        class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                        <option value="">{{ __('-- Pilih --') }}</option>
-                        @foreach ($ermList as $erm)
-                        <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="max-w-sm">
+                        <label class="label">
+                            <span
+                                class="text-xs font-semibold label-text">{{ __('Pilih ERM Tambahan (Opsional)') }}</span>
+                        </label>
+                        <select wire:model="assignTo2"
+                            class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
+                            <option value="">{{ __('-- Pilih --') }}</option>
+                            @foreach ($ermList as $erm)
+                                <option value="{{ $erm['id'] }}">{{ $erm['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
 
                 {{-- TOMBOL SIMPAN --}}
@@ -100,15 +100,18 @@
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end hidden card-actions md:block">
                         <div class="tooltip">
                             <div class="z-40 tooltip-content">
-                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
+                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}
+                                </div>
                             </div>
-                            <flux:button size="xs" wire:click="processAction" class="btn btn-active btn-square btn-primary btn-xs"> <x-icon.send /></flux:button>
+                            <flux:button size="xs" wire:click="processAction"
+                                class="btn btn-active btn-square btn-primary btn-xs"> <x-icon.send /></flux:button>
                         </div>
                     </div>
                     <div x-data="{ proceedTo: @entangle('proceedTo') }" class="justify-end block card-actions md:hidden">
                         <div class="tooltip">
                             <div class="z-40 tooltip-content">
-                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}</div>
+                                <div class="text-sm font-black text-orange-400 animate-bounce">{{ __('Kirim') }}
+                                </div>
                             </div>
                             <button wire:click="processAction" class="btn btn-xs btn-active btn-primary">
                                 {{ __('Kirim') }} <x-icon.send /></button>
@@ -135,121 +138,121 @@
                             </thead>
                             <tbody>
                                 @forelse($report->activities as $activity)
-                                <tr>
-                                    <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
-                                    </td>
-                                    <td class="px-2 py-1 border">
-                                        {{ $activity->causer->name ?? $manualPelaporName }}
-                                    </td>
-                                    <td class="px-2 py-1 border">
-                                        @if (str_contains($activity->description, 'ActionHazard'))
-                                        {{-- Log khusus ActionHazard --}}
-                                        <div class="mb-1 text-blue-600">
-                                            {{ $activity->description }}
-                                        </div>
-                                        @endif
-                                        @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
-                                        @continue($field === 'updated_at')
-                                        @php
-                                        $oldValue = $activity->changes['old'][$field] ?? '-';
-                                        $newValue = $new;
+                                    <tr>
+                                        <td class="px-2 py-1 border">{{ $activity->created_at->format('d-m-Y H:i') }}
+                                        </td>
+                                        <td class="px-2 py-1 border">
+                                            {{ $activity->causer->name ?? $manualPelaporName }}
+                                        </td>
+                                        <td class="px-2 py-1 border">
+                                            @if (str_contains($activity->description, 'ActionHazard'))
+                                                {{-- Log khusus ActionHazard --}}
+                                                <div class="mb-1 text-blue-600">
+                                                    {{ $activity->description }}
+                                                </div>
+                                            @endif
+                                            @foreach ($activity->changes['attributes'] ?? [] as $field => $new)
+                                                @continue($field === 'updated_at')
+                                                @php
+                                                    $oldValue = $activity->changes['old'][$field] ?? '-';
+                                                    $newValue = $new;
 
-                                        switch ($field) {
-                                        case 'penanggung_jawab_id':
-                                        $oldValue =
-                                        $activity->subject->penanggungJawab?->name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\User::find($new)?->name ?? $newValue;
-                                        break;
-                                        case 'pelapor_id':
-                                        $oldValue = $activity->subject->pelapor?->name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\User::find($new)?->name ?? $newValue;
-                                        break;
-                                        case 'department_id':
-                                        $oldValue =
-                                        $activity->subject->department?->department_name ??
-                                        $oldValue;
-                                        $newValue =
-                                        \App\Models\Department::find($new)?->department_name ??
-                                        $newValue;
-                                        break;
-                                        case 'contractor_id':
-                                        $oldValue =
-                                        $activity->subject->contractor?->contractor_name ??
-                                        $oldValue;
-                                        $newValue =
-                                        \App\Models\Contractor::find($new)?->contractor_name ??
-                                        $newValue;
-                                        break;
-                                        case 'location_id':
-                                        $oldValue =
-                                        $activity->subject->location?->name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\Location::find($new)?->name ?? $newValue;
-                                        break;
-                                        case 'event_type_id':
-                                        $oldValue =
-                                        $activity->subject->eventType?->event_type_name ??
-                                        $oldValue;
-                                        $newValue =
-                                        \App\Models\EventType::find($new)?->event_type_name ??
-                                        $newValue;
-                                        break;
-                                        case 'event_sub_type_id':
-                                        $oldValue =
-                                        $activity->subject->eventSubType
-                                        ?->event_sub_type_name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\EventSubType::find($new)
-                                        ?->event_sub_type_name ?? $newValue;
-                                        break;
-                                        case 'kondisi_tidak_aman_id':
-                                        $oldValue =
-                                        $activity->subject->hazardKondisiTidakAman?->name ??
-                                        $oldValue;
-                                        $newValue =
-                                        \App\Models\UnsafeCondition::find($new)?->name ??
-                                        $newValue;
-                                        break;
-                                        case 'tindakan_tidak_aman_id':
-                                        $oldValue =
-                                        $activity->subject->hazardTindakanTidakAman?->name ??
-                                        $oldValue;
-                                        $newValue =
-                                        \App\Models\UnsafeAct::find($new)?->name ?? $newValue;
-                                        break;
-                                        case 'consequence_id':
-                                        $oldValue =
-                                        $activity->subject->consequence?->name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\RiskConsequence::find($new)?->name ??
-                                        $newValue;
-                                        break;
-                                        case 'likelihood_id':
-                                        $oldValue =
-                                        $activity->subject->likelihood?->name ?? $oldValue;
-                                        $newValue =
-                                        \App\Models\Likelihood::find($new)?->name ?? $newValue;
-                                        break;
-                                        }
-                                        $label = ucfirst(str_replace('_', ' ', $field));
-                                        @endphp
+                                                    switch ($field) {
+                                                        case 'penanggung_jawab_id':
+                                                            $oldValue =
+                                                                $activity->subject->penanggungJawab?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\User::find($new)?->name ?? $newValue;
+                                                            break;
+                                                        case 'pelapor_id':
+                                                            $oldValue = $activity->subject->pelapor?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\User::find($new)?->name ?? $newValue;
+                                                            break;
+                                                        case 'department_id':
+                                                            $oldValue =
+                                                                $activity->subject->department?->department_name ??
+                                                                $oldValue;
+                                                            $newValue =
+                                                                \App\Models\Department::find($new)?->department_name ??
+                                                                $newValue;
+                                                            break;
+                                                        case 'contractor_id':
+                                                            $oldValue =
+                                                                $activity->subject->contractor?->contractor_name ??
+                                                                $oldValue;
+                                                            $newValue =
+                                                                \App\Models\Contractor::find($new)?->contractor_name ??
+                                                                $newValue;
+                                                            break;
+                                                        case 'location_id':
+                                                            $oldValue =
+                                                                $activity->subject->location?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\Location::find($new)?->name ?? $newValue;
+                                                            break;
+                                                        case 'event_type_id':
+                                                            $oldValue =
+                                                                $activity->subject->eventType?->event_type_name ??
+                                                                $oldValue;
+                                                            $newValue =
+                                                                \App\Models\EventType::find($new)?->event_type_name ??
+                                                                $newValue;
+                                                            break;
+                                                        case 'event_sub_type_id':
+                                                            $oldValue =
+                                                                $activity->subject->eventSubType
+                                                                    ?->event_sub_type_name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\EventSubType::find($new)
+                                                                    ?->event_sub_type_name ?? $newValue;
+                                                            break;
+                                                        case 'kondisi_tidak_aman_id':
+                                                            $oldValue =
+                                                                $activity->subject->hazardKondisiTidakAman?->name ??
+                                                                $oldValue;
+                                                            $newValue =
+                                                                \App\Models\UnsafeCondition::find($new)?->name ??
+                                                                $newValue;
+                                                            break;
+                                                        case 'tindakan_tidak_aman_id':
+                                                            $oldValue =
+                                                                $activity->subject->hazardTindakanTidakAman?->name ??
+                                                                $oldValue;
+                                                            $newValue =
+                                                                \App\Models\UnsafeAct::find($new)?->name ?? $newValue;
+                                                            break;
+                                                        case 'consequence_id':
+                                                            $oldValue =
+                                                                $activity->subject->consequence?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\RiskConsequence::find($new)?->name ??
+                                                                $newValue;
+                                                            break;
+                                                        case 'likelihood_id':
+                                                            $oldValue =
+                                                                $activity->subject->likelihood?->name ?? $oldValue;
+                                                            $newValue =
+                                                                \App\Models\Likelihood::find($new)?->name ?? $newValue;
+                                                            break;
+                                                    }
+                                                    $label = ucfirst(str_replace('_', ' ', $field));
+                                                @endphp
 
-                                        <div class="mb-1">
-                                            <strong>{{ $label }}</strong>:
-                                            <span class="text-red-500">{{ $oldValue }}</span>
-                                            →
-                                            <span class="text-green-600">{{ $newValue }}</span>
-                                        </div>
-                                        @endforeach
-                                    </td>
-                                </tr>
+                                                <div class="mb-1">
+                                                    <strong>{{ $label }}</strong>:
+                                                    <span class="text-red-500">{{ $oldValue }}</span>
+                                                    →
+                                                    <span class="text-green-600">{{ $newValue }}</span>
+                                                </div>
+                                            @endforeach
+                                        </td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="3" class="py-2 text-center text-gray-500">Belum ada perubahan
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="3" class="py-2 text-center text-gray-500">Belum ada perubahan
+                                        </td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -273,8 +276,7 @@
             {{-- Tombol Hapus dengan Konfirmasi --}}
             <button
                 class=" {{ $isDisabled ? ' btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
-                wire:click="deleteHazard({{ $hazard_id }})"
-                wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
+                wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
                 <x-icon.delete />
                 {{ __('Hapus Laporan') }}
             </button>
@@ -286,9 +288,9 @@
                         <x-form.label label="Tipe Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tipe_bahaya"
                             class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                            <option value="">{{__('-- Pilih --')}}</option>
+                            <option value="">{{ __('-- Pilih --') }}</option>
                             @foreach ($eventTypes as $et)
-                            <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
+                                <option value="{{ $et->id }}">{{ $et->event_type_name }}</option>
                             @endforeach
                         </select>
                         <x-label-error :messages="$errors->get('tipe_bahaya')" />
@@ -298,11 +300,11 @@
                         <x-form.label label="Jenis Bahaya" required />
                         <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="sub_tipe_bahaya"
                             class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                            <option value="">{{__('-- Pilih --')}}</option>
+                            <option value="">{{ __('-- Pilih --') }}</option>
                             @if ($tipe_bahaya)
-                            @foreach ($subTypes as $et)
-                            <option value="{{ $et->id }}">{{ __($et->event_sub_type_name) }}</option>
-                            @endforeach
+                                @foreach ($subTypes as $et)
+                                    <option value="{{ $et->id }}">{{ __($et->event_sub_type_name) }}</option>
+                                @endforeach
                             @endif
 
                         </select>
@@ -323,26 +325,26 @@
                         <div class="hidden peer-checked/kta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="kondisi_tidak_aman"
                                 class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('kondisi_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                                <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
+                                <option value="">{{ __('-- Pilih Kategori Bahaya --') }}</option>
                                 @foreach ($ktas as $kta)
-                                <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
+                                    <option value="{{ $kta->id }}">{{ __($kta->name) }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="hidden peer-checked/tta:block ">
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="tindakan_tidak_aman"
                                 class="select select-xs mb-1 select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 {{ $errors->has('tindakan_tidak_aman') ? 'ring-1 ring-rose-500 focus:ring-rose-500 focus:border-rose-500' : '' }}">
-                                <option value="">{{__('-- Pilih Kategori Bahaya --')}}</option>
+                                <option value="">{{ __('-- Pilih Kategori Bahaya --') }}</option>
                                 @foreach ($ttas as $tta)
-                                <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
+                                    <option value="{{ $tta->id }}">{{ __($tta->name) }}</option>
                                 @endforeach
                             </select>
                         </div>
                         @if ($keyWord === 'kta')
-                        <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
+                            <x-label-error :messages="$errors->get('kondisi_tidak_aman')" />
                         @endif
                         @if ($keyWord === 'tta')
-                        <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
+                            <x-label-error :messages="$errors->get('tindakan_tidak_aman')" />
                         @endif
                     </fieldset>
                 </div>
@@ -364,13 +366,13 @@
 
                     {{-- Lokasi spesifik muncul hanya jika lokasi utama sudah dipilih --}}
                     @if ($location_id)
-                    <fieldset class="fieldset">
-                        <x-form.label label="Lokasi Spesifik" required />
-                        <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                            wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
-                            class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
-                        <x-label-error :messages="$errors->get('location_specific')" />
-                    </fieldset>
+                        <fieldset class="fieldset">
+                            <x-form.label label="Lokasi Spesifik" required />
+                            <input {{ $isDisabled ? 'disabled' : '' }} type="text"
+                                wire:model.live="location_specific" placeholder="Masukkan detail lokasi spesifik..."
+                                class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
+                            <x-label-error :messages="$errors->get('location_specific')" />
+                        </fieldset>
                     @endif
                     <fieldset class="relative fieldset">
                         <x-form.label label="Tanggal & Waktu" required />
@@ -388,7 +390,7 @@
                                     dateFormat: 'd-m-Y H:i',
                                     clickOpens: true,
                                     position: 'auto-below',
-
+                        
                                     onChange: (selectedDates, dateStr) => {
                                         this.$wire.set('tanggal', dateStr);
                                     }
@@ -402,7 +404,8 @@
                                 // initFlatpickr();
                             });">
                             <input {{ $isDisabled ? 'disabled' : '' }} type="text" x-ref="tanggalInput"
-                                wire:model.live='tanggal' placeholder="{{ __('Pilih Tanggal') }} dan Waktu..." readonly
+                                wire:model.live='tanggal' placeholder="{{ __('Pilih Tanggal') }} dan Waktu..."
+                                readonly
                                 class="w-full cursor-pointer input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
                         </div>
                         <x-label-error :messages="$errors->get('tanggal')" />
@@ -419,13 +422,14 @@
 
                         <x-form.label label="kondisi atau tindakan yang sudah dilakukan" required />
                         <div x-data="ckeditorHelper('immediate_corrective_action')" wire:ignore>
-                            <div x-ref="editorElement" data-placeholder="Masukkan kondisi atau tindakan yang sudah dilakukan..."></div>
+                            <div x-ref="editorElement"
+                                data-placeholder="Masukkan kondisi atau tindakan yang sudah dilakukan..."></div>
                         </div>
 
                         <x-label-error :messages="$errors->get('immediate_corrective_action')" />
                     </fieldset>
-                    <x-form.file-upload label="Lampirkan foto atau dokumentasi"
-                        model="new_doc_corrective" :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
+                    <x-form.file-upload label="Lampirkan foto atau dokumentasi" model="new_doc_corrective"
+                        :existingFile="$doc_corrective" :newFile="$new_doc_corrective" :isDisabled="$isDisabled" />
 
                 </div>
                 <fieldset class="p-3 my-4 border border-gray-200 shadow-md fieldset card bg-base-100">
@@ -449,27 +453,28 @@
                                     <!-- Input Search -->
 
                                     <input {{ $isDisabled ? 'disabled' : '' }} type="text"
-                                        wire:model.live.debounce.300ms="search" placeholder="{{ __('Cari departemen...') }}"
+                                        wire:model.live.debounce.300ms="search"
+                                        placeholder="{{ __('Cari departemen...') }}"
                                         class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs " />
                                     <!-- Dropdown hasil search -->
                                     @if ($showDropdown && count($departments) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik salah satu -->
-                                        <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($departments as $dept)
-                                        <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $dept->department_name }}
-                                        </li>
-                                        @endforeach
-                                    </ul>
+                                        <ul
+                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                            <!-- Spinner ketika klik salah satu -->
+                                            <div wire:loading wire:target="selectDepartment" class="p-2 text-center">
+                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                            </div>
+                                            @foreach ($departments as $dept)
+                                                <li wire:click="selectDepartment({{ $dept->id }}, '{{ $dept->department_name }}')"
+                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                    {{ $dept->department_name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     @endif
                                 </div>
                                 @if ($deptCont === 'department')
-                                <x-label-error :messages="$errors->get('department_id')" />
+                                    <x-label-error :messages="$errors->get('department_id')" />
                                 @endif
                             </div>
                             <div class="hidden mt-2 peer-checked/company:block">
@@ -482,23 +487,23 @@
                                         class="w-full input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs" />
                                     <!-- Dropdown hasil search -->
                                     @if ($showContractorDropdown && count($contractors) > 0)
-                                    <ul
-                                        class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
-                                        <!-- Spinner ketika klik -->
-                                        <div wire:loading wire:target="selectContractor" class="p-2 text-center">
-                                            <span class="loading loading-spinner loading-sm text-secondary"></span>
-                                        </div>
-                                        @foreach ($contractors as $contractor)
-                                        <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
-                                            class="px-3 py-2 cursor-pointer hover:bg-base-200">
-                                            {{ $contractor->contractor_name }}
-                                        </li>
-                                        @endforeach
-                                    </ul>
+                                        <ul
+                                            class="absolute z-10 w-full mt-1 overflow-auto border rounded-md shadow bg-base-100 max-h-60">
+                                            <!-- Spinner ketika klik -->
+                                            <div wire:loading wire:target="selectContractor" class="p-2 text-center">
+                                                <span class="loading loading-spinner loading-sm text-secondary"></span>
+                                            </div>
+                                            @foreach ($contractors as $contractor)
+                                                <li wire:click="selectContractor({{ $contractor->id }}, '{{ $contractor->contractor_name }}')"
+                                                    class="px-3 py-2 cursor-pointer hover:bg-base-200">
+                                                    {{ $contractor->contractor_name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     @endif
                                 </div>
                                 @if ($deptCont === 'company')
-                                <x-label-error :messages="$errors->get('contractor_id')" />
+                                    <x-label-error :messages="$errors->get('contractor_id')" />
                                 @endif
                             </div>
                         </fieldset>
@@ -506,9 +511,9 @@
                             <x-form.label label="PIC" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="penanggungJawab"
                                 class="w-full select select-xs select-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                <option value="">{{__('-- Pilih --')}}</option>
+                                <option value="">{{ __('-- Pilih --') }}</option>
                                 @foreach ($penanggungJawabOptions as $pj)
-                                <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
+                                    <option value="{{ $pj['id'] }}">{{ $pj['name'] }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('penanggungJawab')" />
@@ -582,33 +587,44 @@
                             <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
 
                             {{-- Menampilkan data yang sudah diupload sebelumnya --}}
-                            @if(!empty($existing_final_docs))
-                            <div class="flex flex-col gap-2 mb-2 p-3 bg-gray-50 border rounded">
-                                <span class="text-xs font-semibold text-gray-700">{{ __('Dokumen Tersimpan:') }}</span>
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach($existing_final_docs as $file)
-                                    <div class="flex items-center gap-2 p-2 text-xs bg-white border rounded shadow-sm">
-                                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                        </svg>
-                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="text-blue-600 hover:underline truncate max-w-[200px]">
-                                            {{ basename($file) }}
-                                        </a>
+                            @if (!empty($existing_final_docs))
+                                <div class="flex flex-col gap-2 mb-2 p-3 bg-gray-50 border rounded">
+                                    <span
+                                        class="text-xs font-semibold text-gray-700">{{ __('Dokumen Tersimpan:') }}</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach ($existing_final_docs as $file)
+                                            <div
+                                                class="flex items-center gap-2 p-2 text-xs bg-white border rounded shadow-sm">
+                                                <svg class="w-4 h-4 text-blue-500" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                                    </path>
+                                                </svg>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-600 hover:underline truncate max-w-[200px]">
+                                                    {{ basename($file) }}
+                                                </a>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                 </div>
-                            </div>
                             @endif
 
-                            {{-- Input untuk upload file baru --}}
-                            <input type="file" wire:model="edit_action_final_doc" class="w-full file-input file-input-bordered file-input-xs" />
+                            <div class="relative ">
+                                {{-- Input untuk upload file baru --}}
+                                <input type="file" wire:model="edit_action_final_doc"
+                                    class="w-full file-input file-input-bordered file-input-xs" />
 
-                            {{-- Loading state --}}
-                            <div wire:loading.remove.class="hidden" wire:target="edit_action_final_doc" class="mt-1 hidden">
-                                <span class="flex items-center gap-1">
-                                    <span class="loading loading-spinner loading-xs text-info"></span>
-                                    <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
-                                </span>
+                                {{-- Loading state --}}
+                                <div wire:loading.remove.class="hidden" wire:target="edit_action_final_doc"
+                                    class="mt-1 hidden absolute inset-y-0 right-0">
+                                    <span class="flex items-center gap-1">
+                                        <span class="loading loading-spinner loading-xs text-info"></span>
+                                        <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
+                                    </span>
+                                </div>
                             </div>
 
                             <x-label-error :messages="$errors->get('edit_action_final_doc')" />
@@ -632,63 +648,72 @@
                     <div class="my-2 divider">{{ __('Daftar Tindakan') }}</div>
                     <ul class="space-y-2">
                         @forelse($actionHazards as $act)
-                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <div class="flex flex-col gap-1 md:flex-row md:justify-between">
-                                <div class="w-full rounded md:maxw-96 xl:max-w-1/2 bg-base-200">
-                                    <span class="font-semibold">{!! $act['description'] !!}</span>
-                                </div>
-                                <div class="flex flex-col gap-1 md:flex-row md:items-center">
-                                    <span class="text-[9px] badge badge-primary badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
-                                        {{ __('Batas Waktu:') }}
-                                        {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}
-                                    </span>
+                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                                <div class="flex flex-col gap-1 md:flex-row md:justify-between">
+                                    <div class="w-full rounded md:maxw-96 xl:max-w-1/2 bg-base-200">
+                                        <span class="font-semibold">{!! $act['description'] !!}</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 md:flex-row md:items-center">
+                                        <span class="text-[9px] badge badge-primary badge-outline">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-clock-check">
+                                                <path d="M12 6v6l4 2" />
+                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                                <path d="m22 16-5.5 5.5L14 19" />
+                                            </svg>
+                                            {{ __('Batas Waktu:') }}
+                                            {{ $act['due_date'] ? \Carbon\Carbon::parse($act['due_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '' }}
+                                        </span>
 
-                                    <span class="text-[9px] badge badge-info badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-check">
-                                            <path d="M12 6v6l4 2" />
-                                            <path d="M22 12a10 10 0 1 0-11 9.95" />
-                                            <path d="m22 16-5.5 5.5L14 19" />
-                                        </svg>
-                                        {{ __('Tgl Selesai:') }}
-                                        {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}
-                                    </span>
+                                        <span class="text-[9px] badge badge-info badge-outline">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-clock-check">
+                                                <path d="M12 6v6l4 2" />
+                                                <path d="M22 12a10 10 0 1 0-11 9.95" />
+                                                <path d="m22 16-5.5 5.5L14 19" />
+                                            </svg>
+                                            {{ __('Tgl Selesai:') }}
+                                            {{ $act['actual_close_date'] ? \Carbon\Carbon::parse($act['actual_close_date'])->timezone('Asia/Makassar')->format('d-m-Y') : '-' }}
+                                        </span>
 
-                                    <span class="text-[9px] badge badge-success badge-outline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check">
-                                            <path d="m16 11 2 2 4-4" />
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                            <circle cx="9" cy="7" r="4" />
-                                        </svg>
-                                        {{ __('PIC') }}:
-                                        {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}
-                                    </span>
+                                        <span class="text-[9px] badge badge-success badge-outline">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-user-check">
+                                                <path d="m16 11 2 2 4-4" />
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                                <circle cx="9" cy="7" r="4" />
+                                            </svg>
+                                            {{ __('PIC') }}:
+                                            {{ optional(\App\Models\User::find($act['responsible_id']))->name ?? '-' }}
+                                        </span>
 
-                                    <div class="flex gap-2 mt-1 md:mt-0">
-                                        <flux:button variant="subtle" size="xs"
-                                            class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                                            wire:click="loadEditAction({{ $act['id'] }})"
-                                            icon="pencil-square">
-                                        </flux:button>
+                                        <div class="flex gap-2 mt-1 md:mt-0">
+                                            <flux:button variant="subtle" size="xs"
+                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                                wire:click="loadEditAction({{ $act['id'] }})"
+                                                icon="pencil-square">
+                                            </flux:button>
 
-                                        <flux:button variant="danger" size="xs"
-                                            class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
-                                            wire:click="removeAction({{ $act['id'] }})"
-                                            wire:confirm="{{ __('Yakin hapus tindakan ini?') }}"
-                                            icon="trash">
-                                        </flux:button>
+                                            <flux:button variant="danger" size="xs"
+                                                class="{{ $isDisabled ? 'btn btn-disabled cursor-not-allowed' : '' }}"
+                                                wire:click="removeAction({{ $act['id'] }})"
+                                                wire:confirm="{{ __('Yakin hapus tindakan ini?') }}" icon="trash">
+                                            </flux:button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
                         @empty
-                        <li class="p-2 border rounded-md shadow-sm bg-base-100">
-                            <p class="text-sm text-center text-gray-500">{{ __('Belum ada tindakan yang ditambahkan.') }}</p>
-                        </li>
+                            <li class="p-2 border rounded-md shadow-sm bg-base-100">
+                                <p class="text-sm text-center text-gray-500">
+                                    {{ __('Belum ada tindakan yang ditambahkan.') }}</p>
+                            </li>
                         @endforelse
                     </ul>
 
@@ -703,23 +728,23 @@
                             <x-form.label label="Consequence" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="consequence_id"
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                <option value="">{{__('-- Pilih --')}}</option>
+                                <option value="">{{ __('-- Pilih --') }}</option>
                                 @foreach ($consequencess as $cons)
-                                <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
+                                    <option value="{{ $cons->id }}">{{ __($cons->name) }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('consequence_id')" />
 
                             @if ($consequence_id)
-                            @php
-                            $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
-                            @endphp
-                            @if ($selectedConsequence)
-                            <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
-                                {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
-                            </div>
-                            @endif
+                                @php
+                                    $selectedConsequence = $consequencess->firstWhere('id', $consequence_id);
+                                @endphp
+                                @if ($selectedConsequence)
+                                    <div
+                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
+                                        {{ __($selectedConsequence->description) ?? 'Tidak ada deskripsi' }}
+                                    </div>
+                                @endif
                             @endif
                         </fieldset>
                         {{-- Likelihood --}}
@@ -727,23 +752,23 @@
                             <x-form.label label="Likelihood" required />
                             <select {{ $isDisabled ? 'disabled' : '' }} wire:model.live="likelihood_id"
                                 class="w-full select select-xs md:select-xs select-bordered md:max-w-md focus-within:outline-none focus-within:border-info focus-within:ring-0">
-                                <option value="">{{__('-- Pilih --')}}</option>
+                                <option value="">{{ __('-- Pilih --') }}</option>
                                 @foreach ($likelihoodss as $like)
-                                <option value="{{ $like->id }}">{{ __($like->name) }}</option>
+                                    <option value="{{ $like->id }}">{{ __($like->name) }}</option>
                                 @endforeach
                             </select>
                             <x-label-error :messages="$errors->get('likelihood_id')" />
 
                             @if ($likelihood_id)
-                            @php
-                            $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
-                            @endphp
-                            @if ($selectedLikelihood)
-                            <div
-                                class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
-                                {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
-                            </div>
-                            @endif
+                                @php
+                                    $selectedLikelihood = $likelihoodss->firstWhere('id', $likelihood_id);
+                                @endphp
+                                @if ($selectedLikelihood)
+                                    <div
+                                        class="h-20 p-2 mt-1 overflow-y-auto text-sm border rounded text-base-content bg-base-100">
+                                        {{ __($selectedLikelihood->description) ?? 'Tidak ada deskripsi' }}
+                                    </div>
+                                @endif
                             @endif
                         </fieldset>
 
@@ -766,42 +791,44 @@
                                 <tr class="text-center text-[9px]">
                                     <th class="border-1">Likelihood ↓ / Consequence →</th>
                                     @foreach ($consequences as $c)
-                                    {{-- Menterjemahkan Nama Konsekuensi dari DB --}}
-                                    <th class="rotate_text border-1">{{ __($c->name) }}</th>
+                                        {{-- Menterjemahkan Nama Konsekuensi dari DB --}}
+                                        <th class="rotate_text border-1">{{ __($c->name) }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($likelihoods as $l)
-                                <tr class="text-center text-[9px]">
-                                    {{-- Menterjemahkan Nama Likelihood dari DB --}}
-                                    <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
+                                    <tr class="text-center text-[9px]">
+                                        {{-- Menterjemahkan Nama Likelihood dari DB --}}
+                                        <td class="w-1 font-bold border-1">{{ __($l->name) }}</td>
 
-                                    @foreach ($consequences as $c)
-                                    @php
-                                    $cell = App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
-                                    ->where('risk_consequence_id', $c->id)
-                                    ->first() ?? null;
+                                        @foreach ($consequences as $c)
+                                            @php
+                                                $cell =
+                                                    App\Models\RiskMatrixCell::where('likelihood_id', $l->id)
+                                                        ->where('risk_consequence_id', $c->id)
+                                                        ->first() ?? null;
 
-                                    $severity = $cell?->severity ?? '';
+                                                $severity = $cell?->severity ?? '';
 
-                                    $color = match ($severity) {
-                                    'Rendah' => 'bg-emerald-500',
-                                    'Sedang' => 'bg-yellow-500',
-                                    'Tinggi' => 'bg-orange-500',
-                                    'Ekstrem' => 'bg-rose-500',
-                                    default => 'bg-gray-100',
-                                    };
-                                    @endphp
-                                    <td class=" cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
-                                        <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
-                                            class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
-                                            {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
-                                            {{ Str::upper(substr(__( $severity ), 0, 1)) }}
-                                        </span>
-                                    </td>
-                                    @endforeach
-                                </tr>
+                                                $color = match ($severity) {
+                                                    'Rendah' => 'bg-emerald-500',
+                                                    'Sedang' => 'bg-yellow-500',
+                                                    'Tinggi' => 'bg-orange-500',
+                                                    'Ekstrem' => 'bg-rose-500',
+                                                    default => 'bg-gray-100',
+                                                };
+                                            @endphp
+                                            <td
+                                                class=" cursor-pointer @if ($likelihood_id == $l->id && $consequence_id == $c->id) border-2 bg-primary border-primary-content @endif">
+                                                <span wire:click="edit({{ $l->id }}, {{ $c->id }})"
+                                                    class="btn btn-square btn-xs {{ $isDisabled ? 'btn btn-disabled' : "$color" }}">
+                                                    {{-- Mengambil inisial dari hasil terjemahan (misal: "R" -> "L" untuk Low) --}}
+                                                    {{ Str::upper(substr(__($severity), 0, 1)) }}
+                                                </span>
+                                            </td>
+                                        @endforeach
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -809,46 +836,46 @@
 
                 </div>
                 @if ($RiskAssessment != null)
-                <table class="table mb-4 table-xs">
+                    <table class="table mb-4 table-xs">
 
-                    <tr>
-                        <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
-                        <td class="pl-2 text-xs border border-slate-200">
-                            {{ __($RiskAssessment->name) }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border border-slate-200">Notify</th>
-                        <td class="pl-2 text-xs border border-slate-200">
-                            {{ __($RiskAssessment->reporting_obligation) }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border border-slate-200">Deadline</th>
-                        <td class="pl-2 text-xs border border-slate-200">{{ __($RiskAssessment->notes) }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40 text-xs border border-slate-200">Coordinator</th>
-                        <td class="pl-2 text-xs border border-slate-200">
-                            {{ __($RiskAssessment->coordinator) }}
-                        </td>
-                    </tr>
+                        <tr>
+                            <th class="w-40 text-xs border border-slate-200">Potential Risk Rating</th>
+                            <td class="pl-2 text-xs border border-slate-200">
+                                {{ __($RiskAssessment->name) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="w-40 text-xs border border-slate-200">Notify</th>
+                            <td class="pl-2 text-xs border border-slate-200">
+                                {{ __($RiskAssessment->reporting_obligation) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="w-40 text-xs border border-slate-200">Deadline</th>
+                            <td class="pl-2 text-xs border border-slate-200">{{ __($RiskAssessment->notes) }}</td>
+                        </tr>
+                        <tr>
+                            <th class="w-40 text-xs border border-slate-200">Coordinator</th>
+                            <td class="pl-2 text-xs border border-slate-200">
+                                {{ __($RiskAssessment->coordinator) }}
+                            </td>
+                        </tr>
 
 
-                </table>
+                    </table>
                 @endif
-                @if($hazard->isModerator() || !empty($hazard->moderator_comment))
-                @if($hazard->isModerator())
-                {{-- Mode Edit: Jika dia moderator, tampilkan CKEditor --}}
-                <div x-data="ckeditorHelper('moderator_comment')" wire:ignore>
-                    <div x-ref="editorElement" data-placeholder="Masukkan komentar moderator..."></div>
-                </div>
-                @else
-                {{-- Mode Read-Only: Jika bukan moderator tapi komentar ada, tampilkan teks saja --}}
-                <div class="p-3 prose bg-gray-100 rounded-lg max-w-none">
-                    {!! $hazard->moderator_comment !!}
-                </div>
-                @endif
+                @if ($hazard->isModerator() || !empty($hazard->moderator_comment))
+                    @if ($hazard->isModerator())
+                        {{-- Mode Edit: Jika dia moderator, tampilkan CKEditor --}}
+                        <div x-data="ckeditorHelper('moderator_comment')" wire:ignore>
+                            <div x-ref="editorElement" data-placeholder="Masukkan komentar moderator..."></div>
+                        </div>
+                    @else
+                        {{-- Mode Read-Only: Jika bukan moderator tapi komentar ada, tampilkan teks saja --}}
+                        <div class="p-3 prose bg-gray-100 rounded-lg max-w-none">
+                            {!! $hazard->moderator_comment !!}
+                        </div>
+                    @endif
                 @endif
             </div>
         </x-tab-hazard.layout>
@@ -885,7 +912,7 @@
                         }
                     }" x-init="initFlatpickr();
                     Livewire.hook('message.processed', () => initFlatpickr());
-
+                    
                     // ==== Tambahan: isi ulang saat modal dibuka ====
                     Livewire.on('open-edit-action', () => {
                         // Ambil value terbaru dari Livewire
@@ -897,7 +924,8 @@
                     });"
                         x-ref="wrapper">
                         <input type="text" x-ref="dueEdit" wire:model.live="edit_action_due_date"
-                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}"
+                            readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_due_date')" />
                 </fieldset>
@@ -913,7 +941,7 @@
                             this.fp = flatpickr(this.$refs.closeEdit, {
                                 disableMobile: true,
                                 dateFormat: 'd-m-Y',
-
+                    
                                 onChange: (dates, str) => $wire.set('edit_action_actual_close_date', str),
                             });
                         }
@@ -921,7 +949,8 @@
                     Livewire.hook('message.processed', () => initFlatpickr());"
                         x-ref="wrapper">
                         <input type="text" x-ref="closeEdit" wire:model.live="edit_action_actual_close_date"
-                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}" readonly />
+                            class="w-full input input-bordered input-xs" placeholder="{{ __('Pilih Tanggal') }}"
+                            readonly />
                     </div>
                     <x-label-error :messages="$errors->get('edit_action_actual_close_date')" />
                 </fieldset>
@@ -930,26 +959,31 @@
                     <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
 
                     {{-- Menampilkan data yang sudah diupload sebelumnya --}}
-                    @if(!empty($existing_final_docs))
-                    <div class="flex flex-col gap-2 mb-2 p-3 bg-gray-50 border rounded">
-                        <span class="text-xs font-semibold text-gray-700">{{ __('Dokumen Tersimpan:') }}</span>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach($existing_final_docs as $file)
-                            <div class="flex items-center gap-2 p-2 text-xs bg-white border rounded shadow-sm">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                </svg>
-                                <a href="{{ asset('storage/' . $file) }}" target="_blank" class="text-blue-600 hover:underline truncate max-w-[200px]">
-                                    {{ basename($file) }}
-                                </a>
+                    @if (!empty($existing_final_docs))
+                        <div class="flex flex-col gap-2 mb-2 p-3 bg-gray-50 border rounded">
+                            <span class="text-xs font-semibold text-gray-700">{{ __('Dokumen Tersimpan:') }}</span>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($existing_final_docs as $file)
+                                    <div class="flex items-center gap-2 p-2 text-xs bg-white border rounded shadow-sm">
+                                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                            </path>
+                                        </svg>
+                                        <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                            class="text-blue-600 hover:underline truncate max-w-[200px]">
+                                            {{ basename($file) }}
+                                        </a>
+                                    </div>
+                                @endforeach
                             </div>
-                            @endforeach
                         </div>
-                    </div>
                     @endif
 
                     {{-- Input untuk upload file baru --}}
-                    <input type="file" wire:model="edit_action_final_doc" class="w-full file-input file-input-bordered file-input-xs" />
+                    <input type="file" wire:model="edit_action_final_doc"
+                        class="w-full file-input file-input-bordered file-input-xs" />
 
                     {{-- Loading state --}}
                     <div wire:loading wire:target="edit_action_final_doc" class="mt-1">
@@ -995,79 +1029,91 @@
                 <h3 class="mb-4 text-lg font-bold">Diskusi Hazard</h3>
 
                 @php
-                $isModerator = $hazard->isModerator();
-                // Cek apakah sudah ada pesan dari moderator di percakapan ini
-                $hasModeratorChatted = $hazard->chats->contains(function($chat) use ($hazard) {
-                return $hazard->isModerator($chat->user_id);
-                });
+                    $isModerator = $hazard->isModerator();
+                    // Cek apakah sudah ada pesan dari moderator di percakapan ini
+                    $hasModeratorChatted = $hazard->chats->contains(function ($chat) use ($hazard) {
+                        return $hazard->isModerator($chat->user_id);
+                    });
                 @endphp
 
                 {{-- Tambahkan wire:poll agar status centang dan pesan baru terupdate otomatis --}}
                 <div class="p-4 mb-6 space-y-4 overflow-y-auto border max-h-96 rounded-xl bg-base-200/50" wire:poll.5s>
                     @forelse($hazard->chats as $chat)
-                    @php
-                    $isMe = $chat->user_id === auth()->id();
-                    $isSenderModerator = $hazard->isModerator($chat->user_id);
-                    @endphp
+                        @php
+                            $isMe = $chat->user_id === auth()->id();
+                            $isSenderModerator = $hazard->isModerator($chat->user_id);
+                        @endphp
 
-                    <div class="chat {{ $isMe ? 'chat-end' : 'chat-start' }}">
-                        <div class="chat-image avatar">
-                            <div class="w-8 rounded-full ring ring-offset-base-100 ring-offset-2 {{ $isSenderModerator ? 'ring-info' : 'ring-primary' }}">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}&background=random" />
+                        <div class="chat {{ $isMe ? 'chat-end' : 'chat-start' }}">
+                            <div class="chat-image avatar">
+                                <div
+                                    class="w-8 rounded-full ring ring-offset-base-100 ring-offset-2 {{ $isSenderModerator ? 'ring-info' : 'ring-primary' }}">
+                                    <img
+                                        src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name) }}&background=random" />
+                                </div>
+                            </div>
+                            <div class="chat-header">
+                                {{ $chat->user->name }}
+                                <time class="text-xs opacity-50 ml-1">{{ $chat->created_at->diffForHumans() }}</time>
+                            </div>
+                            <div
+                                class="chat-bubble {{ $isSenderModerator ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
+                                {{ $chat->message }}
+                            </div>
+
+                            {{-- Implementasi Chat Footer dengan Status Centang --}}
+                            <div class="mt-1 text-[10px] opacity-50 chat-footer flex items-center gap-1">
+                                {{ $isSenderModerator ? '🛡️ Moderator' : '👤 Pelapor' }}
+
+                                @if ($isMe)
+                                    @if ($chat->read_at)
+                                        <span class="text-info flex"
+                                            title="Dibaca pada {{ $chat->read_at->format('d M H:i') }}">
+                                            {{-- Centang Biru --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-check-check-icon lucide-check-check">
+                                                <path d="M18 6 7 17l-5-5" />
+                                                <path d="m22 10-7.5 7.5L13 16" />
+                                            </svg>
+                                        </span>
+                                    @else
+                                        <span class="flex" title="Terkirim"> {{-- Centang Abu-abu --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </span>
+                                    @endif
+                                @endif
                             </div>
                         </div>
-                        <div class="chat-header">
-                            {{ $chat->user->name }}
-                            <time class="text-xs opacity-50 ml-1">{{ $chat->created_at->diffForHumans() }}</time>
-                        </div>
-                        <div class="chat-bubble {{ $isSenderModerator ? 'chat-bubble-info' : 'chat-bubble-ghost border' }}">
-                            {{ $chat->message }}
-                        </div>
-
-                        {{-- Implementasi Chat Footer dengan Status Centang --}}
-                        <div class="mt-1 text-[10px] opacity-50 chat-footer flex items-center gap-1">
-                            {{ $isSenderModerator ? '🛡️ Moderator' : '👤 Pelapor' }}
-
-                            @if($isMe)
-                            @if($chat->read_at)
-                            <span class="text-info flex" title="Dibaca pada {{ $chat->read_at->format('d M H:i') }}"> {{-- Centang Biru --}}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-check-icon lucide-check-check">
-                                    <path d="M18 6 7 17l-5-5" />
-                                    <path d="m22 10-7.5 7.5L13 16" />
-                                </svg>
-                            </span>
-                            @else
-                            <span class="flex" title="Terkirim"> {{-- Centang Abu-abu --}}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                                </svg>
-                            </span>
-                            @endif
-                            @endif
-                        </div>
-                    </div>
                     @empty
-                    <div class="py-4 text-center opacity-50">
-                        <p>Belum ada diskusi.</p>
-                    </div>
+                        <div class="py-4 text-center opacity-50">
+                            <p>Belum ada diskusi.</p>
+                        </div>
                     @endforelse
                 </div>
 
-                @if($isModerator || $hasModeratorChatted)
-                <div class="flex gap-2">
-                    <x-form.text_area
-                        label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}"
-                        model="newMessage"
-                        placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}"
-                        wire:keydown.enter="sendMessage" />
-                </div>
+                @if ($isModerator || $hasModeratorChatted)
+                    <div class="flex gap-2">
+                        <x-form.text_area
+                            label="{{ $isModerator ? 'Mulai diskusi sebagai moderator' : 'Tulis balasan' }}"
+                            model="newMessage"
+                            placeholder="{{ $isModerator ? 'Mulai diskusi sebagai moderator...' : 'Tulis balasan...' }}"
+                            wire:keydown.enter="sendMessage" />
+                    </div>
                 @else
-                <div class="text-sm italic shadow-sm alert alert-warning">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <span>Hanya moderator yang dapat memulai diskusi ini.</span>
-                </div>
+                    <div class="text-sm italic shadow-sm alert alert-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-current shrink-0"
+                            fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>Hanya moderator yang dapat memulai diskusi ini.</span>
+                    </div>
                 @endif
             </div>
 
@@ -1076,47 +1122,48 @@
                     <span wire:loading.add.class='hidden' wire:target='sendMessage'>Kirim</span>
                     <span class='hidden loading loading-spinner loading-xs' wire:loading.remove.class="hidden"></span>
                 </button>
-                <button wire:loading.add.class='btn-hidden' wire:target='sendMessage' onclick="my_modal_5.close()" class="btn btn-xs btn-error">Tutup</button>
+                <button wire:loading.add.class='btn-hidden' wire:target='sendMessage' onclick="my_modal_5.close()"
+                    class="btn btn-xs btn-error">Tutup</button>
             </div>
         </div>
     </dialog>
     @push('scripts')
-    <script>
-        // 1. Mendengarkan sinyal dari PHP ($this->dispatch)
-        window.addEventListener('scroll-bottom', () => {
-            scrollToBottom();
-        });
+        <script>
+            // 1. Mendengarkan sinyal dari PHP ($this->dispatch)
+            window.addEventListener('scroll-bottom', () => {
+                scrollToBottom();
+            });
 
-        // 2. Fungsi umum untuk scroll
-        function scrollToBottom() {
-            // Gunakan ID agar lebih spesifik dan tidak salah pilih container lain
-            const container = document.querySelector('.overflow-y-auto.max-h-96');
-            if (container) {
-                container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: 'smooth' // Efek scroll halus seperti WhatsApp
+            // 2. Fungsi umum untuk scroll
+            function scrollToBottom() {
+                // Gunakan ID agar lebih spesifik dan tidak salah pilih container lain
+                const container = document.querySelector('.overflow-y-auto.max-h-96');
+                if (container) {
+                    container.scrollTo({
+                        top: container.scrollHeight,
+                        behavior: 'smooth' // Efek scroll halus seperti WhatsApp
+                    });
+                }
+            }
+
+            // 3. Khusus untuk Modal DaisyUI / HTML5 Dialog
+            // Kita gunakan MutationObserver atau cek saat modal terbuka
+            const modal = document.getElementById('my_modal_5');
+
+            // Jika menggunakan <dialog>, event-nya adalah 'toggle' atau kita pantau atribut 'open'
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'open' && modal.open) {
+                        setTimeout(scrollToBottom, 200);
+                    }
+                });
+            });
+
+            if (modal) {
+                observer.observe(modal, {
+                    attributes: true
                 });
             }
-        }
-
-        // 3. Khusus untuk Modal DaisyUI / HTML5 Dialog
-        // Kita gunakan MutationObserver atau cek saat modal terbuka
-        const modal = document.getElementById('my_modal_5');
-
-        // Jika menggunakan <dialog>, event-nya adalah 'toggle' atau kita pantau atribut 'open'
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'open' && modal.open) {
-                    setTimeout(scrollToBottom, 200);
-                }
-            });
-        });
-
-        if (modal) {
-            observer.observe(modal, {
-                attributes: true
-            });
-        }
-    </script>
+        </script>
     @endpush
 </section>
