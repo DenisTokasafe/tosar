@@ -97,13 +97,13 @@ class HazardForm extends Component
     public $manualActPelaporMode = false;
     public $manualActPelaporName = '';
     // input action
-    public $actions = []; // kumpulan action sebelum disimpan
     public $action_description;
     public $action_responsible_id;
     public $action_due_date;
     public $actual_close_date;
     public $doc_deskripsi_path;
     public $doc_corrective_path;
+    public $actions = []; // kumpulan action sebelum disimpan
     public $showActionModal = 'close'; // default tertutup
 
     // Fungsi untuk memastikan modal terbuka/tertutup dengan benar
@@ -517,6 +517,8 @@ class HazardForm extends Component
             'responsible_id'    => $this->action_responsible_id,
             'final_doc'         => $finalDocPaths, // <-- Masukkan path file di sini
         ];
+
+        $this->showActionModal = empty($this->actions) ? 'close' : 'open';
 
         $this->dispatch('alert', [
             'text' => "Tindakan Lanjutan berhasil dibuat!!",
