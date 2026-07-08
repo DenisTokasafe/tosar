@@ -788,6 +788,7 @@ class HazardForm extends Component
 
     public function render()
     {
+        $this->showActionModal = empty($this->actions) ? 'close' : 'open';
         return view('livewire.hazard.hazard-form', [
             'users' => User::limit(10)->get(),
             'Department'   => Department::all(),
