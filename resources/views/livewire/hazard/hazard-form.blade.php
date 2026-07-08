@@ -335,12 +335,30 @@
                 <div class="overflow-y-auto max-h-60">
                     <ul class="space-y-2">
                         @forelse ($actions as $index => $action)
-                        <li class="flex items-center justify-between p-2 border rounded-md bg-base-200">
-                            <div>
-                                <p class="text-sm font-medium">{!! $action['description'] !!}</p>
-                                <p class="text-[10px] opacity-70">Due: {{ $action['due_date'] }} | PIC ID: {{ $action['responsible_id'] }}</p>
+                        <li class="flex items-start justify-between p-2 border rounded-md bg-base-200 gap-2">
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-medium">{!! $action['description'] !!}</div>
+                                <p class="mt-1 text-[10px] opacity-70">
+                                    Due: {{ $action['due_date'] ?: '-' }} | PIC ID: {{ $action['responsible_id'] ?: '-' }}
+                                </p>
+
+                                {{-- === TAMPILKAN PREVIEW DOKUMEN FINAL SEMENTARA === --}}
+                                @if(!empty($action['final_doc']))
+                                <div class="flex flex-wrap gap-1.5 mt-2">
+                                    @foreach($action['final_doc'] as $file)
+                                    <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                        class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-success-content bg-success/20 border border-success/30 rounded hover:bg-success/30 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip">
+                                            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                        </svg>
+                                        <span class="truncate max-w-[150px]">{{ basename($file) }}</span>
+                                    </a>
+                                    @endforeach
+                                </div>
+                                @endif
                             </div>
-                            <flux:button variant="danger" size="xs" wire:click="removeAction({{ $index }})" icon="trash" />
+
+                            <flux:button variant="danger" size="xs" wire:click="removeAction({{ $index }})" icon="trash" class="shrink-0 mt-0.5" />
                         </li>
                         @empty
                         <li class="py-4 text-sm italic text-center text-gray-400 border-2 border-dashed rounded-lg">
