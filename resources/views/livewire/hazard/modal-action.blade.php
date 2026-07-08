@@ -20,7 +20,7 @@
                  <x-form.tgl label="Batas Waktu" format="d-m-Y" model="action_due_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
                  <x-form.tgl label="Tanggal Selesai" format="d-m-Y" model="actual_close_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
 
-                 <x-form.searchable-select-advanced label="{{ __('PIC') }}" placeholder="Cari Nama Pelapor..."
+                 <x-form.searchable-select-advanced label="{{ __('PIC') }}" placeholder="Cari Nama PIC..."
 
                      modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
 
