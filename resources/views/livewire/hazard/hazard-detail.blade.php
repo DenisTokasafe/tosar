@@ -576,7 +576,44 @@
                                     readonly />
                             </div>
                             <x-label-error :messages="$errors->get('action_actual_close_date')" />
+                        </fieldset>0
+                        {{-- === TAMBAHAN: Final Doc Upload & Preview === --}}
+                        <fieldset class="mt-4 fieldset">
+                            <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
+
+                            {{-- Menampilkan data yang sudah diupload sebelumnya --}}
+                            @if(!empty($existing_final_docs))
+                            <div class="flex flex-col gap-2 mb-2 p-3 bg-gray-50 border rounded">
+                                <span class="text-xs font-semibold text-gray-700">{{ __('Dokumen Tersimpan:') }}</span>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($existing_final_docs as $file)
+                                    <div class="flex items-center gap-2 p-2 text-xs bg-white border rounded shadow-sm">
+                                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                        </svg>
+                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="text-blue-600 hover:underline truncate max-w-[200px]">
+                                            {{ basename($file) }}
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+
+                            {{-- Input untuk upload file baru --}}
+                            <input type="file" wire:model="edit_action_final_doc" class="w-full file-input file-input-bordered file-input-xs" />
+
+                            {{-- Loading state --}}
+                            <div wire:loading wire:target="edit_action_final_doc" class="mt-1">
+                                <span class="flex items-center gap-1">
+                                    <span class="loading loading-spinner loading-xs text-info"></span>
+                                    <span class="text-xs text-info">{{ __('Mengunggah...') }}</span>
+                                </span>
+                            </div>
+
+                            <x-label-error :messages="$errors->get('edit_action_final_doc')" />
                         </fieldset>
+                        {{-- === END TAMBAHAN === --}}
                         <!-- Dilaporkan Oleh -->
                         <x-form.searchable-select-advanced label="PIC" placeholder="Cari Nama PIC..."
                             modelsearch="searchActResponsibility" modelid="action_responsible_id"
