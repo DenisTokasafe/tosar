@@ -53,6 +53,7 @@ class HazardForm extends Component
     public $selectedLikelihoodId = null;
     public $selectedConsequenceId = null;
     public $status;
+    public $action_final_doc;
     public $RiskAssessment;
     #[Validate('required')]
     public $likelihood_id;
@@ -460,12 +461,15 @@ class HazardForm extends Component
     }
     public function addAction()
     {
-
         $this->dispatch('validate-action_description');
+
         $this->validate(
             [
                 'action_description'       => 'required|string',
                 'action_responsible_id'    => 'nullable|integer',
+                // Tambahkan validasi untuk file upload
+                'action_final_doc'         => 'nullable|file|max:5120', // Maksimal 5MB (opsional)
+
                 // Due date harus sebelum atau sama dengan actual close date (jika close date ada)
                 'action_due_date'       => [
                     'nullable',
@@ -490,16 +494,30 @@ class HazardForm extends Component
                 'actual_close_date.after_or_equal' => 'Tanggal penyelesaian tidak boleh lebih kecil dari tanggal batas waktu.',
 
                 'action_responsible_id.required' => 'Penanggung jawab wajib dipilih.',
+                'action_final_doc.max'           => 'Ukuran dokumen maksimal adalah 5MB.',
             ]
-
         );
 
+        // === LOGIKA UPLOAD FILE BARU ===
+        $finalDocPaths = []; // Default array kosong
+        if ($this->action_final_doc) {
+            // Simpan file secara fisik ke storage menggunakan FileHelper
+            $path = FileHelper::compressAndStore($this->action_final_doc, 'action_hazard_docs');
+
+            // Masukkan ke dalam array karena tipe data database adalah JSON/Array
+            $finalDocPaths[] = $path;
+        }
+        // ===============================
+
+        // Masukkan data ke array sementara
         $this->actions[] = [
-            'description' => $this->action_description,
-            'due_date' => $this->action_due_date,
+            'description'       => $this->action_description,
+            'due_date'          => $this->action_due_date,
             'actual_close_date' => $this->actual_close_date,
-            'responsible_id' => $this->action_responsible_id,
+            'responsible_id'    => $this->action_responsible_id,
+            'final_doc'         => $finalDocPaths, // <-- Masukkan path file di sini
         ];
+
         $this->dispatch('alert', [
             'text' => "Tindakan Lanjutan berhasil dibuat!!",
             'duration' => 5000,
@@ -508,8 +526,17 @@ class HazardForm extends Component
             'close' => true,
             'backgroundColor' => "background: linear-gradient(135deg, #00c853, #00bfa5);",
         ]);
-        // reset input sementara
-        $this->reset(['action_description', 'action_due_date', 'action_responsible_id', 'actual_close_date', 'searchActResponsibility']);
+
+        // reset input sementara, tambahkan 'action_final_doc' agar input file bersih kembali
+        $this->reset([
+            'action_description',
+            'action_due_date',
+            'action_responsible_id',
+            'actual_close_date',
+            'searchActResponsibility',
+            'action_final_doc' // <-- Reset property file
+        ]);
+
         $this->dispatch('reset-all-editors');
         // $this->dispatch('reset-ckeditor');
     }
