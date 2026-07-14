@@ -40,18 +40,18 @@ class ProcessMcuReminders extends Command
     private function sendNotifications(McuParticipant $participant, string $type, string $nextStatus)
     {
         $employee = $participant->employee;
-
+        $supervisor = $participant->supervisor;
         // Notifikasi ke Karyawan
-        $employee->notify(new McuReminderNotification($participant, $type));
 
         // Logic eskalasi sesuai flowchart
         if (in_array($type, ['h-30', 'h-14', 'h-7', 'h-1'])) {
+            $employee->notify(new McuReminderNotification($participant, $type));
             // Asumsi relasi user ke department head ada
             $employee->departmentHead?->notify(new McuReminderNotification($participant, $type));
         }
 
         if (in_array($type, ['h-7', 'h-1'])) {
-            $employee->supervisor?->notify(new McuReminderNotification($participant, $type));
+            $supervisor->notify(new McuReminderNotification($participant, $type));
         }
 
         // Update status di database
