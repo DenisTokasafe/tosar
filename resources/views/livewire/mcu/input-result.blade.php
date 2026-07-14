@@ -4,21 +4,17 @@
             <h2 class="card-title text-xl mb-4">Input Hasil MCU (Medical Admin)</h2>
 
             @if (session()->has('message'))
-            <div class="alert alert-success mb-4">{{ session('message') }}</div>
+                <div class="alert alert-success mb-4">{{ session('message') }}</div>
             @endif
 
             <form wire:submit="saveResult" class="space-y-4">
 
-                <x-form.searchable-select-advanced
-                    label="Peserta MCU"
-                    placeholder="Cari Nama Peserta MCU..."
-                    modelsearch="searchParticipant"
-                    modelid="participant_id"
-                    :options="$formattedParticipants"
-                    :showdropdown="$showParticipantDropdown"
+                <x-form.searchable-select-advanced label="Peserta MCU" placeholder="Cari Nama Peserta MCU..."
+                    modelsearch="searchParticipant" modelid="participant_id" :options="$formattedParticipants" :showdropdown="$showParticipantDropdown"
                     clickaction="selectParticipant" />
                 <fieldset class="fieldset">
-                    <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document" required />
+                    <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document"
+                        required />
                 </fieldset>
                 <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-admin_notes">
                     <x-form.label label="Catatan Admin (Opsional)" />
@@ -31,7 +27,8 @@
                 <div class="mt-6 flex justify-end">
                     <button type="submit" class="btn btn-primary btn-sm">
                         <span wire:loading.remove wire:target="saveResult">Kirim ke Dokter</span>
-                        <span wire:loading.remove.class="hidden" wire:target="saveResult" class="loading loading-spinner hidden"></span>
+                        <span wire:loading.remove.class="hidden" wire:target="saveResult"
+                            class="loading loading-spinner hidden"></span>
                     </button>
                 </div>
             </form>

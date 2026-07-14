@@ -76,7 +76,7 @@ class McuResultNotification extends Notification implements ShouldQueue
 
         $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
-        $doctorNotes = strip_tags( $this->result->doctor_site_consult)
+        $doctorNotes = strip_tags($this->result->doctor_site_consult);
 
         if ($this->recipientType === 'employee') {
             $text = "*HASIL MEDICAL CHECK-UP (MCU)*\n\n";
