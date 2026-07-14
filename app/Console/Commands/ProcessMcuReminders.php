@@ -41,10 +41,10 @@ class ProcessMcuReminders extends Command
     {
         $employee = $participant->employee;
         $supervisor = $participant->supervisor;
-        // Notifikasi ke Karyawan
 
         // Logic eskalasi sesuai flowchart
         if (in_array($type, ['h-30', 'h-14', 'h-7', 'h-1'])) {
+            // Notifikasi ke Karyawan
             $employee->notify(new McuReminderNotification($participant, $type));
             // Asumsi relasi user ke department head ada
             $employee->departmentHead?->notify(new McuReminderNotification($participant, $type));
