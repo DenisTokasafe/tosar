@@ -77,7 +77,7 @@ class McuReminderNotification extends Notification implements ShouldQueue
         // Deteksi apakah yang menerima ini Atasan atau Karyawan
         $isManualSpv = $notifiable instanceof \Illuminate\Notifications\AnonymousNotifiable;
         $isManager = $this->type === 'new_schedule_spv' || $isManualSpv || (isset($notifiable->id) && $notifiable->id !== $this->participant->employee_id);
-
+        dd($employeeName, $notifiable->whatsapp_number);
         if ($isManager) {
             $spvName = $notifiable->name ?? 'Bapak/Ibu Atasan';
             $text = "*PEMBERITAHUAN JADWAL MCU BAWAHAN*\n\n";
