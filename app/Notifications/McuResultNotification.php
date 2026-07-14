@@ -75,6 +75,7 @@ class McuResultNotification extends Notification implements ShouldQueue
         $this->result->loadMissing(['participant.employee', 'participant.supervisor']);
 
         $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
+        dd($employeeName, $this->recipientType);
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
         $doctorNotes = strip_tags($this->result->doctor_site_consult);
 
