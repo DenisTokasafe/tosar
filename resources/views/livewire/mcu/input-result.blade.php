@@ -11,13 +11,10 @@
 
                     <form wire:submit="saveResult" class="space-y-4">
 
-                        <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex  gap-4">
                             <x-form.searchable-select-advanced label="Peserta MCU" placeholder="Cari Nama Peserta MCU..."
-                                modelsearch="searchParticipant" modelid="participant_id" :options="$formattedParticipants" :showdropdown="$showParticipantDropdown"
-                                clickaction="selectParticipant" />
-
-                            <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document"
-                                required />
+                                modelsearch="searchParticipant" modelid="participant_id" :options="$formattedParticipants" :showdropdown="$showParticipantDropdown" clickaction="selectParticipant" />
+                            <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document" required />
                         </div>
 
                         <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-admin_notes">
