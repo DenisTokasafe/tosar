@@ -27,9 +27,9 @@
                                     class="w-full cursor-pointer input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
                                     x-data="{ fp: null }" x-init="
                                 fp = flatpickr($refs.input, {
-                                    dateFormat: 'Y-m-d',
                                     altInput: true,
-                                    altFormat: " F j, Y",
+                                    altFormat: ' F j, Y',
+                                    dateFormat: 'Y-m-d' ,
 
                                     });
                                     $wire.on('dateLoaded', ()=> {
