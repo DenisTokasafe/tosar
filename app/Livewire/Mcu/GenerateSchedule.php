@@ -37,7 +37,6 @@ class GenerateSchedule extends Component
         return [
             'schedule_date' => 'required|date|after:today',
             'location'      => 'required|string',
-            'participantsData' => 'required|array',
 
             // Perbaikan: tambahkan digits_between di sini agar sesuai dengan pesan error Anda
             'participantsData.*.selected' => 'required|boolean',
@@ -163,6 +162,14 @@ class GenerateSchedule extends Component
     // --- GENERATE JADWAL ---
     public function generateJadwal()
     {
+        // 1. Cek apakah ada peserta yang dipilih
+        $hasSelected = collect($this->participantsData)->where('selected', true)->count() > 0;
+
+        if (!$hasSelected) {
+            // Ini akan memicu @error('participantsData') di Blade Anda
+            $this->addError('participantsData', 'Pilih minimal 1 peserta.');
+            return;
+        }
         $this->validate();
 
         $selectedParticipants = array_filter($this->participantsData, function ($data) {
