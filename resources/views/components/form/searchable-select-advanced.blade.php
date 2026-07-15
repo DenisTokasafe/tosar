@@ -17,7 +17,7 @@
 'addManualAction' => 'addManualData',
 ])
 
-<fieldset class="relative fieldset md:col-span-1">
+<fieldset class="relative  md:col-span-1">
     @if($label)
     <x-form.label :label="$label" :required="$required" />
     @endif
