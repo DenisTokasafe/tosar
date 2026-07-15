@@ -38,6 +38,28 @@ class GenerateSchedule extends Component
             'schedule_date' => 'required|date|after:today',
             'location' => 'required|string',
             'participantsData' => 'required|array',
+            'participantsData.*.selected' => 'nullable|boolean',
+            'participantsData.*.wa'       => 'required_if:participantsData.*.selected,true|numeric|digits_between:9,15',
+
+            // Field lain opsional
+            'participantsData.*.spv_id'   => 'nullable',
+            'participantsData.*.wa_spv'   => 'nullable|numeric',
+            'participantsData.*.dept_head_id' => 'nullable',
+        ];
+    }
+    protected function messages()
+    {
+        return [
+            'schedule_date.required' => 'Tanggal wajib diisi.',
+            'schedule_date.date'     => 'Format tanggal harus berupa tanggal.',
+            'schedule_date.after'    => 'Tanggal harus lebih besar dari tanggal hari ini.',
+            'location.required'      => 'Lokasi wajib diisi.',
+            'location.string'        => 'Format lokasi harus berupa teks.',
+            'participantsData.required' => 'Minimal satu peserta wajib dipilih.',
+            'participantsData.*.wa.required_if' => 'Nomor WhatsApp wajib diisi untuk peserta yang dipilih.',
+            'participantsData.*.wa.numeric'     => 'Format nomor WhatsApp harus berupa angka.',
+            'participantsData.*.wa.digits_between' => 'Nomor WhatsApp harus antara 9-15 digit.',
+
         ];
     }
 
