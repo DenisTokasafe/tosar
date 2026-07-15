@@ -30,7 +30,7 @@
                                     altInput: true,
                                     altFormat: 'F j, Y',
                                     dateFormat: 'Y-m-d' ,
-
+                                    static: true,
                                     });
                                     $wire.on('dateLoaded', ()=> {
                                 if ($wire.schedule_date) {
