@@ -145,22 +145,17 @@ class GenerateSchedule extends Component
             return;
         }
 
-        // VALIDASI TAMBAHAN (SAFEGUARD): Mencegah lolos ke query DB jika data kosong
         foreach ($selectedParticipants as $employee_id => $data) {
-            // Jika SPV tidak diisi di sistem DAN tidak diisi manual, beri pesan error terarah
             if (empty($data['spv_id']) && empty($data['spv_name_manual'])) {
                 $employeeName = User::find($employee_id)->name ?? 'Karyawan';
-                $this->dispatch(
-                    'alert',
-                    [
-                        'text' => "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.",
-                        'duration' => 5000,
-                        'destination' => '/contact',
-                        'newWindow' => true,
-                        'close' => true,
-                        'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
-                    ]
-                );
+                $this->dispatch('alert', [
+                    'text' => "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.",
+                    'duration' => 5000,
+                    'destination' => '/contact',
+                    'newWindow' => true,
+                    'close' => true,
+                    'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
+                ]);
                 return;
             }
         }
@@ -175,40 +170,39 @@ class GenerateSchedule extends Component
             $participant = $schedule->participants()->create([
                 'employee_id' => $employee_id,
                 'whatsapp_number' => $data['wa'] ?? null,
-                'supervisor_id' => $data['spv_id'] ?? null, // Sekarang aman karena ada validasi di atas
+                'supervisor_id' => $data['spv_id'] ?? null,
                 'spv_wa_number' => $data['wa_spv'] ?? null,
                 'dept_head_id' => $data['dept_head_id'] ?? null,
-
-                // Masukkan field manual name jika Anda menyimpannya di DB
                 'spv_name_manual' => $data['spv_name_manual'] ?? null,
                 'dept_head_name_manual' => $data['dept_head_name_manual'] ?? null,
-
                 'notification_status' => 'notified'
             ]);
 
-            // Kirim Notifikasi Karyawan
+            // 1. KIRIM KE KARYAWAN (Cukup cek apakah user ada, jangan hadang pakai nomor WA)
             $employee = User::find($employee_id);
-            if ($employee && !empty($participant->whatsapp_number)) {
+            if ($employee) {
+                // Method via() di notifikasi akan otomatis memilih kirim Email, WA, atau keduanya
+                // tergantung data apa yang tersedia pada user/participant.
                 $employee->notify(new McuReminderNotification($participant, 'new_schedule'));
             }
 
-            // Kirim Notifikasi Supervisor
-            if (!empty($participant->spv_wa_number)) {
-                if ($participant->supervisor_id) {
-                    $spv = User::find($participant->supervisor_id);
-                    if ($spv) {
-                        $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
-                    }
-                } else {
-                    Notification::route('whatsapp', $participant->spv_wa_number)
-                        ->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
+            // 2. KIRIM KE SUPERVISOR
+            if ($participant->supervisor_id) {
+                $spv = User::find($participant->supervisor_id);
+                if ($spv) {
+                    // Jika SPV terdaftar di sistem, kirim (email & WA akan diatur otomatis oleh via())
+                    $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
                 }
+            } elseif (!empty($participant->spv_wa_number)) {
+                // Jika SPV manual (tidak punya akun di sistem), kirim via On-Demand Notification (Khusus WA)
+                Notification::route('whatsapp', $participant->spv_wa_number)
+                    ->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
             }
 
-            // Kirim Notifikasi Dept Head
+            // 3. KIRIM KE DEPT HEAD (Khusus Dept Head, method via() Anda sudah mengunci hanya via Email)
             if ($participant->dept_head_id) {
                 $deptHead = User::find($participant->dept_head_id);
-                if ($deptHead && $deptHead->email) {
+                if ($deptHead && !empty($deptHead->email)) {
                     $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head'));
                 }
             }
@@ -216,7 +210,7 @@ class GenerateSchedule extends Component
 
         $this->reset(['schedule_date', 'location', 'participantsData']);
         $this->dispatch('alert', [
-            'text'            => "Jadwal MCU berhasil dibuat dan notifikasi WA sedang dikirim.",
+            'text'            => "Jadwal MCU berhasil dibuat dan notifikasi sedang dikirim di latar belakang.",
             'duration'        => 5000,
             'destination'     => '/contact',
             'newWindow'       => true,
