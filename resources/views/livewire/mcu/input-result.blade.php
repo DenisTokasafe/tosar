@@ -59,7 +59,7 @@
                                         <td>{{ $formattedParticipants->firstItem() + $index }}</td>
 
                                         {{-- Gunakan raw_name untuk tampilan tabel yang bersih --}}
-                                        <td class="font-medium">{{ $participant->name }}</td>
+                                        <td class="font-medium">{{ $participant->raw_name }}</td>
 
                                         {{-- Gunakan schedule_date yang sudah kita siapkan --}}
                                         <td>{{ $participant->schedule_date }}</td>
