@@ -38,6 +38,18 @@ class GenerateSchedule extends Component
             'schedule_date' => 'required|date|after:today',
             'location'      => 'required|string',
 
+            'participantsData' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    // Mengecek apakah ada setidaknya satu yang selected = true
+                    $hasSelected = collect($value)->where('selected', true)->count() > 0;
+                    if (!$hasSelected) {
+                        $fail('Pilih minimal 1 peserta.');
+                    }
+                },
+            ],
+
             // Perbaikan: tambahkan digits_between di sini agar sesuai dengan pesan error Anda
             'participantsData.*.selected' => 'required|boolean',
             'participantsData.*.wa'       => 'required_if:participantsData.*.selected,true|numeric|digits_between:9,15',
@@ -168,13 +180,7 @@ class GenerateSchedule extends Component
     public function generateJadwal()
     {
         // 1. Cek apakah ada peserta yang dipilih
-        $hasSelected = collect($this->participantsData)->where('selected', true)->count() > 0;
 
-        if (!$hasSelected) {
-            // Ini akan memicu @error('participantsData') di Blade Anda
-            $this->addError('participantsData', 'Pilih minimal 1 peserta.');
-            return;
-        }
         $this->validate();
 
         $selectedParticipants = array_filter($this->participantsData, function ($data) {
