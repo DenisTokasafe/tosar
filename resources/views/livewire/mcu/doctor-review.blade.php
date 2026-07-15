@@ -93,7 +93,7 @@
                                     wire:click="saveNewDisease"
                                     class="btn btn-xs btn-primary join-item"
                                     title="Tambah Penyakit">
-                                    <span wire:loading wire:target="saveNewDisease" class="loading loading-spinner loading-xs"></span>
+                                    <span wire:loading.remove.class="hidden" wire:target="saveNewDisease" class="loading loading-spinner loading-xs hidden"></span>
                                     <span wire:loading.remove wire:target="saveNewDisease">+</span>
                                 </button>
                             </div>
@@ -141,9 +141,9 @@
                 </fieldset>
 
                 <div class="flex justify-end space-x-2 pt-4 border-t border-base-200">
-                    <flux:button variant="ghost" wire:click="$set('showReviewModal', false)">Batal</flux:button>
-                    <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
-                        <span wire:loading wire:target="saveReview" class="loading loading-spinner loading-sm mr-1"></span>
+                    <flux:button size="xs" variant="ghost" wire:click="$set('showReviewModal', false)">Batal</flux:button>
+                    <flux:button type="submit" size="xs" variant="primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove.class="hidden" wire:target="saveReview" class="loading loading-spinner hidden loading-sm mr-1"></span>
                         Simpan Review
                     </flux:button>
                 </div>
