@@ -54,6 +54,7 @@ class InputResult extends Component
         if (strlen($this->searchParticipant) > 0) {
             $this->participant_id = null;
         }
+        $this->resetPage();
     }
 
     /**
@@ -80,16 +81,14 @@ class InputResult extends Component
         }
 
         // 3. Ambil data dan format menjadi bentuk Array yang dibutuhkan komponen kustom
-        $formattedParticipants = $query->take(50)->get()->map(function ($p) {
-            // Ambil tanggal jadwal jika ada
+        $formattedParticipants = $query->paginate(30)->through(function ($p) {
             $date = $p->schedule ? $p->schedule->schedule_date->format('d M Y') : 'Tanpa Jadwal';
 
-            // Tambahkan (object) agar datanya berbentuk objek, sesuai permintaan Blade
             return (object) [
                 'id'   => $p->id,
                 'name' => $p->employee->name . ' - ' . $date
             ];
-        }); // Hapus ->toArray() di sini agar tetap menjadi Collection berisi Objek
+        });
 
         // 4. Kirim data yang sudah diformat ke view
         return view('livewire.mcu.input-result', [

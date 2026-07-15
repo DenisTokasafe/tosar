@@ -4,7 +4,7 @@
             <h2 class="card-title text-xl mb-4">Input Hasil MCU (Medical Admin)</h2>
 
             @if (session()->has('message'))
-                <div class="alert alert-success mb-4">{{ session('message') }}</div>
+            <div class="alert alert-success mb-4">{{ session('message') }}</div>
             @endif
 
             <form wire:submit="saveResult" class="space-y-4">
@@ -32,6 +32,50 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</section>
+<section class="w-full mx-auto px-4 py-6">
+    <div class="card bg-base-100 shadow-sm border border-base-200">
+        <div class="card-body">
+            <h2 class="card-title text-xl mb-4">Daftar Peserta MCU (Menunggu Review Dokter)</h2>
+
+            <div class="overflow-x-auto">
+                <table class="table table-zebra table-sm">
+                    <thead>
+                        <tr class="bg-base-200">
+                            <th>#</th>
+                            <th>Nama Peserta</th>
+                            <th>Jadwal</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($formattedParticipants as $index => $participant)
+                        <tr>
+                            <td>{{ $formattedParticipants->firstItem() + $index }}</td>
+                            <td class="font-medium">{{ $participant->name }}</td>
+                            <td>{{ $participant->schedule ? $participant->schedule->schedule_date->format('d M Y') : '-' }}</td>
+                            <td>
+                                <span class="badge badge-warning badge-xs">Pending</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-ghost btn-xs">Detail</button>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">Belum ada data peserta.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                {{ $formattedParticipants->links() }}
+            </div>
         </div>
     </div>
 </section>
