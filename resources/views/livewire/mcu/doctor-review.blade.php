@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <flux:modal wire:model="showReviewModal" class="w-full overflow-auto">
+    <flux:modal wire:model="showReviewModal" flyout variant="floating" class="md:w-lg">
 
         <flux:heading size="lg" class="border-b pb-2">Review Status MCU</flux:heading>
 
@@ -123,6 +123,52 @@
             @endif
 
             @if($fit_status === 'temporary_unfit')
+            <fieldset class="fieldset border border-base-300 p-3 rounded-lg bg-base-50/50">
+                <x-form.label label="Kategori Penyakit Temuan (Bisa pilih > 1)" />
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto p-2 border border-base-200 rounded bg-base-100 items-center">
+                    @foreach($diseaseCategories as $category)
+                    <label class="cursor-pointer label justify-start space-x-2 py-1">
+                        <input type="checkbox"
+                            value="{{ $category->id }}"
+                            wire:model="selectedDiseaseCategories"
+                            class="checkbox checkbox-xs checkbox-primary">
+                        <span class="label-text text-xs font-medium">{{ $category->name }}</span>
+                    </label>
+                    @endforeach
+
+                    <label class="cursor-pointer label justify-start space-x-2 py-1">
+                        <input type="checkbox"
+                            value="tambah_penyakit"
+                            wire:model.live="selectedDiseaseCategories"
+                            class="checkbox checkbox-xs checkbox-secondary">
+                        <span class="label-text text-xs font-semibold italic text-secondary">+ Penyakit Lainnya</span>
+                    </label>
+
+                    @if (in_array('tambah_penyakit', $selectedDiseaseCategories))
+                    <div class="py-1 pr-1 col-span-2 sm:col-span-1" wire:key="box-input-penyakit-baru">
+                        <div class="join w-full">
+                            <input type="text"
+                                wire:model="new_disease_name"
+                                wire:keydown.enter.prevent="saveNewDisease"
+                                placeholder="+ Ketik & Enter..."
+                                class="input input-bordered input-xs join-item w-full focus:outline-none focus:border-primary text-xs" />
+                            <button type="button"
+                                wire:click="saveNewDisease"
+                                class="btn btn-xs btn-primary join-item"
+                                title="Tambah Penyakit">
+                                <span wire:loading.remove.class="hidden" wire:target="saveNewDisease" class="loading loading-spinner hidden loading-xs"></span>
+                                <span wire:loading.remove wire:target="saveNewDisease">+</span>
+                            </button>
+                        </div>
+                        @error('new_disease_name')
+                        <span class="text-error text-[10px] leading-tight block mt-0.5">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    @endif
+                </div>
+                <x-label-error :messages="$errors->get('selectedDiseaseCategories')" />
+            </fieldset>
             <fieldset class="w-full fieldset">
                 <x-form.label label="Jadwal Follow Up MCU" required />
                 <input type="text" readonly id="follow_up_date" wire:model="follow_up_date" placeholder="Pilih Jadwal Follow Up MCU"
