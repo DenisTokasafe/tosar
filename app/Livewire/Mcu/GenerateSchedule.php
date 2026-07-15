@@ -167,20 +167,6 @@ class GenerateSchedule extends Component
             return;
         }
 
-        foreach ($selectedParticipants as $employee_id => $data) {
-            if (empty($data['spv_id']) && empty($data['spv_name_manual'])) {
-                $employeeName = User::find($employee_id)->name ?? 'Karyawan';
-                $this->dispatch('alert', [
-                    'text' => "Format data Supervisor untuk {$employeeName} belum terpilih dengan benar. Silakan pilih kembali.",
-                    'duration' => 5000,
-                    'destination' => '/contact',
-                    'newWindow' => true,
-                    'close' => true,
-                    'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
-                ]);
-                return;
-            }
-        }
 
         $schedule = McuSchedule::create([
             'schedule_date' => $this->schedule_date,
