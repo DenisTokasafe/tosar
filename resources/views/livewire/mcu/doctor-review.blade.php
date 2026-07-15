@@ -77,6 +77,27 @@
 
                     <x-label-error :messages="$errors->get('restriction_notes')" />
                 </fieldset>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Kategori Penyakit Temuan (Bisa pilih lebih dari satu)
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-3 border rounded-lg bg-gray-50">
+                        @foreach($diseaseCategories as $category)
+                        <label class="inline-flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox"
+                                value="{{ $category->id }}"
+                                wire:model="selectedDiseaseCategories"
+                                class="rounded border-gray-300 text-primary focus:ring-primary shadow-sm">
+                            <span class="text-sm text-gray-700">{{ $category->name }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+
+                    @error('selectedDiseaseCategories')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
 
                 @endif
 
