@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('disease_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name'); // Contoh: Cholesterol
             $table->timestamps();
         });
     }
