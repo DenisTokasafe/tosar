@@ -55,8 +55,13 @@
                         @forelse($formattedParticipants as $index => $participant)
                         <tr>
                             <td>{{ $formattedParticipants->firstItem() + $index }}</td>
-                            <td class="font-medium">{{ $participant->name }}</td>
-                            <td>{{ $participant->schedule ? $participant->schedule->schedule_date->format('d M Y') : '-' }}</td>
+
+                            {{-- Gunakan raw_name untuk tampilan tabel yang bersih --}}
+                            <td class="font-medium">{{ $participant->raw_name }}</td>
+
+                            {{-- Gunakan schedule_date yang sudah kita siapkan --}}
+                            <td>{{ $participant->schedule_date }}</td>
+
                             <td>
                                 <span class="badge badge-warning badge-xs">Pending</span>
                             </td>

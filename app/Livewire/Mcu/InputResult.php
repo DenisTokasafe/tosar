@@ -85,8 +85,10 @@ class InputResult extends Component
             $date = $p->schedule ? $p->schedule->schedule_date->format('d M Y') : 'Tanpa Jadwal';
 
             return (object) [
-                'id'   => $p->id,
-                'name' => $p->employee->name . ' - ' . $date
+                'id'            => $p->id,
+                'name'          => $p->employee->name . ' - ' . $date, // Untuk Searchable Select
+                'raw_name'      => $p->employee->name,                 // Untuk Tabel
+                'schedule_date' => $date,                              // Untuk Tabel
             ];
         });
 
