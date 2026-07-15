@@ -45,7 +45,7 @@
         <div class="space-y-2">
             <flux:heading size="lg" class="border-b pb-2">Review Status MCU</flux:heading>
 
-            <form wire:submit="saveReview" class="py-4 space-y-4">
+            <form wire:submit="saveReview" class="py-4 space-y-4 overflow-auto">
                 @if ($errors->any())
                 <div class="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
                     <p class="font-bold mb-1">Gagal menyimpan karena:</p>
