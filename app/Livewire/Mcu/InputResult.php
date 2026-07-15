@@ -45,7 +45,7 @@ class InputResult extends Component
         ]);
 
         session()->flash('message', 'Hasil MCU berhasil diunggah. Menunggu review Dokter.');
-        $this->reset(['participant_id', 'result_document', 'admin_notes']);
+        $this->reset(['participant_id', 'result_document', 'admin_notes', 'searchParticipant']);
     }
 
     public function updatedSearchParticipant()
