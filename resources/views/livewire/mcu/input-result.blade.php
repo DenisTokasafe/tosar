@@ -1,5 +1,5 @@
 <div>
-    <div class="grid items-start grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="grid items-start grid-cols-1 gap-6 lg:grid-cols-2">
         <section class="w-full  mx-auto px-4 py-6">
             <div class="card bg-base-100 shadow-sm border border-base-200">
                 <div class="card-body">
