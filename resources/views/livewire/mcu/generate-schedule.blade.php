@@ -28,11 +28,14 @@
                                     x-data="{ fp: null }" x-init="
                                 fp = flatpickr($refs.input, {
                                     dateFormat: 'Y-m-d',
-                                });
-                                $wire.on('dateLoaded', () => {
-                                    if ($wire.schedule_date) {
-                                        fp.setDate($wire.schedule_date);
-                                    }
+                                    altInput: true,
+                                    altFormat: " F j, Y",
+                                    inline: true
+                                    });
+                                    $wire.on('dateLoaded', ()=> {
+                                if ($wire.schedule_date) {
+                                fp.setDate($wire.schedule_date);
+                                }
                                 });" x-ref="input" />
                                 <x-label-error :messages="$errors->get('schedule_date')" />
                             </fieldset>
