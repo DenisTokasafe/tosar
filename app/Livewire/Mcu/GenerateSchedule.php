@@ -40,7 +40,7 @@ class GenerateSchedule extends Component
             'participantsData' => 'required|array',
 
             // Perbaikan: tambahkan digits_between di sini agar sesuai dengan pesan error Anda
-            'participantsData.*.selected' => 'nullable|boolean',
+            'participantsData.*.selected' => 'required|boolean',
             'participantsData.*.wa'       => 'required_if:participantsData.*.selected,true|numeric|digits_between:9,15',
 
             // Perbaikan: tambahkan required_if agar validasi hanya berjalan untuk yang terpilih saja
