@@ -11,13 +11,15 @@
 
                     <form wire:submit="saveResult" class="space-y-4">
 
-                        <x-form.searchable-select-advanced label="Peserta MCU" placeholder="Cari Nama Peserta MCU..."
-                            modelsearch="searchParticipant" modelid="participant_id" :options="$formattedParticipants" :showdropdown="$showParticipantDropdown"
-                            clickaction="selectParticipant" />
-                        <fieldset class="fieldset">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <x-form.searchable-select-advanced label="Peserta MCU" placeholder="Cari Nama Peserta MCU..."
+                                modelsearch="searchParticipant" modelid="participant_id" :options="$formattedParticipants" :showdropdown="$showParticipantDropdown"
+                                clickaction="selectParticipant" />
+
                             <x-form.upload label="Unggah Dokumen Hasil (PDF/JPG)" model="result_document" :file="$result_document"
                                 required />
-                        </fieldset>
+                        </div>
+
                         <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-admin_notes">
                             <x-form.label label="Catatan Admin (Opsional)" />
                             <div x-data="ckeditorHelper('admin_notes')" wire:ignore>
@@ -50,7 +52,6 @@
                                         <th>Nama Peserta</th>
                                         <th>Jadwal</th>
                                         <th>Status</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,9 +68,7 @@
                                         <td>
                                             <span class="badge badge-warning badge-xs">Pending</span>
                                         </td>
-                                        <td>
-                                            <button class="btn btn-ghost btn-xs">Detail</button>
-                                        </td>
+
                                     </tr>
                                     @empty
                                     <tr>
