@@ -68,6 +68,11 @@ class GenerateSchedule extends Component
             'participantsData.*.spv_name_manual.required_if' => 'Supervisor wajib dipilih atau diisi manual.',
         ];
     }
+    public function updated($propertyName)
+    {
+        // Ini akan memvalidasi field yang sedang diubah saja secara realtime
+        $this->validateOnly($propertyName);
+    }
 
     // --- SUPERVISOR MANUAL ---
     public function enableManualSupervisor($employeeId)
