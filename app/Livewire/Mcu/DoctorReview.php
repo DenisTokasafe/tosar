@@ -18,18 +18,16 @@ class DoctorReview extends Component
     public $selectedDiseaseCategories = [];
     public $showReviewModal = false;
 
-    // --- PROPERTI TAMBAHAN UNTUK FITUR PENYAKIT BARU ---
-    public $showAddDiseaseModal = false;
+    // Properti untuk input inline
     public $new_disease_name;
 
     public function openReviewModal($id)
     {
         $this->resetValidation();
-        $this->reset(['fit_status', 'restriction_notes', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories']);
+        $this->reset(['fit_status', 'restriction_notes', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories', 'new_disease_name']);
 
         $this->selectedResultId = $id;
 
-        // Load kategori jika sudah pernah diset sebelumnya
         $result = McuResult::with('diseaseCategories')->find($id);
         if ($result) {
             $this->selectedDiseaseCategories = $result->diseaseCategories->pluck('id')->toArray();
@@ -38,41 +36,28 @@ class DoctorReview extends Component
         $this->showReviewModal = true;
     }
 
-    // --- FUNGSI MEMBUKA & MENUTUP MODAL DAISYUI ---
-    public function openAddDiseaseModal()
-    {
-        $this->resetValidation('new_disease_name');
-        $this->new_disease_name = '';
-        $this->showAddDiseaseModal = true;
-    }
-
-    public function closeAddDiseaseModal()
-    {
-        $this->showAddDiseaseModal = false;
-        $this->new_disease_name = '';
-    }
-
-    // --- FUNGSI SIMPAN PENYAKIT BARU & OTOMATIS CENTANG ---
+    // --- FUNGSI SIMPAN PENYAKIT DARI INPUT INLINE ---
     public function saveNewDisease()
     {
         $this->validate([
             'new_disease_name' => 'required|string|min:3|unique:disease_categories,name',
         ], [
-            'new_disease_name.required' => 'Nama penyakit wajib diisi.',
-            'new_disease_name.unique' => 'Penyakit ini sudah ada di dalam daftar.',
-            'new_disease_name.min' => 'Nama penyakit minimal 3 karakter.',
+            'new_disease_name.required' => 'Nama wajib diisi.',
+            'new_disease_name.unique' => 'Penyakit sudah ada.',
+            'new_disease_name.min' => 'Min. 3 huruf.',
         ]);
 
-        // 1. Simpan ke master database
+        // 1. Simpan ke database
         $newCategory = DiseaseCategory::create([
             'name' => trim($this->new_disease_name)
         ]);
 
-        // 2. Otomatis tambahkan ID baru ke dalam array checkbox yang sedang terpilih
+        // 2. Otomatis centang penyakit baru tersebut
         $this->selectedDiseaseCategories[] = (string) $newCategory->id;
 
-        // 3. Tutup modal dan reset input
-        $this->closeAddDiseaseModal();
+        // 3. Kosongkan kembali kolom input agar siap dipakai mengetik lagi jika perlu
+        $this->new_disease_name = '';
+        $this->resetValidation('new_disease_name');
     }
 
     public function saveReview()

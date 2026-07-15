@@ -66,15 +66,12 @@
                 </flux:select>
                 <x-label-error :messages="$errors->get('fit_status')" />
 
-                <fieldset class="fieldset border border-base-300 p-3 rounded-lg bg-base-50/50">
-                    <div class="flex justify-between items-center mb-2">
-                        <x-form.label label="Kategori Penyakit Temuan (Bisa pilih > 1)" />
-                        <button type="button" wire:click="openAddDiseaseModal" class="btn btn-xs btn-outline btn-secondary">
-                            + Penyakit Lainnya
-                        </button>
-                    </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border border-base-200 rounded bg-base-100">
+                @if($fit_status === 'fit_with_notes')
+                <fieldset class="fieldset border border-base-300 p-3 rounded-lg bg-base-50/50">
+                    <x-form.label label="Kategori Penyakit Temuan (Bisa pilih > 1)" />
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto p-2 border border-base-200 rounded bg-base-100 items-center">
                         @foreach($diseaseCategories as $category)
                         <label class="cursor-pointer label justify-start space-x-2 py-1">
                             <input type="checkbox"
@@ -84,11 +81,29 @@
                             <span class="label-text text-xs font-medium">{{ $category->name }}</span>
                         </label>
                         @endforeach
+
+                        <div class="py-1 pr-1">
+                            <div class="join w-full">
+                                <input type="text"
+                                    wire:model="new_disease_name"
+                                    wire:keydown.enter.prevent="saveNewDisease"
+                                    placeholder="+ Ketik & Enter..."
+                                    class="input input-bordered input-xs join-item w-full focus:outline-none focus:border-primary text-xs" />
+                                <button type="button"
+                                    wire:click="saveNewDisease"
+                                    class="btn btn-xs btn-primary join-item"
+                                    title="Tambah Penyakit">
+                                    <span wire:loading wire:target="saveNewDisease" class="loading loading-spinner loading-xs"></span>
+                                    <span wire:loading.remove wire:target="saveNewDisease">+</span>
+                                </button>
+                            </div>
+                            @error('new_disease_name')
+                            <span class="text-error text-[10px] leading-tight block mt-0.5">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                     <x-label-error :messages="$errors->get('selectedDiseaseCategories')" />
                 </fieldset>
-
-                @if($fit_status === 'fit_with_notes')
                 <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-restriction">
                     <x-form.label label="Catatan Batasan Kerja (Restriction Monitoring)" required />
                     <div x-data="ckeditorHelper('restriction_notes')" wire:ignore>
@@ -136,31 +151,6 @@
         </div>
     </flux:modal>
 
-    <input type="checkbox" id="modal-add-disease" class="modal-toggle" wire:model="showAddDiseaseModal" />
-    <div class="modal" role="dialog">
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">Tambah Kategori Penyakit Baru</h3>
-            <p class="py-2 text-xs text-base-content/70">Penyakit yang ditambahkan akan otomatis tercentang di daftar temuan MCU ini.</p>
 
-            <div class="py-4">
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text font-medium">Nama Penyakit</span>
-                    </div>
-                    <input type="text" wire:model="new_disease_name" placeholder="Contoh: Asma, Diabetes Type 2..." class="input input-bordered w-full input-sm" />
-                    @error('new_disease_name') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                </label>
-            </div>
-
-            <div class="modal-action">
-                <button type="button" wire:click="closeAddDiseaseModal" class="btn btn-sm btn-ghost">Batal</button>
-                <button type="button" wire:click="saveNewDisease" class="btn btn-sm btn-primary">
-                    <span wire:loading wire:target="saveNewDisease" class="loading loading-spinner loading-xs"></span>
-                    Simpan & Centang
-                </button>
-            </div>
-        </div>
-        <label class="modal-backdrop" wire:click="closeAddDiseaseModal">Close</label>
-    </div>
 
 </section>
