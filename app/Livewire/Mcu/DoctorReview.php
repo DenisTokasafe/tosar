@@ -43,8 +43,8 @@ class DoctorReview extends Component
             'new_disease_name' => 'required|string|min:3|unique:disease_categories,name',
         ], [
             'new_disease_name.required' => 'Nama wajib diisi.',
-            'new_disease_name.unique' => 'Penyakit sudah ada.',
-            'new_disease_name.min' => 'Min. 3 huruf.',
+            'new_disease_name.unique'   => 'Penyakit sudah ada.',
+            'new_disease_name.min'      => 'Min. 3 huruf.',
         ]);
 
         // 1. Simpan ke database
@@ -52,10 +52,13 @@ class DoctorReview extends Component
             'name' => trim($this->new_disease_name)
         ]);
 
-        // 2. Otomatis centang penyakit baru tersebut
+        // 2. Hapus 'tambah_penyakit' dari array agar kolom ketik otomatis tertutup (UX lebih rapi)
+        $this->selectedDiseaseCategories = array_diff($this->selectedDiseaseCategories, ['tambah_penyakit']);
+
+        // 3. Masukkan ID penyakit yang baru saja dibuat agar langsung tercentang
         $this->selectedDiseaseCategories[] = (string) $newCategory->id;
 
-        // 3. Kosongkan kembali kolom input agar siap dipakai mengetik lagi jika perlu
+        // 4. Reset input teks
         $this->new_disease_name = '';
         $this->resetValidation('new_disease_name');
     }
@@ -63,15 +66,10 @@ class DoctorReview extends Component
     public function saveReview()
     {
         $this->validate([
-            'fit_status'                => 'required|in:fit_to_work,fit_with_notes,temporary_unfit,unfit',
-            'restriction_notes'         => 'required_if:fit_status,fit_with_notes|nullable|string',
-            'follow_up_date'            => 'required_if:fit_status,temporary_unfit|nullable|date',
-            'doctor_notes'              => 'nullable|string',
-            'selectedDiseaseCategories'   => 'nullable|array',
-            'selectedDiseaseCategories.*' => 'exists:disease_categories,id',
-        ], [
-            'restriction_notes.required_if' => 'Catatan batasan kerja wajib diisi untuk status ini.',
-            'follow_up_date.required_if'    => 'Tanggal Follow Up wajib diisi untuk status ini.'
+            'fit_status'        => 'required|in:fit_to_work,fit_with_notes,temporary_unfit,unfit',
+            'restriction_notes' => 'required_if:fit_status,fit_with_notes|nullable|string',
+            'follow_up_date'    => 'required_if:fit_status,temporary_unfit|nullable|date',
+            'doctor_notes'      => 'nullable|string',
         ]);
 
         if (!$this->selectedResultId) {
@@ -92,9 +90,16 @@ class DoctorReview extends Component
                 'reviewed_at'         => now(),
             ]);
 
-            // Sync penyakit temuan ke database
-            $result->diseaseCategories()->sync($this->selectedDiseaseCategories);
+            // PENTING: Filter array agar string 'tambah_penyakit' tidak ikut masuk ke tabel pivot MySQL!
+            // Hanya ambil nilai yang berupa angka (ID penyakit asli)
+            $validIds = array_filter($this->selectedDiseaseCategories, function ($id) {
+                return $id !== 'tambah_penyakit' && is_numeric($id);
+            });
 
+            // Sync menggunakan ID yang sudah bersih dari string non-numeric
+            $result->diseaseCategories()->sync($validIds);
+
+            // ... (KODE NOTIFIKASI DAN RESET FORM ANDA DI BAWAHNYA TETAP SAMA) ...
             $employeeUser = $result->participant?->employee;
             $deptHeadUser = $result->participant?->deptHead;
 

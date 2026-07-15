@@ -66,7 +66,6 @@
                 </flux:select>
                 <x-label-error :messages="$errors->get('fit_status')" />
 
-
                 @if($fit_status === 'fit_with_notes')
                 <fieldset class="fieldset border border-base-300 p-3 rounded-lg bg-base-50/50">
                     <x-form.label label="Kategori Penyakit Temuan (Bisa pilih > 1)" />
@@ -102,7 +101,7 @@
                                     wire:click="saveNewDisease"
                                     class="btn btn-xs btn-primary join-item"
                                     title="Tambah Penyakit">
-                                    <span wire:loading wire:target="saveNewDisease" class="loading loading-spinner loading-xs"></span>
+                                    <span wire:loading.remove.class="hidden" wire:target="saveNewDisease" class="loading loading-spinner hidden loading-xs"></span>
                                     <span wire:loading.remove wire:target="saveNewDisease">+</span>
                                 </button>
                             </div>
