@@ -190,19 +190,7 @@
                         </div>
                     </div>
 
-                    <div class="fixed bottom-0 left-0 right-0 p-4 bg-base-100 border-t border-base-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:relative md:bg-transparent md:border-none md:shadow-none md:p-0 md:pt-4 flex justify-end z-50">
-                        <button type="submit" class="w-full px-8 transition-all rounded-full shadow-md btn btn-primary md:w-auto hover:shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" wire:loading.remove wire:target="generateJadwal">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                            </svg>
-                            <span wire:loading.remove wire:target="generateJadwal">Generate Jadwal</span>
 
-                            <span wire:loading wire:target="generateJadwal" class="hidden loading loading-spinner loading-sm"></span>
-                            <span wire:loading wire:target="generateJadwal" class="hidden ml-2">Memproses...</span>
-                        </button>
-                    </div>
-
-                    <div class="h-16 md:hidden"></div>
 
                 </x-mcu.layout>
             </div>
@@ -244,6 +232,17 @@
                                 Belum ada peserta dipilih.
                             </div>
                             @endif
+                        </div>
+                        <div class="fixed bottom-0 left-0 right-0 p-4 bg-base-100 border-t border-base-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:relative md:bg-transparent md:border-none md:shadow-none md:p-0 md:pt-4 flex justify-end z-50">
+                            <button type="submit" class="w-full px-8 transition-all rounded-full shadow-md btn btn-primary md:w-auto hover:shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" wire:loading.remove wire:target="generateJadwal">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                </svg>
+                                <span wire:loading.remove wire:target="generateJadwal">Generate Jadwal</span>
+
+                                <span wire:loading wire:target="generateJadwal" class="hidden loading loading-spinner loading-sm"></span>
+                                <span wire:loading wire:target="generateJadwal" class="hidden ml-2">Memproses...</span>
+                            </button>
                         </div>
                     </div>
                 </div>
