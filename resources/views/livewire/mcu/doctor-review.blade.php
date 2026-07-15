@@ -82,7 +82,16 @@
                         </label>
                         @endforeach
 
-                        <div class="py-1 pr-1">
+                        <label class="cursor-pointer label justify-start space-x-2 py-1">
+                            <input type="checkbox"
+                                value="tambah_penyakit"
+                                wire:model.live="selectedDiseaseCategories"
+                                class="checkbox checkbox-xs checkbox-secondary">
+                            <span class="label-text text-xs font-semibold italic text-secondary">+ Penyakit Lainnya</span>
+                        </label>
+
+                        @if (in_array('tambah_penyakit', $selectedDiseaseCategories))
+                        <div class="py-1 pr-1 col-span-2 sm:col-span-1" wire:key="box-input-penyakit-baru">
                             <div class="join w-full">
                                 <input type="text"
                                     wire:model="new_disease_name"
@@ -93,7 +102,7 @@
                                     wire:click="saveNewDisease"
                                     class="btn btn-xs btn-primary join-item"
                                     title="Tambah Penyakit">
-                                    <span wire:loading.remove.class="hidden" wire:target="saveNewDisease" class="loading loading-spinner loading-xs hidden"></span>
+                                    <span wire:loading wire:target="saveNewDisease" class="loading loading-spinner loading-xs"></span>
                                     <span wire:loading.remove wire:target="saveNewDisease">+</span>
                                 </button>
                             </div>
@@ -101,6 +110,7 @@
                             <span class="text-error text-[10px] leading-tight block mt-0.5">{{ $message }}</span>
                             @enderror
                         </div>
+                        @endif
                     </div>
                     <x-label-error :messages="$errors->get('selectedDiseaseCategories')" />
                 </fieldset>
