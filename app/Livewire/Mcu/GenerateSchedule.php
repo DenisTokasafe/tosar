@@ -36,18 +36,20 @@ class GenerateSchedule extends Component
     {
         return [
             'schedule_date' => 'required|date|after:today',
-            'location' => 'required|string',
+            'location'      => 'required|string',
             'participantsData' => 'required|array',
+
+            // Perbaikan: tambahkan digits_between di sini agar sesuai dengan pesan error Anda
             'participantsData.*.selected' => 'nullable|boolean',
             'participantsData.*.wa'       => 'required_if:participantsData.*.selected,true|numeric|digits_between:9,15',
 
-            // Field lain opsional
-            'participantsData.*.spv_id'   => 'nullable',
-            'participantsData.*.wa_spv'   => 'nullable|numeric',
-            'participantsData.*.dept_head_id' => 'nullable',
+            // Perbaikan: tambahkan required_if agar validasi hanya berjalan untuk yang terpilih saja
+            'participantsData.*.spv_id'   => 'required_if:participantsData.*.selected,true|required_without:participantsData.*.spv_name_manual',
+            'participantsData.*.spv_name_manual' => 'required_if:participantsData.*.selected,true|required_without:participantsData.*.spv_id',
         ];
     }
-    protected function messages()
+
+    public function messages()
     {
         return [
             'schedule_date.required' => 'Tanggal wajib diisi.',
@@ -55,11 +57,17 @@ class GenerateSchedule extends Component
             'schedule_date.after'    => 'Tanggal harus lebih besar dari tanggal hari ini.',
             'location.required'      => 'Lokasi wajib diisi.',
             'location.string'        => 'Format lokasi harus berupa teks.',
-            'participantsData.required' => 'Minimal satu peserta wajib dipilih.',
-            'participantsData.*.wa.required_if' => 'Nomor WhatsApp wajib diisi untuk peserta yang dipilih.',
-            'participantsData.*.wa.numeric'     => 'Format nomor WhatsApp harus berupa angka.',
-            'participantsData.*.wa.digits_between' => 'Nomor WhatsApp harus antara 9-15 digit.',
 
+            'participantsData.required' => 'Minimal satu peserta wajib dipilih.',
+
+            // Pesan untuk WA
+            'participantsData.*.wa.required_if'      => 'Nomor WhatsApp wajib diisi untuk peserta yang dipilih.',
+            'participantsData.*.wa.numeric'          => 'Format nomor WhatsApp harus berupa angka.',
+            'participantsData.*.wa.digits_between'   => 'Nomor WhatsApp harus antara 9-15 digit.',
+
+            // Tambahkan pesan untuk Supervisor jika perlu
+            'participantsData.*.spv_id.required_if'          => 'Supervisor wajib dipilih atau diisi manual.',
+            'participantsData.*.spv_name_manual.required_if' => 'Supervisor wajib dipilih atau diisi manual.',
         ];
     }
 
