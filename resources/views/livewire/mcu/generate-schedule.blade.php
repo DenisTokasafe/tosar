@@ -192,9 +192,6 @@
 
                         </div>
                     </div>
-
-
-
                 </x-mcu.layout>
             </div>
             <div class="lg:col-span-1">
