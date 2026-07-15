@@ -6,10 +6,12 @@ use App\Models\McuParticipant;
 use App\Models\McuResult; // Pastikan Anda sudah membuat Model ini
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class InputResult extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $participant_id = null;
     public $result_document;
@@ -55,6 +57,10 @@ class InputResult extends Component
             $this->participant_id = null;
         }
         $this->resetPage();
+    }
+    public function paginationView()
+    {
+        return 'paginate.pagination';
     }
 
     /**
