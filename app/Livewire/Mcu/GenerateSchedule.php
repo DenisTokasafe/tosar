@@ -44,8 +44,7 @@ class GenerateSchedule extends Component
             'participantsData.*.wa'       => 'required_if:participantsData.*.selected,true|numeric|digits_between:9,15',
 
             // Perbaikan: tambahkan required_if agar validasi hanya berjalan untuk yang terpilih saja
-            'participantsData.*.spv_id'   => 'required_if:participantsData.*.selected,true|required_without:participantsData.*.spv_name_manual',
-            'participantsData.*.spv_name_manual' => 'required_if:participantsData.*.selected,true|required_without:participantsData.*.spv_id',
+            'participantsData.*.spv_id'   => 'nullable',
         ];
     }
 
