@@ -23,7 +23,7 @@
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2">
                             <fieldset class="w-full fieldset">
                                 <x-form.label label="Tanggal MCU" required />
-                                <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih Tanggal MCU"
+                                <input type="text" readonly id="schedule_date" wire:model="schedule_date" placeholder="Pilih Tanggal MCU" wire:ignore.self
                                     class="w-full cursor-pointer input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
                                     x-data="{ fp: null }" x-init="
                                 fp = flatpickr($refs.input, {
