@@ -1,7 +1,15 @@
 <div>
-    <!-- Open the modal using ID.showModal() method -->
-    <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
-    <dialog id="my_modal_1" wire.ignore.self class="modal">
+
+
+    <button class="btn" x-data @click="$dispatch('open-my-modal')">open modal</button>
+
+    <dialog id="my_modal_1" class="modal"
+        x-data="{ open: false }"
+        x-show="open"
+        @open-my-modal.window="open = true; $el.showModal()"
+        @close-my-modal.window="open = false; $el.close()"
+        wire:ignore.self>
+
         <div class="modal-box">
             <h3 class="font-bold text-lg">Hello!</h3>
             <form wire:submit="register">
@@ -120,11 +128,9 @@
                     </flux:button>
                 </div>
             </form>
+
             <div class="modal-action">
-
-                <!-- if there is a button in form, it will close the modal -->
-                <button onclick="my_modal_1.close()" class="btn">Close</button>
-
+                <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn">Close</button>
             </div>
         </div>
     </dialog>
