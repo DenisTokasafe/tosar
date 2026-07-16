@@ -23,7 +23,7 @@
     @endif
 
     {{-- 1. Gunakan x-data="{ open: false }" --}}
-    <div class="relative" x-data="{ open: false } mb-1">
+    <div class="relative mb-0.5" x-data="{ open: false } ">
 
         <input
             x-ref="trigger"
