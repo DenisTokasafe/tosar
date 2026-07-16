@@ -63,14 +63,14 @@
         class="hidden" />
 
     @error($model . '.*')
-    <span class="mt-1 text-[10px] text-error font-medium italic">
+    <span class=" text-[10px] text-error font-medium italic">
         * {{ $message }}
     </span>
     @enderror
 
     {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
     @error($model)
-    <span class="mt-1 text-[10px] text-error font-medium italic">
+    <span class=" text-[10px] text-error font-medium italic">
         * {{ $message }}
     </span>
     @enderror
