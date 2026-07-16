@@ -1,5 +1,5 @@
 <div>
-
+    <x-toast />
 
     <button class="btn" x-data @click="$dispatch('open-my-modal')">open modal</button>
 

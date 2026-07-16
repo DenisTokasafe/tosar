@@ -7,6 +7,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Rules\Password;
@@ -120,11 +121,8 @@ class AddPeople extends Component
         $this->updateNameField();
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'no_id' => ['required', 'string', 'max:50', 'unique:users,employee_id'], // Ubah kolom DB jika beda
             'jenis_kelamin' => ['required', 'string', 'in:Laki-Laki,Perempuan'],
-            // Validasi wajib isi salah satu (Departemen atau Kontraktor)
-            // Kita wajibkan $searchDepartemen jika $status=='department' DAN $searchContractor jika $status=='company'
             'searchDepartemen' => ['required_if:status,department', 'string', 'nullable', 'max:255'],
             'searchContractor' => ['required_if:status,company', 'string', 'nullable', 'max:255'],
 
@@ -141,17 +139,15 @@ class AddPeople extends Component
         // Siapkan data untuk User::create
         $dataToCreate = [
             'name'            => $validated['name'],
-            'email'           => $validated['email'],
             'employee_id'     => $validated['no_id'],
             'gender'          => $genderCode,
             'department_name' => $departmentName,
         ];
-
         // 1. Simpan user ke database dan tampung object-nya di variabel $user
         $user = User::create($dataToCreate);
 
         // 2. Trigger event Laravel (Optional jika Anda menggunakan listener bawaan)
-        event(new Registered($user));
+
 
         // 3. Ambil ID para Administrator
         $adminIds = User::whereHas('roles', fn($q) => $q->where('name', 'Administrator'))->pluck('id')->toArray();
@@ -179,10 +175,18 @@ class AddPeople extends Component
                 );
             }
         }
-
         Auth::login($user);
-
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->dispatch(
+            'alert',
+            [
+                'text' => "Berhasil menambahkan user baru.",
+                'duration' => 5000,
+                'destination' => '/contact',
+                'newWindow' => true,
+                'close' => true,
+                'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
+            ]
+        );
     }
     public function render()
     {
