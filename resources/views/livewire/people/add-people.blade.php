@@ -12,8 +12,8 @@
 
         <div class="modal-box">
             <h3 class="font-bold text-lg">Hello!</h3>
-            <form wire:submit="register">
-
+            <form>
+                {{ csrf_token() }}
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <!-- Name -->
                     <x-form.input-text label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap"
@@ -113,7 +113,7 @@
                     </fieldset>
                 </div>
                 <div class="modal-action">
-                    <flux:button icon="save-icon" type="submit" variant="primary" size="xs">
+                    <flux:button icon="save-icon" wire:click="register" variant="primary" size="xs">
                         {{ __('Create account') }}
                     </flux:button>
                     <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn btn-error btn-xs">{{ __('Close') }}</button>
