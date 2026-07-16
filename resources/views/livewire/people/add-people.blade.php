@@ -113,8 +113,6 @@
                 </flux:button>
                 <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn btn-error btn-xs">{{ __('Close') }}</button>
             </div>
-
-
         </div>
     </dialog>
 </div>
