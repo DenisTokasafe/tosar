@@ -74,4 +74,4 @@
         * {{ $message }}
     </span>
     @enderror
-    </div>
+</fieldset>
