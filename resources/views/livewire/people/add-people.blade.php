@@ -111,19 +111,15 @@
                             @endif
                         </div>
                     </fieldset>
-
-
                 </div>
-                <div class="flex items-center justify-end mt-4">
+                <div class="modal-action">
                     <flux:button type="submit" variant="primary" class="w-full">
                         {{ __('Create account') }}
                     </flux:button>
+                    <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn">Close</button>
                 </div>
             </form>
 
-            <div class="modal-action">
-                <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn">Close</button>
-            </div>
         </div>
     </dialog>
 </div>
