@@ -34,7 +34,7 @@
                         <x-form.label label="Jenis Kelamin" :required="true" />
                         <select
                             class="select select-xs focus-within:outline-none focus-within:border-info focus-within:ring-0"
-                            wire:model="jenis_kelamin" required>
+                            wire:model="jenis_kelamin">
                             <option value="" selected>Jenis Kelamin</option>
                             <option value="Laki-Laki">Laki-Laki</option>
                             <option value="Perempuan">Perempuan</option>
