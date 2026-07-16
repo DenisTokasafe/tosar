@@ -120,7 +120,6 @@ class AddPeople extends Component
         $this->updateNameField();
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
             'email' => ['nullable', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'no_id' => ['required', 'string', 'max:50', 'unique:users,employee_id'], // Ubah kolom DB jika beda
             'jenis_kelamin' => ['required', 'string', 'in:Laki-Laki,Perempuan'],
@@ -128,8 +127,7 @@ class AddPeople extends Component
             // Kita wajibkan $searchDepartemen jika $status=='department' DAN $searchContractor jika $status=='company'
             'searchDepartemen' => ['required_if:status,department', 'string', 'nullable', 'max:255'],
             'searchContractor' => ['required_if:status,company', 'string', 'nullable', 'max:255'],
-            // End Validasi wajib
-            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+
         ]);
 
         // Tentukan nilai department_name dari input yang aktif
@@ -143,11 +141,9 @@ class AddPeople extends Component
         // Siapkan data untuk User::create
         $dataToCreate = [
             'name'            => $validated['name'],
-            'username'        => $validated['username'],
             'email'           => $validated['email'],
             'employee_id'     => $validated['no_id'],
             'gender'          => $genderCode,
-            'password'        => Hash::make($validated['password']),
             'department_name' => $departmentName,
         ];
 

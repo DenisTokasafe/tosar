@@ -23,8 +23,7 @@
                     <!-- Name yang di tampilkan -->
                     <x-form.input-text label="Nama yang di tampilkan" model="name"
                         placeholder="Masukkan nama yang di tampilkan" required disabled />
-                    <!-- Username -->
-                    <x-form.input-text label="Username" model="username" placeholder="Masukkan username" required />
+
                     <!-- Email Address -->
                     <x-form.input-text label="Alamat Email" model="email" placeholder="email@example.com" />
                     <!-- Nomor ID -->
@@ -113,14 +112,7 @@
                         </div>
                     </fieldset>
 
-                    <!-- Password -->
-                    <flux:input size="sm" wire:model="password" :label="__('Password')" type="password" required
-                        autocomplete="new-password" :placeholder="__('Password')" viewable />
 
-                    <!-- Confirm Password -->
-                    <flux:input size="sm" wire:model="password_confirmation" :label="__('Confirm password')"
-                        type="password" required autocomplete="new-password" :placeholder="__('Confirm password')"
-                        viewable />
                 </div>
                 <div class="flex items-center justify-end mt-4">
                     <flux:button type="submit" variant="primary" class="w-full">
