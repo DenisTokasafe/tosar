@@ -62,16 +62,12 @@
 
         class="hidden" />
 
-    @error($model . '.*')
-    <span class=" text-[10px] text-error font-medium italic">
-        * {{ $message }}
-    </span>
+    @error()
+    <x-label-error :messages="$errors->get($model . '.*')" />
     @enderror
 
     {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
     @error($model)
-    <span class=" text-[10px] text-error font-medium italic">
-        * {{ $message }}
-    </span>
+    <x-label-error :messages="$errors->get($model)" />
     @enderror
 </fieldset>
