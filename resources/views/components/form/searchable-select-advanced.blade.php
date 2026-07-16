@@ -17,13 +17,13 @@
 'addManualAction' => 'addManualData',
 ])
 
-<fieldset class="relative fieldset md:col-span-1">
+<fieldset class="relative  md:col-span-1">
     @if($label)
     <x-form.label :label="$label" :required="$required" />
     @endif
 
     {{-- 1. Gunakan x-data="{ open: false }" --}}
-    <div class="relative" x-data="{ open: false }">
+    <div class="relative" x-data="{ open: false } mb-1">
 
         <input
             x-ref="trigger"
