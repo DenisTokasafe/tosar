@@ -11,7 +11,7 @@
 'multiple' => false, // Tambahkan prop multiple
 ])
 
-<div class="flex flex-col gap-1">
+<fieldset class="flex flex-col gap-1">
     <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" :required="$required" />
 
     <label for="{{ $disabled ? '' : $id }}"
@@ -74,4 +74,4 @@
         * {{ $message }}
     </span>
     @enderror
-</div>
+    </div>
