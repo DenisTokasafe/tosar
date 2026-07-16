@@ -11,7 +11,7 @@
 'multiple' => false, // Tambahkan prop multiple
 ])
 
-<fieldset class="">
+<fieldset class="fieldset">
     <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" :required="$required" />
 
     <label for="{{ $disabled ? '' : $id }}"
