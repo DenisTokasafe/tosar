@@ -63,7 +63,7 @@
         class="hidden" />
 
     @error($model . '.*')
-    <x-label-error :messages="$errors->get($model" />
+    <x-label-error :messages="$errors->get($model)" />
     @enderror
 
     {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
