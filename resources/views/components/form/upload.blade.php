@@ -62,8 +62,8 @@
 
         class="hidden" />
 
-    @error()
-    <x-label-error :messages="$errors->get($model . '.*')" />
+    @error($model . '.*')
+    <x-label-error :messages="$errors->get($model" />
     @enderror
 
     {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
