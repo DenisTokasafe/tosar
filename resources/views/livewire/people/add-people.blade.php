@@ -113,7 +113,7 @@
                     </fieldset>
                 </div>
                 <div class="modal-action">
-                    <flux:button type="submit" variant="primary" size="xs">
+                    <flux:button icon="save-icon" type="submit" variant="primary" size="xs">
                         {{ __('Create account') }}
                     </flux:button>
                     <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn btn-error btn-xs">{{ __('Close') }}</button>
