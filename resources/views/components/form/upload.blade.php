@@ -11,7 +11,7 @@
 'multiple' => false, // Tambahkan prop multiple
 ])
 
-<fieldset class="flex flex-col gap-1">
+<fieldset class="">
     <x-form.label :label="__($label) . ($optional ? ' (' . __('optional') . ')' : '')" :required="$required" />
 
     <label for="{{ $disabled ? '' : $id }}"
@@ -63,14 +63,14 @@
         class="hidden" />
 
     @error($model . '.*')
-    <span class="mt-1 text-[10px] text-error font-medium italic">
+    <span class=" text-[10px] text-error font-medium italic">
         * {{ $message }}
     </span>
     @enderror
 
     {{-- Tambahkan juga error untuk field utamanya (misal jika array kosong) --}}
     @error($model)
-    <span class="mt-1 text-[10px] text-error font-medium italic">
+    <span class=" text-[10px] text-error font-medium italic">
         * {{ $message }}
     </span>
     @enderror
