@@ -7,12 +7,10 @@
 'optionLabel' => 'name',
 'placeholder' => '-- Pilih --'
 ])
-
 <fieldset class="fieldset "> {{-- Tambahkan p-0 agar tidak merusak spacing --}}
     @if($label)
     <x-form.label :label="$label" :required="$required" />
     @endif
-
     <select {{ $model ? "wire:model.live=$model" : '' }} {{ $attributes->merge([
         'class' => 'select select-xs select-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 ' .
         ($errors->has($model) ? 'border-rose-500 ring-rose-500 focus:border-rose-500 focus:ring-0' : '')
@@ -36,7 +34,6 @@
         $displayLabel = __($option);
         }
         @endphp
-
         <option value="{{ $value }}">
             {{ __($displayLabel) }}
         </option>
