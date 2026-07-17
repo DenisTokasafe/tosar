@@ -45,24 +45,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex flex-col items-start justify-between gap-4 p-2 border-b md:flex-row md:items-center border-base-200 md:border-none md:mb-4">
+                    <div>
+                        <h3 class="flex items-center gap-2 text-base font-semibold md:text-lg text-base-content">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            Daftar Peserta
+                        </h3>
+                        <p class="mt-1 text-xs md:text-sm text-base-content/60">Pilih karyawan yang akan dijadwalkan.</p>
+                    </div>
+                    <div class="w-full md:w-80">
+                        <x-form.input-floating label="Cari Nama Karyawan..." model="search" />
+                    </div>
+                </div>
                 <x-mcu.layout>
                     <div class="border shadow-sm card bg-base-100 border-base-200">
                         <div class="p-0 card-body md:p-4">
 
-                            <div class="flex flex-col items-start justify-between gap-4 p-2 border-b md:flex-row md:items-center border-base-200 md:border-none md:mb-4">
-                                <div>
-                                    <h3 class="flex items-center gap-2 text-base font-semibold md:text-lg text-base-content">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                        </svg>
-                                        Daftar Peserta
-                                    </h3>
-                                    <p class="mt-1 text-xs md:text-sm text-base-content/60">Pilih karyawan yang akan dijadwalkan.</p>
-                                </div>
-                                <div class="w-full md:w-80">
-                                    <x-form.input-floating label="Cari Nama Karyawan..." model="search" />
-                                </div>
-                            </div>
 
                             @error('participantsData')
                             <div class="py-2 mx-4 mb-4 text-sm alert alert-warning md:py-3 md:mx-0 rounded-xl">
