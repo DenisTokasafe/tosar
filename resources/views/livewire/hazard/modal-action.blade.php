@@ -9,7 +9,7 @@
          <fieldset class="p-3 border rounded-xl border-base-300 bg-base-100">
              <fieldset class="fieldset md:col-span-1" wire:key="field-action">
                  <x-form.label label="Deskripsi Tindakan" required />
-                 <div x-data="ckeditorHelper('action_description')" wire:ignore.self>
+                 <div x-data="ckeditorHelper('action_description')" wire:ignore>
                      <div x-ref="editorElement" data-placeholder="{{ __('Masukkan deskripsi tindakan...') }}"></div>
                  </div>
 
