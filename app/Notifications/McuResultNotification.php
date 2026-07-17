@@ -71,12 +71,15 @@ class McuResultNotification extends Notification implements ShouldQueue
      */
     public function toWhatsApp(object $notifiable): array
     {
-        // PENTING: Ambil ulang relasi yang hilang akibat serialisasi Queue
-        $this->result->loadMissing(['participant.employee', 'participant.supervisor']);
+        // 1. PENTING: Tambahkan 'diseaseCategories' ke dalam loadMissing
+        $this->result->loadMissing(['participant.employee', 'participant.supervisor', 'diseaseCategories']);
 
         $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
         $doctorNotes = strip_tags($this->result->doctor_site_consult);
+
+        // 2. Ambil daftar penyakit dari tabel pivot dan gabungkan menjadi string teks
+        $diseases = $this->result->diseaseCategories->pluck('name')->join(', ');
 
         if ($this->recipientType === 'employee') {
             $text = "*HASIL MEDICAL CHECK-UP (MCU)*\n\n";
@@ -84,6 +87,10 @@ class McuResultNotification extends Notification implements ShouldQueue
             $text .= "Dokter telah selesai meninjau hasil pemeriksaan kesehatan MCU Anda.\n\n";
             $text .= "*Status Kebugaran:* {$statusText}\n";
 
+            // 3a. Sisipkan info penyakit untuk Karyawan (jika ada temuan)
+            if ($diseases) {
+                $text .= "*Temuan Medis / Penyakit:* {$diseases}\n";
+            }
             if ($this->result->status === 'fit_with_notes') {
                 $text .= "*Catatan Batasan Kerja:* {$doctorNotes}\n";
             } elseif ($this->result->status === 'temporary_unfit' && $this->result->follow_up_date) {
@@ -101,6 +108,11 @@ class McuResultNotification extends Notification implements ShouldQueue
             $text .= "Proses review medis untuk anggota tim Anda telah selesai dilakukan oleh dokter.\n\n";
             $text .= "*Nama Karyawan:* {$employeeName}\n";
             $text .= "*Status Kebugaran Kerja:* {$statusText}\n";
+
+            // 3b. Sisipkan info penyakit untuk Supervisor / Atasan (jika ada temuan)
+            if ($diseases) {
+                $text .= "*Temuan Medis / Penyakit:* {$diseases}\n";
+            }
 
             if ($this->result->status === 'fit_with_notes') {
                 $text .= "*Batasan Kerja (Harap Dimonitor):* {$doctorNotes}\n\n";
