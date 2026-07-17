@@ -568,3 +568,14 @@ select:focus[data-flux-control] {
     background: var(--color-base-100) !important;
     border-color: var(--color-base-300) !important;
 }
+.ck.ck-sticky-panel .ck-sticky-panel__content_sticky {
+    position: static !important;
+    top: auto !important;
+    box-shadow: none !important;
+}
+
+/* Memastikan wrapper CKEditor mengikuti alur kolom standar */
+.ck.ck-editor {
+    display: flex !important;
+    flex-direction: column !important;
+}
