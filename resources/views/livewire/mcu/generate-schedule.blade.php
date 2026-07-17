@@ -74,9 +74,7 @@
                             @enderror
 
                             <div class="md:overflow-x-auto md:border md:rounded-xl md:border-base-200 md:mb-2 bg-base-200/20 md:bg-transparent">
-
                                 <div class="block w-full text-sm md:table">
-
                                     <div class="hidden md:table-header-group bg-base-200/50 text-base-content">
                                         <div class="table-row font-semibold">
                                             <div class="table-cell w-16 py-3 text-center">Pilih</div>
@@ -85,10 +83,8 @@
                                             <div class="table-cell w-2/5 min-w-[300px] py-3">Detail Notifikasi</div>
                                         </div>
                                     </div>
-
+                                    @if($employees->isNotEmpty())
                                     <div class="block divide-y md:table-row-group divide-base-200 md:divide-y-0">
-                                        @forelse ($employees as $employee)
-
                                         <div wire:key="row-emp-{{ $employee->id }}" class="block md:table-row bg-base-100 p-4 md:p-0 md:hover:bg-base-200/40 transition-colors {{ isset($participantsData[$employee->id]['selected']) && $participantsData[$employee->id]['selected'] ? 'bg-primary/5 md:bg-primary/5 border-l-4 border-l-primary md:border-l-0' : '' }}">
 
                                             <div class="flex items-start gap-3 mb-3 md:table-cell md:pt-4 md:text-center md:align-top md:mb-0">
@@ -170,20 +166,21 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        @empty
-                                        <div class="block w-full md:table-caption md:caption-bottom py-16 px-4 bg-base-100">
-                                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto text-center gap-3">
-                                                <div class="text-base font-bold text-base-content">Belum Ada Data Karyawan</div>
-                                                <p class="text-xs text-base-content/60 -mt-1">Silakan tambahkan karyawan baru untuk mulai mengatur notifikasi.</p>
+                                    </div>
+                                    @endif
+                                </div>
+                                @if($employees->isEmpty())
+                                <div class="flex flex-col items-center justify-center w-full py-16 px-4 text-center bg-base-100 border-t border-base-200/50">
+                                    <div class="flex flex-col items-center max-w-sm gap-3">
+                                        <div class="text-base font-bold text-base-content">Belum Ada Data Karyawan</div>
+                                        <p class="text-xs text-base-content/60">Silakan tambahkan karyawan baru untuk mulai mengatur notifikasi WhatsApp.</p>
 
-                                                <div class="mt-2 w-full flex justify-center">
-                                                    <livewire:people.add-people />
-                                                </div>
-                                            </div>
+                                        <div class="mt-2 flex justify-center">
+                                            <livewire:people.add-people />
                                         </div>
-                                        @endforelse
                                     </div>
                                 </div>
+                                @endif
                             </div>
 
                             <div class="p-4 border-t md:px-0 md:pb-0 border-base-200 md:border-none">
