@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Mcu;
 
+use App\Models\DiseaseCategory; // <-- 1. Jangan lupa import model ini
 use App\Models\McuParticipant;
 use App\Models\McuResult;
 use Carbon\Carbon;
@@ -11,26 +12,21 @@ class McuDashboard extends Component
 {
     public function render()
     {
-        // Gunakan tanggal hari ini sebagai patokan
         $today = Carbon::now()->toDateString();
 
-        // 1. DATA KEHADIRAN MCU
-        // Sudah mengikuti MCU (memiliki data di tabel mcu_results)
+        // --- CODE KAMU SEBELUMNYA (Kehadiran, Fit Status, Workflow) ---
         $sudahMcu = McuParticipant::has('result')->count();
 
-        // Belum/Tidak mengikuti MCU (TIDAK punya result DAN jadwal sudah lewat dari hari ini)
         $terlewatMcu = McuParticipant::whereDoesntHave('result')
             ->whereHas('schedule', function ($query) use ($today) {
                 $query->whereDate('schedule_date', '<', $today);
             })->count();
 
-        // Menunggu Jadwal (TIDAK punya result, tapi jadwalnya hari ini atau di masa depan)
         $menungguJadwal = McuParticipant::whereDoesntHave('result')
             ->whereHas('schedule', function ($query) use ($today) {
                 $query->whereDate('schedule_date', '>=', $today);
             })->count();
 
-        // 2. DATA STATUS KEBUGARAN (Fit Status)
         $fitStatusRaw = McuResult::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
@@ -43,7 +39,6 @@ class McuDashboard extends Component
             'unfit'           => $fitStatusRaw['unfit'] ?? 0,
         ];
 
-        // 3. DATA WORKFLOW STATUS
         $workflowStatusRaw = McuResult::selectRaw('workflow_status, count(*) as total')
             ->groupBy('workflow_status')
             ->pluck('total', 'workflow_status')
@@ -53,12 +48,26 @@ class McuDashboard extends Component
             'pending_doctor' => $workflowStatusRaw['pending_doctor'] ?? 0,
             'reviewed'       => $workflowStatusRaw['reviewed'] ?? 0,
         ];
+
+        // --- 2. TAMBAHAN BARU: DATA TOP PENYAKIT ---
+        // Mengambil 10 penyakit terbanyak yang memiliki relasi ke mcu_results
+        $topDiseases = DiseaseCategory::withCount('mcuResults')
+            ->having('mcu_results_count', '>', 0) // Hanya ambil yang ada kasusnya
+            ->orderBy('mcu_results_count', 'asc') // di-asc agar grafik horisontal urut dari terbesar di atas
+            ->limit(10)
+            ->get();
+
+        $diseaseNames  = $topDiseases->pluck('name')->toArray();
+        $diseaseCounts = $topDiseases->pluck('mcu_results_count')->toArray();
+
         return view('livewire.mcu.mcu-dashboard', compact(
             'sudahMcu',
             'terlewatMcu',
             'menungguJadwal',
             'fitStatus',
-            'workflowStatus'
+            'workflowStatus',
+            'diseaseNames',   // <-- 3. Kirim ke view
+            'diseaseCounts'   // <-- 4. Kirim ke view
         ));
     }
 }

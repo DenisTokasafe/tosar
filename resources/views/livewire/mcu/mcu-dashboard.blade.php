@@ -19,6 +19,10 @@
                 <div id="chartWorkflow" wire:ignore style="width: 100%; height: 300px;"></div>
             </div>
 
+            <div class="p-4 mb-6 border shadow bg-base-100 rounded-xl border-base-300">
+                <h3 class="mb-2 text-lg font-semibold text-center">Top 10 Penyakit / Temuan Medis Terbanyak</h3>
+                <div id="chartPenyakit" wire:ignore style="width: 100%; height: 350px;"></div>
+            </div>
         </div>
     </div>
     <script>
@@ -27,7 +31,7 @@
             if (!document.getElementById('chartKehadiran')) return;
 
             // 1. PENTING: Bersihkan instance lama agar tidak terjadi error "Already initialized"
-            const chartIds = ['chartKehadiran', 'chartFitStatus', 'chartWorkflow'];
+            const chartIds = ['chartKehadiran', 'chartFitStatus', 'chartWorkflow', 'chartPenyakit'];
             chartIds.forEach(id => {
                 const dom = document.getElementById(id);
                 if (dom) {
@@ -168,7 +172,55 @@
                     ]
                 }]
             });
+
+            // 4. TAMBAHAN: Grafik Top Penyakit (Horizontal Bar Chart)
+            var chartPenyakitDom = document.getElementById('chartPenyakit');
+            if (chartPenyakitDom) {
+                var chartPenyakit = echarts.init(chartPenyakitDom);
+                chartPenyakit.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        top: '5%',
+                        containLabel: true // Penting agar label teks penyakit yang panjang tidak terpotong
+                    },
+                    xAxis: {
+                        type: 'value',
+                        boundaryGap: [0, 0.01]
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: {!! json_encode($diseaseNames ?? []) !!}, // Render array dari Laravel
+                        axisLabel: {
+                            fontWeight: '500',
+                            interval: 0 // Tampilkan semua label penyakit tanpa ada yang diskip
+                        }
+                    },
+                    series: [{
+                        name: 'Jumlah Kasus',
+                        type: 'bar',
+                        data: {!! json_encode($diseaseCounts ?? []) !!},
+                        itemStyle: {
+                            color: '#6366f1', // Warna Indigo (sesuaikan dengan tema UI)
+                            borderRadius: [0, 4, 4, 0] // Rounded di ujung kanan bar
+                        },
+                        label: {
+                            show: true,
+                            position: 'right',
+                            fontWeight: 'bold'
+                        }
+                    }]
+                });
+            }
         }
+
 
         // Jalankan saat pertama kali halaman dimuat
         document.addEventListener('livewire:initialized', initMcuCharts);
@@ -178,7 +230,7 @@
 
         // Resize handling yang lebih aman
         window.addEventListener('resize', function() {
-            ['chartKehadiran', 'chartFitStatus', 'chartWorkflow'].forEach(id => {
+            ['chartKehadiran', 'chartFitStatus', 'chartWorkflow', 'chartPenyakit'].forEach(id => {
                 const chart = echarts.getInstanceByDom(document.getElementById(id));
                 if (chart) chart.resize();
             });
