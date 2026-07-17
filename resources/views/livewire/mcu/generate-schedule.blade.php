@@ -171,22 +171,12 @@
                                             </div>
                                         </div>
                                         @empty
-                                        <div class="flex flex-col items-center justify-center w-full py-16 px-4 text-center bg-base-100">
-                                            <div class="flex flex-col items-center max-w-md gap-4">
+                                        <div class="block w-full md:table-caption md:caption-bottom py-16 px-4 bg-base-100">
+                                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto text-center gap-3">
+                                                <div class="text-base font-bold text-base-content">Belum Ada Data Karyawan</div>
+                                                <p class="text-xs text-base-content/60 -mt-1">Silakan tambahkan karyawan baru untuk mulai mengatur notifikasi.</p>
 
-                                                <div class="p-4 rounded-full bg-base-200 text-base-content/50">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                    </svg>
-                                                </div>
-
-                                                <div>
-                                                    <h3 class="text-base font-bold text-base-content">Belum Ada Data Karyawan</h3>
-                                                    <p class="text-xs text-base-content/60 mt-1">Silakan tambahkan karyawan baru untuk mulai mengatur notifikasi WhatsApp.</p>
-                                                </div>
-
-
-                                                <div class="w-full mt-2">
+                                                <div class="mt-2 w-full flex justify-center">
                                                     <livewire:people.add-people />
                                                 </div>
                                             </div>
