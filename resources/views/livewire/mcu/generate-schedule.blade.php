@@ -171,8 +171,10 @@
                                             </div>
                                         </div>
                                         @empty
-                                        <div class="block md:table-row">
-                                            <livewire:people.add-people />
+                                        <div class="flex flex-col items-center justify-center w-full py-12 px-4 text-center">
+                                            <div class="w-full max-w-sm">
+                                                <livewire:people.add-people />
+                                            </div>
                                         </div>
                                         @endforelse
                                     </div>
