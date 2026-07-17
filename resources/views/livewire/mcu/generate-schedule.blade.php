@@ -173,7 +173,6 @@
                                     @endif
                                 </div>
 
-                                {/* Area Empty State berada di luar struktur md:table */}
                                 @if($employees->isEmpty())
                                 <div class="flex flex-col items-center justify-center w-full py-16 px-4 text-center bg-base-100 border-t border-base-200/50">
                                     <div class="flex flex-col items-center max-w-sm gap-3">
