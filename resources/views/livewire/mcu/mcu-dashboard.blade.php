@@ -178,6 +178,7 @@
             if (chartPenyakitDom) {
                 var chartPenyakit = echarts.init(chartPenyakitDom);
                 chartPenyakit.setOption({
+                    // Palet warna modern-soft (Matte palette) yang nyaman di mata
                     color: [
                         '#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ec4899',
                         '#8b5cf6', '#3b82f6', '#14b8a6', '#84cc16', '#f97316'
@@ -193,7 +194,7 @@
                         right: '4%',
                         bottom: '3%',
                         top: '5%',
-                        containLabel: true // Penting agar label teks penyakit yang panjang tidak terpotong
+                        containLabel: true
                     },
                     xAxis: {
                         type: 'value',
@@ -201,19 +202,18 @@
                     },
                     yAxis: {
                         type: 'category',
-                        data: {!! json_encode($diseaseNames ?? []) !!}, // Render array dari Laravel
+                        data: {!! json_encode($diseaseNames ?? []) !!},
                         axisLabel: {
                             fontWeight: '500',
-                            interval: 0 // Tampilkan semua label penyakit tanpa ada yang diskip
+                            interval: 0
                         }
                     },
                     series: [{
                         name: 'Jumlah Kasus',
                         type: 'bar',
-                        colorBy: 'data',
+                        colorBy: 'data', // <-- INI KUNCI UTAMANYA: Mengambil warna berbeda per bar dari array color
                         data: {!! json_encode($diseaseCounts ?? []) !!},
                         itemStyle: {
-                            color: '#6366f1', // Warna Indigo (sesuaikan dengan tema UI)
                             borderRadius: [0, 4, 4, 0] // Rounded di ujung kanan bar
                         },
                         label: {
