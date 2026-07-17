@@ -14,7 +14,7 @@
             <h3 class="font-bold text-lg">Hello!</h3>
 
 
-            <div class="">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <!-- Name -->
                 <x-form.input-text label="Nama Lengkap" model="first_name" placeholder="Masukkan nama lengkap"
                     required />
