@@ -14,7 +14,7 @@
                         <tr>
                             <th>Nama Karyawan</th>
                             <th>Tanggal MCU</th>
-                            <th>Dokumen Admin</th>
+                            <th>Dokumen MCU</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
