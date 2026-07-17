@@ -536,7 +536,7 @@ class HazardForm extends Component
             'action_final_doc' // <-- Reset property file
         ]);
 
-        $this->dispatch('reset-all-editors');
+        $this->dispatch('reset-editor-action_description');
         // $this->dispatch('reset-ckeditor');
     }
     public function removeAction($index)

@@ -272,6 +272,13 @@
                                 if (el) el.classList.remove('error');
                             }
                         }));
+                        listeners.push(Livewire.on(`reset-editor-${modelName}`, () => {
+                            if (editorInstance && !isReadOnly) {
+                                editorInstance.setData('');
+                                const el = editorInstance.ui.view.editable.element;
+                                if (el) el.classList.remove('error');
+                            }
+                        }));
                     },
 
                     destroy() {
