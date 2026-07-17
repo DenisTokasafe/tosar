@@ -178,6 +178,10 @@
             if (chartPenyakitDom) {
                 var chartPenyakit = echarts.init(chartPenyakitDom);
                 chartPenyakit.setOption({
+                    color: [
+                        '#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ec4899',
+                        '#8b5cf6', '#3b82f6', '#14b8a6', '#84cc16', '#f97316'
+                    ],
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {
@@ -206,6 +210,7 @@
                     series: [{
                         name: 'Jumlah Kasus',
                         type: 'bar',
+                        colorBy: 'data',
                         data: {!! json_encode($diseaseCounts ?? []) !!},
                         itemStyle: {
                             color: '#6366f1', // Warna Indigo (sesuaikan dengan tema UI)
