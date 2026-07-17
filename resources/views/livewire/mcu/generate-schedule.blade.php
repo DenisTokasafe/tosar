@@ -179,7 +179,7 @@
                                         <div class="text-base font-bold text-base-content">Belum Ada Data Karyawan</div>
                                         <p class="text-xs text-base-content/60">Silakan tambahkan karyawan baru untuk mulai mengatur notifikasi WhatsApp.</p>
 
-                                        <div class="mt-2 flex justify-center">
+                                        <div class="mt-2 flex ">
                                             <livewire:people.add-people />
                                         </div>
                                     </div>
