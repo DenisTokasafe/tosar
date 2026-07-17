@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col items-start justify-between gap-4 p-2 border-b md:flex-row md:items-center border-base-200 md:border-none md:mb-4">
+                <div class="flex flex-col items-start justify-between gap-4 p-2 border-b md:flex-row md:items-center border-base-200 md:border-none ">
                     <div>
                         <h3 class="flex items-center gap-2 text-base font-semibold md:text-lg text-base-content">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
