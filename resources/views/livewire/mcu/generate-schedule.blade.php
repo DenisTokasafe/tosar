@@ -223,17 +223,15 @@
 
                                 @if ($employees->isEmpty())
                                     <div
-                                        class="flex flex-col items-center justify-center w-full py-16 px-4 text-center bg-base-100 border-t border-base-200/50">
-                                        <div class="flex flex-col items-center max-w-sm gap-3">
+                                        class="flex flex-col items-start justify-center w-full py-16 px-4 bg-base-100 border-t border-base-200/50">
+                                        <div class="flex flex-col items-start max-w-sm gap-3 text-left">
                                             <div class="text-base font-bold text-base-content">Belum Ada Data Karyawan
                                             </div>
                                             <p class="text-xs text-base-content/60">Silakan tambahkan karyawan baru
                                                 untuk mulai mengatur notifikasi WhatsApp.</p>
 
-                                            <div class="mt-2 flex justify-start">
-                                                <div>
-
-                                                </div>
+                                            <div class="mt-2 w-full">
+                                                <livewire:people.add-people />
                                             </div>
                                         </div>
                                     </div>
@@ -293,7 +291,6 @@
                         </div>
                         <div
                             class="fixed bottom-0 left-0 right-0 p-4 bg-base-100 border-t border-base-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:relative md:bg-transparent md:border-none md:shadow-none md:p-0 md:pt-4 flex justify-end z-50">
-                            <livewire:people.add-people />
                             <button type="submit"
                                 class="w-full px-8 transition-all rounded-full shadow-md btn btn-primary md:w-auto hover:shadow-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none"
