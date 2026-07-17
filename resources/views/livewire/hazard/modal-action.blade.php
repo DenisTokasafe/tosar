@@ -1,7 +1,8 @@
  <dialog id="action_modal" class="modal {{ $showActionModal === 'open' ? 'modal-open' : '' }}">
      <div class="w-11/12 max-w-5xl modal-box">
          <form method="dialog">
-             <button wire:click="$set('showActionModal', 'close')" class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+             <button wire:click="$set('showActionModal', 'close')"
+                 class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
          </form>
 
          <h3 class="mb-4 text-lg font-bold">{{ __('Manajemen Tindakan Lanjutan') }}</h3>
@@ -17,9 +18,11 @@
              </fieldset>
 
              <div class="grid items-end grid-cols-1 gap-4 mt-4 md:grid-cols-3">
-                 <x-form.tgl label="Batas Waktu" format="d-m-Y" model="action_due_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
+                 <x-form.tgl label="Batas Waktu" format="d-m-Y" model="action_due_date" :required="true"
+                     placeholder="{{ __('Pilih Tanggal') }}" />
 
-                 <x-form.tgl label="Tanggal Selesai" format="d-m-Y" model="actual_close_date" :required="true" placeholder="{{ __('Pilih Tanggal') }}" />
+                 <x-form.tgl label="Tanggal Selesai" format="d-m-Y" model="actual_close_date" :required="true"
+                     placeholder="{{ __('Pilih Tanggal') }}" />
 
                  <x-form.searchable-select-advanced label="{{ __('PIC') }}" placeholder="Cari Nama PIC..."
                      modelsearch="searchActResponsibility" modelid="action_responsible_id" {{-- ID asli di DB --}}
@@ -31,9 +34,11 @@
              <fieldset class="mt-4 fieldset">
                  <x-form.label label="Dokumen Final / Bukti Penyelesaian (Opsional)" />
                  <div class="relative ">
-                     <input type="file" wire:model="action_final_doc" class="w-full file-input file-input-bordered file-input-xs" />
+                     <input type="file" wire:model="action_final_doc"
+                         class="w-full file-input file-input-bordered file-input-xs" />
                      {{-- Loading state --}}
-                     <div wire:loading.remove.class="hidden" wire:target="action_final_doc" class="mt-1 absolute inset-y-0 right-0 hidden">
+                     <div wire:loading.remove.class="hidden" wire:target="action_final_doc"
+                         class="mt-1 absolute inset-y-0 right-0 hidden">
                          <span class="flex items-center gap-1">
                              <span class="loading loading-spinner loading-xs text-success"></span>
                              <span class="text-xs text-success">{{ __('Mengunggah file...') }}</span>
@@ -46,9 +51,12 @@
              {{-- === END TAMBAHAN === --}}
 
              <div class="flex justify-end mt-4">
-                 <flux:button size="xs" wire:click="addAction" variant="success">
+                 <label wire:click='addAction' wire:loading.add.class='btn-disable' wire:target="addAction"
+                     class="btn btn-xs btn-success">
+                     <span wire:loading.remove.class="hidden" wire:target="addAction"
+                         class="hidden loading loading-spinner loading-xs"></span>
                      {{ __('Tambah ke Daftar') }}
-                 </flux:button>
+                 </label>
              </div>
          </fieldset>
 
