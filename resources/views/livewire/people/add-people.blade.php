@@ -1,7 +1,7 @@
-<div>
+<section>
     <x-toast />
 
-    <button class="btn" x-data @click="$dispatch('open-my-modal')">open modal</button>
+    <label class="btn btn-info btn-xs " x-data @click="$dispatch('open-my-modal')">Tambah Karyawan</label>
 
     <dialog id="my_modal_1" class="modal"
         x-data="{ open: false }"
@@ -111,8 +111,8 @@
                 <flux:button icon="save-icon" wire:click="register" variant="primary" size="xs">
                     {{ __('Create account') }}
                 </flux:button>
-                <button type="button" @click="open = false; $el.closest('dialog').close()" class="btn btn-error btn-xs">{{ __('Close') }}</button>
+                <label @click="open = false; $el.closest('dialog').close()" class="btn btn-error btn-xs">{{ __('Close') }}</label>
             </div>
         </div>
     </dialog>
-</div>
+</section>
