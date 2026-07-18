@@ -1,9 +1,13 @@
+@php $iconTrailing = $iconTrailing ??= $attributes->pluck('icon:trailing'); @endphp
+@php $iconVariant = $iconVariant ??= $attributes->pluck('icon:variant'); @endphp
 @props([
     'expandable' => false,
     'expanded' => true,
     'heading' => null,
     'route' => null,
     'icon' => null,
+    'iconVariant' => 'outline',
+    'iconTrailing' => null,
 ])
 
 @if ($expandable && $heading)
