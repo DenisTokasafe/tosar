@@ -16,8 +16,19 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- Gunakan state Alpine murni untuk buka/tutup dropdown agar tidak mengganggu state validasi Livewire --}}
-    <div class="relative" x-data="{ open: false }">
+    {{-- Integrasi Alpine.js dengan ResizeObserver untuk sinkronisasi lebar dropdown --}}
+    <div class="relative mb-0.5" x-data="{
+        open: false,
+        triggerWidth: '100%',
+        init() {
+            this.triggerWidth = this.$refs.trigger.offsetWidth + 'px';
+            new ResizeObserver(() => {
+                if (this.$refs.trigger) {
+                    this.triggerWidth = this.$refs.trigger.offsetWidth + 'px';
+                }
+            }).observe(this.$refs.trigger);
+        }
+    }">
 
         {{-- Input Search --}}
         <input
@@ -26,13 +37,8 @@
             type="text"
             wire:model.live.debounce.300ms="{{ $modelsearch }}"
             placeholder="{{ __($placeholder) }}"
-
-            {{-- Kontrol dropdown via Alpine --}}
             x-on:focus="open = true"
-            x-on:keydown.escape="open = false"
-            x-on:click.away="open = false"
-
-            {{-- Gunakan ternary untuk memastikan border merah tetap ada meskipun re-render --}}
+            x-on:keydown.escape.window="open = false"
             {{ $attributes->merge([
                 'class' => 'input input-bordered w-full focus-within:outline-none focus-within:border-info focus-within:ring-0 input-xs ' .
                     ($disabled ? 'bg-base-200 opacity-70 ' : '') .
@@ -46,33 +52,36 @@
         <template x-teleport="body">
             <ul
                 x-show="open"
+                x-cloak
                 wire:ignore.self
                 x-anchor.bottom-start.offset.4="$refs.trigger"
                 x-on:click.outside="open = false"
-                :style="{ width: $refs.trigger.offsetWidth + 'px' }"
-                class="fixed z-[99999] overflow-auto border rounded-md shadow-2xl bg-base-100 border-base-300 max-h-60">
-                {{-- Spinner Loading --}}
-                <div wire:loading wire:target="{{ $modelsearch }}"
-                    class="flex flex-col items-center justify-center px-4 py-2 text-center">
-                    <span class="loading loading-spinner loading-sm text-secondary"></span>
+                :style="{ width: triggerWidth }"
+                class="fixed z-[99999] overflow-auto border rounded-md shadow-2xl bg-base-100 border-base-300 max-h-60 list-none">
+
+                {{-- Spinner Loading (Aktif saat mengetik ATAU saat memilih opsi) --}}
+                <div class="flex flex-col items-center justify-center px-4 py-2 text-center">
+                    <span wire:loading.remove.class="hidden" wire:target="{{ $modelsearch }}, {{ $clickaction }}" class="loading loading-spinner loading-sm text-secondary hidden"></span>
                 </div>
 
-                {{-- List Hasil Pencarian --}}
-                @if (count($options) > 0)
-                @foreach ($options as $opt)
-                <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$namedb}) }}')"
-                    wire:key="opt-{{ $modelid }}-{{ $opt->id }}"
-                    x-on:click="open = false"
-                    class="px-3 py-2 text-sm transition-colors border-b cursor-pointer hover:bg-base-200 text-base-content border-base-200 last:border-0">
-                    {{ $opt->{$namedb} }}
-                </li>
-                @endforeach
-                @else
-                <li wire:loading.remove wire:target="{{ $modelsearch }}"
-                    class="px-3 py-2 text-sm italic text-warning bg-base-100">
-                    {{ __('Data tidak ditemukan') }}
-                </li>
-                @endif
+                {{-- List Hasil Pencarian (Disembunyikan sementara saat proses klik berlangsung) --}}
+                <div wire:loading.remove wire:target="{{ $clickaction }}">
+                    @if (count($options) > 0)
+                    @foreach ($options as $opt)
+                    <li wire:click="{{ $clickaction }}({{ $opt->id }}, '{{ addslashes($opt->{$namedb}) }}')"
+                        wire:key="opt-{{ $modelid }}-{{ $opt->id }}"
+                        x-on:click="open = false"
+                        class="px-3 py-2 text-sm transition-colors border-b cursor-pointer hover:bg-base-200 text-base-content border-base-200 last:border-0 list-none">
+                        {{ $opt->{$namedb} }}
+                    </li>
+                    @endforeach
+                    @else
+                    <li wire:loading.remove wire:target="{{ $modelsearch }}"
+                        class="px-3 py-2 text-sm italic text-warning bg-base-100 list-none">
+                        {{ __('Data tidak ditemukan') }}
+                    </li>
+                    @endif
+                </div>
             </ul>
         </template>
         @endif
