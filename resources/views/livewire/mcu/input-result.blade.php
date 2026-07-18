@@ -56,20 +56,20 @@
                                     <tr>
                                         <td>{{ $formattedParticipants->firstItem() + $index }}</td>
 
-                                        {{-- Gunakan raw_name untuk tampilan tabel yang bersih --}}
                                         <td class="font-medium">{{ $participant->raw_name }}</td>
 
-                                        {{-- Gunakan schedule_date yang sudah kita siapkan --}}
                                         <td>{{ $participant->schedule_date }}</td>
 
                                         <td>
-                                            <span class="badge badge-warning badge-xs">Pending</span>
+                                            {{-- Contoh pembuatan badge yang dinamis, atau gunakan bawaan Anda yang statis --}}
+                                            <span class="badge badge-warning badge-xs">
+                                                Belum Hadir
+                                            </span>
                                         </td>
-
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-4 text-gray-500">Belum ada data peserta.</td>
+                                        <td colspan="4" class="text-center py-4 text-gray-500">Belum ada data peserta (atau jadwal sudah terlewat).</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
