@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Mcu;
 
+use App\Models\McuParticipant;
 use App\Models\McuResult;
 use Carbon\Carbon;
 use Livewire\Component;
