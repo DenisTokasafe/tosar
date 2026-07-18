@@ -39,7 +39,7 @@
 
             {{-- LEVEL 1: Group dengan SubMenu --}}
             @if (count($menu->subMenus) > 0)
-            <flux:navlist.group-list wire:key="menu-group-{{ $menu->id }}" expandable
+            <flux:navlist.group-list wire:key="menu-group-{{ $menu->id }}" expandable icon="{{ $menu->icon ?: 'ban' }}"
                 route='{{ $menu->request_route }}' heading="{{ __($menu->menu) }}" class="grid">
                 @foreach ($menu->subMenus as $submenu)
                 {{-- LEVEL 2: Extra SubMenu --}}
