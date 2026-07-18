@@ -11,14 +11,29 @@
     @endphp
     <ui-disclosure {{ $attributes->class('group/disclosure') }} {{ $isActive ? 'open' : '' }} data-flux-navlist-group>
         <button type="button"
-            class="w-full h-10 lg:h-8 flex items-center group/disclosure-button mb-[2px] rounded-sm transition-colors
+            class="w-full h-10 lg:h-8 flex items-center group/disclosure-button mb-[2px] rounded-sm transition-colors relative
             {{ $isActive
                 ? 'bg-neutral text-neutral-content font-semibold'
                 : 'text-base-content/80 hover:bg-accent hover:text-accent-content' }}">
 
+            @if ($icon)
+                <div class="relative ps-3 pe-4">
+                    @if (is_string($icon) && $icon !== '')
+                        <flux:icon :$icon :variant="$iconVariant" class="{!! $iconClasses !!}" />
+                    @else
+                        {{ $icon }}
+                    @endif
 
-            <span class="ps-3 pe-4 text-xs font-medium leading-none">{{ $heading }}</span>
-            <div class="">
+                    @if ($iconDot)
+                        <div class="absolute top-[-2px] end-[-2px]">
+                            {{-- Menggunakan warna brand neutral agar sinkron dengan tema --}}
+                            <div class="size-[6px] rounded-sm bg-neutral-content/50"></div>
+                        </div>
+                    @endif
+                </div>
+            @endif
+            <span class=" text-xs font-medium leading-none">{{ $heading }}</span>
+            <div class="absolute inset-y-0 right-0 flex items-center pe-3">
                 {{-- Toggle icon berdasarkan state open/closed --}}
                 <flux:icon.chevron-down class="size-3! hidden group-data-open/disclosure:block" />
                 <flux:icon.chevron-right class="size-3! block group-data-open/disclosure:hidden" />
