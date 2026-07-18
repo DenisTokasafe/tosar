@@ -1,61 +1,117 @@
 <div class="p-6 bg-white rounded-lg shadow">
     <h2 class="text-xl font-bold mb-4">Daftar Hasil MCU (Pending & Reviewed)</h2>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full text-left text-sm whitespace-nowrap">
-            <thead class="bg-gray-100 uppercase tracking-wider">
-                <tr>
-                    <th class="px-4 py-3">Nama Karyawan</th>
-                    <th class="px-4 py-3">Jadwal MCU</th>
-                    <th class="px-4 py-3">Status Kebugaran</th>
-                    <th class="px-4 py-3">Status Dokumen</th>
-                    <th class="px-4 py-3">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse($mcuResults as $result)
-                <tr>
-                    <td class="px-4 py-3 font-medium text-gray-900">
-                        {{ $result->participant->employee->name ?? 'Tidak diketahui' }}
-                    </td>
-                    <td class="px-4 py-3 text-gray-600">
-                        {{ $result->participant->schedule->schedule_date->format('d M Y') ?? '-' }}
-                    </td>
-                    <td class="px-4 py-3">
-                        @if($result->status)
-                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs uppercase">
-                            {{ str_replace('_', ' ', $result->status) }}
-                        </span>
-                        @else
-                        <span class="text-gray-400 italic">Belum direview</span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-3">
-                        @if($result->workflow_status === 'reviewed')
-                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs uppercase">
-                            Selesai Direview
-                        </span>
-                        @else
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs uppercase">
-                            Menunggu Dokter
-                        </span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-3">
-                        <button wire:click="openReviewModal({{ $result->id }})" class="text-indigo-600 hover:text-indigo-900 font-semibold">
-                            Lihat Detail
-                        </button>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
-                        Tidak ada data MCU dengan status tersebut.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div>
+        {{-- BAGIAN 1: TABEL HASIL MCU (Kode Asli Anda) --}}
+        <h3 class="text-lg font-bold mb-4">Daftar Hasil MCU (Menunggu Review / Selesai)</h3>
+        <div class="overflow-x-auto mb-8">
+            <table class="min-w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-gray-100 uppercase tracking-wider">
+                    <tr>
+                        <th class="px-4 py-3">Nama Karyawan</th>
+                        <th class="px-4 py-3">Jadwal MCU</th>
+                        <th class="px-4 py-3">Status Kebugaran</th>
+                        <th class="px-4 py-3">Status Dokumen</th>
+                        <th class="px-4 py-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($mcuResults as $result)
+                    <tr>
+                        <td class="px-4 py-3 font-medium text-gray-900">
+                            {{ $result->participant->employee->name ?? 'Tidak diketahui' }}
+                        </td>
+                        <td class="px-4 py-3 text-gray-600">
+                            {{ $result->participant->schedule->schedule_date->format('d M Y') ?? '-' }}
+                        </td>
+                        <td class="px-4 py-3">
+                            @if($result->status)
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs uppercase">
+                                {{ str_replace('_', ' ', $result->status) }}
+                            </span>
+                            @else
+                            <span class="text-gray-400 italic">Belum direview</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3">
+                            @if($result->workflow_status === 'reviewed')
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs uppercase">
+                                Selesai Direview
+                            </span>
+                            @else
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs uppercase">
+                                Menunggu Dokter
+                            </span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3">
+                            <button wire:click="openReviewModal({{ $result->id }})" class="text-indigo-600 hover:text-indigo-900 font-semibold">
+                                Lihat Detail
+                            </button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                            Tidak ada data MCU dengan status tersebut.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            {{-- Paginasi Tabel 1 --}}
+            <div class="mt-4">
+                {{ $mcuResults->links() }}
+            </div>
+        </div>
+
+
+        {{-- BAGIAN 2: TABEL TIDAK HADIR MCU (Tambahan Baru) --}}
+        <h3 class="text-lg font-bold mb-4 text-red-600">Daftar Peserta Tidak Hadir (Jadwal Terlewat)</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm whitespace-nowrap border-red-200 border">
+                <thead class="bg-red-50 uppercase tracking-wider text-red-700">
+                    <tr>
+                        <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">Nama Karyawan</th>
+                        <th class="px-4 py-3">Jadwal Terlewat</th>
+                        <th class="px-4 py-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($absentParticipants as $index => $absent)
+                    <tr>
+                        <td class="px-4 py-3 text-gray-500">
+                            {{ $absentParticipants->firstItem() + $index }}
+                        </td>
+                        <td class="px-4 py-3 font-medium text-gray-900">
+                            {{ $absent->employee->name ?? 'Tidak diketahui' }}
+                        </td>
+                        <td class="px-4 py-3 text-red-600 font-semibold">
+                            {{ $absent->schedule ? $absent->schedule->schedule_date->format('d M Y') : '-' }}
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs uppercase font-bold">
+                                Tidak Hadir
+                            </span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                            Semua peserta terpantau hadir pada jadwalnya.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            {{-- Paginasi Tabel 2 --}}
+            <div class="mt-4">
+                {{ $absentParticipants->links() }}
+            </div>
+        </div>
     </div>
 
     <div class="mt-4">
