@@ -175,7 +175,6 @@ class AddPeople extends Component
                 );
             }
         }
-        Auth::login($user);
         $this->dispatch(
             'alert',
             [
