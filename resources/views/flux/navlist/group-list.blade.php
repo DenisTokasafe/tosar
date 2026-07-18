@@ -10,15 +10,6 @@
         $isActive = Request::is($route);
     @endphp
     <ui-disclosure {{ $attributes->class('group/disclosure') }} {{ $isActive ? 'open' : '' }} data-flux-navlist-group>
-
-
-        <div class="relative hidden data-open:block space-y-[2px] ps-7"
-            @if ($expanded === true) data-open @endif>
-            {{-- Garis indikator vertikal (Sub-menu line) --}}
-            <div class="absolute inset-y-[3px] w-px bg-base-content/10 start-0 ms-4"></div>
-
-            {{ $slot }}
-        </div>
         <button type="button"
             class="w-full h-10 lg:h-8 flex items-center group/disclosure-button mb-[2px] rounded-sm transition-colors
             {{ $isActive
@@ -33,6 +24,14 @@
 
             <span class="text-xs font-medium leading-none">{{ $heading }}</span>
         </button>
+
+        <div class="relative hidden data-open:block space-y-[2px] ps-7"
+            @if ($expanded === true) data-open @endif>
+            {{-- Garis indikator vertikal (Sub-menu line) --}}
+            <div class="absolute inset-y-[3px] w-px bg-base-content/10 start-0 ms-4"></div>
+
+            {{ $slot }}
+        </div>
     </ui-disclosure>
 @elseif ($heading)
     <div {{ $attributes->class('block space-y-[2px]') }}>
