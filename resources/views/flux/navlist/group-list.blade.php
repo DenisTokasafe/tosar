@@ -13,6 +13,7 @@
 @if ($expandable && $heading)
     @php
         $isActive = Request::is($route);
+        $square ??= $slot->isEmpty();
         $iconClasses = Flux::classes($square ? 'size-5!' : 'size-4!');
     @endphp
     <ui-disclosure {{ $attributes->class('group/disclosure') }} {{ $isActive ? 'open' : '' }} data-flux-navlist-group>
