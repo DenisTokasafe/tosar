@@ -6,9 +6,11 @@ use App\Models\McuParticipant;
 use App\Models\McuResult;
 use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class McuResultList extends Component
 {
+    use WithPagination;
     public $showReviewModal = false; // Flag untuk menampilkan/menyembunyikan modal
     public $selectedResultId;
 
