@@ -88,4 +88,8 @@ class McuResultList extends Component
             'employeeName'
         ]);
     }
+    public function paginationView()
+    {
+        return 'paginate.pagination';
+    }
 }
