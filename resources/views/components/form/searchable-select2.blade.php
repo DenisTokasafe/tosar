@@ -33,12 +33,6 @@
                 }
             }).observe(this.$refs.trigger);
         },
-        selectOption(actionString) {
-            this.open = false;
-            if (actionString) {
-                this.$wire.$eval(actionString);
-            }
-        },
         focusManualInput() {
             this.$nextTick(() => {
                 if (this.$refs.manualInput) {
@@ -88,7 +82,6 @@
                     @if(count($options) > 0)
                     @foreach($options as $opt)
                     @php
-                    // Kembali menggunakan format string asli tanpa addslashes berlebih
                     $action = str_replace(
                     ['VALUE_ID', 'VALUE_NAME'],
                     [$opt->id, "'" . addslashes($opt->{$columnName}) . "'"],
@@ -96,11 +89,11 @@
                     );
                     @endphp
 
-                    {{-- PERBAIKAN DI SINI: Gunakan data-action dan $el.dataset.action --}}
+                    {{-- Kunci Solusi: Gabungkan wire:click dan x-on:click langsung --}}
                     <li
                         wire:key="opt-{{ $opt->id }}"
-                        data-action="{{ $action }}"
-                        x-on:click="selectOption($el.dataset.action)"
+                        wire:click="{{ $action }}"
+                        x-on:click="open = false"
                         class="px-3 py-1.5 text-sm cursor-pointer hover:bg-base-200 transition-colors text-base-content list-none">
                         {{ $opt->{$columnName} }}
                     </li>
@@ -124,7 +117,8 @@
                                 type="text"
                                 wire:model.live="{{ $manualModelName }}"
                                 placeholder="{{ __('Nama manual...') }}"
-                                x-on:keydown.enter.prevent="$wire.{{ $addManualAction }}; open = false"
+                                wire:keydown.enter.prevent="{{ $addManualAction }}"
+                                x-on:keydown.enter="open = false"
                                 class="w-full input input-bordered input-xs focus:ring-1 focus:ring-info bg-base-100" />
 
                             <button
