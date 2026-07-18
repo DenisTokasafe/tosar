@@ -2,9 +2,7 @@
 
 namespace App\Livewire\Mcu;
 
-use App\Models\McuParticipant;
 use App\Models\McuResult;
-use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -24,27 +22,15 @@ class McuResultList extends Component
     public $employeeName;
     public function render()
     {
-        $today = Carbon::today();
         $mcuResults = McuResult::with([
             'participant.employee',
             'participant.schedule'
         ])
             ->whereIn('workflow_status', ['pending_doctor', 'reviewed'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10, ['*'], 'resultPage'); // Tambahkan nama page agar paginasi tidak bentrok
-
-        // 2. Query Data Tidak Hadir MCU (Tambahan Baru)
-        $absentParticipants = McuParticipant::with(['employee', 'schedule'])
-            ->whereDoesntHave('result') // Belum ada hasil MCU
-            ->whereHas('schedule', function ($query) use ($today) {
-                // Jadwalnya sudah lewat dari hari ini
-                $query->whereDate('schedule_date', '<', $today);
-            })
-            ->paginate(10, ['*'], 'absentPage'); // Nama page khusus untuk tabel absen
-
+            ->paginate(10);
         return view('livewire.mcu.mcu-result-list', [
-            'mcuResults' => $mcuResults,
-            'absentParticipants' => $absentParticipants // Kirim ke view
+            'mcuResults' => $mcuResults
         ]);
     }
 
