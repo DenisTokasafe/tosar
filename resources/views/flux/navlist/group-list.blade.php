@@ -17,8 +17,8 @@
                 : 'text-base-content/80 hover:bg-accent hover:text-accent-content' }}">
 
 
-            <span class="text-xs font-medium leading-none">{{ $heading }}</span>
-            <div class="ps-3 pe-4">
+            <span class="ps-3 pe-4 text-xs font-medium leading-none">{{ $heading }}</span>
+            <div class="">
                 {{-- Toggle icon berdasarkan state open/closed --}}
                 <flux:icon.chevron-down class="size-3! hidden group-data-open/disclosure:block" />
                 <flux:icon.chevron-right class="size-3! block group-data-open/disclosure:hidden" />
