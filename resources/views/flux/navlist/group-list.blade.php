@@ -9,7 +9,7 @@
     'iconVariant' => 'outline',
     'iconTrailing' => null,
 ])
-
+$iconClasses = Flux::classes($square ? 'size-5!' : 'size-4!');
 @if ($expandable && $heading)
     @php
         $isActive = Request::is($route);
