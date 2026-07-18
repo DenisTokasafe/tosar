@@ -49,6 +49,11 @@
                                     required />
                             </div>
                         </div>
+
+                    </div>
+                </div>
+                <x-mcu.layout>
+                    <div class="border shadow-sm card bg-base-100 border-base-200">
                         <div
                             class="flex flex-col items-start justify-between gap-4 p-2 border-b md:flex-row md:items-center border-base-200 md:border-none md:mb-4">
                             <div>
@@ -68,14 +73,7 @@
                                 <x-form.input-floating label="Cari Nama Karyawan..." model="search" />
                             </div>
                         </div>
-                    </div>
-                </div>
-                <x-mcu.layout>
-                    <div class="border shadow-sm card bg-base-100 border-base-200">
                         <div class="p-0 card-body md:p-4">
-
-
-
                             @error('participantsData')
                                 <div class="py-2 mx-4 mb-4 text-sm alert alert-warning md:py-3 md:mx-0 rounded-xl">
                                     <svg xmlns="http://www.w3.org/2000/svg"
