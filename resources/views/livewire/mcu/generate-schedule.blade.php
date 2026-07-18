@@ -40,7 +40,7 @@
                                 <x-form.label label="Tanggal MCU" required />
                                 <input type="text" readonly id="schedule_date" wire:model="schedule_date"
                                     placeholder="Pilih Tanggal MCU"
-                                    class="w-full cursor-pointer input input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
+                                    class="w-full cursor-pointer input input-xs input-bordered focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('schedule_date') ? 'input-error focus:ring-error/20' : '' }}"
                                     x-data="{ fp: null }" x-init="fp = flatpickr($refs.input, {
                                         altInput: true,
                                         altFormat: 'F j, Y',
