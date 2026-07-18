@@ -3,6 +3,7 @@
     'expanded' => true,
     'heading' => null,
     'route' => null,
+    'icon' => null,
 ])
 
 @if ($expandable && $heading)
