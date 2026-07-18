@@ -16,13 +16,13 @@
                 ? 'bg-neutral text-neutral-content font-semibold'
                 : 'text-base-content/80 hover:bg-accent hover:text-accent-content' }}">
 
+
+            <span class="text-xs font-medium leading-none">{{ $heading }}</span>
             <div class="ps-3 pe-4">
                 {{-- Toggle icon berdasarkan state open/closed --}}
                 <flux:icon.chevron-down class="size-3! hidden group-data-open/disclosure:block" />
                 <flux:icon.chevron-right class="size-3! block group-data-open/disclosure:hidden" />
             </div>
-
-            <span class="text-xs font-medium leading-none">{{ $heading }}</span>
         </button>
 
         <div class="relative hidden data-open:block space-y-[2px] ps-7"
