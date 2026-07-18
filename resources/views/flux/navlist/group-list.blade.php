@@ -8,6 +8,7 @@
     'icon' => null,
     'iconVariant' => 'outline',
     'iconTrailing' => null,
+    'iconDot' => null,
 ])
 
 @if ($expandable && $heading)
