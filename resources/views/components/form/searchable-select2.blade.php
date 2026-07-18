@@ -22,12 +22,10 @@
     <x-form.label :label="$label" :required="$required" />
     @endif
 
-    {{-- Komponen dibungkus dengan Alpine Data --}}
     <div x-data="{
         open: false,
         triggerWidth: '100%',
         init() {
-            // Set lebar dropdown agar selalu sama dengan input trigger
             this.triggerWidth = this.$refs.trigger.offsetWidth + 'px';
             new ResizeObserver(() => {
                 if (this.$refs.trigger) {
@@ -37,13 +35,11 @@
         },
         selectOption(actionString) {
             this.open = false;
-            // Mengeksekusi string action Livewire langsung via Alpine
             if (actionString) {
                 this.$wire.$eval(actionString);
             }
         },
         focusManualInput() {
-            // Fokus otomatis ke input manual setelah DOM di-render
             this.$nextTick(() => {
                 if (this.$refs.manualInput) {
                     this.$refs.manualInput.focus();
@@ -92,6 +88,7 @@
                     @if(count($options) > 0)
                     @foreach($options as $opt)
                     @php
+                    // Kembali menggunakan format string asli tanpa addslashes berlebih
                     $action = str_replace(
                     ['VALUE_ID', 'VALUE_NAME'],
                     [$opt->id, "'" . addslashes($opt->{$columnName}) . "'"],
@@ -99,9 +96,11 @@
                     );
                     @endphp
 
+                    {{-- PERBAIKAN DI SINI: Gunakan data-action dan $el.dataset.action --}}
                     <li
                         wire:key="opt-{{ $opt->id }}"
-                        x-on:click="selectOption(\" {{ addslashes($action) }}\")"
+                        data-action="{{ $action }}"
+                        x-on:click="selectOption($el.dataset.action)"
                         class="px-3 py-1.5 text-sm cursor-pointer hover:bg-base-200 transition-colors text-base-content list-none">
                         {{ $opt->{$columnName} }}
                     </li>
