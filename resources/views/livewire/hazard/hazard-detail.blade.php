@@ -274,7 +274,7 @@
             </button>
 
             {{-- Tombol Hapus dengan Konfirmasi --}}
-            <button
+            <button type="button"
                 class=" {{ $isDisabled ? ' btn-xs btn btn-disabled cursor-not-allowed' : 'btn btn-error btn-xs btn-active' }}"
                 wire:click="deleteHazard({{ $hazard_id }})" wire:confirm="{{ __('Yakin hapus Laporan ini?') }}">
                 <x-icon.delete />
