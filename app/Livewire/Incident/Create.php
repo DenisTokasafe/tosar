@@ -1270,6 +1270,11 @@ class Create extends Component
                     ['scat_analysis' => null]
                 ));
 
+                // A2. Update Report Number secara aman dari Race Condition menggunakan Auto-Increment ID
+                $report->update([
+                    'report_number' => 'INC-' . now()->format('Ymd') . '-' . str_pad($report->id, 3, '0', STR_PAD_LEFT)
+                ]);
+
 
                 // 2. Baru proses file foto jika ada
                 foreach ($this->saved_photos as $vPath) {
@@ -1351,21 +1356,23 @@ class Create extends Component
                 // dan nama kolom di model Contractor adalah 'name' (sesuaikan jika berbeda)
                 $locationName = $result->contractor->contractor_name;
             }
-            // Kirim email ke setiap moderator
-            foreach ($moderatorIds as $moderatorId) {
-                MailHelper::sendToUserId(
-                    $moderatorId,
-                    'Notifikasi Laporan Hazard',
-                    'emails.notification',
-                    [
-                        'subject'       => 'Laporan Insiden Baru',
-                        'title'         => 'Laporan Notifikasi Insiden',
-                        'messageText'   => "Telah dibuat laporan Insident baru.\nSilakan lakukan  pemeriksaan.",
-                        'additionalInfo' => "Nomor Laporan: $result->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $result->status",
-                        'actionUrl'     => route('incident-detail', $result->id)
-                    ]
-                );
-            }
+            // Kirim email ke setiap moderator (Berjalan di background menggunakan defer Laravel)
+            defer(function () use ($moderatorIds, $result, $reporterName, $locationName) {
+                foreach ($moderatorIds as $moderatorId) {
+                    MailHelper::sendToUserId(
+                        $moderatorId,
+                        'Notifikasi Laporan Insiden',
+                        'emails.notification',
+                        [
+                            'subject'       => 'Laporan Insiden Baru',
+                            'title'         => 'Laporan Notifikasi Insiden',
+                            'messageText'   => "Telah dibuat laporan Insiden baru.\nSilakan lakukan pemeriksaan.",
+                            'additionalInfo' => "Nomor Laporan: {$result->report_number}\nNama Pelapor : {$reporterName}\nLokasi Penugasan: {$locationName}\nStatus: {$result->status}",
+                            'actionUrl'     => route('incident-detail', $result->id)
+                        ]
+                    );
+                }
+            });
             // [END] Logika Baru: Notifikasi ke Semua Moderator
 
 
@@ -1383,10 +1390,10 @@ class Create extends Component
 
     protected function prepareArrayData()
     {
-        // Logika Generate Report Number
-        $lastReport = IncidentReport::latest()->first();
-        $nextId = $lastReport ? $lastReport->id + 1 : 1;
-        $reportNumber = 'INC-' . now()->format('Ymd') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        // Logika Generate Report Number Sementara (Mencegah Race Condition/Duplikat)
+        // Nomor asli akan digenerate setelah data masuk ke database dan ID didapatkan
+        $reportNumber = uniqid('TMP-INC-');
+        
         return [
             // PART 1: INFORMASI DASAR
             'header' => [
