@@ -1400,8 +1400,8 @@ class HazardDetail extends Component
             [
                 'text' => "Laporan hazard berhasil dihapus!",
                 'duration' => 5000,
-                'destination' => '/contact',
-                'newWindow' => true,
+                'destination' => route('hazard'),
+                'newWindow' => false,
                 'close' => true,
                 'backgroundColor' => "linear-gradient(to right, #ff3333, #ff6666)",
             ]
