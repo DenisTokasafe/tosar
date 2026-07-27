@@ -76,80 +76,17 @@ class Create extends Component
     public $involved_personnel_options = [];
 
     // State untuk menyimpan baris data
-    public $pemimpin = [];
-    public $facilitator = [];
-    public $anggota = [];
-
-    // State untuk search (karena searchable-select butuh model binding)
-    public $searchQuery = [];
-    public $searchQueryFacilitator = [];
-    public $showDropdownPartisipan = [];
     public $incident_photo_paths = []; // Ubah dari string ke array
     public $supporting_documents_paths = []; // Ubah dari string ke array
     public $options = [];
 
-    // Penanda baris mana yang sedang aktif dicari
-    public $activeType = '';
-    public $activeIndex = null;
-
-    public $peepoFactors = [
-        'orang' => 'Orang',
-        'peralatan' => 'Peralatan',
-        'lingkungan' => 'Lingkungan',
-        'prosedur' => 'Prosedur',
-        'organisasi' => 'Organisasi'
-    ];
-    public $showPenerimaanKomentarContractorDropdown = false;
-    public $showPenerimaanKomentarInternalDropdown = false;
-    public $showPenerimaanKomentarOhsDropdown = false;
-    public $showPenerimaanKomentarKttDropdown = false;
-
-    // State tambahan untuk tracking fokus (opsional, sesuai Blade kamu)
-    public $activeTypePenerimaan = '';
-    public $activeIndexPenerimaan = null;
-
-    // Pastikan Anda menginisialisasi array penampung data di mount
-    public $peepo = [];
-    public $why_analysis = [];
-    public $whyCount = 1; // Default 5, bisa diubah menjadi 6, 7, dst.
-    public $unsafe_conditions = [];
-    public $unsafe_acts = [];
-    public $personal_factors = [];
-    public $job_factors = [];
-    public $control_system_factors = [];
-
     // Data Utama
-
-    // State untuk Searchable Select di dalam baris
-    public $searchPetugas = [];         // Menampung input teks pencarian per index
-    public $showDropdownPetugas = [];   // Menampung status open/close per index
-    public $pelaporsAct = [];
     public $incident_photo = [];
     public $supporting_documents = [];      // Hasil query pencarian (biasanya global atau di-filter)
-    public $manualActPelaporMode = false; // Jika mode manual global atau per baris
-
-    // Properti untuk menyimpan ID terpilih
-    public $penerimaan_komentar_contractor_id;
-    public $penerimaan_komentar_internal_id;
-    public $penerimaan_komentar_ohs_id;
-    public $penerimaan_komentar_ktt_id;
-    public $penerimaan_komentar_ktt;
 
     public $selectedBodyParts = []; // Sekarang menjadi array
     public $selectedBodyPartCategory = null;
-    // Properti untuk teks editor (CKEditor)
-    public $penerimaan_komentar_contractor;
-    public $penerimaan_komentar_internal;
-    public $penerimaan_komentar_ohs;
-    public $key_learning;
     public $tasks, $potential_lti;
-
-    public $searchNamePenerimaan = [
-        'kontraktor' => '',
-        'internal' => '',
-        'ohs' => '',
-        'ktt' => '',
-    ];
 
 
     public function rules()
@@ -479,24 +416,15 @@ class Create extends Component
         // 1. Load data referensi statis (Paling aman ditaruh di atas)
         $this->likelihoods = Likelihood::orderByDesc('level')->get();
         $this->consequences = RiskConsequence::orderBy('level')->get();
-        if (empty($this->why_analysis)) {
-            $this->why_analysis = ['why1' => ''];
-        }
+
         // 2. PRIORITAS UTAMA: Ambil data dari Session jika ada
         if (session()->has('incident_create_data')) {
             $data = session('incident_create_data');
             $this->fill($data);
 
-            // Pastikan whyCount ikut terisi dari session
-            $this->whyCount = $data['whyCount'] ?? 1;
+
         }
-        // Inisialisasi jika session kosong
-        $roles = ['pemimpin', 'facilitator', 'anggota'];
-        foreach ($roles as $role) {
-            if (empty($this->{$role})) {
-                $this->addRow($role);
-            }
-        }
+
         // 3. INISIALISASI DEFAULT (Hanya jika data masih kosong / belum ada di session)
 
         // Inisialisasi Pihak Terlibat
@@ -505,32 +433,7 @@ class Create extends Component
         }
 
 
-        // Inisialisasi Timeline & Faktor-faktor
-        $categories = [
-            'unsafe_conditions',
-            'unsafe_acts',
-            'personal_factors',
-            'job_factors',
-            'control_system_factors'
-        ];
 
-        foreach ($categories as $category) {
-            if (empty($this->{$category})) {
-                $this->addRow($category);
-            }
-        }
-
-        // Inisialisasi PEEPO
-        foreach ($this->peepoFactors as $key => $label) {
-            if (!isset($this->peepo[$key])) {
-                $this->peepo[$key] = ['temuan' => '', 'deskripsi' => ''];
-            }
-        }
-
-        // Inisialisasi Tindakan Perbaikan
-        if (empty($this->corrective_actions)) {
-            $this->addCorrectiveRow();
-        }
     }
 
 
@@ -804,456 +707,7 @@ class Create extends Component
 
 
 
-    public function addRow($type)
-    {
-        // 1. Tentukan struktur data berdasarkan tipe
-        // Tambahkan pengecekan untuk faktor pribadi, pekerjaan, dan sistem kontrol
-        if (in_array($type, ['unsafe_conditions', 'unsafe_acts', 'personal_factors', 'job_factors', 'control_system_factors'])) {
-            $newData = ['item' => '', 'description' => ''];
-        } elseif ($type === 'timelines') {
-            // Timeline dengan struktur khusus sesuai jumlah kolom "Why"
-            $newData = ['kegiatan' => '', 'tanggal' => ''];
-            for ($i = 1; $i <= $this->whyCount; $i++) {
-                $newData["why{$i}"] = '';
-            }
-        } else {
-            // Default untuk partisipan (pemimpin, facilitator, anggota)
-            $newData = ['user_id' => null, 'nama' => '', 'jabatan' => '', 'jabatan_detail' => '', 'dept' => ''];
-        }
 
-        // 2. Masukkan ke array utama secara dinamis
-        $this->{$type}[] = $newData;
-
-        // 3. Inisialisasi state pembantu untuk pencarian User
-        if (in_array($type, ['pemimpin', 'facilitator', 'anggota',])) {
-            $newIndex = count($this->{$type}) - 1;
-            $this->searchQuery[$newIndex][$type] = '';
-            $this->showDropdownPartisipan[$newIndex] = false;
-        }
-        $this->saveToSession();
-    }
-    public function removeRow($type, $index)
-    {
-        // 1. Hapus data baris utama
-        if (isset($this->{$type}[$index])) {
-            unset($this->{$type}[$index]);
-            $this->{$type} = array_values($this->{$type});
-        }
-
-        // 2. Sinkronisasi searchQuery dan Dropdown
-        // Kita tidak bisa hanya array_values secara global karena akan menggeser
-        // data tipe lain yang berada di indeks yang sama.
-
-        // Cara terbaik: Hapus data indeks tersebut, lalu geser manual data di bawahnya
-        // khusus untuk tipe (key) yang sedang dihapus.
-
-        $totalRemaining = count($this->{$type});
-
-        for ($i = $index; $i <= $totalRemaining; $i++) {
-            // Geser searchQuery untuk tipe yang spesifik ini saja
-            if (isset($this->searchQuery[$i + 1][$type])) {
-                $this->searchQuery[$i][$type] = $this->searchQuery[$i + 1][$type];
-                unset($this->searchQuery[$i + 1][$type]);
-            } else {
-                unset($this->searchQuery[$i][$type]);
-            }
-
-            // Geser status dropdown
-            if (isset($this->showDropdownPartisipan[$i + 1])) {
-                $this->showDropdownPartisipan[$i] = $this->showDropdownPartisipan[$i + 1];
-            } else {
-                unset($this->showDropdownPartisipan[$i]);
-            }
-        }
-
-        // 3. Jika baris habis, tambahkan satu baris kosong lagi
-        if (empty($this->{$type})) {
-            $this->addRow($type);
-        }
-        $this->saveToSession();
-    }
-    #[Computed]
-    public function gridClass()
-    {
-        return match (true) {
-            $this->whyCount == 2 => 'grid-cols-2',
-            $this->whyCount >= 3 => 'grid-cols-3',
-            default => 'grid-cols-1',
-        };
-    }
-    public function addWhyColumn()
-    {
-        $this->whyCount++;
-
-        // Inisialisasi key baru di setiap baris timeline agar tidak error
-        $this->why_analysis['why' . $this->whyCount] = '';
-        $this->saveToSession();
-    }
-    public function removeWhyColumn()
-    {
-        if ($this->whyCount > 1) {
-            unset($this->why_analysis['why' . $this->whyCount]);
-            $this->whyCount--;
-        }
-        $this->saveToSession();
-    }
-
-
-
-    // Fungsi Pencarian (Dipicu oleh modelsearch di component)
-    public function updatedSearchQuery($value, $key)
-    {
-        // $key sekarang berisi "0.pemimpin", "1.facilitator", dst.
-        $parts = explode('.', $key);
-        $index = $parts[0]; // Mendapatkan angka index
-
-        if (strlen($value) < 2) {
-            $this->options = [];
-            $this->showDropdownPartisipan[$index] = false;
-            return;
-        }
-
-        $this->options = User::where('name', 'like', '%' . $value . '%')->limit(50)->get();
-
-        // Buka dropdown berdasarkan index barisnya
-        $this->showDropdownPartisipan[$index] = true;
-    }
-
-    public function selectUser($id, $index, $type)
-    {
-        $user = User::find($id);
-
-        if ($user) {
-            // 1. Set data utama
-            $this->{$type}[$index]['user_id'] = $user->id;
-            $this->{$type}[$index]['nama']    = $user->name;
-
-            // 2. Set default Jabatan & Dept (Sangat membantu user agar tidak ketik manual)
-            $this->{$type}[$index]['jabatan'] = $user->position ?? '';
-            $this->{$type}[$index]['dept']    = $user->department_name ?? '';
-
-            // 3. Update teks input pencarian agar sinkron dengan pilihan
-            // Pastikan $this->searchQuery sudah didefinisikan sebagai array di awal
-            $this->searchQuery[$index][$type] = $user->name;
-
-            // 4. Reset state dropdown
-            $this->showDropdownPartisipan[$index] = false;
-            $this->options = [];
-
-            // 5. TRIGGER VALIDASI (PENTING)
-            // Menghapus pesan error merah segera setelah data terpilih
-            $this->validateOnly($type . '.' . $index . '.user_id');
-            $this->validateOnly($type . '.' . $index . '.dept');
-            $this->validateOnly($type . '.' . $index . '.jabatan');
-            // SIMPAN KE SESSION
-            $this->saveToSession();
-        }
-    }
-    public function resetSearch()
-    {
-        $this->searchQuery = []; // Reset ke array kosong
-        $this->options = [];
-        $this->showDropdownPartisipan = []; // Reset ke array kosong
-        $this->activeType = '';
-        $this->activeIndex = null;
-    }
-
-    // Data opsi sesuai gambar
-    public function getUnsafeConditionOptionsProperty()
-    {
-        return [
-            '1.1.1 Tidak memadainya pengamanan atau penghalang' => '1.1.1 Tidak memadainya pengamanan atau penghalang',
-            '1.1.2 Tidak memadainya atau tidak layaknya peralatan pencegah' => '1.1.2 Tidak memadainya atau tidak layaknya peralatan pencegah',
-            '1.1.3 Perkakas, peralatan atau bahan(material) yang rusak' => '1.1.3 Perkakas, peralatan atau bahan(material) yang rusak',
-            '1.1.4 Tempat kerja sangat terbatas' => '1.1.4 Tempat kerja sangat terbatas',
-            '1.1.5 Kurang memadainya Sistem peringatan' => '1.1.5 Kurang memadainya Sistem peringatan',
-            '1.1.6 Bahaya kebakaran dan ledakan' => '1.1.6 Bahaya kebakaran dan ledakan',
-            '1.1.7 Housekeeping jelek/berantakan' => '1.1.7 Housekeeping jelek/berantakan',
-            '1.1.8 Kebisingan' => '1.1.8 Kebisingan',
-            '1.1.9 Radiasi' => '1.1.9 Radiasi',
-            '1.1.10 Suhu yang ekstrim' => '1.1.10 Suhu yang ekstrim',
-            '1.1.11 Kurangnya penerangan / berlebihan' => '1.1.11 Kurangnya penerangan / berlebihan',
-            '1.1.12 Ventilasi' => '1.1.12 Ventilasi',
-            '1.1.13 Kondisi lingkungan yang berbahaya' => '1.1.13 Kondisi lingkungan yang berbahaya',
-            '1.1.14 Lainnya' => '1.1.14 Lainnya',
-        ];
-    }
-    #[Computed]
-    public function unsafeActOptions()
-    {
-        return [
-            '1.2.1 Mengoperasikan peralatan tanpa izin' => '1.2.1 Mengoperasikan peralatan tanpa izin',
-            '1.2.2 Gagal / lalai memperingatkan' => '1.2.2 Gagal / lalai memperingatkan',
-            '1.2.3 Gagal / lalai mengamankan' => '1.2.3 Gagal / lalai mengamankan',
-            '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai' => '1.2.4 Mengoperasikan dengan kecepatan tidak sesuai',
-            '1.2.5 Membuat alat pengaman tidak berfungsi' => '1.2.5 Membuat alat pengaman tidak berfungsi',
-            '1.2.6 Memakai alat yang rusak' => '1.2.6 Memakai alat yang rusak',
-            '1.2.7 Gagal / lalai menggunakan APD yang semestinya' => '1.2.7 Gagal / lalai menggunakan APD yang semestinya',
-            '1.2.8 Pembebanan yang tidak sesuai' => '1.2.8 Pembebanan yang tidak sesuai',
-            '1.2.9 Salah meletakkan / memuat' => '1.2.9 Salah meletakkan / memuat',
-            '1.2.10 Pengangkatan yang tidak sesuai' => '1.2.10 Pengangkatan yang tidak sesuai',
-            '1.2.11 Berada di tempat / posisi yang terlarang' => '1.2.11 Berada di tempat / posisi yang terlarang',
-            '1.2.12 Memperbaiki peralatan yang bekerja / bergerak' => '1.2.12 Memperbaiki peralatan yang bekerja / bergerak',
-            '1.2.13 Bercanda berlebihan' => '1.2.13 Bercanda berlebihan',
-            '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang' => '1.2.14 Di bawah pengaruh alkohol dan/atau obat terlarang',
-            '1.2.15 Memakai peralatan yang bukan semestinya' => '1.2.15 Memakai peralatan yang bukan semestinya',
-            '1.2.16 Gagal / lalai mengikuti prosedur' => '1.2.16 Gagal / lalai mengikuti prosedur',
-            '1.2.17 Lainnya' => '1.2.17 Lainnya',
-        ];
-    }
-    #[Computed]
-    public function personalFactorOptions()
-    {
-        return [
-            '2.1.1 Tidak memadainya kemampuan fisik / fisiologis' => '2.1.1 Tidak memadainya kemampuan fisik / fisiologis',
-            '2.1.2 Keterbatasan mental / Kemampuan psikologi' => '2.1.2 Keterbatasan mental / Kemampuan psikologi',
-            '2.1.3 Tekanan Fisik atau fisiologis' => '2.1.3 Tekanan Fisik atau fisiologis',
-            '2.1.4 Mental atau Tekanan psikologis' => '2.1.4 Mental atau Tekanan psikologis',
-            '2.1.5 Kurangnya pengetahuan' => '2.1.5 Kurangnya pengetahuan',
-            '2.1.6 Kurangnya keahlian' => '2.1.6 Kurangnya keahlian',
-            '2.1.7 Salah Motivasi' => '2.1.7 Salah Motivasi',
-            '2.1.8 Lainnya' => '2.1.8 Lainnya',
-        ];
-    }
-
-    #[Computed]
-    public function jobFactorOptions()
-    {
-        return [
-            '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai' => '2.2.1 Kepemimpinan dan atau Fungsi pengawasan tidak memadai',
-            '2.2.2 Engineering yang tidak memadai' => '2.2.2 Engineering yang tidak memadai',
-            '2.2.3 Pembelian yang tidak memadai' => '2.2.3 Pembelian yang tidak memadai',
-            '2.2.4 Pemeliharaan yang tidak memadai' => '2.2.4 Pemeliharaan yang tidak memadai',
-            '2.2.5 Alat dan peralatan yang tidak memadai' => '2.2.5 Alat dan peralatan yang tidak memadai',
-            '2.2.6 Standar-standar kerja yang tidak memadai' => '2.2.6 Standar-standar kerja yang tidak memadai',
-            '2.2.7 Pemakaian yang berlebihan' => '2.2.7 Pemakaian yang berlebihan',
-            '2.2.8 Salah pakai atau penyalahgunaan' => '2.2.8 Salah pakai atau penyalahgunaan',
-            '2.2.9 Lainnya' => '2.2.9 Lainnya',
-        ];
-    }
-
-    #[Computed]
-    public function controlSystemOptions()
-    {
-        return [
-            '2.3.1 Perangkat Keras' => '2.3.1 Perangkat Keras',
-            '2.3.2 Pelatihan' => '2.3.2 Pelatihan',
-            '2.3.3 Organisasi' => '2.3.3 Organisasi',
-            '2.3.4 Komunikasi' => '2.3.4 Komunikasi',
-            '2.3.5 Sasaran tidak kompatibel' => '2.3.5 Sasaran tidak kompatibel',
-            '2.3.6 Prosedur' => '2.3.6 Prosedur',
-            '2.3.7 Manajemen Pemeliharaan' => '2.3.7 Manajemen Pemeliharaan',
-            '2.3.8 Disain' => '2.3.8 Disain',
-            '2.3.9 Manajemen Resiko' => '2.3.9 Manajemen Resiko',
-            '2.3.10 Manajemen Perubahan' => '2.3.10 Manajemen Perubahan',
-            '2.3.11 Manajemen Kontraktor' => '2.3.11 Manajemen Kontraktor',
-            '2.3.12 Budaya Organisasi' => '2.3.12 Budaya Organisasi',
-            '2.3.13 Pengaruh Peraturan' => '2.3.13 Pengaruh Peraturan',
-            '2.3.14 Pembelajaran Organisasi' => '2.3.14 Pembelajaran Organisasi',
-            '2.3.15 Manajemen Kendaraan' => '2.3.15 Manajemen Kendaraan',
-            '2.3.16 Sistem Manajemen' => '2.3.16 Sistem Manajemen',
-            '2.3.17 Lainnya' => '2.3.17 Lainnya',
-        ];
-    }
-    public function addCorrectiveRow()
-    {
-        // 1. Definisikan struktur array dengan lengkap
-        $this->corrective_actions[] = [
-            'action_description' => '',
-            'control_hierarchy' => '', // Tambahkan ini agar select tidak error
-            'pic_user_id' => '',
-            'due_date' => null,
-            'actual_completion_date' => null,
-            'inspector_id' => null,
-            'id_number' => '', // Tambahkan jika digunakan di selectActPelapor
-            'dept_con' => '',  // Tambahkan jika digunakan di selectActPelapor
-        ];
-
-        $index = count($this->corrective_actions) - 1;
-
-        // 2. Inisialisasi pendukung UI
-        $this->searchPetugas[$index] = '';
-        $this->showDropdownPetugas[$index] = false;
-
-        // JANGAN tambahkan $this->corrective_actions[$index] = []; di sini
-    }
-
-    /**
-     * Menghapus baris tertentu
-     */
-    public function removeCorrectiveRow($index)
-    {
-        unset($this->corrective_actions[$index]);
-        unset($this->searchPetugas[$index]);
-        unset($this->showDropdownPetugas[$index]);
-
-        // Reset array keys agar urutan index tetap konsisten (0, 1, 2...)
-        $this->corrective_actions = array_values($this->corrective_actions);
-        $this->searchPetugas = array_values($this->searchPetugas);
-        $this->showDropdownPetugas = array_values($this->showDropdownPetugas);
-    }
-
-    /**
-     * Lifecycle Hook: Berjalan otomatis saat $searchPetugas diupdate
-     * Format: updatedFieldNameIndex
-     */
-    public function updatedSearchPetugas($value, $key)
-    {
-        // Livewire v4 mengirim key berupa index (misal: "0")
-        // Jika format modelsearch adalah searchPetugas.{{ $index }}
-        $index = explode('.', $key)[0];
-
-        if (strlen($value) > 1) {
-            $this->pelaporsAct = User::where('name', 'like', '%' . $value . '%')
-                ->orderBy('name')
-                ->limit(20)
-                ->get();
-
-            // Pastikan hanya baris ini yang dropdown-nya terbuka
-            $this->showDropdownPetugas[$index] = true;
-        } else {
-            $this->showDropdownPetugas[$index] = false;
-        }
-    }
-
-    public function selectActPelapor($id, $name)
-    {
-        // Cari index mana yang dropdown-nya sedang terbuka (true)
-        $index = collect($this->showDropdownPetugas)->search(true);
-
-        if ($index !== false) {
-            $inspector = User::find($id);
-
-            if ($inspector) {
-                // CARA TERBAIK: Update key spesifik tanpa menghapus data lama (action_description, dll)
-                $this->corrective_actions[$index]['name'] = $inspector->name;
-                $this->corrective_actions[$index]['id_number'] = $inspector->employee_id;
-                $this->corrective_actions[$index]['dept_con'] = $inspector->department_name;
-                $this->corrective_actions[$index]['pic_user_id'] = $inspector->id;
-
-                // Atau jika ingin menggunakan array_merge:
-                // $this->corrective_actions[$index] = array_merge($this->corrective_actions[$index], [
-                //     'name' => $inspector->name,
-                //     'inspector_id' => $inspector->id,
-                //     'id_number' => $inspector->employee_id,
-                //     'dept_con' => $inspector->department_name,
-                // ]);
-            }
-
-            // Update search input agar input field menampilkan nama pilihan
-            $this->searchPetugas[$index] = $name;
-
-            // Tutup dropdown
-            $this->showDropdownPetugas[$index] = false;
-        }
-    }
-
-    public function getPelaporsPenerimaanProperty()
-    {
-        // Mendeteksi field mana yang sedang diketik berdasarkan activeType
-        $searchTerm = '';
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_contractor') $searchTerm = $this->searchNamePenerimaan['kontraktor'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_internal') $searchTerm = $this->searchNamePenerimaan['internal'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ohs') $searchTerm = $this->searchNamePenerimaan['ohs'];
-        if ($this->activeTypePenerimaan == 'penerimaan_komentar_ktt') $searchTerm = $this->searchNamePenerimaan['ktt'];
-
-        if (strlen($searchTerm) < 2) {
-            return [];
-        }
-
-        return User::where('name', 'like', '%' . $searchTerm . '%')
-            ->limit(80)
-            ->get();
-    }
-
-    /**
-     * Helper Function untuk Reset Dropdown
-     */
-    private function resetDropdowns()
-    {
-        $this->showPenerimaanKomentarContractorDropdown = false;
-        $this->showPenerimaanKomentarInternalDropdown = false;
-        $this->showPenerimaanKomentarOhsDropdown = false;
-        $this->showPenerimaanKomentarKttDropdown = false;
-    }
-
-    /**
-     * Action: Pilih Pelapor Contractor
-     */
-    public function selectPenerimaanKomentarContractor($id, $name)
-    {
-        $this->penerimaan_komentar_contractor_id = $id;
-        $this->searchNamePenerimaan['kontraktor'] = $name;
-        $this->resetDropdowns();
-    }
-
-    /**
-     * Action: Pilih Pelapor Internal
-     */
-    public function selectPenerimaanKomentarInternal($id, $name)
-    {
-        $this->penerimaan_komentar_internal_id = $id;
-        $this->searchNamePenerimaan['internal'] = $name;
-        $this->resetDropdowns();
-    }
-
-    /**
-     * Action: Pilih Pelapor OHS
-     */
-    public function selectPenerimaanKomentarOhs($id, $name)
-    {
-        $this->penerimaan_komentar_ohs_id = $id;
-        $this->searchNamePenerimaan['ohs'] = $name;
-        $this->resetDropdowns();
-    }
-
-    /**
-     * Action: Pilih Pelapor KTT
-     */
-    public function selectPenerimaanKomentarKtt($id, $name)
-    {
-        $this->penerimaan_komentar_ktt_id = $id;
-        $this->searchNamePenerimaan['ktt'] = $name;
-        $this->resetDropdowns();
-    }
-
-    /**
-     * Lifecycle: Monitor perubahan search input untuk memunculkan dropdown
-     */
-    public function updatedSearchNamePenerimaan($value, $key)
-    {
-        $this->resetDropdowns();
-
-        if ($key === 'kontraktor') $this->showPenerimaanKomentarContractorDropdown = true;
-        if ($key === 'internal') $this->showPenerimaanKomentarInternalDropdown = true;
-        if ($key === 'ohs') $this->showPenerimaanKomentarOhsDropdown = true;
-        if ($key === 'ktt') $this->showPenerimaanKomentarKttDropdown = true;
-    }
-
-
-
-    /**
-     * Mendefinisikan pesan error kustom
-     */
-
-    /**
-     * Helper untuk menembakkan event validasi ke frontend
-     */
-    protected function dispatchValidationEvents($errors)
-    {
-        $komentarFields = [
-            'penerimaan_komentar_contractor',
-            'penerimaan_komentar_internal',
-            'penerimaan_komentar_ohs',
-            'penerimaan_komentar_ktt'
-        ];
-
-        foreach ($komentarFields as $field) {
-            if ($errors->has($field)) {
-                $this->dispatch('validate-' . $field);
-            }
-        }
-    }
     public function save()
     {
         // 1. Jalankan Validasi Global (Hanya akan memvalidasi field yang ada di rules)
@@ -1393,7 +847,7 @@ class Create extends Component
         // Logika Generate Report Number Sementara (Mencegah Race Condition/Duplikat)
         // Nomor asli akan digenerate setelah data masuk ke database dan ID didapatkan
         $reportNumber = uniqid('TMP-INC-');
-        
+
         return [
             // PART 1: INFORMASI DASAR
             'header' => [
@@ -1438,9 +892,6 @@ class Create extends Component
                     'detail'  => $this->damage_detail,
                 ] : null,
             ],
-
-
-
             // PART 2: PERSONEL TERLIBAT
             'pihak_terlibat' => collect($this->directly_involved)->map(function ($person) {
                 return [
