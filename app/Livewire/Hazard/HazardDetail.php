@@ -474,7 +474,7 @@ class HazardDetail extends Component
         if ($newStatus === 'in_progress' && !empty($assignedErmIds)) {
 
             foreach ($assignedErmIds as $userId) {
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $userId,
                     'Notifikasi Penugasan ERM Laporan Hazard',
                     'emails.notification', // Gunakan template notifikasi yang sama
@@ -485,14 +485,14 @@ class HazardDetail extends Component
                         'additionalInfo' => $additionalInfo,
                         'actionUrl'      => route('hazard-detail', $this->hazard->id)
                     ]
-                );
+                ));
             }
         }
         if ($newStatus != 'in_progress') {
             // Kirim notifikasi ke moderator
             $moderatorIds = HazardWorkflow::getModeratorsForStatus($newStatus, $this->hazard);
             foreach ($moderatorIds as $moderatorId) {
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $moderatorId,
                     'Notifikasi Perubahan Status Laporan Hazard',
                     'emails.notification',
@@ -503,13 +503,13 @@ class HazardDetail extends Component
                         'additionalInfo' => $additionalInfo,
                         'actionUrl'      => route('hazard-detail', $this->hazard->id)
                     ]
-                );
+                ));
             }
         }
 
         // B. Notifikasi ke Penanggung Jawab (Opsional: Jika Anda ingin memberitahu PJ tentang perubahan status)
         if ($this->hazard->penanggung_jawab_id && $newStatus !== 'submitted') {
-            MailHelper::sendToUserId(
+            defer(fn() => MailHelper::sendToUserId(
                 $this->hazard->penanggung_jawab_id,
                 'Perubahan Status Laporan Hazard',
                 'emails.notification',
@@ -520,7 +520,7 @@ class HazardDetail extends Component
                     'additionalInfo' => $additionalInfo,
                     'actionUrl'      => route('hazard-detail', $this->hazard->id)
                 ]
-            );
+            ));
         }
 
         // --- 6. Update UI dan Feedback ke User ---
@@ -614,7 +614,7 @@ class HazardDetail extends Component
 
             try {
                 $user = User::find($userId);
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $userId,
                     'Notifikasi Pesan Baru di Chat Laporan Hazard',
                     'emails.notification',
@@ -629,7 +629,7 @@ class HazardDetail extends Component
                         'actionUrl'      => route('hazard-detail', $this->hazard->id),
                         'actionText'     => 'Lihat Pesan di Aplikasi'
                     ]
-                );
+                ));
             } catch (\Exception $e) {
                 // Catat error ke log jika pengiriman ke satu user ini gagal, tapi biarkan loop lanjut ke user berikutnya
                 $this->dispatch(
@@ -962,7 +962,7 @@ class HazardDetail extends Component
         // Dapatkan Penanggung Jawab dari relasi
         $penanggungJawab = $hazard->penanggung_jawab_id;
         if ($penanggungJawab) {
-            MailHelper::sendToUserId(
+            defer(fn() => MailHelper::sendToUserId(
                 $penanggungJawab,
                 'Notifikasi Laporan Hazard',
                 'emails.notification',
@@ -973,7 +973,7 @@ class HazardDetail extends Component
                     'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
                     'actionUrl'     => route('hazard-detail', $hazard->id)
                 ]
-            );
+            ));
         }
         if ($this->moderator_comment) {
             // 1. Kumpulkan semua ID yang berpotensi di-assign
@@ -992,7 +992,7 @@ class HazardDetail extends Component
 
             // 4. Looping untuk kirim email ke semua pihak yang terlibat
             foreach ($uniqueAssignIds as $userId) {
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $userId,
                     'Komentar Moderator pada Laporan Hazard',
                     'emails.notification',
@@ -1003,7 +1003,7 @@ class HazardDetail extends Component
                         'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
                         'actionUrl'      => route('hazard-detail', $hazard->id)
                     ]
-                );
+                ));
             }
         }
 
@@ -1033,7 +1033,7 @@ class HazardDetail extends Component
             ->pluck('user_id');
         // Kirim email ke setiap moderator
         foreach ($moderatorIds as $moderatorId) {
-            MailHelper::sendToUserId(
+            defer(fn() => MailHelper::sendToUserId(
                 $moderatorId,
                 'Notifikasi Laporan Hazard',
                 'emails.notification',
@@ -1044,7 +1044,7 @@ class HazardDetail extends Component
                     'additionalInfo' => "Nomor Laporan: $hazard->no_referensi",
                     'actionUrl'     => route('hazard-detail', $hazard->id)
                 ]
-            );
+            ));
         }
         // [END] Logika Baru: Notifikasi ke Semua Moderator
         $this->dispatch(
@@ -1361,7 +1361,7 @@ class HazardDetail extends Component
         $clearDeskription  = strip_tags($hazard->description);
         // Kirim email ke setiap moderator
         foreach ($moderatorIds as $moderatorId) {
-            MailHelper::sendToUserId(
+            defer(fn() => MailHelper::sendToUserId(
                 $moderatorId,
                 'Penghapusan Laporan Hazard',
                 'emails.notification',
@@ -1373,11 +1373,11 @@ class HazardDetail extends Component
                     'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nDeskripsi : $clearDeskription",
                     'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
                 ]
-            );
+            ));
         }
         $penanggungJawab = $hazard->penanggung_jawab_id;
         if ($penanggungJawab) {
-            MailHelper::sendToUserId(
+            defer(fn() => MailHelper::sendToUserId(
                 $penanggungJawab,
                 'Penghapusan Laporan Hazard',
                 'emails.notification',
@@ -1389,7 +1389,7 @@ class HazardDetail extends Component
                     'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nDeskripsi : $clearDeskription",
                     'actionUrl'      => null // Set null agar tombol di email tidak muncul/tidak bisa diklik
                 ]
-            );
+            ));
         }
         $hazard->delete();
 

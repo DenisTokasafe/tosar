@@ -674,7 +674,7 @@ class HazardForm extends Component
             $penanggungJawab = $hazard->penanggung_jawab_id;
             $responsibility = $hazard->penanggungJawab->name;
             if ($penanggungJawab) {
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $penanggungJawab,
                     'Anda Menjadi PIC di laporan Hazard Ini',
                     'emails.notification',
@@ -685,7 +685,7 @@ class HazardForm extends Component
                         'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nPenanggung Jawab Area: $responsibility\nStatus: $status",
                         'actionUrl'     => route('hazard-detail', $hazard->id)
                     ]
-                );
+                ));
             }
 
             // [START] Logika Baru: Notifikasi ke Semua Moderator
@@ -714,7 +714,7 @@ class HazardForm extends Component
                 ->pluck('user_id');
             // Kirim email ke setiap moderator
             foreach ($moderatorIds as $moderatorId) {
-                MailHelper::sendToUserId(
+                defer(fn() => MailHelper::sendToUserId(
                     $moderatorId,
                     'Notifikasi Laporan Hazard',
                     'emails.notification',
@@ -725,7 +725,7 @@ class HazardForm extends Component
                         'additionalInfo' => "Nomor Laporan: $hazard->no_referensi\nNama Pelapor : $reporterName\nLokasi Penugasan: $locationName\nStatus: $status",
                         'actionUrl'     => route('hazard-detail', $hazard->id)
                     ]
-                );
+                ));
             }
             // [END] Logika Baru: Notifikasi ke Semua Moderator
         });
