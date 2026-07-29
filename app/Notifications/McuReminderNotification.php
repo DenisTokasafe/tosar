@@ -76,6 +76,11 @@ class McuReminderNotification extends Notification implements ShouldQueue
         $date = $this->participant->schedule?->schedule_date?->format('d M Y') ?? '-';
         $employeeName = $this->participant->employee?->name ?? 'Karyawan';
 
+        // 1. Coba ambil dari routeNotificationFor terlebih dahulu (Standar Laravel)
+        $phone = method_exists($notifiable, 'routeNotificationFor') 
+            ? $notifiable->routeNotificationFor('whatsapp') 
+            : null;
+
         // Cek apakah penerima adalah Atasan (Supervisor / Dept Head)
         if ($this->isManager($notifiable)) {
             $spvName = $notifiable->name ?? 'Bapak/Ibu Atasan';
@@ -85,20 +90,24 @@ class McuReminderNotification extends Notification implements ShouldQueue
             $text .= "Anggota tim Anda, *{$employeeName}*, dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
             $text .= "Mohon bantuan Anda untuk memastikan kehadirannya.";
 
-            // LANGSUNG AMBIL DARI KOLOM spv_wa_number DI TABEL mcu_participants
-            $phone = $this->participant->spv_wa_number
-                ?? $notifiable->whatsapp_number
-                ?? $notifiable->phone;
+            // 2. Fallback: Ambil dari tabel MCU Participant / properti User
+            if (!$phone) {
+                $phone = $this->participant->spv_wa_number
+                    ?? $notifiable->whatsapp_number
+                    ?? $notifiable->phone;
+            }
         } else {
             $text  = "*PEMBERITAHUAN JADWAL MCU*\n\n";
             $text .= "Halo {$notifiable->name},\n";
             $text .= "Anda telah dijadwalkan untuk Medical Check-Up pada tanggal *{$date}*.\n";
             $text .= "Mohon persiapkan diri Anda.";
 
-            // LANGSUNG AMBIL DARI KOLOM whatsapp_number DI TABEL mcu_participants
-            $phone = $this->participant->whatsapp_number
-                ?? $notifiable->whatsapp_number
-                ?? $notifiable->phone;
+            // 2. Fallback: Ambil dari tabel MCU Participant / properti User
+            if (!$phone) {
+                $phone = $this->participant->whatsapp_number
+                    ?? $notifiable->whatsapp_number
+                    ?? $notifiable->phone;
+            }
         }
 
         return [

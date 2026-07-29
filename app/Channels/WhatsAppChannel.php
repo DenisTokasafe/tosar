@@ -39,8 +39,8 @@ class WhatsAppChannel
             // Contoh implementasi HTTP Request ke API WhatsApp (Misal: Fonnte)
             // SESUAIKAN DENGAN DOKUMENTASI PROVIDER API ANDA
             $response = Http::withHeaders([
-                'Authorization' => env('WHATSAPP_API_TOKEN'), // Ambil token dari file .env
-            ])->post(env('WHATSAPP_API_URL'), [
+                'Authorization' => config('services.whatsapp.token'), // Ambil token dari config
+            ])->post(config('services.whatsapp.url'), [
                 'target' => $phone, // Beberapa provider menggunakan key 'phone' atau 'number'
                 'message' => $message,
                 // 'delay' => '2' // Opsional jika API mendukung

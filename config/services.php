@@ -44,6 +44,9 @@ return [
     'key' => env('LDAP_GATEWAY_KEY'),
 ],
 
-
+    'whatsapp' => [
+        'url' => env('WHATSAPP_API_URL'),
+        'token' => env('WHATSAPP_API_TOKEN'),
+    ],
 
 ];
