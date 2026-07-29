@@ -216,7 +216,7 @@ class GenerateSchedule extends Component
             if ($employee) {
                 // Method via() di notifikasi akan otomatis memilih kirim Email, WA, atau keduanya
                 // tergantung data apa yang tersedia pada user/participant.
-                $employee->notify(new McuReminderNotification($participant, 'new_schedule'));
+                defer(fn() => $employee->notify(new McuReminderNotification($participant, 'new_schedule')));
             }
 
             // 2. KIRIM KE SUPERVISOR
@@ -224,19 +224,19 @@ class GenerateSchedule extends Component
                 $spv = User::find($participant->supervisor_id);
                 if ($spv) {
                     // Jika SPV terdaftar di sistem, kirim (email & WA akan diatur otomatis oleh via())
-                    $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
+                    defer(fn() => $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv')));
                 }
             } elseif (!empty($participant->spv_wa_number)) {
                 // Jika SPV manual (tidak punya akun di sistem), kirim via On-Demand Notification (Khusus WA)
-                Notification::route('whatsapp', $participant->spv_wa_number)
-                    ->notify(new McuReminderNotification($participant, 'new_schedule_spv'));
+                defer(fn() => Notification::route('whatsapp', $participant->spv_wa_number)
+                    ->notify(new McuReminderNotification($participant, 'new_schedule_spv')));
             }
 
             // 3. KIRIM KE DEPT HEAD (Khusus Dept Head, method via() Anda sudah mengunci hanya via Email)
             if ($participant->dept_head_id) {
                 $deptHead = User::find($participant->dept_head_id);
                 if ($deptHead && !empty($deptHead->email)) {
-                    $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head'));
+                    defer(fn() => $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head')));
                 }
             }
         }
@@ -245,8 +245,6 @@ class GenerateSchedule extends Component
         $this->dispatch('alert', [
             'text'            => "Jadwal MCU berhasil dibuat dan notifikasi sedang dikirim di latar belakang.",
             'duration'        => 5000,
-            'destination'     => '/contact',
-            'newWindow'       => true,
             'close'           => true,
             'backgroundColor' => "linear-gradient(to right, #06b6d4, #22c55e)",
         ]);
