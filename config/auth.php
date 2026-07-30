@@ -80,6 +80,10 @@ return [
                     'email' => 'mail',
                     'username' => 'samaccountname', // Biasanya AD menggunakan samaccountname sebagai username
                 ],
+                // Fitur Fallback DB Lokal (Jika user tidak ditemukan di LDAP/Koneksi gagal, cek ke tabel MySQL)
+                'fallback' => [
+                    'password' => 'password',
+                ],
             ],
         ],
     ],

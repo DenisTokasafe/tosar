@@ -35,6 +35,12 @@ return [
         'port'     => env('LDAP_PORT', 636),
         'use_ssl'  => env('LDAP_SSL', true),
         'use_tls'  => env('LDAP_TLS', false),
+        
+        // Opsi ini setara dengan InsecureSkipVerify
+        'options' => [
+            // Jika LDAP_TLS_REQCERT di-set ke 'never', PHP akan mengabaikan sertifikat SSL (berguna untuk Self-Signed)
+            LDAP_OPT_X_TLS_REQUIRE_CERT => env('LDAP_TLS_REQCERT', 'hard') === 'never' ? LDAP_OPT_X_TLS_NEVER : LDAP_OPT_X_TLS_HARD,
+        ],
     ],
 ],
 
