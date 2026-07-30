@@ -15,11 +15,13 @@ class McuResultNotification extends Notification implements ShouldQueue
 
     protected $result;
     protected $recipientType;
+    protected $channels;
 
-    public function __construct(McuResult $result, string $recipientType)
+    public function __construct(McuResult $result, string $recipientType, array $channels = ['mail', 'database', \App\Channels\WhatsAppChannel::class])
     {
         $this->result = $result;
         $this->recipientType = $recipientType;
+        $this->channels = $channels;
     }
 
     /**
@@ -27,7 +29,7 @@ class McuResultNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', WhatsAppChannel::class];
+        return $this->channels;
     }
 
     /**
