@@ -28,14 +28,13 @@ return [
 
 'connections' => [
     'default' => [
-         'hosts' => ['archimining.com'],
-            'base_dn' => 'dc=archimining,dc=com',
-        'username' => null,   // <- kosong, tidak pakai service account
-        'password' => null,
-        'port'     => 636,    // 636 jika LDAPS
-        'use_ssl'  => true,
-        'use_tls'  => false,
-        'base_dn'  => 'DC=archimining,DC=local',
+        'hosts'    => [env('LDAP_HOST', 'archimining.local')],
+        'base_dn'  => env('LDAP_BASE_DN', 'DC=archimining,DC=local'),
+        'username' => env('LDAP_USERNAME', null),
+        'password' => env('LDAP_PASSWORD', null),
+        'port'     => env('LDAP_PORT', 636),
+        'use_ssl'  => env('LDAP_SSL', true),
+        'use_tls'  => env('LDAP_TLS', false),
     ],
 ],
 
