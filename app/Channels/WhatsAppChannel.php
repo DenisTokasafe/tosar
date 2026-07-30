@@ -41,9 +41,9 @@ class WhatsAppChannel
             $response = Http::withHeaders([
                 'Authorization' => config('services.whatsapp.token'), // Ambil token dari config
             ])->post(config('services.whatsapp.url'), [
-                'target' => $phone, // Beberapa provider menggunakan key 'phone' atau 'number'
+                'target' => $phone,
                 'message' => $message,
-                // 'delay' => '2' // Opsional jika API mendukung
+                'delay' => '2', // Mencegah pemblokiran anti-spam jika mengirim ke nomor yang sama berkali-kali dalam 1 detik
             ]);
 
             // Jika API merespon error, catat di log laravel (storage/logs/laravel.log)
