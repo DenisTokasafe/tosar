@@ -162,22 +162,6 @@
                 </div>
                 <x-label-error :messages="$errors->get('selectedDiseaseCategories')" />
             </fieldset>
-            <fieldset class="w-full fieldset">
-                <x-form.label label="Jadwal Follow Up MCU" required />
-                <input type="text" readonly id="follow_up_date" wire:model="follow_up_date" placeholder="Pilih Jadwal Follow Up MCU"
-                    class="w-full cursor-pointer input input-bordered input-xs focus-within:outline-none focus-within:border-info focus-within:ring-0 focus:border-primary transition-all {{ $errors->has('follow_up_date') ? 'input-error focus:ring-error/20' : '' }}"
-                    x-data="{ fp: null }" x-init="
-                                fp = flatpickr($refs.input, {
-                                    dateFormat: 'Y-m-d',
-                                     static: true,
-                                });
-                                $wire.on('dateLoaded', () => {
-                                    if ($wire.follow_up_date) {
-                                        fp.setDate($wire.follow_up_date);
-                                    }
-                                });" x-ref="input" />
-                <x-label-error :messages="$errors->get('follow_up_date')" />
-            </fieldset>
             @endif
 
             <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-doctor_notes">

@@ -50,7 +50,9 @@ class McuResultNotification extends Notification implements ShouldQueue
                 ->greeting('Halo, ' . $employeeName)
                 ->line('Dokter telah selesai meninjau hasil pemeriksaan kesehatan (MCU) Anda.')
                 ->line('**Status Kebugaran:** ' . $statusText)
-                ->line($this->result->status === 'temporary_unfit' && $this->result->follow_up_date ? '• Jadwal MCU Follow Up Anda: ' . $this->result->follow_up_date->format('d M Y') : '')
+                ->line($this->result->status === 'temporary_unfit' ? 'Mohon segera melakukan konsultasi dengan Dokter Onsite untuk mendapatkan surat rujukan. Selanjutnya, harap melakukan pemeriksaan lanjutan ke dokter spesialis sesuai rujukan paling lambat 10 (Sepuluh) hari kerja sejak pesan ini diterima.' : '')
+                ->line($this->result->status === 'temporary_unfit' ? 'Setelah konsultasi selesai, mohon menyerahkan hasil pemeriksaan kepada Klinik Perusahaan sebagai dasar evaluasi status kesehatan dan kelayakan bekerja.' : '')
+                ->line($this->result->status === 'temporary_unfit' ? 'Apabila memerlukan bantuan atau informasi lebih lanjut, silakan menghubungi Klinik Toka.' : '')
                 ->action('Lihat Detail Hasil', url('/dashboard/mcu'))
                 ->line('Terima kasih, tetap jaga kesehatan dan keselamatan kerja Anda.');
         }
@@ -89,12 +91,15 @@ class McuResultNotification extends Notification implements ShouldQueue
             if ($diseases) {
                 $text .= "*Temuan Medis / Penyakit:* {$diseases}\n";
             }
-            if ($this->result->status === 'temporary_unfit' && $this->result->follow_up_date) {
-                $text .= "*Jadwal MCU Follow Up:* " . $this->result->follow_up_date->format('d M Y') . "\n";
+            if ($this->result->status === 'fit_with_notes') {
+                $text .= "Anda tetap dinyatakan layak bekerja.\n";
+                $text .= "kami menyarankan Anda untuk melakukan konsultasi dengan Dokter Onsite\n";
+                $text .= "agar hasil pemeriksaan dapat dijelaskan lebih lanjut dan saran untuk tindak lanjut yang sesuai.\n";
             }
-
-            $text .= "\nDetail selengkapnya dapat Anda lihat melalui Dashboard sistem.";
-
+            if ($this->result->status === 'temporary_unfit') {
+                $text .= "\nMohon segera melakukan konsultasi dengan Dokter Onsite untuk mendapatkan surat rujukan. Selanjutnya, harap melakukan pemeriksaan lanjutan ke dokter spesialis sesuai rujukan paling lambat 10 (Sepuluh) hari kerja sejak pesan ini diterima.\n\nSetelah konsultasi selesai, mohon menyerahkan hasil pemeriksaan kepada Klinik Perusahaan sebagai dasar evaluasi status kesehatan dan kelayakan bekerja.\n\nApabila memerlukan bantuan atau informasi lebih lanjut, silakan menghubungi Klinik Toka.\n";
+            }
+            $text .= "\nTerima kasih dan semoga selalu sehat.";
             $phone = $notifiable->whatsapp_number ?? $notifiable->phone ?? $this->result->participant->whatsapp_number;
         } else {
             $spvName = $notifiable->name ?? 'Bapak/Ibu Atasan';
