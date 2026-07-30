@@ -11,7 +11,6 @@ class DoctorReview extends Component
 {
     public $selectedResultId;
     public $fit_status;
-    public $restriction_notes;
     public $follow_up_date;
     public $doctor_notes;
 
@@ -24,7 +23,7 @@ class DoctorReview extends Component
     public function openReviewModal($id)
     {
         $this->resetValidation();
-        $this->reset(['fit_status', 'restriction_notes', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories', 'new_disease_name']);
+        $this->reset(['fit_status', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories', 'new_disease_name']);
 
         $this->selectedResultId = $id;
 
@@ -67,7 +66,6 @@ class DoctorReview extends Component
     {
         $this->validate([
             'fit_status'        => 'required|in:fit_to_work,fit_with_notes,temporary_unfit,unfit',
-            'restriction_notes' => 'required_if:fit_status,fit_with_notes|nullable|string',
             'follow_up_date'    => 'required_if:fit_status,temporary_unfit|nullable|date',
             'doctor_notes'      => 'nullable|string',
         ]);
@@ -83,7 +81,7 @@ class DoctorReview extends Component
             $result->update([
                 'status'              => $this->fit_status,
                 'workflow_status'     => 'reviewed',
-                'doctor_site_consult' => $this->fit_status === 'fit_with_notes' ? $this->restriction_notes : null,
+                'doctor_site_consult' => null,
                 'follow_up_date'      => $this->fit_status === 'temporary_unfit' ? $this->follow_up_date : null,
                 'doctor_notes'        => $this->doctor_notes,
                 'reviewed_by'         => auth()->id(),
@@ -126,7 +124,7 @@ class DoctorReview extends Component
             }
 
             $this->showReviewModal = false;
-            $this->reset(['fit_status', 'restriction_notes', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories', 'selectedResultId']);
+            $this->reset(['fit_status', 'follow_up_date', 'doctor_notes', 'selectedDiseaseCategories', 'selectedResultId']);
 
             session()->flash('message', 'Review MCU berhasil disimpan dan notifikasi hasil telah terkirim.');
         }

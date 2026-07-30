@@ -113,13 +113,6 @@
                 </div>
                 <x-label-error :messages="$errors->get('selectedDiseaseCategories')" />
             </fieldset>
-            <fieldset class="mb-4 fieldset md:col-span-2" wire:key="box-restriction">
-                <x-form.label label="Catatan Batasan Kerja (Restriction Monitoring)" required />
-                <div x-data="ckeditorHelper('restriction_notes')" wire:ignore>
-                    <div x-ref="editorElement" data-placeholder="{{ __('Masukkan Catatan Batasan Kerja (Restriction Monitoring)...') }}"></div>
-                </div>
-                <x-label-error :messages="$errors->get('restriction_notes')" />
-            </fieldset>
             @endif
 
             @if($fit_status === 'temporary_unfit')
