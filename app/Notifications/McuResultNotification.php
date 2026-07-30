@@ -50,7 +50,6 @@ class McuResultNotification extends Notification implements ShouldQueue
                 ->greeting('Halo, ' . $employeeName)
                 ->line('Dokter telah selesai meninjau hasil pemeriksaan kesehatan (MCU) Anda.')
                 ->line('**Status Kebugaran:** ' . $statusText)
-                ->line($this->result->status === 'fit_with_notes' ? '• Catatan Batasan Kerja: ' . strip_tags($this->result->doctor_site_consult) : '')
                 ->line($this->result->status === 'temporary_unfit' && $this->result->follow_up_date ? '• Jadwal MCU Follow Up Anda: ' . $this->result->follow_up_date->format('d M Y') : '')
                 ->action('Lihat Detail Hasil', url('/dashboard/mcu'))
                 ->line('Terima kasih, tetap jaga kesehatan dan keselamatan kerja Anda.');
@@ -63,9 +62,7 @@ class McuResultNotification extends Notification implements ShouldQueue
             ->line('Pemberitahuan bahwa proses review medis untuk anggota tim Anda telah selesai dilakukan oleh dokter.')
             ->line('**Nama Karyawan:** ' . $employeeName)
             ->line('**Status Kebugaran Kerja:** ' . $statusText)
-            ->line($this->result->status === 'fit_with_notes' ? '• Batasan Kerja (Harap Dimonitor): ' . strip_tags($this->result->doctor_site_consult) : '')
-            ->action('Buka Menu Monitoring', url('/supervisor/mcu-monitoring'))
-            ->line('Mohon lakukan penyesuaian operasional di lapangan jika terdapat batasan kerja pada karyawan terkait.');
+            ->action('Buka Menu Monitoring', url('/supervisor/mcu-monitoring'));
     }
 
     /**
@@ -78,24 +75,21 @@ class McuResultNotification extends Notification implements ShouldQueue
 
         $employeeName = $this->result->participant->employee->name ?? 'Karyawan';
         $statusText = str_replace('_', ' ', strtoupper($this->result->status));
-        $doctorNotes = strip_tags($this->result->doctor_site_consult);
 
         // 2. Ambil daftar penyakit dari tabel pivot dan gabungkan menjadi string teks
         $diseases = $this->result->diseaseCategories->pluck('name')->join(', ');
 
         if ($this->recipientType === 'employee') {
             $text = "*HASIL MEDICAL CHECK-UP (MCU)*\n\n";
-            $text .= "Halo {$employeeName},\n";
-            $text .= "Dokter telah selesai meninjau hasil pemeriksaan kesehatan MCU Anda.\n\n";
-            $text .= "*Status Kebugaran:* {$statusText}\n";
+            $text .= "Halo Bapak/Ibu {$employeeName},\n";
+            $text .= "Hasil Medical Check Up (MCU) Anda telah kami terima.\n\n";
+            $text .= "*Berdasarkan hasil pemeriksaan, status kesehatan Anda adalah:* {$statusText}\n";
 
             // 3a. Sisipkan info penyakit untuk Karyawan (jika ada temuan)
             if ($diseases) {
                 $text .= "*Temuan Medis / Penyakit:* {$diseases}\n";
             }
-            if ($this->result->status === 'fit_with_notes') {
-                $text .= "*Catatan Batasan Kerja:* {$doctorNotes}\n";
-            } elseif ($this->result->status === 'temporary_unfit' && $this->result->follow_up_date) {
+            if ($this->result->status === 'temporary_unfit' && $this->result->follow_up_date) {
                 $text .= "*Jadwal MCU Follow Up:* " . $this->result->follow_up_date->format('d M Y') . "\n";
             }
 
@@ -111,14 +105,8 @@ class McuResultNotification extends Notification implements ShouldQueue
             $text .= "*Nama Karyawan:* {$employeeName}\n";
             $text .= "*Status Kebugaran Kerja:* {$statusText}\n";
 
-            // 3b. Sisipkan info penyakit untuk Supervisor / Atasan (jika ada temuan)
             if ($diseases) {
                 $text .= "*Temuan Medis / Penyakit:* {$diseases}\n";
-            }
-
-            if ($this->result->status === 'fit_with_notes') {
-                $text .= "*Batasan Kerja (Harap Dimonitor):* {$doctorNotes}\n\n";
-                $text .= "Mohon lakukan penyesuaian operasional lapangan jika diperlukan.";
             }
 
             $phone = $notifiable->whatsapp_number ?? $notifiable->phone ?? $this->result->participant->spv_wa_number;
