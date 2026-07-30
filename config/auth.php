@@ -60,32 +60,32 @@ return [
     */
 
     'providers' => [
-        // Driver eloquent bawaan dimatikan
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => env('AUTH_MODEL', App\Models\User::class),
-        // ],
-
-        // Driver LDAP dihidupkan
+        // Driver eloquent bawaan dihidupkan KEMBALI SEMENTARA
         'users' => [
-            'driver' => 'ldap',
-            'model' => LdapRecord\Models\ActiveDirectory\User::class, // Menggunakan model ActiveDirectory
-            'rules' => [],
-            'scopes' => [],
-            'database' => [
-                'model' => App\Models\User::class,
-                'sync_passwords' => false,
-                'sync_attributes' => [
-                    'name' => 'cn',
-                    'email' => 'mail',
-                    'username' => 'samaccountname', // Biasanya AD menggunakan samaccountname sebagai username
-                ],
-                // Fitur Fallback DB Lokal (Jika user tidak ditemukan di LDAP/Koneksi gagal, cek ke tabel MySQL)
-                'fallback' => [
-                    'password' => 'password',
-                ],
-            ],
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+
+        // Driver LDAP dimatikan SEMENTARA karena koneksi terblokir firewall (bikin timeout/error)
+        // 'users' => [
+        //     'driver' => 'ldap',
+        //     'model' => LdapRecord\Models\ActiveDirectory\User::class, // Menggunakan model ActiveDirectory
+        //     'rules' => [],
+        //     'scopes' => [],
+        //     'database' => [
+        //         'model' => App\Models\User::class,
+        //         'sync_passwords' => false,
+        //         'sync_attributes' => [
+        //             'name' => 'cn',
+        //             'email' => 'mail',
+        //             'username' => 'samaccountname', // Biasanya AD menggunakan samaccountname sebagai username
+        //         ],
+        //         // Fitur Fallback DB Lokal (Jika user tidak ditemukan di LDAP/Koneksi gagal, cek ke tabel MySQL)
+        //         'fallback' => [
+        //             'password' => 'password',
+        //         ],
+        //     ],
+        // ],
     ],
 
     /*
