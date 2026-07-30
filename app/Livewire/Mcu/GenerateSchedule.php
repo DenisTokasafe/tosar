@@ -216,7 +216,14 @@ class GenerateSchedule extends Component
             if ($employee) {
                 // Method via() di notifikasi akan otomatis memilih kirim Email, WA, atau keduanya
                 // tergantung data apa yang tersedia pada user/participant.
-                defer(fn() => $employee->notify(new McuReminderNotification($participant, 'new_schedule')));
+                defer(function () use ($employee, $participant) {
+                    $employee->notifyNow(new McuReminderNotification($participant, 'new_schedule', [\App\Channels\WhatsAppChannel::class]));
+                    try {
+                        $employee->notify(new McuReminderNotification($participant, 'new_schedule', ['mail']));
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error('MCU Reminder Email Error (Employee): ' . $e->getMessage());
+                    }
+                });
             }
 
             // 2. KIRIM KE SUPERVISOR
@@ -224,7 +231,14 @@ class GenerateSchedule extends Component
                 $spv = User::find($participant->supervisor_id);
                 if ($spv) {
                     // Jika SPV terdaftar di sistem, kirim (email & WA akan diatur otomatis oleh via())
-                    defer(fn() => $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv')));
+                    defer(function () use ($spv, $participant) {
+                        $spv->notifyNow(new McuReminderNotification($participant, 'new_schedule_spv', [\App\Channels\WhatsAppChannel::class]));
+                        try {
+                            $spv->notify(new McuReminderNotification($participant, 'new_schedule_spv', ['mail']));
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error('MCU Reminder Email Error (SPV): ' . $e->getMessage());
+                        }
+                    });
                 }
             } elseif (!empty($participant->spv_wa_number)) {
                 // Jika SPV manual (tidak punya akun di sistem), kirim via On-Demand Notification (Khusus WA)
@@ -236,7 +250,13 @@ class GenerateSchedule extends Component
             if ($participant->dept_head_id) {
                 $deptHead = User::find($participant->dept_head_id);
                 if ($deptHead && !empty($deptHead->email)) {
-                    defer(fn() => $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head')));
+                    defer(function () use ($deptHead, $participant) {
+                        try {
+                            $deptHead->notify(new McuReminderNotification($participant, 'new_schedule_dept_head', ['mail']));
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error('MCU Reminder Email Error (Dept Head): ' . $e->getMessage());
+                        }
+                    });
                 }
             }
         }

@@ -14,13 +14,21 @@ class McuReminderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public ?array $channels;
+
     public function __construct(
         public McuParticipant $participant,
-        public string $type // 'h-30', 'h-14', 'h-7', 'h-1', 'missed', 'new_schedule', 'new_schedule_spv', 'new_schedule_dept_head'
-    ) {}
+        public string $type, // 'h-30', 'h-14', 'h-7', 'h-1', 'missed', 'new_schedule', 'new_schedule_spv', 'new_schedule_dept_head'
+        ?array $channels = null
+    ) {
+        $this->channels = $channels;
+    }
 
     public function via(object $notifiable): array
     {
+        if ($this->channels !== null) {
+            return $this->channels;
+        }
         // 1. Jika ini Dept Head (cek via tipe atau jika ID notifiable adalah ID Dept Head dari relasi), HANYA VIA EMAIL
         $isDeptHead = $this->type === 'new_schedule_dept_head'
             || (isset($notifiable->id) && $notifiable->id === $this->participant->employee?->department?->head?->id);

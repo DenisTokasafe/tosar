@@ -107,14 +107,22 @@ class DoctorReview extends Component
                 // Notifikasi WhatsApp dan Database dikirim langsung (tanpa antrean/defer)
                 $employeeUser->notifyNow(new McuResultNotification($result, 'employee', [\App\Channels\WhatsAppChannel::class, 'database']));
                 // Notifikasi Email dikirim ke antrean (defer/queue)
-                $employeeUser->notify(new McuResultNotification($result, 'employee', ['mail']));
+                try {
+                    $employeeUser->notify(new McuResultNotification($result, 'employee', ['mail']));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('MCU Result Email Error (Employee): ' . $e->getMessage());
+                }
             }
 
             if ($deptHeadUser) {
                 // Notifikasi WhatsApp dan Database dikirim langsung
                 $deptHeadUser->notifyNow(new McuResultNotification($result, 'dept_head', [\App\Channels\WhatsAppChannel::class, 'database']));
                 // Notifikasi Email dikirim ke antrean (defer/queue)
-                $deptHeadUser->notify(new McuResultNotification($result, 'dept_head', ['mail']));
+                try {
+                    $deptHeadUser->notify(new McuResultNotification($result, 'dept_head', ['mail']));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('MCU Result Email Error (Dept Head): ' . $e->getMessage());
+                }
             }
 
             $this->showReviewModal = false;
